@@ -1,0 +1,165 @@
+.container {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
+
+.sprite {
+  object-fit: cover;
+
+  width: 1rem;
+  height: 1rem;
+  --size: 16;
+}
+
+.sprite:not(:first-of-type) {
+  margin-left: 0.25rem;
+}
+
+.actor-sprite-DeathKnight-Blood {
+  object-position: calc(-1080px / 36 * var(--size)) 0;
+}
+
+.actor-sprite-DeathKnight-Frost {
+  object-position: calc(-72px / 36 * var(--size)) 0;
+}
+
+.actor-sprite-DeathKnight-Unholy {
+  object-position: calc(-144px / 36 * var(--size)) 0;
+}
+
+.actor-sprite-DemonHunter-Havoc {
+  object-position: calc(-216px / 36 * var(--size)) 0;
+}
+
+.actor-sprite-DemonHunter-Vengeance {
+  object-position: calc(-252px / 36 * var(--size)) 0;
+}
+
+.actor-sprite-Druid-Balance {
+  object-position: calc(-324px / 36 * var(--size)) 0;
+}
+
+.actor-sprite-Druid-Feral {
+  object-position: calc(-360px / 36 * var(--size)) 0;
+}
+
+.actor-sprite-Druid-Guardian {
+  object-position: calc(-396px / 36 * var(--size)) 0;
+}
+
+.actor-sprite-Druid-Restoration {
+  object-position: calc(-432px / 36 * var(--size)) 0;
+}
+
+.actor-sprite-Hunter-BeastMastery {
+  object-position: calc(-504px / 36 * var(--size)) 0;
+}
+
+.actor-sprite-Hunter-Marksmanship {
+  object-position: calc(-540px / 36 * var(--size)) 0;
+}
+
+.actor-sprite-Hunter-Survival {
+  object-position: calc(-612px / 36 * var(--size)) 0;
+}
+
+.actor-sprite-Mage-Arcane {
+  object-position: calc(-684px / 36 * var(--size)) 0;
+}
+
+.actor-sprite-Mage-Fire {
+  object-position: calc(-720px / 36 * var(--size)) 0;
+}
+
+.actor-sprite-Mage-Frost {
+  object-position: calc(-756px / 36 * var(--size)) 0;
+}
+
+.actor-sprite-Monk-Brewmaster {
+  object-position: calc(-864px / 36 * var(--size)) 0;
+}
+
+.actor-sprite-Monk-Mistweaver {
+  object-position: calc(-900px / 36 * var(--size)) 0;
+}
+
+.actor-sprite-Monk-Windwalker {
+  object-position: calc(-936px / 36 * var(--size)) 0;
+}
+
+.actor-sprite-Paladin-Holy {
+  object-position: calc(-1044px / 36 * var(--size)) 0;
+}
+
+.actor-sprite-Paladin-Protection {
+  object-position: calc(0px / 36 * var(--size)) 0;
+}
+
+.actor-sprite-Paladin-Retribution {
+  object-position: calc(-1116px / 36 * var(--size)) 0;
+}
+
+.actor-sprite-Priest-Discipline {
+  object-position: calc(-1224px / 36 * var(--size)) 0;
+}
+
+.actor-sprite-Priest-Holy {
+  object-position: calc(-1296px / 36 * var(--size)) 0;
+}
+
+.actor-sprite-Priest-Shadow {
+  object-position: calc(-1332px / 36 * var(--size)) 0;
+}
+
+.actor-sprite-Rogue-Assassination {
+  object-position: calc(-1404px / 36 * var(--size)) 0;
+}
+
+.actor-sprite-Rogue-Combat {
+  object-position: calc(-1440px / 36 * var(--size)) 0;
+}
+
+.actor-sprite-Rogue-Outlaw {
+  object-position: calc(-1512px / 36 * var(--size)) 0;
+}
+
+.actor-sprite-Rogue-Subtlety {
+  object-position: calc(-1548px / 36 * var(--size)) 0;
+}
+
+.actor-sprite-Shaman-Elemental {
+  object-position: calc(-1620px / 36 * var(--size)) 0;
+}
+
+.actor-sprite-Shaman-Enhancement {
+  object-position: calc(-1656px / 36 * var(--size)) 0;
+}
+
+.actor-sprite-Shaman-Restoration {
+  object-position: calc(-1692px / 36 * var(--size)) 0;
+}
+
+.actor-sprite-Warlock-Affliction {
+  object-position: calc(-1764px / 36 * var(--size)) 0;
+}
+
+.actor-sprite-Warlock-Demonology {
+  object-position: calc(-1800px / 36 * var(--size)) 0;
+}
+
+.actor-sprite-Warlock-Destruction {
+  object-position: calc(-1836px / 36 * var(--size)) 0;
+}
+
+.actor-sprite-Warrior-Arms {
+  object-position: calc(-1944px / 36 * var(--size)) 0;
+}
+
+.actor-sprite-Warrior-Fury {
+  object-position: calc(-1980px / 36 * var(--size)) 0;
+}
+
+.actor-sprite-Warrior-Protection {
+  object-position: calc(-2088px / 36 * var(--size)) 0;
+}

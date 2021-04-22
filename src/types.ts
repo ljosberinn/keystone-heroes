@@ -53,11 +53,27 @@ type FightReference = {
   groups?: number;
 };
 
+export type PlayableClass =
+  | "DemonHunter"
+  | "Mage"
+  | "Shaman"
+  | "Rogue"
+  | "Priest"
+  | "Warrior"
+  | "Druid"
+  | "DeathKnight"
+  | "Monk"
+  | "Paladin"
+  | "Warlock"
+  | "Hunter";
+
+export type Unit = "NPC" | "Pet" | PlayableClass;
+
 type Friendly = {
   name: string;
   id: number;
   guid: number;
-  type: string;
+  type: Unit;
   server?: string;
   icon: string;
   fights: FightReference[];
@@ -137,4 +153,6 @@ export type FailedKeystoneFight = KeystoneFight & {
 export type InitialFightInformation = Omit<
   CompletedKeystoneFight | FailedKeystoneFight,
   "dungeonPulls"
->;
+> & {
+  composition: Friendly["icon"][];
+};
