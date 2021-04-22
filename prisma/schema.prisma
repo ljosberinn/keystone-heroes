@@ -1,0 +1,100 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Reports {
+  id    Int    @id @default(autoincrement())
+  code  String @unique @db.Char(16)
+  start Int
+  end   Int
+
+  // used in
+  Fights Fights[]
+}
+
+model Fights {
+  fightId  Int
+  reportId Int
+  report   Reports @relation(fields: [reportId], references: [id])
+
+  dungeonId Int
+  dungeon   Dungeons @relation(fields: [dungeonId], references: [id])
+
+  keyLevel Int
+
+  tankId Int
+  tank   Character @relation("tank-character", fields: [tankId], references: [id])
+
+  healId Int
+  heal   Character @relation("heal-character", fields: [healId], references: [id])
+
+  dps1Id Int
+  dps1   Character @relation("dps1-character", fields: [dps1Id], references: [id])
+
+  dps2Id Int
+  dps2   Character @relation("dps2-character", fields: [dps2Id], references: [id])
+
+  dps3Id Int
+  dps3   Character @relation("dps3-character", fields: [dps3Id], references: [id])
+
+  deaths   Int
+  time     Int
+  finished Boolean
+
+  @@id([reportId, fightId])
+}
+
+enum Roles {
+  DPS
+  Heal
+  Tank
+}
+
+model Classes {
+  id   Int    @id
+  name String
+
+  // used in
+  Specs Specs[]
+}
+
+model Specs {
+  id   Int    @id
+  name String
+
+  classId Int
+  class   Classes @relation(fields: [classId], references: [id])
+
+  role Roles
+}
+
+model Dungeons {
+  id   Int    @id
+  name String @db.Char(40)
+  slug String @db.Char(8)
+  time Int
+
+  // used in
+  Fights Fights[]
+}
+
+model Character {
+  id     Int    @id
+  name   String @db.Char(21)
+  realm  String @db.Char(30)
+  region String @db.Char(3)
+
+  tank Fights[] @relation("tank-character")
+  heal Fights[] @relation("heal-character")
+  dps1 Fights[] @relation("dps1-character")
+  dps2 Fights[] @relation("dps2-character")
+  dps3 Fights[] @relation("dps3-character")
+}

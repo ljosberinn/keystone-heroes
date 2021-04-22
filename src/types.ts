@@ -124,7 +124,7 @@ export type UIFightsResponse = Pick<
   WCLFightResponse,
   "start" | "end" | "title"
 > & {
-  code: string;
+  report: string;
   fights: InitialFightInformation[];
 };
 

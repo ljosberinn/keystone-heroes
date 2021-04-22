@@ -19,7 +19,7 @@ import type {
 import { dungeons, getRunTime } from "../../utils/dungeons";
 import { healSpecs, tankSpecs } from "../../utils/specs";
 
-type CodeProps =
+type ReportProps =
   | {
       error: null;
       report: UIFightsResponse;
@@ -29,7 +29,10 @@ type CodeProps =
       report: null;
     };
 
-export default function Code({ report, error }: CodeProps): JSX.Element | null {
+export default function Report({
+  report,
+  error,
+}: ReportProps): JSX.Element | null {
   const { isFallback } = useRouter();
 
   if (isFallback) {
@@ -104,9 +107,9 @@ export const getStaticPaths = (): GetStaticPathsResult => {
 };
 
 export const getStaticProps = async (
-  context: GetStaticPropsContext<{ code?: string }>
-): Promise<{ props: CodeProps }> => {
-  if (!context.params?.code || context.params.code.length < 16) {
+  context: GetStaticPropsContext<{ report?: string }>
+): Promise<{ props: ReportProps }> => {
+  if (!context.params?.report || context.params.report.length < 16) {
     return {
       props: {
         error: "missing or invalid query param: code",
@@ -115,14 +118,14 @@ export const getStaticProps = async (
     };
   }
 
-  const { code } = context.params;
+  const { report } = context.params;
 
   const retrieveCacheOrSource = async (): Promise<WCLFightResponse | null> => {
-    const resolvedCachePath = resolve(`cache/${code}.json`);
+    const resolvedCachePath = resolve(`cache/${report}.json`);
 
     if (!IS_PROD && existsSync(resolvedCachePath)) {
       // eslint-disable-next-line no-console
-      console.info("[code/getStaticProps] reading from cache");
+      console.info("[report/getStaticProps] reading from cache");
       const raw = readFileSync(resolvedCachePath, {
         encoding: "utf-8",
       });
@@ -130,11 +133,11 @@ export const getStaticProps = async (
       return JSON.parse(raw);
     }
 
-    const url = getFightsUrl(code);
+    const url = getFightsUrl(report);
 
     try {
       // eslint-disable-next-line no-console
-      console.info("[code/getStaticProps] fetching from WCL");
+      console.info("[report/getStaticProps] fetching from WCL");
 
       const response = await fetch(url);
 
@@ -171,7 +174,7 @@ export const getStaticProps = async (
   return {
     props: {
       report: {
-        code,
+        report,
         end,
         start,
         title,
