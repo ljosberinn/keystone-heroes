@@ -1,0 +1,106 @@
+name: Deploy to Vercel (Staging)
+
+on:
+  push:
+    branches-ignore:
+      - master
+
+# used actions
+# https://github.com/actions/setup-node - sets up node env
+# https://github.com/actions/cache - caches build deps
+# https://github.com/actions/checkout - checks out repo
+# https://github.com/amondnet/vercel-action - initiates deploy to vercel
+
+jobs:
+  setup-environment:
+    name: Setup environment
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    steps:
+      - name: Installing node.js
+        uses: actions/setup-node@v2
+        with:
+          # Use the same node.js version as the one Vercel's uses (currently node12.x)
+          node-version: "12.x"
+
+  lint:
+    name: ESLint
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Get Yarn cache path
+        id: yarn-cache
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - uses: actions/checkout@master
+      - name: Load Yarn cache
+        uses: actions/cache@master
+        with:
+          path: ${{ steps.yarn-cache.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - name: Installing dependencies
+        if: steps.cache-modules.outputs.cache-hit != 'true'
+        run: yarn --frozen-lockfile
+      - run: yarn lint:code
+
+  types:
+    name: TypeScript
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Yarn cache path
+        id: yarn-cache
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - uses: actions/checkout@master
+      - name: Load Yarn cache
+        uses: actions/cache@master
+        with:
+          path: ${{ steps.yarn-cache.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - name: Installing dependencies
+        if: steps.cache-modules.outputs.cache-hit != 'true'
+        run: yarn --frozen-lockfile
+      - run: yarn lint:types
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    # only run after lint and tsc completed successfully
+    needs: [lint, types]
+    steps:
+      - name: Get Yarn cache path
+        id: yarn-cache
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - uses: actions/checkout@master
+      - name: Load Yarn cache
+        uses: actions/cache@master
+        with:
+          path: ${{ steps.yarn-cache.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - name: Installing dependencies
+        if: steps.cache-modules.outputs.cache-hit != 'true'
+        run: yarn --frozen-lockfile
+      - name: Running tests
+        run: yarn test --ci --coverage
+
+  deploy:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    # only deploy given successful tests
+    needs: test
+    steps:
+      - uses: actions/checkout@master
+      - uses: amondnet/vercel-action@v20
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID}}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID}}
+          # SET THIS 👇 OR YOU WILL DEPLOY TO YOUR PERSONAL VERCEL NAMESPACE
+          # scope: ${{ secrets.VERCEL_TEAM_ID }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-comment: true
