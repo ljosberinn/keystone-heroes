@@ -1,9 +1,9 @@
-import type { UIFightsResponse } from "../../types";
 import { affixes as allAffixes } from "../../utils/affixes";
 import { classnames } from "../../utils/classNames";
 import styles from "./Affixes.module.css";
 
-type AffixesProps = Pick<UIFightsResponse["fights"][number], "affixes"> & {
+type AffixesProps = {
+  affixes: number[];
   chests: number;
 };
 

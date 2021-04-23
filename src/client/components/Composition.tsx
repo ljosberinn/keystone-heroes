@@ -1,8 +1,10 @@
-import type { InitialFightInformation } from "../../types";
+import type { Friendly } from "../../types/report";
 import { classnames } from "../../utils/classNames";
 import styles from "./Composition.module.css";
 
-export type CompositionProps = Pick<InitialFightInformation, "composition">;
+export type CompositionProps = {
+  composition: Friendly["icon"][];
+};
 
 export function Composition({ composition }: CompositionProps): JSX.Element {
   return (
