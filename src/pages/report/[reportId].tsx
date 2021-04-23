@@ -1,4 +1,8 @@
-import type { GetStaticPathsResult, GetStaticPropsContext } from "next";
+import type {
+  GetStaticPathsResult,
+  GetStaticPropsContext,
+  GetStaticPropsResult,
+} from "next";
 import { useRouter } from "next/router";
 
 import { Affixes } from "../../client/components/Affixes";
@@ -128,7 +132,7 @@ export const getStaticPaths = (): GetStaticPathsResult => {
 
 export const getStaticProps = async (
   context: GetStaticPropsContext<{ reportId?: string }>
-): Promise<{ props: ReportProps }> => {
+): Promise<GetStaticPropsResult<ReportProps>> => {
   if (!context.params?.reportId || context.params.reportId.length < 16) {
     return {
       props: {
@@ -148,6 +152,7 @@ export const getStaticProps = async (
         report: null,
         error: "no report found",
       },
+      revalidate: 1 * 60,
     };
   }
 
@@ -155,17 +160,20 @@ export const getStaticProps = async (
 
   const { start, end, title } = json;
 
+  const report: ReportProps["report"] = {
+    reportId,
+    end,
+    start,
+    title,
+    fights,
+  };
+
   return {
     props: {
-      report: {
-        reportId,
-        end,
-        start,
-        title,
-        fights,
-      },
+      report,
       error: null,
     },
+    revalidate: 5 * 60,
   };
 };
 
