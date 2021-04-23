@@ -1,0 +1,13 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "wix.vscode-import-cost",
+    "eamodio.gitlens",
+    "kisstkondoros.vscode-gutter-preview",
+    "github.vscode-pull-request-github",
+    "ms-vscode.vscode-typescript-next",
+    "ryanluker.vscode-coverage-gutters",
+    "me-dutour-mathieu.vscode-github-actions"
+  ]
+}

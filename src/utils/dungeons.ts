@@ -1,5 +1,3 @@
-import type { InitialFightInformation } from "../types";
-
 const createTimer = (initialTime: number): [number, number, number] => [
   initialTime * 60 * 1000,
   initialTime * 60 * 1000 * 0.8,
@@ -32,26 +30,4 @@ export const dungeons = [
   { id: 12_293, name: "Theatre of Pain", timer: createTimer(37), slug: "TOP" },
 ] as const;
 
-/**
- * `completionTime` is only larger than 0 if the key was indeed finished
- * otherwise, use log `start`/`end` timers
- */
-export const getRunTime = ({
-  completionTime,
-  start_time,
-  end_time,
-}: InitialFightInformation): string => {
-  const totalMilliseconds =
-    completionTime > 0 ? completionTime : end_time - start_time;
-  const totalSeconds = totalMilliseconds / 1000;
-
-  const minutes = Math.floor(totalSeconds / 60);
-  const seconds = Math.floor(totalSeconds - minutes * 60);
-  const milliseconds = totalMilliseconds - minutes * 60 * 1000 - seconds * 1000;
-
-  const paddedMinutes = minutes.toString().padStart(2, "0");
-  const paddedSeconds = seconds.toString().padStart(2, "0");
-  const paddedMs = milliseconds.toString().padStart(3, "0");
-
-  return `${paddedMinutes}:${paddedSeconds}.${paddedMs}`;
-};
+export type Dungeon = typeof dungeons[number];
