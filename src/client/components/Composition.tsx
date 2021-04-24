@@ -1,9 +1,8 @@
-import type { Friendly } from "../../types/report";
 import { classnames } from "../../utils/classNames";
 import styles from "./Composition.module.css";
 
 export type CompositionProps = {
-  composition: Friendly["icon"][];
+  composition: string[];
 };
 
 export function Composition({ composition }: CompositionProps): JSX.Element {

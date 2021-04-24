@@ -1,4 +1,4 @@
-import type { DamageDone } from "../types/fightSummary";
+import type { DamageDone } from "../server/queries/fights";
 import { calcChests, calcGroupDps, calcRunDuration } from "../utils/calc";
 import type { Dungeon } from "../utils/dungeons";
 import { dungeons } from "../utils/dungeons";

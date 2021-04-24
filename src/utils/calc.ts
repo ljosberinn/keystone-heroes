@@ -1,4 +1,4 @@
-import type { DamageDone } from "../types/fightSummary";
+import type { DamageDone } from "../server/queries/fights";
 import type { Dungeon } from "./dungeons";
 
 export const calcGroupDps = (
@@ -10,7 +10,9 @@ export const calcGroupDps = (
   }
 
   const runInSeconds = runDuration / 1000;
-  const sum = damageDone.reduce((acc, damage) => acc + damage.total, 0);
+  const sum = damageDone
+    // .filter((dataset) => dataset.type !== "Pet" && dataset.type !== "NPC")
+    .reduce((acc, damage) => acc + damage.total, 0);
 
   return Math.round(sum / runInSeconds);
 };

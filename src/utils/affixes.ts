@@ -88,3 +88,5 @@ export const affixes = [
     id: 124,
   },
 ] as const;
+
+export type Affix = typeof affixes[number];
