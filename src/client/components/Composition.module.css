@@ -1,19 +1,5 @@
-.container {
-  display: flex;
-  align-items: center;
-  flex-direction: row;
-}
-
 .sprite {
-  object-fit: cover;
-
-  width: 1rem;
-  height: 1rem;
   --size: 16;
-}
-
-.sprite:not(:first-of-type) {
-  margin-left: 0.25rem;
 }
 
 .actor-sprite-DeathKnight-Blood {

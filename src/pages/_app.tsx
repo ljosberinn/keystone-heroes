@@ -1,6 +1,8 @@
 import type { NextComponentType, NextPageContext } from "next";
 import type { NextRouter } from "next/router";
 
+import "tailwindcss/tailwind.css";
+
 export type AppRenderProps = {
   pageProps: Record<string, unknown>;
   err?: Error;

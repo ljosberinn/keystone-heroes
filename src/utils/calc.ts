@@ -16,8 +16,8 @@ export const calcGroupDps = (
 };
 
 export const calcChests = (
-  completionTime: number,
-  { timer }: Dungeon
+  { timer }: Dungeon,
+  completionTime: number
 ): number => {
   if (completionTime === 0) {
     return 0;
@@ -26,6 +26,19 @@ export const calcChests = (
   const index = timer.findIndex((timer) => completionTime > timer);
 
   return index > -1 ? index : 3;
+};
+
+export const calcTimeLeftOrOver = (
+  { timer }: Dungeon,
+  completionTime: number
+): string => {
+  const [maxTime] = timer;
+
+  return calcRunDuration(
+    0,
+    0,
+    completionTime === 0 ? 0 : maxTime - completionTime
+  );
 };
 
 /**

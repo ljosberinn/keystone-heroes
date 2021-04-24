@@ -1,6 +1,5 @@
 import { classnames } from "../../utils/classNames";
 import { Icons } from "../icons";
-import styles from "./Chests.module.css";
 
 type ChestsProps = {
   chests: number;
@@ -8,19 +7,21 @@ type ChestsProps = {
 
 export function Chests({ chests }: ChestsProps): JSX.Element {
   return (
-    <div className={styles.container}>
+    <div className="flex items-center flex-row">
       {Array.from({ length: 3 }, (_, index) => {
         const isOpen = chests >= index + 1;
 
         const icon = isOpen ? Icons.openChest : Icons.closedChest;
-        const color = isOpen ? "green" : "grey";
+        const color = isOpen ? "text-green-500" : "text-gray-500";
 
         return (
           <svg
-            className={classnames(styles.icon, !isOpen && styles.lowOpacity)}
-            height="1rem"
-            width="1rem"
-            color={color}
+            className={classnames(
+              "w-4 h-4",
+              color,
+              index > 0 && "ml-1",
+              !isOpen && "opacity-30"
+            )}
             key={index}
           >
             <use href={`#${icon}`} />

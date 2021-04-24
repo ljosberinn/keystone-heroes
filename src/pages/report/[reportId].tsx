@@ -4,6 +4,7 @@ import type {
   GetStaticPropsResult,
 } from "next";
 import { useRouter } from "next/router";
+import { useState } from "react";
 
 import { Affixes } from "../../client/components/Affixes";
 import { Chests } from "../../client/components/Chests";
@@ -18,7 +19,13 @@ import type {
   FailedKeystoneFight,
 } from "../../types/keystone";
 import type { Friendly, WCLFight, WCLReport } from "../../types/report";
-import { calcChests, calcGroupDps, calcRunDuration } from "../../utils/calc";
+import {
+  calcChests,
+  calcGroupDps,
+  calcRunDuration,
+  calcTimeLeftOrOver,
+} from "../../utils/calc";
+import type { Dungeon } from "../../utils/dungeons";
 import { dungeons } from "../../utils/dungeons";
 import { healSpecs, tankSpecs } from "../../utils/specs";
 
@@ -63,7 +70,7 @@ export default function Report({
   const url = `//warcraftlogs.com/reports/${report.reportId}`;
 
   return (
-    <table>
+    <table className="table-auto">
       <caption>
         <ExternalLink href={url}>{report.title}</ExternalLink> from{" "}
         {new Date(report.start).toLocaleDateString()}
@@ -88,38 +95,71 @@ export default function Report({
             return null;
           }
 
-          const chests = calcChests(fight.completionTime, dungeon);
-          const runTime = calcRunDuration(
-            fight.completionTime,
-            fight.start_time,
-            fight.end_time
-          );
-
           return (
-            <tr key={fight.id}>
-              <td>
-                <ExternalLink href={`${url}/#fight=${fight.id}`}>
-                  {dungeon.name}
-                </ExternalLink>
-              </td>
-              <td>{fight.keystoneLevel}</td>
-              <td>
-                <Affixes affixes={fight.affixes} chests={chests} />
-              </td>
-              <td>
-                <Chests chests={chests} />
-              </td>
-              <td>{runTime}</td>
-              <td>
-                <Composition composition={fight.composition} />
-              </td>
-              <td>{fight.groupDps.toLocaleString()}</td>
-              <td>{fight.deaths}</td>
-            </tr>
+            <Row fight={fight} dungeon={dungeon} key={fight.id} baseUrl={url} />
           );
         })}
       </tbody>
     </table>
+  );
+}
+
+type RowProps = {
+  fight: InitialFightInformation;
+  dungeon: Dungeon;
+  baseUrl: string;
+};
+
+function Row({ fight, dungeon, baseUrl }: RowProps) {
+  const [open, setOpen] = useState(false);
+
+  function handleClick() {
+    setOpen(!open);
+  }
+
+  const chests = calcChests(dungeon, fight.completionTime);
+  const timeLeft = calcTimeLeftOrOver(dungeon, fight.completionTime);
+  const runTime = calcRunDuration(
+    fight.completionTime,
+    fight.start_time,
+    fight.end_time
+  );
+
+  return (
+    <>
+      <tr>
+        <td>
+          <ExternalLink href={`${baseUrl}/#fight=${fight.id}`}>
+            {dungeon.name}
+          </ExternalLink>
+        </td>
+        <td>{fight.keystoneLevel}</td>
+        <td>
+          <Affixes affixes={fight.affixes} chests={chests} />
+        </td>
+        <td>
+          <Chests chests={chests} />
+        </td>
+        <td>
+          {runTime} {chests > 0 && <>(+{timeLeft})</>}
+        </td>
+        <td>
+          <Composition composition={fight.composition} />
+        </td>
+        <td>{fight.groupDps.toLocaleString()}</td>
+        <td>{fight.deaths}</td>
+        <td>
+          <button type="button" onClick={handleClick}>
+            {open ? "hide" : "show"} details
+          </button>
+        </td>
+      </tr>
+      {open && (
+        <tr>
+          <td>hi</td>
+        </tr>
+      )}
+    </>
   );
 }
 
@@ -219,8 +259,15 @@ const getKeystoneFights = async (
           completionTime,
         } = fight;
 
+        const logDuration = end_time - start_time;
+
         // skip fights where keys were dropped intentionally or very early on
-        if (end_time - start_time < 10 * 60 * 1000) {
+        if (logDuration < 10 * 60 * 1000) {
+          return null;
+        }
+
+        // skip fights that are far out of time
+        if (logDuration > 60 * 60 * 1000) {
           return null;
         }
 

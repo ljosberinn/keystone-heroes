@@ -1,6 +1,5 @@
 import { affixes as allAffixes } from "../../utils/affixes";
 import { classnames } from "../../utils/classNames";
-import styles from "./Affixes.module.css";
 
 type AffixesProps = {
   affixes: number[];
@@ -9,8 +8,8 @@ type AffixesProps = {
 
 export function Affixes({ affixes, chests }: AffixesProps): JSX.Element {
   return (
-    <div className={styles.container}>
-      {affixes.map((affixId) => {
+    <div className="flex items-center flex-row">
+      {affixes.map((affixId, index) => {
         const affixInfo = allAffixes.find((affix) => affix.id === affixId);
         const src = affixInfo?.icon ?? "unknown";
         const alt = affixInfo?.name ?? affixId.toString();
@@ -23,8 +22,9 @@ export function Affixes({ affixes, chests }: AffixesProps): JSX.Element {
             alt={alt}
             key={affixId}
             className={classnames(
-              styles.img,
-              chests > 0 ? undefined : styles.dead
+              "w-4 h-4",
+              index > 0 && "ml-1",
+              chests === 0 && "filter grayscale opacity-50"
             )}
           />
         );

@@ -1,5 +1,10 @@
 import type { DamageDone } from "../types/fightSummary";
-import { calcChests, calcGroupDps, calcRunDuration } from "../utils/calc";
+import {
+  calcChests,
+  calcGroupDps,
+  calcRunDuration,
+  calcTimeLeftOrOver,
+} from "../utils/calc";
 import type { Dungeon } from "../utils/dungeons";
 import { dungeons } from "../utils/dungeons";
 
@@ -32,38 +37,44 @@ describe("calcGroupDps", () => {
 
 describe("calcChests", () => {
   test("returns 0 if completionTime is 0", () => {
-    expect(calcChests(0, dungeons[0])).toBe(0);
+    expect(calcChests(dungeons[0], 0)).toBe(0);
   });
 
   test.each(
     dungeons.flatMap((dungeon) =>
-      dungeon.timer.map<[string, number, number, Dungeon]>((timer, index) => [
-        dungeon.slug,
-        timer - 10,
-        index + 1,
-        dungeon,
-      ])
+      dungeon.timer.map<[string, string, number, number, Dungeon]>(
+        (timer, index) => [
+          dungeon.slug,
+          calcRunDuration(timer - 5000, 0, 0),
+          index + 1,
+          timer - 5000,
+          dungeon,
+        ]
+      )
     )
   )(
-    "completing dungeon '%s' in %d, returns %d chests",
-    (_, completionTime, chests, dungeon) => {
-      expect(calcChests(completionTime, dungeon)).toBe(chests);
+    "completing dungeon '%s' in %s, returns %d chests",
+    (_, __, chests, completionTime, dungeon) => {
+      expect(calcChests(dungeon, completionTime)).toBe(chests);
     }
   );
 
   test.each(
     dungeons.flatMap((dungeon) =>
-      dungeon.timer.map<[string, number, number, Dungeon]>((timer, index) => [
-        dungeon.slug,
-        timer + 10,
-        index,
-        dungeon,
-      ])
+      dungeon.timer.map<[string, string, number, number, Dungeon]>(
+        (timer, index) => [
+          dungeon.slug,
+          calcRunDuration(timer + 5000, 0, 0),
+          index,
+          timer + 5000,
+          dungeon,
+        ]
+      )
     )
   )(
-    "completing dungeon '%s' in %d, returns %d chests",
-    (_, completionTime, chests, dungeon) => {
-      expect(calcChests(completionTime, dungeon)).toBe(chests);
+    "completing dungeon '%s' in %s, returns %d chests",
+    (_, __, chests, completionTime, dungeon) => {
+      expect(calcChests(dungeon, completionTime)).toBe(chests);
     }
   );
 });
