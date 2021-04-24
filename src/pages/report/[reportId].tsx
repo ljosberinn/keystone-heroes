@@ -6,19 +6,15 @@ import type {
 import { useRouter } from "next/router";
 import { useState } from "react";
 
+import type { AffixesProps } from "../../client/components/Affixes";
 import { Affixes } from "../../client/components/Affixes";
 import { Chests } from "../../client/components/Chests";
 import { Composition } from "../../client/components/Composition";
 import { ExternalLink } from "../../client/components/ExternalLink";
-import {
-  retrieveFightSummaryCacheOrSource,
-  retrieveReportCacheOrSource,
-} from "../../server/wclUrls";
-import type {
-  CompletedKeystoneFight,
-  FailedKeystoneFight,
-} from "../../types/keystone";
-import type { Friendly, WCLFight, WCLReport } from "../../types/report";
+import type { Table } from "../../server/queries/fights";
+import { retrieveFightTableCacheOrSource } from "../../server/queries/fights";
+import type { Report as ReportType } from "../../server/queries/report";
+import { retrieveReportCacheOrSource } from "../../server/queries/report";
 import {
   calcChests,
   calcGroupDps,
@@ -29,18 +25,24 @@ import type { Dungeon } from "../../utils/dungeons";
 import { dungeons } from "../../utils/dungeons";
 import { healSpecs, tankSpecs } from "../../utils/specs";
 
-type InitialFightInformation = Omit<
-  CompletedKeystoneFight | FailedKeystoneFight,
-  "dungeonPulls"
-> & {
-  composition: Friendly["icon"][];
+type InitialFightInformation = {
+  composition: string[];
   deaths: number;
   groupDps: number;
+  affixes: AffixesProps["affixes"];
+  startTime: number;
+  endTime: number;
+  dungeon: number;
+  keystoneTime: number;
+  id: number;
+  keystoneLevel: number;
 };
 
-type UIFightsResponse = Pick<WCLReport, "start" | "end" | "title"> & {
-  reportId: string;
+type UIFightsResponse = Pick<ReportType, "title"> & {
+  id: string;
   fights: InitialFightInformation[];
+  startTime: number;
+  endTime: number;
 };
 
 type ReportProps =
@@ -67,13 +69,13 @@ export default function Report({
     return <h1>{error}</h1>;
   }
 
-  const url = `//warcraftlogs.com/reports/${report.reportId}`;
+  const url = `//warcraftlogs.com/reports/${report.id}`;
 
   return (
     <table className="table-auto">
       <caption>
         <ExternalLink href={url}>{report.title}</ExternalLink> from{" "}
-        {new Date(report.start).toLocaleDateString()}
+        {new Date(report.startTime).toLocaleDateString()}
       </caption>
       <thead>
         <tr>
@@ -89,7 +91,9 @@ export default function Report({
       </thead>
       <tbody>
         {report.fights.map((fight) => {
-          const dungeon = dungeons.find((dungeon) => dungeon.id === fight.boss);
+          const dungeon = dungeons.find(
+            (dungeon) => dungeon.id === fight.dungeon
+          );
 
           if (!dungeon) {
             return null;
@@ -117,12 +121,12 @@ function Row({ fight, dungeon, baseUrl }: RowProps) {
     setOpen(!open);
   }
 
-  const chests = calcChests(dungeon, fight.completionTime);
-  const timeLeft = calcTimeLeftOrOver(dungeon, fight.completionTime);
+  const chests = calcChests(dungeon, fight.keystoneTime);
+  const timeLeft = calcTimeLeftOrOver(dungeon, fight.keystoneTime);
   const runTime = calcRunDuration(
-    fight.completionTime,
-    fight.start_time,
-    fight.end_time
+    fight.keystoneTime,
+    fight.startTime,
+    fight.endTime
   );
 
   return (
@@ -184,161 +188,83 @@ export const getStaticProps = async (
 
   const { reportId } = context.params;
 
-  const json = await retrieveReportCacheOrSource(reportId);
+  const report = await retrieveReportCacheOrSource(reportId);
 
-  if (!json) {
+  if (!report) {
     return {
       props: {
         report: null,
         error: "no report found",
       },
-      revalidate: 1 * 60,
+      revalidate: 60,
     };
   }
 
-  const fights = await getKeystoneFights(reportId, json);
-
-  const { start, end, title } = json;
-
-  const report: ReportProps["report"] = {
+  const fightTables = await retrieveFightTableCacheOrSource(
     reportId,
-    end,
-    start,
-    title,
-    fights,
-  };
+    report.fights
+  );
+
+  const { startTime, endTime, title } = report;
 
   return {
     props: {
-      report,
+      report: {
+        id: reportId,
+        endTime,
+        startTime,
+        title,
+        fights: transformReportData(report, fightTables),
+      },
       error: null,
     },
     revalidate: 5 * 60,
   };
 };
 
-const isKeystoneFight = (
-  fight: WCLFight
-): fight is (CompletedKeystoneFight | FailedKeystoneFight) &
-  Pick<
-    WCLFight,
-    | "boss"
-    | "name"
-    | "zoneID"
-    | "zoneDifficulty"
-    | "size"
-    | "lastPhaseForPercentageDisplay"
-    | "difficulty"
-    | "maps"
-    | "fightPercentage"
-    | "bossPercentage"
-    | "zoneName"
-    | "partial"
-    | "medal"
-  > => {
-  return (
-    "keystoneLevel" in fight && "dungeonPulls" in fight && "affixes" in fight
-  );
-};
+const transformReportData = (
+  report: ReportType,
+  fightTables: Record<string, Table>
+): InitialFightInformation[] => {
+  return report.fights
+    .filter((fight) => fight.endTime - fight.startTime < 60 * 60 * 1000)
+    .map((fight) => {
+      const composition = fightTables[fight.id].composition
+        .map(({ specs, type }) => `${type}-${specs[0].spec}`)
+        .sort((a, b) => {
+          if (tankSpecs.has(a)) {
+            return -1;
+          }
 
-const getKeystoneFights = async (
-  reportId: string,
-  { fights, friendlies }: WCLReport
-): Promise<InitialFightInformation[]> => {
-  const fightsWithSummary = await Promise.all(
-    fights.map(async (fight) => {
-      if (isKeystoneFight(fight)) {
-        const {
-          affixes,
-          id,
-          end_time,
-          keystoneLevel,
-          boss,
-          start_time,
-          kill,
-          completionTime,
-        } = fight;
+          if (tankSpecs.has(b)) {
+            return 1;
+          }
 
-        const logDuration = end_time - start_time;
+          if (healSpecs.has(a)) {
+            return -1;
+          }
 
-        // skip fights where keys were dropped intentionally or very early on
-        if (logDuration < 10 * 60 * 1000) {
-          return null;
-        }
+          if (healSpecs.has(b)) {
+            return 1;
+          }
 
-        // skip fights that are far out of time
-        if (logDuration > 60 * 60 * 1000) {
-          return null;
-        }
+          return 0;
+        });
 
-        const composition = friendlies
-          // only include units that were present for this fight
-          .filter((friendly) =>
-            friendly.fights.some(({ id: fightId }) => fightId === id)
-          )
-          // filter out Pets and NPCs
-          .filter(
-            (friendly) => friendly.type !== "NPC" && friendly.type !== "Pet"
-          )
-          .map(({ icon }) => icon)
-          .sort((a, b) => {
-            if (tankSpecs.has(a)) {
-              return -1;
-            }
-
-            if (tankSpecs.has(b)) {
-              return 1;
-            }
-
-            if (healSpecs.has(a)) {
-              return -1;
-            }
-
-            if (healSpecs.has(b)) {
-              return 1;
-            }
-
-            return 0;
-          });
-
-        // some logs are broken, showing the start or the end of some other key
-        // apart from unusually long logs, its only detecteable if more than 5 players are present
-        if (composition.length > 5) {
-          return null;
-        }
-
-        const fightSummary = await retrieveFightSummaryCacheOrSource(
-          reportId,
-          fight
-        );
-
-        const deaths = fightSummary?.deathEvents.length ?? 0;
-
-        const groupDps = calcGroupDps(
-          kill ? completionTime : end_time - start_time,
-          fightSummary?.damageDone
-        );
-
-        return {
-          affixes,
-          id,
-          end_time,
-          start_time,
-          boss,
-          composition,
-          keystoneLevel,
-          kill,
-          deaths,
-          completionTime: kill ? completionTime : 0,
-          groupDps,
-        };
-      }
-
-      return null;
-    })
-  );
-
-  return fightsWithSummary.filter(
-    (fight): fight is InitialFightInformation => fight !== null
-  );
+      return {
+        affixes: fight.keystoneAffixes,
+        dungeon: fight.encounterID,
+        id: fight.id,
+        keystoneLevel: fight.keystoneLevel,
+        keystoneTime: fight.keystoneTime,
+        startTime: fight.startTime,
+        endTime: fight.endTime,
+        composition,
+        deaths: fightTables[fight.id]?.deathEvents.length ?? 0,
+        groupDps: calcGroupDps(
+          fight.keystoneTime,
+          fightTables[fight.id]?.damageDone
+        ),
+      };
+    });
 };

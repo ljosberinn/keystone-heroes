@@ -1,8 +1,9 @@
+import type { Affix } from "../../utils/affixes";
 import { affixes as allAffixes } from "../../utils/affixes";
 import { classnames } from "../../utils/classNames";
 
-type AffixesProps = {
-  affixes: number[];
+export type AffixesProps = {
+  affixes: Affix["id"][];
   chests: number;
 };
 
