@@ -26,4 +26,20 @@ describe("calcMetricAverage", () => {
 
     expect(calcMetricAverage(runDuration, damageDone)).toMatchSnapshot();
   });
+
+  test("allows optionally filtering via guid", () => {
+    const total = 28 * 60 * 1000;
+
+    const damageDone: DamageDone[] = [
+      { guid: 1, icon: "", id: 1, name: "", total, type: "DemonHunter" },
+      { guid: 123, icon: "", id: 1, name: "", total, type: "DemonHunter" },
+      { guid: 1, icon: "", id: 1, name: "", total, type: "DemonHunter" },
+      { guid: 1, icon: "", id: 1, name: "", total, type: "DemonHunter" },
+      { guid: 1, icon: "", id: 1, name: "", total, type: "DemonHunter" },
+    ];
+
+    expect(calcMetricAverage(total, damageDone, 123)).toMatchInlineSnapshot(
+      `1000`
+    );
+  });
 });
