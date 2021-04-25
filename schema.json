@@ -65,7 +65,11 @@
             "name": "reportData",
             "description": "Obtain the report data object that allows the retrieval of individual reports or filtered collections of reports by guild or by user.",
             "args": [],
-            "type": { "kind": "OBJECT", "name": "ReportData", "ofType": null },
+            "type": {
+              "kind": "OBJECT",
+              "name": "ReportData",
+              "ofType": null
+            },
             "isDeprecated": false,
             "deprecationReason": null
           },
@@ -101,19 +105,31 @@
               {
                 "name": "name",
                 "description": "Optional. The name of a specific character. Must be used in conjunction with serverSlug and serverRegion to uniquely identify a character.",
-                "type": { "kind": "SCALAR", "name": "String", "ofType": null },
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
                 "defaultValue": null
               },
               {
                 "name": "serverSlug",
                 "description": "Optional. The name of a specific character. Must be used in conjunction with name and serverRegion to uniquely identify a character.",
-                "type": { "kind": "SCALAR", "name": "String", "ofType": null },
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
                 "defaultValue": null
               },
               {
                 "name": "serverRegion",
                 "description": "Optional. The region for a specific character. Must be used in conjunction with name and serverRegion to uniquely identify a character.",
-                "type": { "kind": "SCALAR", "name": "String", "ofType": null },
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
                 "defaultValue": null
               }
             ],
@@ -214,7 +230,11 @@
               {
                 "name": "byBracket",
                 "description": "Optional. Whether or not to use bracket rankings instead of overall rankings. For WoW, brackets are item levels or keystones. For FF, brackets are patches.",
-                "type": { "kind": "SCALAR", "name": "Boolean", "ofType": null },
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                },
                 "defaultValue": "false"
               },
               {
@@ -242,13 +262,21 @@
               {
                 "name": "includeCombatantInfo",
                 "description": "Optional. Whether or not to include detailed combatant info such as gear in the results.",
-                "type": { "kind": "SCALAR", "name": "Boolean", "ofType": null },
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                },
                 "defaultValue": "false"
               },
               {
                 "name": "includePrivateLogs",
                 "description": "Optional. Whether or not to include private logs in the results. This option is only available if using the user GraphQL endpoint.",
-                "type": { "kind": "SCALAR", "name": "Boolean", "ofType": null },
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                },
                 "defaultValue": "false"
               },
               {
@@ -270,7 +298,11 @@
               {
                 "name": "role",
                 "description": "Optional. The slug for a specific role. This allow you to only fetch ranks for the healing role, dps role or tank role.",
-                "type": { "kind": "ENUM", "name": "RoleType", "ofType": null },
+                "type": {
+                  "kind": "ENUM",
+                  "name": "RoleType",
+                  "ofType": null
+                },
                 "defaultValue": null
               },
               {
@@ -282,7 +314,11 @@
               {
                 "name": "specName",
                 "description": "Optional. The slug for a specific spec. Whether or not to filter rankings to a specific spec. If omitted, data for all specs will be used.",
-                "type": { "kind": "SCALAR", "name": "String", "ofType": null },
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
                 "defaultValue": "\"Any\""
               },
               {
@@ -362,7 +398,11 @@
             "type": {
               "kind": "NON_NULL",
               "name": null,
-              "ofType": { "kind": "SCALAR", "name": "Boolean", "ofType": null }
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -447,7 +487,11 @@
               {
                 "name": "byBracket",
                 "description": "Optional. Whether or not to use bracket rankings instead of overall rankings. For WoW, brackets are item levels or keystones. For FF, brackets are patches.",
-                "type": { "kind": "SCALAR", "name": "Boolean", "ofType": null },
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                },
                 "defaultValue": "false"
               },
               {
@@ -469,7 +513,11 @@
               {
                 "name": "includePrivateLogs",
                 "description": "Optional. Whether or not to include private logs in the results. This option is only available if using the user GraphQL endpoint.",
-                "type": { "kind": "SCALAR", "name": "Boolean", "ofType": null },
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                },
                 "defaultValue": "false"
               },
               {
@@ -491,7 +539,11 @@
               {
                 "name": "role",
                 "description": "Optional. The slug for a specific role. This allow you to only fetch ranks for the healing role, dps role or tank role.",
-                "type": { "kind": "ENUM", "name": "RoleType", "ofType": null },
+                "type": {
+                  "kind": "ENUM",
+                  "name": "RoleType",
+                  "ofType": null
+                },
                 "defaultValue": null
               },
               {
@@ -503,7 +555,11 @@
               {
                 "name": "specName",
                 "description": "Optional. The slug for a specific spec. Whether or not to filter rankings to a specific spec. If omitted, data for all specs will be used.",
-                "type": { "kind": "SCALAR", "name": "String", "ofType": null },
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
                 "defaultValue": "\"Any\""
               },
               {
@@ -847,7 +903,11 @@
             "type": {
               "kind": "NON_NULL",
               "name": null,
-              "ofType": { "kind": "SCALAR", "name": "Boolean", "ofType": null }
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -923,7 +983,11 @@
             "type": {
               "kind": "NON_NULL",
               "name": null,
-              "ofType": { "kind": "SCALAR", "name": "Boolean", "ofType": null }
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -935,7 +999,11 @@
             "type": {
               "kind": "LIST",
               "name": null,
-              "ofType": { "kind": "OBJECT", "name": "GuildTag", "ofType": null }
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "GuildTag",
+                "ofType": null
+              }
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -1067,7 +1135,11 @@
             "type": {
               "kind": "NON_NULL",
               "name": null,
-              "ofType": { "kind": "SCALAR", "name": "Boolean", "ofType": null }
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -1202,7 +1274,11 @@
             "type": {
               "kind": "NON_NULL",
               "name": null,
-              "ofType": { "kind": "OBJECT", "name": "Bracket", "ofType": null }
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "Bracket",
+                "ofType": null
+              }
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -1262,7 +1338,11 @@
             "type": {
               "kind": "NON_NULL",
               "name": null,
-              "ofType": { "kind": "SCALAR", "name": "Boolean", "ofType": null }
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -1449,7 +1529,11 @@
               {
                 "name": "className",
                 "description": "Optional. The slug for a specific class. Whether or not to filter rankings to a specific class. If omitted, data for all classes will be used.",
-                "type": { "kind": "SCALAR", "name": "String", "ofType": null },
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
                 "defaultValue": "\"Any\""
               },
               {
@@ -1461,13 +1545,21 @@
               {
                 "name": "filter",
                 "description": "Optional. A filter string for advanced searching. The syntax matches the one used on the web site exactly, so you can filter encounter rankings on the site to figure out the string to use.",
-                "type": { "kind": "SCALAR", "name": "String", "ofType": null },
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
                 "defaultValue": "\"\""
               },
               {
                 "name": "includeCombatantInfo",
                 "description": "Optional. Whether or not to include detailed combatant info such as gear in the results.",
-                "type": { "kind": "SCALAR", "name": "Boolean", "ofType": null },
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                },
                 "defaultValue": "false"
               },
               {
@@ -1495,13 +1587,21 @@
               {
                 "name": "serverRegion",
                 "description": "Optional. The short name of a region to filter to. If paired with a server slug, will uniquely identify a server. If used by itself, rankings for that specific region will be fetched.",
-                "type": { "kind": "SCALAR", "name": "String", "ofType": null },
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
                 "defaultValue": "\"\""
               },
               {
                 "name": "serverSlug",
                 "description": "Optional. The slug for a specific server. Whether or not to filter rankings to a specific server. If omitted, data for all servers will be used.",
-                "type": { "kind": "SCALAR", "name": "String", "ofType": null },
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
                 "defaultValue": "\"\""
               },
               {
@@ -1513,7 +1613,11 @@
               {
                 "name": "specName",
                 "description": "Optional. The slug for a specific spec. Whether or not to filter rankings to a specific spec. If omitted, data for all specs will be used.",
-                "type": { "kind": "SCALAR", "name": "String", "ofType": null },
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
                 "defaultValue": "\"Any\""
               }
             ],
@@ -1540,7 +1644,11 @@
               {
                 "name": "filter",
                 "description": "Optional. A filter string for advanced searching. The syntax matches the one used on the web site exactly, so you can filter encounter rankings on the site to figure out the string to use.",
-                "type": { "kind": "SCALAR", "name": "String", "ofType": null },
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
                 "defaultValue": "\"\""
               },
               {
@@ -1568,13 +1676,21 @@
               {
                 "name": "serverRegion",
                 "description": "Optional. The short name of a region to filter to. If paired with a server slug, will uniquely identify a server. If used by itself, rankings for that specific region will be fetched.",
-                "type": { "kind": "SCALAR", "name": "String", "ofType": null },
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
                 "defaultValue": "\"\""
               },
               {
                 "name": "serverSlug",
                 "description": "Optional. The slug for a specific server. Whether or not to filter rankings to a specific server. If omitted, data for all servers will be used.",
-                "type": { "kind": "SCALAR", "name": "String", "ofType": null },
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
                 "defaultValue": "\"\""
               },
               {
@@ -1754,7 +1870,11 @@
             "type": {
               "kind": "NON_NULL",
               "name": null,
-              "ofType": { "kind": "SCALAR", "name": "Boolean", "ofType": null }
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -2137,7 +2257,11 @@
             "type": {
               "kind": "NON_NULL",
               "name": null,
-              "ofType": { "kind": "SCALAR", "name": "Boolean", "ofType": null }
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -2236,7 +2360,11 @@
             "type": {
               "kind": "NON_NULL",
               "name": null,
-              "ofType": { "kind": "SCALAR", "name": "Boolean", "ofType": null }
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -2386,7 +2514,11 @@
             "type": {
               "kind": "NON_NULL",
               "name": null,
-              "ofType": { "kind": "SCALAR", "name": "Boolean", "ofType": null }
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -2485,7 +2617,11 @@
             "type": {
               "kind": "NON_NULL",
               "name": null,
-              "ofType": { "kind": "SCALAR", "name": "Boolean", "ofType": null }
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -2575,14 +2711,22 @@
                 "type": {
                   "kind": "LIST",
                   "name": null,
-                  "ofType": { "kind": "SCALAR", "name": "Int", "ofType": null }
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  }
                 },
                 "defaultValue": "[]"
               },
               {
                 "name": "filterExpression",
                 "description": "Optional. An expression in the site's query language that will be applied as a filter to the events.",
-                "type": { "kind": "SCALAR", "name": "String", "ofType": null },
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
                 "defaultValue": "\"\""
               },
               {
@@ -2598,13 +2742,21 @@
               {
                 "name": "includeResources",
                 "description": "Optional. Whether or not to include detailed unit resources for actors. Adds substantially to bandwidth, so defaults to off.",
-                "type": { "kind": "SCALAR", "name": "Boolean", "ofType": null },
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                },
                 "defaultValue": "false"
               },
               {
                 "name": "killType",
                 "description": "Optional. A filter to only include kills, wipes, encounters or trash.",
-                "type": { "kind": "ENUM", "name": "KillType", "ofType": null },
+                "type": {
+                  "kind": "ENUM",
+                  "name": "KillType",
+                  "ofType": null
+                },
                 "defaultValue": "All"
               },
               {
@@ -2616,7 +2768,11 @@
               {
                 "name": "sourceClass",
                 "description": "Optional. Whether or not to filter the fights to a specific source class. The argument here is the class slug, obtainable from game data.",
-                "type": { "kind": "SCALAR", "name": "String", "ofType": null },
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
                 "defaultValue": "\"Any\""
               },
               {
@@ -2640,7 +2796,11 @@
               {
                 "name": "targetClass",
                 "description": "Optional. Whether or not to filter the fights to a specific target class. The argument here is the class slug, obtainable from game data.",
-                "type": { "kind": "SCALAR", "name": "String", "ofType": null },
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
                 "defaultValue": "\"Any\""
               },
               {
@@ -2658,7 +2818,11 @@
               {
                 "name": "translate",
                 "description": "Optional. Whether or not the fight data should be auto-translated. Defaults to true. Set to false is speed is a priority, and you do not care about the names.",
-                "type": { "kind": "SCALAR", "name": "Boolean", "ofType": null },
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                },
                 "defaultValue": "true"
               },
               {
@@ -2716,20 +2880,32 @@
                 "type": {
                   "kind": "LIST",
                   "name": null,
-                  "ofType": { "kind": "SCALAR", "name": "Int", "ofType": null }
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  }
                 },
                 "defaultValue": "[]"
               },
               {
                 "name": "killType",
                 "description": "Optional. A filter to only include kills, wipes, encounters or trash.",
-                "type": { "kind": "ENUM", "name": "KillType", "ofType": null },
+                "type": {
+                  "kind": "ENUM",
+                  "name": "KillType",
+                  "ofType": null
+                },
                 "defaultValue": "All"
               },
               {
                 "name": "translate",
                 "description": "Optional. Whether or not the fight data should be auto-translated. Defaults to true. Set to false is speed is a priority, and you do not care about the names.",
-                "type": { "kind": "SCALAR", "name": "Boolean", "ofType": null },
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                },
                 "defaultValue": "true"
               }
             ],
@@ -2795,14 +2971,22 @@
                 "type": {
                   "kind": "LIST",
                   "name": null,
-                  "ofType": { "kind": "SCALAR", "name": "Int", "ofType": null }
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  }
                 },
                 "defaultValue": "[]"
               },
               {
                 "name": "filterExpression",
                 "description": "Optional. An expression in the site's query language that will be applied as a filter to the events.",
-                "type": { "kind": "SCALAR", "name": "String", "ofType": null },
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
                 "defaultValue": "\"\""
               },
               {
@@ -2818,13 +3002,21 @@
               {
                 "name": "killType",
                 "description": "Optional. A filter to only include kills, wipes, encounters or trash.",
-                "type": { "kind": "ENUM", "name": "KillType", "ofType": null },
+                "type": {
+                  "kind": "ENUM",
+                  "name": "KillType",
+                  "ofType": null
+                },
                 "defaultValue": "All"
               },
               {
                 "name": "sourceClass",
                 "description": "Optional. Whether or not to filter the fights to a specific source class. The argument here is the class slug, obtainable from game data.",
-                "type": { "kind": "SCALAR", "name": "String", "ofType": null },
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
                 "defaultValue": "\"Any\""
               },
               {
@@ -2848,7 +3040,11 @@
               {
                 "name": "targetClass",
                 "description": "Optional. Whether or not to filter the fights to a specific target class. The argument here is the class slug, obtainable from game data.",
-                "type": { "kind": "SCALAR", "name": "String", "ofType": null },
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
                 "defaultValue": "\"Any\""
               },
               {
@@ -2866,7 +3062,11 @@
               {
                 "name": "translate",
                 "description": "Optional. Whether or not the fight data should be auto-translated. Defaults to true. Set to false is speed is a priority, and you do not care about the names.",
-                "type": { "kind": "SCALAR", "name": "Boolean", "ofType": null },
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                },
                 "defaultValue": "true"
               },
               {
@@ -2878,7 +3078,11 @@
               {
                 "name": "viewBy",
                 "description": "Optional. Whether to view by source, by target or by ability.",
-                "type": { "kind": "ENUM", "name": "ViewType", "ofType": null },
+                "type": {
+                  "kind": "ENUM",
+                  "name": "ViewType",
+                  "ofType": null
+                },
                 "defaultValue": "Default"
               },
               {
@@ -2923,7 +3127,11 @@
               {
                 "name": "translate",
                 "description": "Optional. Whether or not the actors and abilities in the master data should be auto-translated. Defaults to true. Set to false is speed is a priority, and you do not care about the names of abilities and actors.",
-                "type": { "kind": "SCALAR", "name": "Boolean", "ofType": null },
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                },
                 "defaultValue": "true"
               }
             ],
@@ -2983,7 +3191,11 @@
                 "type": {
                   "kind": "LIST",
                   "name": null,
-                  "ofType": { "kind": "SCALAR", "name": "Int", "ofType": null }
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  }
                 },
                 "defaultValue": "[]"
               },
@@ -3106,14 +3318,22 @@
                 "type": {
                   "kind": "LIST",
                   "name": null,
-                  "ofType": { "kind": "SCALAR", "name": "Int", "ofType": null }
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  }
                 },
                 "defaultValue": "[]"
               },
               {
                 "name": "filterExpression",
                 "description": "Optional. An expression in the site's query language that will be applied as a filter to the events.",
-                "type": { "kind": "SCALAR", "name": "String", "ofType": null },
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
                 "defaultValue": "\"\""
               },
               {
@@ -3129,13 +3349,21 @@
               {
                 "name": "killType",
                 "description": "Optional. A filter to only include kills, wipes, encounters or trash.",
-                "type": { "kind": "ENUM", "name": "KillType", "ofType": null },
+                "type": {
+                  "kind": "ENUM",
+                  "name": "KillType",
+                  "ofType": null
+                },
                 "defaultValue": "All"
               },
               {
                 "name": "sourceClass",
                 "description": "Optional. Whether or not to filter the fights to a specific source class. The argument here is the class slug, obtainable from game data.",
-                "type": { "kind": "SCALAR", "name": "String", "ofType": null },
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
                 "defaultValue": "\"Any\""
               },
               {
@@ -3159,7 +3387,11 @@
               {
                 "name": "targetClass",
                 "description": "Optional. Whether or not to filter the fights to a specific target class. The argument here is the class slug, obtainable from game data.",
-                "type": { "kind": "SCALAR", "name": "String", "ofType": null },
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
                 "defaultValue": "\"Any\""
               },
               {
@@ -3177,7 +3409,11 @@
               {
                 "name": "translate",
                 "description": "Optional. Whether or not the fight data should be auto-translated. Defaults to true. Set to false is speed is a priority, and you do not care about the names.",
-                "type": { "kind": "SCALAR", "name": "Boolean", "ofType": null },
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                },
                 "defaultValue": "true"
               },
               {
@@ -3189,7 +3425,11 @@
               {
                 "name": "viewBy",
                 "description": "Optional. Whether to view by source, by target or by ability.",
-                "type": { "kind": "ENUM", "name": "ViewType", "ofType": null },
+                "type": {
+                  "kind": "ENUM",
+                  "name": "ViewType",
+                  "ofType": null
+                },
                 "defaultValue": "Default"
               },
               {
@@ -3449,13 +3689,29 @@
             "deprecationReason": null
           },
           {
+            "name": "boundingBox",
+            "description": "The bounding box that encloses the positions of all players/enemies in the fight.",
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "ReportMapBoundingBox",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "completeRaid",
             "description": "Whether or not a fight represents an entire raid from start to finish, e.g., in Classic WoW a complete run of Blackwing Lair.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
               "name": null,
-              "ofType": { "kind": "SCALAR", "name": "Boolean", "ofType": null }
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -3465,6 +3721,22 @@
             "description": "The difficulty setting for the raid, dungeon, or arena. Null for trash.",
             "args": [],
             "type": { "kind": "SCALAR", "name": "Int", "ofType": null },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "dungeonPulls",
+            "description": "For a dungeon, a list of pulls that occurred in the dungeon. Pulls have details such as the enemies involved in the pull and map info showing where the pull took place.",
+            "args": [],
+            "type": {
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "ReportDungeonPull",
+                "ofType": null
+              }
+            },
             "isDeprecated": false,
             "deprecationReason": null
           },
@@ -3557,6 +3829,14 @@
             "deprecationReason": null
           },
           {
+            "name": "gameZone",
+            "description": "The game zone the fight takes place in. This should not be confused with the zones used by the sites for rankings. This is the actual in-game zone info.",
+            "args": [],
+            "type": { "kind": "OBJECT", "name": "GameZone", "ofType": null },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "id",
             "description": "The report ID of the fight. This ID can be used to fetch only events, tables or graphs for this fight.",
             "args": [],
@@ -3613,6 +3893,30 @@
             "deprecationReason": null
           },
           {
+            "name": "layer",
+            "description": "The layer of a Torghast run.",
+            "args": [],
+            "type": { "kind": "SCALAR", "name": "Int", "ofType": null },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "maps",
+            "description": "All the maps that were involved in a fight. For single bosses this will usually be a single map, but for dungeons it will typically be multiple maps.",
+            "args": [],
+            "type": {
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "ReportMap",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "name",
             "description": "The name of the fight.",
             "args": [],
@@ -3643,6 +3947,302 @@
             },
             "isDeprecated": false,
             "deprecationReason": null
+          },
+          {
+            "name": "wipeCalledTime",
+            "description": "If a wipe was explicitly called using the Companion app, then this field will contain the time. This is a timestamp with millisecond precision that is relative to the start of the report, i.e., the start of the report is considered time 0.",
+            "args": [],
+            "type": { "kind": "SCALAR", "name": "Float", "ofType": null },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "ReportMapBoundingBox",
+        "description": "The ReportMapBoundingBox is a box that encloses the positions of all players and enemies in a fight or dungeon pull.",
+        "fields": [
+          {
+            "name": "minX",
+            "description": "The smallest X position.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": { "kind": "SCALAR", "name": "Int", "ofType": null }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "maxX",
+            "description": "The largest X position.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": { "kind": "SCALAR", "name": "Int", "ofType": null }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "minY",
+            "description": "The smallest Y position.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": { "kind": "SCALAR", "name": "Int", "ofType": null }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "maxY",
+            "description": "The largest Y position.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": { "kind": "SCALAR", "name": "Int", "ofType": null }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "ReportDungeonPull",
+        "description": "The ReportDungeonPull represents a single pull that occurs in a containing dungeon.",
+        "fields": [
+          {
+            "name": "boundingBox",
+            "description": "The bounding box that encloses the positions of all players/enemies in the fight.",
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "ReportMapBoundingBox",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "encounterID",
+            "description": "The encounter ID of the fight. If the ID is 0, the fight is considered a trash fight.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": { "kind": "SCALAR", "name": "Int", "ofType": null }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "endTime",
+            "description": "The end time of the fight. This is a timestamp with millisecond precision that is relative to the start of the report, i.e., the start of the report is considered time 0.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": { "kind": "SCALAR", "name": "Float", "ofType": null }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "enemyNPCs",
+            "description": "Information about enemies involved in the fight. Includes report IDs, instance counts, and instance group counts for each NPC.",
+            "args": [],
+            "type": {
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "ReportDungeonPullNPC",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "id",
+            "description": "The report ID of the fight. This ID can be used to fetch only events, tables or graphs for this fight.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": { "kind": "SCALAR", "name": "Int", "ofType": null }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "kill",
+            "description": "Whether or not the fight was a boss kill, i.e., successful. If this field is false, it means the fight was an incomplete run, etc..",
+            "args": [],
+            "type": { "kind": "SCALAR", "name": "Boolean", "ofType": null },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "maps",
+            "description": "All the maps that were involved in a pull.",
+            "args": [],
+            "type": {
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "ReportMap",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "name",
+            "description": "The name of the fight.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": { "kind": "SCALAR", "name": "String", "ofType": null }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "startTime",
+            "description": "The start time of the fight. This is a timestamp with millisecond precision that is relative to the start of the report, i.e., the start of the report is considered time 0.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": { "kind": "SCALAR", "name": "Float", "ofType": null }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "x",
+            "description": "The x position of the first mob damaged in the pull at the time this damage happens. Used to establish a marker position to represent where the pull took place.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": { "kind": "SCALAR", "name": "Int", "ofType": null }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "y",
+            "description": "The y position of the first mob damaged in the pull at the time this damage happens. Used to establish a marker position to represent where the pull took place.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": { "kind": "SCALAR", "name": "Int", "ofType": null }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "ReportDungeonPullNPC",
+        "description": "The ReportDungeonPullNPC represents participation info within a single dungeon pull for an NPC.",
+        "fields": [
+          {
+            "name": "id",
+            "description": "The report ID of the actor. This ID is used in events to identify sources and targets.",
+            "args": [],
+            "type": { "kind": "SCALAR", "name": "Int", "ofType": null },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "gameID",
+            "description": "The game ID of the actor, e.g., so it can be looked up on external Web sites.",
+            "args": [],
+            "type": { "kind": "SCALAR", "name": "Int", "ofType": null },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "minimumInstanceID",
+            "description": "The lowest instance ID seen during the pull.",
+            "args": [],
+            "type": { "kind": "SCALAR", "name": "Int", "ofType": null },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "maximumInstanceID",
+            "description": "The highest instance ID seen during the pull.",
+            "args": [],
+            "type": { "kind": "SCALAR", "name": "Int", "ofType": null },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "minimumInstanceGroupID",
+            "description": "The lowest instance group ID seen during the pull.",
+            "args": [],
+            "type": { "kind": "SCALAR", "name": "Int", "ofType": null },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "maximumInstanceGroupID",
+            "description": "The highest instance group ID seen during the pull.",
+            "args": [],
+            "type": { "kind": "SCALAR", "name": "Int", "ofType": null },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "ReportMap",
+        "description": "The ReportMap represents a single map that a fight can occur on.",
+        "fields": [
+          {
+            "name": "id",
+            "description": "The map's game ID.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": { "kind": "SCALAR", "name": "Int", "ofType": null }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
           }
         ],
         "inputFields": null,
@@ -3655,6 +4255,14 @@
         "name": "ReportFightNPC",
         "description": "The ReportFightNPC represents participation info within a single fight for an NPC.",
         "fields": [
+          {
+            "name": "gameID",
+            "description": "The game ID of the actor. This ID is used in events to identify sources and targets.",
+            "args": [],
+            "type": { "kind": "SCALAR", "name": "Int", "ofType": null },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
           {
             "name": "id",
             "description": "The report ID of the actor. This ID is used in events to identify sources and targets.",
@@ -3676,6 +4284,37 @@
             "description": "How many packs of the NPC were seen during the fight.",
             "args": [],
             "type": { "kind": "SCALAR", "name": "Int", "ofType": null },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "GameZone",
+        "description": "A single zone for the game.",
+        "fields": [
+          {
+            "name": "id",
+            "description": "The ID of the zone.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": { "kind": "SCALAR", "name": "Int", "ofType": null }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "name",
+            "description": "The localized name of the zone. Will be null if no localization information exists for the zone.",
+            "args": [],
+            "type": { "kind": "SCALAR", "name": "String", "ofType": null },
             "isDeprecated": false,
             "deprecationReason": null
           }
@@ -3906,13 +4545,21 @@
               {
                 "name": "type",
                 "description": "Optional. A filter on the actors in a report. If the type field of the actor matches the specified type field, it will be included.",
-                "type": { "kind": "SCALAR", "name": "String", "ofType": null },
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
                 "defaultValue": "\"\""
               },
               {
                 "name": "subType",
                 "description": "Optional. A filter on the actors in a report. If the subType field of the actor matches the specified subType field, it will be included.",
-                "type": { "kind": "SCALAR", "name": "String", "ofType": null },
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
                 "defaultValue": "\"\""
               }
             ],
@@ -4265,7 +4912,11 @@
                 "defaultValue": null
               }
             ],
-            "type": { "kind": "OBJECT", "name": "GameAbility", "ofType": null },
+            "type": {
+              "kind": "OBJECT",
+              "name": "GameAbility",
+              "ofType": null
+            },
             "isDeprecated": false,
             "deprecationReason": null
           },
@@ -4411,7 +5062,11 @@
                 "defaultValue": null
               }
             ],
-            "type": { "kind": "OBJECT", "name": "GameEnchant", "ofType": null },
+            "type": {
+              "kind": "OBJECT",
+              "name": "GameEnchant",
+              "ofType": null
+            },
             "isDeprecated": false,
             "deprecationReason": null
           },
@@ -4674,7 +5329,11 @@
             "type": {
               "kind": "NON_NULL",
               "name": null,
-              "ofType": { "kind": "SCALAR", "name": "Boolean", "ofType": null }
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -4863,7 +5522,11 @@
             "type": {
               "kind": "NON_NULL",
               "name": null,
-              "ofType": { "kind": "SCALAR", "name": "Boolean", "ofType": null }
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -5158,7 +5821,11 @@
             "type": {
               "kind": "NON_NULL",
               "name": null,
-              "ofType": { "kind": "SCALAR", "name": "Boolean", "ofType": null }
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -5212,7 +5879,11 @@
             "type": {
               "kind": "LIST",
               "name": null,
-              "ofType": { "kind": "OBJECT", "name": "GameMap", "ofType": null }
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "GameMap",
+                "ofType": null
+              }
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -5288,7 +5959,11 @@
             "type": {
               "kind": "NON_NULL",
               "name": null,
-              "ofType": { "kind": "SCALAR", "name": "Boolean", "ofType": null }
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -5342,7 +6017,11 @@
             "type": {
               "kind": "LIST",
               "name": null,
-              "ofType": { "kind": "OBJECT", "name": "GameNPC", "ofType": null }
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "GameNPC",
+                "ofType": null
+              }
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -5418,39 +6097,12 @@
             "type": {
               "kind": "NON_NULL",
               "name": null,
-              "ofType": { "kind": "SCALAR", "name": "Boolean", "ofType": null }
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
             },
-            "isDeprecated": false,
-            "deprecationReason": null
-          }
-        ],
-        "inputFields": null,
-        "interfaces": [],
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
-        "kind": "OBJECT",
-        "name": "GameZone",
-        "description": "A single zone for the game.",
-        "fields": [
-          {
-            "name": "id",
-            "description": "The ID of the zone.",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": { "kind": "SCALAR", "name": "Int", "ofType": null }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "name",
-            "description": "The localized name of the zone. Will be null if no localization information exists for the zone.",
-            "args": [],
-            "type": { "kind": "SCALAR", "name": "String", "ofType": null },
             "isDeprecated": false,
             "deprecationReason": null
           }
@@ -5472,7 +6124,11 @@
             "type": {
               "kind": "LIST",
               "name": null,
-              "ofType": { "kind": "OBJECT", "name": "GameZone", "ofType": null }
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "GameZone",
+                "ofType": null
+              }
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -5548,7 +6204,11 @@
             "type": {
               "kind": "NON_NULL",
               "name": null,
-              "ofType": { "kind": "SCALAR", "name": "Boolean", "ofType": null }
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -5577,19 +6237,31 @@
               {
                 "name": "name",
                 "description": "Optional. The name of a specific guild. Must be used in conjunction with serverSlug and serverRegion to uniquely identify a guild.",
-                "type": { "kind": "SCALAR", "name": "String", "ofType": null },
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
                 "defaultValue": null
               },
               {
                 "name": "serverSlug",
                 "description": "Optional. The name of a specific guild. Must be used in conjunction with name and serverRegion to uniquely identify a guild.",
-                "type": { "kind": "SCALAR", "name": "String", "ofType": null },
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
                 "defaultValue": null
               },
               {
                 "name": "serverRegion",
                 "description": "Optional. The region for a specific guild. Must be used in conjunction with name and serverRegion to uniquely identify a guild.",
-                "type": { "kind": "SCALAR", "name": "String", "ofType": null },
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
                 "defaultValue": null
               }
             ],
@@ -5622,13 +6294,21 @@
               {
                 "name": "serverSlug",
                 "description": "Optional. The slug for a specific server. Must be used in conjunction with serverRegion to uniquely identify a server. Only guilds from that server (and any connected servers) will be fetched.",
-                "type": { "kind": "SCALAR", "name": "String", "ofType": null },
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
                 "defaultValue": null
               },
               {
                 "name": "serverRegion",
                 "description": "Optional. The region for a specific server. Must be used in conjunction with serverSlug to uniquely identify a server. Only guilds from that server (and any connected servers) will be fetched.",
-                "type": { "kind": "SCALAR", "name": "String", "ofType": null },
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
                 "defaultValue": null
               }
             ],
@@ -5658,13 +6338,21 @@
               {
                 "name": "serverRegion",
                 "description": "Optional. The short name of a region to filter to. If paired with a server slug, will uniquely identify a server. If used by itself, rankings for that specific region will be fetched.",
-                "type": { "kind": "SCALAR", "name": "String", "ofType": null },
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
                 "defaultValue": "\"\""
               },
               {
                 "name": "serverSlug",
                 "description": "Optional. The slug for a specific server. Whether or not to filter rankings to a specific server. If omitted, data for all servers will be used.",
-                "type": { "kind": "SCALAR", "name": "String", "ofType": null },
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
                 "defaultValue": "\"\""
               }
             ],
@@ -5737,7 +6425,11 @@
               {
                 "name": "code",
                 "description": "Required. The code of a single report to retrieve.",
-                "type": { "kind": "SCALAR", "name": "String", "ofType": null },
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
                 "defaultValue": null
               }
             ],
@@ -5764,19 +6456,31 @@
               {
                 "name": "guildName",
                 "description": "Optional. The name of a specific guild. Must be used in conjunction with guildServerSlug and guildServerRegion to uniquely identify a guild.",
-                "type": { "kind": "SCALAR", "name": "String", "ofType": null },
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
                 "defaultValue": null
               },
               {
                 "name": "guildServerSlug",
                 "description": "Optional. The name of a specific guild. Must be used in conjunction with guildName and guildServerRegion to uniquely identify a guild.",
-                "type": { "kind": "SCALAR", "name": "String", "ofType": null },
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
                 "defaultValue": null
               },
               {
                 "name": "guildServerRegion",
                 "description": "Optional. The region for a specific guild. Must be used in conjunction with guildName and guildServerRegion to uniquely identify a guild.",
-                "type": { "kind": "SCALAR", "name": "String", "ofType": null },
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
                 "defaultValue": null
               },
               {
@@ -5921,13 +6625,21 @@
               {
                 "name": "region",
                 "description": "Optional. The compact English abbreviation for a specific region (e.g., \"US\"). Use in conjunction with the server slug to retrieve a single server.",
-                "type": { "kind": "SCALAR", "name": "String", "ofType": null },
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
                 "defaultValue": null
               },
               {
                 "name": "slug",
                 "description": "Optional. A server slug. Use in conjunction with the server region to retrieve a single server.",
-                "type": { "kind": "SCALAR", "name": "String", "ofType": null },
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
                 "defaultValue": null
               }
             ],
@@ -6099,7 +6811,11 @@
             "type": {
               "kind": "NON_NULL",
               "name": null,
-              "ofType": { "kind": "ENUM", "name": "__TypeKind", "ofType": null }
+              "ofType": {
+                "kind": "ENUM",
+                "name": "__TypeKind",
+                "ofType": null
+              }
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -6127,7 +6843,11 @@
               {
                 "name": "includeDeprecated",
                 "description": null,
-                "type": { "kind": "SCALAR", "name": "Boolean", "ofType": null },
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                },
                 "defaultValue": "false"
               }
             ],
@@ -6157,7 +6877,11 @@
               "ofType": {
                 "kind": "NON_NULL",
                 "name": null,
-                "ofType": { "kind": "OBJECT", "name": "__Type", "ofType": null }
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "__Type",
+                  "ofType": null
+                }
               }
             },
             "isDeprecated": false,
@@ -6173,7 +6897,11 @@
               "ofType": {
                 "kind": "NON_NULL",
                 "name": null,
-                "ofType": { "kind": "OBJECT", "name": "__Type", "ofType": null }
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "__Type",
+                  "ofType": null
+                }
               }
             },
             "isDeprecated": false,
@@ -6186,7 +6914,11 @@
               {
                 "name": "includeDeprecated",
                 "description": null,
-                "type": { "kind": "SCALAR", "name": "Boolean", "ofType": null },
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                },
                 "defaultValue": "false"
               }
             ],
@@ -6367,7 +7099,11 @@
             "type": {
               "kind": "NON_NULL",
               "name": null,
-              "ofType": { "kind": "SCALAR", "name": "Boolean", "ofType": null }
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -6469,7 +7205,11 @@
             "type": {
               "kind": "NON_NULL",
               "name": null,
-              "ofType": { "kind": "SCALAR", "name": "Boolean", "ofType": null }
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -6568,7 +7308,11 @@
             "type": {
               "kind": "NON_NULL",
               "name": null,
-              "ofType": { "kind": "SCALAR", "name": "Boolean", "ofType": null }
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
             },
             "isDeprecated": true,
             "deprecationReason": "Use `locations`."
@@ -6580,7 +7324,11 @@
             "type": {
               "kind": "NON_NULL",
               "name": null,
-              "ofType": { "kind": "SCALAR", "name": "Boolean", "ofType": null }
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
             },
             "isDeprecated": true,
             "deprecationReason": "Use `locations`."
@@ -6592,7 +7340,11 @@
             "type": {
               "kind": "NON_NULL",
               "name": null,
-              "ofType": { "kind": "SCALAR", "name": "Boolean", "ofType": null }
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
             },
             "isDeprecated": true,
             "deprecationReason": "Use `locations`."
@@ -6805,7 +7557,11 @@
             "type": {
               "kind": "NON_NULL",
               "name": null,
-              "ofType": { "kind": "SCALAR", "name": "Boolean", "ofType": null }
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
             },
             "defaultValue": null
           }
@@ -6822,7 +7578,11 @@
             "type": {
               "kind": "NON_NULL",
               "name": null,
-              "ofType": { "kind": "SCALAR", "name": "Boolean", "ofType": null }
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
             },
             "defaultValue": null
           }

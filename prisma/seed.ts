@@ -1,6 +1,7 @@
 import type { Dungeons, Specs } from "@prisma/client";
-import { PrismaClient, Roles } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 
+import { Roles } from "../src/types/roles";
 import { dungeons } from "../src/utils/dungeons";
 
 const prisma = new PrismaClient();
@@ -12,15 +13,15 @@ const classes = [
     specs: [
       {
         name: "Protection",
-        role: Roles.Tank,
+        role: Roles.tank,
       },
       {
         name: "Fury",
-        role: Roles.DPS,
+        role: Roles.dps,
       },
       {
         name: "Arms",
-        role: Roles.DPS,
+        role: Roles.dps,
       },
     ],
   },
@@ -30,15 +31,15 @@ const classes = [
     specs: [
       {
         name: "Fire",
-        role: Roles.DPS,
+        role: Roles.dps,
       },
       {
         name: "Frost",
-        role: Roles.DPS,
+        role: Roles.dps,
       },
       {
         name: "Arcane",
-        role: Roles.DPS,
+        role: Roles.dps,
       },
     ],
   },
@@ -48,15 +49,15 @@ const classes = [
     specs: [
       {
         name: "Assassination",
-        role: Roles.DPS,
+        role: Roles.dps,
       },
       {
         name: "Sublety",
-        role: Roles.DPS,
+        role: Roles.dps,
       },
       {
         name: "Outlaw",
-        role: Roles.DPS,
+        role: Roles.dps,
       },
     ],
   },
@@ -66,15 +67,15 @@ const classes = [
     specs: [
       {
         name: "Restoration",
-        role: Roles.Heal,
+        role: Roles.healer,
       },
       {
         name: "Elemental",
-        role: Roles.DPS,
+        role: Roles.dps,
       },
       {
         name: "Enhancement",
-        role: Roles.DPS,
+        role: Roles.dps,
       },
     ],
   },
@@ -84,15 +85,15 @@ const classes = [
     specs: [
       {
         name: "Shadow",
-        role: Roles.DPS,
+        role: Roles.dps,
       },
       {
         name: "Holy",
-        role: Roles.Heal,
+        role: Roles.healer,
       },
       {
         name: "Discipline",
-        role: Roles.Heal,
+        role: Roles.healer,
       },
     ],
   },
@@ -102,15 +103,15 @@ const classes = [
     specs: [
       {
         name: "BeastMastery",
-        role: Roles.DPS,
+        role: Roles.dps,
       },
       {
         name: "Survival",
-        role: Roles.DPS,
+        role: Roles.dps,
       },
       {
         name: "Marksmanship",
-        role: Roles.DPS,
+        role: Roles.dps,
       },
     ],
   },
@@ -120,15 +121,15 @@ const classes = [
     specs: [
       {
         name: "Mistweaver",
-        role: Roles.Heal,
+        role: Roles.healer,
       },
       {
         name: "Brewmaster",
-        role: Roles.Tank,
+        role: Roles.tank,
       },
       {
         name: "Windwalker",
-        role: Roles.DPS,
+        role: Roles.dps,
       },
     ],
   },
@@ -138,19 +139,19 @@ const classes = [
     specs: [
       {
         name: "Restoration",
-        role: Roles.Heal,
+        role: Roles.healer,
       },
       {
         name: "Guardian",
-        role: Roles.Tank,
+        role: Roles.tank,
       },
       {
         name: "Balance",
-        role: Roles.DPS,
+        role: Roles.dps,
       },
       {
         name: "Feral",
-        role: Roles.DPS,
+        role: Roles.dps,
       },
     ],
   },
@@ -160,11 +161,11 @@ const classes = [
     specs: [
       {
         name: "Vengeance",
-        role: Roles.Tank,
+        role: Roles.tank,
       },
       {
         name: "Havoc",
-        role: Roles.DPS,
+        role: Roles.dps,
       },
     ],
   },
@@ -174,15 +175,15 @@ const classes = [
     specs: [
       {
         name: "Protection",
-        role: Roles.Tank,
+        role: Roles.tank,
       },
       {
         name: "Holy",
-        role: Roles.Heal,
+        role: Roles.healer,
       },
       {
         name: "Retribution",
-        role: Roles.DPS,
+        role: Roles.dps,
       },
     ],
   },
@@ -192,15 +193,15 @@ const classes = [
     specs: [
       {
         name: "Destruction",
-        role: Roles.DPS,
+        role: Roles.dps,
       },
       {
         name: "Demonology",
-        role: Roles.DPS,
+        role: Roles.dps,
       },
       {
         name: "Affliction",
-        role: Roles.DPS,
+        role: Roles.dps,
       },
     ],
   },
@@ -210,15 +211,15 @@ const classes = [
     specs: [
       {
         name: "Blood",
-        role: Roles.Tank,
+        role: Roles.tank,
       },
       {
         name: "Unholy",
-        role: Roles.DPS,
+        role: Roles.dps,
       },
       {
         name: "Frost",
-        role: Roles.DPS,
+        role: Roles.dps,
       },
     ],
   },
@@ -248,6 +249,7 @@ function seedDungeons() {
     )
   );
 }
+
 function seedClasses() {
   return Promise.all(
     classes.map(({ id, name }) =>

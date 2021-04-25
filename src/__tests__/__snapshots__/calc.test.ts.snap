@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`calcGroupMetricAverage matches snapshot 1`] = `Infinity`;
+
+exports[`calcGroupMetricAverage matches snapshot 2`] = `100000`;
+
+exports[`calcGroupMetricAverage matches snapshot 3`] = `10000`;
+
+exports[`calcGroupMetricAverage matches snapshot 4`] = `1000`;
+
+exports[`calcGroupMetricAverage matches snapshot 5`] = `100`;
+
+exports[`calcGroupMetricAverage matches snapshot 6`] = `10000`;
+
+exports[`calcGroupMetricAverage matches snapshot 7`] = `1000`;
+
+exports[`calcGroupMetricAverage matches snapshot 8`] = `5000`;
+
+exports[`calcGroupMetricAverage matches snapshot 9`] = `2000`;
+
+exports[`calcGroupMetricAverage matches snapshot 10`] = `595`;
