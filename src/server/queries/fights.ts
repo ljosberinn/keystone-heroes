@@ -203,10 +203,18 @@ type Artifact = {
   total: number;
 };
 
+export enum ItemQuality {
+  POOR = 1,
+  COMMON = 2,
+  RARE = 3,
+  SUPERIOR = 4,
+  LEGENDARY = 5,
+}
+
 export type Item = {
   id: number;
   slot: number;
-  quality: number;
+  quality: ItemQuality;
   icon: string;
   name?: string;
   itemLevel: number;
@@ -237,5 +245,5 @@ type HeartOfAzeroth = {
   total: number;
 };
 
-export type Conduit = HeartOfAzeroth;
-export type SoulbindTalent = Artifact;
+export type Conduit = Omit<HeartOfAzeroth, "type">;
+export type SoulbindTalent = Omit<Artifact, "type" | "total">;

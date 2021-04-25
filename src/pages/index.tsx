@@ -8,6 +8,7 @@ export default function Home(): JSX.Element {
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
+    // eslint-disable-next-line no-console, promise/prefer-await-to-then
     Router.push(`/report/${code}`).catch(console.error);
   }
 

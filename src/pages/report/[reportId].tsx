@@ -3,6 +3,7 @@ import type {
   GetStaticPropsContext,
   GetStaticPropsResult,
 } from "next";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
@@ -10,19 +11,23 @@ import type { AffixesProps } from "../../client/components/Affixes";
 import { Affixes } from "../../client/components/Affixes";
 import { Chests } from "../../client/components/Chests";
 import { Composition } from "../../client/components/Composition";
+import { Conduits } from "../../client/components/Conduits";
 import { ExternalLink } from "../../client/components/ExternalLink";
+import { Icon } from "../../client/components/Icon";
+import { Soulbinds } from "../../client/components/Soulbinds";
+import { WCL_ASSETS_STATIC_URL } from "../../constants";
 import type {
   Conduit,
-  DamageDone,
-  DamageTaken,
-  HealingDone,
   InDepthCharacterInformation,
   Item,
   SoulbindTalent,
   Table,
   Talent,
 } from "../../server/queries/fights";
-import { retrieveFightTableCacheOrSource } from "../../server/queries/fights";
+import {
+  retrieveFightTableCacheOrSource,
+  ItemQuality,
+} from "../../server/queries/fights";
 import type { Fight, Report as ReportType } from "../../server/queries/report";
 import { retrieveReportCacheOrSource } from "../../server/queries/report";
 import type { PlayableClass } from "../../types/classes";
@@ -32,8 +37,10 @@ import {
   calcRunDuration,
   calcTimeLeft,
 } from "../../utils/calc";
-import { classnames } from "../../utils/classNames";
-import type { Covenants, Soulbinds } from "../../utils/covenants";
+import type {
+  Soulbinds as SoulbindsType,
+  Covenants,
+} from "../../utils/covenants";
 import { soulbindMap, covenantMap } from "../../utils/covenants";
 import type { Dungeon } from "../../utils/dungeons";
 import { dungeons } from "../../utils/dungeons";
@@ -88,48 +95,55 @@ export default function Report({
   const reportUrl = `//warcraftlogs.com/reports/${report.id}`;
 
   return (
-    <table>
-      <caption>
-        <ExternalLink href={reportUrl}>{report.title}</ExternalLink> from{" "}
-        {new Date(report.startTime).toLocaleDateString()}
-      </caption>
-      <thead>
-        <tr>
-          <th>Dungeon</th>
-          <th>Key Level</th>
-          <th>Affixes</th>
-          <th>Chests</th>
-          <th>Time</th>
-          <th>Composition</th>
-          <th className="text-right">Avg ItemLevel</th>
-          <th className="text-right">Group DPS</th>
-          <th className="text-right">Group HPS</th>
-          <th className="text-right">Group DTPS</th>
-          <th className="text-right">Deaths</th>
-        </tr>
-      </thead>
-      <tbody>
-        {report.fights.map((fight) => {
-          const dungeon = dungeons.find(
-            (dungeon) => dungeon.id === fight.dungeonId
-          );
+    <>
+      <Head>
+        <title>
+          {report.title} from {new Date(report.startTime).toLocaleDateString()}
+        </title>
+      </Head>
+      <table>
+        <caption>
+          <ExternalLink href={reportUrl}>{report.title}</ExternalLink> from{" "}
+          {new Date(report.startTime).toLocaleDateString()}
+        </caption>
+        <thead>
+          <tr>
+            <th>Dungeon</th>
+            <th>Key Level</th>
+            <th>Affixes</th>
+            <th>Chests</th>
+            <th>Time</th>
+            <th>Composition</th>
+            <th className="text-right">Avg ItemLevel</th>
+            <th className="text-right">Group DPS</th>
+            <th className="text-right">Group HPS</th>
+            <th className="text-right">Group DTPS</th>
+            <th className="text-right">Deaths</th>
+          </tr>
+        </thead>
+        <tbody>
+          {report.fights.map((fight) => {
+            const dungeon = dungeons.find(
+              (dungeon) => dungeon.id === fight.dungeonId
+            );
 
-          if (!dungeon) {
-            return null;
-          }
+            if (!dungeon) {
+              return null;
+            }
 
-          return (
-            <Row
-              fight={fight}
-              dungeon={dungeon}
-              key={fight.id}
-              reportBaseUrl={reportUrl}
-              region={report.region}
-            />
-          );
-        })}
-      </tbody>
-    </table>
+            return (
+              <Row
+                fight={fight}
+                dungeon={dungeon}
+                key={fight.id}
+                reportBaseUrl={reportUrl}
+                region={report.region}
+              />
+            );
+          })}
+        </tbody>
+      </table>
+    </>
   );
 }
 
@@ -193,10 +207,10 @@ function Row({ fight, dungeon, reportBaseUrl, region }: RowProps) {
           <tr>
             <th>Name</th>
             <th className="text-right">ItemLevel</th>
-            <th className="text-right">Legendary</th>
             <th className="text-right">DPS</th>
             <th className="text-right">HPS</th>
             <th className="text-right">Deaths</th>
+            <th>Legendary</th>
             <th className="text-center">Talents</th>
             <th>Covenant</th>
             <th className="text-center">Soulbinds</th>
@@ -213,7 +227,6 @@ function Row({ fight, dungeon, reportBaseUrl, region }: RowProps) {
                   </ExternalLink>
                 </td>
                 <td className="text-right">{player.itemLevel}</td>
-                <td className="text-right">{player.legendary?.id ?? "none"}</td>
 
                 <td className="text-right">
                   <ExternalLink
@@ -235,6 +248,24 @@ function Row({ fight, dungeon, reportBaseUrl, region }: RowProps) {
                   >
                     {player.deaths.toLocaleString()}
                   </ExternalLink>
+                </td>
+
+                <td>
+                  <div className="flex justify-center">
+                    {player.legendary?.effectID &&
+                      player.legendary?.effectIcon &&
+                      player.legendary?.effectName && (
+                        <ExternalLink
+                          href={`//www.wowhead.com/spell=${player.legendary.effectID}`}
+                        >
+                          <Icon
+                            src={`${WCL_ASSETS_STATIC_URL}${player.legendary.effectIcon}`}
+                            alt={player.legendary.effectName}
+                            title={player.legendary.effectName}
+                          />
+                        </ExternalLink>
+                      )}
+                  </div>
                 </td>
 
                 <td>
@@ -270,35 +301,11 @@ function Row({ fight, dungeon, reportBaseUrl, region }: RowProps) {
                 </td>
 
                 <td className="text-center">
-                  <div className="flex justify-center">
-                    {player.covenant.soulbind.talents.map((talent, index) => {
-                      return (
-                        <Icon
-                          src={`//assets.rpglogs.com/img/warcraft/abilities/${talent.abilityIcon}`}
-                          alt={talent.name}
-                          title={talent.name}
-                          className={index > 0 && "ml-1"}
-                          key={talent.guid}
-                        />
-                      );
-                    })}
-                  </div>
+                  <Soulbinds soulbinds={player.covenant.soulbind.talents} />
                 </td>
 
                 <td className="text-center">
-                  <div className="flex justify-center">
-                    {player.covenant.soulbind.conduits.map((conduit, index) => {
-                      return (
-                        <Icon
-                          src={`//assets.rpglogs.com/img/warcraft/abilities/${conduit.abilityIcon}`}
-                          alt={conduit.name}
-                          title={conduit.name}
-                          className={index > 0 && "ml-1"}
-                          key={conduit.guid}
-                        />
-                      );
-                    })}
-                  </div>
+                  <Conduits conduits={player.covenant.soulbind.conduits} />
                 </td>
               </tr>
             );
@@ -306,24 +313,6 @@ function Row({ fight, dungeon, reportBaseUrl, region }: RowProps) {
         </>
       )}
     </>
-  );
-}
-
-type IconProps = {
-  src: string;
-  alt: string;
-  title?: string;
-  className?: Parameters<typeof classnames>[0];
-};
-
-function Icon({ className, ...rest }: IconProps) {
-  return (
-    // eslint-disable-next-line jsx-a11y/alt-text
-    <img
-      loading="lazy"
-      className={classnames("w-6 h-6", className)}
-      {...rest}
-    />
   );
 }
 
@@ -360,6 +349,8 @@ export const getStaticProps = async (
     };
   }
 
+  report.fights = report.fights.filter((fight) => fight.keystoneBonus > 0);
+
   const fightTables = await retrieveFightTableCacheOrSource(
     reportId,
     report.fights
@@ -389,8 +380,6 @@ const transformReportData = (
 ): InitialFightInformation[] => {
   return (
     report.fights
-      // ignore keys out of time
-      .filter((fight) => fight.keystoneBonus > 0)
       // ignore keys with more than 5 participants; broken log
       .filter(({ id }) => {
         const { playerDetails } = fightTables[id];
@@ -479,63 +468,98 @@ export type Player = Pick<
   className: PlayableClass;
   spec: string;
   itemLevel: number;
-  legendary: Item | null;
+  legendary: Pick<Item, "effectID" | "effectIcon" | "effectName"> | null;
   covenant: {
     id: keyof Covenants;
     soulbind: {
-      id: keyof Soulbinds;
-      talents: Omit<SoulbindTalent, "type" | "total">[];
-      conduits: Omit<Conduit, "type">[];
+      id: keyof SoulbindsType;
+      talents: SoulbindTalent[];
+      conduits: Conduit[];
     };
   };
   talents: Omit<Talent, "type">[];
 };
 
 const transformPlayer = (
-  player: InDepthCharacterInformation,
+  {
+    id,
+    name,
+    guid,
+    type: className,
+    server,
+    minItemLevel: itemLevel,
+    specs: [spec],
+    combatantInfo,
+  }: InDepthCharacterInformation,
   role: Roles,
   table: Table,
   keystoneTime: number
 ): Player => {
-  const filter = <
-    T extends Pick<DamageDone | HealingDone | DamageTaken, "guid">
-  >(
-    event: T
-  ) => event.guid === player.guid;
+  const legendary = extractLegendary(combatantInfo.gear);
+
+  const covenant = {
+    id: combatantInfo.covenantID,
+    soulbind: {
+      id: combatantInfo.soulbindID,
+      talents: combatantInfo.artifact
+        .filter((talent) => talent.guid !== 0)
+        .map(({ name, abilityIcon, guid }) => ({ name, abilityIcon, guid })),
+      conduits: combatantInfo.heartOfAzeroth.map(
+        ({ name, guid, abilityIcon, total }) => ({
+          name,
+          abilityIcon,
+          guid,
+          total,
+        })
+      ),
+    },
+  };
+
+  const talents = combatantInfo.talents.map(({ name, abilityIcon, guid }) => ({
+    name,
+    abilityIcon,
+    guid,
+  }));
+
+  const deaths = table.deathEvents.filter((event) => event.guid === guid)
+    .length;
+  const dps = calcMetricAverage(keystoneTime, table.damageDone, guid);
+  const hps = calcMetricAverage(keystoneTime, table.healingDone, guid);
 
   return {
-    id: player.id,
-    name: player.name,
-    guid: player.guid,
-    deaths: table.deathEvents.filter(filter).length,
-    dps: calcMetricAverage(keystoneTime, table.damageDone, player.guid),
-    hps: calcMetricAverage(keystoneTime, table.healingDone, player.guid),
-    server: player.server,
+    id,
+    name,
+    guid,
+    deaths,
+    dps,
+    hps,
+    server,
     role,
-    className: player.type,
-    spec: player.specs[0],
-    itemLevel: player.minItemLevel,
-    legendary:
-      player.combatantInfo.gear.find((item) => item.quality === 5) ?? null,
-    covenant: {
-      id: player.combatantInfo.covenantID,
-      soulbind: {
-        id: player.combatantInfo.soulbindID,
-        talents: player.combatantInfo.artifact
-          .filter((talent) => talent.guid !== 0)
-          .map(({ name, abilityIcon, guid }) => ({ name, abilityIcon, guid })),
-        conduits: player.combatantInfo.heartOfAzeroth.map(
-          ({ name, guid, abilityIcon, total }) => ({
-            name,
-            abilityIcon,
-            guid,
-            total,
-          })
-        ),
-      },
-    },
-    talents: player.combatantInfo.talents.map(
-      ({ name, abilityIcon, guid }) => ({ name, abilityIcon, guid })
-    ),
+    className,
+    spec,
+    itemLevel,
+    legendary,
+    covenant,
+    talents,
   };
+};
+
+const extractLegendary = (
+  items: Item[]
+): Required<Pick<Item, "effectID" | "effectIcon" | "effectName">> | null => {
+  const legendary = items.find(
+    (item) => item.quality === ItemQuality.LEGENDARY
+  );
+
+  if (legendary?.effectID && legendary?.effectIcon && legendary?.effectName) {
+    const { effectID, effectIcon, effectName } = legendary;
+
+    return {
+      effectID,
+      effectIcon,
+      effectName,
+    };
+  }
+
+  return null;
 };

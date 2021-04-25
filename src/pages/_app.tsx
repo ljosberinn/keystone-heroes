@@ -2,6 +2,7 @@ import type { NextComponentType, NextPageContext } from "next";
 import type { NextRouter } from "next/router";
 
 import "tailwindcss/tailwind.css";
+import { BUILD_TIME } from "../constants";
 
 export type AppRenderProps = {
   pageProps: Record<string, unknown>;
@@ -18,5 +19,10 @@ export default function App({
   Component,
   pageProps,
 }: AppRenderProps): JSX.Element {
-  return <Component {...pageProps} />;
+  return (
+    <>
+      <Component {...pageProps} />
+      <footer>Build Time: {BUILD_TIME}</footer>
+    </>
+  );
 }
