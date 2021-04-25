@@ -4,6 +4,7 @@ import { resolve } from "path";
 
 import { IS_PROD } from "../../constants";
 import type { Affix } from "../../utils/affixes";
+import type { Dungeon } from "../../utils/dungeons";
 import { getGqlClient } from "../gqlClient";
 
 type RawReport = {
@@ -21,47 +22,75 @@ type RawReport = {
 export type Report = RawReport["reportData"]["report"];
 
 export type Fight = {
-  averageItemlevel: number;
+  averageItemLevel: number;
   keystoneAffixes: Affix["id"][];
   keystoneLevel: number;
   id: number;
   startTime: number;
   endTime: number;
   keystoneTime: number;
-  encounterID: number;
-  friendlyPlayers: number[];
+  keystoneBonus: 0 | 1 | 2 | 3;
+  dungeonPulls: DungeonPull[];
+  gameZone: { id: Dungeon["id"] };
 };
 
-const getInitialReportData = (reportId: string) => {
-  return getGqlClient().then((client) =>
-    client.request<RawReport>(
-      gql`
-        query ReportData($reportId: String!) {
-          reportData {
-            report(code: $reportId) {
-              fights(translate: true, killType: Kills) {
-                averageItemLevel
-                keystoneAffixes
-                keystoneLevel
+export type DungeonPull = {
+  boundingBox: {
+    minX: number;
+    maxX: number;
+    minY: number;
+    maxY: number;
+  };
+  enemyNPCs: { gameId: number }[];
+  x: number;
+  y: number;
+};
+
+const getInitialReportData = async (reportId: string) => {
+  const client = await getGqlClient();
+
+  return client.request<RawReport>(
+    gql`
+      query ReportData($reportId: String!) {
+        reportData {
+          report(code: $reportId) {
+            title
+            startTime
+            endTime
+            region {
+              slug
+            }
+            fights(translate: true, killType: Kills) {
+              id
+              gameZone {
                 id
-                startTime
-                endTime
-                keystoneTime
-                friendlyPlayers
-                encounterID
               }
-              region {
-                slug
-              }
-              title
+              averageItemLevel
+              keystoneAffixes
+              keystoneLevel
+              keystoneBonus
+              keystoneTime
               startTime
               endTime
+              dungeonPulls {
+                x
+                y
+                boundingBox {
+                  minX
+                  maxX
+                  minY
+                  maxY
+                }
+                enemyNPCs {
+                  gameID
+                }
+              }
             }
           }
         }
-      `,
-      { reportId }
-    )
+      }
+    `,
+    { reportId }
   );
 };
 

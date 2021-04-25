@@ -45,17 +45,10 @@ model Fights {
   dps3Id Int
   dps3   Character @relation("dps3-character", fields: [dps3Id], references: [id])
 
-  deaths   Int
-  time     Int
-  finished Boolean
+  deaths Int
+  time   Int
 
   @@id([reportId, fightId])
-}
-
-enum Roles {
-  DPS
-  Heal
-  Tank
 }
 
 model Classes {
@@ -73,7 +66,7 @@ model Specs {
   classId Int
   class   Classes @relation(fields: [classId], references: [id])
 
-  role Roles
+  role String
 }
 
 model Dungeons {

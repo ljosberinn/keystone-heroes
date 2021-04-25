@@ -21,9 +21,10 @@ export function Affixes({ affixes, chests }: AffixesProps): JSX.Element {
             loading="lazy"
             src={src}
             alt={alt}
+            title={alt}
             key={affixId}
             className={classnames(
-              "w-4 h-4",
+              "w-6 h-6",
               index > 0 && "ml-1",
               chests === 0 && "filter grayscale opacity-50"
             )}

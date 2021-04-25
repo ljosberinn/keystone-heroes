@@ -5,29 +5,29 @@ const createTimer = (initialTime: number): [number, number, number] => [
 ];
 
 export const dungeons = [
-  { id: 12_284, name: "Sanguine Depths", timer: createTimer(41), slug: "SD" },
+  { id: 2284, name: "Sanguine Depths", timer: createTimer(41), slug: "SD" },
   {
-    id: 12_285,
+    id: 2285,
     name: "Spires of Ascension",
     timer: createTimer(39),
     slug: "SoA",
   },
-  { id: 12_286, name: "The Necrotic Wake", timer: createTimer(36), slug: "NW" },
+  { id: 2286, name: "The Necrotic Wake", timer: createTimer(36), slug: "NW" },
   {
-    id: 12_287,
+    id: 2287,
     name: "Halls of Atonement",
     timer: createTimer(31),
     slug: "HoA",
   },
-  { id: 12_289, name: "Plaguefall", timer: createTimer(38), slug: "PF" },
+  { id: 2289, name: "Plaguefall", timer: createTimer(38), slug: "PF" },
   {
-    id: 12_290,
+    id: 2290,
     name: "Mists of Tirna Scithe",
     timer: createTimer(30),
     slug: "MoTS",
   },
-  { id: 12_291, name: "De Other Side", timer: createTimer(43), slug: "DOS" },
-  { id: 12_293, name: "Theatre of Pain", timer: createTimer(37), slug: "TOP" },
+  { id: 2291, name: "De Other Side", timer: createTimer(43), slug: "DOS" },
+  { id: 2293, name: "Theatre of Pain", timer: createTimer(37), slug: "TOP" },
 ] as const;
 
 export type Dungeon = typeof dungeons[number];

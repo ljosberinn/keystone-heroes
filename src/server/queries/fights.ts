@@ -4,28 +4,32 @@ import { resolve } from "path";
 
 import { IS_PROD } from "../../constants";
 import type { PlayableClass } from "../../types/classes";
+import type { Covenants, Soulbinds } from "../../utils/covenants";
 import { getGqlClient } from "../gqlClient";
 import type { Fight } from "./report";
 
-const getFightTable = (reportId: string, { id, startTime, endTime }: Fight) => {
-  return getGqlClient().then((client) =>
-    client.request<RawTable>(
-      gql`
-        query ReportData(
-          $reportId: String!
-          $id: [Int]
-          $startTime: Float
-          $endTime: Float
-        ) {
-          reportData {
-            report(code: $reportId) {
-              table(startTime: $startTime, endTime: $endTime, fightIDs: $id)
-            }
+const getFightTable = async (
+  reportId: string,
+  { id, startTime, endTime }: Fight
+) => {
+  const client = await getGqlClient();
+
+  return client.request<RawTable>(
+    gql`
+      query ReportData(
+        $reportId: String!
+        $id: [Int]
+        $startTime: Float
+        $endTime: Float
+      ) {
+        reportData {
+          report(code: $reportId) {
+            table(startTime: $startTime, endTime: $endTime, fightIDs: $id)
           }
         }
-      `,
-      { reportId, id: [id], startTime, endTime }
-    )
+      }
+    `,
+    { reportId, id: [id], startTime, endTime }
   );
 };
 
@@ -87,10 +91,10 @@ type RawTable = {
           gameVersion: number;
           composition: Composition[];
           damageDone: DamageDone[];
-          healingDone: HealinggDone[];
+          healingDone: HealingDone[];
           damageTaken: DamageTaken[];
           deathEvents: DeathEvent[];
-          playerDetails: PlayerDetails[];
+          playerDetails: PlayerDetails;
         };
       };
     };
@@ -118,9 +122,9 @@ export type DamageDone = Pick<Composition, "name" | "id" | "guid"> & {
   type: Composition["type"] | "Pet" | "NPC";
 };
 
-type HealinggDone = DamageDone;
+export type HealingDone = DamageDone;
 
-type DamageTaken = Pick<DamageDone, "name" | "guid" | "total"> & {
+export type DamageTaken = Pick<DamageDone, "name" | "guid" | "total"> & {
   abilityIcon: string;
   type: number;
 };
@@ -136,7 +140,7 @@ type PlayerDetails = {
   healers: InDepthCharacterInformation[];
 };
 
-type InDepthCharacterInformation = {
+export type InDepthCharacterInformation = {
   name: string;
   id: number;
   guid: number;
@@ -146,19 +150,19 @@ type InDepthCharacterInformation = {
   specs: string[];
   minItemLevel: number;
   maxItemLevel: number;
-  compatantInfo: CombatantInfo;
+  combatantInfo: CombatantInfo;
 };
 
 type CombatantInfo = {
   stats: Stats;
   talents: Talent[];
   artifact: Artifact[];
-  gear: Gear[];
+  gear: Item[];
   heartOfAzeroth: HeartOfAzeroth[];
   specIDs: number[];
   factionID: number;
-  covenantID: number;
-  soulbindID: number;
+  covenantID: keyof Covenants;
+  soulbindID: keyof Soulbinds;
 };
 
 type Stats = {
@@ -184,7 +188,7 @@ type Stat = {
   max: number;
 };
 
-type Talent = {
+export type Talent = {
   name: string;
   guid: number;
   type: number;
@@ -199,7 +203,7 @@ type Artifact = {
   total: number;
 };
 
-type Gear = {
+export type Item = {
   id: number;
   slot: number;
   quality: number;
@@ -232,3 +236,6 @@ type HeartOfAzeroth = {
   abilityIcon: string;
   total: number;
 };
+
+export type Conduit = HeartOfAzeroth;
+export type SoulbindTalent = Artifact;
