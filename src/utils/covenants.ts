@@ -1,18 +1,18 @@
 export const covenantMap = {
   1: {
-    icon: "//assets.rpglogs.com/img/warcraft/abilities/ui_sigil_kyrian.jpg",
+    icon: "ui_sigil_kyrian.jpg",
     name: "Kyrian",
   },
   2: {
-    icon: "//assets.rpglogs.com/img/warcraft/abilities/ui_sigil_venthyr.jpg",
+    icon: "ui_sigil_venthyr.jpg",
     name: "Venthyr",
   },
   3: {
-    icon: "//assets.rpglogs.com/img/warcraft/abilities/ui_sigil_nightfae.jpg",
+    icon: "ui_sigil_nightfae.jpg",
     name: "Night Fae",
   },
   4: {
-    icon: "//assets.rpglogs.com/img/warcraft/abilities/ui_sigil_necrolord.jpg",
+    icon: "ui_sigil_necrolord.jpg",
     name: "Necrolord",
   },
 } as const;
@@ -22,56 +22,52 @@ export type Covenant = Covenants[keyof Covenants];
 
 export const soulbindMap = {
   1: {
-    icon: "//assets.rpglogs.com/img/warcraft/soulbinds/soulbind-1.jpg",
-    name: "",
+    icon: "1.jpg",
+    name: "Niya",
   },
   2: {
-    icon: "//assets.rpglogs.com/img/warcraft/soulbinds/soulbind-2.jpg",
-    name: "",
+    icon: "2.jpg",
+    name: "Dreamweaver",
   },
   3: {
-    icon: "//assets.rpglogs.com/img/warcraft/soulbinds/soulbind-3.jpg",
-    name: "",
+    icon: "3.jpg",
+    name: "Draven",
   },
   4: {
-    icon: "//assets.rpglogs.com/img/warcraft/soulbinds/soulbind-4.jpg",
-    name: "",
+    icon: "4.jpg",
+    name: "Marileth",
   },
   5: {
-    icon: "//assets.rpglogs.com/img/warcraft/soulbinds/soulbind-5.jpg",
-    name: "",
+    icon: "5.jpg",
+    name: "Emeni",
   },
   6: {
-    icon: "//assets.rpglogs.com/img/warcraft/soulbinds/soulbind-6.jpg",
-    name: "",
+    icon: "6.jpg",
+    name: "Korayn",
   },
   7: {
-    icon: "//assets.rpglogs.com/img/warcraft/soulbinds/soulbind-7.jpg",
+    icon: "7.jpg",
     name: "Pelagos",
   },
   8: {
-    icon: "//assets.rpglogs.com/img/warcraft/soulbinds/soulbind-8.jpg",
-    name: "",
+    icon: "8.jpg",
+    name: "Nadjia",
   },
   9: {
-    icon: "//assets.rpglogs.com/img/warcraft/soulbinds/soulbind-9.jpg",
-    name: "",
+    icon: "9.jpg",
+    name: "Theotar",
   },
   10: {
-    icon: "//assets.rpglogs.com/img/warcraft/soulbinds/soulbind-10.jpg",
-    name: "",
-  },
-  11: {
-    icon: "//assets.rpglogs.com/img/warcraft/soulbinds/soulbind-11.jpg",
-    name: "",
+    icon: "10.jpg",
+    name: "Bonesmith Heirmir",
   },
   13: {
-    icon: "//assets.rpglogs.com/img/warcraft/soulbinds/soulbind-13.jpg",
+    icon: "13.jpg",
     name: "Kleia",
   },
   18: {
-    icon: "//assets.rpglogs.com/img/warcraft/soulbinds/soulbind-18.jpg",
-    name: "",
+    icon: "18.jpg",
+    name: "Mikanikos",
   },
 };
 

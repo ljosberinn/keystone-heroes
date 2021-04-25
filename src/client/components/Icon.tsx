@@ -1,17 +1,15 @@
-import { WCL_ASSETS_STATIC_URL } from "../../constants";
 import { classnames } from "../../utils/classNames";
 
 export type IconProps = {
   src: string;
   alt: string;
-  title?: string;
   className?: Parameters<typeof classnames>[0];
-  prefixSrcWithWCLAssetConstant?: boolean;
+  srcPrefix?: keyof typeof wclAssetConstants;
 };
 
 export function Icon({
   className,
-  prefixSrcWithWCLAssetConstant,
+  srcPrefix,
   src,
   alt,
   ...rest
@@ -20,11 +18,15 @@ export function Icon({
     <img
       loading="lazy"
       alt={alt}
-      src={
-        prefixSrcWithWCLAssetConstant ? `${WCL_ASSETS_STATIC_URL}${src}` : src
-      }
+      title={alt}
+      src={srcPrefix ? `${wclAssetConstants[srcPrefix]}${src}` : src}
       className={classnames("w-6 h-6", className)}
       {...rest}
     />
   );
 }
+
+const wclAssetConstants = {
+  soulbinds: "//assets.rpglogs.com/img/warcraft/soulbinds/soulbind-",
+  abilities: "//assets.rpglogs.com/img/warcraft/abilities/",
+};

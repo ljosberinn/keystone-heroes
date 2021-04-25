@@ -3,8 +3,8 @@ import { gql } from "graphql-request";
 import { resolve } from "path";
 
 import { IS_PROD } from "../../constants";
-import type { Affix } from "../../utils/affixes";
-import type { Dungeon } from "../../utils/dungeons";
+import type { Affixes } from "../../utils/affixes";
+import type { Dungeons } from "../../utils/dungeons";
 import { getGqlClient } from "../gqlClient";
 
 type RawReport = {
@@ -23,7 +23,7 @@ export type Report = RawReport["reportData"]["report"];
 
 export type Fight = {
   averageItemLevel: number;
-  keystoneAffixes: Affix["id"][];
+  keystoneAffixes: (keyof Affixes)[];
   keystoneLevel: number;
   id: number;
   startTime: number;
@@ -31,7 +31,7 @@ export type Fight = {
   keystoneTime: number;
   keystoneBonus: 0 | 1 | 2 | 3;
   dungeonPulls: DungeonPull[];
-  gameZone: { id: Dungeon["id"] };
+  gameZone: { id: keyof Dungeons };
 };
 
 export type DungeonPull = {

@@ -17,7 +17,7 @@ describe("formatKeystoneTime", () => {
 
 describe("formatTimeLeft", () => {
   test.each(
-    dungeons.flatMap((dungeon) =>
+    Object.values(dungeons).flatMap((dungeon) =>
       dungeon.timer.map<[Dungeon, number]>((timer) => [
         dungeon,
         timer - 10 * 1000,

@@ -13,10 +13,9 @@ export function Conduits({ conduits }: ConduitsProps): JSX.Element {
           <Icon
             src={conduit.abilityIcon}
             alt={conduit.name}
-            title={conduit.name}
             className={index > 0 && "ml-1"}
             key={conduit.guid}
-            prefixSrcWithWCLAssetConstant
+            srcPrefix="abilities"
           />
         );
       })}

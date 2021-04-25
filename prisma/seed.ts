@@ -226,10 +226,10 @@ const classes = [
 ];
 
 function seedDungeons() {
-  const insertableDungeons: Dungeons[] = dungeons.map(
-    ({ id, name, slug, timer }) => {
+  const insertableDungeons: Dungeons[] = Object.entries(dungeons).map(
+    ([id, { name, slug, timer }]) => {
       return {
-        id,
+        id: Number.parseInt(id),
         name,
         slug,
         time: timer[0],

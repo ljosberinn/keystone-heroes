@@ -2,7 +2,8 @@ import type { NextComponentType, NextPageContext } from "next";
 import type { NextRouter } from "next/router";
 
 import "tailwindcss/tailwind.css";
-import { BUILD_TIME } from "../constants";
+import { Footer } from "../client/components/Footer";
+import { Header } from "../client/components/Header";
 
 export type AppRenderProps = {
   pageProps: Record<string, unknown>;
@@ -21,8 +22,14 @@ export default function App({
 }: AppRenderProps): JSX.Element {
   return (
     <>
-      <Component {...pageProps} />
-      <footer>Build Time: {BUILD_TIME}</footer>
+      <div className="bg-yellow-600 h-2" />
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 xl:max-w-6xl xl:px-0">
+        <Header />
+        <main>
+          <Component {...pageProps} />
+        </main>
+        <Footer />
+      </div>
     </>
   );
 }

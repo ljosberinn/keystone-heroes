@@ -13,10 +13,9 @@ export function Soulbinds({ soulbinds }: SoulbindsProps): JSX.Element {
           <Icon
             src={talent.abilityIcon}
             alt={talent.name}
-            title={talent.name}
             className={index > 0 && "ml-1"}
             key={talent.guid}
-            prefixSrcWithWCLAssetConstant
+            srcPrefix="abilities"
           />
         );
       })}

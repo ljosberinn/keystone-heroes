@@ -17,7 +17,8 @@ export function Chests({ chests }: ChestsProps): JSX.Element {
         return (
           <svg
             className={classnames(
-              "w-4 h-4",
+              "w-6",
+              "h-6",
               color,
               index > 0 && "ml-1",
               !isOpen && "opacity-30"

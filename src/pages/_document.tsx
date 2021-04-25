@@ -5,7 +5,11 @@ import { Icons } from "../client/icons";
 
 export default function CustomDocument(): JSX.Element {
   return (
-    <Html dir="auto">
+    <Html
+      dir="auto"
+      lang="en"
+      className="antialiased bg-coolgray-800 text-coolgray-200"
+    >
       <Head>
         <meta content="global" name="distribution" />
         <meta content="7 days" name="revisit-after" />
@@ -16,8 +20,8 @@ export default function CustomDocument(): JSX.Element {
         <NextScript />
         <svg display="none">
           <defs>
-            <GiOpenChest id={Icons.openChest} height="1rem" width="1rem" />
-            <GiLockedChest id={Icons.closedChest} height="1rem" width="1rem" />
+            <GiOpenChest id={Icons.openChest} size="1.5em" />
+            <GiLockedChest id={Icons.closedChest} size="1.5em" />
           </defs>
         </svg>
       </body>
