@@ -349,6 +349,8 @@ export const getStaticProps = async (
 
   const { reportId } = context.params;
 
+  console.log({ reportId, context });
+
   // report from db is already an entire dataset
   const report = await loadReport(reportId);
 
