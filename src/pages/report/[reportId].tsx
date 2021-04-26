@@ -15,6 +15,10 @@ import { Conduits } from "../../client/components/Conduits";
 import { ExternalLink } from "../../client/components/ExternalLink";
 import { Icon } from "../../client/components/Icon";
 import { Soulbinds } from "../../client/components/Soulbinds";
+import { readLocalFightTable } from "../../server/cache/fights";
+import { readLocalReportCache } from "../../server/cache/report";
+import { createFights } from "../../server/db/fights";
+import { createReport, loadReport } from "../../server/db/report";
 import type {
   Conduit,
   InDepthCharacterInformation,
@@ -24,11 +28,11 @@ import type {
   Talent,
 } from "../../server/queries/fights";
 import {
-  retrieveFightTableCacheOrSource,
+  loadFightTableFromSource,
   ItemQuality,
 } from "../../server/queries/fights";
 import type { Fight, Report as ReportType } from "../../server/queries/report";
-import { retrieveReportCacheOrSource } from "../../server/queries/report";
+import { loadReportFromSource } from "../../server/queries/report";
 import type { PlayableClass } from "../../types/classes";
 import { Roles } from "../../types/roles";
 import {
@@ -44,26 +48,25 @@ import { soulbindMap, covenantMap } from "../../utils/covenants";
 import type { Dungeon, Dungeons } from "../../utils/dungeons";
 import { dungeons } from "../../utils/dungeons";
 
-type InitialFightInformation = Pick<
+export type InitialFightInformation = Pick<
   Fight,
-  "keystoneLevel" | "id" | "keystoneTime" | "startTime" | "endTime"
+  "keystoneLevel" | "id" | "keystoneTime"
 > & {
   affixes: AffixesProps["affixes"];
   dungeonId: keyof Dungeons;
   chests: Fight["keystoneBonus"];
-  group: {
-    metrics: {
-      dps: number;
-      hps: number;
-      dtps: number;
-    };
-    totalDeaths: number;
-    composition: Player[];
-    averageItemlevel: string;
-  };
+  dps: number;
+  hps: number;
+  dtps: number;
+  totalDeaths: number;
+  averageItemlevel: string;
+  composition: Player[];
 };
 
-type UIFightsResponse = Pick<ReportType, "title" | "endTime" | "startTime"> & {
+export type UIFightsResponse = Pick<
+  ReportType,
+  "title" | "endTime" | "startTime"
+> & {
   id: string;
   fights: InitialFightInformation[];
   region: string;
@@ -93,7 +96,7 @@ export default function Report({
     return <h1>{error}</h1>;
   }
 
-  const reportUrl = `//warcraftlogs.com/reports/${report.id}`;
+  const reportUrl = `https://www.warcraftlogs.com/reports/${report.id}`;
 
   return (
     <>
@@ -182,19 +185,29 @@ function Row({ fight, dungeon, reportBaseUrl, region }: RowProps) {
           {runTime} {fight.chests > 0 && <>(+{timeLeft})</>}
         </td>
         <td>
-          <Composition composition={fight.group.composition} />
+          <Composition composition={fight.composition} />
         </td>
-        <td className="text-right">{fight.group.averageItemlevel}</td>
+        <td className="text-right">{fight.averageItemlevel}</td>
         <td className="text-right">
-          {fight.group.metrics.dps.toLocaleString()}
+          <ExternalLink href={`${fightUrl}&type=damage-done`}>
+            {fight.dps.toLocaleString()}
+          </ExternalLink>
         </td>
         <td className="text-right">
-          {fight.group.metrics.hps.toLocaleString()}
+          <ExternalLink href={`${fightUrl}&type=healing`}>
+            {fight.hps.toLocaleString()}
+          </ExternalLink>
         </td>
         <td className="text-right">
-          {fight.group.metrics.dtps.toLocaleString()}
+          <ExternalLink href={`${fightUrl}&type=damage-taken`}>
+            {fight.dtps.toLocaleString()}
+          </ExternalLink>
         </td>
-        <td className="text-right">{fight.group.totalDeaths}</td>
+        <td className="text-right">
+          <ExternalLink href={`${fightUrl}&type=deaths`}>
+            {fight.totalDeaths}
+          </ExternalLink>
+        </td>
         <td>
           <button type="button" onClick={handleClick}>
             {open ? "hide" : "show"} details
@@ -215,12 +228,12 @@ function Row({ fight, dungeon, reportBaseUrl, region }: RowProps) {
             <th className="text-center">Soulbinds</th>
             <th className="text-center">Conduits</th>
           </tr>
-          {fight.group.composition.map((player) => {
+          {fight.composition.map((player) => {
             return (
               <tr key={player.guid}>
                 <td>
                   <ExternalLink
-                    href={`//warcraftlogs.com/character/${region}/${player.server}/${player.name}`}
+                    href={`https://www.warcraftlogs.com/character/${region}/${player.server}/${player.name}`}
                   >
                     {player.name}
                   </ExternalLink>
@@ -255,7 +268,7 @@ function Row({ fight, dungeon, reportBaseUrl, region }: RowProps) {
                       player.legendary?.effectIcon &&
                       player.legendary?.effectName && (
                         <ExternalLink
-                          href={`//www.wowhead.com/spell=${player.legendary.effectID}`}
+                          href={`https://www.wowhead.com/spell=${player.legendary.effectID}`}
                         >
                           <Icon
                             src={player.legendary.effectIcon}
@@ -336,38 +349,78 @@ export const getStaticProps = async (
 
   const { reportId } = context.params;
 
-  const report = await retrieveReportCacheOrSource(reportId);
+  // report from db is already an entire dataset
+  const report = await loadReport(reportId);
 
+  // no db hit
   if (!report) {
+    // raw report cache
+    const reportCache = readLocalReportCache(reportId);
+    // no cache hit - load from source
+    const rawReport = reportCache ?? (await loadReportFromSource(reportId));
+
+    if (!rawReport) {
+      return {
+        props: {
+          error: "no report found",
+          report: null,
+        },
+        revalidate: 60,
+      };
+    }
+
+    // ignore fights that weren't timed
+    const validFights = rawReport.fights.filter(
+      (fight) => fight.keystoneBonus > 0
+    );
+
+    // lookup local cache - then load from source
+    const tables = await Promise.all(
+      validFights.map(async (fight) => {
+        const cache = readLocalFightTable(reportId, fight.id);
+
+        if (cache) {
+          return [fight.id, cache];
+        }
+
+        const table = await loadFightTableFromSource(reportId, fight);
+
+        return [fight.id, table];
+      })
+    );
+
+    const tablesAsMap = Object.fromEntries<Table>(
+      tables.filter((data): data is [number, Table] => data[1] !== null)
+    );
+
+    const fights = transformReportData(validFights, tablesAsMap);
+
+    // store report for the first time in db
+    const dbReportId = await createReport(reportId, rawReport);
+    // attach fights
+    await createFights(dbReportId, fights);
+
+    const { startTime, endTime, title, region } = rawReport;
+
     return {
       props: {
-        report: null,
-        error: "no report found",
+        report: {
+          id: reportId,
+          endTime,
+          startTime,
+          title,
+          region: region.slug,
+          fights,
+        },
+        error: null,
       },
-      revalidate: 60,
+      revalidate: 5 * 60,
     };
   }
 
-  // ignore fights that weren't timed
-  const validFights = report.fights.filter((fight) => fight.keystoneBonus > 0);
-
-  const fightTables = await retrieveFightTableCacheOrSource(
-    reportId,
-    validFights
-  );
-
-  const { startTime, endTime, title, region } = report;
-
   return {
     props: {
-      report: {
-        id: reportId,
-        endTime,
-        startTime,
-        title,
-        region: region.slug,
-        fights: transformReportData(validFights, fightTables),
-      },
+      report,
       error: null,
     },
     revalidate: 5 * 60,
@@ -376,7 +429,7 @@ export const getStaticProps = async (
 
 const transformReportData = (
   fights: ReportType["fights"],
-  fightTables: Record<string, Table>
+  fightTables: Record<number, Table>
 ): InitialFightInformation[] => {
   return (
     fights
@@ -398,8 +451,6 @@ const transformReportData = (
           keystoneAffixes: affixes,
           gameZone: { id: dungeonId },
           keystoneBonus: chests,
-          endTime,
-          startTime,
           keystoneTime,
           keystoneLevel,
           averageItemLevel,
@@ -431,24 +482,18 @@ const transformReportData = (
           });
 
           return {
-            group: {
-              metrics: {
-                dps: calcMetricAverage(keystoneTime, damageDone),
-                dtps: calcMetricAverage(keystoneTime, damageTaken),
-                hps: calcMetricAverage(keystoneTime, healingDone),
-              },
-              composition: [tank, healer, ...dps],
-              totalDeaths: deathEvents.length,
-              averageItemlevel: averageItemLevel.toFixed(2),
-            },
+            composition: [tank, healer, ...dps],
+            dps: calcMetricAverage(keystoneTime, damageDone),
+            dtps: calcMetricAverage(keystoneTime, damageTaken),
+            hps: calcMetricAverage(keystoneTime, healingDone),
+            totalDeaths: deathEvents.length,
+            averageItemlevel: averageItemLevel.toFixed(2),
             affixes,
             chests,
             dungeonId,
             id,
             keystoneLevel,
             keystoneTime,
-            startTime,
-            endTime,
           };
         }
       )

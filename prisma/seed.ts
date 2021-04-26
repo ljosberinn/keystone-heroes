@@ -1,7 +1,8 @@
-import type { Dungeons, Specs } from "@prisma/client";
+import type { Affixes, Dungeons, Specs, Classes } from "@prisma/client";
 import { PrismaClient } from "@prisma/client";
 
 import { Roles } from "../src/types/roles";
+import { affixes } from "../src/utils/affixes";
 import { dungeons } from "../src/utils/dungeons";
 
 const prisma = new PrismaClient();
@@ -226,7 +227,7 @@ const classes = [
 ];
 
 function seedDungeons() {
-  const insertableDungeons: Dungeons[] = Object.entries(dungeons).map(
+  const insertableDungeons = Object.entries(dungeons).map<Dungeons>(
     ([id, { name, slug, timer }]) => {
       return {
         id: Number.parseInt(id),
@@ -251,12 +252,17 @@ function seedDungeons() {
 }
 
 function seedClasses() {
+  const insertableClasses = classes.map<Classes>(({ id, name }) => ({
+    id,
+    name,
+  }));
+
   return Promise.all(
-    classes.map(({ id, name }) =>
+    insertableClasses.map((classData) =>
       prisma.classes.upsert({
-        create: { id, name },
+        create: classData,
         where: {
-          id,
+          id: classData.id,
         },
         update: {},
       })
@@ -288,10 +294,35 @@ function seedSpecs() {
   );
 }
 
+function seedAffixes() {
+  const insertableAffixes = Object.entries(affixes).map<Affixes>(
+    ([id, { name, icon }]) => {
+      return {
+        id: Number.parseInt(id),
+        name,
+        icon,
+      };
+    }
+  );
+
+  return Promise.all(
+    insertableAffixes.map((affix) =>
+      prisma.affixes.upsert({
+        create: affix,
+        where: {
+          id: affix.id,
+        },
+        update: {},
+      })
+    )
+  );
+}
+
 async function main() {
   await seedDungeons();
   await seedClasses();
   await seedSpecs();
+  await seedAffixes();
 }
 
 main()

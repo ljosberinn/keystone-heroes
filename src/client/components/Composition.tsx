@@ -14,7 +14,7 @@ export function Composition({ composition }: CompositionProps): JSX.Element {
         return (
           <Icon
             key={player.guid}
-            src="//assets.rpglogs.com/img/warcraft/icons/actors.jpg?v=2"
+            src="https://assets.rpglogs.com/img/warcraft/icons/actors.jpg?v=2"
             className={classnames(
               "object-cover",
               styles.sprite,

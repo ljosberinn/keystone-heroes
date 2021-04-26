@@ -15,3 +15,5 @@ export const WCL_OAUTH_ENDPOINT = "https://www.warcraftlogs.com/oauth/token";
 export const WCL_GQL_ENDPOINT = "https://www.warcraftlogs.com/api/v2/client";
 export const WCL_CLIENT_ID = process.env.WCL_CLIENT_ID!;
 export const WCL_CLIENT_SECRET = process.env.WCL_CLIENT_SECRET!;
+
+export const DEV_USE_DB = Number.parseInt(process.env.DEV_USE_DB!) === 0;

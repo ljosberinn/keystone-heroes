@@ -27,6 +27,6 @@ export function Icon({
 }
 
 const wclAssetConstants = {
-  soulbinds: "//assets.rpglogs.com/img/warcraft/soulbinds/soulbind-",
-  abilities: "//assets.rpglogs.com/img/warcraft/abilities/",
+  soulbinds: "https://assets.rpglogs.com/img/warcraft/soulbinds/soulbind-",
+  abilities: "https://assets.rpglogs.com/img/warcraft/abilities/",
 };

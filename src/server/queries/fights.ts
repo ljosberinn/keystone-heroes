@@ -1,8 +1,5 @@
-import { existsSync, readFileSync, writeFileSync } from "fs";
 import { gql } from "graphql-request";
-import { resolve } from "path";
 
-import { IS_PROD } from "../../constants";
 import type { PlayableClass } from "../../types/classes";
 import type { Covenants, Soulbinds } from "../../utils/covenants";
 import { getGqlClient } from "../gqlClient";
@@ -33,51 +30,17 @@ const getFightTable = async (
   );
 };
 
-export const retrieveFightTableCacheOrSource = async (
+export const loadFightTableFromSource = async (
   reportId: string,
-  fights: Fight[]
-): Promise<Record<string, Table>> => {
-  const tables = await Promise.all<[number, Table] | null>(
-    fights.map(async (fight) => {
-      const resolvedCachePath = resolve(
-        `cache/${reportId}-fight-${fight.id}.json`
-      );
+  fight: Fight
+): Promise<Table | null> => {
+  try {
+    const json = await getFightTable(reportId, fight);
 
-      if (!IS_PROD && existsSync(resolvedCachePath)) {
-        // eslint-disable-next-line no-console
-        console.info(
-          `[reportId/getStaticProps] reading fight "${fight.id}" of report "${reportId}" from cache`
-        );
-
-        const raw = readFileSync(resolvedCachePath, {
-          encoding: "utf-8",
-        });
-
-        return [fight.id, JSON.parse(raw).reportData.report.table.data];
-      }
-
-      try {
-        // eslint-disable-next-line no-console
-        console.info(
-          `[reportId/getStaticProps] fetching fight "${fight.id}" of report "${reportId}" from WCL`
-        );
-
-        const json = await getFightTable(reportId, fight);
-
-        if (!IS_PROD) {
-          writeFileSync(resolvedCachePath, JSON.stringify(json));
-        }
-
-        return [fight.id, json.reportData.report.table.data];
-      } catch {
-        return null;
-      }
-    })
-  );
-
-  return Object.fromEntries(
-    tables.filter((table): table is [number, Table] => table !== null)
-  );
+    return json.reportData.report.table.data;
+  } catch {
+    return null;
+  }
 };
 
 type RawTable = {
