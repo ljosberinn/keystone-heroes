@@ -66,7 +66,7 @@ enum Errors {
   invalidParam = 2,
 }
 
-export const getStaticProps = async (
+export const getStaticReportProps = async (
   context: GetStaticPropsContext<{ reportId?: string }>
 ): Promise<GetStaticPropsResult<ReportProps>> => {
   if (

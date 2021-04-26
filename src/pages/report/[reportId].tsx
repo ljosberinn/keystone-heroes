@@ -10,7 +10,8 @@ import { Conduits } from "../../client/components/Conduits";
 import { ExternalLink } from "../../client/components/ExternalLink";
 import { Icon } from "../../client/components/Icon";
 import { Soulbinds } from "../../client/components/Soulbinds";
-import type {
+import {
+  getStaticReportProps,
   ReportProps,
   UIFight,
 } from "../../server/getStaticProps/reportId";
@@ -271,3 +272,5 @@ export const getStaticPaths = (): GetStaticPathsResult => {
     fallback: true,
   };
 };
+
+export const getStaticProps = getStaticReportProps;
