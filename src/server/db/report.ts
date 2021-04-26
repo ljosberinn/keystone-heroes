@@ -1,12 +1,12 @@
 import { DEV_USE_DB, IS_PROD } from "../../constants";
-import type { UIFightsResponse } from "../../pages/report/[reportId]";
 import type { Dungeons } from "../../utils/dungeons";
+import type { ReportProps } from "../getStaticProps/reportId";
 import { prisma } from "../prismaClient";
 import type { Fight, Report } from "../queries/report";
 
 export const loadReport = async (
   report: string
-): Promise<UIFightsResponse | null> => {
+): Promise<ReportProps["report"]> => {
   if (!IS_PROD && !DEV_USE_DB) {
     // eslint-disable-next-line no-console
     console.info(`[reportId/getStaticProps] skipping db - read report`);
@@ -79,7 +79,7 @@ export const loadReport = async (
 
 export const createReport = async (
   report: string,
-  json: Report
+  { endTime, startTime, title, region: { slug: region } }: Report
 ): Promise<number> => {
   if (!IS_PROD && !DEV_USE_DB) {
     // eslint-disable-next-line no-console
@@ -92,10 +92,10 @@ export const createReport = async (
       report,
     },
     create: {
-      endTime: new Date(json.endTime),
-      startTime: new Date(json.startTime),
-      region: json.region.slug,
-      title: json.title,
+      endTime: new Date(endTime),
+      startTime: new Date(startTime),
+      region,
+      title,
       report,
     },
     update: {},
@@ -105,4 +105,17 @@ export const createReport = async (
   });
 
   return id;
+};
+
+export const getDbReportId = async (report: string): Promise<number | null> => {
+  const dataset = await prisma.reports.findUnique({
+    where: {
+      report,
+    },
+    select: {
+      id: true,
+    },
+  });
+
+  return dataset ? dataset.id : null;
 };

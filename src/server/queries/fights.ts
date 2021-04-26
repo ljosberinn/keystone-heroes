@@ -97,7 +97,7 @@ type DeathEvent = Pick<DamageDone, "name" | "id" | "guid" | "type" | "icon"> & {
   ability: Omit<DamageTaken, "total">;
 };
 
-type PlayerDetails = {
+export type PlayerDetails = {
   tanks: InDepthCharacterInformation[];
   dps: InDepthCharacterInformation[];
   healers: InDepthCharacterInformation[];

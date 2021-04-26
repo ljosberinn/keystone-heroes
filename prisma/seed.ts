@@ -296,11 +296,12 @@ function seedSpecs() {
 
 function seedAffixes() {
   const insertableAffixes = Object.entries(affixes).map<Affixes>(
-    ([id, { name, icon }]) => {
+    ([id, { name, icon, seasonal }]) => {
       return {
         id: Number.parseInt(id),
         name,
         icon,
+        seasonal,
       };
     }
   );

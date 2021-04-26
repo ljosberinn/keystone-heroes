@@ -1,10 +1,10 @@
 import { DEV_USE_DB, IS_PROD } from "../../constants";
-import type { InitialFightInformation } from "../../pages/report/[reportId]";
+import type { UIFight } from "../getStaticProps/reportId";
 import { prisma } from "../prismaClient";
 
 export const createFights = async (
   reportId: number,
-  fights: InitialFightInformation[]
+  fights: UIFight[]
 ): Promise<void> => {
   if (!IS_PROD && !DEV_USE_DB) {
     // eslint-disable-next-line no-console

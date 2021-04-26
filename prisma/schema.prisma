@@ -39,9 +39,10 @@ model Dungeons {
 }
 
 model Affixes {
-  id   Int    @id
-  name String
-  icon String
+  id       Int     @id
+  name     String
+  icon     String
+  seasonal Boolean
 }
 
 model Reports {
