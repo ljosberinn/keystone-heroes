@@ -75,6 +75,8 @@ model Fights {
   dtps             Int
   totalDeaths      Int
   averageItemLevel String
+
+  @@unique([fightId, reportId])
 }
 
 model Characters {
