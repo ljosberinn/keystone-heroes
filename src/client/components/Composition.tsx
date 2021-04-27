@@ -1,4 +1,4 @@
-import type { Player } from "../../server/getStaticProps/reportId";
+import type { Player } from "../../pages/api/report";
 import { classnames } from "../../utils/classNames";
 import styles from "./Composition.module.css";
 import { Icon } from "./Icon";

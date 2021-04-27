@@ -1,8 +1,8 @@
-import type { GetStaticPathsResult } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
+import type { AffixesProps } from "../../client/components/Affixes";
 import { Affixes } from "../../client/components/Affixes";
 import { Chests } from "../../client/components/Chests";
 import { Composition } from "../../client/components/Composition";
@@ -10,36 +10,56 @@ import { Conduits } from "../../client/components/Conduits";
 import { ExternalLink } from "../../client/components/ExternalLink";
 import { Icon } from "../../client/components/Icon";
 import { Soulbinds } from "../../client/components/Soulbinds";
-import type {
-  ReportProps,
-  UIFight,
-} from "../../server/getStaticProps/reportId";
-import {
-  getStaticReportProps,
-  StaticReportErrors,
-} from "../../server/getStaticProps/reportId";
+import { isValidReportId } from "../../server/api";
+import type { Fight, Report as ReportType } from "../../server/queries/report";
 import { calcRunDuration, calcTimeLeft } from "../../utils/calc";
 import { soulbindMap, covenantMap } from "../../utils/covenants";
-import type { Dungeon } from "../../utils/dungeons";
+import type { Dungeon, Dungeons } from "../../utils/dungeons";
 import { dungeons } from "../../utils/dungeons";
+import type { Player } from "../api/report";
 
-export default function Report({
-  report,
-  error,
-}: ReportProps): JSX.Element | null {
-  const { isFallback } = useRouter();
+export type UIFight = Pick<Fight, "keystoneLevel" | "id" | "keystoneTime"> & {
+  affixes: AffixesProps["affixes"];
+  dungeonId: keyof Dungeons;
+  chests: Fight["keystoneBonus"];
+  dps: number;
+  hps: number;
+  dtps: number;
+  totalDeaths: number;
+  averageItemlevel: string;
+  composition: Player[];
+};
 
-  if (isFallback) {
-    return <h1>retrieving data</h1>;
-  }
+export type UIFightsResponse = Pick<
+  ReportType,
+  "title" | "endTime" | "startTime"
+> & {
+  id: string;
+  fights: UIFight[];
+  region: string;
+};
 
-  if (error || !report) {
+export default function Report(): JSX.Element | null {
+  const [report, setReport] = useState<null | UIFightsResponse>(null);
+  const { query } = useRouter();
+
+  useEffect(() => {
+    if (isValidReportId(query.id)) {
+      fetch(`/api/report?id=${query.id}`)
+        .then((response) => response.json())
+        .then(setReport)
+        .catch(console.error);
+    }
+  }, [query]);
+
+  if (!report) {
     return (
-      <h1>
-        {error === StaticReportErrors.invalidParam
-          ? "invalid report"
-          : "no report found"}
-      </h1>
+      <>
+        <Head>
+          <title>{query.reportId ?? "unknown report"}</title>
+        </Head>
+        <h1>retrieving data</h1>
+      </>
     );
   }
 
@@ -274,12 +294,3 @@ function Row({ fight, dungeon, reportBaseUrl, region }: RowProps) {
     </>
   );
 }
-
-export const getStaticPaths = (): GetStaticPathsResult => {
-  return {
-    paths: [],
-    fallback: true,
-  };
-};
-
-export const getStaticProps = getStaticReportProps;

@@ -1,5 +1,5 @@
 import { DEV_USE_DB, IS_PROD, IS_TEST } from "../../constants";
-import type { UIFight } from "../getStaticProps/reportId";
+import type { UIFight } from "../../pages/report/[id]";
 import { prisma } from "../prismaClient";
 import type { Report } from "../queries/report";
 

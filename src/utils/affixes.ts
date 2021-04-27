@@ -1,4 +1,4 @@
-import type { UIFight } from "../server/getStaticProps/reportId";
+import type { UIFight } from "../pages/report/[id]";
 
 export const affixes = {
   2: {
