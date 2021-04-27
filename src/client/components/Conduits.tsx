@@ -1,4 +1,4 @@
-import type { Conduit } from "../../server/queries/fights";
+import type { Conduit } from "../../server/queries/table";
 import { Icon } from "./Icon";
 
 export type ConduitsProps = {

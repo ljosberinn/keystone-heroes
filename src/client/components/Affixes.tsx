@@ -1,10 +1,10 @@
-import type { Affixes as AffixesType } from "../../utils/affixes";
+import type { RegularAffixIds, SeasonalAffixIds } from "../../utils/affixes";
 import { affixes as allAffixes } from "../../utils/affixes";
 import { classnames } from "../../utils/classNames";
 import { Icon } from "./Icon";
 
 export type AffixesProps = {
-  affixes: (keyof AffixesType)[];
+  affixes: (SeasonalAffixIds | RegularAffixIds)[];
   chests: number;
 };
 

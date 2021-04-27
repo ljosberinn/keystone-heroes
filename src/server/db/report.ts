@@ -1,4 +1,5 @@
 import { DEV_USE_DB, IS_PROD } from "../../constants";
+import type { AffixIds } from "../../utils/affixes";
 import type { Dungeons } from "../../utils/dungeons";
 import type { ReportProps } from "../getStaticProps/reportId";
 import { prisma } from "../prismaClient";
@@ -9,15 +10,13 @@ export const loadReport = async (
 ): Promise<ReportProps["report"]> => {
   if (!IS_PROD && !DEV_USE_DB) {
     // eslint-disable-next-line no-console
-    console.info(`[reportId/getStaticProps] skipping db - read report`);
+    console.info(`[reportId/gSP] skipping db - read report`);
     return null;
   }
 
   try {
     // eslint-disable-next-line no-console
-    console.info(
-      `[reportId/getStaticProps] reading report "${report}" from db`
-    );
+    console.info(`[reportId/gSP] reading report "${report}" from db`);
     const rawReport = await prisma.reports.findFirst({
       where: {
         report,
@@ -40,6 +39,18 @@ export const loadReport = async (
             keystoneTime: true,
             totalDeaths: true,
             fightId: true,
+            week: {
+              select: {
+                affix1Id: true,
+                affix2Id: true,
+                affix3Id: true,
+                season: {
+                  select: {
+                    affixId: true,
+                  },
+                },
+              },
+            },
           },
         },
       },
@@ -60,7 +71,12 @@ export const loadReport = async (
             totalDeaths: fight.totalDeaths,
             keystoneLevel: fight.keystoneLevel,
             keystoneTime: fight.keystoneTime,
-            affixes: [],
+            affixes: [
+              fight.week.affix1Id,
+              fight.week.affix2Id,
+              fight.week.affix3Id,
+              fight.week.season.affixId,
+            ] as AffixIds[],
             dps: fight.dps,
             hps: fight.hps,
             dtps: fight.dtps,
@@ -83,7 +99,7 @@ export const createReport = async (
 ): Promise<number> => {
   if (!IS_PROD && !DEV_USE_DB) {
     // eslint-disable-next-line no-console
-    console.info(`[reportId/getStaticProps] skipping db - create report`);
+    console.info(`[reportId/gSP] skipping db - create report`);
     return -1;
   }
 

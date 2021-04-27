@@ -1,4 +1,4 @@
-import type { DamageDone } from "../server/queries/fights";
+import type { DamageDone } from "../server/queries/table";
 import { calcMetricAverage } from "../utils/calc";
 
 describe("calcMetricAverage", () => {

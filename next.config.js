@@ -1,3 +1,5 @@
+const date = new Date();
+
 module.exports = {
   typescript: {
     /**
@@ -17,6 +19,8 @@ module.exports = {
     // marked for the release they belong to. It may be undefined if running
     // outside of Vercel
     NEXT_PUBLIC_COMMIT_SHA: process.env.VERCEL_GIT_COMMIT_SHA,
+    NEXT_PUBLIC_BUILD_TIME: date.toISOString(),
+    NEXT_PUBLIC_BUILD_TIMESTAMP: Number(date),
   },
   experimental: {
     modern: true,

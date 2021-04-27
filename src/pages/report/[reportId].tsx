@@ -10,11 +10,11 @@ import { Conduits } from "../../client/components/Conduits";
 import { ExternalLink } from "../../client/components/ExternalLink";
 import { Icon } from "../../client/components/Icon";
 import { Soulbinds } from "../../client/components/Soulbinds";
-import {
-  getStaticReportProps,
+import type {
   ReportProps,
   UIFight,
 } from "../../server/getStaticProps/reportId";
+import { getStaticReportProps } from "../../server/getStaticProps/reportId";
 import { calcRunDuration, calcTimeLeft } from "../../utils/calc";
 import { soulbindMap, covenantMap } from "../../utils/covenants";
 import type { Dungeon } from "../../utils/dungeons";

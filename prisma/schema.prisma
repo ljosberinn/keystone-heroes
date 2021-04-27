@@ -43,6 +43,63 @@ model Affixes {
   name     String
   icon     String
   seasonal Boolean
+
+  // used in
+  firstAffix  Weeks[]   @relation("firstAffix")
+  secondAffix Weeks[]   @relation("secondAffix")
+  thirdAffix  Weeks[]   @relation("thirdAffix")
+  Seasons     Seasons[]
+}
+
+model Expansions {
+  id Int @id @default(autoincrement())
+
+  name String
+  slug String
+
+  // used in
+  Seasons Seasons[]
+}
+
+model Seasons {
+  id Int @id @default(autoincrement())
+
+  name      String
+  slug      String
+  startTime DateTime
+  endTime   DateTime?
+
+  expansionId Int
+  expansion   Expansions @relation(fields: [expansionId], references: [id])
+
+  affixId Int?
+  affix   Affixes? @relation(fields: [affixId], references: [id])
+
+  // used in
+  Weeks Weeks[]
+}
+
+model Weeks {
+  id Int @id @default(autoincrement())
+
+  seasonId Int
+  season   Seasons @relation(fields: [seasonId], references: [id])
+
+  seasonWeekId Int
+
+  affix1Id   Int
+  firstAffix Affixes @relation("firstAffix", fields: [affix1Id], references: [id])
+
+  affix2Id    Int
+  secondAffix Affixes @relation("secondAffix", fields: [affix2Id], references: [id])
+
+  affix3Id   Int
+  thirdAffix Affixes @relation("thirdAffix", fields: [affix3Id], references: [id])
+
+  // used in
+  Fights Fights[]
+
+  @@unique([seasonId, seasonWeekId])
 }
 
 model Reports {
@@ -76,6 +133,9 @@ model Fights {
   dtps             Int
   totalDeaths      Int
   averageItemLevel String
+
+  weekId Int
+  week   Weeks @relation(fields: [weekId], references: [id])
 
   @@unique([fightId, reportId])
 }

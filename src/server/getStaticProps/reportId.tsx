@@ -6,10 +6,12 @@ import { Roles } from "../../types/roles";
 import { calcMetricAverage } from "../../utils/calc";
 import type { Covenants, Soulbinds } from "../../utils/covenants";
 import type { Dungeons } from "../../utils/dungeons";
-import { readLocalFightTable } from "../cache/fights";
-import { readLocalReportCache } from "../cache/report";
+import { createReportCache, readLocalReportCache } from "../cache/report";
+import { createTableCache, readTableCache } from "../cache/table";
 import { createFights } from "../db/fights";
 import { loadReport, createReport, getDbReportId } from "../db/report";
+import type { Fight, Report } from "../queries/report";
+import { loadReportFromSource } from "../queries/report";
 import type {
   Table,
   InDepthCharacterInformation,
@@ -17,10 +19,8 @@ import type {
   SoulbindTalent,
   Conduit,
   Talent,
-} from "../queries/fights";
-import { ItemQuality, loadFightTableFromSource } from "../queries/fights";
-import type { Fight, Report } from "../queries/report";
-import { loadReportFromSource } from "../queries/report";
+} from "../queries/table";
+import { ItemQuality, loadTableFromSource } from "../queries/table";
 
 export type UIFight = Pick<Fight, "keystoneLevel" | "id" | "keystoneTime"> & {
   affixes: AffixesProps["affixes"];
@@ -92,6 +92,7 @@ export const getStaticReportProps = async (
   if (!report) {
     const reportCache = readLocalReportCache(reportId);
     const rawReport = reportCache ?? (await loadReportFromSource(reportId));
+    createReportCache(reportId, rawReport);
 
     if (!rawReport) {
       return {
@@ -107,10 +108,8 @@ export const getStaticReportProps = async (
     const validFights = getValidFights(rawReport.fights);
     const fights = await enrichReport(reportId, validFights);
 
-    // store report for the first time in db
     const dbReportId = await createReport(reportId, rawReport);
-    // attach fights
-    await createFights(dbReportId, fights);
+    await createFights(dbReportId, fights, rawReport);
 
     return {
       props: {
@@ -150,6 +149,7 @@ export const getStaticReportProps = async (
         error: null,
         refreshIndicator: SECONDS_TO_REVALIDATE_AFTER,
       },
+      revalidate: SECONDS_TO_REVALIDATE_AFTER,
     };
   }
 
@@ -184,7 +184,7 @@ export const getStaticReportProps = async (
   }
 
   // attach fights
-  await createFights(dbReportId, fights);
+  await createFights(dbReportId, fights, rawReport);
 
   return {
     props: {
@@ -322,14 +322,16 @@ const enrichReport = async (
   const tables = await Promise.all(
     fights.map(async (fight) => {
       if (!skipCache) {
-        const cache = readLocalFightTable(reportId, fight.id);
+        const cache = readTableCache(reportId, fight.id);
 
         if (cache) {
           return [fight.id, cache];
         }
       }
 
-      const table = await loadFightTableFromSource(reportId, fight);
+      const table = await loadTableFromSource(reportId, fight);
+
+      createTableCache(reportId, fight.id, table);
 
       return [fight.id, table];
     })

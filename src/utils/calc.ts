@@ -3,7 +3,7 @@ import type {
   DamageDone,
   DamageTaken,
   InDepthCharacterInformation,
-} from "../server/queries/fights";
+} from "../server/queries/table";
 import type { Dungeon } from "./dungeons";
 
 export const calcMetricAverage = <

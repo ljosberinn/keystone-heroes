@@ -1,4 +1,11 @@
+import type { UIFight } from "../server/getStaticProps/reportId";
+
 export const affixes = {
+  2: {
+    name: "Skittish",
+    icon: "spell_magic_lesserinvisibilty.jpg",
+    seasonal: false,
+  },
   3: { name: "Volcanic", icon: "spell_shaman_lavasurge.jpg", seasonal: false },
   4: {
     name: "Necrotic",
@@ -34,6 +41,26 @@ export const affixes = {
     seasonal: false,
   },
   14: { name: "Quaking", icon: "spell_nature_earthquake.jpg", seasonal: false },
+  16: {
+    name: "Infested",
+    icon: "achievement_nazmir_boss_ghuun.jpg",
+    seasonal: true,
+  },
+  117: {
+    name: "Reaping",
+    icon: "ability_racial_embraceoftheloa_bwonsomdi.jpg",
+    seasonal: true,
+  },
+  119: {
+    name: "Beguiling",
+    icon: "spell_shadow_mindshear.jpg",
+    seasonal: true,
+  },
+  120: {
+    name: "Awakened",
+    icon: "trade_archaeology_nerubian_obelisk.jpg",
+    seasonal: true,
+  },
   121: {
     name: "Prideful",
     icon: "spell_animarevendreth_buff.jpg",
@@ -54,3 +81,25 @@ export const affixes = {
 
 export type Affixes = typeof affixes;
 export type Affix = Affixes[keyof Affixes];
+export type SeasonalAffixes = Extract<Affix, { seasonal: true }>;
+export type RegularAffixes = Extract<Affix, { seasonal: false }>;
+export type AffixIds = keyof Affixes;
+
+type PickByValues<T, V> = {
+  [K in keyof T as T[K] extends V ? K : never]-?: T[K];
+};
+
+export type SeasonalAffixIds = keyof PickByValues<Affixes, { seasonal: true }>;
+export type RegularAffixIds = keyof PickByValues<Affixes, { seasonal: false }>;
+
+export const isSeasonalAffix = (affix: AffixIds): affix is SeasonalAffixIds =>
+  affix === 121 || affix === 16 || affix === 117 || affix === 119;
+export const isRegularAffix = (affix: AffixIds): affix is RegularAffixIds =>
+  affix !== 121 && affix !== 16 && affix !== 117 && affix !== 119;
+
+export const getSeasonalAffix = (fight: UIFight): SeasonalAffixIds | null =>
+  fight.keystoneLevel >= 10
+    ? fight.affixes.find(isSeasonalAffix) ?? null
+    : null;
+export const getRegularAffixes = (fight: UIFight): RegularAffixIds[] =>
+  fight.affixes.filter(isRegularAffix);

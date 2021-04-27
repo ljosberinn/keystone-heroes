@@ -5,7 +5,7 @@ import type { Covenants, Soulbinds } from "../../utils/covenants";
 import { getGqlClient } from "../gqlClient";
 import type { Fight } from "./report";
 
-const getFightTable = async (
+const getTable = async (
   reportId: string,
   { id, startTime, endTime }: Fight
 ) => {
@@ -30,12 +30,12 @@ const getFightTable = async (
   );
 };
 
-export const loadFightTableFromSource = async (
+export const loadTableFromSource = async (
   reportId: string,
   fight: Fight
 ): Promise<Table | null> => {
   try {
-    const json = await getFightTable(reportId, fight);
+    const json = await getTable(reportId, fight);
 
     return json.reportData.report.table.data;
   } catch {

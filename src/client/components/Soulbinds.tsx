@@ -1,4 +1,4 @@
-import type { SoulbindTalent } from "../../server/queries/fights";
+import type { SoulbindTalent } from "../../server/queries/table";
 import { Icon } from "./Icon";
 
 export type SoulbindsProps = {
