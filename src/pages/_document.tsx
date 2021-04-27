@@ -14,6 +14,7 @@ export default function CustomDocument(): JSX.Element {
         <meta content="global" name="distribution" />
         <meta content="7 days" name="revisit-after" />
         <meta content="Gerrit Alex" name="author" />
+        <link rel="preconnect" href="https://assets.rpglogs.com/" />
       </Head>
       <body>
         <Main />

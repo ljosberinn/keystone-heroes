@@ -1,4 +1,4 @@
-import { DEV_USE_DB, IS_PROD } from "../../constants";
+import { DEV_USE_DB, IS_PROD, IS_TEST } from "../../constants";
 import type { UIFight } from "../getStaticProps/reportId";
 import { prisma } from "../prismaClient";
 import type { Report } from "../queries/report";
@@ -8,7 +8,7 @@ export const createFights = async (
   fights: UIFight[],
   { startTime }: Report
 ): Promise<void> => {
-  if (!IS_PROD && !DEV_USE_DB) {
+  if (!IS_PROD && !IS_TEST && !DEV_USE_DB) {
     // eslint-disable-next-line no-console
     console.info(`[reportId/gSP] skipping db - create fights`);
     return;

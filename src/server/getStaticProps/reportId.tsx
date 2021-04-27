@@ -49,7 +49,7 @@ export type ReportProps = { refreshIndicator: number } & (
       report: UIFightsResponse;
     }
   | {
-      error: Errors;
+      error: StaticReportErrors;
       report: null;
     }
 );
@@ -61,7 +61,7 @@ const SECONDS_TO_REVALIDATE_AFTER = 15 * 60;
 const mayBeOngoingReport = (endTime: number) =>
   Date.now() - endTime > 24 * 60 * 60 * 1000;
 
-enum Errors {
+export enum StaticReportErrors {
   noReportFound = 1,
   invalidParam = 2,
 }
@@ -76,7 +76,7 @@ export const getStaticReportProps = async (
   ) {
     return {
       props: {
-        error: Errors.invalidParam,
+        error: StaticReportErrors.invalidParam,
         report: null,
         refreshIndicator: 0,
       },
@@ -97,7 +97,7 @@ export const getStaticReportProps = async (
     if (!rawReport) {
       return {
         props: {
-          error: Errors.noReportFound,
+          error: StaticReportErrors.noReportFound,
           report: null,
           refreshIndicator: 60,
         },

@@ -1,4 +1,4 @@
-import { DEV_USE_DB, IS_PROD } from "../../constants";
+import { DEV_USE_DB, IS_PROD, IS_TEST } from "../../constants";
 import type { AffixIds } from "../../utils/affixes";
 import type { Dungeons } from "../../utils/dungeons";
 import type { ReportProps } from "../getStaticProps/reportId";
@@ -8,7 +8,7 @@ import type { Fight, Report } from "../queries/report";
 export const loadReport = async (
   report: string
 ): Promise<ReportProps["report"]> => {
-  if (!IS_PROD && !DEV_USE_DB) {
+  if (!IS_PROD && !IS_TEST && !DEV_USE_DB) {
     // eslint-disable-next-line no-console
     console.info(`[reportId/gSP] skipping db - read report`);
     return null;

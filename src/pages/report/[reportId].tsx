@@ -14,7 +14,10 @@ import type {
   ReportProps,
   UIFight,
 } from "../../server/getStaticProps/reportId";
-import { getStaticReportProps } from "../../server/getStaticProps/reportId";
+import {
+  getStaticReportProps,
+  StaticReportErrors,
+} from "../../server/getStaticProps/reportId";
 import { calcRunDuration, calcTimeLeft } from "../../utils/calc";
 import { soulbindMap, covenantMap } from "../../utils/covenants";
 import type { Dungeon } from "../../utils/dungeons";
@@ -31,7 +34,13 @@ export default function Report({
   }
 
   if (error || !report) {
-    return <h1>{error}</h1>;
+    return (
+      <h1>
+        {error === StaticReportErrors.invalidParam
+          ? "invalid report"
+          : "no report found"}
+      </h1>
+    );
   }
 
   const reportUrl = `https://www.warcraftlogs.com/reports/${report.id}`;
