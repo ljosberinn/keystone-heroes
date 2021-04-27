@@ -25,5 +25,6 @@ module.exports = {
   experimental: {
     modern: true,
     turboMode: true,
+    optimizeCss: true,
   },
 };
