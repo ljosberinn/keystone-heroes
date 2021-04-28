@@ -10,7 +10,6 @@ import type {
 } from "@prisma/client";
 import { PrismaClient, Roles, PlayableClass, Spec } from "@prisma/client";
 
-import type { Affix } from "../src/utils/affixes";
 import { affixes } from "../src/utils/affixes";
 import { covenantMap } from "../src/utils/covenants";
 import { dungeons } from "../src/utils/dungeons";
@@ -484,7 +483,7 @@ function seedSeasons() {
   );
 }
 
-const getAffix = (name: Affix["name"]) => {
+const getAffix = (name: string) => {
   const match = Object.entries(affixes).find(
     ([, affix]) => affix.name === name
   );

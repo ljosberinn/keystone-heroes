@@ -1,11 +1,10 @@
-import type { RegularAffixIds, SeasonalAffixIds } from "../../utils/affixes";
 import { prisma } from "../prismaClient";
 
 export const WeeksRepo = {
   findWeekByAffixes: async (
     startTime: number,
     // freshly created log has no fights, so affixes may not be present
-    affixes: (SeasonalAffixIds | RegularAffixIds)[] = []
+    affixes: number[] = []
   ): Promise<number> => {
     const week = await prisma.weeks.findFirst({
       where: {

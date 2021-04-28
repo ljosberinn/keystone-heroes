@@ -1,6 +1,5 @@
 import { gql } from "graphql-request";
 
-import type { Affixes } from "../../utils/affixes";
 import type { Dungeons } from "../../utils/dungeons";
 import { getGqlClient } from "../gqlClient";
 
@@ -21,7 +20,7 @@ export type Report = RawReport["reportData"]["report"];
 export type Fight = {
   id: number;
   averageItemLevel: number;
-  keystoneAffixes: (keyof Affixes)[];
+  keystoneAffixes: number[];
   keystoneLevel: number;
   keystoneTime: number;
   keystoneBonus: 0 | 1 | 2 | 3;

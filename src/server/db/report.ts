@@ -1,6 +1,5 @@
 import { DEV_USE_DB, IS_PROD, IS_TEST } from "../../constants";
 import type { UIFightsResponse } from "../../pages/report/[id]";
-import type { AffixIds } from "../../utils/affixes";
 import type { covenantMap } from "../../utils/covenants";
 import type { Dungeons } from "../../utils/dungeons";
 import { prisma } from "../prismaClient";
@@ -252,8 +251,8 @@ export const ReportsRepo = {
                 fight.week.affix1Id,
                 fight.week.affix2Id,
                 fight.week.affix3Id,
-                fight.week.season.affixId,
-              ] as AffixIds[],
+                fight.week.season.affixId ?? -1,
+              ],
               dps: fight.dps,
               hps: fight.hps,
               dtps: fight.dtps,

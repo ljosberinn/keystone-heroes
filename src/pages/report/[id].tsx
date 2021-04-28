@@ -39,16 +39,22 @@ export type UIFightsResponse = Pick<
   region: string;
 };
 
+async function loadReport(id: string) {
+  try {
+    const response = await fetch(`/api/report?id=${id}`);
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 export default function Report(): JSX.Element | null {
   const [report, setReport] = useState<null | UIFightsResponse>(null);
   const { query } = useRouter();
 
   useEffect(() => {
     if (isValidReportId(query.id)) {
-      fetch(`/api/report?id=${query.id}`)
-        .then((response) => response.json())
-        .then(setReport)
-        .catch(console.error);
+      loadReport(query.id).then(setReport);
     }
   }, [query]);
 

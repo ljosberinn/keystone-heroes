@@ -1,6 +1,6 @@
-import type { UIFight } from "../pages/report/[id]";
+import type { Affixes } from "@prisma/client";
 
-export const affixes = {
+export const affixes: Record<Affixes["id"], Omit<Affixes, "id">> = {
   2: {
     name: "Skittish",
     icon: "spell_magic_lesserinvisibilty.jpg",
@@ -77,29 +77,4 @@ export const affixes = {
     seasonal: false,
   },
   124: { name: "Storming", icon: "spell_nature_cyclone.jpg", seasonal: false },
-} as const;
-
-export type Affixes = typeof affixes;
-export type Affix = Affixes[keyof Affixes];
-export type SeasonalAffixes = Extract<Affix, { seasonal: true }>;
-export type RegularAffixes = Extract<Affix, { seasonal: false }>;
-export type AffixIds = keyof Affixes;
-
-type PickByValues<T, V> = {
-  [K in keyof T as T[K] extends V ? K : never]-?: T[K];
 };
-
-export type SeasonalAffixIds = keyof PickByValues<Affixes, { seasonal: true }>;
-export type RegularAffixIds = keyof PickByValues<Affixes, { seasonal: false }>;
-
-export const isSeasonalAffix = (affix: AffixIds): affix is SeasonalAffixIds =>
-  affix === 121 || affix === 16 || affix === 117 || affix === 119;
-export const isRegularAffix = (affix: AffixIds): affix is RegularAffixIds =>
-  affix !== 121 && affix !== 16 && affix !== 117 && affix !== 119;
-
-export const getSeasonalAffix = (fight: UIFight): SeasonalAffixIds | null =>
-  fight.keystoneLevel >= 10
-    ? fight.affixes.find(isSeasonalAffix) ?? null
-    : null;
-export const getRegularAffixes = (fight: UIFight): RegularAffixIds[] =>
-  fight.affixes.filter(isRegularAffix);
