@@ -6,12 +6,8 @@ import {
   createReportCache,
 } from "../../server/cache/report";
 import { readTableCache, createTableCache } from "../../server/cache/table";
-import { createFights } from "../../server/db/fights";
-import {
-  createReport,
-  getDbReportId,
-  loadReport,
-} from "../../server/db/report";
+import { FightsRepo } from "../../server/db/fights";
+import { ReportsRepo } from "../../server/db/report";
 import type { Fight } from "../../server/queries/report";
 import { loadReportFromSource } from "../../server/queries/report";
 import type {
@@ -54,7 +50,7 @@ const reportHandler: RequestHandler<Request, Response> = async (req, res) => {
 
   const { id } = req.query;
 
-  const report = await loadReport(id);
+  const report = await ReportsRepo.loadReport(id);
 
   if (!report) {
     const reportCache = readLocalReportCache(id);
@@ -69,8 +65,8 @@ const reportHandler: RequestHandler<Request, Response> = async (req, res) => {
     const validFights = getValidFights(rawReport.fights);
     const fights = await enrichReport(id, validFights);
 
-    const dbReportId = await createReport(id, rawReport);
-    await createFights(dbReportId, fights, rawReport);
+    const dbReportId = await ReportsRepo.createReport(id, rawReport);
+    await FightsRepo.createFights(dbReportId, fights, rawReport);
 
     setCacheControl(
       res,
@@ -116,7 +112,7 @@ const reportHandler: RequestHandler<Request, Response> = async (req, res) => {
   }
 
   const fights = await enrichReport(id, newValidFights, true);
-  const dbId = await getDbReportId(id);
+  const dbId = await ReportsRepo.searchReportId(id);
 
   if (!dbId) {
     setCacheControl(res, FIFTEEN_MINUTES_IN_SECONDS);
@@ -124,7 +120,7 @@ const reportHandler: RequestHandler<Request, Response> = async (req, res) => {
     return;
   }
 
-  await createFights(dbId, fights, rawReport);
+  await FightsRepo.createFights(dbId, fights, rawReport);
 
   setCacheControl(res, FIFTEEN_MINUTES_IN_SECONDS);
 
@@ -167,7 +163,7 @@ const enrichReport = async (
 
   return (
     fights
-      .filter(({ id }) => tablesAsMap[id])
+      .filter(({ id, gameZone }) => tablesAsMap[id] && gameZone)
       // ignore keys with more than 5 participants; broken log
       .filter(({ id }) => {
         const { playerDetails } = tablesAsMap[id];
@@ -184,6 +180,7 @@ const enrichReport = async (
         ({
           id,
           keystoneAffixes: affixes,
+          // @ts-expect-error filtered above
           gameZone: { id: dungeonId },
           keystoneBonus: chests,
           keystoneTime,
@@ -201,7 +198,7 @@ const enrichReport = async (
             dtps: calcMetricAverage(keystoneTime, damageTaken),
             hps: calcMetricAverage(keystoneTime, healingDone),
             totalDeaths: deathEvents.length,
-            averageItemlevel: averageItemLevel.toFixed(2),
+            averageItemLevel,
             affixes,
             chests,
             dungeonId,

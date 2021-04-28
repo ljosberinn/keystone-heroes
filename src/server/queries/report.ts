@@ -26,7 +26,8 @@ export type Fight = {
   keystoneTime: number;
   keystoneBonus: 0 | 1 | 2 | 3;
   dungeonPulls: DungeonPull[];
-  gameZone: { id: keyof Dungeons };
+  // gameZone is null on broken logs
+  gameZone: { id: keyof Dungeons } | null;
   // only required to query fights table properly
   startTime: number;
   endTime: number;

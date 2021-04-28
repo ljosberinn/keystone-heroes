@@ -30,8 +30,8 @@ model Specs {
 
 model Dungeons {
   id   Int    @id
-  name String @db.Char(40)
-  slug String @db.Char(8)
+  name String
+  slug String
   time Int
 
   // used in
@@ -132,7 +132,22 @@ model Fights {
   hps              Int
   dtps             Int
   totalDeaths      Int
-  averageItemLevel String
+  averageItemLevel Float
+
+  player1 Int
+  tank    Player @relation("tank-player", fields: [player1], references: [id])
+
+  player2 Int
+  heal    Player @relation("heal-player", fields: [player2], references: [id])
+
+  player3 Int
+  dps1    Player @relation("dps1-player", fields: [player3], references: [id])
+
+  player4 Int
+  dps2    Player @relation("dps2-player", fields: [player4], references: [id])
+
+  player5 Int
+  dps3    Player @relation("dps3-player", fields: [player5], references: [id])
 
   weekId Int
   week   Weeks @relation(fields: [weekId], references: [id])
@@ -140,65 +155,30 @@ model Fights {
   @@unique([fightId, reportId])
 }
 
-model Characters {
-  id Int @id @default(autoincrement())
+model Character {
+  id Int @id
 
-  guid Int    @unique
-  name String
-
+  name   String
   server String
+
+  // used in
+  Player Player[]
 }
 
-// model Reports {
-//   id    Int    @id @default(autoincrement())
-//   code  String @unique @db.Char(16)
-//   start Int
-//   end   Int
+model Player {
+  id Int @id @default(autoincrement())
 
-//   // used in
-//   Fights Fights[]
-// }
+  characterId Int
+  character   Character @relation(fields: [characterId], references: [id])
 
-// model Fights {
-//   fightId  Int
-//   reportId Int
-//   report   Reports @relation(fields: [reportId], references: [id])
+  dps       Int
+  hps       Int
+  deaths    Int
+  itemLevel Int
 
-//   dungeonId Int
-//   dungeon   Dungeons @relation(fields: [dungeonId], references: [id])
-
-//   keyLevel Int
-
-//   tankId Int
-//   tank   Character @relation("tank-character", fields: [tankId], references: [id])
-
-//   healId Int
-//   heal   Character @relation("heal-character", fields: [healId], references: [id])
-
-//   dps1Id Int
-//   dps1   Character @relation("dps1-character", fields: [dps1Id], references: [id])
-
-//   dps2Id Int
-//   dps2   Character @relation("dps2-character", fields: [dps2Id], references: [id])
-
-//   dps3Id Int
-//   dps3   Character @relation("dps3-character", fields: [dps3Id], references: [id])
-
-//   deaths Int
-//   time   Int
-
-//   @@id([reportId, fightId])
-// }
-
-// model Character {
-//   id     Int    @id
-//   name   String @db.Char(21)
-//   realm  String @db.Char(30)
-//   region String @db.Char(3)
-
-//   tank Fights[] @relation("tank-character")
-//   heal Fights[] @relation("heal-character")
-//   dps1 Fights[] @relation("dps1-character")
-//   dps2 Fights[] @relation("dps2-character")
-//   dps3 Fights[] @relation("dps3-character")
-// }
+  tank Fights[] @relation("tank-player")
+  heal Fights[] @relation("heal-player")
+  dps1 Fights[] @relation("dps1-player")
+  dps2 Fights[] @relation("dps2-player")
+  dps3 Fights[] @relation("dps3-player")
+}

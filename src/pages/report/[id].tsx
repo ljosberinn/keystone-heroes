@@ -26,7 +26,7 @@ export type UIFight = Pick<Fight, "keystoneLevel" | "id" | "keystoneTime"> & {
   hps: number;
   dtps: number;
   totalDeaths: number;
-  averageItemlevel: string;
+  averageItemLevel: number;
   composition: Player[];
 };
 
@@ -154,7 +154,7 @@ function Row({ fight, dungeon, reportBaseUrl, region }: RowProps) {
         <td>
           <Composition composition={fight.composition} />
         </td>
-        <td className="text-right">{fight.averageItemlevel}</td>
+        <td className="text-right">{fight.averageItemLevel.toFixed(2)}</td>
         <td className="text-right">
           <ExternalLink href={`${fightUrl}&type=damage-done`}>
             {fight.dps.toLocaleString()}
