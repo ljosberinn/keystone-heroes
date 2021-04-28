@@ -36,7 +36,7 @@ export const FightsRepo = {
       )
     );
 
-    const playerIdMap = await PlayersRepo.createMany(fights);
+    const playerIdMap = await PlayersRepo.createMany(fights, reportId);
 
     await prisma.fights.createMany({
       data: fights.map((fight) => {

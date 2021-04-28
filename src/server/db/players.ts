@@ -3,7 +3,7 @@ import type { UIFight } from "../../pages/report/[id]";
 import { prisma } from "../prismaClient";
 
 export const PlayersRepo = {
-  create: async (player: Player): Promise<number> => {
+  create: async (player: Player, reportId: number): Promise<number> => {
     const playerDataset = await prisma.player.create({
       data: {
         characterId: player.guid,
@@ -11,6 +11,7 @@ export const PlayersRepo = {
         deaths: player.deaths,
         hps: player.hps,
         itemLevel: player.itemLevel,
+        reportId,
       },
       select: {
         id: true,
@@ -26,12 +27,15 @@ export const PlayersRepo = {
   /**
    * creates a player for each player in a composition for each fight
    */
-  createMany: async (fights: UIFight[]): Promise<Record<number, number>> => {
+  createMany: async (
+    fights: UIFight[],
+    reportId: number
+  ): Promise<Record<number, number>> => {
     const playerTuples = await Promise.all(
       fights.flatMap((fight) => {
         return fight.composition.map<Promise<[number, number]>>(
           async (player) => {
-            const playerId = await PlayersRepo.create(player);
+            const playerId = await PlayersRepo.create(player, reportId);
 
             return [player.guid, playerId];
           }

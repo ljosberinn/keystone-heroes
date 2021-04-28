@@ -112,6 +112,7 @@ model Reports {
 
   // used in
   Fights Fights[]
+  Player Player[]
 }
 
 model Fights {
@@ -132,7 +133,7 @@ model Fights {
   hps              Int
   dtps             Int
   totalDeaths      Int
-  averageItemLevel Float
+  averageItemLevel Int
 
   player1 Int
   tank    Player @relation("tank-player", fields: [player1], references: [id])
@@ -167,6 +168,9 @@ model Character {
 
 model Player {
   id Int @id @default(autoincrement())
+
+  reportId Int
+  report   Reports @relation(fields: [reportId], references: [id])
 
   characterId Int
   character   Character @relation(fields: [characterId], references: [id])

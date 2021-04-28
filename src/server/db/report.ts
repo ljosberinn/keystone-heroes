@@ -85,6 +85,7 @@ export const ReportsRepo = {
                   hps: true,
                   itemLevel: true,
                   deaths: true,
+                  id: true,
                   character: {
                     select: {
                       name: true,
@@ -100,6 +101,7 @@ export const ReportsRepo = {
                   hps: true,
                   itemLevel: true,
                   deaths: true,
+                  id: true,
                   character: {
                     select: {
                       name: true,
@@ -115,6 +117,7 @@ export const ReportsRepo = {
                   hps: true,
                   itemLevel: true,
                   deaths: true,
+                  id: true,
                   character: {
                     select: {
                       name: true,
@@ -130,6 +133,7 @@ export const ReportsRepo = {
                   hps: true,
                   itemLevel: true,
                   deaths: true,
+                  id: true,
                   character: {
                     select: {
                       name: true,
@@ -145,6 +149,7 @@ export const ReportsRepo = {
                   hps: true,
                   itemLevel: true,
                   deaths: true,
+                  id: true,
                   character: {
                     select: {
                       name: true,
@@ -195,13 +200,16 @@ export const ReportsRepo = {
               dps: fight.dps,
               hps: fight.hps,
               dtps: fight.dtps,
-              averageItemLevel: fight.averageItemLevel / 100,
+              averageItemLevel: Number.parseFloat(
+                (fight.averageItemLevel / 100).toFixed(2)
+              ),
               composition: [
                 {
                   dps: fight.tank.dps,
                   hps: fight.tank.hps,
                   deaths: fight.tank.deaths,
                   guid: fight.tank.character.id,
+                  id: fight.tank.id,
                   name: fight.tank.character.name,
                   server: fight.tank.character.server,
                   talents: [],
@@ -218,6 +226,7 @@ export const ReportsRepo = {
                   hps: fight.heal.hps,
                   deaths: fight.heal.deaths,
                   guid: fight.heal.character.id,
+                  id: fight.heal.id,
                   name: fight.heal.character.name,
                   server: fight.heal.character.server,
                   talents: [],
@@ -234,6 +243,7 @@ export const ReportsRepo = {
                   hps: fight.dps1.hps,
                   deaths: fight.dps1.deaths,
                   guid: fight.dps1.character.id,
+                  id: fight.dps1.id,
                   name: fight.dps1.character.name,
                   server: fight.dps1.character.server,
                   talents: [],
@@ -250,6 +260,7 @@ export const ReportsRepo = {
                   hps: fight.dps2.hps,
                   deaths: fight.dps2.deaths,
                   guid: fight.dps2.character.id,
+                  id: fight.dps2.id,
                   name: fight.dps2.character.name,
                   server: fight.dps2.character.server,
                   talents: [],
@@ -266,6 +277,7 @@ export const ReportsRepo = {
                   hps: fight.dps3.hps,
                   deaths: fight.dps3.deaths,
                   guid: fight.dps3.character.id,
+                  id: fight.dps3.id,
                   name: fight.dps3.character.name,
                   server: fight.dps3.character.server,
                   talents: [],
