@@ -19,9 +19,9 @@ export function Composition({ composition }: CompositionProps): JSX.Element {
               "object-cover",
               styles.sprite,
               index > 0 && "ml-1",
-              styles[`sprite-${player.className}-${player.spec}`]
+              styles[`sprite-${player.spec}`]
             )}
-            alt={`${player.spec} ${player.className}`}
+            alt={player.spec.replace("_", "")}
           />
         );
       })}

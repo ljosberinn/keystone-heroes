@@ -2,12 +2,12 @@ import type { Player } from "../../pages/api/report";
 import { prisma } from "../prismaClient";
 
 export const CharacterRepo = {
-  createMany: async (characters: Player[]): Promise<void> => {
+  upsertMany: async (characters: Player[]): Promise<void> => {
     await Promise.all(
       characters.map((character) =>
-        prisma.character.create({
-          data: {
-            id: character.id,
+        prisma.character.upsert({
+          create: {
+            id: character.guid,
             name: character.name,
             server: character.server,
             // cannot connect in createMany
@@ -16,6 +16,10 @@ export const CharacterRepo = {
                 name: character.className,
               },
             },
+          },
+          update: {},
+          where: {
+            id: character.guid,
           },
         })
       )

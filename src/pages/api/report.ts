@@ -23,7 +23,7 @@ import { loadTableFromSource, ItemQuality } from "../../server/queries/table";
 import type { RequestHandler } from "../../server/types";
 import { calcMetricAverage } from "../../utils/calc";
 import type { Covenants, Soulbinds } from "../../utils/covenants";
-import { BAD_REQUEST } from "../../utils/statusCodes";
+import { BAD_REQUEST, INTERNAL_SERVER_ERROR } from "../../utils/statusCodes";
 import type { UIFight, UIFightsResponse } from "../report/[id]";
 
 type Request = {
@@ -47,90 +47,95 @@ const reportHandler: RequestHandler<Request, Response> = async (req, res) => {
     return;
   }
 
-  const { id } = req.query;
+  try {
+    const { id } = req.query;
 
-  const report = await ReportsRepo.loadReport(id);
+    const report = await ReportsRepo.loadReport(id);
 
-  if (!report) {
-    const reportCache = readLocalReportCache(id);
-    const rawReport = reportCache ?? (await loadReportFromSource(id));
-    createReportCache(id, rawReport);
+    if (!report) {
+      const reportCache = readLocalReportCache(id);
+      const rawReport = reportCache ?? (await loadReportFromSource(id));
+      createReportCache(id, rawReport);
 
-    if (!rawReport) {
-      res.status(BAD_REQUEST).end();
+      if (!rawReport) {
+        res.status(BAD_REQUEST).end();
+        return;
+      }
+
+      const validFights = getValidFights(rawReport.fights);
+      const fights = await enrichReport(id, validFights);
+
+      const dbReportId = await ReportsRepo.createReport(id, rawReport);
+      await FightsRepo.createFights(dbReportId, fights, rawReport);
+
+      setCacheControl(
+        res,
+        maybeOngoingReport(rawReport.endTime)
+          ? FIFTEEN_MINUTES_IN_SECONDS
+          : undefined
+      );
+
+      res.json({
+        id,
+        endTime: rawReport.endTime,
+        startTime: rawReport.startTime,
+        title: rawReport.title,
+        region: rawReport.region.slug,
+        fights,
+      });
       return;
     }
 
-    const validFights = getValidFights(rawReport.fights);
-    const fights = await enrichReport(id, validFights);
+    if (!maybeOngoingReport(report?.endTime)) {
+      setCacheControl(res, FOURTEEN_DAYS_IN_SECONDS);
+      res.json(report);
+      return;
+    }
 
-    const dbReportId = await ReportsRepo.createReport(id, rawReport);
-    await FightsRepo.createFights(dbReportId, fights, rawReport);
+    const rawReport = await loadReportFromSource(id);
 
-    setCacheControl(
-      res,
-      maybeOngoingReport(rawReport.endTime)
-        ? FIFTEEN_MINUTES_IN_SECONDS
-        : undefined
+    if (!rawReport) {
+      setCacheControl(res, FIFTEEN_MINUTES_IN_SECONDS);
+      res.json(report);
+      return;
+    }
+
+    const newValidFights = getValidFights(
+      rawReport.fights,
+      report.fights.map((fight) => fight.id)
     );
+
+    if (newValidFights.length === 0) {
+      setCacheControl(res, FIFTEEN_MINUTES_IN_SECONDS);
+      res.json(report);
+      return;
+    }
+
+    const fights = await enrichReport(id, newValidFights, true);
+    const dbId = await ReportsRepo.searchReportId(id);
+
+    if (!dbId) {
+      setCacheControl(res, FIFTEEN_MINUTES_IN_SECONDS);
+      res.json(report);
+      return;
+    }
+
+    await FightsRepo.createFights(dbId, fights, rawReport);
+
+    setCacheControl(res, FIFTEEN_MINUTES_IN_SECONDS);
 
     res.json({
       id,
       endTime: rawReport.endTime,
-      startTime: rawReport.startTime,
+      startTime: rawReport.endTime,
       title: rawReport.title,
       region: rawReport.region.slug,
       fights,
     });
-    return;
+  } catch (error) {
+    console.error(error);
+    res.status(INTERNAL_SERVER_ERROR).end();
   }
-
-  if (!maybeOngoingReport(report?.endTime)) {
-    setCacheControl(res, FOURTEEN_DAYS_IN_SECONDS);
-    res.json(report);
-    return;
-  }
-
-  const rawReport = await loadReportFromSource(id);
-
-  if (!rawReport) {
-    setCacheControl(res, FIFTEEN_MINUTES_IN_SECONDS);
-    res.json(report);
-    return;
-  }
-
-  const newValidFights = getValidFights(
-    rawReport.fights,
-    report.fights.map((fight) => fight.id)
-  );
-
-  if (newValidFights.length === 0) {
-    setCacheControl(res, FIFTEEN_MINUTES_IN_SECONDS);
-    res.json(report);
-    return;
-  }
-
-  const fights = await enrichReport(id, newValidFights, true);
-  const dbId = await ReportsRepo.searchReportId(id);
-
-  if (!dbId) {
-    setCacheControl(res, FIFTEEN_MINUTES_IN_SECONDS);
-    res.json(report);
-    return;
-  }
-
-  await FightsRepo.createFights(dbId, fights, rawReport);
-
-  setCacheControl(res, FIFTEEN_MINUTES_IN_SECONDS);
-
-  res.json({
-    id,
-    endTime: rawReport.endTime,
-    startTime: rawReport.endTime,
-    title: rawReport.title,
-    region: rawReport.region.slug,
-    fights,
-  });
 };
 
 const enrichReport = async (

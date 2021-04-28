@@ -23,7 +23,7 @@ export const FightsRepo = {
       fights[0]?.affixes
     );
 
-    await CharacterRepo.createMany(
+    await CharacterRepo.upsertMany(
       fights.flatMap((fight) => fight.composition)
     );
 
@@ -42,7 +42,7 @@ export const FightsRepo = {
           dps: fight.dps,
           hps: fight.hps,
           dtps: fight.dtps,
-          averageItemLevel: fight.averageItemLevel * 100,
+          averageItemLevel: Math.round(fight.averageItemLevel * 100),
           keystoneLevel: fight.keystoneLevel,
           keystoneTime: fight.keystoneTime,
           totalDeaths: fight.totalDeaths,
