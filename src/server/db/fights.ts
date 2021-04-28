@@ -2,7 +2,6 @@ import { DEV_USE_DB, IS_PROD, IS_TEST } from "../../constants";
 import type { UIFight } from "../../pages/report/[id]";
 import { prisma } from "../prismaClient";
 import type { Report } from "../queries/report";
-import type { UpsertableCharacter } from "./characters";
 import { CharacterRepo } from "./characters";
 import { PlayersRepo } from "./players";
 import { WeeksRepo } from "./weeks";
@@ -25,15 +24,7 @@ export const FightsRepo = {
     );
 
     await CharacterRepo.createMany(
-      fights.flatMap<UpsertableCharacter>((fight) =>
-        fight.composition.map((player) => {
-          return {
-            id: player.guid,
-            name: player.name,
-            server: player.server,
-          };
-        })
-      )
+      fights.flatMap((fight) => fight.composition)
     );
 
     const playerIdMap = await PlayersRepo.createMany(fights, reportId);

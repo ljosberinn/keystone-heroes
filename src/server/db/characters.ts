@@ -1,14 +1,24 @@
-import type { Prisma } from "@prisma/client";
-
+import type { Player } from "../../pages/api/report";
 import { prisma } from "../prismaClient";
 
-export type UpsertableCharacter = Prisma.CharacterCreateManyInput;
-
 export const CharacterRepo = {
-  createMany: async (characters: UpsertableCharacter[]): Promise<void> => {
-    await prisma.character.createMany({
-      data: characters,
-      skipDuplicates: true,
-    });
+  createMany: async (characters: Player[]): Promise<void> => {
+    await Promise.all(
+      characters.map((character) =>
+        prisma.character.create({
+          data: {
+            id: character.id,
+            name: character.name,
+            server: character.server,
+            // cannot connect in createMany
+            class: {
+              connect: {
+                name: character.className,
+              },
+            },
+          },
+        })
+      )
+    );
   },
 };

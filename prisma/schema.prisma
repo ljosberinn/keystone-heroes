@@ -10,22 +10,97 @@ generator client {
   provider = "prisma-client-js"
 }
 
+enum Roles {
+  dps
+  tank
+  healer
+}
+
+enum PlayableClass {
+  DemonHunter
+  Mage
+  Shaman
+  Rogue
+  Priest
+  Warrior
+  Druid
+  DeathKnight
+  Monk
+  Paladin
+  Warlock
+  Hunter
+}
+
 model Classes {
-  id   Int    @id
-  name String
+  id   Int           @id
+  name PlayableClass @unique
 
   // used in
-  Specs Specs[]
+  Specs     Specs[]
+  Character Character[]
+}
+
+enum Spec {
+  Warrior_Protection
+  Warrior_Fury
+  Warrior_Arms
+
+  Mage_Fire
+  Mage_Frost
+  Mage_Arcane
+
+  Rogue_Assassination
+  Rogue_Sublety
+  Rogue_Outlaw
+
+  Shaman_Restoration
+  Shaman_Elemental
+  Shaman_Enhancement
+
+  Priest_Shadow
+  Priest_Holy
+  Priest_Discipline
+
+  Hunter_BeastMastery
+  Hunter_Survival
+  Hunter_Marksmanship
+
+  Monk_Mistweaver
+  Monk_Brewmaster
+  Monk_Windwalker
+
+  Druid_Restoration
+  Druid_Guardian
+  Druid_Balance
+  Druid_Feral
+
+  DemonHunter_Vengeance
+  DemonHunter_Havoc
+
+  Paladin_Protection
+  Paladin_Holy
+  Paladin_Retribution
+
+  Warlock_Destruction
+  Warlock_Demonology
+  Warlock_Affliction
+
+  DeathKnight_Blood
+  DeathKnight_Unholy
+  DeathKnight_Frost
 }
 
 model Specs {
-  id   Int    @id
-  name String
+  id   Int  @id
+  name Spec @unique
 
   classId Int
   class   Classes @relation(fields: [classId], references: [id])
 
-  role String
+  role Roles
+
+  // used in
+  Player Player[]
 }
 
 model Dungeons {
@@ -162,6 +237,9 @@ model Character {
   name   String
   server String
 
+  classId Int
+  class   Classes @relation(fields: [classId], references: [id])
+
   // used in
   Player Player[]
 }
@@ -175,14 +253,30 @@ model Player {
   characterId Int
   character   Character @relation(fields: [characterId], references: [id])
 
+  specId Int
+  spec   Specs @relation(fields: [specId], references: [id])
+
   dps       Int
   hps       Int
   deaths    Int
   itemLevel Int
+
+  covenantId Int
+  covenant   Covenants @relation(fields: [covenantId], references: [id])
 
   tank Fights[] @relation("tank-player")
   heal Fights[] @relation("heal-player")
   dps1 Fights[] @relation("dps1-player")
   dps2 Fights[] @relation("dps2-player")
   dps3 Fights[] @relation("dps3-player")
+}
+
+model Covenants {
+  id Int @id
+
+  name String
+  icon String
+
+  // used in
+  Player Player[]
 }

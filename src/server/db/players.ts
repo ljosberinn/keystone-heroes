@@ -6,12 +6,30 @@ export const PlayersRepo = {
   create: async (player: Player, reportId: number): Promise<number> => {
     const playerDataset = await prisma.player.create({
       data: {
-        characterId: player.guid,
         dps: player.dps,
         deaths: player.deaths,
         hps: player.hps,
         itemLevel: player.itemLevel,
-        reportId,
+        spec: {
+          connect: {
+            name: player.spec,
+          },
+        },
+        report: {
+          connect: {
+            id: reportId,
+          },
+        },
+        character: {
+          connect: {
+            id: player.guid,
+          },
+        },
+        covenant: {
+          connect: {
+            id: player.covenant.id,
+          },
+        },
       },
       select: {
         id: true,

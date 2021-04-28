@@ -6,12 +6,13 @@ import type {
   Weeks,
   Expansions,
   Seasons,
+  Covenants,
 } from "@prisma/client";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Roles, PlayableClass, Spec } from "@prisma/client";
 
-import { Roles } from "../src/types/roles";
 import type { Affix } from "../src/utils/affixes";
 import { affixes } from "../src/utils/affixes";
+import { covenantMap } from "../src/utils/covenants";
 import { dungeons } from "../src/utils/dungeons";
 
 const prisma = new PrismaClient();
@@ -19,216 +20,218 @@ const prisma = new PrismaClient();
 const classes = [
   {
     id: 1,
-    name: "Warrior",
+    name: PlayableClass.Warrior,
     specs: [
       {
-        name: "Protection",
+        name: Spec.Warrior_Protection,
         role: Roles.tank,
       },
       {
-        name: "Fury",
+        name: Spec.Warrior_Fury,
         role: Roles.dps,
       },
       {
-        name: "Arms",
+        name: Spec.Warrior_Arms,
         role: Roles.dps,
       },
     ],
   },
   {
     id: 2,
-    name: "Mage",
+    name: PlayableClass.Mage,
     specs: [
       {
-        name: "Fire",
+        name: Spec.Mage_Fire,
         role: Roles.dps,
       },
       {
-        name: "Frost",
+        name: Spec.Mage_Frost,
         role: Roles.dps,
       },
       {
-        name: "Arcane",
+        name: Spec.Mage_Arcane,
         role: Roles.dps,
       },
     ],
   },
   {
     id: 3,
-    name: "Rogue",
+    name: PlayableClass.Rogue,
     specs: [
       {
-        name: "Assassination",
+        name: Spec.Rogue_Assassination,
         role: Roles.dps,
       },
       {
-        name: "Sublety",
+        name: Spec.Rogue_Sublety,
         role: Roles.dps,
       },
       {
-        name: "Outlaw",
+        name: Spec.Rogue_Outlaw,
         role: Roles.dps,
       },
     ],
   },
   {
     id: 4,
-    name: "Shaman",
+    name: PlayableClass.Shaman,
     specs: [
       {
-        name: "Restoration",
+        name: Spec.Shaman_Restoration,
         role: Roles.healer,
       },
       {
-        name: "Elemental",
+        name: Spec.Shaman_Elemental,
         role: Roles.dps,
       },
       {
-        name: "Enhancement",
+        name: Spec.Shaman_Enhancement,
         role: Roles.dps,
       },
     ],
   },
   {
     id: 5,
-    name: "Priest",
+    name: PlayableClass.Priest,
     specs: [
       {
-        name: "Shadow",
+        name: Spec.Priest_Shadow,
         role: Roles.dps,
       },
       {
-        name: "Holy",
+        name: Spec.Priest_Holy,
         role: Roles.healer,
       },
       {
-        name: "Discipline",
+        name: Spec.Priest_Discipline,
         role: Roles.healer,
       },
     ],
   },
   {
     id: 6,
-    name: "Hunter",
+    name: PlayableClass.Hunter,
     specs: [
       {
-        name: "BeastMastery",
+        // eslint-disable-next-line inclusive-language/use-inclusive-words
+        name: Spec.Hunter_BeastMastery,
         role: Roles.dps,
       },
       {
-        name: "Survival",
+        name: Spec.Hunter_Survival,
         role: Roles.dps,
       },
       {
-        name: "Marksmanship",
+        name: Spec.Hunter_Marksmanship,
         role: Roles.dps,
       },
     ],
   },
   {
     id: 7,
-    name: "Monk",
+    name: PlayableClass.Monk,
     specs: [
       {
-        name: "Mistweaver",
+        name: Spec.Monk_Mistweaver,
         role: Roles.healer,
       },
       {
-        name: "Brewmaster",
+        // eslint-disable-next-line inclusive-language/use-inclusive-words
+        name: Spec.Monk_Brewmaster,
         role: Roles.tank,
       },
       {
-        name: "Windwalker",
+        name: Spec.Monk_Windwalker,
         role: Roles.dps,
       },
     ],
   },
   {
     id: 8,
-    name: "Druid",
+    name: PlayableClass.Druid,
     specs: [
       {
-        name: "Restoration",
+        name: Spec.Druid_Restoration,
         role: Roles.healer,
       },
       {
-        name: "Guardian",
+        name: Spec.Druid_Guardian,
         role: Roles.tank,
       },
       {
-        name: "Balance",
+        name: Spec.Druid_Balance,
         role: Roles.dps,
       },
       {
-        name: "Feral",
+        name: Spec.Druid_Feral,
         role: Roles.dps,
       },
     ],
   },
   {
     id: 9,
-    name: "DemonHunter",
+    name: PlayableClass.DemonHunter,
     specs: [
       {
-        name: "Vengeance",
+        name: Spec.DemonHunter_Vengeance,
         role: Roles.tank,
       },
       {
-        name: "Havoc",
+        name: Spec.DemonHunter_Havoc,
         role: Roles.dps,
       },
     ],
   },
   {
     id: 10,
-    name: "Paladin",
+    name: PlayableClass.Paladin,
     specs: [
       {
-        name: "Protection",
+        name: Spec.Paladin_Protection,
         role: Roles.tank,
       },
       {
-        name: "Holy",
+        name: Spec.Paladin_Holy,
         role: Roles.healer,
       },
       {
-        name: "Retribution",
+        name: Spec.Paladin_Retribution,
         role: Roles.dps,
       },
     ],
   },
   {
     id: 11,
-    name: "Warlock",
+    name: PlayableClass.Warlock,
     specs: [
       {
-        name: "Destruction",
+        name: Spec.Warlock_Destruction,
         role: Roles.dps,
       },
       {
-        name: "Demonology",
+        name: Spec.Warlock_Demonology,
         role: Roles.dps,
       },
       {
-        name: "Affliction",
+        name: Spec.Warlock_Affliction,
         role: Roles.dps,
       },
     ],
   },
   {
     id: 12,
-    name: "DeathKnight",
+    name: PlayableClass.DeathKnight,
     specs: [
       {
-        name: "Blood",
+        name: Spec.DeathKnight_Blood,
         role: Roles.tank,
       },
       {
-        name: "Unholy",
+        name: Spec.DeathKnight_Unholy,
         role: Roles.dps,
       },
       {
-        name: "Frost",
+        name: Spec.DeathKnight_Frost,
         role: Roles.dps,
       },
     ],
@@ -595,6 +598,24 @@ function seedWeeks() {
   );
 }
 
+function seedCovenants() {
+  const insertableCovenants: Covenants[] = Object.entries(
+    covenantMap
+  ).map(([id, dataset]) => ({ ...dataset, id: Number.parseInt(id) }));
+
+  return Promise.all(
+    insertableCovenants.map((covenant) =>
+      prisma.covenants.upsert({
+        create: covenant,
+        where: {
+          id: covenant.id,
+        },
+        update: {},
+      })
+    )
+  );
+}
+
 async function main() {
   await seedDungeons();
   await seedClasses();
@@ -603,6 +624,7 @@ async function main() {
   await seedExpansions();
   await seedSeasons();
   await seedWeeks();
+  await seedCovenants();
 }
 
 main()

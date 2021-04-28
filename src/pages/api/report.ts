@@ -1,3 +1,4 @@
+import type { PlayableClass, Spec } from "@prisma/client";
 import nc from "next-connect";
 
 import { isValidReportId, setCacheControl } from "../../server/api";
@@ -20,8 +21,6 @@ import type {
 } from "../../server/queries/table";
 import { loadTableFromSource, ItemQuality } from "../../server/queries/table";
 import type { RequestHandler } from "../../server/types";
-import type { PlayableClass } from "../../types/classes";
-import { Roles } from "../../types/roles";
 import { calcMetricAverage } from "../../utils/calc";
 import type { Covenants, Soulbinds } from "../../utils/covenants";
 import { BAD_REQUEST } from "../../utils/statusCodes";
@@ -214,20 +213,18 @@ const enrichReport = async (
 const getComposition = (table: Table, keystoneTime: number): Player[] => {
   const tank = transformPlayer(
     table.playerDetails.tanks[0],
-    Roles.tank,
     table,
     keystoneTime
   );
 
   const healer = transformPlayer(
     table.playerDetails.healers[0],
-    Roles.healer,
     table,
     keystoneTime
   );
 
   const dps = table.playerDetails.dps.map((player) =>
-    transformPlayer(player, Roles.dps, table, keystoneTime)
+    transformPlayer(player, table, keystoneTime)
   );
 
   return [tank, healer, ...dps];
@@ -252,15 +249,14 @@ export type Player = Pick<
   "server" | "name" | "guid"
 > & {
   id: number;
+  guid: number;
   dps: number;
   hps: number;
   deaths: number;
   server: string;
-  guid: number;
   name: string;
-  role: Roles;
   className: PlayableClass;
-  spec: string;
+  spec: Spec;
   itemLevel: number;
   legendary: Pick<Item, "effectID" | "effectIcon" | "effectName"> | null;
   covenant: {
@@ -285,7 +281,6 @@ const transformPlayer = (
     specs: [spec],
     combatantInfo,
   }: InDepthCharacterInformation,
-  role: Roles,
   table: Table,
   keystoneTime: number
 ): Player => {
@@ -328,9 +323,8 @@ const transformPlayer = (
     dps,
     hps,
     server,
-    role,
     className,
-    spec,
+    spec: `${className}_${spec}` as Spec,
     itemLevel,
     legendary,
     covenant,

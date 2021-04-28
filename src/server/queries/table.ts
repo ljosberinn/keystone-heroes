@@ -1,6 +1,6 @@
+import type { PlayableClass, Roles, Spec } from "@prisma/client";
 import { gql } from "graphql-request";
 
-import type { PlayableClass } from "../../types/classes";
 import type { Covenants, Soulbinds } from "../../utils/covenants";
 import { getGqlClient } from "../gqlClient";
 import type { Fight } from "./report";
@@ -71,12 +71,12 @@ type Composition = {
   id: number;
   guid: number;
   type: PlayableClass;
-  specs: Spec[];
+  specs: SpecMeta[];
 };
 
-type Spec = {
+type SpecMeta = {
   spec: string;
-  role: "dps" | "healer" | "tank";
+  role: Roles;
 };
 
 export type DamageDone = Pick<Composition, "name" | "id" | "guid"> & {
@@ -103,6 +103,14 @@ export type PlayerDetails = {
   healers: InDepthCharacterInformation[];
 };
 
+type Split<S extends string, D extends string> = string extends S
+  ? string[]
+  : S extends ""
+  ? []
+  : S extends `${infer T}${D}${infer U}`
+  ? [T, ...Split<U, D>]
+  : [S];
+
 export type InDepthCharacterInformation = {
   name: string;
   id: number;
@@ -110,7 +118,7 @@ export type InDepthCharacterInformation = {
   type: PlayableClass;
   server: string;
   icon: string;
-  specs: string[];
+  specs: Split<Spec, "_">[1][];
   minItemLevel: number;
   maxItemLevel: number;
   combatantInfo: CombatantInfo;

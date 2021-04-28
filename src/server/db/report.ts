@@ -1,6 +1,7 @@
 import { DEV_USE_DB, IS_PROD, IS_TEST } from "../../constants";
 import type { UIFightsResponse } from "../../pages/report/[id]";
 import type { AffixIds } from "../../utils/affixes";
+import type { covenantMap } from "../../utils/covenants";
 import type { Dungeons } from "../../utils/dungeons";
 import { prisma } from "../prismaClient";
 import type { Fight, Report } from "../queries/report";
@@ -57,6 +58,7 @@ export const ReportsRepo = {
     try {
       // eslint-disable-next-line no-console
       console.info(`[reportId/gSP] reading report "${report}" from db`);
+
       const rawReport = await prisma.reports.findFirst({
         where: {
           report,
@@ -79,6 +81,18 @@ export const ReportsRepo = {
               keystoneTime: true,
               totalDeaths: true,
               fightId: true,
+              week: {
+                select: {
+                  affix1Id: true,
+                  affix2Id: true,
+                  affix3Id: true,
+                  season: {
+                    select: {
+                      affixId: true,
+                    },
+                  },
+                },
+              },
               tank: {
                 select: {
                   dps: true,
@@ -86,11 +100,22 @@ export const ReportsRepo = {
                   itemLevel: true,
                   deaths: true,
                   id: true,
+                  covenantId: true,
+                  spec: {
+                    select: {
+                      name: true,
+                    },
+                  },
                   character: {
                     select: {
                       name: true,
                       server: true,
                       id: true,
+                      class: {
+                        select: {
+                          name: true,
+                        },
+                      },
                     },
                   },
                 },
@@ -102,11 +127,22 @@ export const ReportsRepo = {
                   itemLevel: true,
                   deaths: true,
                   id: true,
+                  covenantId: true,
+                  spec: {
+                    select: {
+                      name: true,
+                    },
+                  },
                   character: {
                     select: {
                       name: true,
                       server: true,
                       id: true,
+                      class: {
+                        select: {
+                          name: true,
+                        },
+                      },
                     },
                   },
                 },
@@ -118,11 +154,22 @@ export const ReportsRepo = {
                   itemLevel: true,
                   deaths: true,
                   id: true,
+                  covenantId: true,
+                  spec: {
+                    select: {
+                      name: true,
+                    },
+                  },
                   character: {
                     select: {
                       name: true,
                       server: true,
                       id: true,
+                      class: {
+                        select: {
+                          name: true,
+                        },
+                      },
                     },
                   },
                 },
@@ -134,11 +181,22 @@ export const ReportsRepo = {
                   itemLevel: true,
                   deaths: true,
                   id: true,
+                  covenantId: true,
+                  spec: {
+                    select: {
+                      name: true,
+                    },
+                  },
                   character: {
                     select: {
                       name: true,
                       server: true,
                       id: true,
+                      class: {
+                        select: {
+                          name: true,
+                        },
+                      },
                     },
                   },
                 },
@@ -150,23 +208,22 @@ export const ReportsRepo = {
                   itemLevel: true,
                   deaths: true,
                   id: true,
+                  covenantId: true,
+                  spec: {
+                    select: {
+                      name: true,
+                    },
+                  },
                   character: {
                     select: {
                       name: true,
                       server: true,
                       id: true,
-                    },
-                  },
-                },
-              },
-              week: {
-                select: {
-                  affix1Id: true,
-                  affix2Id: true,
-                  affix3Id: true,
-                  season: {
-                    select: {
-                      affixId: true,
+                      class: {
+                        select: {
+                          name: true,
+                        },
+                      },
                     },
                   },
                 },
@@ -214,12 +271,13 @@ export const ReportsRepo = {
                   server: fight.tank.character.server,
                   talents: [],
                   legendary: {},
-                  spec: "Vengeance",
+                  spec: fight.tank.spec.name,
+                  itemLevel: fight.tank.itemLevel,
                   covenant: {
-                    id: 1,
+                    id: fight.tank.covenantId as keyof typeof covenantMap,
                     soulbind: { id: 1, talents: [], conduits: [] },
                   },
-                  className: "DemonHunter",
+                  className: fight.tank.character.class.name,
                 },
                 {
                   dps: fight.heal.dps,
@@ -231,12 +289,13 @@ export const ReportsRepo = {
                   server: fight.heal.character.server,
                   talents: [],
                   legendary: {},
-                  spec: "Vengeance",
+                  spec: fight.heal.spec.name,
+                  itemLevel: fight.heal.itemLevel,
                   covenant: {
-                    id: 1,
+                    id: fight.heal.covenantId as keyof typeof covenantMap,
                     soulbind: { id: 1, talents: [], conduits: [] },
                   },
-                  className: "DemonHunter",
+                  className: fight.heal.character.class.name,
                 },
                 {
                   dps: fight.dps1.dps,
@@ -248,12 +307,13 @@ export const ReportsRepo = {
                   server: fight.dps1.character.server,
                   talents: [],
                   legendary: {},
-                  spec: "Vengeance",
+                  spec: fight.dps1.spec.name,
+                  itemLevel: fight.dps1.itemLevel,
                   covenant: {
-                    id: 1,
+                    id: fight.dps1.covenantId as keyof typeof covenantMap,
                     soulbind: { id: 1, talents: [], conduits: [] },
                   },
-                  className: "DemonHunter",
+                  className: fight.dps1.character.class.name,
                 },
                 {
                   dps: fight.dps2.dps,
@@ -265,12 +325,13 @@ export const ReportsRepo = {
                   server: fight.dps2.character.server,
                   talents: [],
                   legendary: {},
-                  spec: "Vengeance",
+                  spec: fight.dps2.spec.name,
+                  itemLevel: fight.dps2.itemLevel,
                   covenant: {
-                    id: 1,
+                    id: fight.dps2.covenantId as keyof typeof covenantMap,
                     soulbind: { id: 1, talents: [], conduits: [] },
                   },
-                  className: "DemonHunter",
+                  className: fight.dps2.character.class.name,
                 },
                 {
                   dps: fight.dps3.dps,
@@ -282,12 +343,13 @@ export const ReportsRepo = {
                   server: fight.dps3.character.server,
                   talents: [],
                   legendary: {},
-                  spec: "Vengeance",
+                  spec: fight.dps3.spec.name,
+                  itemLevel: fight.dps3.itemLevel,
                   covenant: {
-                    id: 1,
+                    id: fight.dps3.covenantId as keyof typeof covenantMap,
                     soulbind: { id: 1, talents: [], conduits: [] },
                   },
-                  className: "DemonHunter",
+                  className: fight.dps3.character.class.name,
                 },
               ],
             };
