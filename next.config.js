@@ -9,9 +9,6 @@ module.exports = {
      */
     ignoreBuildErrors: true,
   },
-  future: {
-    webpack5: true,
-  },
   reactStrictMode: true,
   productionBrowserSourceMaps: true,
   env: {
