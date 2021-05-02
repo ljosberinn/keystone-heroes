@@ -3,7 +3,12 @@ import nc from "next-connect";
 
 import { classMapByName } from "../../../prisma/classes";
 import { specMapByName } from "../../../prisma/specs";
-import { isValidReportId } from "../../server/api";
+import {
+  CacheControl,
+  isValidReportId,
+  maybeOngoingReport,
+  setCacheControl,
+} from "../../server/api";
 import { CharacterRepo } from "../../server/db/characters";
 import { ConduitRepo } from "../../server/db/conduit";
 import { CovenantTraitRepo } from "../../server/db/covenantTrait";
@@ -127,12 +132,18 @@ const fightsHandler: RequestHandler<Request, ResponseFight2[]> = async (
       return;
     }
 
+    const ongoing = maybeOngoingReport(report.endTime);
+
     const persistedFights = await FightRepo.loadFull(reportId, fightIds);
     const unseenFightIds = fightIds.filter(
       (id) => !persistedFights.some((fight) => fight.fightId === id)
     );
 
     if (unseenFightIds.length === 0) {
+      setCacheControl(
+        res,
+        ongoing ? CacheControl.ONE_MONTH : CacheControl.ONE_HOUR
+      );
       res.json(persistedFights);
       return;
     }
@@ -140,11 +151,24 @@ const fightsHandler: RequestHandler<Request, ResponseFight2[]> = async (
     const newFights = await loadFightsFromSource(reportId, unseenFightIds);
 
     if (!newFights) {
-      res.status(INTERNAL_SERVER_ERROR).end();
+      // eslint-disable-next-line no-console
+      console.info(
+        `[api/fight] failed to load new fights from wcl for "${reportId}`
+      );
+
+      setCacheControl(res, CacheControl.ONE_HOUR);
+      res.json(persistedFights);
       return;
     }
 
     if (newFights.length === 0) {
+      // eslint-disable-next-line no-console
+      console.info(`[api/fight] no new fights present for "${reportId}"`);
+
+      setCacheControl(
+        res,
+        ongoing ? CacheControl.ONE_HOUR : CacheControl.ONE_MONTH
+      );
       res.json(persistedFights);
       return;
     }
@@ -208,6 +232,10 @@ const fightsHandler: RequestHandler<Request, ResponseFight2[]> = async (
       // eslint-disable-next-line no-console
       console.info("[api/fight] no insertable fights found");
 
+      setCacheControl(
+        res,
+        ongoing ? CacheControl.ONE_HOUR : CacheControl.ONE_MONTH
+      );
       res.json(persistedFights);
       return;
     }
@@ -376,6 +404,10 @@ const fightsHandler: RequestHandler<Request, ResponseFight2[]> = async (
       unseenFightIds
     );
 
+    setCacheControl(
+      res,
+      ongoing ? CacheControl.ONE_HOUR : CacheControl.ONE_MONTH
+    );
     res.json([...persistedFights, ...fullPersistedFights]);
   } catch (error) {
     // eslint-disable-next-line no-console

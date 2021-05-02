@@ -1,6 +1,11 @@
 import nc from "next-connect";
 
-import { isValidReportId } from "../../server/api";
+import {
+  CacheControl,
+  isValidReportId,
+  maybeOngoingReport,
+  setCacheControl,
+} from "../../server/api";
 import { ReportRepo } from "../../server/db/report";
 import { loadReportFromSource } from "../../server/queries/report";
 import type { RequestHandler } from "../../server/types";
@@ -22,10 +27,6 @@ export type Response =
       fights: number[];
       title: string;
     };
-
-// assume a report may still be ongoing if its less than one day old
-const maybeOngoingReport = (endTime: number) =>
-  24 * 60 * 60 * 1000 > Date.now() - endTime;
 
 const reportHandler: RequestHandler<Request, Response> = async (req, res) => {
   if (
@@ -49,6 +50,8 @@ const reportHandler: RequestHandler<Request, Response> = async (req, res) => {
       console.info("[api/report] known & finished report");
       const { id: dbId, region, ...rest } = report;
 
+      setCacheControl(res, CacheControl.ONE_MONTH);
+
       res.json({
         ...rest,
         id,
@@ -66,6 +69,8 @@ const reportHandler: RequestHandler<Request, Response> = async (req, res) => {
       );
 
       const { id: dbId, region, ...rest } = report;
+
+      setCacheControl(res, CacheControl.ONE_HOUR);
 
       res.json({
         ...rest,
@@ -103,6 +108,13 @@ const reportHandler: RequestHandler<Request, Response> = async (req, res) => {
   }
 
   await ReportRepo.create(id, rawReport);
+
+  setCacheControl(
+    res,
+    maybeOngoingReport(rawReport.endTime)
+      ? CacheControl.ONE_HOUR
+      : CacheControl.ONE_MONTH
+  );
 
   res.json({
     id,
