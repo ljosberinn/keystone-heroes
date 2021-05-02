@@ -1,17 +1,21 @@
+import type { Server, Spec, Character } from "@prisma/client";
+
 import type { FooFight } from "../../pages/api/fight";
 import { prisma } from "../prismaClient";
 
-export type PlayerInsert = {
-  dps: number;
-  hps: number;
-  deaths: number;
-  serverId: number;
-  itemLevel: number;
-  soulbindId: number;
-  covenantId: number;
-  specId: number;
-  characterId: number;
-  legendary: FooFight["composition"][number]["legendary"];
+export type PlayerInsert = Pick<
+  FooFight["composition"][number],
+  | "dps"
+  | "hps"
+  | "deaths"
+  | "itemLevel"
+  | "covenantId"
+  | "soulbindId"
+  | "legendary"
+> & {
+  serverId: Server["id"];
+  specId: Spec["id"];
+  characterId: Character["id"];
 };
 
 export const PlayerRepo = {

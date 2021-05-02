@@ -1,4 +1,4 @@
-import type { PlayableClass } from "@prisma/client";
+import type { Character, Fight, PlayableClass, Server } from "@prisma/client";
 import nc from "next-connect";
 
 import { classMapByName } from "../../../prisma/classes";
@@ -7,12 +7,12 @@ import { isValidReportId } from "../../server/api";
 import { CharacterRepo } from "../../server/db/characters";
 import { ConduitRepo } from "../../server/db/conduit";
 import { CovenantTraitRepo } from "../../server/db/covenantTrait";
+import type { ResponseFight2 } from "../../server/db/fights";
 import { FightRepo } from "../../server/db/fights";
 import { LegendaryRepo } from "../../server/db/legendary";
 import { PlayerConduitRepo } from "../../server/db/playerConduit";
 import { PlayerCovenantTraitRepo } from "../../server/db/playerCovenantTrait";
 import { PlayerTalentRepo } from "../../server/db/playerTalent";
-import type { PlayerInsert } from "../../server/db/players";
 import { PlayerRepo } from "../../server/db/players";
 import { ReportRepo } from "../../server/db/report";
 import { ServerRepo } from "../../server/db/server";
@@ -41,8 +41,6 @@ type Request = {
   };
 };
 
-type Response = {};
-
 const getData = (
   details: InDepthCharacterInformation,
   table: Table,
@@ -54,13 +52,15 @@ const getData = (
 
   const specId = specMapByName[details.specs[0]];
 
+  const covenantId = details.combatantInfo.covenantID ?? null;
+
   return {
     server: details.server,
     name: details.name,
     className: details.type,
     itemLevel: details.minItemLevel,
-    covenantId: details.combatantInfo.covenantID,
-    soulbindId: details.combatantInfo.soulbindID,
+    covenantId,
+    soulbindId: details.combatantInfo.soulbindID ?? null,
     specId,
     legendary: legendary
       ? {
@@ -78,16 +78,18 @@ const getData = (
         itemLevel: conduit.total,
       };
     }),
-    covenantTraits: details.combatantInfo.artifact
-      .filter((talent) => talent.guid !== 0)
-      .map((talent) => {
-        return {
-          name: talent.name,
-          abilityIcon: talent.abilityIcon,
-          id: talent.guid,
-          covenantId: details.combatantInfo.covenantID,
-        };
-      }),
+    covenantTraits: covenantId
+      ? details.combatantInfo.artifact
+          .filter((talent) => talent.guid !== 0)
+          .map((talent) => {
+            return {
+              name: talent.name,
+              abilityIcon: talent.abilityIcon,
+              id: talent.guid,
+              covenantId,
+            };
+          })
+      : [],
     talents: details.combatantInfo.talents.map((talent) => {
       return {
         name: talent.name,
@@ -104,7 +106,10 @@ const getData = (
   };
 };
 
-const fightsHandler: RequestHandler<Request, Response> = async (req, res) => {
+const fightsHandler: RequestHandler<Request, ResponseFight2[]> = async (
+  req,
+  res
+) => {
   if (
     !isValidReportId(req.query.reportId) ||
     !req.query.ids ||
@@ -159,7 +164,7 @@ const fightsHandler: RequestHandler<Request, Response> = async (req, res) => {
       fightTables.filter((data): data is [number, Table] => data[1] !== null)
     );
 
-    const processedFights = newFights
+    const insertableFights = newFights
       .filter((fight): fight is ValidRawFight => {
         const hasSuccessfulTableRequest = fight.id in tablesAsMap;
         const hasGameZone = Boolean(fight.gameZone);
@@ -202,7 +207,7 @@ const fightsHandler: RequestHandler<Request, Response> = async (req, res) => {
         };
       });
 
-    if (processedFights.length === 0) {
+    if (insertableFights.length === 0) {
       res.json(persistedFights);
       return;
     }
@@ -210,23 +215,55 @@ const fightsHandler: RequestHandler<Request, Response> = async (req, res) => {
     const serverMap = await ServerRepo.createMany(
       report.region,
       toUniqueArray(
-        processedFights.flatMap((fight) =>
+        insertableFights.flatMap((fight) =>
           fight.composition.map((player) => player.server)
         )
       )
     );
 
     const characters = await CharacterRepo.createMany(
-      processedFights.flatMap((fight) => fight.composition),
+      insertableFights.flatMap((fight) => fight.composition),
       report.region,
       serverMap
     );
 
+    const insertableFightsWithCharacterId = insertableFights.map((fight) => {
+      return {
+        ...fight,
+        composition: fight.composition
+          .map((player) => {
+            const serverId = serverMap[player.server];
+
+            const character = getCharacterId(characters, {
+              className: player.className,
+              name: player.name,
+              serverId,
+            });
+
+            if (!character) {
+              return null;
+            }
+
+            return {
+              ...player,
+              serverId,
+              characterId: character.id,
+            };
+          })
+          .filter(
+            (player): player is ExtendedPlayer =>
+              player?.characterId !== null && player?.serverId !== null
+          ),
+      };
+    });
+
+    const allPlayers = insertableFightsWithCharacterId.flatMap(
+      (fight) => fight.composition
+    );
+
     await LegendaryRepo.createMany(
-      processedFights
-        .flatMap<FooFight["composition"][number]["legendary"] | null>((fight) =>
-          fight.composition.map((player) => player.legendary)
-        )
+      allPlayers
+        .map((player) => player.legendary)
         .filter(
           (
             item
@@ -237,98 +274,101 @@ const fightsHandler: RequestHandler<Request, Response> = async (req, res) => {
     );
 
     await ConduitRepo.createMany(
-      processedFights
-        .map((fight) => fight.composition.map((player) => player.conduits))
-        .flat(2)
+      allPlayers.flatMap((player) => player.conduits)
     );
 
-    await TalentRepo.createMany(
-      processedFights
-        .map((fight) => fight.composition.map((player) => player.talents))
-        .flat(2)
-    );
+    await TalentRepo.createMany(allPlayers.flatMap((player) => player.talents));
 
     await CovenantTraitRepo.createMany(
-      processedFights
-        .map((fight) =>
-          fight.composition.map((player) => player.covenantTraits)
-        )
-        .flat(2)
+      allPlayers.flatMap((player) => player.covenantTraits)
     );
 
-    const processed2 = processedFights.map((fight) => {
-      return {
-        ...fight,
-        composition: fight.composition.map((player) => {
-          return {
-            ...player,
-            serverId: serverMap[player.server],
-            characterId: characters.find(
-              (character) => character.name === player.name
-            )!.id,
-          };
-        }),
-      };
-    });
+    const week = WeekRepo.findWeekbyTimestamp(report.startTime, report.endTime);
 
-    const playerIdMap = await PlayerRepo.createMany(
-      processed2.flatMap<PlayerInsert>((fight) => fight.composition),
-      report.id
+    const playerIdMap = await PlayerRepo.createMany(allPlayers, report.id);
+
+    await FightRepo.createMany(
+      insertableFightsWithCharacterId.map((fight) => {
+        const [tank, heal, dps1, dps2, dps3] = fight.composition;
+
+        return {
+          reportId: report.id,
+          weekId: week.id,
+          fightId: fight.id,
+          dungeonId: fight.dungeon,
+          chests: fight.chests,
+          dps: fight.dps,
+          hps: fight.hps,
+          dtps: fight.dtps,
+          averageItemLevel: Math.round(fight.averageItemLevel * 100),
+          keystoneLevel: fight.keystoneLevel,
+          keystoneTime: fight.keystoneTime,
+          totalDeaths: fight.totalDeaths,
+          player1: playerIdMap[tank.characterId],
+          player2: playerIdMap[heal.characterId],
+          player3: playerIdMap[dps1.characterId],
+          player4: playerIdMap[dps2.characterId],
+          player5: playerIdMap[dps3.characterId],
+        };
+      })
     );
 
-    const week = await WeekRepo.findWeekByAffixes(
-      report.startTime,
-      processedFights[0].affixes
-    );
-
-    await FightRepo.createMany(report.id, week.id, processed2, playerIdMap);
-
-    const newPersistedFights = await FightRepo.loadMany(
+    const insertedFights = await FightRepo.loadMany(
       reportId,
-      processed2.map((fight) => fight.id)
+      insertableFightsWithCharacterId.map((fight) => fight.id)
+    );
+
+    const playersWithFightAndPlayerId = insertableFightsWithCharacterId.flatMap(
+      (fight) =>
+        fight.composition
+          .map((player) => {
+            const dbFight = getFightId(insertedFights, fight.id);
+
+            if (!dbFight) {
+              return null;
+            }
+
+            return {
+              ...player,
+              playerId: playerIdMap[player.characterId],
+              fightId: dbFight.id,
+            };
+          })
+          .filter(
+            (player): player is FurtherExtendedPlayer =>
+              player?.fightId !== null
+          )
     );
 
     await PlayerConduitRepo.createMany(
-      processed2.flatMap((fight) =>
-        fight.composition.map((player) => {
-          return {
-            playerId: playerIdMap[player.characterId],
-            conduits: player.conduits,
-            fightId: newPersistedFights.find(
-              (newFight) => fight.id === newFight.fightId
-            )!.id,
-          };
-        })
-      )
+      playersWithFightAndPlayerId.map((player) => {
+        return {
+          playerId: player.playerId,
+          conduits: player.conduits,
+          fightId: player.fightId,
+        };
+      })
     );
 
     await PlayerTalentRepo.createMany(
-      processed2.flatMap((fight) =>
-        fight.composition.map((player) => {
-          return {
-            playerId: playerIdMap[player.characterId],
-            talents: player.talents,
-            fightId: newPersistedFights.find(
-              (newFight) => fight.id === newFight.fightId
-            )!.id,
-          };
-        })
-      )
+      playersWithFightAndPlayerId.map((player) => {
+        return {
+          playerId: player.playerId,
+          talents: player.talents,
+          fightId: player.fightId,
+        };
+      })
     );
 
     await PlayerCovenantTraitRepo.createMany(
-      processed2.flatMap((fight) =>
-        fight.composition.map((player) => {
-          return {
-            playerId: playerIdMap[player.characterId],
-            fightId: newPersistedFights.find(
-              (newFight) => fight.id === newFight.fightId
-            )!.id,
-            covenantTraits: player.covenantTraits,
-            covenantId: player.covenantId,
-          };
-        })
-      )
+      playersWithFightAndPlayerId.map((player) => {
+        return {
+          playerId: player.playerId,
+          covenantTraits: player.covenantTraits,
+          covenantId: player.covenantId,
+          fightId: player.fightId,
+        };
+      })
     );
 
     const fullPersistedFights = await FightRepo.loadFull(
@@ -370,8 +410,8 @@ export type FooFight = Omit<
     className: PlayableClass;
     // spec: SpecName;
     specId: number;
-    covenantId: number;
-    soulbindId: number;
+    covenantId: number | null;
+    soulbindId: number | null;
     itemLevel: number;
     deaths: number;
     hps: number;
@@ -395,4 +435,36 @@ export type FooFight = Omit<
       covenantId: number;
     })[];
   }[];
+};
+
+const getCharacterId = (
+  characters: Character[],
+  {
+    serverId,
+    name,
+    className,
+  }: { serverId: Server["id"]; name: string; className: PlayableClass }
+) => {
+  const classId = classMapByName[className];
+
+  return characters.find(
+    (character) =>
+      character.name === name &&
+      character.serverId === serverId &&
+      character.classId === classId
+  );
+};
+
+const getFightId = (fights: Pick<Fight, "id" | "fightId">[], id: number) => {
+  return fights.find((fight) => fight.fightId === id);
+};
+
+type ExtendedPlayer = FooFight["composition"][number] & {
+  characterId: number;
+  serverId: number;
+};
+
+type FurtherExtendedPlayer = ExtendedPlayer & {
+  playerId: number;
+  fightId: number;
 };

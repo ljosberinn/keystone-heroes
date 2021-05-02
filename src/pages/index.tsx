@@ -4,12 +4,20 @@ import { useState } from "react";
 
 export default function Home(): JSX.Element {
   const [code, setCode] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    // eslint-disable-next-line no-console, promise/prefer-await-to-then
-    Router.push(`/report/${code}`).catch(console.error);
+    setSubmitting(true);
+
+    try {
+      await Router.push(`/report/${code}`);
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(error);
+      setSubmitting(false);
+    }
   }
 
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
@@ -18,7 +26,7 @@ export default function Home(): JSX.Element {
 
   return (
     <form onSubmit={handleSubmit}>
-      <fieldset>
+      <fieldset disabled={submitting}>
         <legend>legend</legend>
         <div>
           <label htmlFor="code">code</label>

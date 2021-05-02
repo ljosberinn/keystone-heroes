@@ -1,9 +1,10 @@
-import type { Conduit } from "../../server/queries/table";
+import type { ResponseFight2 } from "../../server/db/fights";
 import { Icon } from "./Icon";
 
-export type ConduitsProps = {
-  conduits: Conduit[];
-};
+export type ConduitsProps = Pick<
+  ResponseFight2["composition"][number],
+  "conduits"
+>;
 
 export function Conduits({ conduits }: ConduitsProps): JSX.Element {
   return (
@@ -12,9 +13,9 @@ export function Conduits({ conduits }: ConduitsProps): JSX.Element {
         return (
           <Icon
             src={conduit.abilityIcon}
-            alt={conduit.name}
+            alt={`${conduit.name} @ ${conduit.itemLevel}`}
             className={index > 0 && "ml-1"}
-            key={conduit.guid}
+            key={conduit.id}
             srcPrefix="abilities"
           />
         );

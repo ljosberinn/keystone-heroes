@@ -1,31 +1,22 @@
-import { affixes as allAffixes } from "../../../prisma/affixes";
+import type { ResponseFight2 } from "../../server/db/fights";
 import { classnames } from "../../utils/classNames";
 import { Icon } from "./Icon";
 
-export type AffixesProps = {
-  affixes: number[];
-  chests: number;
-};
+export type AffixesProps = Pick<ResponseFight2, "affixes" | "chests">;
 
 export function Affixes({ affixes, chests }: AffixesProps): JSX.Element {
   return (
     <div className="flex items-center flex-row">
-      {affixes.map((affixId, index) => {
-        const affixInfo = allAffixes[affixId] ?? null;
-
-        if (!affixInfo) {
-          return "?";
-        }
-
-        const src = affixInfo.icon ?? null;
-        const alt = affixInfo.name ?? affixId.toString();
+      {affixes.map((affix, index) => {
+        const src = affix.icon ?? null;
+        const alt = affix.name ?? affix.id.toString();
 
         return (
           <Icon
             srcPrefix="abilities"
             src={src}
             alt={alt}
-            key={affixId}
+            key={affix.id}
             className={classnames(
               index > 0 && "ml-1",
               chests === 0 && "filter grayscale opacity-50"

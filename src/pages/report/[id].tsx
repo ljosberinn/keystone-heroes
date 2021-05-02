@@ -7,42 +7,15 @@ import { createDungeonTimer } from "../../../prisma/dungeons";
 import { Affixes } from "../../client/components/Affixes";
 import { Chests } from "../../client/components/Chests";
 import { Composition } from "../../client/components/Composition";
+import { Conduits } from "../../client/components/Conduits";
 import { ExternalLink } from "../../client/components/ExternalLink";
 import { Icon } from "../../client/components/Icon";
+import { Soulbinds } from "../../client/components/Soulbinds";
 import { isValidReportId } from "../../server/api";
 import type { ResponseFight2 } from "../../server/db/fights";
 import { ReportRepo } from "../../server/db/report";
 import { loadReportFromSource } from "../../server/queries/report";
 import { calcRunDuration, calcTimeLeft } from "../../utils/calc";
-
-async function loadFights({
-  report,
-  fights,
-}: NewUIReport): Promise<ResponseFight2[]> {
-  if (fights.length === 0) {
-    return [];
-  }
-
-  try {
-    const params = new URLSearchParams({
-      reportId: report,
-    });
-
-    fights.forEach((id) => {
-      // @ts-expect-error doesn't have to be a string
-      params.append("ids", id);
-    });
-
-    const query = params.toString();
-
-    const response = await fetch(`/api/fight?${query}`);
-
-    return await response.json();
-  } catch (error) {
-    console.error(error);
-    return [];
-  }
-}
 
 export type NewUIReport = {
   endTime: number;
@@ -63,7 +36,28 @@ export default function Report({ report }: ReportProps): JSX.Element | null {
 
   useEffect(() => {
     if (report) {
-      loadFights(report).then(setFights);
+      if (!report || report.fights.length === 0) {
+        return;
+      }
+
+      const params = new URLSearchParams({
+        reportId: report.report,
+      });
+
+      report.fights.forEach((id) => {
+        // @ts-expect-error doesn't have to be a string
+        params.append("ids", id);
+      });
+
+      const query = params.toString();
+
+      fetch(`/api/fight?${query}`)
+        // eslint-disable-next-line promise/prefer-await-to-then
+        .then((response) => response.json())
+        // eslint-disable-next-line promise/prefer-await-to-then
+        .then(setFights)
+        // eslint-disable-next-line promise/prefer-await-to-then, no-console
+        .catch(console.error);
     }
   }, [report]);
 
@@ -86,7 +80,7 @@ export default function Report({ report }: ReportProps): JSX.Element | null {
     return <h1>still loading stuff</h1>;
   }
 
-  const reportUrl = `https://www.warcraftlogs.com/reports/${report}`;
+  const reportUrl = `https://www.warcraftlogs.com/reports/${report.report}`;
 
   return (
     <>
@@ -218,7 +212,7 @@ function Row({ fight, reportBaseUrl, region }: RowProps) {
               <tr key={player.character.name}>
                 <td>
                   <ExternalLink
-                    href={`https://www.warcraftlogs.com/character/${region}/${player.server}/${player.name}`}
+                    href={`https://www.warcraftlogs.com/character/${region}/${player.character.server.name}/${player.character.name}`}
                   >
                     {player.character.name}
                   </ExternalLink>
@@ -227,22 +221,18 @@ function Row({ fight, reportBaseUrl, region }: RowProps) {
 
                 <td className="text-right">
                   <ExternalLink
-                    href={`${fightUrl}&type=damage-done&source=${player.id}`}
+                    href={`${fightUrl}&type=damage-done&source=TODO`}
                   >
                     {player.dps.toLocaleString()}
                   </ExternalLink>
                 </td>
                 <td className="text-right">
-                  <ExternalLink
-                    href={`${fightUrl}&type=healing&source=${player.id}`}
-                  >
+                  <ExternalLink href={`${fightUrl}&type=healing&source=TODO`}>
                     {player.hps.toLocaleString()}
                   </ExternalLink>
                 </td>
                 <td className="text-right">
-                  <ExternalLink
-                    href={`${fightUrl}&type=deaths&source=${player.id}`}
-                  >
+                  <ExternalLink href={`${fightUrl}&type=deaths&source=TODO`}>
                     {player.deaths.toLocaleString()}
                   </ExternalLink>
                 </td>
@@ -272,7 +262,7 @@ function Row({ fight, reportBaseUrl, region }: RowProps) {
                         <Icon
                           src={talent.abilityIcon}
                           alt={talent.name}
-                          key={talent.guid}
+                          key={talent.id}
                           className={index > 0 && "ml-1"}
                           srcPrefix="abilities"
                         />
@@ -283,26 +273,30 @@ function Row({ fight, reportBaseUrl, region }: RowProps) {
 
                 <td className="text-center">
                   <div className="flex justify-center">
-                    <Icon
-                      src={player.covenant.icon}
-                      alt={player.covenant.name}
-                      srcPrefix="abilities"
-                    />
-                    {/* <Icon
-                      src={soulbindMap[player.covenant.soulbind.id].icon}
-                      alt={soulbindMap[player.covenant.soulbind.id].name}
-                      srcPrefix="soulbinds"
-                      className="ml-1"
-                    /> */}
+                    {player.covenant && (
+                      <Icon
+                        src={player.covenant.icon}
+                        alt={player.covenant.name}
+                        srcPrefix="abilities"
+                      />
+                    )}
+                    {player.soulbind && (
+                      <Icon
+                        src={player.soulbind.icon}
+                        alt={player.soulbind.name}
+                        srcPrefix="soulbinds"
+                        className="ml-1"
+                      />
+                    )}
                   </div>
                 </td>
 
                 <td className="text-center">
-                  {/* <Soulbinds soulbinds={player.covenant.soulbind.talents} /> */}
+                  <Soulbinds covenantTraits={player.covenantTraits} />
                 </td>
 
                 <td className="text-center">
-                  {/* <Conduits conduits={player.covenant.soulbind.conduits} /> */}
+                  <Conduits conduits={player.conduits} />
                 </td>
               </tr>
             );

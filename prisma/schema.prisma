@@ -299,11 +299,11 @@ model Player {
   deaths    Int
   itemLevel Int
 
-  covenantId Int
-  covenant   Covenant @relation(fields: [covenantId], references: [id])
+  covenantId Int?
+  covenant   Covenant? @relation(fields: [covenantId], references: [id])
 
-  soulbindId Int
-  soulbind   Soulbind @relation(fields: [soulbindId], references: [id])
+  soulbindId Int?
+  soulbind   Soulbind? @relation(fields: [soulbindId], references: [id])
 
   legendaryId Int?
   legendary   Legendary? @relation(fields: [legendaryId], references: [id])

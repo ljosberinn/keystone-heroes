@@ -12,9 +12,9 @@ import type {
   Spec,
   SpecName,
   Player as PrismaPlayer,
+  CovenantTrait,
 } from "@prisma/client";
 
-import type { FooFight } from "../../pages/api/fight";
 import { prisma } from "../prismaClient";
 import type {
   Conduit,
@@ -23,10 +23,6 @@ import type {
   SoulbindTalent,
   Talent,
 } from "../queries/table";
-
-type Test = Omit<FooFight, "composition"> & {
-  composition: (FooFight["composition"][number] & { characterId: number })[];
-};
 
 export type ResponseFight2 = Pick<
   Fight,
@@ -42,57 +38,36 @@ export type ResponseFight2 = Pick<
 > & {
   dungeon: Dungeon;
   affixes: Omit<Affix, "seasonal">[];
-  composition: (Pick<PrismaPlayer, "dps" | "hps" | "deaths" | "itemLevel"> & {
-    legendary: Legendary | null;
-    covenant: Pick<Covenant, "icon" | "name">;
-    soulbind: Pick<Soulbind, "icon" | "name">;
-    character: Pick<Character, "name"> & {
-      class: Class;
-      spec: Pick<Spec, "id" | "name">;
-      server: Omit<Server, "regionId">;
-    };
-    talents: [];
-    covenantTraits: [];
-    conduits: [];
-  })[];
+  composition: Composition;
 };
 
+type Composition = (Pick<
+  PrismaPlayer,
+  "dps" | "hps" | "deaths" | "itemLevel"
+> & {
+  legendary: Legendary | null;
+  covenant: Pick<Covenant, "icon" | "name"> | null;
+  soulbind: Pick<Soulbind, "icon" | "name"> | null;
+  character: Pick<Character, "name"> & {
+    class: Class;
+    spec: Pick<Spec, "id" | "name">;
+    server: Pick<Server, "name">;
+  };
+  talents: (Omit<Talent, "guid" | "type"> & { id: number })[];
+  covenantTraits: Omit<CovenantTrait, "covenantId">[];
+  conduits: (Omit<Conduit, "guid" | "total"> & {
+    itemLevel: number;
+    id: number;
+  })[];
+})[];
+
 export const FightRepo = {
-  createMany: async <T extends Test>(
-    reportId: number,
-    weekId: number,
-    fights: T[],
-    playerIdMap: Record<number, number>
-  ): Promise<void> => {
+  createMany: async (fights: Omit<Fight, "id">[]): Promise<void> => {
     // eslint-disable-next-line no-console
-    console.info(
-      `[FightsRepo/createMany] reportId ${reportId} - creating ${fights.length} fights`
-    );
+    console.info(`[FightsRepo/createMany]creating ${fights.length} fights`);
 
     await prisma.fight.createMany({
-      data: fights.map((fight) => {
-        const [tank, heal, dps1, dps2, dps3] = fight.composition;
-
-        return {
-          reportId,
-          weekId,
-          fightId: fight.id,
-          chests: fight.chests,
-          dungeonId: fight.dungeon,
-          dps: fight.dps,
-          hps: fight.hps,
-          dtps: fight.dtps,
-          averageItemLevel: Math.round(fight.averageItemLevel * 100),
-          keystoneLevel: fight.keystoneLevel,
-          keystoneTime: fight.keystoneTime,
-          totalDeaths: fight.totalDeaths,
-          player1: playerIdMap[tank.characterId],
-          player2: playerIdMap[heal.characterId],
-          player3: playerIdMap[dps1.characterId],
-          player4: playerIdMap[dps2.characterId],
-          player5: playerIdMap[dps3.characterId],
-        };
-      }),
+      data: fights,
       skipDuplicates: true,
     });
   },
@@ -105,6 +80,83 @@ export const FightRepo = {
       `[FightsRepo/loadFull] report "${report}" - ids "${ids.join(",")}"`
     );
 
+    const playerSelect = {
+      select: {
+        covenant: {
+          select: {
+            name: true,
+            icon: true,
+          },
+        },
+        dps: true,
+        hps: true,
+        deaths: true,
+        itemLevel: true,
+        spec: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        soulbind: {
+          select: {
+            name: true,
+            icon: true,
+          },
+        },
+        character: {
+          select: {
+            id: true,
+            name: true,
+            server: {
+              select: {
+                name: true,
+              },
+            },
+            class: true,
+          },
+        },
+        legendary: true,
+        PlayerTalent: {
+          select: {
+            talent: {
+              select: {
+                abilityIcon: true,
+                name: true,
+                id: true,
+              },
+            },
+            fightId: true,
+          },
+        },
+        PlayerConduit: {
+          select: {
+            fightId: true,
+            itemLevel: true,
+            conduit: {
+              select: {
+                abilityIcon: true,
+                name: true,
+                id: true,
+              },
+            },
+          },
+        },
+        PlayerCovenantTrait: {
+          select: {
+            fightId: true,
+            covenantTrait: {
+              select: {
+                abilityIcon: true,
+                id: true,
+                name: true,
+              },
+            },
+          },
+        },
+      },
+    } as const;
+
     const response = await prisma.fight.findMany({
       where: {
         report: {
@@ -115,6 +167,7 @@ export const FightRepo = {
         },
       },
       select: {
+        id: true,
         fightId: true,
         averageItemLevel: true,
         chests: true,
@@ -161,206 +214,11 @@ export const FightRepo = {
             },
           },
         },
-        tank: {
-          select: {
-            covenant: {
-              select: {
-                name: true,
-                icon: true,
-              },
-            },
-            dps: true,
-            hps: true,
-            deaths: true,
-            itemLevel: true,
-            spec: {
-              select: {
-                id: true,
-                name: true,
-              },
-            },
-            soulbind: {
-              select: {
-                name: true,
-                icon: true,
-              },
-            },
-            character: {
-              select: {
-                id: true,
-                name: true,
-                server: {
-                  select: {
-                    id: true,
-                    name: true,
-                  },
-                },
-                class: true,
-              },
-            },
-            legendary: true,
-          },
-        },
-        heal: {
-          select: {
-            covenant: {
-              select: {
-                name: true,
-                icon: true,
-              },
-            },
-            dps: true,
-            hps: true,
-            deaths: true,
-            itemLevel: true,
-            spec: {
-              select: {
-                id: true,
-                name: true,
-              },
-            },
-            soulbind: {
-              select: {
-                name: true,
-                icon: true,
-              },
-            },
-            character: {
-              select: {
-                id: true,
-                name: true,
-                server: {
-                  select: {
-                    id: true,
-                    name: true,
-                  },
-                },
-                class: true,
-              },
-            },
-            legendary: true,
-          },
-        },
-        dps1: {
-          select: {
-            covenant: {
-              select: {
-                name: true,
-                icon: true,
-              },
-            },
-            dps: true,
-            hps: true,
-            deaths: true,
-            itemLevel: true,
-            spec: {
-              select: {
-                id: true,
-                name: true,
-              },
-            },
-            soulbind: {
-              select: {
-                name: true,
-                icon: true,
-              },
-            },
-            character: {
-              select: {
-                id: true,
-                name: true,
-                server: {
-                  select: {
-                    id: true,
-                    name: true,
-                  },
-                },
-                class: true,
-              },
-            },
-            legendary: true,
-          },
-        },
-        dps2: {
-          select: {
-            covenant: {
-              select: {
-                name: true,
-                icon: true,
-              },
-            },
-            dps: true,
-            hps: true,
-            deaths: true,
-            itemLevel: true,
-            spec: {
-              select: {
-                id: true,
-                name: true,
-              },
-            },
-            soulbind: {
-              select: {
-                name: true,
-                icon: true,
-              },
-            },
-            character: {
-              select: {
-                id: true,
-                name: true,
-                server: {
-                  select: {
-                    id: true,
-                    name: true,
-                  },
-                },
-                class: true,
-              },
-            },
-            legendary: true,
-          },
-        },
-        dps3: {
-          select: {
-            covenant: {
-              select: {
-                name: true,
-                icon: true,
-              },
-            },
-            dps: true,
-            hps: true,
-            deaths: true,
-            itemLevel: true,
-            spec: {
-              select: {
-                id: true,
-                name: true,
-              },
-            },
-            soulbind: {
-              select: {
-                name: true,
-                icon: true,
-              },
-            },
-            character: {
-              select: {
-                id: true,
-                name: true,
-                server: {
-                  select: {
-                    id: true,
-                    name: true,
-                  },
-                },
-                class: true,
-              },
-            },
-            legendary: true,
-          },
-        },
+        tank: playerSelect,
+        heal: playerSelect,
+        dps1: playerSelect,
+        dps2: playerSelect,
+        dps3: playerSelect,
       },
     });
 
@@ -372,6 +230,13 @@ export const FightRepo = {
         fight.dps2,
         fight.dps3,
       ];
+
+      const affixes = [
+        fight.week.firstAffix,
+        fight.keystoneLevel >= 4 && fight.week.secondAffix,
+        fight.keystoneLevel >= 7 && fight.week.thirdAffix,
+        fight.keystoneLevel >= 10 && fight.week.season?.affix,
+      ].filter((affix): affix is Omit<Affix, "seasonal"> => affix !== false);
 
       return {
         averageItemLevel: Number.parseFloat(
@@ -386,8 +251,23 @@ export const FightRepo = {
         totalDeaths: fight.totalDeaths,
         fightId: fight.fightId,
         dungeon: fight.dungeon,
-        affixes: [],
+        affixes,
         composition: player.map((dataset) => {
+          const talents = dataset.PlayerTalent.filter(
+            (dataset) => dataset.fightId === fight.id
+          ).map((dataset) => dataset.talent);
+
+          const conduits = dataset.PlayerConduit.filter(
+            (dataset) => dataset.fightId === fight.id
+          ).map((dataset) => ({
+            ...dataset.conduit,
+            itemLevel: dataset.itemLevel,
+          }));
+
+          const covenantTraits = dataset.PlayerCovenantTrait.filter(
+            (dataset) => dataset.fightId === fight.id
+          ).map((dataset) => dataset.covenantTrait);
+
           return {
             legendary: dataset.legendary,
             dps: dataset.dps,
@@ -402,9 +282,9 @@ export const FightRepo = {
             },
             soulbind: dataset.soulbind,
             covenant: dataset.covenant,
-            conduits: [],
-            covenantTraits: [],
-            talents: [],
+            conduits,
+            covenantTraits,
+            talents,
           };
         }),
       };
@@ -459,13 +339,13 @@ export type RawDBFight = Pick<
     };
   };
   tank: Pick<Player, "deaths" | "dps" | "hps" | "itemLevel"> & {
-    covenant: Covenant;
-    spec: Omit<Spec, "role" | "classId">;
     character: Pick<Character, "name" | "id"> & {
       class: Class;
       server: Server;
     };
-    soulbind: Soulbind;
+    spec: Omit<Spec, "role" | "classId">;
+    covenant: Covenant | null;
+    soulbind: Soulbind | null;
     legendary: Legendary | null;
   };
   // heal: {}

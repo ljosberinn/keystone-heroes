@@ -123,8 +123,8 @@ type CombatantInfo = {
   heartOfAzeroth: HeartOfAzeroth[];
   specIDs: number[];
   factionID: number;
-  covenantID: number;
-  soulbindID: number;
+  covenantID?: number;
+  soulbindID?: number;
 };
 
 type Stats = {
