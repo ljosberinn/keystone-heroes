@@ -375,7 +375,7 @@ export const getStaticProps: GetStaticProps<ReportProps> = async (ctx) => {
       };
     }
 
-    await ReportRepo.createReport(id, rawReport);
+    await ReportRepo.create(id, rawReport);
 
     return {
       props: {
@@ -409,7 +409,7 @@ export const getStaticProps: GetStaticProps<ReportProps> = async (ctx) => {
     };
   }
 
-  await ReportRepo.createReport(id, rawReport);
+  await ReportRepo.create(id, rawReport);
 
   return {
     props: {

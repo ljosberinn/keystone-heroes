@@ -4,22 +4,13 @@ import { prisma } from "../prismaClient";
 import type { RawReport } from "../queries/report";
 
 export const ReportRepo = {
-  searchReportId: async (report: string): Promise<number | null> => {
-    const dataset = await prisma.report.findUnique({
-      where: {
-        report,
-      },
-      select: {
-        id: true,
-      },
-    });
-
-    return dataset ? dataset.id : null;
-  },
-  createReport: async (
+  create: async (
     report: string,
     { endTime, startTime, title, region }: RawReport
   ): Promise<number> => {
+    // eslint-disable-next-line no-console
+    console.info(`[ReportRepo/create] creating ${report}`);
+
     const { id } = await prisma.report.upsert({
       where: {
         report,

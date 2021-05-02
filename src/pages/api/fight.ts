@@ -115,10 +115,10 @@ const fightsHandler: RequestHandler<Request, ResponseFight2[]> = async (
     return;
   }
 
-  const { reportId, ids } = req.query;
-  const fightIds = (Array.isArray(ids) ? ids : [ids]).map((id) =>
-    Number.parseInt(id)
-  );
+  const { reportId } = req.query;
+  const ids = Array.isArray(req.query.ids) ? req.query.ids : [req.query.ids];
+
+  const fightIds = ids.map((id) => Number.parseInt(id));
 
   try {
     const report = await ReportRepo.load(reportId);
