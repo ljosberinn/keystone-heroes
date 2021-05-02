@@ -143,6 +143,7 @@ const fightsHandler: RequestHandler<Request, ResponseFight2[]> = async (
     }
 
     const newFights = await loadFightsFromSource(reportId, unseenFightIds);
+    console.log({ newFights });
 
     if (!newFights) {
       res.status(INTERNAL_SERVER_ERROR).end();
