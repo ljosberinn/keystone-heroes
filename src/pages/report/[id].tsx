@@ -319,7 +319,11 @@ const maybeOngoingReport = (endTime: number) =>
   24 * 60 * 60 * 1000 > Date.now() - endTime;
 
 export const getStaticProps: GetStaticProps<ReportProps> = async (ctx) => {
-  if (!ctx.params?.id || !isValidReportId(ctx.params.id)) {
+  if (
+    !ctx.params?.id ||
+    !isValidReportId(ctx.params.id) ||
+    ctx.params.id.includes(".")
+  ) {
     // eslint-disable-next-line no-console
     console.info('[report/gSP] missing or invalid "params.id"');
 
