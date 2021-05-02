@@ -1,4 +1,3 @@
-import type { GetStaticPaths, GetStaticProps } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -13,35 +12,34 @@ import { Icon } from "../../client/components/Icon";
 import { Soulbinds } from "../../client/components/Soulbinds";
 import { isValidReportId } from "../../server/api";
 import type { ResponseFight2 } from "../../server/db/fights";
-import { ReportRepo } from "../../server/db/report";
-import { loadReportFromSource } from "../../server/queries/report";
 import { calcRunDuration, calcTimeLeft } from "../../utils/calc";
+import type { Response as ReportType } from "../api/report";
 
-export type NewUIReport = {
-  endTime: number;
-  fights: number[];
-  region: string;
-  report: string;
-  startTime: number;
-  title: string;
-};
-
-export type ReportProps = {
-  report: null | NewUIReport;
-};
-
-export default function Report({ report }: ReportProps): JSX.Element | null {
-  const { query, isFallback } = useRouter();
+export default function Report(): JSX.Element | null {
+  const { query } = useRouter();
+  const [report, setReport] = useState<ReportType | null>(null);
   const [fights, setFights] = useState<ResponseFight2[]>([]);
 
   useEffect(() => {
-    if (report) {
-      if (!report || report.fights.length === 0) {
-        return;
-      }
+    if (query.id && !Array.isArray(query.id) && isValidReportId(query.id)) {
+      fetch(`/api/report?id=${query.id}`)
+        // eslint-disable-next-line promise/prefer-await-to-then
+        .then((response) => response.json())
+        // eslint-disable-next-line promise/prefer-await-to-then
+        .then((data: ReportType) => {
+          if (data) {
+            setReport(data);
+          }
+        })
+        // eslint-disable-next-line no-console, promise/prefer-await-to-then
+        .catch(console.error);
+    }
+  }, [query.id]);
 
+  useEffect(() => {
+    if (report && report.fights.length > 0) {
       const params = new URLSearchParams({
-        reportId: report.report,
+        reportId: report.id,
       });
 
       report.fights.forEach((id) => {
@@ -61,10 +59,6 @@ export default function Report({ report }: ReportProps): JSX.Element | null {
     }
   }, [report]);
 
-  if (isFallback) {
-    return <h1>fallback</h1>;
-  }
-
   if (!report) {
     return (
       <>
@@ -80,7 +74,7 @@ export default function Report({ report }: ReportProps): JSX.Element | null {
     return <h1>still loading stuff</h1>;
   }
 
-  const reportUrl = `https://www.warcraftlogs.com/reports/${report.report}`;
+  const reportUrl = `https://www.warcraftlogs.com/reports/${report.id}`;
 
   return (
     <>
@@ -306,123 +300,3 @@ function Row({ fight, reportBaseUrl, region }: RowProps) {
     </>
   );
 }
-
-export const getStaticPaths: GetStaticPaths = async () => {
-  return {
-    fallback: true,
-    paths: [],
-  };
-};
-
-// assume a report may still be ongoing if its less than one day old
-const maybeOngoingReport = (endTime: number) =>
-  24 * 60 * 60 * 1000 > Date.now() - endTime;
-
-export const getStaticProps: GetStaticProps<ReportProps> = async (ctx) => {
-  if (
-    !ctx.params?.id ||
-    !isValidReportId(ctx.params.id) ||
-    ctx.params.id.includes(".")
-  ) {
-    // eslint-disable-next-line no-console
-    console.info('[report/gSP] missing or invalid "params.id"');
-
-    return {
-      props: {
-        report: null,
-      },
-    };
-  }
-
-  const { id } = ctx.params;
-
-  const report = await ReportRepo.load(id);
-
-  if (report) {
-    if (!maybeOngoingReport(report.endTime)) {
-      // eslint-disable-next-line no-console
-      console.info("[report/gSP] known & finished report");
-
-      const { id, region, ...rest } = report;
-      return {
-        props: {
-          report: {
-            ...rest,
-            region: region.slug,
-          },
-        },
-      };
-    }
-
-    const rawReport = await loadReportFromSource(id);
-
-    if (!rawReport) {
-      // eslint-disable-next-line no-console
-      console.info(
-        "[report/gSP] known report - failed to load report from WCL"
-      );
-
-      const { id, region, ...rest } = report;
-
-      return {
-        props: {
-          report: {
-            ...rest,
-            region: region.slug,
-          },
-        },
-        revalidate: 15 * 60 * 60,
-      };
-    }
-
-    await ReportRepo.create(id, rawReport);
-
-    return {
-      props: {
-        report: {
-          report: id,
-          endTime: rawReport.endTime,
-          startTime: rawReport.startTime,
-          title: rawReport.title,
-          region: rawReport.region.slug,
-          fights: rawReport.fights
-            .filter((fight) => fight.keystoneBonus > 0)
-            .map((fight) => fight.id),
-        },
-      },
-    };
-  }
-
-  const rawReport = await loadReportFromSource(id);
-
-  if (!rawReport) {
-    // eslint-disable-next-line no-console
-    console.info(
-      "[report/gSP] unknown report - failed to load report from WCL"
-    );
-
-    return {
-      props: {
-        report: null,
-      },
-      revalidate: 15 * 60 * 60,
-    };
-  }
-
-  await ReportRepo.create(id, rawReport);
-
-  return {
-    props: {
-      report: {
-        report: id,
-        endTime: rawReport.endTime,
-        startTime: rawReport.startTime,
-        title: rawReport.title,
-        region: rawReport.region.slug,
-        fights: rawReport.fights
-          .filter((fight) => fight.keystoneBonus > 0)
-          .map((fight) => fight.id),
-      },
-    },
-  };
-};

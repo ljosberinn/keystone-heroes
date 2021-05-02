@@ -9,7 +9,7 @@ export const ReportRepo = {
     { endTime, startTime, title, region }: RawReport
   ): Promise<number> => {
     // eslint-disable-next-line no-console
-    console.info(`[ReportRepo/create] creating ${report}`);
+    console.info(`[ReportRepo/create] creating "${report}"`);
 
     const { id } = await prisma.report.upsert({
       where: {

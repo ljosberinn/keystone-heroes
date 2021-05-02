@@ -138,7 +138,6 @@ const fightsHandler: RequestHandler<Request, ResponseFight2[]> = async (
     }
 
     const newFights = await loadFightsFromSource(reportId, unseenFightIds);
-    console.log({ newFights });
 
     if (!newFights) {
       res.status(INTERNAL_SERVER_ERROR).end();
@@ -170,12 +169,6 @@ const fightsHandler: RequestHandler<Request, ResponseFight2[]> = async (
           ? Object.values(tablesAsMap[fight.id].playerDetails).flat().length !==
             5
           : true;
-
-        console.log(fight.id, {
-          hasSuccessfulTableRequest,
-          hasGameZone,
-          isBrokenLog,
-        });
 
         return hasSuccessfulTableRequest && hasGameZone && !isBrokenLog;
       })
