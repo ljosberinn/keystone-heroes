@@ -1,12 +1,11 @@
 import { gql } from "graphql-request";
 
-import type { Dungeons } from "../../utils/dungeons";
 import { getGqlClient } from "../gqlClient";
 
-type RawReport = {
+type InitialRawReport = {
   reportData: {
     report: {
-      fights: Fight[];
+      fights: RawFightBase[];
       region: { slug: string };
       title: string;
       startTime: number;
@@ -15,21 +14,28 @@ type RawReport = {
   };
 };
 
-export type Report = RawReport["reportData"]["report"];
+export type RawReport = InitialRawReport["reportData"]["report"];
 
-export type Fight = {
+type RawFightBase = {
   id: number;
+  keystoneBonus: number;
+};
+
+export type RawFight = RawFightBase & {
   averageItemLevel: number;
   keystoneAffixes: number[];
   keystoneLevel: number;
   keystoneTime: number;
-  keystoneBonus: 0 | 1 | 2 | 3;
   dungeonPulls: DungeonPull[];
   // gameZone is null on broken logs
-  gameZone: { id: keyof Dungeons } | null;
+  gameZone: { id: number } | null;
   // only required to query fights table properly
   startTime: number;
   endTime: number;
+};
+
+export type ValidRawFight = Omit<RawFight, "gameZone"> & {
+  gameZone: { id: number };
 };
 
 export type DungeonPull = {
@@ -47,7 +53,7 @@ export type DungeonPull = {
 const getInitialReportData = async (reportId: string) => {
   const client = await getGqlClient();
 
-  return client.request<RawReport>(
+  return client.request<InitialRawReport>(
     gql`
       query ReportData($reportId: String!) {
         reportData {
@@ -59,6 +65,34 @@ const getInitialReportData = async (reportId: string) => {
               slug
             }
             fights(translate: true, killType: Kills) {
+              id
+              keystoneBonus
+            }
+          }
+        }
+      }
+    `,
+    { reportId }
+  );
+};
+
+type FightsReport = {
+  reportData: {
+    report: {
+      fights: RawFight[];
+    };
+  };
+};
+
+const getExtendedFightData = async (reportId: string, fightIds: number[]) => {
+  const client = await getGqlClient();
+
+  return client.request<FightsReport>(
+    gql`
+      query ReportData($reportId: String!, $fightIds: [Int]!) {
+        reportData {
+          report(code: $reportId) {
+            fights(translate: true, killType: Kills, fightIDs: $fightIds) {
               id
               gameZone {
                 id
@@ -88,17 +122,30 @@ const getInitialReportData = async (reportId: string) => {
         }
       }
     `,
-    { reportId }
+    { reportId, fightIds }
   );
 };
 
 export const loadReportFromSource = async (
   reportId: string
-): Promise<Report | null> => {
+): Promise<RawReport | null> => {
   try {
     const json = await getInitialReportData(reportId);
 
     return json.reportData.report;
+  } catch {
+    return null;
+  }
+};
+
+export const loadFightsFromSource = async (
+  reportId: string,
+  fightIds: number[]
+): Promise<RawFight[] | null> => {
+  try {
+    const json = await getExtendedFightData(reportId, fightIds);
+
+    return json.reportData.report.fights;
   } catch {
     return null;
   }

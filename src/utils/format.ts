@@ -1,8 +1,7 @@
-import type { Fight } from "../server/queries/report";
-import type { Dungeon } from "./dungeons";
+import type { RawFight } from "../server/queries/report";
 
 export const formatTimeLeft = (
-  { timer }: Dungeon,
+  timer: [number, number, number],
   completionTime: number
 ): string => {
   const [maxTime] = timer;
@@ -11,7 +10,7 @@ export const formatTimeLeft = (
 };
 
 export const formatKeystoneTime = (
-  completionTime: Fight["keystoneTime"]
+  completionTime: RawFight["keystoneTime"]
 ): string => {
   const totalSeconds = completionTime / 1000;
 

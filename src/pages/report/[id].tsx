@@ -1,75 +1,92 @@
+import type { GetStaticPaths, GetStaticProps } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
-import type { AffixesProps } from "../../client/components/Affixes";
+import { createDungeonTimer } from "../../../prisma/dungeons";
 import { Affixes } from "../../client/components/Affixes";
 import { Chests } from "../../client/components/Chests";
 import { Composition } from "../../client/components/Composition";
-import { Conduits } from "../../client/components/Conduits";
 import { ExternalLink } from "../../client/components/ExternalLink";
 import { Icon } from "../../client/components/Icon";
-import { Soulbinds } from "../../client/components/Soulbinds";
 import { isValidReportId } from "../../server/api";
-import type { Fight, Report as ReportType } from "../../server/queries/report";
+import type { ResponseFight2 } from "../../server/db/fights";
+import { ReportRepo } from "../../server/db/report";
+import { loadReportFromSource } from "../../server/queries/report";
 import { calcRunDuration, calcTimeLeft } from "../../utils/calc";
-import { soulbindMap, covenantMap } from "../../utils/covenants";
-import type { Dungeon, Dungeons } from "../../utils/dungeons";
-import { dungeons } from "../../utils/dungeons";
-import type { Player } from "../api/report";
 
-export type UIFight = Pick<Fight, "keystoneLevel" | "id" | "keystoneTime"> & {
-  affixes: AffixesProps["affixes"];
-  dungeonId: keyof Dungeons;
-  chests: Fight["keystoneBonus"];
-  dps: number;
-  hps: number;
-  dtps: number;
-  totalDeaths: number;
-  averageItemLevel: number;
-  composition: Player[];
-};
+async function loadFights({
+  report,
+  fights,
+}: NewUIReport): Promise<ResponseFight2[]> {
+  if (fights.length === 0) {
+    return [];
+  }
 
-export type UIFightsResponse = Pick<
-  ReportType,
-  "title" | "endTime" | "startTime"
-> & {
-  id: string;
-  fights: UIFight[];
-  region: string;
-};
-
-async function loadReport(id: string) {
   try {
-    const response = await fetch(`/api/report?id=${id}`);
+    const params = new URLSearchParams({
+      reportId: report,
+    });
+
+    fights.forEach((id) => {
+      // @ts-expect-error doesn't have to be a string
+      params.append("ids", id);
+    });
+
+    const query = params.toString();
+
+    const response = await fetch(`/api/fight?${query}`);
+
     return await response.json();
   } catch (error) {
     console.error(error);
+    return [];
   }
 }
 
-export default function Report(): JSX.Element | null {
-  const [report, setReport] = useState<null | UIFightsResponse>(null);
-  const { query } = useRouter();
+export type NewUIReport = {
+  endTime: number;
+  fights: number[];
+  region: string;
+  report: string;
+  startTime: number;
+  title: string;
+};
+
+export type ReportProps = {
+  report: null | NewUIReport;
+};
+
+export default function Report({ report }: ReportProps): JSX.Element | null {
+  const { query, isFallback } = useRouter();
+  const [fights, setFights] = useState<ResponseFight2[]>([]);
 
   useEffect(() => {
-    if (isValidReportId(query.id)) {
-      loadReport(query.id).then(setReport);
+    if (report) {
+      loadFights(report).then(setFights);
     }
-  }, [query]);
+  }, [report]);
+
+  if (isFallback) {
+    return <h1>fallback</h1>;
+  }
 
   if (!report) {
     return (
       <>
         <Head>
-          <title>{query.reportId ?? "unknown report"}</title>
+          <title>{query.id ?? "unknown report"}</title>
         </Head>
         <h1>retrieving data</h1>
       </>
     );
   }
 
-  const reportUrl = `https://www.warcraftlogs.com/reports/${report.id}`;
+  if (fights.length === 0) {
+    return <h1>still loading stuff</h1>;
+  }
+
+  const reportUrl = `https://www.warcraftlogs.com/reports/${report}`;
 
   return (
     <>
@@ -99,18 +116,11 @@ export default function Report(): JSX.Element | null {
           </tr>
         </thead>
         <tbody>
-          {report.fights.map((fight) => {
-            const dungeon = dungeons[fight.dungeonId];
-
-            if (!dungeon) {
-              return null;
-            }
-
+          {fights.map((fight) => {
             return (
               <Row
                 fight={fight}
-                dungeon={dungeon}
-                key={fight.id}
+                key={fight.fightId}
                 reportBaseUrl={reportUrl}
                 region={report.region}
               />
@@ -123,29 +133,31 @@ export default function Report(): JSX.Element | null {
 }
 
 type RowProps = {
-  fight: UIFight;
-  dungeon: Dungeon;
+  fight: ResponseFight2;
   reportBaseUrl: string;
   region: string;
 };
 
-function Row({ fight, dungeon, reportBaseUrl, region }: RowProps) {
+function Row({ fight, reportBaseUrl, region }: RowProps) {
   const [open, setOpen] = useState(true);
 
   function handleClick() {
     setOpen(!open);
   }
 
-  const timeLeft = calcTimeLeft(dungeon, fight.keystoneTime);
+  const timeLeft = calcTimeLeft(
+    createDungeonTimer(fight.dungeon.time),
+    fight.keystoneTime * 1000
+  );
   const runTime = calcRunDuration(fight.keystoneTime);
 
-  const fightUrl = `${reportBaseUrl}/#fight=${fight.id}`;
+  const fightUrl = `${reportBaseUrl}/#fight=${fight.fightId}`;
 
   return (
     <>
       <tr>
         <td>
-          <ExternalLink href={fightUrl}>{dungeon.name}</ExternalLink>
+          <ExternalLink href={fightUrl}>{fight.dungeon.name}</ExternalLink>
         </td>
         <td>{fight.keystoneLevel}</td>
         <td>
@@ -203,12 +215,12 @@ function Row({ fight, dungeon, reportBaseUrl, region }: RowProps) {
           </tr>
           {fight.composition.map((player) => {
             return (
-              <tr key={player.guid}>
+              <tr key={player.character.name}>
                 <td>
                   <ExternalLink
                     href={`https://www.warcraftlogs.com/character/${region}/${player.server}/${player.name}`}
                   >
-                    {player.name}
+                    {player.character.name}
                   </ExternalLink>
                 </td>
                 <td className="text-right">{player.itemLevel}</td>
@@ -237,11 +249,11 @@ function Row({ fight, dungeon, reportBaseUrl, region }: RowProps) {
 
                 <td>
                   <div className="flex justify-center">
-                    {player.legendary?.effectID &&
+                    {player.legendary?.id &&
                       player.legendary?.effectIcon &&
                       player.legendary?.effectName && (
                         <ExternalLink
-                          href={`https://www.wowhead.com/spell=${player.legendary.effectID}`}
+                          href={`https://www.wowhead.com/spell=${player.legendary.id}`}
                         >
                           <Icon
                             src={player.legendary.effectIcon}
@@ -272,25 +284,25 @@ function Row({ fight, dungeon, reportBaseUrl, region }: RowProps) {
                 <td className="text-center">
                   <div className="flex justify-center">
                     <Icon
-                      src={covenantMap[player.covenant.id].icon}
-                      alt={covenantMap[player.covenant.id].name}
+                      src={player.covenant.icon}
+                      alt={player.covenant.name}
                       srcPrefix="abilities"
                     />
-                    <Icon
+                    {/* <Icon
                       src={soulbindMap[player.covenant.soulbind.id].icon}
                       alt={soulbindMap[player.covenant.soulbind.id].name}
                       srcPrefix="soulbinds"
                       className="ml-1"
-                    />
+                    /> */}
                   </div>
                 </td>
 
                 <td className="text-center">
-                  <Soulbinds soulbinds={player.covenant.soulbind.talents} />
+                  {/* <Soulbinds soulbinds={player.covenant.soulbind.talents} /> */}
                 </td>
 
                 <td className="text-center">
-                  <Conduits conduits={player.covenant.soulbind.conduits} />
+                  {/* <Conduits conduits={player.covenant.soulbind.conduits} /> */}
                 </td>
               </tr>
             );
@@ -300,3 +312,119 @@ function Row({ fight, dungeon, reportBaseUrl, region }: RowProps) {
     </>
   );
 }
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  return {
+    fallback: true,
+    paths: [],
+  };
+};
+
+// assume a report may still be ongoing if its less than one day old
+const maybeOngoingReport = (endTime: number) =>
+  24 * 60 * 60 * 1000 > Date.now() - endTime;
+
+export const getStaticProps: GetStaticProps<ReportProps> = async (ctx) => {
+  if (!ctx.params?.id || !isValidReportId(ctx.params.id)) {
+    // eslint-disable-next-line no-console
+    console.info('[report/gSP] missing or invalid "params.id"');
+
+    return {
+      props: {
+        report: null,
+      },
+    };
+  }
+
+  const { id } = ctx.params;
+
+  const report = await ReportRepo.load(id);
+
+  if (report) {
+    if (!maybeOngoingReport(report.endTime)) {
+      // eslint-disable-next-line no-console
+      console.info("[report/gSP] known & finished report");
+
+      const { id, region, ...rest } = report;
+      return {
+        props: {
+          report: {
+            ...rest,
+            region: region.slug,
+          },
+        },
+      };
+    }
+
+    const rawReport = await loadReportFromSource(id);
+
+    if (!rawReport) {
+      // eslint-disable-next-line no-console
+      console.info(
+        "[report/gSP] known report - failed to load report from WCL"
+      );
+
+      const { id, region, ...rest } = report;
+
+      return {
+        props: {
+          report: {
+            ...rest,
+            region: region.slug,
+          },
+        },
+        revalidate: 15 * 60 * 60,
+      };
+    }
+
+    await ReportRepo.createReport(id, rawReport);
+
+    return {
+      props: {
+        report: {
+          report: id,
+          endTime: rawReport.endTime,
+          startTime: rawReport.startTime,
+          title: rawReport.title,
+          region: rawReport.region.slug,
+          fights: rawReport.fights
+            .filter((fight) => fight.keystoneBonus > 0)
+            .map((fight) => fight.id),
+        },
+      },
+    };
+  }
+
+  const rawReport = await loadReportFromSource(id);
+
+  if (!rawReport) {
+    // eslint-disable-next-line no-console
+    console.info(
+      "[report/gSP] unknown report - failed to load report from WCL"
+    );
+
+    return {
+      props: {
+        report: null,
+      },
+      revalidate: 15 * 60 * 60,
+    };
+  }
+
+  await ReportRepo.createReport(id, rawReport);
+
+  return {
+    props: {
+      report: {
+        report: id,
+        endTime: rawReport.endTime,
+        startTime: rawReport.startTime,
+        title: rawReport.title,
+        region: rawReport.region.slug,
+        fights: rawReport.fights
+          .filter((fight) => fight.keystoneBonus > 0)
+          .map((fight) => fight.id),
+      },
+    },
+  };
+};

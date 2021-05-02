@@ -1,13 +1,12 @@
-import type { PlayableClass, Roles, Spec } from "@prisma/client";
+import type { PlayableClass, Role, SpecName } from "@prisma/client";
 import { gql } from "graphql-request";
 
-import type { Covenants, Soulbinds } from "../../utils/covenants";
 import { getGqlClient } from "../gqlClient";
-import type { Fight } from "./report";
+import type { RawFight } from "./report";
 
 const getTable = async (
   reportId: string,
-  { id, startTime, endTime }: Fight
+  { id, startTime, endTime }: RawFight
 ) => {
   const client = await getGqlClient();
 
@@ -32,7 +31,7 @@ const getTable = async (
 
 export const loadTableFromSource = async (
   reportId: string,
-  fight: Fight
+  fight: RawFight
 ): Promise<Table | null> => {
   try {
     const json = await getTable(reportId, fight);
@@ -76,7 +75,7 @@ type Composition = {
 
 type SpecMeta = {
   spec: string;
-  role: Roles;
+  role: Role;
 };
 
 export type DamageDone = Pick<Composition, "name" | "id" | "guid"> & {
@@ -103,14 +102,6 @@ export type PlayerDetails = {
   healers: InDepthCharacterInformation[];
 };
 
-type Split<S extends string, D extends string> = string extends S
-  ? string[]
-  : S extends ""
-  ? []
-  : S extends `${infer T}${D}${infer U}`
-  ? [T, ...Split<U, D>]
-  : [S];
-
 export type InDepthCharacterInformation = {
   name: string;
   id: number;
@@ -118,7 +109,7 @@ export type InDepthCharacterInformation = {
   type: PlayableClass;
   server: string;
   icon: string;
-  specs: Split<Spec, "_">[1][];
+  specs: SpecName[];
   minItemLevel: number;
   maxItemLevel: number;
   combatantInfo: CombatantInfo;
@@ -128,12 +119,12 @@ type CombatantInfo = {
   stats: Stats;
   talents: Talent[];
   artifact: Artifact[];
-  gear: Item[];
+  gear: (Item | LegendaryItem)[];
   heartOfAzeroth: HeartOfAzeroth[];
   specIDs: number[];
   factionID: number;
-  covenantID: keyof Covenants;
-  soulbindID: keyof Soulbinds;
+  covenantID: number;
+  soulbindID: number;
 };
 
 type Stats = {
@@ -200,6 +191,13 @@ export type Item = {
   effectName?: string;
   temporaryEnchant?: number;
   temporaryEnchantName?: string;
+};
+
+export type LegendaryItem = Item & {
+  quality: ItemQuality.LEGENDARY;
+  effectID: number;
+  effectIcon: string;
+  effectName: string;
 };
 
 type Gem = {

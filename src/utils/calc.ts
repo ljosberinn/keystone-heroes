@@ -4,7 +4,6 @@ import type {
   DamageTaken,
   InDepthCharacterInformation,
 } from "../server/queries/table";
-import type { Dungeon } from "./dungeons";
 
 export const calcMetricAverage = <
   T extends Pick<DamageDone | HealingDone | DamageTaken, "total" | "guid">[]
@@ -23,7 +22,7 @@ export const calcMetricAverage = <
 };
 
 export const calcTimeLeft = (
-  { timer }: Dungeon,
+  timer: [number, number, number],
   keystoneTime: number
 ): string => {
   const [maxTime] = timer;

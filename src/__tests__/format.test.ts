@@ -1,5 +1,4 @@
-import type { Dungeon } from "../utils/dungeons";
-import { dungeons } from "../utils/dungeons";
+import { createDungeonTimer } from "../../prisma/dungeons";
 import { formatKeystoneTime, formatTimeLeft } from "../utils/format";
 
 describe("formatKeystoneTime", () => {
@@ -17,13 +16,13 @@ describe("formatKeystoneTime", () => {
 
 describe("formatTimeLeft", () => {
   test.each(
-    Object.values(dungeons).flatMap((dungeon) =>
-      dungeon.timer.map<[Dungeon, number]>((timer) => [
-        dungeon,
-        timer - 10 * 1000,
-      ])
-    )
-  )("matches snapshot", (dungeon, completionTime) => {
-    expect(formatTimeLeft(dungeon, completionTime)).toMatchSnapshot();
+    [10, 15, 20, 25, 30, 35, 40, 45, 50, 55].map<
+      [number, [number, number, number]]
+    >((value, index) => [
+      value * 60 * 1000 - (value + index + 1) * (1000 + index + 1),
+      createDungeonTimer(value),
+    ])
+  )("matches snapshot", (completionTime, timer) => {
+    expect(formatTimeLeft(timer, completionTime)).toMatchSnapshot();
   });
 });

@@ -1,13 +1,13 @@
-import { DEV_USE_DB, IS_PROD, IS_TEST } from "../../constants";
-import type { UIFightsResponse } from "../../pages/report/[id]";
-import type { covenantMap } from "../../utils/covenants";
-import type { Dungeons } from "../../utils/dungeons";
-import { prisma } from "../prismaClient";
-import type { Fight, Report } from "../queries/report";
+import type { Region, Report } from "@prisma/client";
 
-export const ReportsRepo = {
+import { createDungeonTimer } from "../../../prisma/dungeons";
+import type { UIFightsResponse } from "../../pages/report/[id]";
+import { prisma } from "../prismaClient";
+import type { RawReport } from "../queries/report";
+
+export const ReportRepo = {
   searchReportId: async (report: string): Promise<number | null> => {
-    const dataset = await prisma.reports.findUnique({
+    const dataset = await prisma.report.findUnique({
       where: {
         report,
       },
@@ -20,22 +20,25 @@ export const ReportsRepo = {
   },
   createReport: async (
     report: string,
-    { endTime, startTime, title, region: { slug: region } }: Report
+    { endTime, startTime, title, region }: RawReport
   ): Promise<number> => {
-    if (!IS_PROD && !DEV_USE_DB) {
-      // eslint-disable-next-line no-console
-      console.info(`[reportId/gSP] skipping db - create report`);
-      return -1;
-    }
-
-    const { id } = await prisma.reports.upsert({
+    const { id } = await prisma.report.upsert({
       where: {
         report,
       },
       create: {
         endTime: new Date(endTime),
         startTime: new Date(startTime),
-        region,
+        region: {
+          connectOrCreate: {
+            create: {
+              slug: region.slug,
+            },
+            where: {
+              slug: region.slug,
+            },
+          },
+        },
         title,
         report,
       },
@@ -48,17 +51,11 @@ export const ReportsRepo = {
     return id;
   },
   loadReport: async (report: string): Promise<UIFightsResponse | null> => {
-    if (!IS_PROD && !IS_TEST && !DEV_USE_DB) {
-      // eslint-disable-next-line no-console
-      console.info(`[reportId/gSP] skipping db - read report`);
-      return null;
-    }
-
     try {
       // eslint-disable-next-line no-console
-      console.info(`[reportId/gSP] reading report "${report}" from db`);
+      console.info(`[ReportRepo/loadReport] reading "${report}" from db`);
 
-      const rawReport = await prisma.reports.findFirst({
+      const rawReport = await prisma.report.findFirst({
         where: {
           report,
         },
@@ -68,18 +65,25 @@ export const ReportsRepo = {
           title: true,
           startTime: true,
           id: true,
-          Fights: {
+          Fight: {
             select: {
               averageItemLevel: true,
               chests: true,
               dps: true,
               dtps: true,
-              dungeonId: true,
               hps: true,
               keystoneLevel: true,
               keystoneTime: true,
               totalDeaths: true,
               fightId: true,
+              dungeon: {
+                select: {
+                  id: true,
+                  time: true,
+                  name: true,
+                  slug: true,
+                },
+              },
               week: {
                 select: {
                   affix1Id: true,
@@ -99,7 +103,13 @@ export const ReportsRepo = {
                   itemLevel: true,
                   deaths: true,
                   id: true,
-                  covenantId: true,
+                  covenant: true,
+                  soulbind: {
+                    select: {
+                      id: true,
+                      name: true,
+                    },
+                  },
                   spec: {
                     select: {
                       name: true,
@@ -126,7 +136,13 @@ export const ReportsRepo = {
                   itemLevel: true,
                   deaths: true,
                   id: true,
-                  covenantId: true,
+                  covenant: true,
+                  soulbind: {
+                    select: {
+                      id: true,
+                      name: true,
+                    },
+                  },
                   spec: {
                     select: {
                       name: true,
@@ -153,7 +169,13 @@ export const ReportsRepo = {
                   itemLevel: true,
                   deaths: true,
                   id: true,
-                  covenantId: true,
+                  covenant: true,
+                  soulbind: {
+                    select: {
+                      id: true,
+                      name: true,
+                    },
+                  },
                   spec: {
                     select: {
                       name: true,
@@ -180,7 +202,13 @@ export const ReportsRepo = {
                   itemLevel: true,
                   deaths: true,
                   id: true,
-                  covenantId: true,
+                  covenant: true,
+                  soulbind: {
+                    select: {
+                      id: true,
+                      name: true,
+                    },
+                  },
                   spec: {
                     select: {
                       name: true,
@@ -207,7 +235,13 @@ export const ReportsRepo = {
                   itemLevel: true,
                   deaths: true,
                   id: true,
-                  covenantId: true,
+                  covenant: true,
+                  soulbind: {
+                    select: {
+                      id: true,
+                      name: true,
+                    },
+                  },
                   spec: {
                     select: {
                       name: true,
@@ -236,14 +270,19 @@ export const ReportsRepo = {
         return {
           endTime: rawReport.endTime.getTime(),
           id: report,
-          region: rawReport.region,
+          region: rawReport.region.slug,
           startTime: rawReport.startTime.getTime(),
           title: rawReport.title,
-          fights: rawReport.Fights.map((fight) => {
+          fights: rawReport.Fight.map((fight) => {
             return {
-              chests: fight.chests as Fight["keystoneBonus"],
+              chests: fight.chests,
               id: fight.fightId,
-              dungeonId: fight.dungeonId as keyof Dungeons,
+              dungeon: {
+                id: fight.dungeon.id,
+                name: fight.dungeon.name,
+                timer: createDungeonTimer(fight.dungeon.time),
+                slug: fight.dungeon.slug,
+              },
               totalDeaths: fight.totalDeaths,
               keystoneLevel: fight.keystoneLevel,
               keystoneTime: fight.keystoneTime,
@@ -273,8 +312,13 @@ export const ReportsRepo = {
                   spec: fight.tank.spec.name,
                   itemLevel: fight.tank.itemLevel,
                   covenant: {
-                    id: fight.tank.covenantId as keyof typeof covenantMap,
-                    soulbind: { id: 1, talents: [], conduits: [] },
+                    ...fight.tank.covenant,
+                    soulbind: {
+                      id: fight.tank.soulbind.id,
+                      name: fight.tank.soulbind.name,
+                      talents: [],
+                      conduits: [],
+                    },
                   },
                   className: fight.tank.character.class.name,
                 },
@@ -291,8 +335,13 @@ export const ReportsRepo = {
                   spec: fight.heal.spec.name,
                   itemLevel: fight.heal.itemLevel,
                   covenant: {
-                    id: fight.heal.covenantId as keyof typeof covenantMap,
-                    soulbind: { id: 1, talents: [], conduits: [] },
+                    ...fight.heal.covenant,
+                    soulbind: {
+                      id: fight.heal.soulbind.id,
+                      name: fight.heal.soulbind.name,
+                      talents: [],
+                      conduits: [],
+                    },
                   },
                   className: fight.heal.character.class.name,
                 },
@@ -309,8 +358,13 @@ export const ReportsRepo = {
                   spec: fight.dps1.spec.name,
                   itemLevel: fight.dps1.itemLevel,
                   covenant: {
-                    id: fight.dps1.covenantId as keyof typeof covenantMap,
-                    soulbind: { id: 1, talents: [], conduits: [] },
+                    ...fight.dps1.covenant,
+                    soulbind: {
+                      id: fight.dps1.soulbind.id,
+                      name: fight.dps1.soulbind.name,
+                      talents: [],
+                      conduits: [],
+                    },
                   },
                   className: fight.dps1.character.class.name,
                 },
@@ -327,8 +381,13 @@ export const ReportsRepo = {
                   spec: fight.dps2.spec.name,
                   itemLevel: fight.dps2.itemLevel,
                   covenant: {
-                    id: fight.dps2.covenantId as keyof typeof covenantMap,
-                    soulbind: { id: 1, talents: [], conduits: [] },
+                    ...fight.dps2.covenant,
+                    soulbind: {
+                      id: fight.dps2.soulbind.id,
+                      name: fight.dps2.soulbind.name,
+                      talents: [],
+                      conduits: [],
+                    },
                   },
                   className: fight.dps2.character.class.name,
                 },
@@ -345,8 +404,13 @@ export const ReportsRepo = {
                   spec: fight.dps3.spec.name,
                   itemLevel: fight.dps3.itemLevel,
                   covenant: {
-                    id: fight.dps3.covenantId as keyof typeof covenantMap,
-                    soulbind: { id: 1, talents: [], conduits: [] },
+                    ...fight.dps3.covenant,
+                    soulbind: {
+                      id: fight.dps3.soulbind.id,
+                      name: fight.dps3.soulbind.name,
+                      talents: [],
+                      conduits: [],
+                    },
                   },
                   className: fight.dps3.character.class.name,
                 },
@@ -357,6 +421,56 @@ export const ReportsRepo = {
       }
 
       return null;
+    } catch {
+      return null;
+    }
+  },
+  load: async (
+    report: string
+  ): Promise<
+    | (Omit<Report, "startTime" | "endTime" | "regionId"> & {
+        fights: number[];
+        startTime: number;
+        endTime: number;
+        region: Region;
+      })
+    | null
+  > => {
+    try {
+      // eslint-disable-next-line no-console
+      console.info(`[ReportRepo/load] reading "${report}" from db`);
+
+      const data = await prisma.report.findUnique({
+        where: {
+          report,
+        },
+        select: {
+          id: true,
+          endTime: true,
+          startTime: true,
+          title: true,
+          region: true,
+          report: true,
+          Fight: {
+            select: {
+              fightId: true,
+            },
+          },
+        },
+      });
+
+      if (!data) {
+        return null;
+      }
+
+      const { Fight, ...rest } = data;
+
+      return {
+        ...rest,
+        startTime: data.startTime.getTime(),
+        endTime: data.endTime.getTime(),
+        fights: Fight.map((fight) => fight.fightId),
+      };
     } catch {
       return null;
     }

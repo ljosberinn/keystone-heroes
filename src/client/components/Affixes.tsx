@@ -1,4 +1,4 @@
-import { affixes as allAffixes } from "../../utils/affixes";
+import { affixes as allAffixes } from "../../../prisma/affixes";
 import { classnames } from "../../utils/classNames";
 import { Icon } from "./Icon";
 

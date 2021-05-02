@@ -14,50 +14,22 @@ exports[`formatKeystoneTime matches snapshot 6`] = `"01:40.000"`;
 
 exports[`formatKeystoneTime matches snapshot 7`] = `"16:40.000"`;
 
-exports[`formatTimeLeft matches snapshot 1`] = `"00:10.000"`;
+exports[`formatTimeLeft matches snapshot 1`] = `"00:11.011"`;
 
-exports[`formatTimeLeft matches snapshot 2`] = `"08:22.000"`;
+exports[`formatTimeLeft matches snapshot 2`] = `"00:17.034"`;
 
-exports[`formatTimeLeft matches snapshot 3`] = `"16:34.000"`;
+exports[`formatTimeLeft matches snapshot 3`] = `"00:23.069"`;
 
-exports[`formatTimeLeft matches snapshot 4`] = `"00:10.000"`;
+exports[`formatTimeLeft matches snapshot 4`] = `"00:29.116"`;
 
-exports[`formatTimeLeft matches snapshot 5`] = `"07:58.000"`;
+exports[`formatTimeLeft matches snapshot 5`] = `"00:35.175"`;
 
-exports[`formatTimeLeft matches snapshot 6`] = `"15:46.000"`;
+exports[`formatTimeLeft matches snapshot 6`] = `"00:41.246"`;
 
-exports[`formatTimeLeft matches snapshot 7`] = `"00:10.000"`;
+exports[`formatTimeLeft matches snapshot 7`] = `"00:47.329"`;
 
-exports[`formatTimeLeft matches snapshot 8`] = `"07:22.000"`;
+exports[`formatTimeLeft matches snapshot 8`] = `"00:53.424"`;
 
-exports[`formatTimeLeft matches snapshot 9`] = `"14:34.000"`;
+exports[`formatTimeLeft matches snapshot 9`] = `"00:59.531"`;
 
-exports[`formatTimeLeft matches snapshot 10`] = `"00:10.000"`;
-
-exports[`formatTimeLeft matches snapshot 11`] = `"06:22.000"`;
-
-exports[`formatTimeLeft matches snapshot 12`] = `"12:34.000"`;
-
-exports[`formatTimeLeft matches snapshot 13`] = `"00:10.000"`;
-
-exports[`formatTimeLeft matches snapshot 14`] = `"07:46.000"`;
-
-exports[`formatTimeLeft matches snapshot 15`] = `"15:22.000"`;
-
-exports[`formatTimeLeft matches snapshot 16`] = `"00:10.000"`;
-
-exports[`formatTimeLeft matches snapshot 17`] = `"06:10.000"`;
-
-exports[`formatTimeLeft matches snapshot 18`] = `"12:10.000"`;
-
-exports[`formatTimeLeft matches snapshot 19`] = `"00:10.000"`;
-
-exports[`formatTimeLeft matches snapshot 20`] = `"08:46.000"`;
-
-exports[`formatTimeLeft matches snapshot 21`] = `"17:22.000"`;
-
-exports[`formatTimeLeft matches snapshot 22`] = `"00:10.000"`;
-
-exports[`formatTimeLeft matches snapshot 23`] = `"07:34.000"`;
-
-exports[`formatTimeLeft matches snapshot 24`] = `"14:58.000"`;
+exports[`formatTimeLeft matches snapshot 10`] = `"01:05.650"`;
