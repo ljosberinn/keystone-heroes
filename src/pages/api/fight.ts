@@ -110,17 +110,15 @@ const fightsHandler: RequestHandler<Request, ResponseFight2[]> = async (
   req,
   res
 ) => {
-  if (
-    !isValidReportId(req.query.reportId) ||
-    !req.query.ids ||
-    !Array.isArray(req.query.ids)
-  ) {
+  if (!isValidReportId(req.query.reportId) || !req.query.ids) {
     res.status(BAD_REQUEST).end();
     return;
   }
 
   const { reportId, ids } = req.query;
-  const fightIds = ids.map((id) => Number.parseInt(id));
+  const fightIds = (Array.isArray(ids) ? ids : [ids]).map((id) =>
+    Number.parseInt(id)
+  );
 
   try {
     const report = await ReportRepo.load(reportId);
