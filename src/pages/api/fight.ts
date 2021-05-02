@@ -117,7 +117,6 @@ const fightsHandler: RequestHandler<Request, ResponseFight2[]> = async (
 
   const { reportId } = req.query;
   const ids = Array.isArray(req.query.ids) ? req.query.ids : [req.query.ids];
-
   const fightIds = ids.map((id) => Number.parseInt(id));
 
   try {
@@ -132,6 +131,11 @@ const fightsHandler: RequestHandler<Request, ResponseFight2[]> = async (
     const unseenFightIds = fightIds.filter(
       (id) => !persistedFights.some((fight) => fight.fightId === id)
     );
+    console.log({
+      persistedFights,
+      unseenFightIds,
+      fightIds,
+    });
 
     if (unseenFightIds.length === 0) {
       res.json(persistedFights);
