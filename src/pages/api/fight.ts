@@ -131,11 +131,6 @@ const fightsHandler: RequestHandler<Request, ResponseFight2[]> = async (
     const unseenFightIds = fightIds.filter(
       (id) => !persistedFights.some((fight) => fight.fightId === id)
     );
-    console.log({
-      persistedFights,
-      unseenFightIds,
-      fightIds,
-    });
 
     if (unseenFightIds.length === 0) {
       res.json(persistedFights);
@@ -176,6 +171,12 @@ const fightsHandler: RequestHandler<Request, ResponseFight2[]> = async (
             5
           : true;
 
+        console.log(fight.id, {
+          hasSuccessfulTableRequest,
+          hasGameZone,
+          isBrokenLog,
+        });
+
         return hasSuccessfulTableRequest && hasGameZone && !isBrokenLog;
       })
       .map<FooFight>((fight) => {
@@ -211,6 +212,9 @@ const fightsHandler: RequestHandler<Request, ResponseFight2[]> = async (
       });
 
     if (insertableFights.length === 0) {
+      // eslint-disable-next-line no-console
+      console.info("[api/fight] no insertable fights found");
+
       res.json(persistedFights);
       return;
     }
