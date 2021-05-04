@@ -26,16 +26,18 @@ type ReportProps = {
 };
 
 export default function Report({ cache }: ReportProps): JSX.Element | null {
-  const { query } = useRouter();
+  const { query, isFallback } = useRouter();
   const [report, setReport] = useState<ReportType | null>(cache.report);
   const [fights, setFights] = useState<ResponseFight2[]>(cache.fights);
 
   useEffect(() => {
-    if (report) {
-      return;
-    }
-
-    if (!query.id || Array.isArray(query.id) || !isValidReportId(query.id)) {
+    if (
+      isFallback ||
+      report ||
+      !query.id ||
+      Array.isArray(query.id) ||
+      !isValidReportId(query.id)
+    ) {
       return;
     }
 
@@ -50,10 +52,15 @@ export default function Report({ cache }: ReportProps): JSX.Element | null {
       })
       // eslint-disable-next-line no-console, promise/prefer-await-to-then
       .catch(console.error);
-  }, [query.id, report]);
+  }, [query.id, report, isFallback]);
 
   useEffect(() => {
-    if (!report || report.fights.length === 0 || fights.length > 0) {
+    if (
+      isFallback ||
+      !report ||
+      report.fights.length === 0 ||
+      fights.length > 0
+    ) {
       return;
     }
 
@@ -75,7 +82,7 @@ export default function Report({ cache }: ReportProps): JSX.Element | null {
       .then(setFights)
       // eslint-disable-next-line promise/prefer-await-to-then, no-console
       .catch(console.error);
-  }, [report, fights]);
+  }, [report, fights, isFallback]);
 
   if (!report) {
     return (
@@ -326,7 +333,7 @@ export const getStaticPaths: GetStaticPaths<{ id: string }> = async () => {
   console.info(`[Report/getStaticPaths] found ${reports.length} reports`);
 
   return {
-    fallback: false,
+    fallback: true,
     paths: reports.map((report) => {
       return {
         params: {
