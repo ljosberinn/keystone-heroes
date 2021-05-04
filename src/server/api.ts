@@ -22,8 +22,10 @@ export const setCacheControl = <Response extends NextApiResponse>(
 export const isValidReportId = (id?: string | string[]): id is string =>
   id?.length === 16 && !id.includes(".");
 
+export const ONGOING_REPORT_THRESHOLD = 24 * 60 * 60 * 1000;
+
 /**
  * assume a report may still be ongoing if its less than one day old
  */
 export const maybeOngoingReport = (endTime: number): boolean =>
-  24 * 60 * 60 * 1000 > Date.now() - endTime;
+  ONGOING_REPORT_THRESHOLD > Date.now() - endTime;

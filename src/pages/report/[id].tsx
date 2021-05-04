@@ -1,3 +1,4 @@
+import type { GetStaticPaths, GetStaticProps } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -12,52 +13,69 @@ import { Icon } from "../../client/components/Icon";
 import { Soulbinds } from "../../client/components/Soulbinds";
 import { isValidReportId } from "../../server/api";
 import type { ResponseFight2 } from "../../server/db/fights";
+import { FightRepo } from "../../server/db/fights";
+import { ReportRepo } from "../../server/db/report";
 import { calcRunDuration, calcTimeLeft } from "../../utils/calc";
 import type { Response as ReportType } from "../api/report";
 
-export default function Report(): JSX.Element | null {
+type ReportProps = {
+  cache: {
+    report: ReportType | null;
+    fights: ResponseFight2[] | [];
+  };
+};
+
+export default function Report({ cache }: ReportProps): JSX.Element | null {
   const { query } = useRouter();
-  const [report, setReport] = useState<ReportType | null>(null);
-  const [fights, setFights] = useState<ResponseFight2[]>([]);
+  const [report, setReport] = useState<ReportType | null>(cache.report);
+  const [fights, setFights] = useState<ResponseFight2[]>(cache.fights);
 
   useEffect(() => {
-    if (query.id && !Array.isArray(query.id) && isValidReportId(query.id)) {
-      fetch(`/api/report?id=${query.id}`)
-        // eslint-disable-next-line promise/prefer-await-to-then
-        .then((response) => response.json())
-        // eslint-disable-next-line promise/prefer-await-to-then
-        .then((data: ReportType) => {
-          if (data) {
-            setReport(data);
-          }
-        })
-        // eslint-disable-next-line no-console, promise/prefer-await-to-then
-        .catch(console.error);
+    if (report) {
+      return;
     }
-  }, [query.id]);
+
+    if (!query.id || Array.isArray(query.id) || !isValidReportId(query.id)) {
+      return;
+    }
+
+    fetch(`/api/report?id=${query.id}`)
+      // eslint-disable-next-line promise/prefer-await-to-then
+      .then((response) => response.json())
+      // eslint-disable-next-line promise/prefer-await-to-then
+      .then((data: ReportType) => {
+        if (data) {
+          setReport(data);
+        }
+      })
+      // eslint-disable-next-line no-console, promise/prefer-await-to-then
+      .catch(console.error);
+  }, [query.id, report]);
 
   useEffect(() => {
-    if (report && report.fights.length > 0) {
-      const params = new URLSearchParams({
-        reportId: report.id,
-      });
-
-      report.fights.forEach((id) => {
-        // @ts-expect-error doesn't have to be a string
-        params.append("ids", id);
-      });
-
-      const query = params.toString();
-
-      fetch(`/api/fight?${query}`)
-        // eslint-disable-next-line promise/prefer-await-to-then
-        .then((response) => response.json())
-        // eslint-disable-next-line promise/prefer-await-to-then
-        .then(setFights)
-        // eslint-disable-next-line promise/prefer-await-to-then, no-console
-        .catch(console.error);
+    if (!report || report.fights.length === 0 || fights.length > 0) {
+      return;
     }
-  }, [report]);
+
+    const params = new URLSearchParams({
+      reportId: report.id,
+    });
+
+    report.fights.forEach((id) => {
+      // @ts-expect-error doesn't have to be a string
+      params.append("ids", id);
+    });
+
+    const query = params.toString();
+
+    fetch(`/api/fight?${query}`)
+      // eslint-disable-next-line promise/prefer-await-to-then
+      .then((response) => response.json())
+      // eslint-disable-next-line promise/prefer-await-to-then
+      .then(setFights)
+      // eslint-disable-next-line promise/prefer-await-to-then, no-console
+      .catch(console.error);
+  }, [report, fights]);
 
   if (!report) {
     return (
@@ -300,3 +318,92 @@ function Row({ fight, reportBaseUrl, region }: RowProps) {
     </>
   );
 }
+
+export const getStaticPaths: GetStaticPaths<{ id: string }> = async () => {
+  const reports = await ReportRepo.loadFinishedReports();
+
+  // eslint-disable-next-line no-console
+  console.info(`[Report/getStaticPaths] found ${reports.length} reports`);
+
+  return {
+    fallback: false,
+    paths: reports.map((report) => {
+      return {
+        params: {
+          id: report,
+        },
+      };
+    }),
+  };
+};
+
+export const getStaticProps: GetStaticProps<
+  ReportProps,
+  { id: string }
+> = async (ctx) => {
+  if (
+    !ctx.params?.id ||
+    Array.isArray(ctx.params.id) ||
+    ctx.params.id.includes(".")
+  ) {
+    throw new Error("invalid or missing params.id");
+  }
+
+  const { id } = ctx.params;
+
+  try {
+    // eslint-disable-next-line no-console
+    console.info(`[Report/getStaticProps] loading report "${id}"`);
+
+    const report = await ReportRepo.load(id);
+
+    if (!report) {
+      return {
+        props: {
+          cache: {
+            fights: [],
+            report: null,
+          },
+        },
+      };
+    }
+
+    const {
+      id: dbId,
+      report: reportId,
+      fights: reportFights,
+      ...rest
+    } = report;
+
+    // eslint-disable-next-line no-console
+    console.info(
+      `[Report/getStaticProps] loading fights "${reportFights.join(",")}"`
+    );
+    const fights = await FightRepo.loadFull(reportId, reportFights);
+
+    return {
+      props: {
+        cache: {
+          fights,
+          report: {
+            ...rest,
+            id: reportId,
+            fights: reportFights,
+            endTime: rest.endTime,
+            region: report.region.slug,
+            startTime: report.startTime,
+          },
+        },
+      },
+    };
+  } catch {
+    return {
+      props: {
+        cache: {
+          fights: [],
+          report: null,
+        },
+      },
+    };
+  }
+};
