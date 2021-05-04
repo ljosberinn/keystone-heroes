@@ -4,12 +4,12 @@ import { prisma } from "../prismaClient";
 import type { RawReport } from "../queries/report";
 
 export const ReportRepo = {
-  create: async (
+  upsert: async (
     report: string,
     { endTime, startTime, title, region }: RawReport
   ): Promise<number> => {
     // eslint-disable-next-line no-console
-    console.info(`[ReportRepo/create] creating "${report}"`);
+    console.info(`[ReportRepo/upsert] creating "${report}"`);
 
     const { id } = await prisma.report.upsert({
       where: {

@@ -80,7 +80,7 @@ const reportHandler: RequestHandler<Request, Response> = async (req, res) => {
       return;
     }
 
-    await ReportRepo.create(id, rawReport);
+    await ReportRepo.upsert(id, rawReport);
 
     res.json({
       id,
@@ -107,7 +107,7 @@ const reportHandler: RequestHandler<Request, Response> = async (req, res) => {
     return;
   }
 
-  await ReportRepo.create(id, rawReport);
+  await ReportRepo.upsert(id, rawReport);
 
   setCacheControl(
     res,

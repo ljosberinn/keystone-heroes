@@ -6,6 +6,7 @@ import {
   WCL_GQL_ENDPOINT,
   WCL_OAUTH_ENDPOINT,
 } from "../constants";
+import { WCLAuthRepo } from "./db/wclAuth";
 
 type ClientCache = {
   client: GraphQLClient | null;
@@ -17,7 +18,7 @@ const clientCache: ClientCache = {
   expiresAt: -1,
 };
 
-type WCLOAuthResponse = {
+export type WCLOAuthResponse = {
   access_token: string;
   expires_in: number;
   token_type: "Bearer";
@@ -25,8 +26,31 @@ type WCLOAuthResponse = {
 
 export const getGqlClient = async (): Promise<GraphQLClient> => {
   if (clientCache.client && clientCache.expiresAt > Date.now() + 60 * 1000) {
+    console.log("cached client");
     return clientCache.client;
   }
+
+  const cache = await WCLAuthRepo.load();
+
+  if (cache?.token && cache?.expiresAt) {
+    console.log("auth cache hit");
+    const { token, expiresAt } = cache;
+
+    // eslint-disable-next-line require-atomic-updates
+    clientCache.client = new GraphQLClient(WCL_GQL_ENDPOINT, {
+      headers: {
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+        authorization: `Bearer ${token}`,
+      },
+    });
+
+    // eslint-disable-next-line require-atomic-updates
+    clientCache.expiresAt = expiresAt * 1000;
+
+    return clientCache.client;
+  }
+
+  console.log("no auth cache hit");
 
   try {
     const body = new URLSearchParams({
@@ -45,6 +69,8 @@ export const getGqlClient = async (): Promise<GraphQLClient> => {
 
     if (response.ok) {
       const json: WCLOAuthResponse = await response.json();
+
+      await WCLAuthRepo.upsert(json);
 
       // eslint-disable-next-line require-atomic-updates
       clientCache.client = new GraphQLClient(WCL_GQL_ENDPOINT, {

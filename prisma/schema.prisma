@@ -465,3 +465,10 @@ model PlayerCovenantTrait {
   playerId Int
   player   Player @relation(fields: [playerId], references: [id])
 }
+
+model WCLAuth {
+  id Int @id @default(autoincrement())
+
+  token     String?
+  expiresAt Int?
+}
