@@ -37,7 +37,6 @@ export const getGqlClient = async (): Promise<GraphQLClient> => {
     // eslint-disable-next-line require-atomic-updates
     clientCache.client = new GraphQLClient(WCL_GQL_ENDPOINT, {
       headers: {
-        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         authorization: `Bearer ${token}`,
       },
     });

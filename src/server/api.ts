@@ -1,5 +1,7 @@
 import type { NextApiResponse } from "next";
 
+import { IS_PROD } from "../constants";
+
 export enum CacheControl {
   ONE_HOUR = 3600,
   ONE_DAY = 86_400,
@@ -11,12 +13,14 @@ export const setCacheControl = <Response extends NextApiResponse>(
   res: Response,
   expiration = CacheControl.ONE_DAY
 ): void => {
-  res.setHeader(
-    "Cache-Control",
-    `public, s-maxage=${expiration}, stale-while-revalidate=${Math.round(
-      expiration / 2
-    )}`
-  );
+  if (IS_PROD) {
+    res.setHeader(
+      "Cache-Control",
+      `public, s-maxage=${expiration}, stale-while-revalidate=${Math.round(
+        expiration / 2
+      )}`
+    );
+  }
 };
 
 export const isValidReportId = (id?: string | string[]): id is string =>

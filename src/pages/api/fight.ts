@@ -2,6 +2,7 @@ import type { Character, Fight, PlayableClass, Server } from "@prisma/client";
 import nc from "next-connect";
 
 import { classMapByName } from "../../../prisma/classes";
+import { dungeons } from "../../../prisma/dungeons";
 import { specMapByName } from "../../../prisma/specs";
 import {
   CacheControl,
@@ -186,6 +187,37 @@ const fightsHandler: RequestHandler<Request, ResponseFight2[]> = async (
     );
 
     const insertableFights = newFights
+      .map((fight) => {
+        const allNpcIds = new Set(
+          fight.dungeonPulls.flatMap((pull) =>
+            pull.enemyNPCs.map((npc) => npc.gameID)
+          )
+        );
+
+        const matchingDungeon = dungeons.find((dungeon) =>
+          dungeon.bossIds.every((bossId) => allNpcIds.has(bossId))
+        );
+
+        if (matchingDungeon) {
+          // some fights report the wrong zone
+          // e.g. PhjZq1LBkf98bvx3/#fight=7 being NW showing up as SoA
+          if (fight.gameZone?.id === matchingDungeon.id) {
+            return fight;
+          }
+
+          // some fights do not have a gameZone at all due to the log missing
+          // the `zone_change` event
+          // see https://discord.com/channels/180033360939319296/427632146019123201/836585255930429460
+          return {
+            ...fight,
+            gameZone: {
+              id: matchingDungeon.id,
+            },
+          };
+        }
+
+        return fight;
+      })
       .filter((fight): fight is ValidRawFight => {
         const hasSuccessfulTableRequest = fight.id in tablesAsMap;
         const hasGameZone = Boolean(fight.gameZone);

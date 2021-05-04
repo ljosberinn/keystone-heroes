@@ -10,7 +10,7 @@ import { PrismaClient } from "@prisma/client";
 import { affixes } from "./affixes";
 import { classes } from "./classes";
 import { covenantMap } from "./covenants";
-import { dungeons } from "./dungeons";
+import { dungeonMap } from "./dungeons";
 import { regions } from "./regions";
 import { seasons } from "./seasons";
 import { soulbindMap } from "./soulbinds";
@@ -20,7 +20,7 @@ import { weeks } from "./weeks";
 const prisma = new PrismaClient();
 
 function seedDungeons() {
-  const insertableDungeons = Object.entries(dungeons).map<Dungeon>(
+  const insertableDungeons = Object.entries(dungeonMap).map<Dungeon>(
     ([id, { name, slug, timer }]) => {
       return {
         id: Number.parseInt(id),

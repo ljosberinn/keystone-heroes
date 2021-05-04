@@ -25,12 +25,50 @@ type ReportProps = {
   };
 };
 
-export default function Report({ cache }: ReportProps): JSX.Element | null {
+function useFights(
+  report: ReportType | null,
+  initialFights: ResponseFight2[] = []
+) {
+  const { isFallback } = useRouter();
+  const [fights, setFights] = useState<ResponseFight2[]>(initialFights);
+
+  useEffect(() => {
+    if (
+      isFallback ||
+      !report ||
+      !report.id ||
+      report.fights.length === 0 ||
+      initialFights.length > 0
+    ) {
+      return;
+    }
+
+    const params = new URLSearchParams({
+      reportId: report.id,
+    });
+
+    report.fights.forEach((id) => {
+      // @ts-expect-error doesn't have to be a string
+      params.append("ids", id);
+    });
+
+    const query = params.toString();
+
+    fetch(`/api/fight?${query}`)
+      // eslint-disable-next-line promise/prefer-await-to-then
+      .then((response) => response.json())
+      // eslint-disable-next-line promise/prefer-await-to-then
+      .then(setFights)
+      // eslint-disable-next-line promise/prefer-await-to-then, no-console
+      .catch(console.error);
+  }, [report, isFallback, initialFights]);
+
+  return fights;
+}
+
+function useReport(cachedReport: ReportType | null = null) {
   const { query, isFallback } = useRouter();
-  const [report, setReport] = useState<ReportType | null>(
-    cache?.report ?? null
-  );
-  const [fights, setFights] = useState<ResponseFight2[]>(cache?.fights ?? []);
+  const [report, setReport] = useState<ReportType | null>(cachedReport);
 
   useEffect(() => {
     if (
@@ -56,35 +94,14 @@ export default function Report({ cache }: ReportProps): JSX.Element | null {
       .catch(console.error);
   }, [query.id, report, isFallback]);
 
-  useEffect(() => {
-    if (
-      isFallback ||
-      !report ||
-      report.fights.length === 0 ||
-      fights.length > 0
-    ) {
-      return;
-    }
+  return report;
+}
 
-    const params = new URLSearchParams({
-      reportId: report.id,
-    });
+export default function Report({ cache }: ReportProps): JSX.Element | null {
+  const { query } = useRouter();
 
-    report.fights.forEach((id) => {
-      // @ts-expect-error doesn't have to be a string
-      params.append("ids", id);
-    });
-
-    const query = params.toString();
-
-    fetch(`/api/fight?${query}`)
-      // eslint-disable-next-line promise/prefer-await-to-then
-      .then((response) => response.json())
-      // eslint-disable-next-line promise/prefer-await-to-then
-      .then(setFights)
-      // eslint-disable-next-line promise/prefer-await-to-then, no-console
-      .catch(console.error);
-  }, [report, fights, isFallback]);
+  const report = useReport(cache?.report);
+  const fights = useFights(report, cache?.fights);
 
   if (!report) {
     return (

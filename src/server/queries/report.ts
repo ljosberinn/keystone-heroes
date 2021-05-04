@@ -45,7 +45,7 @@ export type DungeonPull = {
     minY: number;
     maxY: number;
   };
-  enemyNPCs: { gameId: number }[];
+  enemyNPCs: { gameID: number }[];
   x: number;
   y: number;
 };
