@@ -19,7 +19,7 @@ import { calcRunDuration, calcTimeLeft } from "../../utils/calc";
 import type { Response as ReportType } from "../api/report";
 
 type ReportProps = {
-  cache: {
+  cache?: {
     report: ReportType | null;
     fights: ResponseFight2[] | [];
   };
@@ -27,8 +27,10 @@ type ReportProps = {
 
 export default function Report({ cache }: ReportProps): JSX.Element | null {
   const { query, isFallback } = useRouter();
-  const [report, setReport] = useState<ReportType | null>(cache.report);
-  const [fights, setFights] = useState<ResponseFight2[]>(cache.fights);
+  const [report, setReport] = useState<ReportType | null>(
+    cache?.report ?? null
+  );
+  const [fights, setFights] = useState<ResponseFight2[]>(cache?.fights ?? []);
 
   useEffect(() => {
     if (

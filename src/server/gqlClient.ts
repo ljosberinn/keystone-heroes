@@ -25,18 +25,13 @@ export type WCLOAuthResponse = {
 };
 
 export const getGqlClient = async (): Promise<GraphQLClient> => {
-  console.log("enter getGqlClient");
   if (clientCache.client && clientCache.expiresAt > Date.now() + 60 * 1000) {
-    console.log("cached client");
     return clientCache.client;
   }
 
-  console.time("WCLAuthRepo.load()");
   const cache = await WCLAuthRepo.load();
-  console.timeEnd("WCLAuthRepo.load()");
 
   if (cache?.token && cache?.expiresAt) {
-    console.log("auth cache hit");
     const { token, expiresAt } = cache;
 
     // eslint-disable-next-line require-atomic-updates
@@ -52,8 +47,6 @@ export const getGqlClient = async (): Promise<GraphQLClient> => {
 
     return clientCache.client;
   }
-
-  console.log("no auth cache hit");
 
   try {
     const body = new URLSearchParams({
