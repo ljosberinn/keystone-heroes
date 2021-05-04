@@ -133,7 +133,8 @@ export const loadReportFromSource = async (
     const json = await getInitialReportData(reportId);
 
     return json.reportData.report;
-  } catch {
+  } catch (error) {
+    console.trace(error);
     return null;
   }
 };
@@ -146,7 +147,8 @@ export const loadFightsFromSource = async (
     const json = await getExtendedFightData(reportId, fightIds);
 
     return json.reportData.report.fights;
-  } catch {
+  } catch (error) {
+    console.trace(error);
     return null;
   }
 };

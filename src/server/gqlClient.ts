@@ -25,12 +25,15 @@ export type WCLOAuthResponse = {
 };
 
 export const getGqlClient = async (): Promise<GraphQLClient> => {
+  console.log("enter getGqlClient");
   if (clientCache.client && clientCache.expiresAt > Date.now() + 60 * 1000) {
     console.log("cached client");
     return clientCache.client;
   }
 
+  console.time("WCLAuthRepo.load()");
   const cache = await WCLAuthRepo.load();
+  console.timeEnd("WCLAuthRepo.load()");
 
   if (cache?.token && cache?.expiresAt) {
     console.log("auth cache hit");
