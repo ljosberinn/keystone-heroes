@@ -12,7 +12,7 @@
     "lint:types": "tsc --noEmit",
     "start": "next start",
     "test": "jest",
-    "postinstall": "yarn-deduplicate -l",
+    "postinstall": "yarn-deduplicate -l && yarn prisma:generate",
     "prisma:generate": "prisma generate",
     "prisma:push": "prisma db push --preview-feature",
     "prisma:seed": "prisma db seed --preview-feature",
