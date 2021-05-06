@@ -57,7 +57,6 @@ const getData = (
   );
 
   const specId = specMapByName[details.specs[0]];
-
   const covenantId = details.combatantInfo.covenantID ?? null;
 
   return {

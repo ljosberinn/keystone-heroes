@@ -19,12 +19,12 @@ export type RawReport = InitialRawReport["reportData"]["report"];
 type RawFightBase = {
   id: number;
   keystoneBonus: number;
+  keystoneLevel: number;
 };
 
 export type RawFight = RawFightBase & {
   averageItemLevel: number;
   keystoneAffixes: number[];
-  keystoneLevel: number;
   keystoneTime: number;
   dungeonPulls: DungeonPull[];
   // gameZone is null on broken logs
@@ -67,6 +67,7 @@ const getInitialReportData = async (reportId: string) => {
             fights(translate: true, killType: Kills) {
               id
               keystoneBonus
+              keystoneLevel
             }
           }
         }

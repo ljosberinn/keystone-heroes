@@ -1,130 +1,154 @@
-import { getAffix } from "./affixes";
+import type { Season } from "@prisma/client";
+
+import { getAffixByName } from "./affixes";
+import { ExpansionEnum } from "./expansions";
+
+export enum SeasonId {
+  LEGION_7_2_0 = 1,
+  LEGION_7_2_5 = 2,
+  LEGION_7_3_0 = 3,
+  LEGION_7_3_2 = 4,
+  LEGION_POST_SEASON = 5,
+  BFA_PRE_SEASON = 6,
+  BFA_SEASON_1 = 7,
+  BFA_SEASON_2 = 8,
+  BFA_POST_SEASON_2 = 9,
+  BFA_SEASON_3 = 10,
+  BFA_POST_SEASON_3 = 11,
+  BFA_SEASON_4 = 12,
+  BFA_POST_SEASON_4 = 13,
+  SL_SEASON_1 = 14,
+}
 
 // via https://raider.io/api#/mythic_plus/getApiV1MythicplusStaticdata
-export const seasons = [
+export const seasons: (Season & { seasonId: SeasonId })[] = [
   // Legion
   {
-    slug: "season-7.2.0",
+    slug: "legion-7.2.0",
     name: "Season 7.2",
-    expansionId: 6,
+    expansionId: ExpansionEnum.LEGION,
     startTime: new Date(0),
     endTime: new Date(1),
     affixId: null,
+    seasonId: SeasonId.LEGION_7_2_0,
   },
   {
-    slug: "season-7.2.5",
+    slug: "legion-7.2.5",
     name: "Season 7.2.5",
-    expansionId: 6,
+    expansionId: ExpansionEnum.LEGION,
     startTime: new Date(0),
     endTime: new Date(1),
     affixId: null,
+    seasonId: SeasonId.LEGION_7_2_5,
   },
   {
-    slug: "season-7.3.0",
+    slug: "legion-7.3.0",
     name: "Season 7.3",
-    expansionId: 6,
+    expansionId: ExpansionEnum.LEGION,
     startTime: new Date(0),
     endTime: new Date(1),
     affixId: null,
+    seasonId: SeasonId.LEGION_7_3_0,
   },
   {
-    slug: "season-7.3.2",
+    slug: "legion-7.3.2",
     name: "Season 7.3.2",
-    expansionId: 6,
+    expansionId: ExpansionEnum.LEGION,
     startTime: new Date(0),
     endTime: new Date(1),
     affixId: null,
+    seasonId: SeasonId.LEGION_7_3_2,
   },
   {
-    slug: "season-post-legion",
+    slug: "legion-7.3.2-post",
     name: "Legion Post-Season",
-    expansionId: 6,
+    expansionId: ExpansionEnum.LEGION,
     startTime: new Date(0),
     endTime: new Date(1),
     affixId: null,
+    seasonId: SeasonId.LEGION_POST_SEASON,
   },
   {
-    slug: "season-pre-bfa",
+    slug: "legion-pre-bfa",
     name: "BFA Pre-Season",
-    expansionId: 6,
+    expansionId: ExpansionEnum.LEGION,
     startTime: new Date(0),
     endTime: new Date(1),
     affixId: null,
+    seasonId: SeasonId.BFA_PRE_SEASON,
   },
   // BFA
   {
-    slug: "season-bfa-1",
+    slug: "bfa-1",
     name: "BFA Season 1",
-    expansionId: 7,
+    expansionId: ExpansionEnum.BATTLE_FOR_AZEROTH,
     startTime: new Date(0),
     endTime: new Date(1),
-    affixId: getAffix("Infested"),
+    affixId: getAffixByName("Infested"),
+    seasonId: SeasonId.BFA_SEASON_1,
   },
   {
-    slug: "season-bfa-2",
+    slug: "bfa-2",
     name: "BFA Season 2",
-    expansionId: 7,
+    expansionId: ExpansionEnum.BATTLE_FOR_AZEROTH,
     startTime: new Date(0),
     endTime: new Date(1),
-    affixId: getAffix("Reaping"),
+    affixId: getAffixByName("Reaping"),
+    seasonId: SeasonId.BFA_SEASON_2,
   },
   {
-    slug: "season-bfa-2-post",
+    slug: "bfa-2-post",
     name: "BFA Post-Season 2",
-    expansionId: 7,
+    expansionId: ExpansionEnum.BATTLE_FOR_AZEROTH,
     startTime: new Date(0),
     endTime: new Date(1),
-    affixId: getAffix("Reaping"),
+    affixId: getAffixByName("Reaping"),
+    seasonId: SeasonId.BFA_POST_SEASON_2,
   },
   {
-    slug: "season-bfa-3",
+    slug: "bfa-3",
     name: "BFA Season 3",
-    expansionId: 7,
+    expansionId: ExpansionEnum.BATTLE_FOR_AZEROTH,
     startTime: new Date(0),
     endTime: new Date(1),
-    affixId: getAffix("Beguiling"),
+    affixId: getAffixByName("Beguiling"),
+    seasonId: SeasonId.BFA_SEASON_3,
   },
   {
-    slug: "season-bfa-3-post",
+    slug: "bfa-3-post",
     name: "BFA Post-Season 3",
-    expansionId: 7,
+    expansionId: ExpansionEnum.BATTLE_FOR_AZEROTH,
     startTime: new Date(0),
     endTime: new Date(1),
-    affixId: getAffix("Beguiling"),
+    affixId: getAffixByName("Beguiling"),
+    seasonId: SeasonId.BFA_POST_SEASON_3,
   },
   {
-    slug: "season-bfa-4",
+    slug: "bfa-4",
     name: "BFA Season 4",
-    expansionId: 7,
+    expansionId: ExpansionEnum.BATTLE_FOR_AZEROTH,
     startTime: new Date(0),
     endTime: new Date(1),
-    affixId: getAffix("Awakened"),
+    affixId: getAffixByName("Awakened"),
+    seasonId: SeasonId.BFA_SEASON_4,
   },
   {
-    slug: "season-bfa-4-post",
+    slug: "bfa-4-post",
     name: "BFA Post-Season 4",
-    expansionId: 7,
+    expansionId: ExpansionEnum.BATTLE_FOR_AZEROTH,
     startTime: new Date(0),
     endTime: new Date(1),
-    affixId: getAffix("Awakened"),
+    affixId: getAffixByName("Awakened"),
+    seasonId: SeasonId.BFA_POST_SEASON_4,
   },
   // SL
   {
-    slug: "season-sl-1",
+    slug: "sl-1",
     name: "SL Season 1",
-    expansionId: 8,
+    expansionId: ExpansionEnum.SHADOWLANDS,
     startTime: new Date(1_607_385_600 * 1000),
     endTime: null,
-    affixId: getAffix("Prideful"),
+    affixId: getAffixByName("Prideful"),
+    seasonId: SeasonId.SL_SEASON_1,
   },
 ].map((dataset, index) => ({ ...dataset, id: index }));
-
-export const getSeasonId = (name: string): number => {
-  const match = seasons.find((season) => season.name === name);
-
-  if (match) {
-    return match.id;
-  }
-
-  throw new Error("impossible");
-};

@@ -67,3 +67,7 @@ export const soulbindMap: Record<
     covenantId: 1,
   },
 };
+
+export const soulbinds: Soulbind[] = Object.entries(
+  soulbindMap
+).map(([id, dataset]) => ({ id: Number.parseInt(id), ...dataset }));

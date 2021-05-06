@@ -1,40 +1,27 @@
-import type {
-  Affix,
-  Class,
-  Covenant,
-  Dungeon,
-  Expansion,
-} from "@prisma/client";
+import type { Class } from "@prisma/client";
 import { PrismaClient } from "@prisma/client";
 
 import { affixes } from "./affixes";
 import { classes } from "./classes";
-import { covenantMap } from "./covenants";
-import { dungeonMap } from "./dungeons";
+import { covenants } from "./covenants";
+import { dungeons } from "./dungeons";
+import { expansions } from "./expansions";
 import { regions } from "./regions";
 import { seasons } from "./seasons";
-import { soulbindMap } from "./soulbinds";
+import { soulbinds } from "./soulbinds";
 import { specs } from "./specs";
 import { weeks } from "./weeks";
 
 const prisma = new PrismaClient();
 
 function seedDungeons() {
-  const insertableDungeons = Object.entries(dungeonMap).map<Dungeon>(
-    ([id, { name, slug, timer }]) => {
-      return {
-        id: Number.parseInt(id),
-        name,
-        slug,
-        time: timer[0],
-      };
-    }
-  );
-
   return Promise.all(
-    insertableDungeons.map((dungeon) =>
+    dungeons.map(({ timer, bossIds, expansionId, ...dungeon }) =>
       prisma.dungeon.upsert({
-        create: dungeon,
+        create: {
+          ...dungeon,
+          time: timer[0],
+        },
         where: {
           id: dungeon.id,
         },
@@ -78,19 +65,8 @@ function seedSpecs() {
 }
 
 function seedAffixes() {
-  const insertableAffixes = Object.entries(affixes).map<Affix>(
-    ([id, { name, icon, seasonal }]) => {
-      return {
-        id: Number.parseInt(id),
-        name,
-        icon,
-        seasonal,
-      };
-    }
-  );
-
   return Promise.all(
-    insertableAffixes.map((affix) =>
+    affixes.map((affix) =>
       prisma.affix.upsert({
         create: affix,
         where: {
@@ -103,14 +79,8 @@ function seedAffixes() {
 }
 
 function seedExpansions() {
-  const insertableExpansions: Expansion[] = [
-    { id: 6, name: "Legion", slug: "Legion" },
-    { id: 7, name: "Battle for Azeroth", slug: "BfA" },
-    { id: 8, name: "Shadowlands", slug: "SL" },
-  ];
-
   return Promise.all(
-    insertableExpansions.map((expansion) =>
+    expansions.map(({ dungeonIds, ...expansion }) =>
       prisma.expansion.upsert({
         create: expansion,
         where: {
@@ -124,7 +94,7 @@ function seedExpansions() {
 
 function seedSeasons() {
   return Promise.all(
-    seasons.map((season) =>
+    seasons.map(({ seasonId, ...season }) =>
       prisma.season.upsert({
         create: season,
         where: {
@@ -151,12 +121,8 @@ function seedWeeks() {
 }
 
 function seedCovenants() {
-  const insertableCovenants: Covenant[] = Object.entries(
-    covenantMap
-  ).map(([id, dataset]) => ({ ...dataset, id: Number.parseInt(id) }));
-
   return Promise.all(
-    insertableCovenants.map((covenant) =>
+    covenants.map((covenant) =>
       prisma.covenant.upsert({
         create: covenant,
         where: {
@@ -170,16 +136,11 @@ function seedCovenants() {
 
 function seedSoulbinds() {
   return Promise.all(
-    Object.entries(soulbindMap).map(([id, soulbind]) =>
+    soulbinds.map((soulbind) =>
       prisma.soulbind.upsert({
-        create: {
-          icon: soulbind.icon,
-          name: soulbind.name,
-          covenantId: soulbind.covenantId,
-          id: Number.parseInt(id),
-        },
+        create: soulbind,
         where: {
-          id: Number.parseInt(id),
+          id: soulbind.id,
         },
         update: {},
       })

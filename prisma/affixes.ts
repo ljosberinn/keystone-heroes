@@ -1,7 +1,7 @@
 import type { Affix } from "@prisma/client";
 import { Affixes } from "@prisma/client";
 
-export const affixes: Record<Affix["id"], Omit<Affix, "id">> = {
+export const affixMap: Record<Affix["id"], Omit<Affix, "id">> = {
   2: {
     name: Affixes.Skittish,
     icon: "spell_magic_lesserinvisibilty.jpg",
@@ -104,13 +104,28 @@ export const affixes: Record<Affix["id"], Omit<Affix, "id">> = {
   },
 };
 
-export const getAffix = (name: Affixes): number => {
-  const match = Object.entries(affixes).find(
+export const affixes = Object.entries(affixMap).map(([key, dataset]) => ({
+  id: Number.parseInt(key),
+  ...dataset,
+}));
+
+export const getAffixByName = (name: Affixes): number => {
+  const match = Object.entries(affixMap).find(
     ([, affix]) => affix.name === name
   );
 
   if (match) {
     return Number.parseInt(match[0]);
+  }
+
+  throw new Error("impossible");
+};
+
+export const getAffixById = (id: Affix["id"] | null): Affix => {
+  const match = affixes.find((affix) => affix.id === id);
+
+  if (match) {
+    return match;
   }
 
   throw new Error("impossible");

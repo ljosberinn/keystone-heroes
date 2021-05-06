@@ -1,5 +1,6 @@
 import nc from "next-connect";
 
+import { MIN_KEYSTONE_LEVEL } from "../../constants";
 import {
   CacheControl,
   isValidReportId,
@@ -89,7 +90,10 @@ const reportHandler: RequestHandler<Request, Response> = async (req, res) => {
       title: rawReport.title,
       region: rawReport.region.slug,
       fights: rawReport.fights
-        .filter((fight) => fight.keystoneBonus > 0)
+        .filter(
+          (fight) =>
+            fight.keystoneBonus > 0 && fight.keystoneLevel >= MIN_KEYSTONE_LEVEL
+        )
         .map((fight) => fight.id),
     });
     return;
@@ -123,7 +127,10 @@ const reportHandler: RequestHandler<Request, Response> = async (req, res) => {
     title: rawReport.title,
     region: rawReport.region.slug,
     fights: rawReport.fights
-      .filter((fight) => fight.keystoneBonus > 0)
+      .filter(
+        (fight) =>
+          fight.keystoneBonus > 0 && fight.keystoneLevel >= MIN_KEYSTONE_LEVEL
+      )
       .map((fight) => fight.id),
   });
 };
