@@ -4,11 +4,11 @@ import type { GetStaticPaths, GetStaticProps } from "next";
 import {
   affixes as allAffixes,
   getAffixById,
-} from "../../../../../../prisma/affixes";
-import { dungeonMap, dungeons } from "../../../../../../prisma/dungeons";
-import { expansions } from "../../../../../../prisma/expansions";
-import { seasons } from "../../../../../../prisma/seasons";
-import { weeks as allWeeks } from "../../../../../../prisma/weeks";
+} from "../../../../../prisma/affixes";
+import { dungeonMap, dungeons } from "../../../../../prisma/dungeons";
+import { expansions } from "../../../../../prisma/expansions";
+import { seasons } from "../../../../../prisma/seasons";
+import { weeks as allWeeks } from "../../../../../prisma/weeks";
 
 type DungeonProps = {
   dungeon: DungeonType;

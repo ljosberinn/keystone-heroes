@@ -26,4 +26,3 @@ export const WCL_CLIENT_SECRET = process.env.WCL_CLIENT_SECRET!;
  * general
  *********************/
 export const MIN_KEYSTONE_LEVEL = 10;
-export const MAX_KEYSTONE_LEVEL = 40;
