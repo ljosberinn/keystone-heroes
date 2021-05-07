@@ -6,6 +6,7 @@ import { classes } from "./classes";
 import { covenants } from "./covenants";
 import { dungeons } from "./dungeons";
 import { expansions } from "./expansions";
+import { maps } from "./maps";
 import { regions } from "./regions";
 import { seasons } from "./seasons";
 import { soulbinds } from "./soulbinds";
@@ -164,6 +165,20 @@ function seedRegions() {
   );
 }
 
+function seedMaps() {
+  return Promise.all(
+    maps.map((map) =>
+      prisma.map.upsert({
+        create: map,
+        where: {
+          id: map.id,
+        },
+        update: {},
+      })
+    )
+  );
+}
+
 async function main() {
   await seedDungeons();
   await seedClasses();
@@ -175,6 +190,7 @@ async function main() {
   await seedCovenants();
   await seedSoulbinds();
   await seedRegions();
+  await seedMaps();
 }
 
 main()

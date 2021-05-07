@@ -115,6 +115,7 @@ model Dungeon {
 
   // used in
   Fight Fight[]
+  Map   Map[]
 }
 
 enum Affixes {
@@ -262,6 +263,8 @@ model Fight {
   PlayerConduit       PlayerConduit[]
   PlayerTalent        PlayerTalent[]
   PlayerCovenantTrait PlayerCovenantTrait[]
+  Pulls               Pulls[]
+
   @@unique([fightId, reportId])
 }
 
@@ -471,4 +474,98 @@ model WCLAuth {
 
   token     String?
   expiresAt Int?
+}
+
+model Pulls {
+  id Int @id @default(autoincrement())
+
+  fightId Int
+  fight   Fight @relation(fields: [fightId], references: [id])
+
+  mapId Int
+  map   Map @relation(fields: [mapId], references: [id])
+
+  // used in
+  Events Events[]
+}
+
+model Map {
+  id Int @id
+
+  dungeonId Int
+  dungeon   Dungeon @relation(fields: [dungeonId], references: [id])
+
+  // used in
+  Pulls Pulls[]
+}
+
+model NPCsToPulls {
+  id Int @id @default(autoincrement())
+
+  amount Int
+
+  npcId Int
+  npc   NPCs @relation(fields: [npcId], references: [id])
+}
+
+model NPCs {
+  id Int @id
+
+  name String
+
+  // used in
+  NPCsToPulls NPCsToPulls[]
+}
+
+enum Event {
+  // profesion specific
+  INVISIBILITY_POTION
+  CARDBOARD_ASSASSIN
+  DRUMS
+
+  // battle rez
+  REBIRTH
+
+  // class specific cooldowns
+  SHROUD_OF_CONCEALMENT
+  COMBUSTION
+  SPIRIT_LINK_TOTEM
+  METAMORPHOSIS
+  TIME_WARP
+  BLOODLUST
+  HEROISM
+  POWER_INFUSION // with meta: target player
+
+  // covenant specific
+  CONVOKE_THE_SPIRITS
+  ASHEN_HALLOW
+  SHIFTING_POWER
+  BENEVOLENT_FAIRIE // with meta: target player
+
+  // dungeon specific
+  NW_SPEAR
+  NW_ORB
+  NW_HAMMER
+  NW_KYRIAN_ORB
+
+  SOA_SPEAR
+
+  HOA_GARGOYLE
+
+  DOS_URN
+
+  // affix specific
+  HEALING_BY_SANGUINE
+  EXPLOSIVE_KILLS // with meta: amount per role
+}
+
+model Events {
+  id Int @id @default(autoincrement())
+
+  event     Event
+  timestamp Int
+  meta      Json?
+
+  pullId Int
+  pulls  Pulls @relation(fields: [pullId], references: [id])
 }
