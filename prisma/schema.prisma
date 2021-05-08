@@ -320,6 +320,7 @@ model Player {
   PlayerConduit       PlayerConduit[]
   PlayerTalent        PlayerTalent[]
   PlayerCovenantTrait PlayerCovenantTrait[]
+  CombatEvents        CombatEvents[]
 }
 
 enum Covenants {
@@ -486,7 +487,7 @@ model Pulls {
   map   Map @relation(fields: [mapId], references: [id])
 
   // used in
-  Events Events[]
+  CombatEvents CombatEvents[]
 }
 
 model Map {
@@ -517,30 +518,171 @@ model NPCs {
   NPCsToPulls NPCsToPulls[]
 }
 
-enum Event {
-  // profesion specific
+enum NonCombatEvent {
+  // profession specific
   INVISIBILITY_POTION
+  DIMENSIONAL_SHIFTER
+
+  // class specific cooldowns
+  // # rogue
+  SHROUD_OF_CONCEALMENT
+  SAP
+  BLIND
+  // # mage
+  SHEEP
+  // # demon hunter
+  IMPRISON
+  // # druid
+  ENTANGLING_ROOTS
+  // # monk
+  PARALYSIS
+  // # hunter
+  // # death knight
+  // # warrior
+}
+
+enum CombatEvent {
+  // profession specific
   CARDBOARD_ASSASSIN
   DRUMS
+  DISPOSABLE_SPECTROPHASIC_REANIMATOR
 
   // battle rez
   REBIRTH
+  SOULSTONE
 
-  // class specific cooldowns
-  SHROUD_OF_CONCEALMENT
+  // class specific cooldowns - everything that has 1+ min base cd
+  // # mage
   COMBUSTION
-  SPIRIT_LINK_TOTEM
-  METAMORPHOSIS
   TIME_WARP
+  ICY_VEINS
+  // # shaman
+  SPIRIT_LINK_TOTEM
   BLOODLUST
   HEROISM
+  ASCENDANCE
+  // # demon hunter
+  METAMORPHOSIS
+  FEL_DEVASTATION
+  // # priest
   POWER_INFUSION // with meta: target player
+  VOID_FORM
+  POWER_WORD_BARRIER
+  DESPERATE_PRAYER
+  PAIN_SUPPRESSION
+  // # druid
+  CELESTIAL_ALIGNMENT
+  FORCE_OF_NATURE
+  BARKSKIN
+  IRONBARK
+  TRANQUILITY
+  FLOURISH
+  INNERVATE
+  STAMPEDING_ROAR
+  HEART_OF_THE_WILD
+  URSOLS_VORTEX
+  RENEWAL
+  // # hunter
+  ASPECT_OF_THE_TURTLE
+  DOUBLE_TAP
+  EXHILARATION
+  // # paladin
+  BLESSING_OF_PROTECTION
+  DIVINE_SHIELD
+  DIVINE_PROTECTION
+  LAY_ON_HANDS
+  AVENGING_WRATH
+  HOLY_AVENGER
+  BLESSING_OF_SACRIFICE
+  // # warlock
+  SHADOWFURY
+  UNENDING_RESOLVE
+  // # rogue
+  ADRENALINE_RUSH
+  EVASION
+  CLOAK_OF_SHADOWS
+  VANISH
+  KILLING_SPREE
+  MARKED_FOR_DEATH
+  // # warrior
+  SHIELD_WALL
+  LAST_STAND
+  // # monk
+  INVOKE_XUEN
+  STORM_EARTH_AND_FIRE
+  TOUCH_OF_KARMA
+  FORTIFYING_BREW
+  DIFFUSE_MAGIC
+  DAMPEN_HARM
+  TOUCH_OF_DEATH
+  // # death knight
+  ARMY_OF_THE_DEAD
+  ANTI_MAGIC_ZONE
+  ICEBOUND_FORTITUDE
+  DARK_TRANSFORMATION
+  ANTI_MAGIC_SHELL
+  UNHOLY_ASSAULT
 
   // covenant specific
+  // # druid
   CONVOKE_THE_SPIRITS
+  KINDRED_SPIRITS
+  RAVENOUS_FRENZY
+  // ADAPTIVE_SWARM 25s cd only
+  // # paladin
   ASHEN_HALLOW
+  DIVINE_TOLL
+  // VANQUISHERS_HAMMER 30s cd only
+  // BLESSING_OF_THE_SEASON 45s cd only; buff for other players
+  // # hunter
+  WILD_SPIRITS
+  RESONATING_ARROW
+  // FLAYED_SHOT 30s cd only
+  // DEATH_CHAKRAM 45s cd only
+  // # death knight
+  SHACKLE_THE_UNWORTHY
+  ABOMINATION_LIMB
+  // DEATHS_DUE 30s cd only
+  SWARMING_MIST
+  // # mage
+  MIRRORS_OF_TORMENT
+  // RADIANT_SPARK 30s cd only
+  DEATHBORNE
   SHIFTING_POWER
-  BENEVOLENT_FAIRIE // with meta: target player
+  // # demon hunter
+  SINFUL_BRAND
+  FODDER_TO_THE_FLAME
+  THE_HUNT
+  // # monk
+  WEAPONS_OF_ORDER
+  FALLEN_ORDER
+  BONEDUST_BREW
+  // FAELINE_STOMP 30s cd only
+  // # priest
+  BOON_OF_THE_ASCENDED
+  // MINDGAMES 45s cd only
+  UNHOLY_NOVA
+  FAE_GUARDIANS // with meta: target player
+  // # rogue
+  // ECHOING_REPRIMAND 45s cd only
+  FLAGELLATION
+  // SERRATED_BONE_SPIKE 30s cd only
+  SEPSIS
+  // # shaman
+  VESPER_TOTEM
+  CHAIN_HARVEST
+  // PRIMORDIAL_WAVE 45s cd only
+  FAE_TRANSFUSION
+  // # warlock
+  // SCOURING_TITHE 40s cd only
+  IMPENDING_CATASTROPHE
+  // DECIMATING_BOLT 45s cd only
+  SOUL_ROT
+  // # warrior
+  SPEAR_OF_BASTION
+  // CONDEMN 6s cd only
+  CONQUERORS_BANNER
+  ANCIENT_AFTERSHOCK
 
   // dungeon specific
   NW_SPEAR
@@ -554,18 +696,31 @@ enum Event {
 
   DOS_URN
 
+  SD_LANTERN
+
   // affix specific
   HEALING_BY_SANGUINE
   EXPLOSIVE_KILLS // with meta: amount per role
 }
 
-model Events {
+model CombatEvents {
   id Int @id @default(autoincrement())
 
-  event     Event
-  timestamp Int
-  meta      Json?
+  combatEvent CombatEvent
+  timestamp   Int
+  meta        Json?
 
   pullId Int
   pulls  Pulls @relation(fields: [pullId], references: [id])
+
+  playerId Int
+  player   Player @relation(fields: [playerId], references: [id])
+}
+
+model NonCombatEvents {
+  id Int @id @default(autoincrement())
+
+  nonCombatEvent NonCombatEvent
+  timestamp      Int
+  meta           Json?
 }
