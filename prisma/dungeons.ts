@@ -58,6 +58,17 @@ enum Boss {
   MARGRAVE_STRADAMA = 164_267,
 }
 
+export enum DungeonIds {
+  SANGUINE_DEPTHS = 2284,
+  SPIRES_OF_ASCENSION = 2285,
+  THE_NECROTIC_WAKE = 2286,
+  HALLS_OF_ATONEMENT = 2287,
+  PLAGUEFALL = 2289,
+  MISTS_OF_TIRNA_SCITHE = 2290,
+  DE_OTHER_SIDE = 2291,
+  THEATRE_OF_PAIN = 2293,
+}
+
 export const dungeonMap: Record<
   Dungeon["id"],
   Omit<Dungeon, "id" | "time"> & {
@@ -66,7 +77,7 @@ export const dungeonMap: Record<
     expansionId: ExpansionEnum;
   }
 > = {
-  2284: {
+  [DungeonIds.SANGUINE_DEPTHS]: {
     name: "Sanguine Depths",
     timer: createDungeonTimer(41),
     slug: "SD",
@@ -78,7 +89,7 @@ export const dungeonMap: Record<
     ],
     expansionId: ExpansionEnum.SHADOWLANDS,
   },
-  2285: {
+  [DungeonIds.SPIRES_OF_ASCENSION]: {
     name: "Spires of Ascension",
     timer: createDungeonTimer(39),
     slug: "SoA",
@@ -91,7 +102,7 @@ export const dungeonMap: Record<
     ],
     expansionId: ExpansionEnum.SHADOWLANDS,
   },
-  2286: {
+  [DungeonIds.THE_NECROTIC_WAKE]: {
     name: "The Necrotic Wake",
     timer: createDungeonTimer(36),
     slug: "NW",
@@ -103,7 +114,7 @@ export const dungeonMap: Record<
     ],
     expansionId: ExpansionEnum.SHADOWLANDS,
   },
-  2287: {
+  [DungeonIds.HALLS_OF_ATONEMENT]: {
     name: "Halls of Atonement",
     timer: createDungeonTimer(31),
     slug: "HoA",
@@ -115,7 +126,7 @@ export const dungeonMap: Record<
     ],
     expansionId: ExpansionEnum.SHADOWLANDS,
   },
-  2289: {
+  [DungeonIds.PLAGUEFALL]: {
     name: "Plaguefall",
     timer: createDungeonTimer(38),
     slug: "PF",
@@ -127,7 +138,7 @@ export const dungeonMap: Record<
     ],
     expansionId: ExpansionEnum.SHADOWLANDS,
   },
-  2290: {
+  [DungeonIds.MISTS_OF_TIRNA_SCITHE]: {
     name: "Mists of Tirna Scithe",
     timer: createDungeonTimer(30),
     slug: "MoTS",
@@ -139,7 +150,7 @@ export const dungeonMap: Record<
     ],
     expansionId: ExpansionEnum.SHADOWLANDS,
   },
-  2291: {
+  [DungeonIds.DE_OTHER_SIDE]: {
     name: "De Other Side",
     timer: createDungeonTimer(43),
     slug: "DOS",
@@ -152,7 +163,7 @@ export const dungeonMap: Record<
     ],
     expansionId: ExpansionEnum.SHADOWLANDS,
   },
-  2293: {
+  [DungeonIds.THEATRE_OF_PAIN]: {
     name: "Theatre of Pain",
     timer: createDungeonTimer(37),
     slug: "TOP",

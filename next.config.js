@@ -22,7 +22,6 @@ module.exports = {
   experimental: {
     modern: true,
     turboMode: true,
-    optimizeCss: true,
   },
   async headers() {
     return [

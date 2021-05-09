@@ -12,7 +12,6 @@ export const IS_TEST = process.env.NODE_ENV === "test";
 export const COMMIT_SHA = process.env.NEXT_PUBLIC_COMMIT_SHA;
 export const BUILD_TIME = process.env.NEXT_PUBLIC_BUILD_TIME!;
 export const BUILD_TIMESTAMP = process.env.NEXT_PUBLIC_BUILD_TIMESTAMP!;
-export const DEV_USE_DB = Number.parseInt(process.env.DEV_USE_DB!) === 1;
 
 /** *********************
  * WCL

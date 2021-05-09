@@ -45,7 +45,11 @@ export type DungeonPull = {
     minY: number;
     maxY: number;
   };
-  enemyNPCs: { gameID: number }[];
+  enemyNPCs: {
+    gameID: number;
+    minimumInstanceID: number;
+    maximumInstanceID: number;
+  }[];
   x: number;
   y: number;
 };
@@ -116,6 +120,8 @@ const getExtendedFightData = async (reportId: string, fightIds: number[]) => {
                 }
                 enemyNPCs {
                   gameID
+                  minimumInstanceID
+                  maximumInstanceID
                 }
               }
             }
