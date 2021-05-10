@@ -12,6 +12,7 @@ export type PlayerInsert = Pick<
   | "covenantId"
   | "soulbindId"
   | "legendary"
+  | "actorId"
 > & {
   serverId: Server["id"];
   specId: Spec["id"];
@@ -39,6 +40,7 @@ export const PlayerRepo = {
           specId: dataset.specId,
           characterId: dataset.characterId,
           legendaryId: dataset.legendary?.effectId ?? null,
+          actorId: dataset.actorId,
         };
       }),
       skipDuplicates: true,

@@ -1,11 +1,10 @@
-import type { Character, PlayableClass, Region } from "@prisma/client";
+import type { Character, Region } from "@prisma/client";
 
-import { classMapByName } from "../../../prisma/classes";
 import { prisma } from "../prismaClient";
 
 export const CharacterRepo = {
   createMany: async <
-    T extends { server: string; className: PlayableClass; name: string }
+    T extends { server: string; classId: number; name: string }
   >(
     characters: T[],
     region: Region,
@@ -19,12 +18,11 @@ export const CharacterRepo = {
     await prisma.character.createMany({
       data: characters.map((character) => {
         const serverId = serverMap[character.server];
-        const classId = classMapByName[character.className];
 
         return {
           name: character.name,
           serverId,
-          classId,
+          classId: character.classId,
         };
       }),
       skipDuplicates: true,

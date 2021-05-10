@@ -259,18 +259,22 @@ function Row({ fight, reportBaseUrl, region }: RowProps) {
 
                 <td className="text-right">
                   <ExternalLink
-                    href={`${fightUrl}&type=damage-done&source=TODO`}
+                    href={`${fightUrl}&type=damage-done&source=${player.actorId}`}
                   >
                     {player.dps.toLocaleString()}
                   </ExternalLink>
                 </td>
                 <td className="text-right">
-                  <ExternalLink href={`${fightUrl}&type=healing&source=TODO`}>
+                  <ExternalLink
+                    href={`${fightUrl}&type=healing&source=${player.actorId}`}
+                  >
                     {player.hps.toLocaleString()}
                   </ExternalLink>
                 </td>
                 <td className="text-right">
-                  <ExternalLink href={`${fightUrl}&type=deaths&source=TODO`}>
+                  <ExternalLink
+                    href={`${fightUrl}&type=deaths&source=${player.actorId}`}
+                  >
                     {player.deaths.toLocaleString()}
                   </ExternalLink>
                 </td>
@@ -366,16 +370,12 @@ export const getStaticPaths: GetStaticPaths<{ id: string }> = async () => {
 export const getStaticProps: GetStaticProps<
   ReportProps,
   { id: string }
-> = async (ctx) => {
-  if (
-    !ctx.params?.id ||
-    Array.isArray(ctx.params.id) ||
-    ctx.params.id.includes(".")
-  ) {
+> = async ({ params }) => {
+  if (!params?.id || Array.isArray(params.id) || params.id.includes(".")) {
     throw new Error("invalid or missing params.id");
   }
 
-  const { id } = ctx.params;
+  const { id } = params;
 
   try {
     // eslint-disable-next-line no-console

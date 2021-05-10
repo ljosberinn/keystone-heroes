@@ -24,6 +24,7 @@ import { ReportRepo } from "../../server/db/report";
 import { ServerRepo } from "../../server/db/server";
 import { TalentRepo } from "../../server/db/talent";
 import { WeekRepo } from "../../server/db/weeks";
+// import { loadRecursiveEventsFromSource } from "../../server/queries/events";
 import type { ValidRawFight } from "../../server/queries/report";
 import { loadFightsFromSource } from "../../server/queries/report";
 import type {
@@ -60,9 +61,10 @@ const getData = (
   const covenantId = details.combatantInfo.covenantID ?? null;
 
   return {
+    actorId: details.id,
     server: details.server,
     name: details.name,
-    className: details.type,
+    classId: classMapByName[details.type],
     itemLevel: details.minItemLevel,
     covenantId,
     soulbindId: details.combatantInfo.soulbindID ?? null,
@@ -271,6 +273,25 @@ const fightsHandler: RequestHandler<Request, ResponseFight2[]> = async (
       return;
     }
 
+    // try {
+    //   const [firstFight] = insertableFights;
+    //   const raw = newFights.find((fight) => fight.id === firstFight.id);
+
+    //   if (raw) {
+    //     const actorIds = firstFight.composition.map((player) => player.actorId);
+
+    //     const events = await loadRecursiveEventsFromSource(
+    //       reportId,
+    //       raw.startTime,
+    //       raw.endTime,
+    //       actorIds
+    //     );
+    //     console.log(events);
+    //   }
+    // } catch (error) {
+    //   console.error(error);
+    // }
+
     const serverMap = await ServerRepo.createMany(
       report.region,
       toUniqueArray(
@@ -294,7 +315,7 @@ const fightsHandler: RequestHandler<Request, ResponseFight2[]> = async (
             const serverId = serverMap[player.server];
 
             const character = getCharacterId(characters, {
-              className: player.className,
+              classId: player.classId,
               name: player.name,
               serverId,
             });
@@ -348,7 +369,7 @@ const fightsHandler: RequestHandler<Request, ResponseFight2[]> = async (
 
     await FightRepo.createMany(
       insertableFightsWithCharacterId.map((fight) => {
-        const [tank, heal, dps1, dps2, dps3] = fight.composition;
+        const [player1, player2, player3, player4, player5] = fight.composition;
 
         return {
           reportId: report.id,
@@ -363,11 +384,11 @@ const fightsHandler: RequestHandler<Request, ResponseFight2[]> = async (
           keystoneLevel: fight.keystoneLevel,
           keystoneTime: fight.keystoneTime,
           totalDeaths: fight.totalDeaths,
-          player1: playerIdMap[tank.characterId],
-          player2: playerIdMap[heal.characterId],
-          player3: playerIdMap[dps1.characterId],
-          player4: playerIdMap[dps2.characterId],
-          player5: playerIdMap[dps3.characterId],
+          player1Id: playerIdMap[player1.characterId],
+          player2Id: playerIdMap[player2.characterId],
+          player3Id: playerIdMap[player3.characterId],
+          player4Id: playerIdMap[player4.characterId],
+          player5Id: playerIdMap[player5.characterId],
         };
       })
     );
@@ -470,11 +491,12 @@ export type FooFight = Omit<
   composition: {
     server: string;
     name: string;
-    className: PlayableClass;
+    classId: number;
     // spec: SpecName;
     specId: number;
     covenantId: number | null;
     soulbindId: number | null;
+    actorId: number;
     itemLevel: number;
     deaths: number;
     hps: number;
@@ -505,11 +527,9 @@ const getCharacterId = (
   {
     serverId,
     name,
-    className,
-  }: { serverId: Server["id"]; name: string; className: PlayableClass }
+    classId,
+  }: { serverId: Server["id"]; name: string; classId: number }
 ) => {
-  const classId = classMapByName[className];
-
   return characters.find(
     (character) =>
       character.name === name &&

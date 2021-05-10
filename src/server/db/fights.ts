@@ -45,6 +45,7 @@ type Composition = (Pick<
   PrismaPlayer,
   "dps" | "hps" | "deaths" | "itemLevel"
 > & {
+  actorId: number;
   legendary: Legendary | null;
   covenant: Pick<Covenant, "icon" | "name"> | null;
   soulbind: Pick<Soulbind, "icon" | "name"> | null;
@@ -82,6 +83,7 @@ export const FightRepo = {
 
     const playerSelect = {
       select: {
+        actorId: true,
         covenant: {
           select: {
             name: true,
@@ -180,21 +182,21 @@ export const FightRepo = {
         dungeon: true,
         week: {
           select: {
-            firstAffix: {
+            affix1: {
               select: {
                 id: true,
                 name: true,
                 icon: true,
               },
             },
-            secondAffix: {
+            affix2: {
               select: {
                 id: true,
                 name: true,
                 icon: true,
               },
             },
-            thirdAffix: {
+            affix3: {
               select: {
                 id: true,
                 name: true,
@@ -214,27 +216,27 @@ export const FightRepo = {
             },
           },
         },
-        tank: playerSelect,
-        heal: playerSelect,
-        dps1: playerSelect,
-        dps2: playerSelect,
-        dps3: playerSelect,
+        player1: playerSelect,
+        player2: playerSelect,
+        player3: playerSelect,
+        player4: playerSelect,
+        player5: playerSelect,
       },
     });
 
     return response.map((fight) => {
       const player = [
-        fight.tank,
-        fight.heal,
-        fight.dps1,
-        fight.dps2,
-        fight.dps3,
+        fight.player1,
+        fight.player2,
+        fight.player3,
+        fight.player4,
+        fight.player5,
       ];
 
       const affixes = [
-        fight.week.firstAffix,
-        fight.keystoneLevel >= 4 && fight.week.secondAffix,
-        fight.keystoneLevel >= 7 && fight.week.thirdAffix,
+        fight.week.affix1,
+        fight.keystoneLevel >= 4 && fight.week.affix2,
+        fight.keystoneLevel >= 7 && fight.week.affix3,
         fight.keystoneLevel >= 10 && fight.week.season?.affix,
       ].filter((affix): affix is Omit<Affix, "seasonal"> => affix !== false);
 
@@ -269,6 +271,7 @@ export const FightRepo = {
           ).map((dataset) => dataset.covenantTrait);
 
           return {
+            actorId: dataset.actorId,
             legendary: dataset.legendary,
             dps: dataset.dps,
             hps: dataset.hps,
@@ -338,7 +341,7 @@ export type RawDBFight = Pick<
       affix: Omit<Affix, "seasonal"> | null;
     };
   };
-  tank: Pick<Player, "deaths" | "dps" | "hps" | "itemLevel"> & {
+  player1: Pick<Player, "deaths" | "dps" | "hps" | "itemLevel"> & {
     character: Pick<Character, "name" | "id"> & {
       class: Class;
       server: Server;

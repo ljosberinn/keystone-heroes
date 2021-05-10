@@ -148,10 +148,10 @@ model Affix {
   seasonal Boolean
 
   // used in
-  firstAffix  Week[]   @relation("firstAffix")
-  secondAffix Week[]   @relation("secondAffix")
-  thirdAffix  Week[]   @relation("thirdAffix")
-  Seasons     Season[]
+  affix1  Week[]   @relation("affix1")
+  affix2  Week[]   @relation("affix2")
+  affix3  Week[]   @relation("affix3")
+  Seasons Season[]
 }
 
 model Expansion {
@@ -190,14 +190,14 @@ model Week {
 
   seasonWeekId Int
 
-  affix1Id   Int
-  firstAffix Affix @relation("firstAffix", fields: [affix1Id], references: [id])
+  affix1Id Int
+  affix1   Affix @relation("affix1", fields: [affix1Id], references: [id])
 
-  affix2Id    Int?
-  secondAffix Affix? @relation("secondAffix", fields: [affix2Id], references: [id])
+  affix2Id Int?
+  affix2   Affix? @relation("affix2", fields: [affix2Id], references: [id])
 
-  affix3Id   Int?
-  thirdAffix Affix? @relation("thirdAffix", fields: [affix3Id], references: [id])
+  affix3Id Int?
+  affix3   Affix? @relation("affix3", fields: [affix3Id], references: [id])
 
   // used in
   Fight Fight[]
@@ -241,20 +241,20 @@ model Fight {
   totalDeaths      Int
   averageItemLevel Int
 
-  player1 Int
-  tank    Player @relation("tank-player", fields: [player1], references: [id])
+  player1Id Int
+  player1   Player @relation("player1", fields: [player1Id], references: [id])
 
-  player2 Int
-  heal    Player @relation("heal-player", fields: [player2], references: [id])
+  player2Id Int
+  player2   Player @relation("player2", fields: [player2Id], references: [id])
 
-  player3 Int
-  dps1    Player @relation("dps1-player", fields: [player3], references: [id])
+  player3Id Int
+  player3   Player @relation("player3", fields: [player3Id], references: [id])
 
-  player4 Int
-  dps2    Player @relation("dps2-player", fields: [player4], references: [id])
+  player4Id Int
+  player4   Player @relation("player4", fields: [player4Id], references: [id])
 
-  player5 Int
-  dps3    Player @relation("dps3-player", fields: [player5], references: [id])
+  player5Id Int
+  player5   Player @relation("player5", fields: [player5Id], references: [id])
 
   weekId Int
   week   Week @relation(fields: [weekId], references: [id])
@@ -294,6 +294,8 @@ model Player {
   characterId Int
   character   Character @relation(fields: [characterId], references: [id])
 
+  actorId Int
+
   specId Int
   spec   Spec @relation(fields: [specId], references: [id])
 
@@ -312,15 +314,15 @@ model Player {
   legendary   Legendary? @relation(fields: [legendaryId], references: [id])
 
   // used in
-  tank                Fight[]               @relation("tank-player")
-  heal                Fight[]               @relation("heal-player")
-  dps1                Fight[]               @relation("dps1-player")
-  dps2                Fight[]               @relation("dps2-player")
-  dps3                Fight[]               @relation("dps3-player")
+  player1             Fight[]               @relation("player1")
+  player2             Fight[]               @relation("player2")
+  player3             Fight[]               @relation("player3")
+  player4             Fight[]               @relation("player4")
+  player5             Fight[]               @relation("player5")
   PlayerConduit       PlayerConduit[]
   PlayerTalent        PlayerTalent[]
   PlayerCovenantTrait PlayerCovenantTrait[]
-  CombatEvents        CombatEvents[]
+  Events              Events[]
 }
 
 enum Covenants {
@@ -485,9 +487,6 @@ model Pulls {
 
   mapId Int
   map   Map @relation(fields: [mapId], references: [id])
-
-  // used in
-  CombatEvents CombatEvents[]
 }
 
 model Map {
@@ -518,209 +517,11 @@ model NPCs {
   NPCsToPulls NPCsToPulls[]
 }
 
-enum NonCombatEvent {
-  // profession specific
-  INVISIBILITY_POTION
-  DIMENSIONAL_SHIFTER
-
-  // class specific cooldowns
-  // # rogue
-  SHROUD_OF_CONCEALMENT
-  SAP
-  BLIND
-  // # mage
-  SHEEP
-  // # demon hunter
-  IMPRISON
-  // # druid
-  ENTANGLING_ROOTS
-  // # monk
-  PARALYSIS
-  // # hunter
-  // # death knight
-  // # warrior
-}
-
-enum CombatEvent {
-  // profession specific
-  CARDBOARD_ASSASSIN
-  DRUMS
-  DISPOSABLE_SPECTROPHASIC_REANIMATOR
-
-  // battle rez
-  REBIRTH
-  SOULSTONE
-
-  // class specific cooldowns - everything that has 1+ min base cd
-  // # mage
-  COMBUSTION
-  TIME_WARP
-  ICY_VEINS
-  // # shaman
-  SPIRIT_LINK_TOTEM
-  BLOODLUST
-  HEROISM
-  ASCENDANCE
-  // # demon hunter
-  METAMORPHOSIS
-  FEL_DEVASTATION
-  // # priest
-  POWER_INFUSION // with meta: target player
-  VOID_FORM
-  POWER_WORD_BARRIER
-  DESPERATE_PRAYER
-  PAIN_SUPPRESSION
-  // # druid
-  CELESTIAL_ALIGNMENT
-  FORCE_OF_NATURE
-  BARKSKIN
-  IRONBARK
-  TRANQUILITY
-  FLOURISH
-  INNERVATE
-  STAMPEDING_ROAR
-  HEART_OF_THE_WILD
-  URSOLS_VORTEX
-  RENEWAL
-  // # hunter
-  ASPECT_OF_THE_TURTLE
-  DOUBLE_TAP
-  EXHILARATION
-  // # paladin
-  BLESSING_OF_PROTECTION
-  DIVINE_SHIELD
-  DIVINE_PROTECTION
-  LAY_ON_HANDS
-  AVENGING_WRATH
-  HOLY_AVENGER
-  BLESSING_OF_SACRIFICE
-  // # warlock
-  SHADOWFURY
-  UNENDING_RESOLVE
-  // # rogue
-  ADRENALINE_RUSH
-  EVASION
-  CLOAK_OF_SHADOWS
-  VANISH
-  KILLING_SPREE
-  MARKED_FOR_DEATH
-  // # warrior
-  SHIELD_WALL
-  LAST_STAND
-  // # monk
-  INVOKE_XUEN
-  STORM_EARTH_AND_FIRE
-  TOUCH_OF_KARMA
-  FORTIFYING_BREW
-  DIFFUSE_MAGIC
-  DAMPEN_HARM
-  TOUCH_OF_DEATH
-  // # death knight
-  ARMY_OF_THE_DEAD
-  ANTI_MAGIC_ZONE
-  ICEBOUND_FORTITUDE
-  DARK_TRANSFORMATION
-  ANTI_MAGIC_SHELL
-  UNHOLY_ASSAULT
-
-  // covenant specific
-  // # druid
-  CONVOKE_THE_SPIRITS
-  KINDRED_SPIRITS
-  RAVENOUS_FRENZY
-  // ADAPTIVE_SWARM 25s cd only
-  // # paladin
-  ASHEN_HALLOW
-  DIVINE_TOLL
-  // VANQUISHERS_HAMMER 30s cd only
-  // BLESSING_OF_THE_SEASON 45s cd only; buff for other players
-  // # hunter
-  WILD_SPIRITS
-  RESONATING_ARROW
-  // FLAYED_SHOT 30s cd only
-  // DEATH_CHAKRAM 45s cd only
-  // # death knight
-  SHACKLE_THE_UNWORTHY
-  ABOMINATION_LIMB
-  // DEATHS_DUE 30s cd only
-  SWARMING_MIST
-  // # mage
-  MIRRORS_OF_TORMENT
-  // RADIANT_SPARK 30s cd only
-  DEATHBORNE
-  SHIFTING_POWER
-  // # demon hunter
-  SINFUL_BRAND
-  FODDER_TO_THE_FLAME
-  THE_HUNT
-  // # monk
-  WEAPONS_OF_ORDER
-  FALLEN_ORDER
-  BONEDUST_BREW
-  // FAELINE_STOMP 30s cd only
-  // # priest
-  BOON_OF_THE_ASCENDED
-  // MINDGAMES 45s cd only
-  UNHOLY_NOVA
-  FAE_GUARDIANS // with meta: target player
-  // # rogue
-  // ECHOING_REPRIMAND 45s cd only
-  FLAGELLATION
-  // SERRATED_BONE_SPIKE 30s cd only
-  SEPSIS
-  // # shaman
-  VESPER_TOTEM
-  CHAIN_HARVEST
-  // PRIMORDIAL_WAVE 45s cd only
-  FAE_TRANSFUSION
-  // # warlock
-  // SCOURING_TITHE 40s cd only
-  IMPENDING_CATASTROPHE
-  // DECIMATING_BOLT 45s cd only
-  SOUL_ROT
-  // # warrior
-  SPEAR_OF_BASTION
-  // CONDEMN 6s cd only
-  CONQUERORS_BANNER
-  ANCIENT_AFTERSHOCK
-
-  // dungeon specific
-  NW_SPEAR
-  NW_ORB
-  NW_HAMMER
-  NW_KYRIAN_ORB
-
-  SOA_SPEAR
-
-  HOA_GARGOYLE
-
-  DOS_URN
-
-  SD_LANTERN
-
-  // affix specific
-  HEALING_BY_SANGUINE
-  EXPLOSIVE_KILLS // with meta: amount per role
-}
-
-model CombatEvents {
-  id Int @id @default(autoincrement())
-
-  combatEvent CombatEvent
-  timestamp   Int
-  meta        Json?
-
-  pullId Int
-  pulls  Pulls @relation(fields: [pullId], references: [id])
+model Events {
+  id        Int   @id @default(autoincrement())
+  timestamp Int
+  meta      Json?
 
   playerId Int
   player   Player @relation(fields: [playerId], references: [id])
-}
-
-model NonCombatEvents {
-  id Int @id @default(autoincrement())
-
-  nonCombatEvent NonCombatEvent
-  timestamp      Int
-  meta           Json?
 }
