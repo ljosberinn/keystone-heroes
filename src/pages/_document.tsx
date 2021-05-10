@@ -1,7 +1,6 @@
 import Document, { Html, Head, Main, NextScript } from "next/document";
-import { GiOpenChest, GiLockedChest } from "react-icons/gi";
 
-import { Icons } from "../client/icons";
+import { icons } from "../client/icons";
 
 export default function CustomDocument(): JSX.Element {
   return (
@@ -21,8 +20,9 @@ export default function CustomDocument(): JSX.Element {
         <NextScript />
         <svg display="none">
           <defs>
-            <GiOpenChest id={Icons.openChest} size="1.5em" />
-            <GiLockedChest id={Icons.closedChest} size="1.5em" />
+            {Object.values(icons).map(({ component: Component, id }) => (
+              <Component id={id} size="1.5em" key={id} />
+            ))}
           </defs>
         </svg>
       </body>

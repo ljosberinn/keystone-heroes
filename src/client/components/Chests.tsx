@@ -1,5 +1,5 @@
 import { classnames } from "../../utils/classNames";
-import { Icons } from "../icons";
+import { icons } from "../icons";
 
 type ChestsProps = {
   chests: number;
@@ -11,7 +11,7 @@ export function Chests({ chests }: ChestsProps): JSX.Element {
       {Array.from({ length: 3 }, (_, index) => {
         const isOpen = chests >= index + 1;
 
-        const icon = isOpen ? Icons.openChest : Icons.closedChest;
+        const icon = isOpen ? icons.openChest : icons.lockedChest;
         const color = isOpen ? "text-green-500" : "text-gray-500";
 
         return (
@@ -25,7 +25,7 @@ export function Chests({ chests }: ChestsProps): JSX.Element {
             )}
             key={index}
           >
-            <use href={`#${icon}`} />
+            <use href={`#${icon.id}`} />
           </svg>
         );
       })}
