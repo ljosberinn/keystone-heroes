@@ -59,7 +59,7 @@ type StaticParams = {
 
 export const getStaticPaths: GetStaticPaths<StaticParams> = async () => {
   const paths = seasons.flatMap((season) => {
-    const weeks = allWeeks.filter((week) => week.seasonId === season.seasonId);
+    const weeks = allWeeks.filter((week) => week.seasonId === season.id);
 
     return weeks.map((week) => {
       const affixSlug = [
@@ -89,24 +89,24 @@ export const getStaticPaths: GetStaticPaths<StaticParams> = async () => {
 export const getStaticProps: GetStaticProps<
   AffixesProps,
   StaticParams
-> = async (ctx) => {
+> = async ({ params }) => {
   if (
-    !ctx.params?.affixes ||
-    !ctx.params.season ||
-    Array.isArray(ctx.params.affixes) ||
-    Array.isArray(ctx.params.season) ||
-    !ctx.params.affixes.includes("-")
+    !params?.affixes ||
+    !params?.season ||
+    Array.isArray(params.affixes) ||
+    Array.isArray(params.season) ||
+    !params.affixes.includes("-")
   ) {
     throw new Error("nope");
   }
 
-  const affixSlug = ctx.params.affixes;
+  const affixSlug = params.affixes;
   const affixSlugs = affixSlug.split("-");
   const affixes = allAffixes.filter((affix) =>
     affixSlugs.includes(affix.name.toLowerCase())
   );
 
-  const seasonSlug = ctx.params.season;
+  const seasonSlug = params.season;
   const season = seasons.find((season) => season.slug === seasonSlug);
 
   if (!season) {

@@ -21,7 +21,7 @@ export enum SeasonId {
 }
 
 // via https://raider.io/api#/mythic_plus/getApiV1MythicplusStaticdata
-export const seasons: (Season & { seasonId: SeasonId })[] = [
+export const seasons: Season[] = [
   // Legion
   {
     slug: "legion-7.2.0",
@@ -30,7 +30,7 @@ export const seasons: (Season & { seasonId: SeasonId })[] = [
     startTime: new Date(0),
     endTime: new Date(1),
     affixId: null,
-    seasonId: SeasonId.LEGION_7_2_0,
+    id: SeasonId.LEGION_7_2_0,
   },
   {
     slug: "legion-7.2.5",
@@ -39,7 +39,7 @@ export const seasons: (Season & { seasonId: SeasonId })[] = [
     startTime: new Date(0),
     endTime: new Date(1),
     affixId: null,
-    seasonId: SeasonId.LEGION_7_2_5,
+    id: SeasonId.LEGION_7_2_5,
   },
   {
     slug: "legion-7.3.0",
@@ -48,7 +48,7 @@ export const seasons: (Season & { seasonId: SeasonId })[] = [
     startTime: new Date(0),
     endTime: new Date(1),
     affixId: null,
-    seasonId: SeasonId.LEGION_7_3_0,
+    id: SeasonId.LEGION_7_3_0,
   },
   {
     slug: "legion-7.3.2",
@@ -57,7 +57,7 @@ export const seasons: (Season & { seasonId: SeasonId })[] = [
     startTime: new Date(0),
     endTime: new Date(1),
     affixId: null,
-    seasonId: SeasonId.LEGION_7_3_2,
+    id: SeasonId.LEGION_7_3_2,
   },
   {
     slug: "legion-7.3.2-post",
@@ -66,7 +66,7 @@ export const seasons: (Season & { seasonId: SeasonId })[] = [
     startTime: new Date(0),
     endTime: new Date(1),
     affixId: null,
-    seasonId: SeasonId.LEGION_POST_SEASON,
+    id: SeasonId.LEGION_POST_SEASON,
   },
   {
     slug: "legion-pre-bfa",
@@ -75,7 +75,7 @@ export const seasons: (Season & { seasonId: SeasonId })[] = [
     startTime: new Date(0),
     endTime: new Date(1),
     affixId: null,
-    seasonId: SeasonId.BFA_PRE_SEASON,
+    id: SeasonId.BFA_PRE_SEASON,
   },
   // BFA
   {
@@ -85,7 +85,7 @@ export const seasons: (Season & { seasonId: SeasonId })[] = [
     startTime: new Date(0),
     endTime: new Date(1),
     affixId: getAffixByName("Infested"),
-    seasonId: SeasonId.BFA_SEASON_1,
+    id: SeasonId.BFA_SEASON_1,
   },
   {
     slug: "bfa-2",
@@ -94,7 +94,7 @@ export const seasons: (Season & { seasonId: SeasonId })[] = [
     startTime: new Date(0),
     endTime: new Date(1),
     affixId: getAffixByName("Reaping"),
-    seasonId: SeasonId.BFA_SEASON_2,
+    id: SeasonId.BFA_SEASON_2,
   },
   {
     slug: "bfa-2-post",
@@ -103,7 +103,7 @@ export const seasons: (Season & { seasonId: SeasonId })[] = [
     startTime: new Date(0),
     endTime: new Date(1),
     affixId: getAffixByName("Reaping"),
-    seasonId: SeasonId.BFA_POST_SEASON_2,
+    id: SeasonId.BFA_POST_SEASON_2,
   },
   {
     slug: "bfa-3",
@@ -112,7 +112,7 @@ export const seasons: (Season & { seasonId: SeasonId })[] = [
     startTime: new Date(0),
     endTime: new Date(1),
     affixId: getAffixByName("Beguiling"),
-    seasonId: SeasonId.BFA_SEASON_3,
+    id: SeasonId.BFA_SEASON_3,
   },
   {
     slug: "bfa-3-post",
@@ -121,7 +121,7 @@ export const seasons: (Season & { seasonId: SeasonId })[] = [
     startTime: new Date(0),
     endTime: new Date(1),
     affixId: getAffixByName("Beguiling"),
-    seasonId: SeasonId.BFA_POST_SEASON_3,
+    id: SeasonId.BFA_POST_SEASON_3,
   },
   {
     slug: "bfa-4",
@@ -130,7 +130,7 @@ export const seasons: (Season & { seasonId: SeasonId })[] = [
     startTime: new Date(0),
     endTime: new Date(1),
     affixId: getAffixByName("Awakened"),
-    seasonId: SeasonId.BFA_SEASON_4,
+    id: SeasonId.BFA_SEASON_4,
   },
   {
     slug: "bfa-4-post",
@@ -139,7 +139,7 @@ export const seasons: (Season & { seasonId: SeasonId })[] = [
     startTime: new Date(0),
     endTime: new Date(1),
     affixId: getAffixByName("Awakened"),
-    seasonId: SeasonId.BFA_POST_SEASON_4,
+    id: SeasonId.BFA_POST_SEASON_4,
   },
   // SL
   {
@@ -149,6 +149,6 @@ export const seasons: (Season & { seasonId: SeasonId })[] = [
     startTime: new Date(1_607_385_600 * 1000),
     endTime: null,
     affixId: getAffixByName("Prideful"),
-    seasonId: SeasonId.SL_SEASON_1,
+    id: SeasonId.SL_SEASON_1,
   },
-].map((dataset, index) => ({ ...dataset, id: index }));
+];

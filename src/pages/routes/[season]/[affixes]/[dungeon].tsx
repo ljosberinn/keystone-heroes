@@ -44,7 +44,7 @@ type StaticParams = {
 
 export const getStaticPaths: GetStaticPaths<StaticParams> = async () => {
   const paths = seasons.flatMap((season) => {
-    const weeks = allWeeks.filter((week) => week.seasonId === season.seasonId);
+    const weeks = allWeeks.filter((week) => week.seasonId === season.id);
 
     return weeks.flatMap((week) => {
       const affixSlug = [
@@ -85,30 +85,27 @@ export const getStaticPaths: GetStaticPaths<StaticParams> = async () => {
 export const getStaticProps: GetStaticProps<
   DungeonProps,
   StaticParams
-> = async (ctx) => {
+> = async ({ params }) => {
   if (
-    !ctx.params?.affixes ||
-    !ctx.params?.dungeon ||
-    !ctx.params?.season ||
-    Array.isArray(ctx.params.affixes) ||
-    Array.isArray(ctx.params.dungeon) ||
-    Array.isArray(ctx.params.season) ||
-    !ctx.params.affixes.includes("-")
+    !params?.affixes ||
+    !params?.dungeon ||
+    !params?.season ||
+    Array.isArray(params.affixes) ||
+    Array.isArray(params.dungeon) ||
+    Array.isArray(params.season) ||
+    !params.affixes.includes("-")
   ) {
     throw new Error("nope");
   }
 
-  const seasonSlug = ctx.params.season;
-  const season = seasons.find((season) => season.slug === seasonSlug);
+  const season = seasons.find((season) => season.slug === params.season);
 
   if (!season) {
     throw new Error("nope");
   }
 
-  const dungeonSlug = ctx.params.dungeon;
-
   const dungeon = dungeons.find(
-    (dungeon) => dungeon.slug.toLowerCase() === dungeonSlug
+    (dungeon) => dungeon.slug.toLowerCase() === params.dungeon
   );
 
   if (!dungeon) {
@@ -122,8 +119,7 @@ export const getStaticProps: GetStaticProps<
     time: dungeon.timer[0],
   };
 
-  const affixSlug = ctx.params.affixes;
-  const affixSlugs = affixSlug.split("-");
+  const affixSlugs = params.affixes.split("-");
   const affixes = allAffixes.filter((affix) =>
     affixSlugs.includes(affix.name.toLowerCase())
   );

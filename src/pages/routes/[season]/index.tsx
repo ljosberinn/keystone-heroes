@@ -51,14 +51,14 @@ export const getStaticPaths: GetStaticPaths<StaticPaths> = async () => {
   };
 };
 
-export const getStaticProps: GetStaticProps<SeasonProps, StaticPaths> = async (
-  ctx
-) => {
-  if (!ctx.params?.season || Array.isArray(ctx.params.season)) {
+export const getStaticProps: GetStaticProps<SeasonProps, StaticPaths> = async ({
+  params,
+}) => {
+  if (!params?.season || Array.isArray(params.season)) {
     throw new Error("nope");
   }
 
-  const seasonSlug = ctx.params.season;
+  const seasonSlug = params.season;
   const season = seasons.find((season) => season.slug === seasonSlug);
 
   if (!season) {
@@ -66,7 +66,7 @@ export const getStaticProps: GetStaticProps<SeasonProps, StaticPaths> = async (
   }
 
   const weeks = allWeeks
-    .filter((week) => week.seasonId === season.seasonId)
+    .filter((week) => week.seasonId === season.id)
     .map((week) => {
       const affixSlug = [
         getAffixById(week.affix1Id),

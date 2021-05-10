@@ -95,7 +95,7 @@ function seedExpansions() {
 
 function seedSeasons() {
   return Promise.all(
-    seasons.map(({ seasonId, ...season }) =>
+    seasons.map((season) =>
       prisma.season.upsert({
         create: season,
         where: {
