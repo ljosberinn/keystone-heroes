@@ -517,7 +517,15 @@ export const classes: Class[] = [
   {
     id: 11,
     name: PlayableClass.Warlock,
-    cooldowns: [],
+    cooldowns: [
+      { name: "Create Soulwell", id: 29_893 },
+      { name: "Shadowfury", id: 30_283 },
+      { name: "Unending Resolve", id: 104_773 },
+      { name: "Soulstone", id: 20_707 },
+      { name: "Ritual of Summoning", id: 698 },
+      { name: "Ritual of Doom", id: 342_601 },
+      { name: "Fel Domination", id: 333_889 },
+    ],
     covenantAbilities: [
       { name: "Impending Catastrophe", id: 321_792 },
       { name: "Soul Rot", id: 325_640 },
@@ -528,24 +536,45 @@ export const classes: Class[] = [
       {
         name: SpecName.Destruction,
         role: Role.dps,
-        cooldowns: [],
+        cooldowns: [
+          { name: "Dark Soul: Instability", id: 113_858 },
+          { name: "Summon Infernal", id: 1122 },
+        ],
       },
       {
         name: SpecName.Demonology,
         role: Role.dps,
-        cooldowns: [],
+        cooldowns: [
+          { name: "Nether Portal", id: 267_217 },
+          { name: "Grimoire: Felguard", id: 111_898 },
+          { name: "Summon Demonic Tyrant", id: 265_187 },
+          { name: "Demonic Strength", id: 267_171 },
+        ],
       },
       {
         name: SpecName.Affliction,
         role: Role.dps,
-        cooldowns: [],
+        cooldowns: [
+          { name: "Dark Soul: Misery", id: 113_860 },
+          { name: "Summon Darkglare", id: 205_180 },
+        ],
       },
     ],
   },
   {
     id: 12,
     name: PlayableClass.DeathKnight,
-    cooldowns: [],
+    cooldowns: [
+      { name: "Anti-Magic Shell", id: 48_707 },
+      { name: "Icebound Fortitude", id: 48_792 },
+      { name: "Raise Ally", id: 61_999 },
+      { name: "Lichborne", id: 49_039 },
+      { name: "Sacrificial Pact", id: 327_574 },
+      { name: "Raise Dead", id: 46_585 },
+      { name: "Anti-Magic Zone", id: 51_052 },
+      { name: "Wraith Walk", id: 212_552 },
+      { name: "Death Pact", id: 48_743 },
+    ],
     covenantAbilities: [
       { name: "Shackle the Unworthy", id: 312_202 },
       { name: "Abomination Limb", id: 315_443 },
@@ -556,29 +585,46 @@ export const classes: Class[] = [
       {
         name: SpecName.Blood,
         role: Role.tank,
-        cooldowns: [],
+        cooldowns: [
+          { name: "Bonestorm", id: 194_844 },
+          { name: "Tombstone", id: 219_809 },
+          { name: "Blood Tap", id: 221_699 },
+          { name: "Vampiric Blood", id: 55_233 },
+          { name: "Gorefiend's Grasp", id: 108_199 },
+          { name: "Dancing Rune Weapon", id: 49_028 },
+        ],
       },
       {
         name: SpecName.Unholy,
         role: Role.dps,
-        cooldowns: [],
+        cooldowns: [
+          { name: "Summon Gargoyle", id: 49_206 },
+          { name: "Unholy Assault", id: 207_289 },
+          { name: "Army of the Dead", id: 42_650 },
+          { name: "Dark Transformation", id: 63_560 },
+          { name: "Apocalypse", id: 275_699 },
+        ],
       },
       {
         name: SpecName.Frost,
         role: Role.dps,
-        cooldowns: [],
+        cooldowns: [
+          { name: "Breath of Sindragosa", id: 152_279 },
+          { name: "Empower Rune Weapon", id: 47_568 },
+          { name: "Frostwyrm's Fury", id: 279_302 },
+          { name: "Blinding Sleet", id: 207_167 },
+          { name: "Pillar of Frost", id: 51_271 },
+        ],
       },
     ],
   },
 ];
 
-export const classMapById: Record<
-  Class["id"],
-  Class["name"]
-> = Object.fromEntries(
-  classes.map((classData) => [classData.id, classData.name])
-);
+export const classMapById: Record<Class["id"], Class["name"]> =
+  Object.fromEntries(
+    classes.map((classData) => [classData.id, classData.name])
+  );
 
-export const classMapByName = Object.fromEntries(
+export const classMapByName = Object.fromEntries<Class["id"]>(
   classes.map((classData) => [classData.name, classData.id])
-) as Record<Class["name"], Class["id"]>;
+);
