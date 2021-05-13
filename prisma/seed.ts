@@ -1,4 +1,4 @@
-import type { Class } from "@prisma/client";
+import type { Class, Zone } from "@prisma/client";
 import { PrismaClient } from "@prisma/client";
 
 import { affixes } from "./affixes";
@@ -25,6 +25,27 @@ function seedDungeons() {
         },
         where: {
           id: dungeon.id,
+        },
+        update: {},
+      })
+    )
+  );
+}
+
+function seedZones() {
+  const allZones: Zone[] = dungeons.flatMap((dungeon) =>
+    dungeon.zones.map((zone) => ({
+      dungeonId: dungeon.id,
+      id: zone,
+    }))
+  );
+
+  return Promise.all(
+    allZones.map((zone) =>
+      prisma.zone.upsert({
+        create: zone,
+        where: {
+          id: zone.id,
         },
         update: {},
       })
@@ -181,6 +202,7 @@ function seedMaps() {
 
 async function main() {
   await seedDungeons();
+  await seedZones();
   await seedClasses();
   await seedSpecs();
   await seedAffixes();

@@ -116,6 +116,14 @@ model Dungeon {
   // used in
   Fight Fight[]
   Map   Map[]
+  Zone  Zone[]
+}
+
+model Zone {
+  id Int @id
+
+  dungeonId Int
+  dungeon   Dungeon @relation(fields: [dungeonId], references: [id])
 }
 
 enum Affixes {

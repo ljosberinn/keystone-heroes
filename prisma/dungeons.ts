@@ -75,6 +75,7 @@ export const dungeonMap: Record<
     timer: [number, number, number];
     bossIds: Boss[];
     expansionId: ExpansionEnum;
+    zones: number[];
   }
 > = {
   [DungeonIds.SANGUINE_DEPTHS]: {
@@ -88,6 +89,7 @@ export const dungeonMap: Record<
       Boss.GENERAL_KAAL,
     ],
     expansionId: ExpansionEnum.SHADOWLANDS,
+    zones: [1675, 1676],
   },
   [DungeonIds.SPIRES_OF_ASCENSION]: {
     name: "Spires of Ascension",
@@ -101,6 +103,7 @@ export const dungeonMap: Record<
       Boss.DEVOS,
     ],
     expansionId: ExpansionEnum.SHADOWLANDS,
+    zones: [1692, 1693, 1694, 1695],
   },
   [DungeonIds.THE_NECROTIC_WAKE]: {
     name: "The Necrotic Wake",
@@ -113,6 +116,7 @@ export const dungeonMap: Record<
       Boss.NALTHOR_THE_RIMEBINDER,
     ],
     expansionId: ExpansionEnum.SHADOWLANDS,
+    zones: [1666, 1667, 1668],
   },
   [DungeonIds.HALLS_OF_ATONEMENT]: {
     name: "Halls of Atonement",
@@ -125,6 +129,7 @@ export const dungeonMap: Record<
       Boss.LORD_CHAMBERLAIN,
     ],
     expansionId: ExpansionEnum.SHADOWLANDS,
+    zones: [1663, 1664, 1665],
   },
   [DungeonIds.PLAGUEFALL]: {
     name: "Plaguefall",
@@ -137,6 +142,7 @@ export const dungeonMap: Record<
       Boss.MARGRAVE_STRADAMA,
     ],
     expansionId: ExpansionEnum.SHADOWLANDS,
+    zones: [1674, 1697],
   },
   [DungeonIds.MISTS_OF_TIRNA_SCITHE]: {
     name: "Mists of Tirna Scithe",
@@ -149,6 +155,7 @@ export const dungeonMap: Record<
       Boss.TRED_OVA,
     ],
     expansionId: ExpansionEnum.SHADOWLANDS,
+    zones: [1669],
   },
   [DungeonIds.DE_OTHER_SIDE]: {
     name: "De Other Side",
@@ -162,6 +169,7 @@ export const dungeonMap: Record<
       Boss.MUEH_ZALA,
     ],
     expansionId: ExpansionEnum.SHADOWLANDS,
+    zones: [1677, 1678, 1679, 1680],
   },
   [DungeonIds.THEATRE_OF_PAIN]: {
     name: "Theatre of Pain",
@@ -177,6 +185,7 @@ export const dungeonMap: Record<
       Boss.MORDRETHA_THE_ENDLESS_EMPRESS,
     ],
     expansionId: ExpansionEnum.SHADOWLANDS,
+    zones: [1683, 1684, 1685, 1686, 1687],
   },
 };
 
@@ -184,6 +193,7 @@ export const dungeons: (Omit<Dungeon, "time"> & {
   timer: [number, number, number];
   bossIds: Boss[];
   expansionId: ExpansionEnum;
+  zones: number[];
 })[] = Object.entries(dungeonMap).map(([id, dataset]) => ({
   id: Number.parseInt(id),
   ...dataset,
