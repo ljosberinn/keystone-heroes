@@ -133,6 +133,39 @@ const getExtendedFightData = async (reportId: string, fightIds: number[]) => {
   );
 };
 
+type EnemyNpcIdResponse = {
+  reportData: {
+    report: {
+      fights: [{ enemyNPCs: { id: number; gameID: number }[] }];
+    };
+  };
+};
+
+export const getEnemyNpcIds = async (
+  reportId: string,
+  fightIds: number[]
+): Promise<EnemyNpcIdResponse> => {
+  const client = await getGqlClient();
+
+  return client.request<EnemyNpcIdResponse>(
+    gql`
+      query ReportData($reportId: String!, $fightIds: [Int]!) {
+        reportData {
+          report(code: $reportId) {
+            fights(translate: true, killType: Kills, fightIDs: $fightIds) {
+              enemyNPCs {
+                id
+                gameID
+              }
+            }
+          }
+        }
+      }
+    `,
+    { reportId, fightIds }
+  );
+};
+
 export const loadReportFromSource = async (
   reportId: string
 ): Promise<RawReport | null> => {

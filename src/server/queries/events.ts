@@ -1,7 +1,21 @@
 import { gql } from "graphql-request";
 
-import { DOS_URN, SOA_SPEAR } from "../../utils/spellIds";
+import {
+  DIMENSIONAL_SHIFTER,
+  HOA_GARGOYLE,
+  POTION_OF_THE_HIDDEN_SPIRIT,
+  SD_LANTERN_OPENING,
+  SANGUINE_ICHOR_DAMAGE,
+  SANGUINE_ICHOR_HEALING,
+  CARDBOARD_ASSASSIN,
+  DOS_URN,
+  SOA_SPEAR,
+  GRIEVOUS_WOUND,
+  EXPLOSIVES,
+  EXPLOSION,
+} from "../../utils/spellIds";
 import { getGqlClient } from "../gqlClient";
+import { getEnemyNpcIds } from "./report";
 
 type Event<T extends Record<string, unknown>> = T & {
   timestamp: number;
@@ -110,6 +124,7 @@ type DamageEvent = Event<{
   unmitigatedAmount: number;
   tick?: true;
   sourceMarker?: number;
+  absorbed?: number;
 }>;
 
 type DamageTakenEvent = DamageEvent & {
@@ -231,40 +246,39 @@ type DeathEvent = Event<{
   killingAbilityGameID: number;
 }>;
 
-type RawEventResponse = {
+type LogEvent =
+  | EncounterStartEvent
+  | CombatantInfoEvent
+  | ApplyDebuffEvent
+  | ApplyBuffEvent
+  | RemoveBuffEvent
+  | CastEvent
+  | DamageEvent
+  | DamageTakenEvent
+  | BeginCastEvent
+  | RemoveDebuffEvent
+  | SummonEvent
+  | PhaseStartEvent
+  | HealEvent
+  | EnergizeEvent
+  | ApplyBuffEvent
+  | ApplyBuffStackEvent
+  | InterruptEvent
+  | AbsorbEvent
+  | RefreshDebuffEvent
+  | DispelEvent
+  | DeathEvent;
+
+type RawEventResponse<Event extends LogEvent | LogEvent[]> = {
   reportData: {
     report: {
       events: {
-        data: (
-          | EncounterStartEvent
-          | CombatantInfoEvent
-          | ApplyDebuffEvent
-          | ApplyBuffEvent
-          | RemoveBuffEvent
-          | CastEvent
-          | DamageEvent
-          | DamageTakenEvent
-          | BeginCastEvent
-          | RemoveDebuffEvent
-          | SummonEvent
-          | PhaseStartEvent
-          | HealEvent
-          | EnergizeEvent
-          | ApplyBuffEvent
-          | ApplyBuffStackEvent
-          | InterruptEvent
-          | AbsorbEvent
-          | RefreshDebuffEvent
-          | DispelEvent
-          | DeathEvent
-        )[];
+        data: Event extends LogEvent[] ? Event : Event[];
         nextPageTimestamp: number | null;
       };
     };
   };
 };
-
-type RawEvents = RawEventResponse["reportData"]["report"]["events"];
 
 type DataType =
   | "All"
@@ -290,12 +304,16 @@ type EventQueryParams = {
   endTime: number;
   sourceId?: number;
   abilityId?: number;
+  targetId?: number;
 };
 
-const getEventData = async (reportId: string, params: EventQueryParams) => {
+const getEventData = async <Event extends LogEvent | LogEvent[]>(
+  reportId: string,
+  params: EventQueryParams
+) => {
   const client = await getGqlClient();
 
-  return client.request<RawEventResponse>(
+  return client.request<RawEventResponse<Event>>(
     gql`
       query EventData(
         $reportId: String!
@@ -305,6 +323,7 @@ const getEventData = async (reportId: string, params: EventQueryParams) => {
         $sourceId: Int
         $dataType: EventDataType
         $abilityId: Float
+        $targetId: Int
       ) {
         reportData {
           report(code: $reportId) {
@@ -315,6 +334,7 @@ const getEventData = async (reportId: string, params: EventQueryParams) => {
               sourceID: $sourceId
               dataType: $dataType
               abilityID: $abilityId
+              targetID: $targetId
             ) {
               data
               nextPageTimestamp
@@ -335,14 +355,10 @@ export const loadRecursiveEventsFromSource = async (
   startTime: number,
   endTime: number,
   sourceId: number,
-  previousEvents: RawEvents["data"] = []
-): Promise<RawEvents["data"]> => {
-  const soaSpear = await spiresSpear(reportId, startTime, endTime);
-  const urn = await dosUrn(reportId, startTime, endTime);
-  console.log({ soaSpear, urn });
-
+  previousEvents: CastEvent[] = []
+): Promise<CastEvent[]> => {
   try {
-    const json = await getEventData(reportId, {
+    const json = await getEventData<CastEvent>(reportId, {
       startTime,
       endTime,
       sourceId,
@@ -352,8 +368,6 @@ export const loadRecursiveEventsFromSource = async (
 
     const { data, nextPageTimestamp } = json.reportData.report.events;
     const nextEvents = [...previousEvents, ...data];
-
-    console.log(nextEvents.length);
 
     if (nextPageTimestamp) {
       return await loadRecursiveEventsFromSource(
@@ -366,54 +380,381 @@ export const loadRecursiveEventsFromSource = async (
     }
 
     return nextEvents;
-  } catch (error) {
-    console.trace(error);
+  } catch {
     return previousEvents;
   }
 };
 
-const spiresSpear = async (
+export const getSpiresSpearUsage = async (
   reportId: string,
   startTime: number,
   endTime: number
 ): Promise<ApplyDebuffEvent[]> => {
-  try {
-    const json = await getEventData(reportId, {
-      startTime,
-      endTime,
-      dataType: "Debuffs",
-      hostilityType: "Enemies",
-      abilityId: SOA_SPEAR,
-    });
+  const json = await getEventData<
+    (ApplyDebuffEvent | RemoveDebuffEvent | RefreshDebuffEvent)[]
+  >(reportId, {
+    startTime,
+    endTime,
+    dataType: "Debuffs",
+    hostilityType: "Enemies",
+    abilityId: SOA_SPEAR,
+  });
 
-    return json.reportData.report.events.data.filter(
-      (event): event is ApplyDebuffEvent => event.type === "applydebuff"
-    );
-  } catch (error) {
-    console.error(error);
-    return [];
-  }
+  return json.reportData.report.events.data.filter(
+    (event): event is ApplyDebuffEvent => event.type === "applydebuff"
+  );
 };
 
-const dosUrn = async (
+export const getDosUrnUsage = async (
   reportId: string,
   startTime: number,
   endTime: number
 ): Promise<ApplyDebuffEvent[]> => {
-  try {
-    const json = await getEventData(reportId, {
-      startTime,
-      endTime,
-      dataType: "Debuffs",
-      hostilityType: "Enemies",
-      abilityId: DOS_URN,
-    });
+  const json = await getEventData<
+    (ApplyDebuffEvent | RemoveDebuffEvent | RefreshDebuffEvent)[]
+  >(reportId, {
+    startTime,
+    endTime,
+    dataType: "Debuffs",
+    hostilityType: "Enemies",
+    abilityId: DOS_URN,
+  });
 
-    return json.reportData.report.events.data.filter(
-      (event): event is ApplyDebuffEvent => event.type === "applydebuff"
+  return json.reportData.report.events.data.filter(
+    (event): event is ApplyDebuffEvent => event.type === "applydebuff"
+  );
+};
+
+// eslint-disable-next-line inclusive-language/use-inclusive-words
+type MasterDataActors = {
+  gameID: number;
+  id: number;
+  petOwner: null | number;
+};
+
+// eslint-disable-next-line inclusive-language/use-inclusive-words
+type RawMasterDataResponse = {
+  reportData: {
+    report: {
+      // eslint-disable-next-line inclusive-language/use-inclusive-words
+      masterData: {
+        // eslint-disable-next-line inclusive-language/use-inclusive-words
+        actors: MasterDataActors[];
+      };
+    };
+  };
+};
+
+type CardboardAssassinUsages = { events: CastEvent[]; actorId: number | null };
+
+export const getCardboardAssassinUsage = async (
+  reportId: string,
+  startTime: number,
+  endTime: number
+): Promise<CardboardAssassinUsages[]> => {
+  const client = await getGqlClient();
+
+  // eslint-disable-next-line inclusive-language/use-inclusive-words
+  const data = await client.request<RawMasterDataResponse>(
+    // eslint-disable-next-line inclusive-language/use-inclusive-words
+    gql`
+      query EventData($reportId: String!) {
+        reportData {
+          report(code: $reportId) {
+            masterData {
+              actors(type: "Pet") {
+                gameID
+                petOwner
+                id
+              }
+            }
+          }
+        }
+      }
+    `,
+    {
+      reportId,
+    }
+  );
+
+  const cardboardAssassinInstances =
+    // eslint-disable-next-line inclusive-language/use-inclusive-words
+    data.reportData.report.masterData.actors.filter(
+      (pet) => pet.gameID === CARDBOARD_ASSASSIN
     );
-  } catch (error) {
-    console.error(error);
+
+  if (cardboardAssassinInstances.length === 0) {
     return [];
   }
+
+  const eventGroup = await Promise.all(
+    cardboardAssassinInstances.map(async (instance) => {
+      const response = await getEventData<CastEvent[]>(reportId, {
+        startTime,
+        endTime,
+        sourceId: instance.id,
+        dataType: "Threat",
+        hostilityType: "Friendlies",
+      });
+
+      if (response.reportData.report.events.data.length === 0) {
+        return null;
+      }
+
+      return {
+        actorId: instance.petOwner,
+        events: response.reportData.report.events.data,
+      };
+    })
+  );
+
+  return eventGroup.filter(
+    (dataset): dataset is CardboardAssassinUsages => dataset !== null
+  );
+};
+
+export const getInvisibilityUsage = async (
+  reportId: string,
+  startTime: number,
+  endTime: number
+): Promise<ApplyBuffEvent[]> => {
+  const dimensionalShifterUsage = await getEventData<
+    (ApplyBuffEvent | RemoveBuffEvent)[]
+  >(reportId, {
+    startTime,
+    endTime,
+    dataType: "Buffs",
+    hostilityType: "Friendlies",
+    abilityId: DIMENSIONAL_SHIFTER,
+  });
+
+  const potionUsage = await getEventData<(ApplyBuffEvent | RemoveBuffEvent)[]>(
+    reportId,
+    {
+      endTime,
+      startTime,
+      abilityId: POTION_OF_THE_HIDDEN_SPIRIT,
+      dataType: "Buffs",
+      hostilityType: "Friendlies",
+    }
+  );
+
+  const allEvents = [
+    ...dimensionalShifterUsage.reportData.report.events.data,
+    ...potionUsage.reportData.report.events.data,
+  ];
+
+  return allEvents.filter(
+    (event): event is ApplyBuffEvent => event.type === "applybuff"
+  );
+};
+
+export const getHoaGargoyleCharms = async (
+  reportId: string,
+  startTime: number,
+  endTime: number
+): Promise<CastEvent[]> => {
+  const casts = await getEventData<(CastEvent | BeginCastEvent)[]>(reportId, {
+    endTime,
+    startTime,
+    dataType: "Casts",
+    hostilityType: "Friendlies",
+    abilityId: HOA_GARGOYLE,
+  });
+
+  return casts.reportData.report.events.data.filter(
+    (event): event is CastEvent => event.type === "cast"
+  );
+};
+
+export const getSdLanternUsages = async (
+  reportId: string,
+  startTime: number,
+  endTime: number
+): Promise<BeginCastEvent[]> => {
+  const casts = await getEventData<BeginCastEvent[]>(reportId, {
+    endTime,
+    startTime,
+    dataType: "Casts",
+    hostilityType: "Friendlies",
+    abilityId: SD_LANTERN_OPENING,
+  });
+
+  return casts.reportData.report.events.data;
+};
+
+export const getTotalSanguineHealing = async (
+  reportId: string,
+  startTime: number,
+  endTime: number,
+  previousEvents: HealEvent[] = []
+): Promise<number> => {
+  const response = await getEventData<HealEvent[]>(reportId, {
+    endTime,
+    startTime,
+    dataType: "Healing",
+    hostilityType: "Enemies",
+    abilityId: SANGUINE_ICHOR_HEALING,
+  });
+
+  const { nextPageTimestamp, data } = response.reportData.report.events;
+  const allEvents = [...previousEvents, ...data];
+
+  if (nextPageTimestamp) {
+    return getTotalSanguineHealing(
+      reportId,
+      nextPageTimestamp,
+      endTime,
+      allEvents
+    );
+  }
+
+  return allEvents.reduce((acc, event) => acc + event.amount, 0);
+};
+
+export const getTotalDamageTakenBySanguine = async (
+  reportId: string,
+  startTime: number,
+  endTime: number,
+  previousEvents: DamageEvent[] = []
+): Promise<number> => {
+  const response = await getEventData<DamageTakenEvent[]>(reportId, {
+    startTime,
+    endTime,
+    dataType: "DamageTaken",
+    hostilityType: "Friendlies",
+    abilityId: SANGUINE_ICHOR_DAMAGE,
+  });
+
+  const { nextPageTimestamp, data } = response.reportData.report.events;
+  const allEvents = [...previousEvents, ...data];
+
+  if (nextPageTimestamp) {
+    return getTotalDamageTakenBySanguine(
+      reportId,
+      nextPageTimestamp,
+      endTime,
+      allEvents
+    );
+  }
+
+  return allEvents.reduce(
+    (acc, event) => acc + event.amount - (event.absorbed ?? 0),
+    0
+  );
+};
+
+export const getTotalDamageTakenByGrievousWound = async (
+  reportId: string,
+  startTime: number,
+  endTime: number,
+  previousEvents: DamageEvent[] = []
+): Promise<number> => {
+  const response = await getEventData<DamageTakenEvent[]>(reportId, {
+    startTime,
+    endTime,
+    dataType: "DamageTaken",
+    hostilityType: "Friendlies",
+    abilityId: GRIEVOUS_WOUND,
+  });
+
+  const { nextPageTimestamp, data } = response.reportData.report.events;
+
+  const allEvents = [...previousEvents, ...data];
+
+  if (nextPageTimestamp) {
+    return getTotalDamageTakenByGrievousWound(
+      reportId,
+      nextPageTimestamp,
+      endTime,
+      allEvents
+    );
+  }
+
+  return allEvents.reduce((acc, event) => acc + event.amount, 0);
+};
+
+export const getExplosiveId = async (
+  reportId: string,
+  fightId: number
+): Promise<number | null> => {
+  const response = await getEnemyNpcIds(reportId, [fightId]);
+
+  return (
+    response.reportData.report.fights[0].enemyNPCs.find(
+      (npc) => npc.gameID === EXPLOSIVES
+    )?.id ?? null
+  );
+};
+
+export const getAllExplosiveKills = async (
+  reportId: string,
+  startTime: number,
+  endTime: number,
+  explosiveId: number,
+  previousEvents: DamageEvent[] = []
+): Promise<Record<number, DamageEvent[]>> => {
+  const response = await getEventData<DamageEvent>(reportId, {
+    startTime,
+    endTime,
+    dataType: "DamageDone",
+    hostilityType: "Friendlies",
+    targetId: explosiveId,
+  });
+
+  const { nextPageTimestamp, data } = response.reportData.report.events;
+
+  const allEvents = [...previousEvents, ...data];
+
+  if (nextPageTimestamp) {
+    return getAllExplosiveKills(
+      reportId,
+      nextPageTimestamp,
+      endTime,
+      explosiveId,
+      allEvents
+    );
+  }
+
+  // TODO: maybe dont return a map
+  // return allEvents;
+
+  return allEvents.reduce<Record<number, DamageEvent[]>>((acc, event) => {
+    return {
+      ...acc,
+      [event.sourceID]: acc[event.sourceID]
+        ? [...acc[event.sourceID], event]
+        : [event],
+    };
+  }, {});
+};
+
+export const getTotalDamageTakenByExplosion = async (
+  reportId: string,
+  startTime: number,
+  endTime: number,
+  previousEvents: DamageEvent[] = []
+): Promise<number> => {
+  const response = await getEventData<DamageTakenEvent[]>(reportId, {
+    startTime,
+    endTime,
+    dataType: "DamageTaken",
+    hostilityType: "Friendlies",
+    abilityId: EXPLOSION,
+  });
+
+  const { nextPageTimestamp, data } = response.reportData.report.events;
+
+  const allEvents = [...previousEvents, ...data];
+
+  if (nextPageTimestamp) {
+    return getTotalDamageTakenByExplosion(
+      reportId,
+      nextPageTimestamp,
+      endTime,
+      allEvents
+    );
+  }
+
+  return allEvents.reduce((acc, event) => acc + event.amount, 0);
 };
