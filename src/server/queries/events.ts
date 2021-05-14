@@ -19,6 +19,8 @@ import {
   PF_GREEN_BUFF,
   PF_PURPLE_BUFF,
   PF_RED_BUFF,
+  BURSTING,
+  QUAKING,
 } from "../../utils/spellIds";
 import { getGqlClient } from "../gqlClient";
 import { getEnemyNpcIds } from "./report";
@@ -624,12 +626,14 @@ export const getTotalSanguineHealing = async (
   return allEvents.reduce((acc, event) => acc + event.amount, 0);
 };
 
+type SanguineDamageTakenMap = Record<number, number>;
+
 export const getTotalDamageTakenBySanguine = async (
   reportId: string,
   startTime: number,
   endTime: number,
   previousEvents: DamageEvent[] = []
-): Promise<number> => {
+): Promise<SanguineDamageTakenMap> => {
   const response = await getEventData<DamageTakenEvent[]>(reportId, {
     startTime,
     endTime,
@@ -650,18 +654,27 @@ export const getTotalDamageTakenBySanguine = async (
     );
   }
 
-  return allEvents.reduce(
-    (acc, event) => acc + event.amount + (event.absorbed ?? 0),
-    0
+  return allEvents.reduce<SanguineDamageTakenMap>(
+    (acc, { amount, sourceID, absorbed = 0 }) => {
+      const sum = amount + absorbed;
+
+      return {
+        ...acc,
+        [sourceID]: acc[sourceID] ? acc[sourceID] + sum : sum,
+      };
+    },
+    {}
   );
 };
+
+type GrievousDamageTakenMap = Record<number, number>;
 
 export const getTotalDamageTakenByGrievousWound = async (
   reportId: string,
   startTime: number,
   endTime: number,
   previousEvents: DamageEvent[] = []
-): Promise<number> => {
+): Promise<GrievousDamageTakenMap> => {
   const response = await getEventData<DamageTakenEvent[]>(reportId, {
     startTime,
     endTime,
@@ -671,7 +684,6 @@ export const getTotalDamageTakenByGrievousWound = async (
   });
 
   const { nextPageTimestamp, data } = response.reportData.report.events;
-
   const allEvents = [...previousEvents, ...data];
 
   if (nextPageTimestamp) {
@@ -683,7 +695,17 @@ export const getTotalDamageTakenByGrievousWound = async (
     );
   }
 
-  return allEvents.reduce((acc, event) => acc + event.amount, 0);
+  return allEvents.reduce<GrievousDamageTakenMap>(
+    (acc, { amount, sourceID, absorbed = 0 }) => {
+      const sum = amount + absorbed;
+
+      return {
+        ...acc,
+        [sourceID]: acc[sourceID] ? acc[sourceID] + sum : sum,
+      };
+    },
+    {}
+  );
 };
 
 export const getAllExplosiveKills = async (
@@ -702,7 +724,6 @@ export const getAllExplosiveKills = async (
   });
 
   const { nextPageTimestamp, data } = response.reportData.report.events;
-
   const allEvents = [...previousEvents, ...data];
 
   if (nextPageTimestamp) {
@@ -728,13 +749,15 @@ export const getAllExplosiveKills = async (
   }, {});
 };
 
+type SpitefulDamageTakenMap = Record<number, number>;
+
 export const getTotalDamageTakenBySpiteful = async (
   reportId: string,
   startTime: number,
   endTime: number,
   spitefulId: number,
   previousEvents: DamageTakenEvent[] = []
-): Promise<number> => {
+): Promise<SpitefulDamageTakenMap> => {
   const response = await getEventData<DamageTakenEvent[]>(reportId, {
     startTime,
     endTime,
@@ -744,7 +767,6 @@ export const getTotalDamageTakenBySpiteful = async (
   });
 
   const { nextPageTimestamp, data } = response.reportData.report.events;
-
   const allEvents = [...previousEvents, ...data];
 
   if (nextPageTimestamp) {
@@ -757,9 +779,16 @@ export const getTotalDamageTakenBySpiteful = async (
     );
   }
 
-  return allEvents.reduce(
-    (acc, event) => acc + event.amount + (event.absorbed ?? 0),
-    0
+  return allEvents.reduce<SpitefulDamageTakenMap>(
+    (acc, { amount, sourceID, absorbed = 0 }) => {
+      const sum = amount + absorbed;
+
+      return {
+        ...acc,
+        [sourceID]: acc[sourceID] ? acc[sourceID] + sum : sum,
+      };
+    },
+    {}
   );
 };
 
@@ -778,7 +807,6 @@ export const getTotalDamageTakenByExplosion = async (
   });
 
   const { nextPageTimestamp, data } = response.reportData.report.events;
-
   const allEvents = [...previousEvents, ...data];
 
   if (nextPageTimestamp) {
@@ -813,10 +841,13 @@ export const getHighestNecroticStackAmount = async (
   });
 
   const { nextPageTimestamp, data } = response.reportData.report.events;
-
-  const allEvents = [...previousEvents, ...data].filter(
-    (event): event is ApplyDebuffStackEvent => event.type === "applydebuffstack"
-  );
+  const allEvents = [
+    ...previousEvents,
+    ...data.filter(
+      (event): event is ApplyDebuffStackEvent =>
+        event.type === "applydebuffstack"
+    ),
+  ];
 
   if (nextPageTimestamp) {
     return getHighestNecroticStackAmount(
@@ -833,12 +864,14 @@ export const getHighestNecroticStackAmount = async (
   );
 };
 
+type NecroticDamageTakenMap = Record<number, number>;
+
 export const getTotalDamageTakenByNecrotic = async (
   reportId: string,
   startTime: number,
   endTime: number,
   previousEvents: DamageTakenEvent[] = []
-): Promise<number> => {
+): Promise<NecroticDamageTakenMap> => {
   const response = await getEventData<DamageTakenEvent[]>(reportId, {
     startTime,
     endTime,
@@ -848,7 +881,6 @@ export const getTotalDamageTakenByNecrotic = async (
   });
 
   const { nextPageTimestamp, data } = response.reportData.report.events;
-
   const allEvents = [...previousEvents, ...data];
 
   if (nextPageTimestamp) {
@@ -860,18 +892,27 @@ export const getTotalDamageTakenByNecrotic = async (
     );
   }
 
-  return allEvents.reduce(
-    (acc, event) => acc + event.amount + (event.absorbed ?? 0),
-    0
+  return allEvents.reduce<NecroticDamageTakenMap>(
+    (acc, { amount, sourceID, absorbed = 0 }) => {
+      const sum = amount + absorbed;
+
+      return {
+        ...acc,
+        [sourceID]: acc[sourceID] ? acc[sourceID] + sum : sum,
+      };
+    },
+    {}
   );
 };
+
+type StormingDamageTakenMap = Record<number, number>;
 
 export const getTotalDamageTakenByStorming = async (
   reportId: string,
   startTime: number,
   endTime: number,
   previousEvents: DamageTakenEvent[] = []
-): Promise<number> => {
+): Promise<StormingDamageTakenMap> => {
   const response = await getEventData<DamageTakenEvent[]>(reportId, {
     startTime,
     endTime,
@@ -881,11 +922,10 @@ export const getTotalDamageTakenByStorming = async (
   });
 
   const { nextPageTimestamp, data } = response.reportData.report.events;
-
   const allEvents = [...previousEvents, ...data];
 
   if (nextPageTimestamp) {
-    return getTotalDamageTakenByNecrotic(
+    return getTotalDamageTakenByStorming(
       reportId,
       nextPageTimestamp,
       endTime,
@@ -893,18 +933,27 @@ export const getTotalDamageTakenByStorming = async (
     );
   }
 
-  return allEvents.reduce(
-    (acc, event) => acc + event.amount + (event.absorbed ?? 0),
-    0
+  return allEvents.reduce<StormingDamageTakenMap>(
+    (acc, { amount, sourceID, absorbed = 0 }) => {
+      const sum = amount + absorbed;
+
+      return {
+        ...acc,
+        [sourceID]: acc[sourceID] ? acc[sourceID] + sum : sum,
+      };
+    },
+    {}
   );
 };
+
+type VolcanicDamageTakenMap = Record<number, number>;
 
 export const getTotalDamageTakenByVolcanic = async (
   reportId: string,
   startTime: number,
   endTime: number,
   previousEvents: DamageTakenEvent[] = []
-): Promise<number> => {
+): Promise<VolcanicDamageTakenMap> => {
   const response = await getEventData<DamageTakenEvent[]>(reportId, {
     startTime,
     endTime,
@@ -914,11 +963,10 @@ export const getTotalDamageTakenByVolcanic = async (
   });
 
   const { nextPageTimestamp, data } = response.reportData.report.events;
-
   const allEvents = [...previousEvents, ...data];
 
   if (nextPageTimestamp) {
-    return getTotalDamageTakenByNecrotic(
+    return getTotalDamageTakenByVolcanic(
       reportId,
       nextPageTimestamp,
       endTime,
@@ -926,9 +974,16 @@ export const getTotalDamageTakenByVolcanic = async (
     );
   }
 
-  return allEvents.reduce(
-    (acc, event) => acc + event.amount + (event.absorbed ?? 0),
-    0
+  return allEvents.reduce<VolcanicDamageTakenMap>(
+    (acc, { amount, sourceID, absorbed = 0 }) => {
+      const sum = amount + absorbed;
+
+      return {
+        ...acc,
+        [sourceID]: acc[sourceID] ? acc[sourceID] + sum : sum,
+      };
+    },
+    {}
   );
 };
 
@@ -956,10 +1011,12 @@ export const getHighestBolsteringStack = async (
   );
 
   const { nextPageTimestamp, data } = response.reportData.report.events;
-
-  const allEvents = [...previousEvents, ...data].filter(
-    (event): event is ApplyBuffEvent => event.type === "applybuff"
-  );
+  const allEvents = [
+    ...previousEvents,
+    ...data.filter(
+      (event): event is ApplyBuffEvent => event.type === "applybuff"
+    ),
+  ];
 
   if (nextPageTimestamp) {
     return getHighestBolsteringStack(
@@ -1082,4 +1139,177 @@ export const getPFSlimeKills = async (
       consumed: purpleAuraApplication.length,
     },
   };
+};
+
+// export const getHighestBurstingCount = async (
+//   reportId: string,
+//   startTime: number,
+//   endTime: number,
+//   previousEvents: ApplyDebuffStackEvent[] = []
+// ): Promise<number> => {
+//   const response = await getEventData<
+//     (ApplyDebuffEvent | ApplyDebuffStackEvent)[]
+//   >(reportId, {
+//     startTime,
+//     endTime,
+//     hostilityType: "Friendlies",
+//     dataType: "Debuffs",
+//     abilityId: BURSTING,
+//   });
+
+//   const { data, nextPageTimestamp } = response.reportData.report.events;
+//   const allEvents = [
+//     ...previousEvents,
+//     ...data.filter(
+//       (event): event is ApplyDebuffStackEvent =>
+//         event.type === "applydebuffstack"
+//     ),
+//   ];
+
+//   if (nextPageTimestamp) {
+//     return getHighestBurstingCount(
+//       reportId,
+//       nextPageTimestamp,
+//       endTime,
+//       allEvents
+//     );
+//   }
+
+//   return allEvents.reduce((acc, event) => {
+//     return acc > event.stack ? acc : event.stack;
+//   }, 0);
+// };
+
+type BurstingDamageTakenMap = Record<number, number>;
+
+export const getTotalDamageTakenByBursting = async (
+  reportId: string,
+  startTime: number,
+  endTime: number,
+  previousEvents: DamageTakenEvent[] = []
+): Promise<BurstingDamageTakenMap> => {
+  const response = await getEventData<DamageTakenEvent[]>(reportId, {
+    startTime,
+    endTime,
+    hostilityType: "Friendlies",
+    dataType: "DamageTaken",
+    abilityId: BURSTING,
+  });
+
+  const { data, nextPageTimestamp } = response.reportData.report.events;
+  const allEvents = [...previousEvents, ...data];
+
+  if (nextPageTimestamp) {
+    return getTotalDamageTakenByBursting(
+      reportId,
+      nextPageTimestamp,
+      endTime,
+      allEvents
+    );
+  }
+
+  return allEvents.reduce<BurstingDamageTakenMap>(
+    (acc, { amount, sourceID, absorbed = 0 }) => {
+      const sum = amount + absorbed;
+
+      return {
+        ...acc,
+        [sourceID]: acc[sourceID] ? acc[sourceID] + sum : sum,
+      };
+    },
+    {}
+  );
+};
+
+type QuakingDamageTakenMap = Record<number, number>;
+
+export const getTotalDamageTakenByQuaking = async (
+  reportId: string,
+  startTime: number,
+  endTime: number,
+  previousEvents: DamageTakenEvent[] = []
+): Promise<QuakingDamageTakenMap> => {
+  const response = await getEventData<DamageTakenEvent[]>(reportId, {
+    startTime,
+    endTime,
+    hostilityType: "Friendlies",
+    dataType: "DamageTaken",
+    abilityId: QUAKING,
+  });
+
+  const { data, nextPageTimestamp } = response.reportData.report.events;
+  const allEvents = [...previousEvents, ...data];
+
+  if (nextPageTimestamp) {
+    return getTotalDamageTakenByQuaking(
+      reportId,
+      nextPageTimestamp,
+      endTime,
+      allEvents
+    );
+  }
+
+  return allEvents.reduce<QuakingDamageTakenMap>(
+    (acc, { amount, sourceID, absorbed = 0 }) => {
+      const sum = amount + absorbed;
+
+      return {
+        ...acc,
+        [sourceID]: acc[sourceID] ? acc[sourceID] + sum : sum,
+      };
+    },
+    {}
+  );
+};
+
+type QuakingInterruptMap = Record<
+  number,
+  { timestamp: number; abilityID: number }[]
+>;
+
+export const getInterruptsByQuaking = async (
+  reportId: string,
+  startTime: number,
+  endTime: number,
+  previousEvents: InterruptEvent[] = []
+): Promise<QuakingInterruptMap> => {
+  const response = await getEventData<InterruptEvent[]>(reportId, {
+    startTime,
+    endTime,
+    hostilityType: "Friendlies",
+    dataType: "Interrupts",
+    abilityId: QUAKING,
+  });
+
+  const { data, nextPageTimestamp } = response.reportData.report.events;
+  const allEvents = [...previousEvents, ...data];
+
+  if (nextPageTimestamp) {
+    return getInterruptsByQuaking(
+      reportId,
+      nextPageTimestamp,
+      endTime,
+      allEvents
+    );
+  }
+
+  return (
+    allEvents
+      // see https://canary.discord.com/channels/180033360939319296/681904912090529801/842578775840391188
+      .filter((event) => event.abilityGameID === QUAKING)
+      .reduce<QuakingInterruptMap>(
+        (acc, { sourceID, timestamp, extraAbilityGameID }) => {
+          const next = {
+            timestamp,
+            abilityID: extraAbilityGameID,
+          };
+
+          return {
+            ...acc,
+            [sourceID]: acc[sourceID] ? [...acc[sourceID], next] : [next],
+          };
+        },
+        {}
+      )
+  );
 };

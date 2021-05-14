@@ -48,12 +48,10 @@ export const STORMING = 343_520;
 export const VOLCANIC = 209_862;
 export const BOLSTERING = 209_859;
 export const SPITEFUL = 174_773;
-// highest stacks, total dmg taken
 export const BURSTING = 243_237;
+export const QUAKING = 240_448;
 // highest dmg taken within a fight; total dmg taken, fastest, slowest
 export const PRIDEFUL = 342_332;
-// total dmg taken, interrupt count
-export const QUAKING = 240_448;
 
 // profession specific
 //  DRUMS
