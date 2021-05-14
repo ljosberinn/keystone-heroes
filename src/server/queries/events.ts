@@ -21,6 +21,7 @@ import {
   PF_RED_BUFF,
   BURSTING,
   QUAKING,
+  PRIDE,
 } from "../../utils/spellIds";
 import { getGqlClient } from "../gqlClient";
 import { getEnemyNpcIds } from "./report";
@@ -253,6 +254,7 @@ type DeathEvent = Event<{
   type: "death";
   sourceID: number;
   targetID: number;
+  targetInstance?: number;
   abilityGameID: number;
   killerID: number;
   killerInstance: number;
@@ -319,6 +321,7 @@ type EventQueryParams = {
   sourceId?: number;
   abilityId?: number;
   targetId?: number;
+  targetInstance?: number;
 };
 
 const getEventData = async <Event extends LogEvent | LogEvent[]>(
@@ -338,6 +341,7 @@ const getEventData = async <Event extends LogEvent | LogEvent[]>(
         $dataType: EventDataType
         $abilityId: Float
         $targetId: Int
+        $targetInstance: Int
       ) {
         reportData {
           report(code: $reportId) {
@@ -349,6 +353,7 @@ const getEventData = async <Event extends LogEvent | LogEvent[]>(
               dataType: $dataType
               abilityID: $abilityId
               targetID: $targetId
+              targetInstanceID: $targetInstance
             ) {
               data
               nextPageTimestamp
@@ -626,14 +631,35 @@ export const getTotalSanguineHealing = async (
   return allEvents.reduce((acc, event) => acc + event.amount, 0);
 };
 
-type SanguineDamageTakenMap = Record<number, number>;
+const reduceDamageTakenToMap = <Data extends DamageTakenEvent[]>(
+  allEvents: Data,
+  type: Hostility = "Friendlies"
+) => {
+  // when querying for dataType: DamageTaken and hostilityType: Enemies
+  // targetID is the target of the enemy which is doing the damage
+  // sourceID is the enemy
+  const isFriendlies = type === "Friendlies";
+
+  return allEvents.reduce<Record<number, number>>(
+    (acc, { amount, sourceID, targetID, absorbed = 0 }) => {
+      const sum = amount + absorbed;
+      const key = isFriendlies ? sourceID : targetID;
+
+      return {
+        ...acc,
+        [key]: acc[key] ? acc[key] + sum : sum,
+      };
+    },
+    {}
+  );
+};
 
 export const getTotalDamageTakenBySanguine = async (
   reportId: string,
   startTime: number,
   endTime: number,
   previousEvents: DamageEvent[] = []
-): Promise<SanguineDamageTakenMap> => {
+): Promise<Record<number, number>> => {
   const response = await getEventData<DamageTakenEvent[]>(reportId, {
     startTime,
     endTime,
@@ -654,17 +680,7 @@ export const getTotalDamageTakenBySanguine = async (
     );
   }
 
-  return allEvents.reduce<SanguineDamageTakenMap>(
-    (acc, { amount, sourceID, absorbed = 0 }) => {
-      const sum = amount + absorbed;
-
-      return {
-        ...acc,
-        [sourceID]: acc[sourceID] ? acc[sourceID] + sum : sum,
-      };
-    },
-    {}
-  );
+  return reduceDamageTakenToMap(allEvents);
 };
 
 type GrievousDamageTakenMap = Record<number, number>;
@@ -695,17 +711,7 @@ export const getTotalDamageTakenByGrievousWound = async (
     );
   }
 
-  return allEvents.reduce<GrievousDamageTakenMap>(
-    (acc, { amount, sourceID, absorbed = 0 }) => {
-      const sum = amount + absorbed;
-
-      return {
-        ...acc,
-        [sourceID]: acc[sourceID] ? acc[sourceID] + sum : sum,
-      };
-    },
-    {}
-  );
+  return reduceDamageTakenToMap(allEvents);
 };
 
 export const getAllExplosiveKills = async (
@@ -749,15 +755,13 @@ export const getAllExplosiveKills = async (
   }, {});
 };
 
-type SpitefulDamageTakenMap = Record<number, number>;
-
 export const getTotalDamageTakenBySpiteful = async (
   reportId: string,
   startTime: number,
   endTime: number,
   spitefulId: number,
   previousEvents: DamageTakenEvent[] = []
-): Promise<SpitefulDamageTakenMap> => {
+): Promise<Record<number, number>> => {
   const response = await getEventData<DamageTakenEvent[]>(reportId, {
     startTime,
     endTime,
@@ -779,17 +783,7 @@ export const getTotalDamageTakenBySpiteful = async (
     );
   }
 
-  return allEvents.reduce<SpitefulDamageTakenMap>(
-    (acc, { amount, sourceID, absorbed = 0 }) => {
-      const sum = amount + absorbed;
-
-      return {
-        ...acc,
-        [sourceID]: acc[sourceID] ? acc[sourceID] + sum : sum,
-      };
-    },
-    {}
-  );
+  return reduceDamageTakenToMap(allEvents);
 };
 
 export const getTotalDamageTakenByExplosion = async (
@@ -864,14 +858,12 @@ export const getHighestNecroticStackAmount = async (
   );
 };
 
-type NecroticDamageTakenMap = Record<number, number>;
-
 export const getTotalDamageTakenByNecrotic = async (
   reportId: string,
   startTime: number,
   endTime: number,
   previousEvents: DamageTakenEvent[] = []
-): Promise<NecroticDamageTakenMap> => {
+): Promise<Record<number, number>> => {
   const response = await getEventData<DamageTakenEvent[]>(reportId, {
     startTime,
     endTime,
@@ -892,27 +884,15 @@ export const getTotalDamageTakenByNecrotic = async (
     );
   }
 
-  return allEvents.reduce<NecroticDamageTakenMap>(
-    (acc, { amount, sourceID, absorbed = 0 }) => {
-      const sum = amount + absorbed;
-
-      return {
-        ...acc,
-        [sourceID]: acc[sourceID] ? acc[sourceID] + sum : sum,
-      };
-    },
-    {}
-  );
+  return reduceDamageTakenToMap(allEvents);
 };
-
-type StormingDamageTakenMap = Record<number, number>;
 
 export const getTotalDamageTakenByStorming = async (
   reportId: string,
   startTime: number,
   endTime: number,
   previousEvents: DamageTakenEvent[] = []
-): Promise<StormingDamageTakenMap> => {
+): Promise<Record<number, number>> => {
   const response = await getEventData<DamageTakenEvent[]>(reportId, {
     startTime,
     endTime,
@@ -933,27 +913,15 @@ export const getTotalDamageTakenByStorming = async (
     );
   }
 
-  return allEvents.reduce<StormingDamageTakenMap>(
-    (acc, { amount, sourceID, absorbed = 0 }) => {
-      const sum = amount + absorbed;
-
-      return {
-        ...acc,
-        [sourceID]: acc[sourceID] ? acc[sourceID] + sum : sum,
-      };
-    },
-    {}
-  );
+  return reduceDamageTakenToMap(allEvents);
 };
-
-type VolcanicDamageTakenMap = Record<number, number>;
 
 export const getTotalDamageTakenByVolcanic = async (
   reportId: string,
   startTime: number,
   endTime: number,
   previousEvents: DamageTakenEvent[] = []
-): Promise<VolcanicDamageTakenMap> => {
+): Promise<Record<number, number>> => {
   const response = await getEventData<DamageTakenEvent[]>(reportId, {
     startTime,
     endTime,
@@ -974,17 +942,7 @@ export const getTotalDamageTakenByVolcanic = async (
     );
   }
 
-  return allEvents.reduce<VolcanicDamageTakenMap>(
-    (acc, { amount, sourceID, absorbed = 0 }) => {
-      const sum = amount + absorbed;
-
-      return {
-        ...acc,
-        [sourceID]: acc[sourceID] ? acc[sourceID] + sum : sum,
-      };
-    },
-    {}
-  );
+  return reduceDamageTakenToMap(allEvents);
 };
 
 type HighestBolsteringDataset = {
@@ -1180,14 +1138,12 @@ export const getPFSlimeKills = async (
 //   }, 0);
 // };
 
-type BurstingDamageTakenMap = Record<number, number>;
-
 export const getTotalDamageTakenByBursting = async (
   reportId: string,
   startTime: number,
   endTime: number,
   previousEvents: DamageTakenEvent[] = []
-): Promise<BurstingDamageTakenMap> => {
+): Promise<Record<number, number>> => {
   const response = await getEventData<DamageTakenEvent[]>(reportId, {
     startTime,
     endTime,
@@ -1208,27 +1164,15 @@ export const getTotalDamageTakenByBursting = async (
     );
   }
 
-  return allEvents.reduce<BurstingDamageTakenMap>(
-    (acc, { amount, sourceID, absorbed = 0 }) => {
-      const sum = amount + absorbed;
-
-      return {
-        ...acc,
-        [sourceID]: acc[sourceID] ? acc[sourceID] + sum : sum,
-      };
-    },
-    {}
-  );
+  return reduceDamageTakenToMap(allEvents);
 };
-
-type QuakingDamageTakenMap = Record<number, number>;
 
 export const getTotalDamageTakenByQuaking = async (
   reportId: string,
   startTime: number,
   endTime: number,
   previousEvents: DamageTakenEvent[] = []
-): Promise<QuakingDamageTakenMap> => {
+): Promise<Record<number, number>> => {
   const response = await getEventData<DamageTakenEvent[]>(reportId, {
     startTime,
     endTime,
@@ -1249,17 +1193,7 @@ export const getTotalDamageTakenByQuaking = async (
     );
   }
 
-  return allEvents.reduce<QuakingDamageTakenMap>(
-    (acc, { amount, sourceID, absorbed = 0 }) => {
-      const sum = amount + absorbed;
-
-      return {
-        ...acc,
-        [sourceID]: acc[sourceID] ? acc[sourceID] + sum : sum,
-      };
-    },
-    {}
-  );
+  return reduceDamageTakenToMap(allEvents);
 };
 
 type QuakingInterruptMap = Record<
@@ -1312,4 +1246,125 @@ export const getInterruptsByQuaking = async (
         {}
       )
   );
+};
+
+const getManifestationOfPrideSourceId = async (
+  reportId: string,
+  fightId: number
+): Promise<number | null> => {
+  const response = await getEnemyNpcIds(reportId, fightId, [PRIDE.unit]);
+
+  return response[PRIDE.unit] ?? null;
+};
+
+export const getManifestationOfPrideDeathEvents = async (
+  reportId: string,
+  fightId: number,
+  startTime: number,
+  endTime: number
+): Promise<DeathEvent[]> => {
+  const sourceId = await getManifestationOfPrideSourceId(reportId, fightId);
+
+  if (!sourceId) {
+    return [];
+  }
+
+  const response = await getEventData<DeathEvent[]>(reportId, {
+    startTime,
+    endTime,
+    dataType: "Deaths",
+    hostilityType: "Enemies",
+    sourceId,
+  });
+
+  return response.reportData.report.events.data;
+};
+
+type ManifestationOfPrideQueryParams = {
+  startTime: number;
+  endTime: number;
+  targetId: number;
+  targetInstance?: number;
+  dataType: DataType;
+};
+
+const getManifestationOfPrideDamageEvents = async (
+  reportId: string,
+  queryParams: ManifestationOfPrideQueryParams,
+  firstEventOnly = false,
+  previousEvents: DamageEvent[] = []
+): Promise<DamageEvent[]> => {
+  const response = await getEventData<DamageEvent[]>(reportId, {
+    ...queryParams,
+    hostilityType: "Friendlies",
+  });
+
+  const { data, nextPageTimestamp } = response.reportData.report.events;
+
+  if (firstEventOnly) {
+    return [data[0]];
+  }
+
+  const allEvents = [...previousEvents, ...data];
+
+  if (nextPageTimestamp) {
+    return getManifestationOfPrideDamageEvents(
+      reportId,
+      {
+        ...queryParams,
+        startTime: nextPageTimestamp,
+      },
+      false,
+      allEvents
+    );
+  }
+
+  return allEvents;
+};
+
+type ManifestationOfPrideMeta = {
+  startTime: number;
+  endTime: number;
+  combatTime: number;
+  damageTaken: Record<number, number>;
+};
+
+export const getManifestationOfPrideDamageTaken = async (
+  reportId: string,
+  startTime: number,
+  endTime: number,
+  targetId: number,
+  targetInstance?: number
+): Promise<ManifestationOfPrideMeta> => {
+  const [{ timestamp: firstDamageDoneTimestamp }] =
+    await getManifestationOfPrideDamageEvents(
+      reportId,
+      {
+        dataType: "DamageDone",
+        endTime,
+        startTime,
+        targetId,
+        targetInstance,
+      },
+      true
+    );
+
+  const damageTakenEvents = await getManifestationOfPrideDamageEvents(
+    reportId,
+    {
+      dataType: "DamageTaken",
+      endTime,
+      startTime,
+      targetId,
+      targetInstance,
+    },
+    false
+  );
+
+  return {
+    startTime: firstDamageDoneTimestamp,
+    endTime,
+    combatTime: endTime - firstDamageDoneTimestamp,
+    damageTaken: reduceDamageTakenToMap(damageTakenEvents, "Enemies"),
+  };
 };

@@ -50,8 +50,10 @@ export const BOLSTERING = 209_859;
 export const SPITEFUL = 174_773;
 export const BURSTING = 243_237;
 export const QUAKING = 240_448;
-// highest dmg taken within a fight; total dmg taken, fastest, slowest
-export const PRIDEFUL = 342_332;
+export const PRIDE = {
+  unit: 173_729,
+  aoe: 342_332,
+};
 
 // profession specific
 //  DRUMS

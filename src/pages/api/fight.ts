@@ -1,4 +1,4 @@
-import type { Character, Fight, PlayableClass, Server } from "@prisma/client";
+import type { Character, Fight, Server } from "@prisma/client";
 import nc from "next-connect";
 
 import { classMapByName } from "../../../prisma/classes";
