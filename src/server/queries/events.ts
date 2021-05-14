@@ -11,8 +11,14 @@ import {
   DOS_URN,
   SOA_SPEAR,
   GRIEVOUS_WOUND,
-  EXPLOSIVES,
   EXPLOSION,
+  NECROTIC,
+  STORMING,
+  VOLCANIC,
+  BOLSTERING,
+  PF_GREEN_BUFF,
+  PF_PURPLE_BUFF,
+  PF_RED_BUFF,
 } from "../../utils/spellIds";
 import { getGqlClient } from "../gqlClient";
 import { getEnemyNpcIds } from "./report";
@@ -88,12 +94,17 @@ type ApplyDebuffEvent = Event<{
   abilityGameID: number;
 }>;
 
+type ApplyDebuffStackEvent = Event<{
+  type: "applydebuffstack";
+  stack: number;
+}>;
+
 type ApplyBuffEvent = Event<{
   type: "applybuff";
   sourceID: number;
   sourceInstance: number;
   targetID: number;
-  targetInstance: number;
+  targetInstance?: number;
   abilityGameID: number;
 }>;
 
@@ -267,7 +278,8 @@ type LogEvent =
   | AbsorbEvent
   | RefreshDebuffEvent
   | DispelEvent
-  | DeathEvent;
+  | DeathEvent
+  | ApplyDebuffStackEvent;
 
 type RawEventResponse<Event extends LogEvent | LogEvent[]> = {
   reportData: {
@@ -639,7 +651,7 @@ export const getTotalDamageTakenBySanguine = async (
   }
 
   return allEvents.reduce(
-    (acc, event) => acc + event.amount - (event.absorbed ?? 0),
+    (acc, event) => acc + event.amount + (event.absorbed ?? 0),
     0
   );
 };
@@ -672,19 +684,6 @@ export const getTotalDamageTakenByGrievousWound = async (
   }
 
   return allEvents.reduce((acc, event) => acc + event.amount, 0);
-};
-
-export const getExplosiveId = async (
-  reportId: string,
-  fightId: number
-): Promise<number | null> => {
-  const response = await getEnemyNpcIds(reportId, [fightId]);
-
-  return (
-    response.reportData.report.fights[0].enemyNPCs.find(
-      (npc) => npc.gameID === EXPLOSIVES
-    )?.id ?? null
-  );
 };
 
 export const getAllExplosiveKills = async (
@@ -729,6 +728,41 @@ export const getAllExplosiveKills = async (
   }, {});
 };
 
+export const getTotalDamageTakenBySpiteful = async (
+  reportId: string,
+  startTime: number,
+  endTime: number,
+  spitefulId: number,
+  previousEvents: DamageTakenEvent[] = []
+): Promise<number> => {
+  const response = await getEventData<DamageTakenEvent[]>(reportId, {
+    startTime,
+    endTime,
+    dataType: "DamageTaken",
+    hostilityType: "Friendlies",
+    targetId: spitefulId,
+  });
+
+  const { nextPageTimestamp, data } = response.reportData.report.events;
+
+  const allEvents = [...previousEvents, ...data];
+
+  if (nextPageTimestamp) {
+    return getTotalDamageTakenBySpiteful(
+      reportId,
+      nextPageTimestamp,
+      endTime,
+      spitefulId,
+      allEvents
+    );
+  }
+
+  return allEvents.reduce(
+    (acc, event) => acc + event.amount + (event.absorbed ?? 0),
+    0
+  );
+};
+
 export const getTotalDamageTakenByExplosion = async (
   reportId: string,
   startTime: number,
@@ -756,5 +790,296 @@ export const getTotalDamageTakenByExplosion = async (
     );
   }
 
-  return allEvents.reduce((acc, event) => acc + event.amount, 0);
+  return allEvents.reduce(
+    (acc, event) => acc + event.amount + (event.absorbed ?? 0),
+    0
+  );
+};
+
+export const getHighestNecroticStackAmount = async (
+  reportId: string,
+  startTime: number,
+  endTime: number,
+  previousEvents: ApplyDebuffStackEvent[] = []
+): Promise<number> => {
+  const response = await getEventData<
+    (ApplyDebuffStackEvent | ApplyDebuffEvent)[]
+  >(reportId, {
+    startTime,
+    endTime,
+    dataType: "Debuffs",
+    hostilityType: "Friendlies",
+    abilityId: NECROTIC,
+  });
+
+  const { nextPageTimestamp, data } = response.reportData.report.events;
+
+  const allEvents = [...previousEvents, ...data].filter(
+    (event): event is ApplyDebuffStackEvent => event.type === "applydebuffstack"
+  );
+
+  if (nextPageTimestamp) {
+    return getHighestNecroticStackAmount(
+      reportId,
+      nextPageTimestamp,
+      endTime,
+      allEvents
+    );
+  }
+
+  return allEvents.reduce(
+    (acc, event) => (acc >= event.stack ? acc : event.stack),
+    0
+  );
+};
+
+export const getTotalDamageTakenByNecrotic = async (
+  reportId: string,
+  startTime: number,
+  endTime: number,
+  previousEvents: DamageTakenEvent[] = []
+): Promise<number> => {
+  const response = await getEventData<DamageTakenEvent[]>(reportId, {
+    startTime,
+    endTime,
+    dataType: "DamageTaken",
+    hostilityType: "Friendlies",
+    abilityId: NECROTIC,
+  });
+
+  const { nextPageTimestamp, data } = response.reportData.report.events;
+
+  const allEvents = [...previousEvents, ...data];
+
+  if (nextPageTimestamp) {
+    return getTotalDamageTakenByNecrotic(
+      reportId,
+      nextPageTimestamp,
+      endTime,
+      allEvents
+    );
+  }
+
+  return allEvents.reduce(
+    (acc, event) => acc + event.amount + (event.absorbed ?? 0),
+    0
+  );
+};
+
+export const getTotalDamageTakenByStorming = async (
+  reportId: string,
+  startTime: number,
+  endTime: number,
+  previousEvents: DamageTakenEvent[] = []
+): Promise<number> => {
+  const response = await getEventData<DamageTakenEvent[]>(reportId, {
+    startTime,
+    endTime,
+    dataType: "DamageTaken",
+    hostilityType: "Friendlies",
+    abilityId: STORMING,
+  });
+
+  const { nextPageTimestamp, data } = response.reportData.report.events;
+
+  const allEvents = [...previousEvents, ...data];
+
+  if (nextPageTimestamp) {
+    return getTotalDamageTakenByNecrotic(
+      reportId,
+      nextPageTimestamp,
+      endTime,
+      allEvents
+    );
+  }
+
+  return allEvents.reduce(
+    (acc, event) => acc + event.amount + (event.absorbed ?? 0),
+    0
+  );
+};
+
+export const getTotalDamageTakenByVolcanic = async (
+  reportId: string,
+  startTime: number,
+  endTime: number,
+  previousEvents: DamageTakenEvent[] = []
+): Promise<number> => {
+  const response = await getEventData<DamageTakenEvent[]>(reportId, {
+    startTime,
+    endTime,
+    dataType: "DamageTaken",
+    hostilityType: "Friendlies",
+    abilityId: VOLCANIC,
+  });
+
+  const { nextPageTimestamp, data } = response.reportData.report.events;
+
+  const allEvents = [...previousEvents, ...data];
+
+  if (nextPageTimestamp) {
+    return getTotalDamageTakenByNecrotic(
+      reportId,
+      nextPageTimestamp,
+      endTime,
+      allEvents
+    );
+  }
+
+  return allEvents.reduce(
+    (acc, event) => acc + event.amount + (event.absorbed ?? 0),
+    0
+  );
+};
+
+type HighestBolsteringDataset = {
+  stack: number;
+  targetID: number;
+  targetInstance: number | null;
+};
+
+export const getHighestBolsteringStack = async (
+  reportId: string,
+  startTime: number,
+  endTime: number,
+  previousEvents: ApplyBuffEvent[] = []
+): Promise<HighestBolsteringDataset> => {
+  const response = await getEventData<(ApplyBuffEvent | RemoveBuffEvent)[]>(
+    reportId,
+    {
+      startTime,
+      endTime,
+      dataType: "Buffs",
+      hostilityType: "Enemies",
+      abilityId: BOLSTERING,
+    }
+  );
+
+  const { nextPageTimestamp, data } = response.reportData.report.events;
+
+  const allEvents = [...previousEvents, ...data].filter(
+    (event): event is ApplyBuffEvent => event.type === "applybuff"
+  );
+
+  if (nextPageTimestamp) {
+    return getHighestBolsteringStack(
+      reportId,
+      nextPageTimestamp,
+      endTime,
+      allEvents
+    );
+  }
+
+  return allEvents
+    .reduce<HighestBolsteringDataset[]>(
+      (acc, { targetID, targetInstance = null }) => {
+        const existingIndex = acc.findIndex(
+          (dataset) =>
+            dataset.targetInstance === targetInstance &&
+            targetID === dataset.targetID
+        );
+
+        if (existingIndex > -1) {
+          return acc.map((dataset, index) =>
+            index === existingIndex
+              ? { ...dataset, stack: dataset.stack + 1 }
+              : dataset
+          );
+        }
+
+        return [
+          ...acc,
+          {
+            targetID,
+            targetInstance,
+            stack: 1,
+          },
+        ];
+      },
+      []
+    )
+    .reduce((acc, dataset) => (acc?.stack >= dataset.stack ? acc : dataset));
+};
+
+type PFSlimeKills = {
+  red: { kills: number; consumed: number };
+  green: { kills: number; consumed: number };
+  purple: { kills: number; consumed: number };
+};
+
+export const getPFSlimeKills = async (
+  reportId: string,
+  fightId: number,
+  startTime: number,
+  endTime: number
+): Promise<PFSlimeKills> => {
+  const {
+    [PF_RED_BUFF.unit]: red,
+    [PF_GREEN_BUFF.unit]: green,
+    [PF_PURPLE_BUFF.unit]: purple,
+  } = await getEnemyNpcIds(reportId, fightId, [
+    PF_RED_BUFF.unit,
+    PF_GREEN_BUFF.unit,
+    PF_PURPLE_BUFF.unit,
+  ]);
+
+  const [redDeathEvents, greenDeathEvents, purpleDeathEvents] =
+    await Promise.all(
+      [red, green, purple].map(async (sourceId) => {
+        const response = await getEventData<DeathEvent[]>(reportId, {
+          startTime,
+          endTime,
+          dataType: "Deaths",
+          hostilityType: "Enemies",
+          sourceId,
+        });
+
+        return response.reportData.report.events.data;
+      })
+    );
+
+  const earliestUnitDeathTimestamp = [
+    ...redDeathEvents,
+    ...greenDeathEvents,
+    ...purpleDeathEvents,
+  ].reduce(
+    (acc, event) => (acc <= event.timestamp ? acc : event.timestamp),
+    Infinity
+  );
+
+  const [redAuraApplication, greenAuraApplication, purpleAuraApplication] =
+    await Promise.all(
+      [PF_RED_BUFF.aura, PF_GREEN_BUFF.aura, PF_PURPLE_BUFF.aura].map(
+        async (abilityId) => {
+          const response = await getEventData<
+            (ApplyBuffEvent | RemoveBuffEvent)[]
+          >(reportId, {
+            startTime: earliestUnitDeathTimestamp,
+            endTime,
+            dataType: "Buffs",
+            hostilityType: "Friendlies",
+            abilityId,
+          });
+
+          return response.reportData.report.events.data.filter(
+            (event): event is ApplyBuffEvent => event.type === "applybuff"
+          );
+        }
+      )
+    );
+
+  return {
+    red: {
+      kills: redDeathEvents.length,
+      consumed: redAuraApplication.length,
+    },
+    green: {
+      kills: greenDeathEvents.length,
+      consumed: greenAuraApplication.length,
+    },
+    purple: {
+      kills: purpleDeathEvents.length,
+      consumed: purpleAuraApplication.length,
+    },
+  };
 };

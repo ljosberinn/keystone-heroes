@@ -133,21 +133,24 @@ const getExtendedFightData = async (reportId: string, fightIds: number[]) => {
   );
 };
 
+type EnemyNPC = { id: number; gameID: number };
+
 type EnemyNpcIdResponse = {
   reportData: {
     report: {
-      fights: [{ enemyNPCs: { id: number; gameID: number }[] }];
+      fights: [{ enemyNPCs: EnemyNPC[] }];
     };
   };
 };
 
 export const getEnemyNpcIds = async (
   reportId: string,
-  fightIds: number[]
-): Promise<EnemyNpcIdResponse> => {
+  fightIds: number | number[],
+  gameIdOrIds: number | number[]
+): Promise<Record<number, number>> => {
   const client = await getGqlClient();
 
-  return client.request<EnemyNpcIdResponse>(
+  const response = await client.request<EnemyNpcIdResponse>(
     gql`
       query ReportData($reportId: String!, $fightIds: [Int]!) {
         reportData {
@@ -162,8 +165,20 @@ export const getEnemyNpcIds = async (
         }
       }
     `,
-    { reportId, fightIds }
+    { reportId, fightIds: Array.isArray(fightIds) ? fightIds : [fightIds] }
   );
+
+  const ids = new Set(Array.isArray(gameIdOrIds) ? gameIdOrIds : [gameIdOrIds]);
+
+  return response.reportData.report.fights[0].enemyNPCs
+    .filter((npc) => ids.has(npc.gameID))
+    .reduce<Record<number, number>>(
+      (acc, npc) => ({
+        ...acc,
+        [npc.gameID]: npc.id,
+      }),
+      {}
+    );
 };
 
 export const loadReportFromSource = async (
