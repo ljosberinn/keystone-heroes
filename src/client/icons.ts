@@ -1,3 +1,4 @@
+import { FaSun, FaMoon } from "react-icons/fa";
 import { GiLockedChest, GiOpenChest } from "react-icons/gi";
 
 export const icons = {
@@ -8,5 +9,13 @@ export const icons = {
   lockedChest: {
     id: "gi-locked-chest",
     component: GiLockedChest,
+  },
+  sun: {
+    id: "fa-sun",
+    component: FaSun,
+  },
+  moon: {
+    id: "fa-moon",
+    component: FaMoon,
   },
 } as const;

@@ -1,10 +1,12 @@
 import type { NextComponentType, NextPageContext } from "next";
+import { ThemeProvider } from "next-themes";
 import Head from "next/head";
 import type { NextRouter } from "next/router";
 
 import "tailwindcss/tailwind.css";
 import { Footer } from "../client/components/Footer";
 import { Header } from "../client/components/Header";
+import { RouteChangeIndicator } from "../client/components/RouteChangeIndicator";
 
 export type AppRenderProps = {
   pageProps: Record<string, unknown>;
@@ -29,13 +31,15 @@ export default function App({
           content="minimum-scale=1, initial-scale=1, width=device-width"
         />
       </Head>
-      <div className="bg-yellow-600 h-2" />
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 xl:max-w-6xl xl:px-0">
-        <Header />
-        <main>
-          <Component {...pageProps} />
-        </main>
-        <Footer />
+      <RouteChangeIndicator />
+      <div className="px-5">
+        <ThemeProvider attribute="class" defaultTheme="dark">
+          <Header />
+          <main className="w-full flex flex-col flex-grow">
+            <Component {...pageProps} />
+          </main>
+          <Footer />
+        </ThemeProvider>
       </div>
     </>
   );

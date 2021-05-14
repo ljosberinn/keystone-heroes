@@ -20,11 +20,13 @@
   },
   "dependencies": {
     "@prisma/client": "2.22.1",
+    "@tanem/react-nprogress": "3.0.66",
     "critters": "0.0.10",
     "graphql": "15.5.0",
     "graphql-request": "3.4.0",
     "next": "10.2.0",
     "next-connect": "0.10.1",
+    "next-themes": "0.0.14",
     "prisma": "2.22.1",
     "react": "17.0.2",
     "react-dom": "17.0.2",
