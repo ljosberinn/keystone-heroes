@@ -1,5 +1,6 @@
-import type { DamageDone } from "../server/queries/table";
 import { calcMetricAverage } from "../utils/calc";
+
+import type { DamageDone } from "../server/queries/table";
 
 describe("calcMetricAverage", () => {
   test.each([

@@ -1,6 +1,6 @@
-import type { NextApiResponse } from "next";
-
 import { IS_PROD } from "../constants";
+
+import type { NextApiResponse } from "next";
 
 export enum CacheControl {
   ONE_HOUR = 3600,

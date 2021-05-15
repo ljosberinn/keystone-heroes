@@ -1,6 +1,6 @@
-import type { Region } from "@prisma/client";
-
 import { prisma } from "../prismaClient";
+
+import type { Region } from "@prisma/client";
 
 export const RegionRepo = {
   upsert: (slug: string): Promise<Region> => {

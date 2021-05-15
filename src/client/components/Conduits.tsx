@@ -1,5 +1,6 @@
-import type { ResponseFight2 } from "../../server/db/fights";
 import { Icon } from "./Icon";
+
+import type { ResponseFight2 } from "../../server/db/fights";
 
 export type ConduitsProps = Pick<
   ResponseFight2["composition"][number],

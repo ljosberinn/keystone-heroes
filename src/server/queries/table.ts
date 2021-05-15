@@ -1,8 +1,9 @@
-import type { PlayableClass, Role, SpecName } from "@prisma/client";
 import { gql } from "graphql-request";
 
 import { getGqlClient } from "../gqlClient";
+
 import type { RawFight } from "./report";
+import type { PlayableClass, Role, SpecName } from "@prisma/client";
 
 const getTable = async (
   reportId: string,

@@ -1,7 +1,7 @@
-import type { WCLAuth } from "@prisma/client";
+import { prisma } from "../prismaClient";
 
 import type { WCLOAuthResponse } from "../gqlClient";
-import { prisma } from "../prismaClient";
+import type { WCLAuth } from "@prisma/client";
 
 export const WCLAuthRepo = {
   upsert: async ({

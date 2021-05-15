@@ -1,6 +1,7 @@
 import Router from "next/router";
-import type { ChangeEvent, FormEvent } from "react";
 import { useState } from "react";
+
+import type { ChangeEvent, FormEvent } from "react";
 
 export default function Home(): JSX.Element {
   const [code, setCode] = useState("");

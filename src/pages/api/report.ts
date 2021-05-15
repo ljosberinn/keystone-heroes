@@ -9,8 +9,9 @@ import {
 } from "../../server/api";
 import { ReportRepo } from "../../server/db/report";
 import { loadReportFromSource } from "../../server/queries/report";
-import type { RequestHandler } from "../../server/types";
 import { BAD_REQUEST, NO_CONTENT } from "../../utils/statusCodes";
+
+import type { RequestHandler } from "../../server/types";
 
 type Request = {
   query: {

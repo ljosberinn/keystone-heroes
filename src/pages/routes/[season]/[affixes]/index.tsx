@@ -1,5 +1,3 @@
-import type { Affix, Dungeon, Season } from "@prisma/client";
-import type { GetStaticPaths, GetStaticProps } from "next";
 import Link from "next/link";
 
 import {
@@ -9,6 +7,9 @@ import {
 import { dungeons } from "../../../../../prisma/dungeons";
 import { seasons } from "../../../../../prisma/seasons";
 import { weeks as allWeeks } from "../../../../../prisma/weeks";
+
+import type { Affix, Dungeon, Season } from "@prisma/client";
+import type { GetStaticPaths, GetStaticProps } from "next";
 
 type AffixesProps = {
   affixSlug: string;
@@ -86,51 +87,49 @@ export const getStaticPaths: GetStaticPaths<StaticParams> = async () => {
   };
 };
 
-export const getStaticProps: GetStaticProps<
-  AffixesProps,
-  StaticParams
-> = async ({ params }) => {
-  if (
-    !params?.affixes ||
-    !params?.season ||
-    Array.isArray(params.affixes) ||
-    Array.isArray(params.season) ||
-    !params.affixes.includes("-")
-  ) {
-    throw new Error("nope");
-  }
+export const getStaticProps: GetStaticProps<AffixesProps, StaticParams> =
+  async ({ params }) => {
+    if (
+      !params?.affixes ||
+      !params?.season ||
+      Array.isArray(params.affixes) ||
+      Array.isArray(params.season) ||
+      !params.affixes.includes("-")
+    ) {
+      throw new Error("nope");
+    }
 
-  const affixSlug = params.affixes;
-  const affixSlugs = affixSlug.split("-");
-  const affixes = allAffixes.filter((affix) =>
-    affixSlugs.includes(affix.name.toLowerCase())
-  );
+    const affixSlug = params.affixes;
+    const affixSlugs = affixSlug.split("-");
+    const affixes = allAffixes.filter((affix) =>
+      affixSlugs.includes(affix.name.toLowerCase())
+    );
 
-  const seasonSlug = params.season;
-  const season = seasons.find((season) => season.slug === seasonSlug);
+    const seasonSlug = params.season;
+    const season = seasons.find((season) => season.slug === seasonSlug);
 
-  if (!season) {
-    throw new Error("nope");
-  }
+    if (!season) {
+      throw new Error("nope");
+    }
 
-  return {
-    props: {
-      affixSlug,
-      affixes,
-      season: {
-        id: season.id,
-        name: season.name,
-        slug: season.slug,
+    return {
+      props: {
+        affixSlug,
+        affixes,
+        season: {
+          id: season.id,
+          name: season.name,
+          slug: season.slug,
+        },
+        dungeons: dungeons
+          .filter((dungeon) => dungeon.expansionId === season.expansionId)
+          .map((dungeon) => {
+            return {
+              id: dungeon.id,
+              name: dungeon.name,
+              slug: dungeon.slug,
+            };
+          }),
       },
-      dungeons: dungeons
-        .filter((dungeon) => dungeon.expansionId === season.expansionId)
-        .map((dungeon) => {
-          return {
-            id: dungeon.id,
-            name: dungeon.name,
-            slug: dungeon.slug,
-          };
-        }),
-    },
+    };
   };
-};

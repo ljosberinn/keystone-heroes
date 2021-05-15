@@ -39,28 +39,26 @@ export const getStaticPaths: GetStaticPaths<StaticPaths> = async () => {
   };
 };
 
-export const getStaticProps: GetStaticProps<
-  CharacterProps,
-  StaticPaths
-> = async ({ params }) => {
-  if (
-    !params?.character ||
-    !params?.region ||
-    !params?.server ||
-    Array.isArray(params.character) ||
-    Array.isArray(params.region) ||
-    Array.isArray(params.server)
-  ) {
-    throw new Error("invalid params");
-  }
+export const getStaticProps: GetStaticProps<CharacterProps, StaticPaths> =
+  async ({ params }) => {
+    if (
+      !params?.character ||
+      !params?.region ||
+      !params?.server ||
+      Array.isArray(params.character) ||
+      Array.isArray(params.region) ||
+      Array.isArray(params.server)
+    ) {
+      throw new Error("invalid params");
+    }
 
-  const { character, region, server } = params;
+    const { character, region, server } = params;
 
-  return {
-    props: {
-      character,
-      region,
-      server,
-    },
+    return {
+      props: {
+        character,
+        region,
+        server,
+      },
+    };
   };
-};

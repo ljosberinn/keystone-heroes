@@ -1,7 +1,7 @@
-import type { Server, Spec, Character } from "@prisma/client";
+import { prisma } from "../prismaClient";
 
 import type { FooFight } from "../../pages/api/fight";
-import { prisma } from "../prismaClient";
+import type { Server, Spec, Character } from "@prisma/client";
 
 export type PlayerInsert = Pick<
   FooFight["composition"][number],

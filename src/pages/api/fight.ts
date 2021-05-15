@@ -1,4 +1,3 @@
-import type { Character, Fight, Server } from "@prisma/client";
 import nc from "next-connect";
 
 import { classMapByName } from "../../../prisma/classes";
@@ -13,7 +12,6 @@ import {
 import { CharacterRepo } from "../../server/db/characters";
 import { ConduitRepo } from "../../server/db/conduit";
 import { CovenantTraitRepo } from "../../server/db/covenantTrait";
-import type { ResponseFight2 } from "../../server/db/fights";
 import { FightRepo } from "../../server/db/fights";
 import { LegendaryRepo } from "../../server/db/legendary";
 import { PlayerConduitRepo } from "../../server/db/playerConduit";
@@ -24,9 +22,16 @@ import { ReportRepo } from "../../server/db/report";
 import { ServerRepo } from "../../server/db/server";
 import { TalentRepo } from "../../server/db/talent";
 import { WeekRepo } from "../../server/db/weeks";
+
 // import { loadRecursiveEventsFromSource } from "../../server/queries/events";
-import type { ValidRawFight } from "../../server/queries/report";
 import { loadFightsFromSource } from "../../server/queries/report";
+import { ItemQuality, loadTableFromSource } from "../../server/queries/table";
+import { toUniqueArray } from "../../utils/array";
+import { calcMetricAverage } from "../../utils/calc";
+import { BAD_REQUEST, INTERNAL_SERVER_ERROR } from "../../utils/statusCodes";
+
+import type { ResponseFight2 } from "../../server/db/fights";
+import type { ValidRawFight } from "../../server/queries/report";
 import type {
   Conduit,
   InDepthCharacterInformation,
@@ -35,11 +40,8 @@ import type {
   Table,
   Talent,
 } from "../../server/queries/table";
-import { ItemQuality, loadTableFromSource } from "../../server/queries/table";
 import type { RequestHandler } from "../../server/types";
-import { toUniqueArray } from "../../utils/array";
-import { calcMetricAverage } from "../../utils/calc";
-import { BAD_REQUEST, INTERNAL_SERVER_ERROR } from "../../utils/statusCodes";
+import type { Character, Fight, Server } from "@prisma/client";
 
 type Request = {
   query: {

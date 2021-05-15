@@ -1,3 +1,12 @@
+import { prisma } from "../prismaClient";
+
+import type {
+  Conduit,
+  InDepthCharacterInformation,
+  Item,
+  SoulbindTalent,
+  Talent,
+} from "../queries/table";
 import type {
   Affix,
   Character,
@@ -14,15 +23,6 @@ import type {
   Player as PrismaPlayer,
   CovenantTrait,
 } from "@prisma/client";
-
-import { prisma } from "../prismaClient";
-import type {
-  Conduit,
-  InDepthCharacterInformation,
-  Item,
-  SoulbindTalent,
-  Talent,
-} from "../queries/table";
 
 export type ResponseFight2 = Pick<
   Fight,

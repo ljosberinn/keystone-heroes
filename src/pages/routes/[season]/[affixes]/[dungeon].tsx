@@ -1,6 +1,3 @@
-import type { Affix, Dungeon as DungeonType, Season } from "@prisma/client";
-import type { GetStaticPaths, GetStaticProps } from "next";
-
 import {
   affixes as allAffixes,
   getAffixById,
@@ -9,6 +6,9 @@ import { dungeonMap, dungeons } from "../../../../../prisma/dungeons";
 import { expansions } from "../../../../../prisma/expansions";
 import { seasons } from "../../../../../prisma/seasons";
 import { weeks as allWeeks } from "../../../../../prisma/weeks";
+
+import type { Affix, Dungeon as DungeonType, Season } from "@prisma/client";
+import type { GetStaticPaths, GetStaticProps } from "next";
 
 type DungeonProps = {
   dungeon: DungeonType;
@@ -82,57 +82,55 @@ export const getStaticPaths: GetStaticPaths<StaticParams> = async () => {
   };
 };
 
-export const getStaticProps: GetStaticProps<
-  DungeonProps,
-  StaticParams
-> = async ({ params }) => {
-  if (
-    !params?.affixes ||
-    !params?.dungeon ||
-    !params?.season ||
-    Array.isArray(params.affixes) ||
-    Array.isArray(params.dungeon) ||
-    Array.isArray(params.season) ||
-    !params.affixes.includes("-")
-  ) {
-    throw new Error("nope");
-  }
+export const getStaticProps: GetStaticProps<DungeonProps, StaticParams> =
+  async ({ params }) => {
+    if (
+      !params?.affixes ||
+      !params?.dungeon ||
+      !params?.season ||
+      Array.isArray(params.affixes) ||
+      Array.isArray(params.dungeon) ||
+      Array.isArray(params.season) ||
+      !params.affixes.includes("-")
+    ) {
+      throw new Error("nope");
+    }
 
-  const season = seasons.find((season) => season.slug === params.season);
+    const season = seasons.find((season) => season.slug === params.season);
 
-  if (!season) {
-    throw new Error("nope");
-  }
+    if (!season) {
+      throw new Error("nope");
+    }
 
-  const dungeon = dungeons.find(
-    (dungeon) => dungeon.slug.toLowerCase() === params.dungeon
-  );
+    const dungeon = dungeons.find(
+      (dungeon) => dungeon.slug.toLowerCase() === params.dungeon
+    );
 
-  if (!dungeon) {
-    throw new Error("unknown dungeon slug");
-  }
+    if (!dungeon) {
+      throw new Error("unknown dungeon slug");
+    }
 
-  const dataset: DungeonType = {
-    id: dungeon.id,
-    name: dungeon.name,
-    slug: dungeon.slug,
-    time: dungeon.timer[0],
-  };
+    const dataset: DungeonType = {
+      id: dungeon.id,
+      name: dungeon.name,
+      slug: dungeon.slug,
+      time: dungeon.timer[0],
+    };
 
-  const affixSlugs = params.affixes.split("-");
-  const affixes = allAffixes.filter((affix) =>
-    affixSlugs.includes(affix.name.toLowerCase())
-  );
+    const affixSlugs = params.affixes.split("-");
+    const affixes = allAffixes.filter((affix) =>
+      affixSlugs.includes(affix.name.toLowerCase())
+    );
 
-  return {
-    props: {
-      affixes,
-      dungeon: dataset,
-      season: {
-        id: season.id,
-        name: season.name,
-        slug: season.slug,
+    return {
+      props: {
+        affixes,
+        dungeon: dataset,
+        season: {
+          id: season.id,
+          name: season.name,
+          slug: season.slug,
+        },
       },
-    },
+    };
   };
-};

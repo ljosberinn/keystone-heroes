@@ -1,6 +1,6 @@
-import type { Region } from "@prisma/client";
-
 import { prisma } from "../prismaClient";
+
+import type { Region } from "@prisma/client";
 
 export const ServerRepo = {
   createMany: async (

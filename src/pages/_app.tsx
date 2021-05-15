@@ -1,6 +1,8 @@
 import type { NextComponentType, NextPageContext } from "next";
+
 import { ThemeProvider } from "next-themes";
 import Head from "next/head";
+
 import type { NextRouter } from "next/router";
 
 import "tailwindcss/tailwind.css";

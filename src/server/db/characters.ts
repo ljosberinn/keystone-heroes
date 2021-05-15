@@ -1,6 +1,6 @@
-import type { Character, Region } from "@prisma/client";
-
 import { prisma } from "../prismaClient";
+
+import type { Character, Region } from "@prisma/client";
 
 export const CharacterRepo = {
   createMany: async <

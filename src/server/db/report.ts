@@ -1,8 +1,8 @@
-import type { Region, Report } from "@prisma/client";
-
 import { ONGOING_REPORT_THRESHOLD } from "../api";
 import { prisma } from "../prismaClient";
+
 import type { RawReport } from "../queries/report";
+import type { Region, Report } from "@prisma/client";
 
 export const ReportRepo = {
   upsert: async (

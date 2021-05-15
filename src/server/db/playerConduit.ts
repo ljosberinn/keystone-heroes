@@ -1,5 +1,6 @@
-import type { FooFight } from "../../pages/api/fight";
 import { prisma } from "../prismaClient";
+
+import type { FooFight } from "../../pages/api/fight";
 
 export type PlayerConduitInsert = {
   playerId: number;

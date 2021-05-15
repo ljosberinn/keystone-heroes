@@ -1,9 +1,10 @@
 import crypto from "crypto";
-import type { DocumentProps } from "next/document";
 import Document, { Html, Head, Main, NextScript } from "next/document";
 
 import { icons } from "../client/icons";
 import { IS_PROD } from "../constants";
+
+import type { DocumentProps } from "next/document";
 
 const createCSP = (props: DocumentProps) => {
   const hash1 = crypto.createHash("sha256");

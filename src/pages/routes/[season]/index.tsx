@@ -1,11 +1,12 @@
-import type { Season as SeasonType } from "@prisma/client";
-import type { GetStaticPaths, GetStaticProps } from "next";
 import Head from "next/head";
 import Link from "next/link";
 
 import { getAffixById } from "../../../../prisma/affixes";
 import { seasons } from "../../../../prisma/seasons";
 import { weeks as allWeeks } from "../../../../prisma/weeks";
+
+import type { Season as SeasonType } from "@prisma/client";
+import type { GetStaticPaths, GetStaticProps } from "next";
 
 type SeasonProps = {
   season: Omit<SeasonType, "startTime" | "endTime" | "affixId" | "expansionId">;

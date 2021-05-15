@@ -1,6 +1,7 @@
-import type { ResponseFight2 } from "../../server/db/fights";
 import { classnames } from "../../utils/classNames";
 import { Icon } from "./Icon";
+
+import type { ResponseFight2 } from "../../server/db/fights";
 
 export type AffixesProps = Pick<ResponseFight2, "affixes" | "chests">;
 
