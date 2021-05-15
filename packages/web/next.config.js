@@ -1,6 +1,8 @@
+const withTM = require("next-transpile-modules")(["db", "warcraftlogs"]);
+
 const date = new Date();
 
-module.exports = {
+module.exports = withTM({
   typescript: {
     /**
      * `yarn lint:types` ran in CI already so we can safely assume no errors
@@ -23,7 +25,10 @@ module.exports = {
     modern: true,
     turboMode: true,
   },
-  async headers() {
+  future: {
+    webpack5: true,
+  },
+  headers() {
     return [
       {
         source: "/(.*)",
@@ -31,7 +36,7 @@ module.exports = {
       },
     ];
   },
-};
+});
 
 // https://securityheaders.com
 const ContentSecurityPolicy = `
