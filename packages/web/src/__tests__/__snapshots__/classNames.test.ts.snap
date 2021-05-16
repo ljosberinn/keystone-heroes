@@ -1,7 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`given different args, works as expected 1`] = `"1 abc"`;
-
-exports[`given different args, works as expected 2`] = `"x"`;
-
-exports[`given different args, works as expected 3`] = `"-1 1"`;

@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "lib": ["dom", "esnext"],
+    "module": "commonjs",
+    "target": "esnext",
+    "moduleResolution": "node",
+    "noEmit": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "allowSyntheticDefaultImports": true,
+    "paths": {
+      "@keystone-heroes/db/repos": ["../db/repos/index.ts"],
+      "@keystone-heroes/db/data": ["../db/data/index.ts"],
+      "@keystone-heroes/env": ["../env/index.ts"],
+      "@keystone-heroes/wcl/utils": ["../wcl/utils.ts"],
+      "@keystone-heroes/wcl/queries": ["../wcl/queries/index.ts"]
+    }
+  },
+  "exclude": ["node_modules"],
+  "include": ["**/*.ts", "**/*.tsx"]
+}

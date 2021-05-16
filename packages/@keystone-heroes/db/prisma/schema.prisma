@@ -1,0 +1,538 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  dps
+  tank
+  healer
+}
+
+enum PlayableClass {
+  DemonHunter
+  Mage
+  Shaman
+  Rogue
+  Priest
+  Warrior
+  Druid
+  DeathKnight
+  Monk
+  Paladin
+  Warlock
+  Hunter
+}
+
+model Class {
+  id   Int           @id
+  name PlayableClass @unique
+
+  // used in
+  Spec      Spec[]
+  Character Character[]
+  Talent    Talent[]
+}
+
+enum SpecName {
+  Protection
+  Fury
+  Arms
+
+  Fire
+  Frost
+  Arcane
+
+  Assassination
+  Sublety
+  Outlaw
+
+  Restoration
+  Elemental
+  Enhancement
+
+  Shadow
+  Holy
+  Discipline
+
+  BeastMastery
+  Survival
+  Marksmanship
+
+  Mistweaver
+  Brewmaster
+  Windwalker
+
+  // Restoration
+  Guardian
+  Balance
+  Feral
+
+  Vengeance
+  Havoc
+
+  // Protection
+  // Holy
+  Retribution
+
+  Destruction
+  Demonology
+  Affliction
+
+  Blood
+  Unholy
+  // Frost
+}
+
+model Spec {
+  id   Int      @id
+  name SpecName
+
+  classId Int
+  class   Class @relation(fields: [classId], references: [id])
+
+  role Role
+
+  // used in
+  Player Player[]
+  Talent Talent[]
+
+  @@unique([name, classId])
+}
+
+model Dungeon {
+  id   Int    @id
+  name String
+  slug String
+  time Int
+
+  // used in
+  Fight Fight[]
+  Map   Map[]
+  Zone  Zone[]
+}
+
+model Zone {
+  id Int @id
+
+  name  String
+  order Int
+
+  dungeonId Int
+  dungeon   Dungeon @relation(fields: [dungeonId], references: [id])
+}
+
+enum Affixes {
+  Skittish
+  Volcanic
+  Necrotic
+  Raging
+  Bolstering
+  Sanguine
+  Tyrannical
+  Fortified
+  Bursting
+  Grievous
+  Explosive
+  Quaking
+  Infested
+  Reaping
+  Beguiling
+  Awakened
+  Prideful
+  Inspiring
+  Spiteful
+  Storming
+}
+
+model Affix {
+  id       Int     @id
+  name     Affixes
+  icon     String
+  seasonal Boolean
+
+  // used in
+  affix1  Week[]   @relation("affix1")
+  affix2  Week[]   @relation("affix2")
+  affix3  Week[]   @relation("affix3")
+  Seasons Season[]
+}
+
+model Expansion {
+  id Int @id @default(autoincrement())
+
+  name String
+  slug String
+
+  // used in
+  Season Season[]
+}
+
+model Season {
+  id Int @id @default(autoincrement())
+
+  name      String
+  slug      String
+  startTime DateTime
+  endTime   DateTime?
+
+  expansionId Int
+  expansion   Expansion @relation(fields: [expansionId], references: [id])
+
+  affixId Int
+  affix   Affix @relation(fields: [affixId], references: [id])
+
+  // used in
+  Week Week[]
+}
+
+model Week {
+  id Int @id @default(autoincrement())
+
+  seasonId Int
+  season   Season @relation(fields: [seasonId], references: [id])
+
+  seasonWeekId Int
+
+  affix1Id Int
+  affix1   Affix @relation("affix1", fields: [affix1Id], references: [id])
+
+  affix2Id Int
+  affix2   Affix @relation("affix2", fields: [affix2Id], references: [id])
+
+  affix3Id Int
+  affix3   Affix @relation("affix3", fields: [affix3Id], references: [id])
+
+  // used in
+  Fight Fight[]
+
+  @@unique([seasonId, seasonWeekId])
+}
+
+model Report {
+  id     Int    @id @default(autoincrement())
+  report String @unique @db.Char(16)
+
+  regionId Int
+  region   Region @relation(fields: [regionId], references: [id])
+
+  title     String
+  startTime DateTime
+  endTime   DateTime
+
+  // used in
+  Fight  Fight[]
+  Player Player[]
+}
+
+model Fight {
+  id Int @id @default(autoincrement())
+
+  fightId Int
+
+  reportId Int
+  report   Report @relation(fields: [reportId], references: [id])
+
+  dungeonId Int
+  dungeon   Dungeon @relation(fields: [dungeonId], references: [id])
+
+  keystoneTime     Int
+  keystoneLevel    Int
+  chests           Int
+  dps              Int
+  hps              Int
+  dtps             Int
+  totalDeaths      Int
+  averageItemLevel Int
+
+  player1Id Int
+  player1   Player @relation("player1", fields: [player1Id], references: [id])
+
+  player2Id Int
+  player2   Player @relation("player2", fields: [player2Id], references: [id])
+
+  player3Id Int
+  player3   Player @relation("player3", fields: [player3Id], references: [id])
+
+  player4Id Int
+  player4   Player @relation("player4", fields: [player4Id], references: [id])
+
+  player5Id Int
+  player5   Player @relation("player5", fields: [player5Id], references: [id])
+
+  weekId Int
+  week   Week @relation(fields: [weekId], references: [id])
+
+  // used in
+  PlayerConduit       PlayerConduit[]
+  PlayerTalent        PlayerTalent[]
+  PlayerCovenantTrait PlayerCovenantTrait[]
+  Pulls               Pulls[]
+
+  @@unique([fightId, reportId])
+}
+
+model Character {
+  id Int @id @default(autoincrement())
+
+  name String
+
+  serverId Int
+  server   Server @relation(fields: [serverId], references: [id])
+
+  classId Int
+  class   Class @relation(fields: [classId], references: [id])
+
+  // used in
+  Player Player[]
+
+  @@unique([name, serverId])
+}
+
+model Player {
+  id Int @id @default(autoincrement())
+
+  reportId Int
+  report   Report @relation(fields: [reportId], references: [id])
+
+  characterId Int
+  character   Character @relation(fields: [characterId], references: [id])
+
+  actorId Int
+
+  specId Int
+  spec   Spec @relation(fields: [specId], references: [id])
+
+  dps       Int
+  hps       Int
+  deaths    Int
+  itemLevel Int
+
+  covenantId Int?
+  covenant   Covenant? @relation(fields: [covenantId], references: [id])
+
+  soulbindId Int?
+  soulbind   Soulbind? @relation(fields: [soulbindId], references: [id])
+
+  legendaryId Int?
+  legendary   Legendary? @relation(fields: [legendaryId], references: [id])
+
+  // used in
+  player1             Fight[]               @relation("player1")
+  player2             Fight[]               @relation("player2")
+  player3             Fight[]               @relation("player3")
+  player4             Fight[]               @relation("player4")
+  player5             Fight[]               @relation("player5")
+  PlayerConduit       PlayerConduit[]
+  PlayerTalent        PlayerTalent[]
+  PlayerCovenantTrait PlayerCovenantTrait[]
+  Events              Events[]
+}
+
+enum Covenants {
+  Kyrian
+  Venthyr
+  Necrolord
+  NightFae
+}
+
+model Covenant {
+  id Int @id
+
+  name Covenants
+  icon String
+
+  // used in
+  Player        Player[]
+  Soulbind      Soulbind[]
+  CovenantTrait CovenantTrait[]
+}
+
+model Soulbind {
+  id Int @id
+
+  name String
+  icon String
+
+  covenantId Int
+  covenant   Covenant @relation(fields: [covenantId], references: [id])
+
+  // used in
+  Player Player[]
+}
+
+model Region {
+  id Int @id @default(autoincrement())
+
+  slug String @unique
+
+  // used in
+  Server Server[]
+  Report Report[]
+}
+
+model Server {
+  id Int @id @default(autoincrement())
+
+  name     String
+  regionId Int
+  region   Region @relation(fields: [regionId], references: [id])
+
+  // used in
+  Character Character[]
+
+  @@unique([name, regionId])
+}
+
+model Legendary {
+  // effectId
+  id Int @id
+
+  itemId     Int
+  effectIcon String
+  effectName String
+
+  // used in
+  Player Player[]
+}
+
+model Conduit {
+  id Int @id
+
+  name        String
+  abilityIcon String
+
+  // used in
+  PlayerConduit PlayerConduit[]
+}
+
+model PlayerConduit {
+  id Int @id @default(autoincrement())
+
+  itemLevel Int
+
+  fightId Int
+  fight   Fight @relation(fields: [fightId], references: [id])
+
+  conduitId Int
+  conduit   Conduit @relation(fields: [conduitId], references: [id])
+
+  playerId Int
+  player   Player @relation(fields: [playerId], references: [id])
+}
+
+model Talent {
+  id Int @id
+
+  name        String
+  abilityIcon String
+
+  classId Int
+  class   Class @relation(fields: [classId], references: [id])
+
+  specId Int
+  spec   Spec @relation(fields: [specId], references: [id])
+
+  // used in
+  PlayerTalent PlayerTalent[]
+}
+
+model PlayerTalent {
+  id Int @id @default(autoincrement())
+
+  fightId Int
+  fight   Fight @relation(fields: [fightId], references: [id])
+
+  talentId Int
+  talent   Talent @relation(fields: [talentId], references: [id])
+
+  playerId Int
+  player   Player @relation(fields: [playerId], references: [id])
+}
+
+model CovenantTrait {
+  id Int @id
+
+  name        String
+  abilityIcon String
+
+  covenantId Int
+  covenant   Covenant @relation(fields: [covenantId], references: [id])
+
+  // used in
+  PlayerCovenantTrait PlayerCovenantTrait[]
+}
+
+model PlayerCovenantTrait {
+  id Int @id @default(autoincrement())
+
+  fightId Int
+  fight   Fight @relation(fields: [fightId], references: [id])
+
+  covenantTraitId Int
+  covenantTrait   CovenantTrait @relation(fields: [covenantTraitId], references: [id])
+
+  playerId Int
+  player   Player @relation(fields: [playerId], references: [id])
+}
+
+model WCLAuth {
+  id Int @id @default(autoincrement())
+
+  token     String?
+  expiresAt Int?
+}
+
+model Pulls {
+  id Int @id @default(autoincrement())
+
+  fightId Int
+  fight   Fight @relation(fields: [fightId], references: [id])
+
+  mapId Int
+  map   Map @relation(fields: [mapId], references: [id])
+}
+
+model Map {
+  id Int @id
+
+  dungeonId Int
+  dungeon   Dungeon @relation(fields: [dungeonId], references: [id])
+
+  // used in
+  Pulls Pulls[]
+}
+
+model NPCsToPulls {
+  id Int @id @default(autoincrement())
+
+  amount Int
+
+  npcId Int
+  npc   NPCs @relation(fields: [npcId], references: [id])
+}
+
+model NPCs {
+  id Int @id
+
+  name String
+
+  // used in
+  NPCsToPulls NPCsToPulls[]
+}
+
+model Events {
+  id        Int   @id @default(autoincrement())
+  timestamp Int
+  meta      Json?
+
+  playerId Int
+  player   Player @relation(fields: [playerId], references: [id])
+}

@@ -2,13 +2,24 @@
   "name": "wcl-to-mdt",
   "private": true,
   "workspaces": [
-    "packages/*"
+    "packages/@keystone-heroes/*"
   ],
   "scripts": {
-    "dev": "yarn --cwd packages/web dev",
-    "build": "yarn --cwd packages/web build",
-    "start": "yarn --cwd packages/web start",
-    "postinstall": "yarn-deduplicate -l"
+    "dev": "yarn --cwd packages/@keystone-heroes/web dev",
+    "build": "yarn --cwd packages/@keystone-heroes/web build",
+    "start": "yarn --cwd packages/@keystone-heroes/web start",
+    "postinstall": "yarn-deduplicate -l && yarn --cwd packages/@keystone-heroes/db generate",
+    "lint": "eslint packages --cache",
+    "lint:fix": "eslint packages --fix && yarn --cwd packages/@keystone-heroes/web format",
+    "types": "yarn --cwd packages/@keystone-heroes/web types",
+    "install:clean": "rimraf yarn.lock && rimraf node_modules && rimraf packages/@keystone-heroes/**/node_modules && yarn"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "7.26.0",
+    "eslint-config-galex": "2.15.9",
+    "prettier": "2.3.0",
+    "rimraf": "3.0.2",
+    "yarn-deduplicate": "3.1.0"
+  }
 }
