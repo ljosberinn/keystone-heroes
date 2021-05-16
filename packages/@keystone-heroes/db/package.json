@@ -11,7 +11,8 @@
     "generate": "prisma generate",
     "push": "prisma db push",
     "seed": "prisma db seed --preview-feature",
-    "pull": "prisma db pull"
+    "pull": "prisma db pull",
+    "format": "prettier --write data && prettier --write repos"
   },
   "dependencies": {
     "@keystone-heroes/env": "1.0.0",

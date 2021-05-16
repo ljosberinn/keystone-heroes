@@ -2,7 +2,6 @@ import { classes } from "./classes";
 
 import type { Spec, SpecName } from "@prisma/client";
 
-
 export const specs = classes
   .flatMap<Omit<Spec, "id">>(({ id: classId, specs }) =>
     specs.map(({ name, role }) => ({

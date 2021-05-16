@@ -1,23 +1,26 @@
 {
   "name": "@keystone-heroes/wcl",
   "version": "1.0.0",
+  "private": true,
+  "exports": {
+    ".": "./index.ts",
+    "./queries": "./queries",
+    "./utils": "./utils.ts"
+  },
+  "scripts": {
+    "format": "prettier --write queries"
+  },
   "dependencies": {
     "@keystone-heroes/db": "1.0.0",
     "@keystone-heroes/env": "1.0.0",
     "graphql": "15.5.0",
     "graphql-request": "3.4.0"
   },
-  "private": true,
-  "graphql": {
-    "schema": "./schema.json"
-  },
-  "exports": {
-    ".": "./index.ts",
-    "./queries": "./queries",
-    "./utils": "./utils.ts"
-  },
   "devDependencies": {
     "eslint": "7.26.0",
     "eslint-config-galex": "2.15.9"
+  },
+  "graphql": {
+    "schema": "./schema.json"
   }
 }

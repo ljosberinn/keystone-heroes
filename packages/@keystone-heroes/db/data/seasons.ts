@@ -1,4 +1,3 @@
-
 import { getAffixByName } from "./affixes";
 import { ExpansionEnum } from "./expansions";
 

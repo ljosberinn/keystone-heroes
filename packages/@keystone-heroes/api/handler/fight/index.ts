@@ -1,10 +1,9 @@
 import { FightRepo, ReportRepo } from "@keystone-heroes/db/repos";
-import { wcl, Talent } from "@keystone-heroes/wcl/queries";
+import { wcl } from "@keystone-heroes/wcl/queries";
 import nc from "next-connect";
 
 import { createValidReportIdMiddleware } from "../../middleware/validReportId";
 import { BAD_GATEWAY, INTERNAL_SERVER_ERROR } from "../../utils/statusCodes";
-import { RequestHandler } from "../../utils/types";
 import {
   calcMetricAverage,
   createConduits,
@@ -15,12 +14,14 @@ import {
   enhanceFightsWithTable,
   extendPlayersWithServerAndCharacterId,
   extractPlayerData,
-  InsertableFight,
   linkPlayerToConduits,
   linkPlayerToCovenantTraits,
   linkPlayerToTalents,
 } from "./utils";
 
+import type { RequestHandler } from "../../utils/types";
+import type { InsertableFight } from "./utils";
+import type { Talent } from "@keystone-heroes/wcl/queries";
 import type {
   Fight,
   Dungeon,

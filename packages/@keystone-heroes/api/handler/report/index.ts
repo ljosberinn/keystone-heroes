@@ -6,7 +6,8 @@ import nc from "next-connect";
 
 import { createValidReportIdMiddleware } from "../../middleware/validReportId";
 import { NO_CONTENT } from "../../utils/statusCodes";
-import { RequestHandler } from "../../utils/types";
+
+import type { RequestHandler } from "../../utils/types";
 
 type Request = {
   query: {

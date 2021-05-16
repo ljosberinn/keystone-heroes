@@ -13,29 +13,28 @@ import {
   PlayerCovenantTraitRepo,
   PlayerRepo,
   PlayerTalentRepo,
-  ReportRepo,
   ServerRepo,
   TalentRepo,
   WeekRepo,
 } from "@keystone-heroes/db/repos";
-import {
+import { ItemQuality, wcl } from "@keystone-heroes/wcl/queries";
+
+import { toUniqueArray } from "../../utils";
+
+import type { ReportRepo } from "@keystone-heroes/db/repos";
+import type {
   Conduit,
   DamageDone,
   DamageTaken,
   HealingDone,
   InDepthCharacterInformation,
-  ItemQuality,
   LegendaryItem,
   RawFight,
   SoulbindTalent,
   Table,
   Talent,
   ValidRawFight,
-  wcl,
 } from "@keystone-heroes/wcl/queries";
-
-import { toUniqueArray } from "../../utils";
-
 import type { Region, Character } from "@prisma/client";
 
 export const extendPlayersWithServerAndCharacterId = async (

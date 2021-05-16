@@ -2,7 +2,6 @@ import { DungeonIds } from "./dungeons";
 
 import type { Map } from "@prisma/client";
 
-
 export const maps: Map[] = [
   { id: 1663, dungeonId: DungeonIds.HALLS_OF_ATONEMENT },
   { id: 1664, dungeonId: DungeonIds.HALLS_OF_ATONEMENT },

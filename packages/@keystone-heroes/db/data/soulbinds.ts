@@ -68,6 +68,6 @@ export const soulbindMap: Record<
   },
 };
 
-export const soulbinds: Soulbind[] = Object.entries(
-  soulbindMap
-).map(([id, dataset]) => ({ id: Number.parseInt(id), ...dataset }));
+export const soulbinds: Soulbind[] = Object.entries(soulbindMap).map(
+  ([id, dataset]) => ({ id: Number.parseInt(id), ...dataset })
+);

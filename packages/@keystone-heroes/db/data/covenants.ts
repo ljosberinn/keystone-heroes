@@ -21,6 +21,6 @@ export const covenantMap: Record<Covenant["id"], Omit<Covenant, "id">> = {
   },
 };
 
-export const covenants: Covenant[] = Object.entries(
-  covenantMap
-).map(([id, dataset]) => ({ ...dataset, id: Number.parseInt(id) }));
+export const covenants: Covenant[] = Object.entries(covenantMap).map(
+  ([id, dataset]) => ({ ...dataset, id: Number.parseInt(id) })
+);

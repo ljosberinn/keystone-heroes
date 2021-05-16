@@ -2,6 +2,9 @@
   "name": "@keystone-heroes/env",
   "version": "1.0.0",
   "private": true,
+  "scripts": {
+    "format": "prettier --write ./index.ts"
+  },
   "devDependencies": {
     "eslint": "7.26.0",
     "eslint-config-galex": "2.15.9",

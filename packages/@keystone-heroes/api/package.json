@@ -2,6 +2,9 @@
   "name": "@keystone-heroes/api",
   "version": "1.0.0",
   "private": true,
+  "scripts": {
+    "format": "prettier --write handler && prettier --write middleware && prettier --write utils"
+  },
   "dependencies": {
     "@keystone-heroes/db": "1.0.0",
     "@keystone-heroes/wcl": "1.0.0",
