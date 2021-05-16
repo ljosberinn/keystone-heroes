@@ -12,7 +12,8 @@
     "lint": "eslint packages --cache",
     "lint:fix": "eslint packages --fix && yarn --cwd packages/@keystone-heroes/web format",
     "types": "yarn --cwd packages/@keystone-heroes/web types",
-    "install:clean": "rimraf yarn.lock && rimraf packages/@keystone-heroes/**/node_modules && rimraf node_modules && yarn"
+    "install:clean": "rimraf yarn.lock && rimraf packages/@keystone-heroes/**/node_modules && rimraf node_modules && yarn",
+    "test": "exit 0"
   },
   "license": "MIT",
   "devDependencies": {

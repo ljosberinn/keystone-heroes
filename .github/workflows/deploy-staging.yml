@@ -42,7 +42,7 @@ jobs:
       - name: Installing dependencies
         if: steps.cache-modules.outputs.cache-hit != 'true'
         run: yarn --frozen-lockfile
-      - run: yarn lint:code
+      - run: yarn lint
 
   types:
     name: TypeScript
@@ -62,7 +62,7 @@ jobs:
       - name: Installing dependencies
         if: steps.cache-modules.outputs.cache-hit != 'true'
         run: yarn --frozen-lockfile
-      - run: yarn lint:types
+      - run: yarn types
 
   test:
     name: Test
