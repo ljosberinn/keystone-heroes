@@ -1,6 +1,4 @@
-const { createConfig } = require("eslint-config-galex/src/createConfig");
-
 module.exports = {
-  ...createConfig({}),
+  extends: "galex",
   root: true,
 };

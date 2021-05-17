@@ -18,5 +18,12 @@
   },
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
-  }
+  },
+  "eslint.workingDirectories": [
+    "./packages/@keystone-heroes/api",
+    "./packages/@keystone-heroes/db",
+    "./packages/@keystone-heroes/wcl",
+    "./packages/@keystone-heroes/env",
+    "./packages/@keystone-heroes/web"
+  ]
 }
