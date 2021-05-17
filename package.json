@@ -1,6 +1,7 @@
 {
-  "name": "wcl-to-mdt",
+  "name": "keystone-heroes",
   "private": true,
+  "license": "MIT",
   "workspaces": [
     "packages/@keystone-heroes/*"
   ],
@@ -13,14 +14,28 @@
     "lint:fix": "yarn workspaces run lint --fix && yarn workspaces run format",
     "types": "yarn --cwd packages/@keystone-heroes/web types",
     "install:clean": "rimraf yarn.lock && rimraf packages/@keystone-heroes/**/node_modules && rimraf node_modules && yarn",
-    "test": "exit 0"
+    "test": "exit 0",
+    "prepare": "husky install"
   },
-  "license": "MIT",
+  "lint-staged": {
+    "packages/**/*.{js,tsx,ts,tsx,css,scss}": [
+      "eslint --fix"
+    ],
+    "packages/**/*.{js,jsx,ts,tsx,json,css,scss,md,graphql}": "prettier --write",
+    "package.json": "sort-package-json",
+    "packages/**/package.json": "sort-package-json"
+  },
   "devDependencies": {
     "eslint": "7.26.0",
     "eslint-config-galex": "2.15.10",
+    "husky": "6.0.0",
+    "lint-staged": "11.0.0",
     "prettier": "2.3.0",
     "rimraf": "3.0.2",
+    "sort-package-json": "1.50.0",
     "yarn-deduplicate": "3.1.0"
+  },
+  "hooks": {
+    "pre-commit": "lint-staged"
   }
 }
