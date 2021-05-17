@@ -1,70 +1,33 @@
-import { gql } from "graphql-request";
+import { getCachedSdk } from "../client";
 
-import { getGqlClient } from "../client";
-
-import type { RawFight } from "./report";
+import type { TableQueryVariables } from "../types";
 import type { PlayableClass, Role, SpecName } from "@prisma/client";
 
-const getTable = async (
-  reportId: string,
-  { id, startTime, endTime }: RawFight
-) => {
-  const client = await getGqlClient();
-
-  return client.request<RawTable>(
-    gql`
-      query ReportData(
-        $reportId: String!
-        $id: [Int]
-        $startTime: Float
-        $endTime: Float
-      ) {
-        reportData {
-          report(code: $reportId) {
-            table(startTime: $startTime, endTime: $endTime, fightIDs: $id)
-          }
-        }
-      }
-    `,
-    { reportId, id: [id], startTime, endTime }
-  );
-};
-
 export const loadTableFromSource = async (
-  reportId: string,
-  fight: RawFight
+  params: TableQueryVariables
 ): Promise<Table | null> => {
   try {
-    const json = await getTable(reportId, fight);
+    const sdk = await getCachedSdk();
+    const json = await sdk.Table(params);
 
-    return json.reportData.report.table.data;
+    return json?.reportData?.report?.table.data ?? null;
   } catch {
     return null;
   }
 };
 
-type RawTable = {
-  reportData: {
-    report: {
-      table: {
-        data: {
-          totalTime: number;
-          itemLevel: number;
-          logVersion: number;
-          gameVersion: number;
-          composition: Composition[];
-          damageDone: DamageDone[];
-          healingDone: HealingDone[];
-          damageTaken: DamageTaken[];
-          deathEvents: DeathEvent[];
-          playerDetails: PlayerDetails;
-        };
-      };
-    };
-  };
+export type Table = {
+  totalTime: number;
+  itemLevel: number;
+  logVersion: number;
+  gameVersion: number;
+  composition: Composition[];
+  damageDone: DamageDone[];
+  healingDone: HealingDone[];
+  damageTaken: DamageTaken[];
+  deathEvents: DeathEvent[];
+  playerDetails: PlayerDetails;
 };
-
-export type Table = RawTable["reportData"]["report"]["table"]["data"];
 
 type Composition = {
   name: string;
@@ -131,7 +94,6 @@ type CombatantInfo = {
 type Stats = {
   Speed: Stat;
   Dodge: Stat;
-  // eslint-disable-next-line inclusive-language/use-inclusive-words
   Mastery: Stat;
   Stamina: Stat;
   Haste: Stat;

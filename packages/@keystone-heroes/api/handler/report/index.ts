@@ -1,5 +1,4 @@
 import { ReportRepo } from "@keystone-heroes/db/repos";
-import { MIN_KEYSTONE_LEVEL } from "@keystone-heroes/env";
 import { wcl } from "@keystone-heroes/wcl/queries";
 import { maybeOngoingReport } from "@keystone-heroes/wcl/utils";
 import nc from "next-connect";
@@ -11,25 +10,25 @@ import type { RequestHandler } from "../../utils/types";
 
 type Request = {
   query: {
-    id: string;
+    reportID: string;
   };
 };
 
 export type ReportResponse = {
-  id: string;
+  reportID: string;
   region: string;
   endTime: number;
   startTime: number;
   title: string;
-  fights: number[];
+  fights: readonly number[];
 };
 
 const reportHandler: RequestHandler<Request, ReportResponse> = async (
   req,
   res
 ) => {
-  const { id } = req.query;
-  const report = await ReportRepo.load(id);
+  const { reportID } = req.query;
+  const report = await ReportRepo.load(reportID);
 
   if (report) {
     if (!maybeOngoingReport(report.endTime)) {
@@ -41,13 +40,13 @@ const reportHandler: RequestHandler<Request, ReportResponse> = async (
 
       res.json({
         ...rest,
-        id,
+        reportID,
         region: region.slug,
       });
       return;
     }
 
-    const rawReport = await wcl.report(id);
+    const rawReport = await wcl.report({ reportID });
 
     if (!rawReport) {
       // eslint-disable-next-line no-console
@@ -61,31 +60,26 @@ const reportHandler: RequestHandler<Request, ReportResponse> = async (
 
       res.json({
         ...rest,
-        id,
+        reportID,
         region: region.slug,
       });
       return;
     }
 
-    await ReportRepo.upsert(id, rawReport);
+    await ReportRepo.upsert(reportID, rawReport);
 
     res.json({
-      id,
+      reportID,
       endTime: rawReport.endTime,
       startTime: rawReport.startTime,
       title: rawReport.title,
       region: rawReport.region.slug,
-      fights: rawReport.fights
-        .filter(
-          (fight) =>
-            fight.keystoneBonus > 0 && fight.keystoneLevel >= MIN_KEYSTONE_LEVEL
-        )
-        .map((fight) => fight.id),
+      fights: rawReport.fights,
     });
     return;
   }
 
-  const rawReport = await wcl.report(id);
+  const rawReport = await wcl.report({ reportID });
 
   if (!rawReport) {
     // eslint-disable-next-line no-console
@@ -97,7 +91,7 @@ const reportHandler: RequestHandler<Request, ReportResponse> = async (
     return;
   }
 
-  await ReportRepo.upsert(id, rawReport);
+  await ReportRepo.upsert(reportID, rawReport);
 
   //   setCacheControl(
   //     res,
@@ -107,20 +101,15 @@ const reportHandler: RequestHandler<Request, ReportResponse> = async (
   //   );
 
   res.json({
-    id,
+    reportID,
     endTime: rawReport.endTime,
     startTime: rawReport.startTime,
     title: rawReport.title,
     region: rawReport.region.slug,
-    fights: rawReport.fights
-      .filter(
-        (fight) =>
-          fight.keystoneBonus > 0 && fight.keystoneLevel >= MIN_KEYSTONE_LEVEL
-      )
-      .map((fight) => fight.id),
+    fights: rawReport.fights,
   });
 };
 
 export const handler = nc()
-  .get(createValidReportIdMiddleware("id"))
+  .get(createValidReportIdMiddleware("reportID"))
   .use(reportHandler);

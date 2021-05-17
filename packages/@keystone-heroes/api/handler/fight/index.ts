@@ -41,8 +41,8 @@ import type {
 
 type Request = {
   query: {
-    reportId: string;
-    ids?: string[] | string;
+    reportID: string;
+    fightIDs?: string[] | string;
   };
 };
 
@@ -90,17 +90,17 @@ const fightHandler: RequestHandler<Request, FightResponse[]> = async (
   req,
   res
 ) => {
-  if (!req.query.ids) {
+  if (!req.query.fightIDs) {
     res.status(BAD_GATEWAY).end();
     return;
   }
 
-  const { reportId } = req.query;
-  const ids = Array.isArray(req.query.ids) ? req.query.ids : [req.query.ids];
+  const { reportID, fightIDs } = req.query;
+  const ids = Array.isArray(fightIDs) ? fightIDs : [fightIDs];
   const fightIds = ids.map((id) => Number.parseInt(id));
 
   try {
-    const report = await ReportRepo.load(reportId);
+    const report = await ReportRepo.load(reportID);
 
     if (!report) {
       res.status(INTERNAL_SERVER_ERROR).end();
@@ -109,7 +109,7 @@ const fightHandler: RequestHandler<Request, FightResponse[]> = async (
 
     // const ongoing = maybeOngoingReport(report.endTime);
 
-    const persistedFights = await FightRepo.loadFull(reportId, fightIds);
+    const persistedFights = await FightRepo.loadFull(reportID, fightIds);
     const unseenFightIds = fightIds.filter(
       (id) => !persistedFights.some((fight) => fight.fightId === id)
     );
@@ -123,12 +123,15 @@ const fightHandler: RequestHandler<Request, FightResponse[]> = async (
       return;
     }
 
-    const newFights = await wcl.fights(reportId, unseenFightIds);
+    const newFights = await wcl.fights({
+      reportID,
+      fightIDs: unseenFightIds,
+    });
 
     if (!newFights) {
       // eslint-disable-next-line no-console
       console.info(
-        `[api/fight] failed to load new fights from wcl for "${reportId}`
+        `[api/fight] failed to load new fights from wcl for "${reportID}`
       );
 
       //   setCacheControl(res, CacheControl.ONE_HOUR);
@@ -138,7 +141,7 @@ const fightHandler: RequestHandler<Request, FightResponse[]> = async (
 
     if (newFights.length === 0) {
       // eslint-disable-next-line no-console
-      console.info(`[api/fight] no new fights present for "${reportId}"`);
+      console.info(`[api/fight] no new fights present for "${reportID}"`);
 
       //   setCacheControl(
       //     res,
@@ -148,7 +151,7 @@ const fightHandler: RequestHandler<Request, FightResponse[]> = async (
       return;
     }
 
-    const sanitizedFights = await enhanceFightsWithTable(reportId, newFights);
+    const sanitizedFights = await enhanceFightsWithTable(reportID, newFights);
 
     const insertableFights = sanitizedFights.map<InsertableFight>((fight) => {
       return {
@@ -258,7 +261,7 @@ const fightHandler: RequestHandler<Request, FightResponse[]> = async (
     );
 
     const fullPersistedFights = await FightRepo.loadFull(
-      reportId,
+      reportID,
       unseenFightIds
     );
 
@@ -275,5 +278,5 @@ const fightHandler: RequestHandler<Request, FightResponse[]> = async (
 };
 
 export const handler = nc()
-  .get(createValidReportIdMiddleware("reportId"))
+  .get(createValidReportIdMiddleware("reportID"))
   .get(fightHandler);

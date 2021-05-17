@@ -1,24 +1,21 @@
-const {
-  createConfig,
-  getDependencies,
-} = require("eslint-config-galex/src/createConfig");
-const {
-  createTSOverride,
-} = require("eslint-config-galex/src/overrides/typescript");
-
-const cwd = "./packages/@keystone-heroes/wcl";
-
-const tsOverride = createTSOverride({
-  ...getDependencies({ cwd }),
-  parserOptions: {
-    project: `${cwd}/tsconfig.json`,
-  },
-});
+const { createConfig } = require("eslint-config-galex/src/createConfig");
 
 module.exports = {
   ...createConfig({
-    cwd,
-    overrides: [tsOverride],
+    rules: {
+      "new-cap": "off",
+      "inclusive-language/use-inclusive-words": "off",
+    },
+    overrides: [
+      {
+        files: ["./types.ts"],
+        rules: {
+          "import/no-namespace": "off",
+          "@typescript-eslint/no-explicit-any": "off",
+          "@typescript-eslint/explicit-module-boundary-types": "off",
+          "unicorn/no-keyword-prefix": "off",
+        },
+      },
+    ],
   }),
-  root: true,
 };

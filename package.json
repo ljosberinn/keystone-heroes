@@ -9,8 +9,8 @@
     "build": "yarn --cwd packages/@keystone-heroes/web build",
     "start": "yarn --cwd packages/@keystone-heroes/web start",
     "postinstall": "yarn-deduplicate -l && yarn --cwd packages/@keystone-heroes/db generate",
-    "lint": "eslint packages --cache",
-    "lint:fix": "eslint packages --fix && yarn --cwd packages/@keystone-heroes/web format && yarn --cwd packages/@keystone-heroes/api format && yarn --cwd packages/@keystone-heroes/db format && yarn --cwd packages/@keystone-heroes/env format && yarn --cwd packages/@keystone-heroes/wcl format",
+    "lint": "yarn workspaces run lint",
+    "lint:fix": "yarn workspaces run lint --fix && yarn workspaces run format",
     "types": "yarn --cwd packages/@keystone-heroes/web types",
     "install:clean": "rimraf yarn.lock && rimraf packages/@keystone-heroes/**/node_modules && rimraf node_modules && yarn",
     "test": "exit 0"
@@ -18,7 +18,7 @@
   "license": "MIT",
   "devDependencies": {
     "eslint": "7.26.0",
-    "eslint-config-galex": "2.15.9",
+    "eslint-config-galex": "2.15.10",
     "prettier": "2.3.0",
     "rimraf": "3.0.2",
     "yarn-deduplicate": "3.1.0"

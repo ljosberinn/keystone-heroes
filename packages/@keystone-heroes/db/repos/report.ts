@@ -2,13 +2,13 @@ import { ONGOING_REPORT_THRESHOLD } from "@keystone-heroes/wcl/utils";
 
 import { prisma } from "../client";
 
-import type { RawReport } from "@keystone-heroes/wcl/queries";
+import type { InitialReportData } from "@keystone-heroes/wcl/queries";
 import type { Region, Report } from "@prisma/client";
 
 export const ReportRepo = {
   upsert: async (
     report: string,
-    { endTime, startTime, title, region }: RawReport
+    { endTime, startTime, title, region }: InitialReportData
   ): Promise<number> => {
     // eslint-disable-next-line no-console
     console.info(`[ReportRepo/upsert] creating "${report}"`);

@@ -133,7 +133,7 @@ export const classes: Class[] = [
         cooldowns: [{ name: "Vendetta", id: 79_140 }],
       },
       {
-        name: SpecName.Sublety,
+        name: SpecName.Subtlety,
         role: Role.dps,
         cooldowns: [
           { name: "Shadow Dance", id: 185_313 },

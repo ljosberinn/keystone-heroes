@@ -17,6 +17,7 @@
     "skipLibCheck": true,
     "strict": true,
     "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
     "paths": {
       "@keystone-heroes/db/repos": ["../db/repos/index.ts"],
       "@keystone-heroes/db/data": ["../db/data/index.ts"],

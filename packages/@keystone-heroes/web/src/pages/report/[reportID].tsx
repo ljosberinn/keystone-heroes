@@ -26,7 +26,7 @@ function useFights(
     if (
       isFallback ||
       !report ||
-      !report.id ||
+      !report.reportID ||
       report.fights.length === 0 ||
       initialFights.length > 0
     ) {
@@ -34,12 +34,12 @@ function useFights(
     }
 
     const params = new URLSearchParams({
-      reportId: report.id,
+      reportID: report.reportID,
     });
 
     report.fights.forEach((id) => {
       // @ts-expect-error doesn't have to be a string
-      params.append("ids", id);
+      params.append("fightIDs", id);
     });
 
     const query = params.toString();
@@ -64,14 +64,14 @@ function useReport(cachedReport: ReportResponse | null = null) {
     if (
       isFallback ||
       report ||
-      !query.id ||
-      Array.isArray(query.id) ||
-      !isValidReportId(query.id)
+      !query.reportID ||
+      Array.isArray(query.reportID) ||
+      !isValidReportId(query.reportID)
     ) {
       return;
     }
 
-    fetch(`/api/report?id=${query.id}`)
+    fetch(`/api/report?reportID=${query.reportID}`)
       // eslint-disable-next-line promise/prefer-await-to-then
       .then((response) => response.json())
       // eslint-disable-next-line promise/prefer-await-to-then
@@ -82,7 +82,7 @@ function useReport(cachedReport: ReportResponse | null = null) {
       })
       // eslint-disable-next-line no-console, promise/prefer-await-to-then
       .catch(console.error);
-  }, [query.id, report, isFallback]);
+  }, [query.reportID, report, isFallback]);
 
   return report;
 }
@@ -111,37 +111,42 @@ export default function Report({ cache }: ReportProps): JSX.Element | null {
   return <code>{JSON.stringify({ report, fights }, null, 2)}</code>;
 }
 
-export const getStaticPaths: GetStaticPaths<{ id: string }> = async () => {
-  const reports = await ReportRepo.loadFinishedReports();
+export const getStaticPaths: GetStaticPaths<{ reportID: string }> =
+  async () => {
+    const reports = await ReportRepo.loadFinishedReports();
 
-  // eslint-disable-next-line no-console
-  console.info(`[Report/getStaticPaths] found ${reports.length} reports`);
+    // eslint-disable-next-line no-console
+    console.info(`[Report/getStaticPaths] found ${reports.length} reports`);
 
-  return {
-    fallback: true,
-    paths: reports.map((report) => {
-      return {
-        params: {
-          id: report,
-        },
-      };
-    }),
+    return {
+      fallback: true,
+      paths: reports.map((report) => {
+        return {
+          params: {
+            reportID: report,
+          },
+        };
+      }),
+    };
   };
-};
 
-export const getStaticProps: GetStaticProps<ReportProps, { id: string }> =
+export const getStaticProps: GetStaticProps<ReportProps, { reportID: string }> =
   async ({ params }) => {
-    if (!params?.id || Array.isArray(params.id) || params.id.includes(".")) {
+    if (
+      !params?.reportID ||
+      Array.isArray(params.reportID) ||
+      params.reportID.includes(".")
+    ) {
       throw new Error("invalid or missing params.id");
     }
 
-    const { id } = params;
+    const { reportID } = params;
 
     try {
       // eslint-disable-next-line no-console
-      console.info(`[Report/getStaticProps] loading report "${id}"`);
+      console.info(`[Report/getStaticProps] loading report "${reportID}"`);
 
-      const report = await ReportRepo.load(id);
+      const report = await ReportRepo.load(reportID);
 
       if (!report) {
         return {
@@ -154,18 +159,13 @@ export const getStaticProps: GetStaticProps<ReportProps, { id: string }> =
         };
       }
 
-      const {
-        id: dbId,
-        report: reportId,
-        fights: reportFights,
-        ...rest
-      } = report;
+      const { id: dbId, fights: reportFights, ...rest } = report;
 
       // eslint-disable-next-line no-console
       console.info(
         `[Report/getStaticProps] loading fights "${reportFights.join(",")}"`
       );
-      const fights = await FightRepo.loadFull(reportId, reportFights);
+      const fights = await FightRepo.loadFull(reportID, reportFights);
 
       return {
         props: {
@@ -173,7 +173,7 @@ export const getStaticProps: GetStaticProps<ReportProps, { id: string }> =
             fights,
             report: {
               ...rest,
-              id: reportId,
+              reportID,
               fights: reportFights,
               endTime: rest.endTime,
               region: report.region.slug,

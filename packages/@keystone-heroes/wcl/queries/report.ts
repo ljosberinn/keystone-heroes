@@ -1,214 +1,238 @@
-import { gql } from "graphql-request";
+import { MIN_KEYSTONE_LEVEL } from "@keystone-heroes/env";
 
-import { getGqlClient } from "../client";
+import { getCachedSdk } from "../client";
 
-type InitialRawReport = {
-  reportData: {
-    report: {
-      fights: RawFightBase[];
-      region: { slug: string };
-      title: string;
-      startTime: number;
-      endTime: number;
-    };
-  };
-};
+import type {
+  EnemyNpcIdsQueryVariables,
+  ExtendedReportDataQueryVariables,
+  GameZone,
+  InitialReportDataQueryVariables,
+  Region,
+  Report,
+  ReportDungeonPullNpc,
+  ReportFight,
+  ReportFightNpc,
+  ReportMap,
+  ReportMapBoundingBox,
+} from "../types";
 
-export type RawReport = InitialRawReport["reportData"]["report"];
-
-type RawFightBase = {
-  id: number;
-  keystoneBonus: number;
-  keystoneLevel: number;
-};
-
-/**
- + a fight with unconfirmed game zone
- */
-export type RawFight = RawFightBase & {
-  averageItemLevel: number;
-  keystoneAffixes: number[];
-  keystoneTime: number;
-  dungeonPulls: DungeonPull[];
-  // gameZone is null on broken logs
-  gameZone: { id: number } | null;
-  // only required to query fights table properly
-  startTime: number;
-  endTime: number;
-};
-
-/**
- * a fight with game zone
- */
-export type ValidRawFight = Omit<RawFight, "gameZone"> & {
-  gameZone: { id: number };
-};
-
-export type DungeonPull = {
-  boundingBox: {
-    minX: number;
-    maxX: number;
-    minY: number;
-    maxY: number;
-  };
-  enemyNPCs: {
-    gameID: number;
-    minimumInstanceID: number;
-    maximumInstanceID: number;
-  }[];
-  x: number;
-  y: number;
-};
-
-const getInitialReportData = async (reportId: string) => {
-  const client = await getGqlClient();
-
-  return client.request<InitialRawReport>(
-    gql`
-      query ReportData($reportId: String!) {
-        reportData {
-          report(code: $reportId) {
-            title
-            startTime
-            endTime
-            region {
-              slug
-            }
-            fights(translate: true, killType: Kills) {
-              id
-              keystoneBonus
-              keystoneLevel
-            }
-          }
-        }
-      }
-    `,
-    { reportId }
-  );
-};
-
-type FightsReport = {
-  reportData: {
-    report: {
-      fights: RawFight[];
-    };
-  };
-};
-
-const getExtendedFightData = async (reportId: string, fightIds: number[]) => {
-  const client = await getGqlClient();
-
-  return client.request<FightsReport>(
-    gql`
-      query ReportData($reportId: String!, $fightIds: [Int]!) {
-        reportData {
-          report(code: $reportId) {
-            fights(translate: true, killType: Kills, fightIDs: $fightIds) {
-              id
-              gameZone {
-                id
-              }
-              averageItemLevel
-              keystoneAffixes
-              keystoneLevel
-              keystoneBonus
-              keystoneTime
-              startTime
-              endTime
-              dungeonPulls {
-                x
-                y
-                boundingBox {
-                  minX
-                  maxX
-                  minY
-                  maxY
-                }
-                enemyNPCs {
-                  gameID
-                  minimumInstanceID
-                  maximumInstanceID
-                }
-              }
-            }
-          }
-        }
-      }
-    `,
-    { reportId, fightIds }
-  );
-};
-
-type EnemyNPC = { id: number; gameID: number };
-
-type EnemyNpcIdResponse = {
-  reportData: {
-    report: {
-      fights: [{ enemyNPCs: EnemyNPC[] }];
-    };
-  };
-};
-
-export const getEnemyNpcIds = async (
-  reportId: string,
-  fightIds: number | number[],
+export const loadEnemyNPCIDs = async (
+  params: EnemyNpcIdsQueryVariables,
   gameIdOrIds: number | number[]
 ): Promise<Record<number, number>> => {
-  const client = await getGqlClient();
-
-  const response = await client.request<EnemyNpcIdResponse>(
-    gql`
-      query ReportData($reportId: String!, $fightIds: [Int]!) {
-        reportData {
-          report(code: $reportId) {
-            fights(translate: true, killType: Kills, fightIDs: $fightIds) {
-              enemyNPCs {
-                id
-                gameID
-              }
-            }
-          }
-        }
-      }
-    `,
-    { reportId, fightIds: Array.isArray(fightIds) ? fightIds : [fightIds] }
-  );
+  const client = await getCachedSdk();
+  const response = await client.EnemyNPCIds(params);
 
   const ids = new Set(Array.isArray(gameIdOrIds) ? gameIdOrIds : [gameIdOrIds]);
 
-  return response.reportData.report.fights[0].enemyNPCs
-    .filter((npc) => ids.has(npc.gameID))
-    .reduce<Record<number, number>>(
-      (acc, npc) => ({
-        ...acc,
-        [npc.gameID]: npc.id,
-      }),
-      {}
-    );
+  type EnsuredNPC = Omit<ReportFightNpc, "gameID" | "id"> & {
+    gameID: number;
+    id: number;
+  };
+
+  return (
+    response?.reportData?.report?.fights?.[0]?.enemyNPCs
+      ?.filter(
+        (npc): npc is EnsuredNPC =>
+          npc?.gameID !== undefined &&
+          npc?.gameID !== null &&
+          ids.has(npc.gameID) &&
+          typeof npc.id === "number"
+      )
+      .reduce<Record<number, number>>(
+        (acc, npc) => ({
+          ...acc,
+          [npc.gameID]: npc.id,
+        }),
+        {}
+      ) ?? {}
+  );
+};
+
+export type InitialReportData = Pick<
+  Report,
+  "startTime" | "endTime" | "title"
+> & {
+  readonly region: Pick<Region, "slug">;
+  readonly fights: readonly ReportFight["id"][];
 };
 
 export const loadReportFromSource = async (
-  reportId: string
-): Promise<RawReport | null> => {
+  params: InitialReportDataQueryVariables
+): Promise<InitialReportData | null> => {
   try {
-    const json = await getInitialReportData(reportId);
+    const sdk = await getCachedSdk();
+    const json = await sdk.InitialReportData(params);
 
-    return json.reportData.report;
+    if (!json?.reportData?.report) {
+      return null;
+    }
+
+    const { report } = json.reportData;
+
+    if (!report.region || !report.fights) {
+      return null;
+    }
+
+    return {
+      startTime: report.startTime,
+      endTime: report.endTime,
+      title: report.title,
+      region: {
+        slug: report.region.slug,
+      },
+      fights: report.fights.reduce<readonly ReportFight["id"][]>(
+        (acc, fight) => {
+          if (!fight) {
+            return acc;
+          }
+
+          const keystoneBonus = fight.keystoneBonus ?? 0;
+          const keystoneLevel = fight.keystoneLevel ?? 0;
+
+          if (keystoneBonus === 0 || keystoneLevel < MIN_KEYSTONE_LEVEL) {
+            return acc;
+          }
+
+          return [...acc, fight.id];
+        },
+        []
+      ),
+    };
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.trace(error);
     return null;
   }
 };
 
-export const loadFightsFromSource = async (
-  reportId: string,
-  fightIds: number[]
-): Promise<RawFight[] | null> => {
-  try {
-    const json = await getExtendedFightData(reportId, fightIds);
+export type ExtendedReportData = {
+  readonly averageItemLevel: number;
+  readonly keystoneTime: number;
+  readonly keystoneBonus: number;
+  readonly keystoneLevel: number;
+  readonly startTime: number;
+  readonly endTime: number;
+  readonly keystoneAffixes: number[];
+  readonly id: number;
+  readonly dungeonPulls: DungeonPull[];
+  readonly gameZone: Pick<GameZone, "id"> | null;
+};
 
-    return json.reportData.report.fights;
+export type ExtendedReportDataWithGameZone = Omit<
+  ExtendedReportData,
+  "gameZone"
+> & {
+  readonly gameZone: Pick<GameZone, "id">;
+};
+
+export type DungeonPull = {
+  readonly x: number;
+  readonly y: number;
+  readonly startTime: number;
+  readonly endTime: number;
+  readonly maps: readonly number[];
+  readonly boundingBox: Readonly<NonNullable<ReportMapBoundingBox>>;
+  readonly enemyNPCs: readonly NonNullable<ReportDungeonPullNpc>[];
+};
+
+export const loadFightsFromSource = async (
+  params: ExtendedReportDataQueryVariables
+): Promise<ExtendedReportData[] | null> => {
+  try {
+    const sdk = await getCachedSdk();
+    const json = await sdk.ExtendedReportData(params);
+
+    if (!json?.reportData?.report) {
+      return null;
+    }
+
+    const { report } = json.reportData;
+
+    if (!report.fights) {
+      return null;
+    }
+
+    return report.fights.reduce<ExtendedReportData[]>((acc, fight) => {
+      if (!fight || !fight.keystoneAffixes || !fight.dungeonPulls) {
+        return acc;
+      }
+
+      const keystoneBonus = fight.keystoneBonus ?? 0;
+      const keystoneLevel = fight.keystoneLevel ?? 0;
+      const keystoneTime = fight.keystoneTime ?? 0;
+      const averageItemLevel = fight.averageItemLevel ?? 0;
+      const gameZone = fight.gameZone ?? null;
+      const keystoneAffixes = fight.keystoneAffixes.filter(
+        (affix): affix is number => affix !== null
+      );
+      const dungeonPulls = fight.dungeonPulls.reduce<DungeonPull[]>(
+        (acc, pull) => {
+          if (!pull || !pull.maps || !pull.enemyNPCs || !pull.boundingBox) {
+            return acc;
+          }
+
+          const maps = pull.maps
+            .filter((map): map is ReportMap => map !== null)
+            .map((map) => map.id);
+
+          if (maps.length === 0) {
+            return acc;
+          }
+
+          const enemyNPCs = pull.enemyNPCs.filter(
+            (enemyNPC): enemyNPC is ReportDungeonPullNpc => enemyNPC !== null
+          );
+
+          if (enemyNPCs.length === 0) {
+            return acc;
+          }
+
+          return [
+            ...acc,
+            {
+              x: pull.x,
+              y: pull.y,
+              startTime: pull.startTime,
+              endTime: pull.endTime,
+              maps,
+              boundingBox: pull.boundingBox,
+              enemyNPCs,
+            },
+          ];
+        },
+        []
+      );
+
+      if (
+        keystoneBonus === 0 ||
+        keystoneLevel < MIN_KEYSTONE_LEVEL ||
+        keystoneAffixes.length === 0 ||
+        keystoneTime === 0 ||
+        averageItemLevel === 0 ||
+        dungeonPulls.length === 0
+      ) {
+        return acc;
+      }
+
+      return [
+        ...acc,
+        {
+          id: fight.id,
+          startTime: fight.startTime,
+          endTime: fight.endTime,
+          keystoneAffixes,
+          averageItemLevel,
+          keystoneTime,
+          keystoneBonus,
+          keystoneLevel,
+          dungeonPulls,
+          gameZone,
+        },
+      ];
+    }, []);
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.trace(error);
     return null;
   }

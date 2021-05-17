@@ -1,5 +1,5 @@
-import { loadTableFromSource } from "./table";
 import { loadFightsFromSource, loadReportFromSource } from "./report";
+import { loadTableFromSource } from "./table";
 
 export type {
   Conduit,
@@ -16,7 +16,7 @@ export type {
 } from "./table";
 export { ItemQuality } from "./table";
 
-export type { DungeonPull, RawFight, RawReport, ValidRawFight } from "./report";
+export type { DungeonPull, InitialReportData } from "./report";
 
 export const wcl = {
   report: loadReportFromSource,

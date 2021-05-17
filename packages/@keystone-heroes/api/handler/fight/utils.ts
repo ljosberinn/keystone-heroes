@@ -21,6 +21,10 @@ import { ItemQuality, wcl } from "@keystone-heroes/wcl/queries";
 
 import { toUniqueArray } from "../../utils";
 
+import type {
+  ExtendedReportData,
+  ExtendedReportDataWithGameZone,
+} from "../../../wcl/queries/report";
 import type { ReportRepo } from "@keystone-heroes/db/repos";
 import type {
   Conduit,
@@ -29,11 +33,9 @@ import type {
   HealingDone,
   InDepthCharacterInformation,
   LegendaryItem,
-  RawFight,
   SoulbindTalent,
   Table,
   Talent,
-  ValidRawFight,
 } from "@keystone-heroes/wcl/queries";
 import type { Region, Character } from "@prisma/client";
 
@@ -193,7 +195,7 @@ type ExtendedPlayer = InsertableFight["composition"][number] & {
 };
 
 export type InsertableFight = Omit<
-  ValidRawFight,
+  ExtendedReportDataWithGameZone,
   | "keystoneBonus"
   | "keystoneAffixes"
   | "startTime"
@@ -202,14 +204,14 @@ export type InsertableFight = Omit<
   | "gameZone"
   | "dungeonPulls"
 > & {
-  chests: ValidRawFight["keystoneBonus"];
+  chests: ExtendedReportDataWithGameZone["keystoneBonus"];
   dps: number;
   dtps: number;
   totalDeaths: number;
   hps: number;
   dungeon: number;
   keystoneTime: number;
-  affixes: ValidRawFight["keystoneAffixes"];
+  affixes: ExtendedReportDataWithGameZone["keystoneAffixes"];
   composition: {
     server: string;
     name: string;
@@ -293,17 +295,22 @@ export const linkPlayerToCovenantTraits = (
     }))
   );
 
-type EnhancedFight = ValidRawFight & { table: Table };
+type EnhancedFight = ExtendedReportDataWithGameZone & { table: Table };
 
 export const enhanceFightsWithTable = async (
-  reportId: string,
-  fights: RawFight[]
+  reportID: string,
+  fights: ExtendedReportData[]
 ): Promise<EnhancedFight[]> => {
   const fightsWithGameZone = ensureGameZone(fights);
 
   const fightsWithTable = await Promise.all(
     fightsWithGameZone.map(async (fight) => {
-      const table = await wcl.table(reportId, fight);
+      const table = await wcl.table({
+        reportID,
+        fightIDs: [fight.id],
+        startTime: fight.startTime,
+        endTime: fight.endTime,
+      });
 
       return {
         ...fight,
@@ -320,7 +327,7 @@ export const enhanceFightsWithTable = async (
   });
 };
 
-const ensureGameZone = (fights: RawFight[]) =>
+const ensureGameZone = (fights: ExtendedReportData[]) =>
   fights.map((fight) => {
     const allNpcIds = new Set(
       fight.dungeonPulls.flatMap((pull) =>

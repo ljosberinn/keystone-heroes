@@ -1,5 +1,3 @@
-import { gql } from "graphql-request";
-
 import {
   DIMENSIONAL_SHIFTER,
   HOA_GARGOYLE,
@@ -23,8 +21,12 @@ import {
   QUAKING,
   PRIDE,
 } from "@keystone-heroes/db/data";
-import { getGqlClient } from "../client";
-import { getEnemyNpcIds } from "./report";
+
+import { getCachedSdk } from "../client";
+import { EventDataType, HostilityType } from "../types";
+import { loadEnemyNPCIDs } from "./report";
+
+import type { Sdk } from "../types";
 
 type Event<T extends Record<string, unknown>> = T & {
   timestamp: number;
@@ -73,7 +75,6 @@ type CombatantInfoEvent = Event<{
   hasteRanged: number;
   hasteSpell: number;
   avoidance: number;
-  // eslint-disable-next-line inclusive-language/use-inclusive-words
   mastery: number;
   versatilityDamageDone: number;
   versatilityHealingDone: number;
@@ -261,136 +262,32 @@ type DeathEvent = Event<{
   killingAbilityGameID: number;
 }>;
 
-type LogEvent =
-  | EncounterStartEvent
-  | CombatantInfoEvent
-  | ApplyDebuffEvent
-  | ApplyBuffEvent
-  | RemoveBuffEvent
-  | CastEvent
-  | DamageEvent
-  | DamageTakenEvent
-  | BeginCastEvent
-  | RemoveDebuffEvent
-  | SummonEvent
-  | PhaseStartEvent
-  | HealEvent
-  | EnergizeEvent
-  | ApplyBuffEvent
-  | ApplyBuffStackEvent
-  | InterruptEvent
-  | AbsorbEvent
-  | RefreshDebuffEvent
-  | DispelEvent
-  | DeathEvent
-  | ApplyDebuffStackEvent;
-
-type RawEventResponse<Event extends LogEvent | LogEvent[]> = {
-  reportData: {
-    report: {
-      events: {
-        data: Event extends LogEvent[] ? Event : Event[];
-        nextPageTimestamp: number | null;
-      };
-    };
-  };
-};
-
-type DataType =
-  | "All"
-  | "Buffs"
-  | "Casts"
-  | "CombatantInfo"
-  | "DamageDone"
-  | "DamageTaken"
-  | "Deaths"
-  | "Debuffs"
-  | "Dispels"
-  | "Healing"
-  | "Interrupts"
-  | "Resources"
-  | "Summons"
-  | "Threat";
-type Hostility = "Friendlies" | "Enemies";
-
-type EventQueryParams = {
-  dataType?: DataType;
-  hostilityType?: Hostility;
-  startTime: number;
-  endTime: number;
-  sourceId?: number;
-  abilityId?: number;
-  targetId?: number;
-  targetInstance?: number;
-};
-
-const getEventData = async <Event extends LogEvent | LogEvent[]>(
-  reportId: string,
-  params: EventQueryParams
-) => {
-  const client = await getGqlClient();
-
-  return client.request<RawEventResponse<Event>>(
-    gql`
-      query EventData(
-        $reportId: String!
-        $startTime: Float!
-        $endTime: Float!
-        $hostilityType: HostilityType!
-        $sourceId: Int
-        $dataType: EventDataType
-        $abilityId: Float
-        $targetId: Int
-        $targetInstance: Int
-      ) {
-        reportData {
-          report(code: $reportId) {
-            events(
-              startTime: $startTime
-              endTime: $endTime
-              hostilityType: $hostilityType
-              sourceID: $sourceId
-              dataType: $dataType
-              abilityID: $abilityId
-              targetID: $targetId
-              targetInstanceID: $targetInstance
-            ) {
-              data
-              nextPageTimestamp
-            }
-          }
-        }
-      }
-    `,
-    {
-      reportId,
-      ...params,
-    }
-  );
-};
-
 export const loadRecursiveEventsFromSource = async (
-  reportId: string,
+  reportID: string,
   startTime: number,
   endTime: number,
-  sourceId: number,
+  sourceID: number,
   previousEvents: CastEvent[] = []
 ): Promise<CastEvent[]> => {
   try {
-    const json = await getEventData<CastEvent>(reportId, {
+    const sdk = await getCachedSdk();
+
+    const json = await sdk.EventData({
+      reportID,
       startTime,
       endTime,
-      sourceId,
-      dataType: "Casts",
-      hostilityType: "Friendlies",
+      sourceID,
+      dataType: EventDataType.Casts,
+      hostilityType: HostilityType.Friendlies,
     });
 
-    const { data, nextPageTimestamp } = json.reportData.report.events;
+    const { data = [], nextPageTimestamp = null } =
+      json?.reportData?.report?.events ?? {};
     const nextEvents = [...previousEvents, ...data];
 
     if (nextPageTimestamp) {
       return await loadRecursiveEventsFromSource(
-        reportId,
+        reportID,
         startTime,
         nextPageTimestamp,
         endTime,
@@ -404,103 +301,69 @@ export const loadRecursiveEventsFromSource = async (
   }
 };
 
+type SpiresSpearUsageParams = Pick<
+  Parameters<Sdk["EventData"]>[0],
+  "reportID" | "startTime" | "endTime"
+>;
+
 export const getSpiresSpearUsage = async (
-  reportId: string,
-  startTime: number,
-  endTime: number
+  params: SpiresSpearUsageParams
 ): Promise<ApplyDebuffEvent[]> => {
-  const json = await getEventData<
-    (ApplyDebuffEvent | RemoveDebuffEvent | RefreshDebuffEvent)[]
-  >(reportId, {
-    startTime,
-    endTime,
-    dataType: "Debuffs",
-    hostilityType: "Enemies",
-    abilityId: SOA_SPEAR,
+  const sdk = await getCachedSdk();
+
+  const json = await sdk.EventData({
+    ...params,
+    dataType: EventDataType.Casts,
+    hostilityType: HostilityType.Friendlies,
+    abilityID: SOA_SPEAR,
   });
 
-  return json.reportData.report.events.data.filter(
+  const data: (ApplyDebuffEvent | RemoveDebuffEvent | RefreshDebuffEvent)[] =
+    json?.reportData?.report?.events?.data ?? [];
+
+  return data.filter(
     (event): event is ApplyDebuffEvent => event.type === "applydebuff"
   );
 };
+
+type DOSUrnUsageParams = SpiresSpearUsageParams;
 
 export const getDosUrnUsage = async (
-  reportId: string,
-  startTime: number,
-  endTime: number
+  params: DOSUrnUsageParams
 ): Promise<ApplyDebuffEvent[]> => {
-  const json = await getEventData<
-    (ApplyDebuffEvent | RemoveDebuffEvent | RefreshDebuffEvent)[]
-  >(reportId, {
-    startTime,
-    endTime,
-    dataType: "Debuffs",
-    hostilityType: "Enemies",
-    abilityId: DOS_URN,
+  const sdk = await getCachedSdk();
+
+  const json = await sdk.EventData({
+    ...params,
+    dataType: EventDataType.Debuffs,
+    hostilityType: HostilityType.Enemies,
+    abilityID: DOS_URN,
   });
 
-  return json.reportData.report.events.data.filter(
+  const data: (ApplyDebuffEvent | RemoveDebuffEvent | RefreshDebuffEvent)[] =
+    json?.reportData?.report?.events?.data ?? [];
+
+  return data.filter(
     (event): event is ApplyDebuffEvent => event.type === "applydebuff"
   );
 };
 
-// eslint-disable-next-line inclusive-language/use-inclusive-words
-type MasterDataActors = {
-  gameID: number;
-  id: number;
-  petOwner: null | number;
-};
-
-// eslint-disable-next-line inclusive-language/use-inclusive-words
-type RawMasterDataResponse = {
-  reportData: {
-    report: {
-      // eslint-disable-next-line inclusive-language/use-inclusive-words
-      masterData: {
-        // eslint-disable-next-line inclusive-language/use-inclusive-words
-        actors: MasterDataActors[];
-      };
-    };
-  };
-};
-
+type CardboardAssassinUsageParams = SpiresSpearUsageParams;
 type CardboardAssassinUsages = { events: CastEvent[]; actorId: number | null };
 
 export const getCardboardAssassinUsage = async (
-  reportId: string,
-  startTime: number,
-  endTime: number
+  params: CardboardAssassinUsageParams
 ): Promise<CardboardAssassinUsages[]> => {
-  const client = await getGqlClient();
+  const sdk = await getCachedSdk();
 
-  // eslint-disable-next-line inclusive-language/use-inclusive-words
-  const data = await client.request<RawMasterDataResponse>(
-    // eslint-disable-next-line inclusive-language/use-inclusive-words
-    gql`
-      query EventData($reportId: String!) {
-        reportData {
-          report(code: $reportId) {
-            masterData {
-              actors(type: "Pet") {
-                gameID
-                petOwner
-                id
-              }
-            }
-          }
-        }
-      }
-    `,
-    {
-      reportId,
-    }
-  );
+  const data = await sdk.PetActors({
+    reportID: params.reportID,
+  });
 
   const cardboardAssassinInstances =
-    // eslint-disable-next-line inclusive-language/use-inclusive-words
-    data.reportData.report.masterData.actors.filter(
-      (pet) => pet.gameID === CARDBOARD_ASSASSIN
-    );
+    data?.reportData?.report?.masterData?.actors?.filter(
+      (pet) => pet?.gameID === CARDBOARD_ASSASSIN
+    ) ?? [];
 
   if (cardboardAssassinInstances.length === 0) {
     return [];
@@ -508,21 +371,26 @@ export const getCardboardAssassinUsage = async (
 
   const eventGroup = await Promise.all(
     cardboardAssassinInstances.map(async (instance) => {
-      const response = await getEventData<CastEvent[]>(reportId, {
-        startTime,
-        endTime,
-        sourceId: instance.id,
-        dataType: "Threat",
-        hostilityType: "Friendlies",
+      if (!instance?.id) {
+        return null;
+      }
+
+      const response = await sdk.EventData({
+        ...params,
+        sourceID: instance.id,
+        dataType: EventDataType.Threat,
+        hostilityType: HostilityType.Friendlies,
       });
 
-      if (response.reportData.report.events.data.length === 0) {
+      const events = response?.reportData?.report?.events?.data ?? [];
+
+      if (events.length === 0) {
         return null;
       }
 
       return {
         actorId: instance.petOwner,
-        events: response.reportData.report.events.data,
+        events,
       };
     })
   );
@@ -532,35 +400,30 @@ export const getCardboardAssassinUsage = async (
   );
 };
 
+type InvisibilityUsageParams = SpiresSpearUsageParams;
+
 export const getInvisibilityUsage = async (
-  reportId: string,
-  startTime: number,
-  endTime: number
+  params: InvisibilityUsageParams
 ): Promise<ApplyBuffEvent[]> => {
-  const dimensionalShifterUsage = await getEventData<
-    (ApplyBuffEvent | RemoveBuffEvent)[]
-  >(reportId, {
-    startTime,
-    endTime,
-    dataType: "Buffs",
-    hostilityType: "Friendlies",
-    abilityId: DIMENSIONAL_SHIFTER,
+  const sdk = await getCachedSdk();
+
+  const dimensionalShifterUsage = await sdk.EventData({
+    ...params,
+    dataType: EventDataType.Buffs,
+    hostilityType: HostilityType.Friendlies,
+    abilityID: DIMENSIONAL_SHIFTER,
   });
 
-  const potionUsage = await getEventData<(ApplyBuffEvent | RemoveBuffEvent)[]>(
-    reportId,
-    {
-      endTime,
-      startTime,
-      abilityId: POTION_OF_THE_HIDDEN_SPIRIT,
-      dataType: "Buffs",
-      hostilityType: "Friendlies",
-    }
-  );
+  const potionUsage = await sdk.EventData({
+    ...params,
+    dataType: EventDataType.Buffs,
+    hostilityType: HostilityType.Friendlies,
+    abilityID: POTION_OF_THE_HIDDEN_SPIRIT,
+  });
 
-  const allEvents = [
-    ...dimensionalShifterUsage.reportData.report.events.data,
-    ...potionUsage.reportData.report.events.data,
+  const allEvents: (ApplyBuffEvent | RemoveBuffEvent)[] = [
+    ...(dimensionalShifterUsage?.reportData?.report?.events?.data ?? []),
+    ...(potionUsage?.reportData?.report?.events?.data ?? []),
   ];
 
   return allEvents.filter(
@@ -568,62 +431,65 @@ export const getInvisibilityUsage = async (
   );
 };
 
+type HOAGargoyleCharmsParams = SpiresSpearUsageParams;
+
 export const getHoaGargoyleCharms = async (
-  reportId: string,
-  startTime: number,
-  endTime: number
+  params: HOAGargoyleCharmsParams
 ): Promise<CastEvent[]> => {
-  const casts = await getEventData<(CastEvent | BeginCastEvent)[]>(reportId, {
-    endTime,
-    startTime,
-    dataType: "Casts",
-    hostilityType: "Friendlies",
-    abilityId: HOA_GARGOYLE,
+  const sdk = await getCachedSdk();
+
+  const casts = await sdk.EventData({
+    ...params,
+    dataType: EventDataType.Casts,
+    hostilityType: HostilityType.Friendlies,
+    abilityID: HOA_GARGOYLE,
   });
 
-  return casts.reportData.report.events.data.filter(
-    (event): event is CastEvent => event.type === "cast"
-  );
+  const data: (CastEvent | BeginCastEvent)[] =
+    casts?.reportData?.report?.events?.data ?? [];
+
+  return data.filter((event): event is CastEvent => event.type === "cast");
 };
+
+type SDLanternUsageParams = SpiresSpearUsageParams;
 
 export const getSdLanternUsages = async (
-  reportId: string,
-  startTime: number,
-  endTime: number
+  params: SDLanternUsageParams
 ): Promise<BeginCastEvent[]> => {
-  const casts = await getEventData<BeginCastEvent[]>(reportId, {
-    endTime,
-    startTime,
-    dataType: "Casts",
-    hostilityType: "Friendlies",
-    abilityId: SD_LANTERN_OPENING,
+  const sdk = await getCachedSdk();
+
+  const casts = await sdk.EventData({
+    ...params,
+    dataType: EventDataType.Casts,
+    hostilityType: HostilityType.Friendlies,
+    abilityID: SD_LANTERN_OPENING,
   });
 
-  return casts.reportData.report.events.data;
+  return casts?.reportData?.report?.events?.data ?? [];
 };
 
-export const getTotalSanguineHealing = async (
-  reportId: string,
-  startTime: number,
-  endTime: number,
+type TotalHealingDoneBySanguineParams = SpiresSpearUsageParams;
+
+export const getTotalHealingDoneBySanguine = async (
+  params: TotalHealingDoneBySanguineParams,
   previousEvents: HealEvent[] = []
 ): Promise<number> => {
-  const response = await getEventData<HealEvent[]>(reportId, {
-    endTime,
-    startTime,
-    dataType: "Healing",
-    hostilityType: "Enemies",
-    abilityId: SANGUINE_ICHOR_HEALING,
+  const sdk = await getCachedSdk();
+
+  const response = await sdk.EventData({
+    ...params,
+    dataType: EventDataType.Healing,
+    hostilityType: HostilityType.Enemies,
+    abilityID: SANGUINE_ICHOR_HEALING,
   });
 
-  const { nextPageTimestamp, data } = response.reportData.report.events;
-  const allEvents = [...previousEvents, ...data];
+  const { data = [], nextPageTimestamp = null } =
+    response?.reportData?.report?.events ?? {};
+  const allEvents: HealEvent[] = [...previousEvents, ...data];
 
   if (nextPageTimestamp) {
-    return getTotalSanguineHealing(
-      reportId,
-      nextPageTimestamp,
-      endTime,
+    return getTotalHealingDoneBySanguine(
+      { ...params, startTime: nextPageTimestamp },
       allEvents
     );
   }
@@ -633,12 +499,12 @@ export const getTotalSanguineHealing = async (
 
 const reduceDamageTakenToMap = <Data extends DamageTakenEvent[]>(
   allEvents: Data,
-  type: Hostility = "Friendlies"
+  type: HostilityType = HostilityType.Friendlies
 ) => {
   // when querying for dataType: DamageTaken and hostilityType: Enemies
   // targetID is the target of the enemy which is doing the damage
   // sourceID is the enemy
-  const isFriendlies = type === "Friendlies";
+  const isFriendlies = type === HostilityType.Friendlies;
 
   return allEvents.reduce<Record<number, number>>(
     (acc, { amount, sourceID, targetID, absorbed = 0 }) => {
@@ -654,28 +520,28 @@ const reduceDamageTakenToMap = <Data extends DamageTakenEvent[]>(
   );
 };
 
+type TotalDamageTakenBySanguineParams = SpiresSpearUsageParams;
+
 export const getTotalDamageTakenBySanguine = async (
-  reportId: string,
-  startTime: number,
-  endTime: number,
+  params: TotalDamageTakenBySanguineParams,
   previousEvents: DamageEvent[] = []
 ): Promise<Record<number, number>> => {
-  const response = await getEventData<DamageTakenEvent[]>(reportId, {
-    startTime,
-    endTime,
-    dataType: "DamageTaken",
-    hostilityType: "Friendlies",
-    abilityId: SANGUINE_ICHOR_DAMAGE,
+  const sdk = await getCachedSdk();
+
+  const response = await sdk.EventData({
+    ...params,
+    dataType: EventDataType.DamageTaken,
+    hostilityType: HostilityType.Friendlies,
+    abilityID: SANGUINE_ICHOR_DAMAGE,
   });
 
-  const { nextPageTimestamp, data } = response.reportData.report.events;
+  const { data = [], nextPageTimestamp = null } =
+    response?.reportData?.report?.events ?? {};
   const allEvents = [...previousEvents, ...data];
 
   if (nextPageTimestamp) {
     return getTotalDamageTakenBySanguine(
-      reportId,
-      nextPageTimestamp,
-      endTime,
+      { ...params, startTime: nextPageTimestamp },
       allEvents
     );
   }
@@ -683,30 +549,29 @@ export const getTotalDamageTakenBySanguine = async (
   return reduceDamageTakenToMap(allEvents);
 };
 
+type TotalDamageTakenByGrievousWoundParams = SpiresSpearUsageParams;
 type GrievousDamageTakenMap = Record<number, number>;
 
 export const getTotalDamageTakenByGrievousWound = async (
-  reportId: string,
-  startTime: number,
-  endTime: number,
+  params: TotalDamageTakenByGrievousWoundParams,
   previousEvents: DamageEvent[] = []
 ): Promise<GrievousDamageTakenMap> => {
-  const response = await getEventData<DamageTakenEvent[]>(reportId, {
-    startTime,
-    endTime,
-    dataType: "DamageTaken",
-    hostilityType: "Friendlies",
-    abilityId: GRIEVOUS_WOUND,
+  const sdk = await getCachedSdk();
+
+  const response = await sdk.EventData({
+    ...params,
+    dataType: EventDataType.DamageTaken,
+    hostilityType: HostilityType.Friendlies,
+    abilityID: GRIEVOUS_WOUND,
   });
 
-  const { nextPageTimestamp, data } = response.reportData.report.events;
+  const { data = [], nextPageTimestamp = null } =
+    response?.reportData?.report?.events ?? {};
   const allEvents = [...previousEvents, ...data];
 
   if (nextPageTimestamp) {
     return getTotalDamageTakenByGrievousWound(
-      reportId,
-      nextPageTimestamp,
-      endTime,
+      { ...params, startTime: nextPageTimestamp },
       allEvents
     );
   }
@@ -714,36 +579,33 @@ export const getTotalDamageTakenByGrievousWound = async (
   return reduceDamageTakenToMap(allEvents);
 };
 
+type ExplosiveKillsParams = SpiresSpearUsageParams;
+
 export const getAllExplosiveKills = async (
-  reportId: string,
-  startTime: number,
-  endTime: number,
+  params: ExplosiveKillsParams,
   explosiveId: number,
   previousEvents: DamageEvent[] = []
 ): Promise<Record<number, DamageEvent[]>> => {
-  const response = await getEventData<DamageEvent>(reportId, {
-    startTime,
-    endTime,
-    dataType: "DamageDone",
-    hostilityType: "Friendlies",
-    targetId: explosiveId,
+  const sdk = await getCachedSdk();
+
+  const response = await sdk.EventData({
+    ...params,
+    dataType: EventDataType.DamageDone,
+    hostilityType: HostilityType.Friendlies,
+    targetID: explosiveId,
   });
 
-  const { nextPageTimestamp, data } = response.reportData.report.events;
+  const { data = [], nextPageTimestamp = null } =
+    response?.reportData?.report?.events ?? {};
   const allEvents = [...previousEvents, ...data];
 
   if (nextPageTimestamp) {
     return getAllExplosiveKills(
-      reportId,
-      nextPageTimestamp,
-      endTime,
+      { ...params, startTime: nextPageTimestamp },
       explosiveId,
       allEvents
     );
   }
-
-  // TODO: maybe dont return a map
-  // return allEvents;
 
   return allEvents.reduce<Record<number, DamageEvent[]>>((acc, event) => {
     return {
@@ -755,29 +617,29 @@ export const getAllExplosiveKills = async (
   }, {});
 };
 
+type TotalDamageTakenBySpitefulParams = SpiresSpearUsageParams;
+
 export const getTotalDamageTakenBySpiteful = async (
-  reportId: string,
-  startTime: number,
-  endTime: number,
+  params: TotalDamageTakenBySpitefulParams,
   spitefulId: number,
   previousEvents: DamageTakenEvent[] = []
 ): Promise<Record<number, number>> => {
-  const response = await getEventData<DamageTakenEvent[]>(reportId, {
-    startTime,
-    endTime,
-    dataType: "DamageTaken",
-    hostilityType: "Friendlies",
-    targetId: spitefulId,
+  const sdk = await getCachedSdk();
+
+  const response = await sdk.EventData({
+    ...params,
+    dataType: EventDataType.DamageTaken,
+    hostilityType: HostilityType.Friendlies,
+    targetID: spitefulId,
   });
 
-  const { nextPageTimestamp, data } = response.reportData.report.events;
+  const { data = [], nextPageTimestamp = null } =
+    response?.reportData?.report?.events ?? {};
   const allEvents = [...previousEvents, ...data];
 
   if (nextPageTimestamp) {
     return getTotalDamageTakenBySpiteful(
-      reportId,
-      nextPageTimestamp,
-      endTime,
+      { ...params, startTime: nextPageTimestamp },
       spitefulId,
       allEvents
     );
@@ -786,28 +648,28 @@ export const getTotalDamageTakenBySpiteful = async (
   return reduceDamageTakenToMap(allEvents);
 };
 
+type TotalDamageTakenByExplosionParams = SpiresSpearUsageParams;
+
 export const getTotalDamageTakenByExplosion = async (
-  reportId: string,
-  startTime: number,
-  endTime: number,
+  params: TotalDamageTakenByExplosionParams,
   previousEvents: DamageEvent[] = []
 ): Promise<number> => {
-  const response = await getEventData<DamageTakenEvent[]>(reportId, {
-    startTime,
-    endTime,
-    dataType: "DamageTaken",
-    hostilityType: "Friendlies",
-    abilityId: EXPLOSION,
+  const sdk = await getCachedSdk();
+
+  const response = await sdk.EventData({
+    ...params,
+    dataType: EventDataType.DamageTaken,
+    hostilityType: HostilityType.Friendlies,
+    abilityID: EXPLOSION,
   });
 
-  const { nextPageTimestamp, data } = response.reportData.report.events;
-  const allEvents = [...previousEvents, ...data];
+  const { data = [], nextPageTimestamp = null } =
+    response?.reportData?.report?.events ?? {};
+  const allEvents: DamageTakenEvent[] = [...previousEvents, ...data];
 
   if (nextPageTimestamp) {
     return getTotalDamageTakenByExplosion(
-      reportId,
-      nextPageTimestamp,
-      endTime,
+      { ...params, startTime: nextPageTimestamp },
       allEvents
     );
   }
@@ -818,36 +680,35 @@ export const getTotalDamageTakenByExplosion = async (
   );
 };
 
+type HighestNecroticStackAmountParams = SpiresSpearUsageParams;
+
 export const getHighestNecroticStackAmount = async (
-  reportId: string,
-  startTime: number,
-  endTime: number,
+  params: HighestNecroticStackAmountParams,
   previousEvents: ApplyDebuffStackEvent[] = []
 ): Promise<number> => {
-  const response = await getEventData<
-    (ApplyDebuffStackEvent | ApplyDebuffEvent)[]
-  >(reportId, {
-    startTime,
-    endTime,
-    dataType: "Debuffs",
-    hostilityType: "Friendlies",
-    abilityId: NECROTIC,
+  const sdk = await getCachedSdk();
+
+  const response = await sdk.EventData({
+    ...params,
+    dataType: EventDataType.Debuffs,
+    hostilityType: HostilityType.Friendlies,
+    abilityID: NECROTIC,
   });
 
-  const { nextPageTimestamp, data } = response.reportData.report.events;
+  const { data = [], nextPageTimestamp = null } =
+    response?.reportData?.report?.events ?? {};
   const allEvents = [
     ...previousEvents,
     ...data.filter(
-      (event): event is ApplyDebuffStackEvent =>
-        event.type === "applydebuffstack"
+      (
+        event: ApplyDebuffStackEvent | ApplyDebuffEvent
+      ): event is ApplyDebuffStackEvent => event.type === "applydebuffstack"
     ),
   ];
 
   if (nextPageTimestamp) {
     return getHighestNecroticStackAmount(
-      reportId,
-      nextPageTimestamp,
-      endTime,
+      { ...params, startTime: nextPageTimestamp },
       allEvents
     );
   }
@@ -858,28 +719,28 @@ export const getHighestNecroticStackAmount = async (
   );
 };
 
+type TotalDamageTakenByNecroticParams = SpiresSpearUsageParams;
+
 export const getTotalDamageTakenByNecrotic = async (
-  reportId: string,
-  startTime: number,
-  endTime: number,
+  params: TotalDamageTakenByNecroticParams,
   previousEvents: DamageTakenEvent[] = []
 ): Promise<Record<number, number>> => {
-  const response = await getEventData<DamageTakenEvent[]>(reportId, {
-    startTime,
-    endTime,
-    dataType: "DamageTaken",
-    hostilityType: "Friendlies",
-    abilityId: NECROTIC,
+  const sdk = await getCachedSdk();
+
+  const response = await sdk.EventData({
+    ...params,
+    dataType: EventDataType.DamageTaken,
+    hostilityType: HostilityType.Friendlies,
+    abilityID: NECROTIC,
   });
 
-  const { nextPageTimestamp, data } = response.reportData.report.events;
+  const { data = [], nextPageTimestamp = null } =
+    response?.reportData?.report?.events ?? {};
   const allEvents = [...previousEvents, ...data];
 
   if (nextPageTimestamp) {
     return getTotalDamageTakenByNecrotic(
-      reportId,
-      nextPageTimestamp,
-      endTime,
+      { ...params, startTime: nextPageTimestamp },
       allEvents
     );
   }
@@ -887,28 +748,28 @@ export const getTotalDamageTakenByNecrotic = async (
   return reduceDamageTakenToMap(allEvents);
 };
 
+type TotalDamageTakenByStormingParams = SpiresSpearUsageParams;
+
 export const getTotalDamageTakenByStorming = async (
-  reportId: string,
-  startTime: number,
-  endTime: number,
+  params: TotalDamageTakenByStormingParams,
   previousEvents: DamageTakenEvent[] = []
 ): Promise<Record<number, number>> => {
-  const response = await getEventData<DamageTakenEvent[]>(reportId, {
-    startTime,
-    endTime,
-    dataType: "DamageTaken",
-    hostilityType: "Friendlies",
-    abilityId: STORMING,
+  const sdk = await getCachedSdk();
+
+  const response = await sdk.EventData({
+    ...params,
+    dataType: EventDataType.DamageTaken,
+    hostilityType: HostilityType.Friendlies,
+    abilityID: STORMING,
   });
 
-  const { nextPageTimestamp, data } = response.reportData.report.events;
+  const { data = [], nextPageTimestamp = null } =
+    response?.reportData?.report?.events ?? {};
   const allEvents = [...previousEvents, ...data];
 
   if (nextPageTimestamp) {
     return getTotalDamageTakenByStorming(
-      reportId,
-      nextPageTimestamp,
-      endTime,
+      { ...params, startTime: nextPageTimestamp },
       allEvents
     );
   }
@@ -916,34 +777,36 @@ export const getTotalDamageTakenByStorming = async (
   return reduceDamageTakenToMap(allEvents);
 };
 
+type TotalDamageTakenByVolcanicParams = SpiresSpearUsageParams;
+
 export const getTotalDamageTakenByVolcanic = async (
-  reportId: string,
-  startTime: number,
-  endTime: number,
+  params: TotalDamageTakenByVolcanicParams,
   previousEvents: DamageTakenEvent[] = []
 ): Promise<Record<number, number>> => {
-  const response = await getEventData<DamageTakenEvent[]>(reportId, {
-    startTime,
-    endTime,
-    dataType: "DamageTaken",
-    hostilityType: "Friendlies",
-    abilityId: VOLCANIC,
+  const sdk = await getCachedSdk();
+
+  const response = await sdk.EventData({
+    ...params,
+    dataType: EventDataType.DamageTaken,
+    hostilityType: HostilityType.Friendlies,
+    abilityID: VOLCANIC,
   });
 
-  const { nextPageTimestamp, data } = response.reportData.report.events;
+  const { data = [], nextPageTimestamp = null } =
+    response?.reportData?.report?.events ?? {};
   const allEvents = [...previousEvents, ...data];
 
   if (nextPageTimestamp) {
     return getTotalDamageTakenByVolcanic(
-      reportId,
-      nextPageTimestamp,
-      endTime,
+      { ...params, startTime: nextPageTimestamp },
       allEvents
     );
   }
 
   return reduceDamageTakenToMap(allEvents);
 };
+
+type HighestBolsteringStackParams = SpiresSpearUsageParams;
 
 type HighestBolsteringDataset = {
   stack: number;
@@ -952,35 +815,31 @@ type HighestBolsteringDataset = {
 };
 
 export const getHighestBolsteringStack = async (
-  reportId: string,
-  startTime: number,
-  endTime: number,
+  params: HighestBolsteringStackParams,
   previousEvents: ApplyBuffEvent[] = []
 ): Promise<HighestBolsteringDataset> => {
-  const response = await getEventData<(ApplyBuffEvent | RemoveBuffEvent)[]>(
-    reportId,
-    {
-      startTime,
-      endTime,
-      dataType: "Buffs",
-      hostilityType: "Enemies",
-      abilityId: BOLSTERING,
-    }
-  );
+  const sdk = await getCachedSdk();
 
-  const { nextPageTimestamp, data } = response.reportData.report.events;
-  const allEvents = [
+  const response = await sdk.EventData({
+    ...params,
+    dataType: EventDataType.Buffs,
+    hostilityType: HostilityType.Enemies,
+    abilityID: BOLSTERING,
+  });
+
+  const { data = [], nextPageTimestamp = null } =
+    response?.reportData?.report?.events ?? {};
+  const allEvents: ApplyBuffEvent[] = [
     ...previousEvents,
     ...data.filter(
-      (event): event is ApplyBuffEvent => event.type === "applybuff"
+      (event: ApplyBuffEvent | RemoveBuffEvent): event is ApplyBuffEvent =>
+        event.type === "applybuff"
     ),
   ];
 
   if (nextPageTimestamp) {
     return getHighestBolsteringStack(
-      reportId,
-      nextPageTimestamp,
-      endTime,
+      { ...params, startTime: nextPageTimestamp },
       allEvents
     );
   }
@@ -1016,6 +875,10 @@ export const getHighestBolsteringStack = async (
     .reduce((acc, dataset) => (acc?.stack >= dataset.stack ? acc : dataset));
 };
 
+type PFSlimeKillsParams = SpiresSpearUsageParams & {
+  fightID: number;
+};
+
 type PFSlimeKills = {
   red: { kills: number; consumed: number };
   green: { kills: number; consumed: number };
@@ -1023,33 +886,37 @@ type PFSlimeKills = {
 };
 
 export const getPFSlimeKills = async (
-  reportId: string,
-  fightId: number,
-  startTime: number,
-  endTime: number
+  params: PFSlimeKillsParams
 ): Promise<PFSlimeKills> => {
   const {
     [PF_RED_BUFF.unit]: red,
     [PF_GREEN_BUFF.unit]: green,
     [PF_PURPLE_BUFF.unit]: purple,
-  } = await getEnemyNpcIds(reportId, fightId, [
-    PF_RED_BUFF.unit,
-    PF_GREEN_BUFF.unit,
-    PF_PURPLE_BUFF.unit,
-  ]);
+  } = await loadEnemyNPCIDs(
+    {
+      fightIDs: [params.fightID],
+      reportID: params.reportID,
+    },
+    [PF_RED_BUFF.unit, PF_GREEN_BUFF.unit, PF_PURPLE_BUFF.unit]
+  );
+
+  const sdk = await getCachedSdk();
 
   const [redDeathEvents, greenDeathEvents, purpleDeathEvents] =
-    await Promise.all(
-      [red, green, purple].map(async (sourceId) => {
-        const response = await getEventData<DeathEvent[]>(reportId, {
-          startTime,
-          endTime,
-          dataType: "Deaths",
-          hostilityType: "Enemies",
-          sourceId,
+    await Promise.all<DeathEvent[]>(
+      [red, green, purple].map(async (sourceID) => {
+        if (!sourceID) {
+          return [];
+        }
+
+        const response = await sdk.EventData({
+          ...params,
+          dataType: EventDataType.Deaths,
+          hostilityType: HostilityType.Enemies,
+          sourceID,
         });
 
-        return response.reportData.report.events.data;
+        return response?.reportData?.report?.events?.data ?? [];
       })
     );
 
@@ -1065,18 +932,23 @@ export const getPFSlimeKills = async (
   const [redAuraApplication, greenAuraApplication, purpleAuraApplication] =
     await Promise.all(
       [PF_RED_BUFF.aura, PF_GREEN_BUFF.aura, PF_PURPLE_BUFF.aura].map(
-        async (abilityId) => {
-          const response = await getEventData<
-            (ApplyBuffEvent | RemoveBuffEvent)[]
-          >(reportId, {
+        async (abilityID) => {
+          if (earliestUnitDeathTimestamp === Infinity) {
+            return [];
+          }
+
+          const response = await sdk.EventData({
+            ...params,
             startTime: earliestUnitDeathTimestamp,
-            endTime,
-            dataType: "Buffs",
-            hostilityType: "Friendlies",
-            abilityId,
+            dataType: EventDataType.Buffs,
+            hostilityType: HostilityType.Friendlies,
+            abilityID,
           });
 
-          return response.reportData.report.events.data.filter(
+          const events: (ApplyBuffEvent | RemoveBuffEvent)[] =
+            response?.reportData?.report?.events?.data ?? [];
+
+          return events.filter(
             (event): event is ApplyBuffEvent => event.type === "applybuff"
           );
         }
@@ -1111,8 +983,8 @@ export const getPFSlimeKills = async (
 //     startTime,
 //     endTime,
 //     hostilityType: "Friendlies",
-//     dataType: "Debuffs",
-//     abilityId: BURSTING,
+//     dataType: EventDataType."Debuffs",
+//     abilityID: BURSTING,
 //   });
 
 //   const { data, nextPageTimestamp } = response.reportData.report.events;
@@ -1138,28 +1010,28 @@ export const getPFSlimeKills = async (
 //   }, 0);
 // };
 
+type TotalDamageTakenByBurstingParams = SpiresSpearUsageParams;
+
 export const getTotalDamageTakenByBursting = async (
-  reportId: string,
-  startTime: number,
-  endTime: number,
+  params: TotalDamageTakenByBurstingParams,
   previousEvents: DamageTakenEvent[] = []
 ): Promise<Record<number, number>> => {
-  const response = await getEventData<DamageTakenEvent[]>(reportId, {
-    startTime,
-    endTime,
-    hostilityType: "Friendlies",
-    dataType: "DamageTaken",
-    abilityId: BURSTING,
+  const sdk = await getCachedSdk();
+
+  const response = await sdk.EventData({
+    ...params,
+    hostilityType: HostilityType.Friendlies,
+    dataType: EventDataType.DamageTaken,
+    abilityID: BURSTING,
   });
 
-  const { data, nextPageTimestamp } = response.reportData.report.events;
+  const { data = [], nextPageTimestamp = null } =
+    response?.reportData?.report?.events ?? {};
   const allEvents = [...previousEvents, ...data];
 
   if (nextPageTimestamp) {
     return getTotalDamageTakenByBursting(
-      reportId,
-      nextPageTimestamp,
-      endTime,
+      { ...params, startTime: nextPageTimestamp },
       allEvents
     );
   }
@@ -1167,34 +1039,36 @@ export const getTotalDamageTakenByBursting = async (
   return reduceDamageTakenToMap(allEvents);
 };
 
+type TotalDamageTakenByQuakingParams = SpiresSpearUsageParams;
+
 export const getTotalDamageTakenByQuaking = async (
-  reportId: string,
-  startTime: number,
-  endTime: number,
+  params: TotalDamageTakenByQuakingParams,
   previousEvents: DamageTakenEvent[] = []
 ): Promise<Record<number, number>> => {
-  const response = await getEventData<DamageTakenEvent[]>(reportId, {
-    startTime,
-    endTime,
-    hostilityType: "Friendlies",
-    dataType: "DamageTaken",
-    abilityId: QUAKING,
+  const sdk = await getCachedSdk();
+
+  const response = await sdk.EventData({
+    ...params,
+    hostilityType: HostilityType.Friendlies,
+    dataType: EventDataType.DamageTaken,
+    abilityID: QUAKING,
   });
 
-  const { data, nextPageTimestamp } = response.reportData.report.events;
+  const { data = [], nextPageTimestamp = null } =
+    response?.reportData?.report?.events ?? {};
   const allEvents = [...previousEvents, ...data];
 
   if (nextPageTimestamp) {
     return getTotalDamageTakenByQuaking(
-      reportId,
-      nextPageTimestamp,
-      endTime,
+      { ...params, startTime: nextPageTimestamp },
       allEvents
     );
   }
 
   return reduceDamageTakenToMap(allEvents);
 };
+
+type InterrutpsByQuakingParams = SpiresSpearUsageParams;
 
 type QuakingInterruptMap = Record<
   number,
@@ -1202,27 +1076,25 @@ type QuakingInterruptMap = Record<
 >;
 
 export const getInterruptsByQuaking = async (
-  reportId: string,
-  startTime: number,
-  endTime: number,
+  params: InterrutpsByQuakingParams,
   previousEvents: InterruptEvent[] = []
 ): Promise<QuakingInterruptMap> => {
-  const response = await getEventData<InterruptEvent[]>(reportId, {
-    startTime,
-    endTime,
-    hostilityType: "Friendlies",
-    dataType: "Interrupts",
-    abilityId: QUAKING,
+  const sdk = await getCachedSdk();
+
+  const response = await sdk.EventData({
+    ...params,
+    hostilityType: HostilityType.Friendlies,
+    dataType: EventDataType.Interrupts,
+    abilityID: QUAKING,
   });
 
-  const { data, nextPageTimestamp } = response.reportData.report.events;
+  const { data = [], nextPageTimestamp = null } =
+    response?.reportData?.report?.events ?? {};
   const allEvents = [...previousEvents, ...data];
 
   if (nextPageTimestamp) {
     return getInterruptsByQuaking(
-      reportId,
-      nextPageTimestamp,
-      endTime,
+      { ...params, startTime: nextPageTimestamp },
       allEvents
     );
   }
@@ -1248,58 +1120,72 @@ export const getInterruptsByQuaking = async (
   );
 };
 
+type ManifestationOfPrideSourceIdParams = Pick<
+  SpiresSpearUsageParams,
+  "reportID"
+> & {
+  fightID: number;
+};
+
 const getManifestationOfPrideSourceId = async (
-  reportId: string,
-  fightId: number
+  params: ManifestationOfPrideSourceIdParams
 ): Promise<number | null> => {
-  const response = await getEnemyNpcIds(reportId, fightId, [PRIDE.unit]);
+  const response = await loadEnemyNPCIDs(
+    {
+      fightIDs: [params.fightID],
+      reportID: params.reportID,
+    },
+    [PRIDE.unit]
+  );
 
   return response[PRIDE.unit] ?? null;
 };
 
-export const getManifestationOfPrideDeathEvents = async (
-  reportId: string,
-  fightId: number,
-  startTime: number,
-  endTime: number
-): Promise<DeathEvent[]> => {
-  const sourceId = await getManifestationOfPrideSourceId(reportId, fightId);
+type ManifestationOfPrideDeathEvents = SpiresSpearUsageParams & {
+  fightID: number;
+};
 
-  if (!sourceId) {
+export const getManifestationOfPrideDeathEvents = async (
+  params: ManifestationOfPrideDeathEvents
+): Promise<DeathEvent[]> => {
+  const sourceID = await getManifestationOfPrideSourceId(params);
+
+  if (!sourceID) {
     return [];
   }
 
-  const response = await getEventData<DeathEvent[]>(reportId, {
-    startTime,
-    endTime,
-    dataType: "Deaths",
-    hostilityType: "Enemies",
-    sourceId,
+  const sdk = await getCachedSdk();
+
+  const response = await sdk.EventData({
+    ...params,
+    dataType: EventDataType.Deaths,
+    hostilityType: HostilityType.Enemies,
+    sourceID,
   });
 
-  return response.reportData.report.events.data;
+  return response?.reportData?.report?.events?.data ?? [];
 };
 
-type ManifestationOfPrideQueryParams = {
-  startTime: number;
-  endTime: number;
-  targetId: number;
+type ManifestationOfPrideDamageEventsParams = SpiresSpearUsageParams & {
+  targetID: number;
   targetInstance?: number;
-  dataType: DataType;
+  dataType: EventDataType;
 };
 
 const getManifestationOfPrideDamageEvents = async (
-  reportId: string,
-  queryParams: ManifestationOfPrideQueryParams,
+  params: ManifestationOfPrideDamageEventsParams,
   firstEventOnly = false,
   previousEvents: DamageEvent[] = []
 ): Promise<DamageEvent[]> => {
-  const response = await getEventData<DamageEvent[]>(reportId, {
-    ...queryParams,
-    hostilityType: "Friendlies",
+  const sdk = await getCachedSdk();
+
+  const response = await sdk.EventData({
+    ...params,
+    hostilityType: HostilityType.Friendlies,
   });
 
-  const { data, nextPageTimestamp } = response.reportData.report.events;
+  const { data = [], nextPageTimestamp = null } =
+    response?.reportData?.report?.events ?? {};
 
   if (firstEventOnly) {
     return [data[0]];
@@ -1309,17 +1195,18 @@ const getManifestationOfPrideDamageEvents = async (
 
   if (nextPageTimestamp) {
     return getManifestationOfPrideDamageEvents(
-      reportId,
-      {
-        ...queryParams,
-        startTime: nextPageTimestamp,
-      },
+      { ...params, startTime: nextPageTimestamp },
       false,
       allEvents
     );
   }
 
   return allEvents;
+};
+
+type ManifestationOfPrideDamageTakenEventsParams = SpiresSpearUsageParams & {
+  targetID: number;
+  targetInstance?: number;
 };
 
 type ManifestationOfPrideMeta = {
@@ -1330,41 +1217,38 @@ type ManifestationOfPrideMeta = {
 };
 
 export const getManifestationOfPrideDamageTaken = async (
-  reportId: string,
-  startTime: number,
-  endTime: number,
-  targetId: number,
-  targetInstance?: number
-): Promise<ManifestationOfPrideMeta> => {
-  const [{ timestamp: firstDamageDoneTimestamp }] =
-    await getManifestationOfPrideDamageEvents(
-      reportId,
-      {
-        dataType: "DamageDone",
-        endTime,
-        startTime,
-        targetId,
-        targetInstance,
-      },
-      true
-    );
+  params: ManifestationOfPrideDamageTakenEventsParams
+): Promise<ManifestationOfPrideMeta | null> => {
+  const deathEvents = await getManifestationOfPrideDamageEvents(
+    {
+      ...params,
+      dataType: EventDataType.DamageDone,
+    },
+    true
+  );
+
+  // all prides skipped :tada:
+  if (!deathEvents) {
+    return null;
+  }
+
+  const [{ timestamp: firstDamageDoneTimestamp }] = deathEvents;
 
   const damageTakenEvents = await getManifestationOfPrideDamageEvents(
-    reportId,
     {
-      dataType: "DamageTaken",
-      endTime,
-      startTime,
-      targetId,
-      targetInstance,
+      ...params,
+      dataType: EventDataType.DamageTaken,
     },
     false
   );
 
   return {
     startTime: firstDamageDoneTimestamp,
-    endTime,
-    combatTime: endTime - firstDamageDoneTimestamp,
-    damageTaken: reduceDamageTakenToMap(damageTakenEvents, "Enemies"),
+    endTime: params.endTime,
+    combatTime: params.endTime - firstDamageDoneTimestamp,
+    damageTaken: reduceDamageTakenToMap(
+      damageTakenEvents,
+      HostilityType.Enemies
+    ),
   };
 };

@@ -1,9 +1,9 @@
 import type { IncomingMessage } from "http";
+import type { NextApiResponse, NextApiRequest } from "next";
 import type {
   RequestHandler as NextConnectRequestHandler,
   Middleware as NextConnectMiddleware,
 } from "next-connect";
-import type { NextApiResponse, NextApiRequest } from "next";
 
 type NextApiRequestWithoutIncomingMessage = {
   [Key in keyof NextApiRequest as Key extends keyof IncomingMessage

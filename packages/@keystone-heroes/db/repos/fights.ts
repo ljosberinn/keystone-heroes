@@ -33,10 +33,13 @@ export const FightRepo = {
       skipDuplicates: true,
     });
   },
-  loadFull: async (report: string, ids: number[]): Promise<FightResponse[]> => {
+  loadFull: async (
+    reportID: string,
+    fightIDs: number[]
+  ): Promise<FightResponse[]> => {
     // eslint-disable-next-line no-console
     console.info(
-      `[FightsRepo/loadFull] report "${report}" - ids "${ids.join(",")}"`
+      `[FightsRepo/loadFull] report "${reportID}" - ids "${fightIDs.join(",")}"`
     );
 
     const playerSelect = {
@@ -120,10 +123,10 @@ export const FightRepo = {
     const response = await prisma.fight.findMany({
       where: {
         report: {
-          report,
+          report: reportID,
         },
         fightId: {
-          in: ids,
+          in: fightIDs,
         },
       },
       select: {
@@ -274,21 +277,23 @@ export const FightRepo = {
     });
   },
   loadMany: async (
-    report: string,
-    ids: number[]
+    reportID: string,
+    fightIDs: number[]
   ): Promise<Pick<Fight, "id" | "fightId">[]> => {
     // eslint-disable-next-line no-console
     console.info(
-      `[FightsRepo/loadMany] report "${report}" - ids "${ids.join(",")}"`
+      `[FightsRepo/loadMany] reportID "${reportID}" - ids "${fightIDs.join(
+        ","
+      )}"`
     );
 
     return prisma.fight.findMany({
       where: {
         report: {
-          report,
+          report: reportID,
         },
         fightId: {
-          in: ids,
+          in: fightIDs,
         },
       },
       select: {

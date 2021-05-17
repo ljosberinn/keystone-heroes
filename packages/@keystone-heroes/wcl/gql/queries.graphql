@@ -1,0 +1,127 @@
+query EventData(
+  $reportID: String!
+  $startTime: Float!
+  $endTime: Float!
+  $hostilityType: HostilityType!
+  $sourceID: Int
+  $dataType: EventDataType
+  $abilityID: Float
+  $targetID: Int
+  $targetInstance: Int
+) {
+  reportData {
+    report(code: $reportID) {
+      events(
+        startTime: $startTime
+        endTime: $endTime
+        hostilityType: $hostilityType
+        sourceID: $sourceID
+        dataType: $dataType
+        abilityID: $abilityID
+        targetID: $targetID
+        targetInstanceID: $targetInstance
+      ) {
+        data
+        nextPageTimestamp
+      }
+    }
+  }
+}
+
+query PetActors($reportID: String!) {
+  reportData {
+    report(code: $reportID) {
+      masterData {
+        actors(type: "Pet") {
+          gameID
+          petOwner
+          id
+        }
+      }
+    }
+  }
+}
+
+query EnemyNPCIds($reportID: String!, $fightIDs: [Int]!) {
+  reportData {
+    report(code: $reportID) {
+      fights(killType: Kills, fightIDs: $fightIDs) {
+        enemyNPCs {
+          id
+          gameID
+        }
+      }
+    }
+  }
+}
+
+query Table(
+  $reportID: String!
+  $fightIDs: [Int]!
+  $startTime: Float!
+  $endTime: Float!
+) {
+  reportData {
+    report(code: $reportID) {
+      table(startTime: $startTime, endTime: $endTime, fightIDs: $fightIDs)
+    }
+  }
+}
+
+query InitialReportData($reportID: String!) {
+  reportData {
+    report(code: $reportID) {
+      title
+      startTime
+      endTime
+      region {
+        slug
+      }
+      fights(translate: true, killType: Kills) {
+        id
+        keystoneBonus
+        keystoneLevel
+      }
+    }
+  }
+}
+
+query ExtendedReportData($reportID: String!, $fightIDs: [Int]!) {
+  reportData {
+    report(code: $reportID) {
+      fights(translate: true, killType: Kills, fightIDs: $fightIDs) {
+        id
+        gameZone {
+          id
+        }
+        averageItemLevel
+        keystoneAffixes
+        keystoneLevel
+        keystoneBonus
+        keystoneTime
+        startTime
+        endTime
+        dungeonPulls {
+          x
+          y
+          startTime
+          endTime
+          maps {
+            id
+          }
+          boundingBox {
+            minX
+            maxX
+            minY
+            maxY
+          }
+          enemyNPCs {
+            gameID
+            minimumInstanceID
+            maximumInstanceID
+          }
+        }
+      }
+    }
+  }
+}
