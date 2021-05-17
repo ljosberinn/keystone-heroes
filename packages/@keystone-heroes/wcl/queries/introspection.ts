@@ -1,4 +1,3 @@
-import { config } from "dotenv";
 import { writeFileSync } from "fs";
 import { getIntrospectionQuery, printSchema, buildClientSchema } from "graphql";
 import { resolve } from "path";
@@ -6,21 +5,6 @@ import { resolve } from "path";
 import { getGqlClient } from "../client";
 
 import type { IntrospectionQuery } from "graphql";
-
-if (!process.env.DATABASE_URL) {
-  // eslint-disable-next-line no-console
-  console.log(`
-  Loading .env from "@keystone-heroes/env/.env" (rel. path: "../env/.env").
-  
-  If this crashes, make sure the file is present.
-  `);
-  config({
-    path: "../env/.env",
-  });
-
-  // eslint-disable-next-line no-console
-  console.log("Loaded .env successfully!");
-}
 
 async function loadSchema() {
   const client = await getGqlClient();

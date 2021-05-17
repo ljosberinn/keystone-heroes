@@ -29,7 +29,6 @@
     "@types/react": "17.0.5",
     "@types/react-dom": "17.0.5",
     "autoprefixer": "10.2.5",
-    "dotenv": "9.0.2",
     "eslint": "7.26.0",
     "eslint-config-galex": "2.15.10",
     "next-transpile-modules": "7.0.0",

@@ -1615,6 +1615,14 @@ type ReportFight {
   """
   kill: Boolean
 
+  """The phase that the encounter was in when the fight ended."""
+  lastPhase: Int
+
+  """
+  Whether or not the phase that the encounter was in when the fight ended was an intermission or not.
+  """
+  lastPhaseIsIntermission: Boolean
+
   """The layer of a Torghast run."""
   layer: Int
 

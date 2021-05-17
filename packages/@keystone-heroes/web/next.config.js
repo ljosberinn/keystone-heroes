@@ -1,23 +1,10 @@
-const { config } = require("dotenv");
 const withTM = require("next-transpile-modules")([
   "@keystone-heroes/db",
   "@keystone-heroes/wcl",
   "@keystone-heroes/env",
   "@keystone-heroes/api",
 ]);
-
-if (!process.env.DATABASE_URL) {
-  const path = "../env/.env";
-  // eslint-disable-next-line no-console
-  console.log(
-    `[@keystone-heroes/web] Loading .env from "@keystone-heroes/env" (rel. path: "${path}")`
-  );
-
-  config({ path });
-
-  // eslint-disable-next-line no-console
-  console.log("[@keystone-heroes/web] Successfully loaded .env");
-}
+require("@keystone-heroes/env/loader");
 
 const date = new Date();
 
