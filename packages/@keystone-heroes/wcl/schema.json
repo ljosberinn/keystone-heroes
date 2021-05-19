@@ -7089,6 +7089,30 @@
             "deprecationReason": null
           },
           {
+            "name": "lastPhase",
+            "description": "The phase that the encounter was in when the fight ended.",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "lastPhaseIsIntermission",
+            "description": "Whether or not the phase that the encounter was in when the fight ended was an intermission or not.",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "layer",
             "description": "The layer of a Torghast run.",
             "args": [],

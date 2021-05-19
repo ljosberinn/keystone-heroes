@@ -1256,6 +1256,10 @@ export type ReportFight = {
   readonly keystoneTime?: Maybe<Scalars["Int"]>;
   /** Whether or not the fight was a boss kill, i.e., successful. If this field is false, it means the fight was an incomplete run, etc.. */
   readonly kill?: Maybe<Scalars["Boolean"]>;
+  /** The phase that the encounter was in when the fight ended. */
+  readonly lastPhase?: Maybe<Scalars["Int"]>;
+  /** Whether or not the phase that the encounter was in when the fight ended was an intermission or not. */
+  readonly lastPhaseIsIntermission?: Maybe<Scalars["Boolean"]>;
   /** The layer of a Torghast run. */
   readonly layer?: Maybe<Scalars["Int"]>;
   /** All the maps that were involved in a fight. For single bosses this will usually be a single map, but for dungeons it will typically be multiple maps. */
