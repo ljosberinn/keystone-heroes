@@ -34,7 +34,7 @@ module.exports = withTM({
   future: {
     webpack5: true,
   },
-  headers() {
+  headers: () => {
     return [
       {
         source: "/(.*)",
