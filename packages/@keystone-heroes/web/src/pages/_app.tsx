@@ -1,7 +1,7 @@
 import { ThemeProvider } from "next-themes";
 import Head from "next/head";
 
-import "tailwindcss/tailwind.css";
+import "../styles/globals.css";
 import { Footer } from "../client/components/Footer";
 import { Header } from "../client/components/Header";
 import { RouteChangeIndicator } from "../client/components/RouteChangeIndicator";
