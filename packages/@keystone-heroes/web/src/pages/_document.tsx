@@ -2,7 +2,7 @@
 // import crypto from "crypto";
 import Document, { Html, Head, Main, NextScript } from "next/document";
 
-import { icons } from "../client/icons";
+import { icons } from "../icons";
 
 // import type { DocumentProps } from "next/document";
 
