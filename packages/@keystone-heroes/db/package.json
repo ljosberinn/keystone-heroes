@@ -18,14 +18,14 @@
   "dependencies": {
     "@keystone-heroes/env": "1.0.0",
     "@keystone-heroes/wcl": "1.0.0",
-    "@prisma/client": "2.22.1",
+    "@prisma/client": "2.23.0",
     "dotenv": "9.0.2",
-    "prisma": "2.22.1",
+    "prisma": "2.23.0",
     "ts-node": "9.1.1"
   },
   "devDependencies": {
     "eslint": "7.26.0",
-    "eslint-config-galex": "2.15.10",
+    "eslint-config-galex": "2.16.1",
     "typescript": "4.4.0-dev.20210515"
   }
 }
