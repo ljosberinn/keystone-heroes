@@ -10,12 +10,12 @@
     "build": "yarn --cwd packages/@keystone-heroes/web build",
     "start": "yarn --cwd packages/@keystone-heroes/web start",
     "storybook": "yarn --cwd packages/@keystone-heroes/web storybook",
+    "test": "yarn --cwd packages/@keystone-heroes/web test",
     "postinstall": "yarn-deduplicate -l && yarn --cwd packages/@keystone-heroes/db generate",
     "lint": "yarn workspaces run lint",
     "lint:fix": "yarn workspaces run lint --fix && yarn workspaces run format",
     "types": "yarn --cwd packages/@keystone-heroes/web types",
     "install:clean": "rimraf yarn.lock && rimraf packages/@keystone-heroes/**/node_modules && rimraf node_modules && yarn",
-    "test": "exit 0",
     "prepare": "husky install"
   },
   "lint-staged": {
