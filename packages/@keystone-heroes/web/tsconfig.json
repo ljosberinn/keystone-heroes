@@ -19,11 +19,17 @@
     "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
     "paths": {
-      "@keystone-heroes/db/repos": ["../db/repos/index.ts"],
-      "@keystone-heroes/db/data": ["../db/data/index.ts"],
-      "@keystone-heroes/env": ["../env/index.ts"],
-      "@keystone-heroes/wcl/utils": ["../wcl/utils.ts"],
-      "@keystone-heroes/wcl/queries": ["../wcl/queries/index.ts"]
+      "@keystone-heroes/db/repos": ["../db/src/repos/index.ts"],
+      "@keystone-heroes/db/data": ["../db/src/data/index.ts"],
+      "@keystone-heroes/api/handler/report": [
+        "../api/src/handler/report/index.ts"
+      ],
+      "@keystone-heroes/api/handler/fight": [
+        "../api/src/handler/fight/index.ts"
+      ],
+      "@keystone-heroes/env": ["../env/src/index.ts"],
+      "@keystone-heroes/wcl/utils": ["../wcl/src/utils.ts"],
+      "@keystone-heroes/wcl/queries": ["../wcl/src/queries/index.ts"]
     }
   },
   "exclude": ["node_modules"],

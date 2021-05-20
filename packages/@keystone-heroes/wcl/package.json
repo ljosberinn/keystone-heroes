@@ -2,16 +2,12 @@
   "name": "@keystone-heroes/wcl",
   "version": "1.0.0",
   "private": true,
-  "exports": {
-    ".": "./index.ts",
-    "./queries": "./queries",
-    "./utils": "./utils.ts"
-  },
+  "main": "src",
   "scripts": {
     "lint": "eslint . --cache",
     "format": "prettier --write queries",
-    "introspection": "ts-node -r tsconfig-paths/register queries/introspection.ts --project tsconfig.json",
-    "generate": "graphql-codegen --config codegen.yml && prettier --write types.ts && prettier --write schema.json"
+    "introspection": "ts-node -r tsconfig-paths/register src/queries/introspection.ts --project tsconfig.json",
+    "generate": "graphql-codegen --config codegen.yml && prettier --write src/types.ts && prettier --write schema.json"
   },
   "dependencies": {
     "@keystone-heroes/db": "1.0.0",

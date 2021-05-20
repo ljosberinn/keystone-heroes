@@ -1,4 +1,4 @@
-import { ColorModeToggle } from "../client/components/ColorModeToggle";
+import { ColorModeToggle } from "../components/ColorModeToggle";
 
 export default {
   title: "ColorModeToggle",

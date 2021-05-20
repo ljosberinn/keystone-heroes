@@ -2,9 +2,9 @@ import { ThemeProvider } from "next-themes";
 import Head from "next/head";
 
 import "../styles/globals.css";
-import { Footer } from "../client/components/Footer";
-import { Header } from "../client/components/Header";
-import { RouteChangeIndicator } from "../client/components/RouteChangeIndicator";
+import { Footer } from "../components/Footer";
+import { Header } from "../components/Header";
+import { RouteChangeIndicator } from "../components/RouteChangeIndicator";
 
 import type { NextComponentType, NextPageContext } from "next";
 import type { NextRouter } from "next/router";

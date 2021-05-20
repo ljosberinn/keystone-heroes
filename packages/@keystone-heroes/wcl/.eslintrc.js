@@ -7,7 +7,7 @@ module.exports = createConfig({
   },
   overrides: [
     {
-      files: ["./types.ts"],
+      files: ["./src/types.ts"],
       rules: {
         "import/no-namespace": "off",
         "@typescript-eslint/no-explicit-any": "off",

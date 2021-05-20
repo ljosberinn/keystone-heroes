@@ -2,11 +2,7 @@
   "name": "@keystone-heroes/db",
   "version": "1.0.0",
   "private": true,
-  "exports": {
-    ".": "./index.ts",
-    "./data": "./data",
-    "./repos": "./repos"
-  },
+  "main": "src",
   "scripts": {
     "generate": "prisma generate",
     "push": "prisma db push",

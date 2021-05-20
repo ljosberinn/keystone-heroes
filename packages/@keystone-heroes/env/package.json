@@ -2,6 +2,7 @@
   "name": "@keystone-heroes/env",
   "version": "1.0.0",
   "private": true,
+  "main": "src",
   "scripts": {
     "format": "prettier --write ./index.ts",
     "copy-env-to-db": "cp .env ../db/.env",

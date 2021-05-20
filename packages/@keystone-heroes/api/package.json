@@ -2,6 +2,7 @@
   "name": "@keystone-heroes/api",
   "version": "1.0.0",
   "private": true,
+  "main": "src",
   "scripts": {
     "format": "prettier --write handler && prettier --write middleware && prettier --write utils",
     "lint": "eslint . --cache"

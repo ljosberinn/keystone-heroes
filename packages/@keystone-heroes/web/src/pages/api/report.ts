@@ -1,5 +1,4 @@
+import { handler } from "@keystone-heroes/api/handler/report";
 import nc from "next-connect";
-
-import { handler } from "../../../../api/handler/report";
 
 export default nc().get(handler);
