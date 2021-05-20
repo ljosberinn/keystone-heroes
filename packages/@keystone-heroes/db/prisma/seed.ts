@@ -1,17 +1,17 @@
 import { PrismaClient } from "@prisma/client";
 import { config } from "dotenv";
 
-import { affixes } from "../data/affixes";
-import { classes } from "../data/classes";
-import { covenants } from "../data/covenants";
-import { dungeons } from "../data/dungeons";
-import { expansions } from "../data/expansions";
-import { maps } from "../data/maps";
-import { regions } from "../data/regions";
-import { seasons } from "../data/seasons";
-import { soulbinds } from "../data/soulbinds";
-import { specs } from "../data/specs";
-import { weeks } from "../data/weeks";
+import { affixes } from "../src/data/affixes";
+import { classes } from "../src/data/classes";
+import { covenants } from "../src/data/covenants";
+import { dungeons } from "../src/data/dungeons";
+import { expansions } from "../src/data/expansions";
+import { maps } from "../src/data/maps";
+import { regions } from "../src/data/regions";
+import { seasons } from "../src/data/seasons";
+import { soulbinds } from "../src/data/soulbinds";
+import { specs } from "../src/data/specs";
+import { weeks } from "../src/data/weeks";
 
 import type { Class, Zone } from "@prisma/client";
 
