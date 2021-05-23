@@ -116,6 +116,7 @@ query ExtendedReportData($reportID: String!, $fightIDs: [Int]!) {
             maxY
           }
           enemyNPCs {
+            id
             gameID
             minimumInstanceID
             maximumInstanceID

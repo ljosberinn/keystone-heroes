@@ -7,16 +7,15 @@
     "generate": "prisma generate",
     "push": "prisma db push",
     "seed": "prisma db seed --preview-feature",
-    "pull": "prisma db pull",
     "format": "prettier --write data && prettier --write repos",
     "lint": "eslint . --cache"
   },
   "dependencies": {
     "@keystone-heroes/env": "1.0.0",
     "@keystone-heroes/wcl": "1.0.0",
-    "@prisma/client": "2.23.0",
+    "@prisma/client": "2.22.1",
     "dotenv": "9.0.2",
-    "prisma": "2.23.0",
+    "prisma": "2.22.1",
     "ts-node": "9.1.1"
   },
   "devDependencies": {

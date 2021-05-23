@@ -73,22 +73,22 @@ export const dungeonMap: Record<
   Dungeon["id"],
   Omit<Dungeon, "id" | "time"> & {
     timer: [number, number, number];
-    bossIds: Boss[];
-    expansionId: ExpansionEnum;
-    zones: Omit<Zone, "dungeonId">[];
+    bossIDs: Boss[];
+    expansionID: ExpansionEnum;
+    zones: Omit<Zone, "dungeonID">[];
   }
 > = {
   [DungeonIds.SANGUINE_DEPTHS]: {
     name: "Sanguine Depths",
     timer: createDungeonTimer(41),
     slug: "SD",
-    bossIds: [
+    bossIDs: [
       Boss.KRYXIS_THE_VORACIOUS,
       Boss.EXECUTOR_TARVOLD,
       Boss.GRAND_PROCTOR_BERYLLIA,
       Boss.GENERAL_KAAL,
     ],
-    expansionId: ExpansionEnum.SHADOWLANDS,
+    expansionID: ExpansionEnum.SHADOWLANDS,
     zones: [
       { id: 1675, name: "Depths of Despair", order: 1 },
       { id: 1676, name: "Amphitheater of Sorrow", order: 2 },
@@ -98,14 +98,14 @@ export const dungeonMap: Record<
     name: "Spires of Ascension",
     timer: createDungeonTimer(39),
     slug: "SoA",
-    bossIds: [
+    bossIDs: [
       Boss.KIN_TARA,
       Boss.VENZULES,
       Boss.VENTUNAX,
       Boss.ORYPHRION,
       Boss.DEVOS,
     ],
-    expansionId: ExpansionEnum.SHADOWLANDS,
+    expansionID: ExpansionEnum.SHADOWLANDS,
     zones: [
       { id: 1692, name: "Honor's Ascent", order: 1 },
       { id: 1693, name: "Garden of Repose", order: 2 },
@@ -117,13 +117,13 @@ export const dungeonMap: Record<
     name: "The Necrotic Wake",
     timer: createDungeonTimer(36),
     slug: "NW",
-    bossIds: [
+    bossIDs: [
       Boss.BLIGHTBONE,
       Boss.AMARTH,
       Boss.SURGEON_STITCHFLESH,
       Boss.NALTHOR_THE_RIMEBINDER,
     ],
-    expansionId: ExpansionEnum.SHADOWLANDS,
+    expansionID: ExpansionEnum.SHADOWLANDS,
     zones: [
       { id: 1666, name: "The Necrotic Wake", order: 1 },
       { id: 1667, name: "Stitchwerks", order: 2 },
@@ -134,13 +134,13 @@ export const dungeonMap: Record<
     name: "Halls of Atonement",
     timer: createDungeonTimer(31),
     slug: "HoA",
-    bossIds: [
+    bossIDs: [
       Boss.HALKIAS,
       Boss.ECHELON,
       Boss.HIGH_ADJUDICATOR_ALEEZ,
       Boss.LORD_CHAMBERLAIN,
     ],
-    expansionId: ExpansionEnum.SHADOWLANDS,
+    expansionID: ExpansionEnum.SHADOWLANDS,
     zones: [
       { id: 1663, name: "Halls of Atonement", order: 1 },
       { id: 1664, name: "The Nave of Pain", order: 2 },
@@ -151,13 +151,13 @@ export const dungeonMap: Record<
     name: "Plaguefall",
     timer: createDungeonTimer(38),
     slug: "PF",
-    bossIds: [
+    bossIDs: [
       Boss.GLOBGROG,
       Boss.DOCTOR_ICKUS,
       Boss.DOMINA_VENOMBLADE,
       Boss.MARGRAVE_STRADAMA,
     ],
-    expansionId: ExpansionEnum.SHADOWLANDS,
+    expansionID: ExpansionEnum.SHADOWLANDS,
     zones: [
       { id: 1674, name: "Plaguefall", order: 1 },
       { id: 1697, name: "The Festering Sanctum", order: 2 },
@@ -167,27 +167,27 @@ export const dungeonMap: Record<
     name: "Mists of Tirna Scithe",
     timer: createDungeonTimer(30),
     slug: "MoTS",
-    bossIds: [
+    bossIDs: [
       Boss.INGRA_MALOCH,
       Boss.DROMAN_OULFARRAN,
       Boss.MISTCALLER,
       Boss.TRED_OVA,
     ],
-    expansionId: ExpansionEnum.SHADOWLANDS,
+    expansionID: ExpansionEnum.SHADOWLANDS,
     zones: [{ id: 1669, name: "Mists of Tirna Scithe", order: 1 }],
   },
   [DungeonIds.DE_OTHER_SIDE]: {
     name: "De Other Side",
     timer: createDungeonTimer(43),
     slug: "DOS",
-    bossIds: [
+    bossIDs: [
       Boss.HAKKAR_THE_SOULFLAYER,
       Boss.MILLHOUSE_MANASTORM,
       Boss.MILLIFICIENT_MANASTORM,
       Boss.DEALER_XY_EXA,
       Boss.MUEH_ZALA,
     ],
-    expansionId: ExpansionEnum.SHADOWLANDS,
+    expansionID: ExpansionEnum.SHADOWLANDS,
     zones: [
       { id: 1677, name: "Ardenweald", order: 4 },
       { id: 1678, name: "Mechagon", order: 3 },
@@ -199,7 +199,7 @@ export const dungeonMap: Record<
     name: "Theatre of Pain",
     timer: createDungeonTimer(37),
     slug: "TOP",
-    bossIds: [
+    bossIDs: [
       Boss.PACERAN_THE_VIRULENT,
       Boss.DESSIA_THE_DECAPITATOR,
       Boss.SATHEL_THE_ACCURSED,
@@ -208,7 +208,7 @@ export const dungeonMap: Record<
       Boss.KUL_THAROK,
       Boss.MORDRETHA_THE_ENDLESS_EMPRESS,
     ],
-    expansionId: ExpansionEnum.SHADOWLANDS,
+    expansionID: ExpansionEnum.SHADOWLANDS,
     zones: [
       { id: 1683, name: "Theater of Pain", order: 1 },
       { id: 1684, name: "Chamber of Conquest", order: 2 },
@@ -221,9 +221,9 @@ export const dungeonMap: Record<
 
 export const dungeons: (Omit<Dungeon, "time"> & {
   timer: [number, number, number];
-  bossIds: Boss[];
-  expansionId: ExpansionEnum;
-  zones: Omit<Zone, "dungeonId">[];
+  bossIDs: Boss[];
+  expansionID: ExpansionEnum;
+  zones: Omit<Zone, "dungeonID">[];
 })[] = Object.entries(dungeonMap).map(([id, dataset]) => ({
   id: Number.parseInt(id),
   ...dataset,

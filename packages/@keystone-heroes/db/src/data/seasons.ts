@@ -3,7 +3,7 @@ import { ExpansionEnum } from "./expansions";
 
 import type { Season } from "@prisma/client";
 
-export enum SeasonId {
+export enum SeasonID {
   LEGION_7_2_0 = 1,
   LEGION_7_2_5 = 2,
   LEGION_7_3_0 = 3,
@@ -145,10 +145,10 @@ export const seasons: Season[] = [
   {
     slug: "sl-1",
     name: "SL Season 1",
-    expansionId: ExpansionEnum.SHADOWLANDS,
+    expansionID: ExpansionEnum.SHADOWLANDS,
     startTime: new Date(1_607_385_600 * 1000),
     endTime: null,
-    affixId: getAffixByName("Prideful"),
-    id: SeasonId.SL_SEASON_1,
+    affixID: getAffixByName("Prideful"),
+    id: SeasonID.SL_SEASON_1,
   },
 ];

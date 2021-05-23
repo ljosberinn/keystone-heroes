@@ -4,7 +4,7 @@
   "private": true,
   "main": "src",
   "scripts": {
-    "format": "prettier --write handler && prettier --write middleware && prettier --write utils",
+    "format": "prettier --write src",
     "lint": "eslint . --cache"
   },
   "dependencies": {

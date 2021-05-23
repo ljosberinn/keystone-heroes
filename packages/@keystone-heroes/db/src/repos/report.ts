@@ -10,9 +10,6 @@ export const ReportRepo = {
     report: string,
     { endTime, startTime, title, region }: InitialReportData
   ): Promise<number> => {
-    // eslint-disable-next-line no-console
-    console.info(`[ReportRepo/upsert] creating "${report}"`);
-
     const { id } = await prisma.report.upsert({
       where: {
         report,
@@ -44,7 +41,7 @@ export const ReportRepo = {
   load: async (
     report: string
   ): Promise<
-    | (Omit<Report, "startTime" | "endTime" | "regionId"> & {
+    | (Omit<Report, "startTime" | "endTime" | "regionID"> & {
         fights: number[];
         startTime: number;
         endTime: number;
@@ -53,9 +50,6 @@ export const ReportRepo = {
     | null
   > => {
     try {
-      // eslint-disable-next-line no-console
-      console.info(`[ReportRepo/load] reading "${report}" from db`);
-
       const data = await prisma.report.findUnique({
         where: {
           report,
@@ -69,7 +63,7 @@ export const ReportRepo = {
           report: true,
           Fight: {
             select: {
-              fightId: true,
+              fightID: true,
             },
           },
         },
@@ -85,16 +79,13 @@ export const ReportRepo = {
         ...rest,
         startTime: data.startTime.getTime(),
         endTime: data.endTime.getTime(),
-        fights: Fight.map((fight) => fight.fightId),
+        fights: Fight.map((fight) => fight.fightID),
       };
     } catch {
       return null;
     }
   },
   loadFinishedReports: async (): Promise<string[]> => {
-    // eslint-disable-next-line no-console
-    console.info(`[ReportRepo/loadFinishedReports]`);
-
     try {
       const data = await prisma.report.findMany({
         where: {
@@ -113,16 +104,13 @@ export const ReportRepo = {
     }
   },
   loadFinishedFull: async (): Promise<
-    (Omit<Report, "startTime" | "endTime" | "regionId"> & {
+    (Omit<Report, "startTime" | "endTime" | "regionID"> & {
       fights: number[];
       startTime: number;
       endTime: number;
       region: Region;
     })[]
   > => {
-    // eslint-disable-next-line no-console
-    console.info(`[ReportRepo/loadFinishedFull]`);
-
     try {
       const data = await prisma.report.findMany({
         select: {
@@ -134,7 +122,7 @@ export const ReportRepo = {
           report: true,
           Fight: {
             select: {
-              fightId: true,
+              fightID: true,
             },
           },
         },
@@ -147,7 +135,7 @@ export const ReportRepo = {
           ...rest,
           startTime: report.startTime.getTime(),
           endTime: report.endTime.getTime(),
-          fights: Fight.map((fight) => fight.fightId),
+          fights: Fight.map((fight) => fight.fightID),
         };
       });
     } catch {

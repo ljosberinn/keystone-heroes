@@ -12,10 +12,7 @@ export type WCLOAuthResponse = {
 export const WCLAuthRepo = {
   upsert: withPerformanceLogging(
     async ({ access_token, expires_in }: WCLOAuthResponse): Promise<void> => {
-      // eslint-disable-next-line no-console
-      console.info("[WCLAuthRepo/upsert] storing");
-
-      const payload = {
+      const payload: Omit<WCLAuth, "id"> = {
         token: access_token,
         expiresAt: Math.round(Date.now() / 1000) + expires_in,
       };

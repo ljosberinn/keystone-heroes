@@ -1,30 +1,26 @@
 import { prisma } from "../client";
 import { withPerformanceLogging } from "../utils";
 
-import type { Character, Region } from "@prisma/client";
+import type { Character } from "@prisma/client";
 
 export const CharacterRepo = {
   createMany: withPerformanceLogging(
-    async <T extends { server: string; classId: number; name: string }>(
+    async <T extends { server: string; classID: number; name: string }>(
       characters: T[],
-      region: Region,
       serverMap: Record<string, number>
     ): Promise<Character[]> => {
-      // eslint-disable-next-line no-console
-      console.info(
-        `[CharacterRepo/createMany] creating ${characters.length} characters in ${region.slug}`
-      );
+      const payload = characters.map<Omit<Character, "id">>((character) => {
+        const serverID = serverMap[character.server];
+
+        return {
+          name: character.name,
+          serverID,
+          classID: character.classID,
+        };
+      });
 
       await prisma.character.createMany({
-        data: characters.map((character) => {
-          const serverId = serverMap[character.server];
-
-          return {
-            name: character.name,
-            serverId,
-            classId: character.classId,
-          };
-        }),
+        data: payload,
         skipDuplicates: true,
       });
 
@@ -32,7 +28,7 @@ export const CharacterRepo = {
         where: {
           OR: characters.map((character) => ({
             name: character.name,
-            serverId: serverMap[character.server],
+            serverID: serverMap[character.server],
           })),
         },
       });

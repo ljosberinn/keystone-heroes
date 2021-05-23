@@ -3,7 +3,7 @@ import { wcl } from "@keystone-heroes/wcl/src/queries";
 import { maybeOngoingReport } from "@keystone-heroes/wcl/utils";
 import nc from "next-connect";
 
-import { createValidReportIdMiddleware } from "../../middleware/validReportId";
+import { createValidReportIDMiddleware } from "../../middleware/validReportID";
 import { NO_CONTENT } from "../../utils/statusCodes";
 
 import type { RequestHandler } from "../../utils/types";
@@ -111,5 +111,5 @@ const reportHandler: RequestHandler<Request, ReportResponse> = async (
 };
 
 export const handler = nc()
-  .get(createValidReportIdMiddleware("reportID"))
+  .get(createValidReportIDMiddleware("reportID"))
   .use(reportHandler);

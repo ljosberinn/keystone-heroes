@@ -1,34 +1,32 @@
 import { prisma } from "../client";
 
 import type { SoulbindTalent } from "@keystone-heroes/wcl/src/queries";
+import type { PlayerCovenantTrait } from "@prisma/client";
 
 export type PlayerCovenantTraitInsert = {
-  playerId: number;
+  playerID: number;
   covenantTraits: (Omit<SoulbindTalent, "guid"> & {
     id: SoulbindTalent["guid"];
-    covenantId: number;
+    covenantID: number;
   })[];
-  fightId: number;
+  fightID: number;
 }[];
 
 export const PlayerCovenantTraitRepo = {
   createMany: async (data: PlayerCovenantTraitInsert): Promise<void> => {
-    // eslint-disable-next-line no-console
-    console.info(
-      `[PlayerCovenantTraitRepo/createMany] linking covenantTraits to player`
+    const payload = data.flatMap<Omit<PlayerCovenantTrait, "id">>((dataset) =>
+      dataset.covenantTraits.map((conduit) => {
+        return {
+          playerID: dataset.playerID,
+          covenantTraitID: conduit.id,
+          fightID: dataset.fightID,
+        };
+      })
     );
 
     await prisma.playerCovenantTrait.createMany({
+      data: payload,
       skipDuplicates: true,
-      data: data.flatMap((dataset) =>
-        dataset.covenantTraits.map((conduit) => {
-          return {
-            playerId: dataset.playerId,
-            covenantTraitId: conduit.id,
-            fightId: dataset.fightId,
-          };
-        })
-      ),
     });
   },
 };

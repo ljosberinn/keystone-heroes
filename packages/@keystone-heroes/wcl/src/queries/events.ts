@@ -20,6 +20,7 @@ import {
   BURSTING,
   QUAKING,
   PRIDE,
+  remarkableSpellIds,
 } from "@keystone-heroes/db/data";
 
 import { getCachedSdk } from "../client";
@@ -32,63 +33,63 @@ type Event<T extends Record<string, unknown>> = T & {
   timestamp: number;
 };
 
-type EncounterStartEvent = Event<{
-  type: "encounterstart";
-  encounterID: number;
-  name: string;
-  difficulty: number;
-  size: number;
-  level: number;
-  affixes: number[];
-}>;
+// type EncounterStartEvent = Event<{
+//   type: "encounterstart";
+//   encounterID: number;
+//   name: string;
+//   difficulty: number;
+//   size: number;
+//   level: number;
+//   affixes: number[];
+// }>;
 
-type CombatantInfoEvent = Event<{
-  type: "combatantinfo";
-  sourceID: number;
-  gear: [];
-  auras: {
-    source: number;
-    ability: number;
-    stacks: number;
-    icon: string;
-    name?: string;
-  }[];
-  expansion: string;
-  faction: number;
-  specID: number;
-  covenantID: number;
-  soulbindID: number;
-  strength: number;
-  agility: number;
-  stamina: number;
-  intellect: number;
-  dodge: number;
-  parry: number;
-  block: number;
-  armor: number;
-  critMelee: number;
-  critRanged: number;
-  critSpell: number;
-  speed: number;
-  leech: number;
-  hasteMelee: number;
-  hasteRanged: number;
-  hasteSpell: number;
-  avoidance: number;
-  mastery: number;
-  versatilityDamageDone: number;
-  versatilityHealingDone: number;
-  versatilityDamageReduction: number;
-  talents: { id: number; icon: string }[];
-  pvpTalents: { id: number; icon: string }[];
-  artifact: { traitID: number; rank: number; spellID: number; icon: string }[];
-  heartOfAzeroth: {
-    traitID: number;
-    rank: number;
-    spellID: number;
-    icon: string;
-  }[];
-}>;
+// type CombatantInfoEvent = Event<{
+//   type: "combatantinfo";
+//   sourceID: number;
+//   gear: [];
+//   auras: {
+//     source: number;
+//     ability: number;
+//     stacks: number;
+//     icon: string;
+//     name?: string;
+//   }[];
+//   expansion: string;
+//   faction: number;
+//   specID: number;
+//   covenantID: number;
+//   soulbindID: number;
+//   strength: number;
+//   agility: number;
+//   stamina: number;
+//   intellect: number;
+//   dodge: number;
+//   parry: number;
+//   block: number;
+//   armor: number;
+//   critMelee: number;
+//   critRanged: number;
+//   critSpell: number;
+//   speed: number;
+//   leech: number;
+//   hasteMelee: number;
+//   hasteRanged: number;
+//   hasteSpell: number;
+//   avoidance: number;
+//   mastery: number;
+//   versatilityDamageDone: number;
+//   versatilityHealingDone: number;
+//   versatilityDamageReduction: number;
+//   talents: { id: number; icon: string }[];
+//   pvpTalents: { id: number; icon: string }[];
+//   artifact: { traitID: number; rank: number; spellID: number; icon: string }[];
+//   heartOfAzeroth: {
+//     traitID: number;
+//     rank: number;
+//     spellID: number;
+//     icon: string;
+//   }[];
+// }>;
 
 type ApplyDebuffEvent = Event<{
   type: "applydebuff";
@@ -121,11 +122,12 @@ type RemoveBuffEvent = Event<{
   targetMarker: number;
 }>;
 
-type CastEvent = Event<{
+export type CastEvent = Event<{
   type: "cast";
   sourceID: number;
   targetID: number;
   abilityGameID: number;
+  sourceMarker?: number;
 }>;
 
 type DamageEvent = Event<{
@@ -161,21 +163,21 @@ type RemoveDebuffEvent = Event<{
   abilityGameID: number;
 }>;
 
-type SummonEvent = Event<{
-  type: "summon";
-  sourceID: number;
-  targetID: number;
-  targetInstance: number;
-  abilityGameID: number;
-}>;
+// type SummonEvent = Event<{
+//   type: "summon";
+//   sourceID: number;
+//   targetID: number;
+//   targetInstance: number;
+//   abilityGameID: number;
+// }>;
 
-type PhaseStartEvent = Event<{
-  type: "phasestart";
-  encounterID: number;
-  name: string;
-  difficulty: number;
-  size: number;
-}>;
+// type PhaseStartEvent = Event<{
+//   type: "phasestart";
+//   encounterID: number;
+//   name: string;
+//   difficulty: number;
+//   size: number;
+// }>;
 
 type HealEvent = Event<{
   type: "heal";
@@ -189,28 +191,28 @@ type HealEvent = Event<{
   tick?: true;
 }>;
 
-type EnergizeEvent = Event<{
-  type: "energize";
-  sourceID: number;
-  targetID: number;
-  abilityGameID: number;
-  resourceChange: number;
-  resourceChangeType: number;
-  otherResourceChange: number;
-  waste: number;
-  sourceMarker?: number;
-  targetMarker?: number;
-}>;
+// type EnergizeEvent = Event<{
+//   type: "energize";
+//   sourceID: number;
+//   targetID: number;
+//   abilityGameID: number;
+//   resourceChange: number;
+//   resourceChangeType: number;
+//   otherResourceChange: number;
+//   waste: number;
+//   sourceMarker?: number;
+//   targetMarker?: number;
+// }>;
 
-type ApplyBuffStackEvent = Event<{
-  type: "applybuffstack";
-  sourceID: number;
-  targetID: number;
-  abilityGameID: number;
-  stack: number;
-  sourceMarker: number;
-  targetMarker: number;
-}>;
+// type ApplyBuffStackEvent = Event<{
+//   type: "applybuffstack";
+//   sourceID: number;
+//   targetID: number;
+//   abilityGameID: number;
+//   stack: number;
+//   sourceMarker: number;
+//   targetMarker: number;
+// }>;
 
 type InterruptEvent = Event<{
   type: "interrupt";
@@ -221,17 +223,17 @@ type InterruptEvent = Event<{
   sourceMarker: number;
 }>;
 
-type AbsorbEvent = Event<{
-  type: "absorbed";
-  sourceID: number;
-  targetID: number;
-  abilityGameID: number;
-  attackerID: number;
-  amount: number;
-  extraAbilityGameID: number;
-  sourceMarker: number;
-  targetMarker: number;
-}>;
+// type AbsorbEvent = Event<{
+//   type: "absorbed";
+//   sourceID: number;
+//   targetID: number;
+//   abilityGameID: number;
+//   attackerID: number;
+//   amount: number;
+//   extraAbilityGameID: number;
+//   sourceMarker: number;
+//   targetMarker: number;
+// }>;
 
 type RefreshDebuffEvent = Event<{
   type: "refreshdebuff";
@@ -240,16 +242,16 @@ type RefreshDebuffEvent = Event<{
   abilityGameID: number;
 }>;
 
-type DispelEvent = Event<{
-  type: "dispel";
-  sourceID: number;
-  targetID: number;
-  abilityGameID: number;
-  extraAbilityGameID: number;
-  isBuff: boolean;
-  sourceMarker: number;
-  targetMarker: number;
-}>;
+// type DispelEvent = Event<{
+//   type: "dispel";
+//   sourceID: number;
+//   targetID: number;
+//   abilityGameID: number;
+//   extraAbilityGameID: number;
+//   isBuff: boolean;
+//   sourceMarker: number;
+//   targetMarker: number;
+// }>;
 
 type DeathEvent = Event<{
   type: "death";
@@ -268,7 +270,7 @@ export const loadRecursiveEventsFromSource = async (
   endTime: number,
   sourceID: number,
   previousEvents: CastEvent[] = []
-): Promise<CastEvent[]> => {
+): Promise<Omit<CastEvent, "sourceMarker">[]> => {
   try {
     const sdk = await getCachedSdk();
 
@@ -281,9 +283,15 @@ export const loadRecursiveEventsFromSource = async (
       hostilityType: HostilityType.Friendlies,
     });
 
-    const { data = [], nextPageTimestamp = null } =
-      json?.reportData?.report?.events ?? {};
-    const nextEvents = [...previousEvents, ...data];
+    const data: (CastEvent | BeginCastEvent)[] =
+      json?.reportData?.report?.events?.data ?? [];
+    const nextPageTimestamp =
+      json?.reportData?.report?.events?.nextPageTimestamp ?? null;
+
+    const nextEvents = [
+      ...previousEvents,
+      ...data.filter((event): event is CastEvent => event.type === "cast"),
+    ];
 
     if (nextPageTimestamp) {
       return await loadRecursiveEventsFromSource(
@@ -295,7 +303,9 @@ export const loadRecursiveEventsFromSource = async (
       );
     }
 
-    return nextEvents;
+    return nextEvents
+      .map(({ sourceMarker, ...rest }) => rest)
+      .filter((event) => remarkableSpellIds.has(event.abilityGameID));
   } catch {
     return previousEvents;
   }

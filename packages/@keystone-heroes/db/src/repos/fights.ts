@@ -2,34 +2,11 @@ import { prisma } from "../client";
 import { withPerformanceLogging } from "../utils";
 
 import type { FightResponse } from "@keystone-heroes/api/handler/fight";
-import type {
-  Conduit,
-  InDepthCharacterInformation,
-  Item,
-  SoulbindTalent,
-  Talent,
-} from "@keystone-heroes/wcl/src/queries";
-import type {
-  Affix,
-  Character,
-  Class,
-  Covenant,
-  Dungeon,
-  Fight,
-  Legendary,
-  PlayableClass,
-  Server,
-  Soulbind,
-  Spec,
-  SpecName,
-} from "@prisma/client";
+import type { Fight } from "@prisma/client";
 
 export const FightRepo = {
   createMany: withPerformanceLogging(
     async (fights: Omit<Fight, "id">[]): Promise<void> => {
-      // eslint-disable-next-line no-console
-      console.info(`[FightsRepo/createMany]creating ${fights.length} fights`);
-
       await prisma.fight.createMany({
         data: fights,
         skipDuplicates: true,
@@ -39,16 +16,9 @@ export const FightRepo = {
   ),
   loadFull: withPerformanceLogging(
     async (reportID: string, fightIDs: number[]): Promise<FightResponse[]> => {
-      // eslint-disable-next-line no-console
-      console.info(
-        `[FightsRepo/loadFull] report "${reportID}" - ids "${fightIDs.join(
-          ","
-        )}"`
-      );
-
       const playerSelect = {
         select: {
-          actorId: true,
+          actorID: true,
           covenant: {
             select: {
               name: true,
@@ -93,12 +63,12 @@ export const FightRepo = {
                   id: true,
                 },
               },
-              fightId: true,
+              fightID: true,
             },
           },
           PlayerConduit: {
             select: {
-              fightId: true,
+              fightID: true,
               itemLevel: true,
               conduit: {
                 select: {
@@ -111,7 +81,7 @@ export const FightRepo = {
           },
           PlayerCovenantTrait: {
             select: {
-              fightId: true,
+              fightID: true,
               covenantTrait: {
                 select: {
                   abilityIcon: true,
@@ -129,13 +99,13 @@ export const FightRepo = {
           report: {
             report: reportID,
           },
-          fightId: {
+          fightID: {
             in: fightIDs,
           },
         },
         select: {
           id: true,
-          fightId: true,
+          fightID: true,
           averageItemLevel: true,
           chests: true,
           dps: true,
@@ -232,7 +202,7 @@ export const FightRepo = {
           keystoneLevel: fight.keystoneLevel,
           keystoneTime: fight.keystoneTime,
           totalDeaths: fight.totalDeaths,
-          fightId: fight.fightId,
+          fightID: fight.fightID,
           dungeon: {
             id: fight.dungeon.id,
             name: fight.dungeon.name,
@@ -244,22 +214,22 @@ export const FightRepo = {
           pulls: [],
           composition: player.map((dataset) => {
             const talents = dataset.PlayerTalent.filter(
-              (dataset) => dataset.fightId === fight.id
+              (dataset) => dataset.fightID === fight.id
             ).map((dataset) => dataset.talent);
 
             const conduits = dataset.PlayerConduit.filter(
-              (dataset) => dataset.fightId === fight.id
+              (dataset) => dataset.fightID === fight.id
             ).map((dataset) => ({
               ...dataset.conduit,
               itemLevel: dataset.itemLevel,
             }));
 
             const covenantTraits = dataset.PlayerCovenantTrait.filter(
-              (dataset) => dataset.fightId === fight.id
+              (dataset) => dataset.fightID === fight.id
             ).map((dataset) => dataset.covenantTrait);
 
             return {
-              actorId: dataset.actorId,
+              actorID: dataset.actorID,
               legendary: dataset.legendary,
               dps: dataset.dps,
               hps: dataset.hps,
@@ -287,96 +257,22 @@ export const FightRepo = {
     async (
       reportID: string,
       fightIDs: number[]
-    ): Promise<Pick<Fight, "id" | "fightId">[]> => {
-      // eslint-disable-next-line no-console
-      console.info(
-        `[FightsRepo/loadMany] reportID "${reportID}" - ids "${fightIDs.join(
-          ","
-        )}"`
-      );
-
+    ): Promise<Pick<Fight, "id" | "fightID">[]> => {
       return prisma.fight.findMany({
         where: {
           report: {
             report: reportID,
           },
-          fightId: {
+          fightID: {
             in: fightIDs,
           },
         },
         select: {
           id: true,
-          fightId: true,
+          fightID: true,
         },
       });
     },
     "FightsRepo/loadMany"
   ),
-};
-
-export type RawDBFight = Pick<
-  Fight,
-  | "fightId"
-  | "averageItemLevel"
-  | "chests"
-  | "keystoneLevel"
-  | "keystoneTime"
-  | "dps"
-  | "hps"
-  | "fightId"
-  | "dtps"
-  | "totalDeaths"
-> & {
-  dungeon: Dungeon;
-  week: {
-    firstAffix: Omit<Affix, "seasonal">;
-    secondAffix: Omit<Affix, "seasonal"> | null;
-    thirdAffix: Omit<Affix, "seasonal"> | null;
-    season: {
-      affix: Omit<Affix, "seasonal"> | null;
-    };
-  };
-  player1: Pick<XPlayer, "deaths" | "dps" | "hps" | "itemLevel"> & {
-    character: Pick<Character, "name" | "id"> & {
-      class: Class;
-      server: Server;
-    };
-    spec: Omit<Spec, "role" | "classId">;
-    covenant: Covenant | null;
-    soulbind: Soulbind | null;
-    legendary: Legendary | null;
-  };
-  // heal: {}
-  // dps1: {}
-  // dps2: {}
-  // dps3: {}
-};
-
-export type XPlayer = Pick<
-  InDepthCharacterInformation,
-  "server" | "name" | "guid"
-> & {
-  id: number;
-  dps: number;
-  hps: number;
-  deaths: number;
-  name: string;
-  server: {
-    id: number;
-    name: string;
-  };
-  class: {
-    id: number;
-    name: PlayableClass;
-    spec: SpecName;
-  };
-  itemLevel: number;
-  legendary: Pick<Item, "effectID" | "effectIcon" | "effectName"> | null;
-  covenant: Covenant & {
-    soulbind: Omit<Soulbind, "icon"> & {
-      talents: SoulbindTalent[];
-      conduits: Conduit[];
-    };
-  };
-  talents: Omit<Talent, "type">[];
 };

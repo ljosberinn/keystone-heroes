@@ -18,7 +18,7 @@ export const WeekRepo = {
     }
 
     const thisSeasonsWeeks = weeks.filter(
-      (week) => week.seasonId === season.id
+      (week) => week.seasonID === season.id
     );
 
     const amountOfWeeksThisSeason = thisSeasonsWeeks.length;

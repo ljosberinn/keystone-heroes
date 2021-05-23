@@ -5,7 +5,7 @@
   "main": "src",
   "scripts": {
     "lint": "eslint . --cache",
-    "format": "prettier --write queries",
+    "format": "prettier --write src",
     "introspection": "ts-node -r tsconfig-paths/register src/queries/introspection.ts --project tsconfig.json",
     "generate": "graphql-codegen --config codegen.yml && prettier --write src/types.ts && prettier --write schema.json"
   },

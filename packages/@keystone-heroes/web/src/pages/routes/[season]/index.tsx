@@ -10,7 +10,7 @@ import type { Season as SeasonType } from "@prisma/client";
 import type { GetStaticPaths, GetStaticProps } from "next";
 
 type SeasonProps = {
-  season: Omit<SeasonType, "startTime" | "endTime" | "affixId" | "expansionId">;
+  season: Omit<SeasonType, "startTime" | "endTime" | "affixID" | "expansionID">;
   weeks: { id: number; slug: string }[];
 };
 
@@ -68,13 +68,13 @@ export const getStaticProps: GetStaticProps<SeasonProps, StaticPaths> = async ({
   }
 
   const weeks = allWeeks
-    .filter((week) => week.seasonId === season.id)
+    .filter((week) => week.seasonID === season.id)
     .map((week) => {
       const affixSlug = [
-        getAffixById(week.affix1Id),
-        getAffixById(week.affix2Id),
-        getAffixById(week.affix3Id),
-        getAffixById(season.affixId),
+        getAffixById(week.affix1ID),
+        getAffixById(week.affix2ID),
+        getAffixById(week.affix3ID),
+        getAffixById(season.affixID),
       ]
         .map((affix) => affix.name.toLowerCase())
         .join("-");

@@ -1,9 +1,9 @@
-import { FightRepo, ReportRepo } from "@keystone-heroes/db/repos";
+import { FightRepo, PullRepo, ReportRepo } from "@keystone-heroes/db/repos";
 import { wcl } from "@keystone-heroes/wcl/src/queries";
 import nc from "next-connect";
 
-import { createValidReportIdMiddleware } from "../../middleware/validReportId";
-import { BAD_GATEWAY, INTERNAL_SERVER_ERROR } from "../../utils/statusCodes";
+import { createValidReportIDMiddleware } from "../../middleware/validReportID";
+import { BAD_REQUEST, INTERNAL_SERVER_ERROR } from "../../utils/statusCodes";
 import {
   calcMetricAverage,
   createConduits,
@@ -11,8 +11,9 @@ import {
   createFights,
   createLegendaries,
   createTalents,
+  enhanceFightsWithEvents,
   enhanceFightsWithTable,
-  extendPlayersWithServerAndCharacterId,
+  extendPlayersWithServerAndCharacterID,
   extractPlayerData,
   linkPlayerToConduits,
   linkPlayerToCovenantTraits,
@@ -21,7 +22,7 @@ import {
 
 import type { RequestHandler } from "../../utils/types";
 import type { InsertableFight } from "./utils";
-import type { Talent } from "@keystone-heroes/wcl/src/queries";
+import type { Talent, DungeonPull } from "@keystone-heroes/wcl/src/queries";
 import type {
   Fight,
   Dungeon,
@@ -37,6 +38,7 @@ import type {
   Class,
   Server,
   Spec,
+  Event,
 } from "@prisma/client";
 
 type Request = {
@@ -56,25 +58,28 @@ export type FightResponse = Pick<
   | "keystoneLevel"
   | "keystoneTime"
   | "totalDeaths"
-  | "fightId"
+  | "fightID"
 > & {
   dungeon: Dungeon & {
-    zones: Omit<Zone, "dungeonId" | "order">[];
+    zones: Omit<Zone, "dungeonID" | "order">[];
   };
   affixes: Omit<Affix, "seasonal">[];
   composition: Composition;
-  pulls: {
-    startTime: number;
-    endTime: number;
-    events: unknown[];
-  }[];
+  pulls: Pull[];
+};
+
+type Pull = Pick<
+  DungeonPull,
+  "x" | "y" | "startTime" | "endTime" | "maps" | "boundingBox"
+> & {
+  events: Event[];
 };
 
 type Composition = (Pick<
   PrismaPlayer,
   "dps" | "hps" | "deaths" | "itemLevel"
 > & {
-  actorId: number;
+  actorID: number;
   legendary: Legendary | null;
   covenant: Pick<Covenant, "icon" | "name"> | null;
   soulbind: Pick<Soulbind, "icon" | "name"> | null;
@@ -84,25 +89,37 @@ type Composition = (Pick<
     server: Pick<Server, "name">;
   };
   talents: (Omit<Talent, "guid" | "type"> & { id: number })[];
-  covenantTraits: Omit<CovenantTrait, "covenantId">[];
+  covenantTraits: Omit<CovenantTrait, "covenantID">[];
   conduits: (Omit<Conduit, "guid" | "total"> & {
     itemLevel: number;
     id: number;
   })[];
 })[];
 
+const extractQueryParams = (query: Required<Request["query"]>) => {
+  const { reportID, fightIDs } = query;
+
+  const ids = Array.isArray(fightIDs) ? fightIDs : [fightIDs];
+
+  return {
+    reportID,
+    fightIDs: ids.map((id) => Number.parseInt(id)),
+  };
+};
+
 const fightHandler: RequestHandler<Request, FightResponse[]> = async (
   req,
   res
 ) => {
   if (!req.query.fightIDs) {
-    res.status(BAD_GATEWAY).end();
+    res.status(BAD_REQUEST).end();
     return;
   }
 
-  const { reportID, fightIDs } = req.query;
-  const ids = Array.isArray(fightIDs) ? fightIDs : [fightIDs];
-  const fightIds = ids.map((id) => Number.parseInt(id));
+  const { reportID, fightIDs } = extractQueryParams({
+    reportID: req.query.reportID,
+    fightIDs: req.query.fightIDs,
+  });
 
   try {
     const report = await ReportRepo.load(reportID);
@@ -114,12 +131,12 @@ const fightHandler: RequestHandler<Request, FightResponse[]> = async (
 
     // const ongoing = maybeOngoingReport(report.endTime);
 
-    const persistedFights = await FightRepo.loadFull(reportID, fightIds);
-    const unseenFightIds = fightIds.filter(
-      (id) => !persistedFights.some((fight) => fight.fightId === id)
+    const persistedFights = await FightRepo.loadFull(reportID, fightIDs);
+    const unseenFightIDs = fightIDs.filter(
+      (id) => !persistedFights.some((fight) => fight.fightID === id)
     );
 
-    if (unseenFightIds.length === 0) {
+    if (unseenFightIDs.length === 0) {
       //   setCacheControl(
       //     res,
       //     ongoing ? CacheControl.ONE_MONTH : CacheControl.ONE_HOUR
@@ -130,7 +147,7 @@ const fightHandler: RequestHandler<Request, FightResponse[]> = async (
 
     const newFights = await wcl.fights({
       reportID,
-      fightIDs: unseenFightIds,
+      fightIDs: unseenFightIDs,
     });
 
     if (!newFights) {
@@ -156,9 +173,13 @@ const fightHandler: RequestHandler<Request, FightResponse[]> = async (
       return;
     }
 
-    const sanitizedFights = await enhanceFightsWithTable(reportID, newFights);
+    const fightsWithTable = await enhanceFightsWithTable(reportID, newFights);
+    const fightsWithEvents = await enhanceFightsWithEvents(
+      reportID,
+      fightsWithTable
+    );
 
-    const insertableFights = sanitizedFights.map<InsertableFight>((fight) => {
+    const insertableFights = fightsWithEvents.map<InsertableFight>((fight) => {
       return {
         id: fight.id,
         keystoneLevel: fight.keystoneLevel,
@@ -171,6 +192,26 @@ const fightHandler: RequestHandler<Request, FightResponse[]> = async (
         dps: calcMetricAverage(fight.keystoneTime, fight.table.damageDone),
         dtps: calcMetricAverage(fight.keystoneTime, fight.table.damageTaken),
         hps: calcMetricAverage(fight.keystoneTime, fight.table.healingDone),
+        pulls: fight.dungeonPulls.map<InsertableFight["pulls"][number]>(
+          (pull) => {
+            const eventsOfThisPull = fight.events.filter(
+              (event) =>
+                event.timestamp >= pull.startTime &&
+                event.timestamp <= pull.endTime
+            );
+
+            return {
+              startTime: pull.startTime,
+              endTime: pull.endTime,
+              x: pull.x,
+              y: pull.y,
+              maps: pull.maps,
+              events: eventsOfThisPull,
+              boundingBox: pull.boundingBox,
+              npcs: pull.enemyNPCs,
+            };
+          }
+        ),
         composition: [
           extractPlayerData(
             fight.table.playerDetails.tanks[0],
@@ -213,32 +254,13 @@ const fightHandler: RequestHandler<Request, FightResponse[]> = async (
       return;
     }
 
-    // try {
-    //   const [firstFight] = insertableFights;
-    //   const raw = newFights.find((fight) => fight.id === firstFight.id);
-
-    //   if (raw) {
-    //     const actorIds = firstFight.composition.map((player) => player.actorId);
-
-    //     const events = await loadRecursiveEventsFromSource(
-    //       reportId,
-    //       raw.startTime,
-    //       raw.endTime,
-    //       actorIds
-    //     );
-    //     console.log(events);
-    //   }
-    // } catch (error) {
-    //   console.error(error);
-    // }
-
-    const insertableFightsWithCharacterId =
-      await extendPlayersWithServerAndCharacterId(
+    const insertableFightsWithCharacterID =
+      await extendPlayersWithServerAndCharacterID(
         report.region,
         insertableFights
       );
 
-    const allPlayers = insertableFightsWithCharacterId.flatMap(
+    const allPlayers = insertableFightsWithCharacterID.flatMap(
       (fight) => fight.composition
     );
 
@@ -251,23 +273,29 @@ const fightHandler: RequestHandler<Request, FightResponse[]> = async (
       ].map((fn) => fn(allPlayers))
     );
 
-    const playersWithFightAndPlayerId = await createFights(
+    const fightsWithExtendedPlayers = await createFights(
       report,
       allPlayers,
-      insertableFightsWithCharacterId
+      insertableFightsWithCharacterID
     );
+
+    const playersTODO_REFACTOR = fightsWithExtendedPlayers.flatMap(
+      (fight) => fight.composition
+    );
+
+    await PullRepo.createMany(fightsWithExtendedPlayers);
 
     await Promise.all(
       [
         linkPlayerToConduits,
         linkPlayerToTalents,
         linkPlayerToCovenantTraits,
-      ].map((fn) => fn(playersWithFightAndPlayerId))
+      ].map((fn) => fn(playersTODO_REFACTOR))
     );
 
     const fullPersistedFights = await FightRepo.loadFull(
       reportID,
-      unseenFightIds
+      unseenFightIDs
     );
 
     // setCacheControl(
@@ -283,5 +311,5 @@ const fightHandler: RequestHandler<Request, FightResponse[]> = async (
 };
 
 export const handler = nc()
-  .get(createValidReportIdMiddleware("reportID"))
+  .get(createValidReportIDMiddleware("reportID"))
   .get(fightHandler);

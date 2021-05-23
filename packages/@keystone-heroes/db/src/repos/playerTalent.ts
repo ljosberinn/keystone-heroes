@@ -2,29 +2,29 @@ import { prisma } from "../client";
 import { withPerformanceLogging } from "../utils";
 
 import type { Player } from "./players";
+import type { PlayerTalent } from "@prisma/client";
 
 export type PlayerTalentInsert = (Pick<Player, "talents"> & {
-  playerId: number;
-  fightId: number;
+  playerID: number;
+  fightID: number;
 })[];
 
 export const PlayerTalentRepo = {
   createMany: withPerformanceLogging(
     async (data: PlayerTalentInsert): Promise<void> => {
-      // eslint-disable-next-line no-console
-      console.info(`[PlayerTalentRepo/createMany] linking talents to player`);
+      const payload = data.flatMap<Omit<PlayerTalent, "id">>((dataset) =>
+        dataset.talents.map((talent) => {
+          return {
+            playerID: dataset.playerID,
+            talentID: talent.id,
+            fightID: dataset.fightID,
+          };
+        })
+      );
 
       await prisma.playerTalent.createMany({
         skipDuplicates: true,
-        data: data.flatMap((dataset) =>
-          dataset.talents.map((talent) => {
-            return {
-              playerId: dataset.playerId,
-              talentId: talent.id,
-              fightId: dataset.fightId,
-            };
-          })
-        ),
+        data: payload,
       });
     },
     "PlayerTalentRepo/createMany"

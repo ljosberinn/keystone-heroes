@@ -6,17 +6,22 @@ import type {
   Talent,
   SoulbindTalent,
 } from "@keystone-heroes/wcl/src/queries";
-import type { Server, Spec, Character } from "@prisma/client";
+import type {
+  Player as PrismaPlayer,
+  Server,
+  Spec,
+  Character,
+} from "@prisma/client";
 
 export type Player = {
   server: string;
   name: string;
-  classId: number;
+  classID: number;
   // spec: SpecName;
   specId: number;
-  covenantId: number | null;
-  soulbindId: number | null;
-  actorId: number;
+  covenantID: number | null;
+  soulbindID: number | null;
+  actorID: number;
   itemLevel: number;
   deaths: number;
   hps: number;
@@ -24,7 +29,7 @@ export type Player = {
   legendary:
     | null
     | (Pick<LegendaryItem, "id" | "effectIcon" | "effectName"> & {
-        effectId: number;
+        effectID: number;
       });
   conduits: (Omit<Conduit, "total" | "guid"> & {
     id: Conduit["guid"];
@@ -32,12 +37,12 @@ export type Player = {
   })[];
   talents: (Omit<Talent, "type" | "guid"> & {
     id: Talent["guid"];
-    classId: number;
-    specId: number;
+    classID: number;
+    specID: number;
   })[];
   covenantTraits: (Omit<SoulbindTalent, "guid"> & {
     id: SoulbindTalent["guid"];
-    covenantId: number;
+    covenantID: number;
   })[];
 };
 
@@ -47,40 +52,39 @@ export type PlayerInsert = Pick<
   | "hps"
   | "deaths"
   | "itemLevel"
-  | "covenantId"
-  | "soulbindId"
+  | "covenantID"
+  | "soulbindID"
   | "legendary"
-  | "actorId"
+  | "actorID"
 > & {
-  serverId: Server["id"];
-  specId: Spec["id"];
-  characterId: Character["id"];
+  serverID: Server["id"];
+  specID: Spec["id"];
+  characterID: Character["id"];
 };
 
 export const PlayerRepo = {
   createMany: async (
     player: PlayerInsert[],
-    reportId: number
+    reportID: number
   ): Promise<Record<number, number>> => {
-    // eslint-disable-next-line no-console
-    console.info(`[PlayerRepo/createMany] creating ${player.length} player`);
+    const payload = player.map<Omit<PrismaPlayer, "id">>((dataset) => {
+      return {
+        dps: dataset.dps,
+        hps: dataset.hps,
+        deaths: dataset.deaths,
+        reportID,
+        itemLevel: dataset.itemLevel,
+        soulbindID: dataset.soulbindID,
+        covenantID: dataset.covenantID,
+        specID: dataset.specID,
+        characterID: dataset.characterID,
+        legendaryID: dataset.legendary?.effectID ?? null,
+        actorID: dataset.actorID,
+      };
+    });
 
     await prisma.player.createMany({
-      data: player.map((dataset) => {
-        return {
-          dps: dataset.dps,
-          hps: dataset.hps,
-          deaths: dataset.deaths,
-          reportId,
-          itemLevel: dataset.itemLevel,
-          soulbindId: dataset.soulbindId,
-          covenantId: dataset.covenantId,
-          specId: dataset.specId,
-          characterId: dataset.characterId,
-          legendaryId: dataset.legendary?.effectId ?? null,
-          actorId: dataset.actorId,
-        };
-      }),
+      data: payload,
       skipDuplicates: true,
     });
 
@@ -88,15 +92,15 @@ export const PlayerRepo = {
       where: {
         OR: player.map((dataset) => {
           return {
-            characterId: dataset.characterId,
-            reportId,
+            characterID: dataset.characterID,
+            reportID,
           };
         }),
       },
     });
 
     return Object.fromEntries(
-      playerData.map((dataset) => [dataset.characterId, dataset.id])
+      playerData.map((dataset) => [dataset.characterID, dataset.id])
     );
   },
 };

@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
-import { config } from "dotenv";
 
 import { affixes } from "../src/data/affixes";
+import allNPCs from "../src/data/all-npcs.json";
 import { classes } from "../src/data/classes";
 import { covenants } from "../src/data/covenants";
 import { dungeons } from "../src/data/dungeons";
@@ -14,27 +14,13 @@ import { specs } from "../src/data/specs";
 import { weeks } from "../src/data/weeks";
 
 import type { Class, Zone } from "@prisma/client";
-
-if (!process.env.DATABASE_URL) {
-  // eslint-disable-next-line no-console
-  console.log(`
-  Loading .env from "@keystone-heroes/env/.env" (rel. path: "../env/.env").
-  
-  If this crashes, make sure the file is present.
-  `);
-  config({
-    path: "../env/.env",
-  });
-
-  // eslint-disable-next-line no-console
-  console.log("Loaded .env successfully!");
-}
+// import "@keystone-heroes/env/src/loader";
 
 const prisma = new PrismaClient();
 
 function seedDungeons() {
   return Promise.all(
-    dungeons.map(({ timer, bossIds, expansionId, zones, ...dungeon }) =>
+    dungeons.map(({ timer, bossIDs, expansionID, zones, ...dungeon }) =>
       prisma.dungeon.upsert({
         create: {
           ...dungeon,
@@ -53,7 +39,7 @@ function seedZones() {
   const allZones: Zone[] = dungeons.flatMap((dungeon) =>
     dungeon.zones.map((zone) => ({
       name: zone.name,
-      dungeonId: dungeon.id,
+      dungeonID: dungeon.id,
       id: zone.id,
       order: zone.order,
     }))
@@ -219,7 +205,15 @@ function seedMaps() {
   );
 }
 
-async function main() {
+function seedNPCs() {
+  return prisma.nPC.createMany({
+    // @ts-expect-error file too large to properly analyze for ts
+    data: allNPCs,
+    skipDuplicates: true,
+  });
+}
+
+async function seed(): Promise<void> {
   await seedDungeons();
   await seedZones();
   await seedClasses();
@@ -232,17 +226,13 @@ async function main() {
   await seedSoulbinds();
   await seedRegions();
   await seedMaps();
+  await seedNPCs();
+
+  await prisma.$disconnect();
+
+  // eslint-disable-next-line unicorn/no-process-exit
+  process.exit(0);
 }
 
-main()
-  // eslint-disable-next-line promise/prefer-await-to-callbacks
-  .catch((error) => {
-    // eslint-disable-next-line no-console
-    console.error(error);
-    // eslint-disable-next-line unicorn/no-process-exit
-    process.exit(1);
-  })
-  // eslint-disable-next-line @typescript-eslint/no-misused-promises
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+// eslint-disable-next-line @typescript-eslint/no-floating-promises
+seed();

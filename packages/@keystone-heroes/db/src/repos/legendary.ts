@@ -1,28 +1,30 @@
 import { prisma } from "../client";
+import { withPerformanceLogging } from "../utils";
 
 import type { LegendaryItem } from "@keystone-heroes/wcl/src/queries";
+import type { Legendary } from "@prisma/client";
 
 export const LegendaryRepo = {
-  createMany: async (
-    items: (Pick<LegendaryItem, "id" | "effectIcon" | "effectName"> & {
-      effectId: number;
-    })[]
-  ): Promise<void> => {
-    // eslint-disable-next-line no-console
-    console.info(
-      `[LegendaryRepo/createMany] creating ${items.length} legendaries`
-    );
-
-    await prisma.legendary.createMany({
-      data: items.map((item) => {
+  createMany: withPerformanceLogging(
+    async (
+      data: (Pick<LegendaryItem, "id" | "effectIcon" | "effectName"> & {
+        effectID: number;
+      })[]
+    ): Promise<void> => {
+      const payload = data.map<Legendary>((item) => {
         return {
-          id: item.effectId,
-          itemId: item.id,
+          id: item.effectID,
+          itemID: item.id,
           effectName: item.effectName,
           effectIcon: item.effectIcon,
         };
-      }),
-      skipDuplicates: true,
-    });
-  },
+      });
+
+      await prisma.legendary.createMany({
+        data: payload,
+        skipDuplicates: true,
+      });
+    },
+    "LegendaryRepo/createMany"
+  ),
 };

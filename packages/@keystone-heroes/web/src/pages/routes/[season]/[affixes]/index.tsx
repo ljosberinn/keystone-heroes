@@ -13,7 +13,7 @@ import type { GetStaticPaths, GetStaticProps } from "next";
 type AffixesProps = {
   affixSlug: string;
   affixes: Affix[];
-  season: Omit<Season, "startTime" | "endTime" | "affixId" | "expansionId">;
+  season: Omit<Season, "startTime" | "endTime" | "affixID" | "expansionID">;
   dungeons: Omit<Dungeon, "time">[];
 };
 
@@ -59,14 +59,14 @@ type StaticParams = {
 
 export const getStaticPaths: GetStaticPaths<StaticParams> = async () => {
   const paths = seasons.flatMap((season) => {
-    const weeks = allWeeks.filter((week) => week.seasonId === season.id);
+    const weeks = allWeeks.filter((week) => week.seasonID === season.id);
 
     return weeks.map((week) => {
       const affixSlug = [
-        getAffixById(week.affix1Id),
-        getAffixById(week.affix2Id),
-        getAffixById(week.affix3Id),
-        getAffixById(season.affixId),
+        getAffixById(week.affix1ID),
+        getAffixById(week.affix2ID),
+        getAffixById(week.affix3ID),
+        getAffixById(season.affixID),
       ]
         .map((affix) => affix.name.toLowerCase())
         .join("-");
@@ -121,7 +121,7 @@ export const getStaticProps: GetStaticProps<AffixesProps, StaticParams> =
           slug: season.slug,
         },
         dungeons: dungeons
-          .filter((dungeon) => dungeon.expansionId === season.expansionId)
+          .filter((dungeon) => dungeon.expansionID === season.expansionID)
           .map((dungeon) => {
             return {
               id: dungeon.id,

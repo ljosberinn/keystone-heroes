@@ -9,7 +9,6 @@ generates:
       - "typescript-graphql-request"
     config:
       useTypeImports: true
-      immutableTypes: true
   ./schema.json:
     plugins:
       - "introspection"

@@ -1,29 +1,29 @@
 import { Affixes } from "@prisma/client";
 
 import { getAffixByName } from "./affixes";
-import { SeasonId } from "./seasons";
+import { SeasonID } from "./seasons";
 
 import type { Week } from "@prisma/client";
 
 const createWeek = (
-  seasonId: SeasonId,
+  seasonID: SeasonID,
   affixes: Affixes[],
-  seasonWeekId: number
+  seasonWeekID: number
 ): Omit<Week, "id"> => {
   const [affix1, affix2, affix3] = affixes;
 
   return {
-    seasonId,
-    affix1Id: getAffixByName(affix1),
-    affix2Id: getAffixByName(affix2),
-    affix3Id: getAffixByName(affix3),
-    seasonWeekId,
+    seasonID,
+    affix1ID: getAffixByName(affix1),
+    affix2ID: getAffixByName(affix2),
+    affix3ID: getAffixByName(affix3),
+    seasonWeekID,
   };
 };
 
 export const weeks: Week[] = [
   {
-    seasonId: SeasonId.SL_SEASON_1,
+    seasonID: SeasonID.SL_SEASON_1,
     weeks: [
       [Affixes.Fortified, Affixes.Bursting, Affixes.Volcanic, Affixes.Prideful],
       [
@@ -65,7 +65,7 @@ export const weeks: Week[] = [
     ],
   },
 ]
-  .flatMap(({ seasonId, weeks }) =>
-    weeks.map((week, index) => createWeek(seasonId, week, index))
+  .flatMap(({ seasonID, weeks }) =>
+    weeks.map((week, index) => createWeek(seasonID, week, index))
   )
   .map((week, index) => ({ ...week, id: index + 1 }));

@@ -1,3 +1,4 @@
+import { loadRecursiveEventsFromSource } from "./events";
 import { loadFightsFromSource, loadReportFromSource } from "./report";
 import { loadTableFromSource } from "./table";
 
@@ -22,4 +23,5 @@ export const wcl = {
   report: loadReportFromSource,
   fights: loadFightsFromSource,
   table: loadTableFromSource,
+  events: loadRecursiveEventsFromSource,
 };

@@ -15,6 +15,7 @@ import type {
   ReportMap,
   ReportMapBoundingBox,
 } from "../types";
+import type { DeepNonNullable } from "../utils";
 
 export const loadEnemyNPCIDs = async (
   params: EnemyNpcIdsQueryVariables,
@@ -53,8 +54,8 @@ export type InitialReportData = Pick<
   Report,
   "startTime" | "endTime" | "title"
 > & {
-  readonly region: Pick<Region, "slug">;
-  readonly fights: readonly ReportFight["id"][];
+  region: Pick<Region, "slug">;
+  fights: ReportFight["id"][];
 };
 
 export const loadReportFromSource = async (
@@ -81,23 +82,20 @@ export const loadReportFromSource = async (
       region: {
         slug: report.region.slug,
       },
-      fights: report.fights.reduce<readonly ReportFight["id"][]>(
-        (acc, fight) => {
-          if (!fight) {
-            return acc;
-          }
+      fights: report.fights.reduce<ReportFight["id"][]>((acc, fight) => {
+        if (!fight) {
+          return acc;
+        }
 
-          const keystoneBonus = fight.keystoneBonus ?? 0;
-          const keystoneLevel = fight.keystoneLevel ?? 0;
+        const keystoneBonus = fight.keystoneBonus ?? 0;
+        const keystoneLevel = fight.keystoneLevel ?? 0;
 
-          if (keystoneBonus === 0 || keystoneLevel < MIN_KEYSTONE_LEVEL) {
-            return acc;
-          }
+        if (keystoneBonus === 0 || keystoneLevel < MIN_KEYSTONE_LEVEL) {
+          return acc;
+        }
 
-          return [...acc, fight.id];
-        },
-        []
-      ),
+        return [...acc, fight.id];
+      }, []),
     };
   } catch (error) {
     // eslint-disable-next-line no-console
@@ -107,16 +105,16 @@ export const loadReportFromSource = async (
 };
 
 export type ExtendedReportData = {
-  readonly averageItemLevel: number;
-  readonly keystoneTime: number;
-  readonly keystoneBonus: number;
-  readonly keystoneLevel: number;
-  readonly startTime: number;
-  readonly endTime: number;
-  readonly keystoneAffixes: number[];
-  readonly id: number;
-  readonly dungeonPulls: DungeonPull[];
-  readonly gameZone: Pick<GameZone, "id"> | null;
+  averageItemLevel: number;
+  keystoneTime: number;
+  keystoneBonus: number;
+  keystoneLevel: number;
+  startTime: number;
+  endTime: number;
+  keystoneAffixes: number[];
+  id: number;
+  dungeonPulls: DungeonPull[];
+  gameZone: Pick<GameZone, "id"> | null;
 };
 
 export type ExtendedReportDataWithGameZone = Omit<
@@ -127,13 +125,16 @@ export type ExtendedReportDataWithGameZone = Omit<
 };
 
 export type DungeonPull = {
-  readonly x: number;
-  readonly y: number;
-  readonly startTime: number;
-  readonly endTime: number;
-  readonly maps: readonly number[];
-  readonly boundingBox: Readonly<NonNullable<ReportMapBoundingBox>>;
-  readonly enemyNPCs: readonly NonNullable<ReportDungeonPullNpc>[];
+  x: number;
+  y: number;
+  startTime: number;
+  endTime: number;
+  maps: number[];
+  boundingBox: ReportMapBoundingBox;
+  enemyNPCs: Pick<
+    Required<DeepNonNullable<ReportDungeonPullNpc>>,
+    "gameID" | "minimumInstanceID" | "maximumInstanceID" | "id"
+  >[];
 };
 
 export const loadFightsFromSource = async (
@@ -181,7 +182,8 @@ export const loadFightsFromSource = async (
           }
 
           const enemyNPCs = pull.enemyNPCs.filter(
-            (enemyNPC): enemyNPC is ReportDungeonPullNpc => enemyNPC !== null
+            (enemyNPC): enemyNPC is DungeonPull["enemyNPCs"][number] =>
+              enemyNPC !== null
           );
 
           if (enemyNPCs.length === 0) {

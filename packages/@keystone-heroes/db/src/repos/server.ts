@@ -1,7 +1,7 @@
 import { prisma } from "../client";
 import { withPerformanceLogging } from "../utils";
 
-import type { Region } from "@prisma/client";
+import type { Region, Server } from "@prisma/client";
 
 export const ServerRepo = {
   createMany: withPerformanceLogging(
@@ -9,19 +9,19 @@ export const ServerRepo = {
       region: Region,
       server: string[]
     ): Promise<Record<string, number>> => {
-      // eslint-disable-next-line no-console
-      console.info(
-        `[ServerRepo/createMany] creating ${server.length} servers in ${region.slug}`
-      );
+      const payload = server.map<Omit<Server, "id">>((name) => ({
+        name,
+        regionID: region.id,
+      }));
 
       await prisma.server.createMany({
-        data: server.map((name) => ({ name, regionId: region.id })),
+        data: payload,
         skipDuplicates: true,
       });
 
       const datasets = await prisma.server.findMany({
         where: {
-          regionId: region.id,
+          regionID: region.id,
           AND: {
             name: {
               in: server,

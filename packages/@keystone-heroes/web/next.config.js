@@ -1,14 +1,9 @@
-const withTM = require("next-transpile-modules")(
-  [
-    "@keystone-heroes/db",
-    "@keystone-heroes/wcl",
-    "@keystone-heroes/env",
-    "@keystone-heroes/api",
-  ],
-  {
-    debug: process.env.NODE_ENV !== "production",
-  }
-);
+const withTM = require("next-transpile-modules")([
+  "@keystone-heroes/db",
+  "@keystone-heroes/wcl",
+  "@keystone-heroes/env",
+  "@keystone-heroes/api",
+]);
 require("@keystone-heroes/env/src/loader");
 
 const date = new Date();

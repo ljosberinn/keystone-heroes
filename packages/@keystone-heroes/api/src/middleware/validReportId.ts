@@ -4,7 +4,7 @@ import { BAD_REQUEST } from "../utils/statusCodes";
 
 import type { Middleware } from "../utils/types";
 
-export const createValidReportIdMiddleware =
+export const createValidReportIDMiddleware =
   (key: string): Middleware =>
   (req, res, next) => {
     if (!isValidReportId(req.query[key])) {

@@ -21,6 +21,7 @@ import { ItemQuality, wcl } from "@keystone-heroes/wcl/src/queries";
 
 import { toUniqueArray } from "../../utils";
 
+import type { CastEvent } from "../../../../wcl/src/queries/events";
 import type { ReportRepo } from "@keystone-heroes/db/repos";
 import type {
   Conduit,
@@ -34,32 +35,33 @@ import type {
   Talent,
 } from "@keystone-heroes/wcl/src/queries";
 import type {
+  DungeonPull,
   ExtendedReportData,
   ExtendedReportDataWithGameZone,
 } from "@keystone-heroes/wcl/src/queries/report";
 import type { Region, Character } from "@prisma/client";
 
-export const extendPlayersWithServerAndCharacterId = async (
+export const extendPlayersWithServerAndCharacterID = async (
   region: Region,
   fights: InsertableFight[]
 ): Promise<
   (Omit<InsertableFight, "composition"> & { composition: ExtendedPlayer[] })[]
 > => {
   const serverMap = await createServers(region, fights);
-  const characters = await createCharacters(region, fights, serverMap);
+  const characters = await createCharacters(fights, serverMap);
 
   return fights.map((fight) => {
     return {
       ...fight,
       composition: fight.composition
         .map((player) => {
-          const serverId = serverMap[player.server];
+          const serverID = serverMap[player.server];
 
           const character = characters.find(
             (character) =>
               character.name === player.name &&
-              character.serverId === serverId &&
-              character.classId === player.classId
+              character.serverID === serverID &&
+              character.classID === player.classID
           );
 
           if (!character) {
@@ -68,13 +70,13 @@ export const extendPlayersWithServerAndCharacterId = async (
 
           return {
             ...player,
-            serverId,
-            characterId: character.id,
+            serverID,
+            characterID: character.id,
           };
         })
         .filter(
           (player): player is ExtendedPlayer =>
-            player?.characterId !== null && player?.serverId !== null
+            player?.characterID !== null && player?.serverID !== null
         ),
     };
   });
@@ -82,12 +84,20 @@ export const extendPlayersWithServerAndCharacterId = async (
 
 type Await<T> = T extends PromiseLike<infer U> ? U : T;
 
+type CreateFightsReturn_TODO_REFACTOR = Omit<
+  Await<ReturnType<typeof extendPlayersWithServerAndCharacterID>>[number],
+  "composition"
+> & {
+  fightID: number;
+  composition: FurtherExtendedPlayer[];
+};
+
 export const createFights = async (
   report: NonNullable<Await<ReturnType<typeof ReportRepo.load>>>,
   allPlayers: ExtendedPlayer[],
-  fights: Await<ReturnType<typeof extendPlayersWithServerAndCharacterId>>
-): Promise<FurtherExtendedPlayer[]> => {
-  const playerIdMap = await PlayerRepo.createMany(allPlayers, report.id);
+  fights: Await<ReturnType<typeof extendPlayersWithServerAndCharacterID>>
+): Promise<CreateFightsReturn_TODO_REFACTOR[]> => {
+  const playerIDMap = await PlayerRepo.createMany(allPlayers, report.id);
 
   const week = WeekRepo.findWeekbyTimestamp(report.startTime, report.endTime);
 
@@ -96,10 +106,10 @@ export const createFights = async (
       const [player1, player2, player3, player4, player5] = fight.composition;
 
       return {
-        reportId: report.id,
-        weekId: week.id,
-        fightId: fight.id,
-        dungeonId: fight.dungeon,
+        reportID: report.id,
+        weekID: week.id,
+        fightID: fight.id,
+        dungeonID: fight.dungeon,
         chests: fight.chests,
         dps: fight.dps,
         hps: fight.hps,
@@ -108,11 +118,11 @@ export const createFights = async (
         keystoneLevel: fight.keystoneLevel,
         keystoneTime: fight.keystoneTime,
         totalDeaths: fight.totalDeaths,
-        player1Id: playerIdMap[player1.characterId],
-        player2Id: playerIdMap[player2.characterId],
-        player3Id: playerIdMap[player3.characterId],
-        player4Id: playerIdMap[player4.characterId],
-        player5Id: playerIdMap[player5.characterId],
+        player1ID: playerIDMap[player1.characterID],
+        player2ID: playerIDMap[player2.characterID],
+        player3ID: playerIDMap[player3.characterID],
+        player4ID: playerIDMap[player4.characterID],
+        player5ID: playerIDMap[player5.characterID],
       };
     })
   );
@@ -122,27 +132,32 @@ export const createFights = async (
     fights.map((fight) => fight.id)
   );
 
-  return fights.flatMap((fight) =>
-    fight.composition
-      .map((player) => {
-        const dbFight = createdFights.find(
-          (createdFight) => createdFight.fightId === fight.id
-        );
+  return fights
+    .map<CreateFightsReturn_TODO_REFACTOR | null>((fight) => {
+      const dbFight = createdFights.find(
+        (createdFight) => createdFight.fightID === fight.id
+      );
 
-        if (!dbFight) {
-          return null;
-        }
+      if (!dbFight) {
+        return null;
+      }
 
-        return {
-          ...player,
-          playerId: playerIdMap[player.characterId],
-          fightId: dbFight.id,
-        };
-      })
-      .filter(
-        (player): player is FurtherExtendedPlayer => player?.fightId !== null
-      )
-  );
+      return {
+        ...fight,
+        fightID: dbFight.id,
+        composition: fight.composition.map((player) => {
+          return {
+            ...player,
+            playerID: playerIDMap[player.characterID],
+            fightID: dbFight.id,
+          };
+        }),
+      };
+    })
+    .filter(
+      (fight): fight is CreateFightsReturn_TODO_REFACTOR =>
+        fight?.fightID !== null
+    );
 };
 
 export const createLegendaries = async (
@@ -175,23 +190,21 @@ const createServers = (
   );
 
 const createCharacters = (
-  region: Region,
   fights: InsertableFight[],
   serverMap: Record<number, number>
 ): Promise<Character[]> =>
   CharacterRepo.createMany(
     fights.flatMap((fight) => fight.composition),
-    region,
     serverMap
   );
 
-type FurtherExtendedPlayer = ExtendedPlayer & {
-  playerId: number;
-  fightId: number;
+export type FurtherExtendedPlayer = ExtendedPlayer & {
+  playerID: number;
+  fightID: number;
 };
 type ExtendedPlayer = InsertableFight["composition"][number] & {
-  characterId: number;
-  serverId: number;
+  characterID: number;
+  serverID: number;
 };
 
 export type InsertableFight = Omit<
@@ -215,12 +228,12 @@ export type InsertableFight = Omit<
   composition: {
     server: string;
     name: string;
-    classId: number;
+    classID: number;
     // spec: SpecName;
-    specId: number;
-    covenantId: number | null;
-    soulbindId: number | null;
-    actorId: number;
+    specID: number;
+    covenantID: number | null;
+    soulbindID: number | null;
+    actorID: number;
     itemLevel: number;
     deaths: number;
     hps: number;
@@ -228,7 +241,7 @@ export type InsertableFight = Omit<
     legendary:
       | null
       | (Pick<LegendaryItem, "id" | "effectIcon" | "effectName"> & {
-          effectId: number;
+          effectID: number;
         });
     conduits: (Omit<Conduit, "total" | "guid"> & {
       id: Conduit["guid"];
@@ -236,13 +249,28 @@ export type InsertableFight = Omit<
     })[];
     talents: (Omit<Talent, "type" | "guid"> & {
       id: Talent["guid"];
-      classId: number;
-      specId: number;
+      classID: number;
+      specID: number;
     })[];
     covenantTraits: (Omit<SoulbindTalent, "guid"> & {
       id: SoulbindTalent["guid"];
-      covenantId: number;
+      covenantID: number;
     })[];
+  }[];
+  pulls: {
+    startTime: number;
+    endTime: number;
+    x: number;
+    y: number;
+    boundingBox: {
+      minX: number;
+      maxX: number;
+      minY: number;
+      maxY: number;
+    };
+    maps: number[];
+    events: CastEvent[];
+    npcs: DungeonPull["enemyNPCs"];
   }[];
 };
 
@@ -265,9 +293,9 @@ export const linkPlayerToConduits = (
   PlayerConduitRepo.createMany(
     player.map((player) => {
       return {
-        playerId: player.playerId,
+        playerID: player.playerID,
         conduits: player.conduits,
-        fightId: player.fightId,
+        fightID: player.fightID,
       };
     })
   );
@@ -277,9 +305,9 @@ export const linkPlayerToTalents = (
 ): Promise<void> =>
   PlayerTalentRepo.createMany(
     player.map((player) => ({
-      playerId: player.playerId,
+      playerID: player.playerID,
       talents: player.talents,
-      fightId: player.fightId,
+      fightID: player.fightID,
     }))
   );
 
@@ -288,19 +316,19 @@ export const linkPlayerToCovenantTraits = (
 ): Promise<void> =>
   PlayerCovenantTraitRepo.createMany(
     player.map((player) => ({
-      playerId: player.playerId,
+      playerID: player.playerID,
       covenantTraits: player.covenantTraits,
-      covenantId: player.covenantId,
-      fightId: player.fightId,
+      covenantID: player.covenantID,
+      fightID: player.fightID,
     }))
   );
 
-type EnhancedFight = ExtendedReportDataWithGameZone & { table: Table };
+type FightWithTable = ExtendedReportDataWithGameZone & { table: Table };
 
 export const enhanceFightsWithTable = async (
   reportID: string,
   fights: ExtendedReportData[]
-): Promise<EnhancedFight[]> => {
+): Promise<FightWithTable[]> => {
   const fightsWithGameZone = ensureGameZone(fights);
 
   const fightsWithTable = await Promise.all(
@@ -319,7 +347,7 @@ export const enhanceFightsWithTable = async (
     })
   );
 
-  return fightsWithTable.filter((fight): fight is EnhancedFight => {
+  return fightsWithTable.filter((fight): fight is FightWithTable => {
     return (
       fight.table !== null &&
       Object.values(fight.table.playerDetails).flat().length === 5
@@ -327,16 +355,44 @@ export const enhanceFightsWithTable = async (
   });
 };
 
+type FightWithEvents = FightWithTable & { events: CastEvent[] };
+
+export const enhanceFightsWithEvents = async (
+  reportID: string,
+  fights: FightWithTable[]
+): Promise<FightWithEvents[]> => {
+  const fightsWithEvents = await Promise.all(
+    fights.map(async (fight) => {
+      const ids = fight.table.composition.map((player) => player.id);
+
+      const allEvents = await Promise.all(
+        ids.map((id) =>
+          wcl.events(reportID, fight.startTime, fight.endTime, id)
+        )
+      );
+
+      return {
+        ...fight,
+        events: allEvents.flat().sort((a, b) => a.timestamp - b.timestamp),
+      };
+    })
+  );
+
+  return fightsWithEvents.filter((fight): fight is FightWithEvents => {
+    return fight.events.length > 0;
+  });
+};
+
 const ensureGameZone = (fights: ExtendedReportData[]) =>
   fights.map((fight) => {
-    const allNpcIds = new Set(
+    const allNPCIDs = new Set(
       fight.dungeonPulls.flatMap((pull) =>
         pull.enemyNPCs.map((npc) => npc.gameID)
       )
     );
 
     const matchingDungeon = dungeons.find((dungeon) =>
-      dungeon.bossIds.every((bossId) => allNpcIds.has(bossId))
+      dungeon.bossIDs.every((bossID) => allNPCIDs.has(bossID))
     );
 
     if (matchingDungeon) {
@@ -369,22 +425,22 @@ export const extractPlayerData = (
     (item): item is LegendaryItem => item.quality === ItemQuality.LEGENDARY
   );
 
-  const specId = specMapByName[details.specs[0]];
-  const covenantId = details.combatantInfo.covenantID ?? null;
+  const specID = specMapByName[details.specs[0]];
+  const covenantID = details.combatantInfo.covenantID ?? null;
 
   return {
-    actorId: details.id,
+    actorID: details.id,
     server: details.server,
     name: details.name,
-    classId: classMapByName[details.type],
+    classID: classMapByName[details.type],
     itemLevel: details.minItemLevel,
-    covenantId,
-    soulbindId: details.combatantInfo.soulbindID ?? null,
-    specId,
+    covenantID,
+    soulbindID: details.combatantInfo.soulbindID ?? null,
+    specID,
     legendary: legendary
       ? {
           id: legendary.id,
-          effectId: legendary.effectID,
+          effectID: legendary.effectID,
           effectName: legendary.effectName,
           effectIcon: legendary.effectIcon,
         }
@@ -397,7 +453,7 @@ export const extractPlayerData = (
         itemLevel: conduit.total,
       };
     }),
-    covenantTraits: covenantId
+    covenantTraits: covenantID
       ? details.combatantInfo.artifact
           .filter((talent) => talent.guid !== 0)
           .map((talent) => {
@@ -405,7 +461,7 @@ export const extractPlayerData = (
               name: talent.name,
               abilityIcon: talent.abilityIcon,
               id: talent.guid,
-              covenantId,
+              covenantID,
             };
           })
       : [],
@@ -414,8 +470,8 @@ export const extractPlayerData = (
         name: talent.name,
         abilityIcon: talent.abilityIcon,
         id: talent.guid,
-        specId,
-        classId: classMapByName[details.type],
+        specID,
+        classID: classMapByName[details.type],
       };
     }),
     deaths: table.deathEvents.filter((event) => event.guid === details.guid)
