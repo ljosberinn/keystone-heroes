@@ -3,7 +3,7 @@ import { wcl } from "@keystone-heroes/wcl/src/queries";
 import { maybeOngoingReport } from "@keystone-heroes/wcl/utils";
 import nc from "next-connect";
 
-import { createValidReportIDMiddleware } from "../../middleware/validReportID";
+import { createValidReportIDMiddleware } from "../../middleware";
 import { NO_CONTENT } from "../../utils/statusCodes";
 
 import type { RequestHandler } from "../../utils/types";

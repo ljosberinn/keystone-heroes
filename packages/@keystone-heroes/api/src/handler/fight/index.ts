@@ -2,7 +2,7 @@ import { FightRepo, PullRepo, ReportRepo } from "@keystone-heroes/db/repos";
 import { wcl } from "@keystone-heroes/wcl/src/queries";
 import nc from "next-connect";
 
-import { createValidReportIDMiddleware } from "../../middleware/validReportID";
+import { createValidReportIDMiddleware } from "../../middleware";
 import { BAD_REQUEST, INTERNAL_SERVER_ERROR } from "../../utils/statusCodes";
 import {
   calcMetricAverage,
