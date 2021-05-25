@@ -9,24 +9,23 @@ export type PlayerTalentInsert = (Pick<Player, "talents"> & {
   fightID: number;
 })[];
 
-export const PlayerTalentRepo = {
-  createMany: withPerformanceLogging(
-    async (data: PlayerTalentInsert): Promise<void> => {
-      const payload = data.flatMap<Omit<PlayerTalent, "id">>((dataset) =>
-        dataset.talents.map((talent) => {
-          return {
-            playerID: dataset.playerID,
-            talentID: talent.id,
-            fightID: dataset.fightID,
-          };
-        })
-      );
+const createMany = async (data: PlayerTalentInsert): Promise<void> => {
+  const payload = data.flatMap<Omit<PlayerTalent, "id">>((dataset) =>
+    dataset.talents.map((talent) => {
+      return {
+        playerID: dataset.playerID,
+        talentID: talent.id,
+        fightID: dataset.fightID,
+      };
+    })
+  );
 
-      await prisma.playerTalent.createMany({
-        skipDuplicates: true,
-        data: payload,
-      });
-    },
-    "PlayerTalentRepo/createMany"
-  ),
+  await prisma.playerTalent.createMany({
+    skipDuplicates: true,
+    data: payload,
+  });
+};
+
+export const PlayerTalentRepo = {
+  createMany: withPerformanceLogging(createMany, "PlayerTalentRepo/createMany"),
 };

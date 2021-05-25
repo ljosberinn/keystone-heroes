@@ -1,0 +1,83 @@
+[
+  {
+    "timestamp": 6591764,
+    "type": "death",
+    "sourceID": -1,
+    "targetID": 30,
+    "targetInstance": 1,
+    "abilityGameID": 0
+  },
+  {
+    "timestamp": 6613466,
+    "type": "death",
+    "sourceID": -1,
+    "targetID": 28,
+    "targetInstance": 3,
+    "abilityGameID": 0
+  },
+  {
+    "timestamp": 6619599,
+    "type": "death",
+    "sourceID": -1,
+    "targetID": 28,
+    "targetInstance": 1,
+    "abilityGameID": 0
+  },
+  {
+    "timestamp": 6626889,
+    "type": "death",
+    "sourceID": -1,
+    "targetID": 28,
+    "targetInstance": 2,
+    "abilityGameID": 0,
+    "targetMarker": 8
+  },
+  {
+    "timestamp": 6664640,
+    "type": "death",
+    "sourceID": -1,
+    "targetID": 31,
+    "targetInstance": 1,
+    "abilityGameID": 0
+  },
+  {
+    "timestamp": 6933937,
+    "type": "death",
+    "sourceID": -1,
+    "targetID": 31,
+    "targetInstance": 2,
+    "abilityGameID": 0
+  },
+  {
+    "timestamp": 6934894,
+    "type": "death",
+    "sourceID": -1,
+    "targetID": 30,
+    "targetInstance": 2,
+    "abilityGameID": 0
+  },
+  {
+    "timestamp": 7583945,
+    "type": "death",
+    "sourceID": -1,
+    "targetID": 28,
+    "targetInstance": 7,
+    "abilityGameID": 0
+  },
+  {
+    "timestamp": 7587132,
+    "type": "death",
+    "sourceID": -1,
+    "targetID": 30,
+    "targetInstance": 3,
+    "abilityGameID": 0
+  },
+  {
+    "timestamp": 7588201,
+    "type": "death",
+    "sourceID": -1,
+    "targetID": 31,
+    "targetInstance": 3,
+    "abilityGameID": 0
+  }
+]

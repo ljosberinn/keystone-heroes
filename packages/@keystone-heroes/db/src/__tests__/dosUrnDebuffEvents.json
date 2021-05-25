@@ -1,0 +1,161 @@
+[
+  {
+    "timestamp": 5321492,
+    "type": "applydebuff",
+    "sourceID": 8,
+    "targetID": 107,
+    "targetInstance": 1,
+    "abilityGameID": 228626
+  },
+  {
+    "timestamp": 5935595,
+    "type": "applydebuff",
+    "sourceID": 8,
+    "targetID": 93,
+    "targetInstance": 2,
+    "abilityGameID": 228626
+  },
+  {
+    "timestamp": 5935595,
+    "type": "applydebuff",
+    "sourceID": 8,
+    "targetID": 90,
+    "targetInstance": 8,
+    "abilityGameID": 228626
+  },
+  {
+    "timestamp": 5935595,
+    "type": "applydebuff",
+    "sourceID": 8,
+    "targetID": 94,
+    "targetInstance": 7,
+    "abilityGameID": 228626
+  },
+  {
+    "timestamp": 5935595,
+    "type": "applydebuff",
+    "sourceID": 8,
+    "targetID": 89,
+    "targetInstance": 5,
+    "abilityGameID": 228626
+  },
+  {
+    "timestamp": 5935595,
+    "type": "applydebuff",
+    "sourceID": 8,
+    "targetID": 89,
+    "targetInstance": 6,
+    "abilityGameID": 228626
+  },
+  {
+    "timestamp": 5935595,
+    "type": "applydebuff",
+    "sourceID": 8,
+    "targetID": 89,
+    "targetInstance": 7,
+    "abilityGameID": 228626
+  },
+  {
+    "timestamp": 6422409,
+    "type": "applydebuff",
+    "sourceID": 8,
+    "targetID": 131,
+    "targetInstance": 6,
+    "abilityGameID": 228626
+  },
+  {
+    "timestamp": 6422409,
+    "type": "applydebuff",
+    "sourceID": 8,
+    "targetID": 131,
+    "targetInstance": 5,
+    "abilityGameID": 228626
+  },
+  {
+    "timestamp": 6422409,
+    "type": "applydebuff",
+    "sourceID": 8,
+    "targetID": 131,
+    "targetInstance": 4,
+    "abilityGameID": 228626
+  },
+  {
+    "timestamp": 6422409,
+    "type": "applydebuff",
+    "sourceID": 8,
+    "targetID": 131,
+    "targetInstance": 7,
+    "abilityGameID": 228626
+  },
+  {
+    "timestamp": 6422409,
+    "type": "applydebuff",
+    "sourceID": 8,
+    "targetID": 131,
+    "targetInstance": 8,
+    "abilityGameID": 228626
+  },
+  {
+    "timestamp": 6422409,
+    "type": "applydebuff",
+    "sourceID": 8,
+    "targetID": 130,
+    "targetInstance": 7,
+    "abilityGameID": 228626
+  },
+  {
+    "timestamp": 6422409,
+    "type": "applydebuff",
+    "sourceID": 8,
+    "targetID": 130,
+    "targetInstance": 5,
+    "abilityGameID": 228626
+  },
+  {
+    "timestamp": 6422409,
+    "type": "applydebuff",
+    "sourceID": 8,
+    "targetID": 130,
+    "targetInstance": 6,
+    "abilityGameID": 228626
+  },
+  {
+    "timestamp": 6422409,
+    "type": "applydebuff",
+    "sourceID": 8,
+    "targetID": 130,
+    "targetInstance": 9,
+    "abilityGameID": 228626
+  },
+  {
+    "timestamp": 6422409,
+    "type": "applydebuff",
+    "sourceID": 8,
+    "targetID": 130,
+    "targetInstance": 8,
+    "abilityGameID": 228626
+  },
+  {
+    "timestamp": 6422409,
+    "type": "applydebuff",
+    "sourceID": 8,
+    "targetID": 130,
+    "targetInstance": 10,
+    "abilityGameID": 228626
+  },
+  {
+    "timestamp": 6422409,
+    "type": "applydebuff",
+    "sourceID": 8,
+    "targetID": 130,
+    "targetInstance": 11,
+    "abilityGameID": 228626
+  },
+  {
+    "timestamp": 6422409,
+    "type": "applydebuff",
+    "sourceID": 8,
+    "targetID": 135,
+    "abilityGameID": 228626
+  }
+]

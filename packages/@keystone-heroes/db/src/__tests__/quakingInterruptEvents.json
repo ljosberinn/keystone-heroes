@@ -1,0 +1,28 @@
+[
+  {
+    "timestamp": 3870105,
+    "type": "interrupt",
+    "sourceID": 3,
+    "targetID": 3,
+    "abilityGameID": 240448,
+    "extraAbilityGameID": 212084,
+    "sourceMarker": 7,
+    "targetMarker": 7
+  },
+  {
+    "timestamp": 4190108,
+    "type": "interrupt",
+    "sourceID": 19,
+    "targetID": 19,
+    "abilityGameID": 240448,
+    "extraAbilityGameID": 34914
+  },
+  {
+    "timestamp": 4310106,
+    "type": "interrupt",
+    "sourceID": 19,
+    "targetID": 19,
+    "abilityGameID": 240448,
+    "extraAbilityGameID": 8092
+  }
+]

@@ -38,7 +38,9 @@ import type {
   Class,
   Server,
   Spec,
+  Ability,
   Event,
+  NPC,
 } from "@prisma/client";
 
 type Request = {
@@ -70,16 +72,30 @@ export type FightResponse = Pick<
 
 type Pull = Pick<
   DungeonPull,
-  "x" | "y" | "startTime" | "endTime" | "maps" | "boundingBox"
+  "x" | "y" | "startTime" | "endTime" | "boundingBox"
 > & {
-  events: Event[];
+  events: (Omit<
+    Event,
+    | "pullID"
+    | "id"
+    | "sourceNPCID"
+    | "targetNPCID"
+    | "interruptedAbilityID"
+    | "abilityID"
+  > & {
+    sourceNPC: NPC | null;
+    targetNPC: NPC | null;
+    interruptedAbility: Ability | null;
+    ability: Ability | null;
+  })[];
+  zones: number[];
 };
 
 type Composition = (Pick<
   PrismaPlayer,
-  "dps" | "hps" | "deaths" | "itemLevel"
+  "dps" | "hps" | "deaths" | "itemLevel" | "actorID"
 > & {
-  actorID: number;
+  playerID: PrismaPlayer["id"];
   legendary: Legendary | null;
   covenant: Pick<Covenant, "icon" | "name"> | null;
   soulbind: Pick<Soulbind, "icon" | "name"> | null;
@@ -88,7 +104,10 @@ type Composition = (Pick<
     spec: Pick<Spec, "id" | "name">;
     server: Pick<Server, "name">;
   };
-  talents: (Omit<Talent, "guid" | "type"> & { id: number })[];
+  talents: (Omit<Talent, "guid" | "type" | "abilityIcon"> & {
+    id: number;
+    icon: string;
+  })[];
   covenantTraits: Omit<CovenantTrait, "covenantID">[];
   conduits: (Omit<Conduit, "guid" | "total"> & {
     itemLevel: number;
@@ -182,6 +201,8 @@ const fightHandler: RequestHandler<Request, FightResponse[]> = async (
     const insertableFights = fightsWithEvents.map<InsertableFight>((fight) => {
       return {
         id: fight.id,
+        startTime: fight.startTime,
+        endTime: fight.endTime,
         keystoneLevel: fight.keystoneLevel,
         keystoneTime: fight.keystoneTime,
         chests: fight.keystoneBonus,
@@ -254,11 +275,10 @@ const fightHandler: RequestHandler<Request, FightResponse[]> = async (
       return;
     }
 
-    const insertableFightsWithCharacterID =
-      await extendPlayersWithServerAndCharacterID(
-        report.region,
-        insertableFights
-      );
+    const insertableFightsWithCharacterID = await extendPlayersWithServerAndCharacterID(
+      report.region,
+      insertableFights
+    );
 
     const allPlayers = insertableFightsWithCharacterID.flatMap(
       (fight) => fight.composition
@@ -283,7 +303,13 @@ const fightHandler: RequestHandler<Request, FightResponse[]> = async (
       (fight) => fight.composition
     );
 
-    await PullRepo.createMany(fightsWithExtendedPlayers);
+    const actorPlayerMap = new Map(
+      fightsWithExtendedPlayers.flatMap((fight) =>
+        fight.composition.map((player) => [player.actorID, player.playerID])
+      )
+    );
+
+    await PullRepo.createMany(fightsWithExtendedPlayers, actorPlayerMap);
 
     await Promise.all(
       [

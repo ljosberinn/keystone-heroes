@@ -1,0 +1,43 @@
+[
+  {
+    "timestamp": 5742140,
+    "type": "death",
+    "sourceID": -1,
+    "targetID": 7,
+    "abilityGameID": 0,
+    "killerID": 42,
+    "killerInstance": 1,
+    "killingAbilityGameID": 342332
+  },
+  {
+    "timestamp": 5842330,
+    "type": "death",
+    "sourceID": -1,
+    "targetID": 3,
+    "abilityGameID": 0,
+    "killerID": -1,
+    "killingAbilityGameID": 240559,
+    "targetMarker": 2
+  },
+  {
+    "timestamp": 6934404,
+    "type": "death",
+    "sourceID": -1,
+    "targetID": 3,
+    "abilityGameID": 0,
+    "killerID": 42,
+    "killerInstance": 4,
+    "killingAbilityGameID": 342332,
+    "targetMarker": 2
+  },
+  {
+    "timestamp": 7081669,
+    "type": "death",
+    "sourceID": -1,
+    "targetID": 3,
+    "abilityGameID": 0,
+    "killerID": 187,
+    "killingAbilityGameID": 331818,
+    "targetMarker": 2
+  }
+]

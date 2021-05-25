@@ -2,11 +2,11 @@ import { PrismaClient } from "@prisma/client";
 
 import { affixes } from "../src/data/affixes";
 import allNPCs from "../src/data/all-npcs.json";
+import allAbilities from "../src/data/all-spells.json";
 import { classes } from "../src/data/classes";
 import { covenants } from "../src/data/covenants";
 import { dungeons } from "../src/data/dungeons";
 import { expansions } from "../src/data/expansions";
-import { maps } from "../src/data/maps";
 import { regions } from "../src/data/regions";
 import { seasons } from "../src/data/seasons";
 import { soulbinds } from "../src/data/soulbinds";
@@ -14,7 +14,7 @@ import { specs } from "../src/data/specs";
 import { weeks } from "../src/data/weeks";
 
 import type { Class, Zone } from "@prisma/client";
-// import "@keystone-heroes/env/src/loader";
+import "@keystone-heroes/env/src/loader";
 
 const prisma = new PrismaClient();
 
@@ -191,26 +191,51 @@ function seedRegions() {
   );
 }
 
-function seedMaps() {
-  return Promise.all(
-    maps.map((map) =>
-      prisma.map.upsert({
-        create: map,
-        where: {
-          id: map.id,
-        },
-        update: {},
-      })
-    )
-  );
-}
-
 function seedNPCs() {
   return prisma.nPC.createMany({
-    // @ts-expect-error file too large to properly analyze for ts
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment, @typescript-eslint/prefer-ts-expect-error
+    // @ts-ignore ts-expect-error fails in yarn seed for whichever reason
     data: allNPCs,
     skipDuplicates: true,
   });
+}
+
+async function seedAbilities() {
+  const chunkSize = 10_000;
+
+  if (!Array.isArray(allAbilities)) {
+    throw new TypeError("ts must be satisfied");
+  }
+
+  const iterations = Math.ceil(allAbilities.length / chunkSize);
+
+  for (let i = 0; i < iterations; i++) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment, @typescript-eslint/prefer-ts-expect-error
+    // @ts-ignore ts-expect-error fails in yarn seed for whichever reason
+    const start = chunkSize * i;
+    const end = chunkSize * (i + 1);
+
+    const key = `abilities-${start}-${end}`;
+
+    // eslint-disable-next-line no-console
+    console.time(key);
+
+    const data = allAbilities
+      .slice(start, end)
+      .filter((ability) => ability.name !== null)
+      .map(({ id, name, icon }) => ({ id, name, icon }));
+
+    // eslint-disable-next-line no-await-in-loop
+    await prisma.ability.createMany({
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment, @typescript-eslint/prefer-ts-expect-error
+      // @ts-ignore ts-expect-error fails in yarn seed for whichever reason
+      data,
+      skipDuplicates: true,
+    });
+
+    // eslint-disable-next-line no-console
+    console.timeEnd(key);
+  }
 }
 
 async function seed(): Promise<void> {
@@ -225,8 +250,8 @@ async function seed(): Promise<void> {
   await seedCovenants();
   await seedSoulbinds();
   await seedRegions();
-  await seedMaps();
   await seedNPCs();
+  await seedAbilities();
 
   await prisma.$disconnect();
 

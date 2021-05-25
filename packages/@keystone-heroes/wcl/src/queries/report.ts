@@ -17,6 +17,11 @@ import type {
 } from "../types";
 import type { DeepNonNullable } from "../utils";
 
+type EnsuredNPC = Omit<ReportFightNpc, "gameID" | "id"> & {
+  gameID: number;
+  id: number;
+};
+
 export const loadEnemyNPCIDs = async (
   params: EnemyNpcIdsQueryVariables,
   gameIdOrIds: number | number[]
@@ -25,11 +30,6 @@ export const loadEnemyNPCIDs = async (
   const response = await client.EnemyNPCIds(params);
 
   const ids = new Set(Array.isArray(gameIdOrIds) ? gameIdOrIds : [gameIdOrIds]);
-
-  type EnsuredNPC = Omit<ReportFightNpc, "gameID" | "id"> & {
-    gameID: number;
-    id: number;
-  };
 
   return (
     response?.reportData?.report?.fights?.[0]?.enemyNPCs
@@ -121,7 +121,7 @@ export type ExtendedReportDataWithGameZone = Omit<
   ExtendedReportData,
   "gameZone"
 > & {
-  readonly gameZone: Pick<GameZone, "id">;
+  gameZone: Pick<GameZone, "id">;
 };
 
 export type DungeonPull = {

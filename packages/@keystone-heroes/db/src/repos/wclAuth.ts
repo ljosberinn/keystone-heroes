@@ -9,26 +9,27 @@ export type WCLOAuthResponse = {
   token_type: "Bearer";
 };
 
-export const WCLAuthRepo = {
-  upsert: withPerformanceLogging(
-    async ({ access_token, expires_in }: WCLOAuthResponse): Promise<void> => {
-      const payload: Omit<WCLAuth, "id"> = {
-        token: access_token,
-        expiresAt: Math.round(Date.now() / 1000) + expires_in,
-      };
+const upsert = async ({
+  access_token,
+  expires_in,
+}: WCLOAuthResponse): Promise<void> => {
+  const payload: Omit<WCLAuth, "id"> = {
+    token: access_token,
+    expiresAt: Math.round(Date.now() / 1000) + expires_in,
+  };
 
-      await prisma.wCLAuth.upsert({
-        create: payload,
-        where: {
-          id: 1,
-        },
-        update: payload,
-      });
+  await prisma.wCLAuth.upsert({
+    create: payload,
+    where: {
+      id: 1,
     },
-    "WCLAuthRepo/upsert"
-  ),
-  load: withPerformanceLogging(
-    (): Promise<WCLAuth | null> => prisma.wCLAuth.findFirst(),
-    "WCLAuthRepo/load"
-  ),
+    update: payload,
+  });
+};
+
+const load = (): Promise<WCLAuth | null> => prisma.wCLAuth.findFirst();
+
+export const WCLAuthRepo = {
+  upsert: withPerformanceLogging(upsert, "WCLAuthRepo/upsert"),
+  load: withPerformanceLogging(load, "WCLAuthRepo/load"),
 };

@@ -9,25 +9,27 @@ export type PlayerConduitInsert = (Pick<Player, "conduits"> & {
   fightID: number;
 })[];
 
+const createMany = async (data: PlayerConduitInsert): Promise<void> => {
+  const payload = data.flatMap<Omit<PlayerConduit, "id">>((dataset) =>
+    dataset.conduits.map((conduit) => {
+      return {
+        playerID: dataset.playerID,
+        itemLevel: conduit.itemLevel,
+        conduitID: conduit.id,
+        fightID: dataset.fightID,
+      };
+    })
+  );
+
+  await prisma.playerConduit.createMany({
+    skipDuplicates: true,
+    data: payload,
+  });
+};
+
 export const PlayerConduitRepo = {
   createMany: withPerformanceLogging(
-    async (data: PlayerConduitInsert): Promise<void> => {
-      const payload = data.flatMap<Omit<PlayerConduit, "id">>((dataset) =>
-        dataset.conduits.map((conduit) => {
-          return {
-            playerID: dataset.playerID,
-            itemLevel: conduit.itemLevel,
-            conduitID: conduit.id,
-            fightID: dataset.fightID,
-          };
-        })
-      );
-
-      await prisma.playerConduit.createMany({
-        skipDuplicates: true,
-        data: payload,
-      });
-    },
+    createMany,
     "PlayerConduitRepo/createMany"
   ),
 };

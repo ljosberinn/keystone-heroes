@@ -1,0 +1,12 @@
+[
+  {
+    "timestamp": 6143395,
+    "type": "applybuff",
+    "sourceID": 174,
+    "sourceInstance": 2,
+    "targetID": 173,
+    "targetInstance": 3,
+    "abilityGameID": 209859,
+    "stacks": 8
+  }
+]

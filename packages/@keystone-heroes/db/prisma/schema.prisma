@@ -36,17 +36,18 @@ model Dungeon {
   time Int
 
   Fight Fight[]
-  Map   Map[]
   Zone  Zone[]
 }
 
 model Zone {
-  id        Int     @id
+  id        Int    @id
   name      String
   order     Int
   dungeonID Int
 
-  dungeon   Dungeon @relation(fields: [dungeonID], references: [id])
+  dungeon Dungeon @relation(fields: [dungeonID], references: [id])
+
+  PullZone PullZone[]
 }
 
 model Affix {
@@ -69,7 +70,7 @@ model Expansion {
 }
 
 model Season {
-  id          Int       @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
   name        String
   slug        String
@@ -78,14 +79,14 @@ model Season {
   expansionID Int
   affixID     Int
 
-  affix       Affix     @relation(fields: [affixID], references: [id])
-  expansion   Expansion @relation(fields: [expansionID], references: [id])
+  affix     Affix     @relation(fields: [affixID], references: [id])
+  expansion Expansion @relation(fields: [expansionID], references: [id])
 
   Week Week[]
 }
 
 model Week {
-  id           Int    @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
   seasonID     Int
   seasonWeekID Int
@@ -93,10 +94,10 @@ model Week {
   affix2ID     Int
   affix3ID     Int
 
-  affix1       Affix  @relation("affix1", fields: [affix1ID], references: [id])
-  affix2       Affix  @relation("affix2", fields: [affix2ID], references: [id])
-  affix3       Affix  @relation("affix3", fields: [affix3ID], references: [id])
-  season       Season @relation(fields: [seasonID], references: [id])
+  affix1 Affix  @relation("affix1", fields: [affix1ID], references: [id])
+  affix2 Affix  @relation("affix2", fields: [affix2ID], references: [id])
+  affix3 Affix  @relation("affix3", fields: [affix3ID], references: [id])
+  season Season @relation(fields: [seasonID], references: [id])
 
   Fight Fight[]
 
@@ -104,7 +105,7 @@ model Week {
 }
 
 model Report {
-  id        Int      @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
   report    String   @unique @db.Char(16)
   regionID  Int
@@ -112,14 +113,14 @@ model Report {
   startTime DateTime
   endTime   DateTime
 
-  region    Region   @relation(fields: [regionID], references: [id])
+  region Region @relation(fields: [regionID], references: [id])
 
   Fight  Fight[]
   Player Player[]
 }
 
 model Fight {
-  id               Int     @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
   fightID          Int
   reportID         Int
@@ -139,14 +140,14 @@ model Fight {
   player5ID        Int
   weekID           Int
 
-  dungeon          Dungeon @relation(fields: [dungeonID], references: [id])
-  player1          Player  @relation("player1", fields: [player1ID], references: [id])
-  player2          Player  @relation("player2", fields: [player2ID], references: [id])
-  player3          Player  @relation("player3", fields: [player3ID], references: [id])
-  player4          Player  @relation("player4", fields: [player4ID], references: [id])
-  player5          Player  @relation("player5", fields: [player5ID], references: [id])
-  report           Report  @relation(fields: [reportID], references: [id])
-  week             Week    @relation(fields: [weekID], references: [id])
+  dungeon Dungeon @relation(fields: [dungeonID], references: [id])
+  player1 Player  @relation("player1", fields: [player1ID], references: [id])
+  player2 Player  @relation("player2", fields: [player2ID], references: [id])
+  player3 Player  @relation("player3", fields: [player3ID], references: [id])
+  player4 Player  @relation("player4", fields: [player4ID], references: [id])
+  player5 Player  @relation("player5", fields: [player5ID], references: [id])
+  report  Report  @relation(fields: [reportID], references: [id])
+  week    Week    @relation(fields: [weekID], references: [id])
 
   PlayerConduit       PlayerConduit[]
   PlayerCovenantTrait PlayerCovenantTrait[]
@@ -157,21 +158,21 @@ model Fight {
 }
 
 model Character {
-  id       Int      @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
   name     String
   serverID Int
   classID  Int
 
-  class    Class    @relation(fields: [classID], references: [id])
-  server   Server   @relation(fields: [serverID], references: [id])
-  Player   Player[]
+  class  Class    @relation(fields: [classID], references: [id])
+  server Server   @relation(fields: [serverID], references: [id])
+  Player Player[]
 
   @@unique([name, serverID])
 }
 
 model Player {
-  id          Int        @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
   reportID    Int
   characterID Int
@@ -185,29 +186,31 @@ model Player {
   soulbindID  Int?
   legendaryID Int?
 
-  character   Character  @relation(fields: [characterID], references: [id])
-  covenant    Covenant?  @relation(fields: [covenantID], references: [id])
-  legendary   Legendary? @relation(fields: [legendaryID], references: [id])
-  report      Report     @relation(fields: [reportID], references: [id])
-  soulbind    Soulbind?  @relation(fields: [soulbindID], references: [id])
-  spec        Spec       @relation(fields: [specID], references: [id])
+  character Character  @relation(fields: [characterID], references: [id])
+  covenant  Covenant?  @relation(fields: [covenantID], references: [id])
+  legendary Legendary? @relation(fields: [legendaryID], references: [id])
+  report    Report     @relation(fields: [reportID], references: [id])
+  soulbind  Soulbind?  @relation(fields: [soulbindID], references: [id])
+  spec      Spec       @relation(fields: [specID], references: [id])
 
-  sourcePlayer        Event[]               @relation("sourcePlayer")
-  targetPlayer        Event[]               @relation("targetPlayer")
-  player1             Fight[]               @relation("player1")
-  player2             Fight[]               @relation("player2")
-  player3             Fight[]               @relation("player3")
-  player4             Fight[]               @relation("player4")
-  player5             Fight[]               @relation("player5")
+  sourcePlayer Event[] @relation("sourcePlayer")
+  targetPlayer Event[] @relation("targetPlayer")
+
+  player1 Fight[] @relation("player1")
+  player2 Fight[] @relation("player2")
+  player3 Fight[] @relation("player3")
+  player4 Fight[] @relation("player4")
+  player5 Fight[] @relation("player5")
+
   PlayerConduit       PlayerConduit[]
   PlayerCovenantTrait PlayerCovenantTrait[]
   PlayerTalent        PlayerTalent[]
 }
 
 model Covenant {
-  id            Int             @id
-  name          Covenants
-  icon          String
+  id   Int       @id
+  name Covenants
+  icon String
 
   CovenantTrait CovenantTrait[]
   Player        Player[]
@@ -215,19 +218,19 @@ model Covenant {
 }
 
 model Soulbind {
-  id         Int      @id
+  id Int @id
 
   name       String
   icon       String
   covenantID Int
 
-  covenant   Covenant @relation(fields: [covenantID], references: [id])
+  covenant Covenant @relation(fields: [covenantID], references: [id])
 
   Player Player[]
 }
 
 model Region {
-  id   Int    @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
   slug String @unique
 
@@ -236,12 +239,12 @@ model Region {
 }
 
 model Server {
-  id       Int    @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
   name     String
   regionID Int
 
-  region   Region @relation(fields: [regionID], references: [id])
+  region Region @relation(fields: [regionID], references: [id])
 
   Character Character[]
 
@@ -258,84 +261,84 @@ model Legendary {
 }
 
 model Conduit {
-  id          Int    @id
-  name        String
-  abilityIcon String
+  id   Int    @id
+  name String
+  icon String
 
   PlayerConduit PlayerConduit[]
 }
 
 model PlayerConduit {
-  id        Int     @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
   itemLevel Int
   fightID   Int
   conduitID Int
   playerID  Int
 
-  conduit   Conduit @relation(fields: [conduitID], references: [id])
-  fight     Fight   @relation(fields: [fightID], references: [id])
-  player    Player  @relation(fields: [playerID], references: [id])
+  conduit Conduit @relation(fields: [conduitID], references: [id])
+  fight   Fight   @relation(fields: [fightID], references: [id])
+  player  Player  @relation(fields: [playerID], references: [id])
 }
 
 model Talent {
-  id          Int    @id
+  id Int @id
 
-  name        String
-  abilityIcon String
-  classID     Int
-  specID      Int
+  name    String
+  icon    String
+  classID Int
+  specID  Int
 
-  class       Class  @relation(fields: [classID], references: [id])
-  spec        Spec   @relation(fields: [specID], references: [id])
+  class Class @relation(fields: [classID], references: [id])
+  spec  Spec  @relation(fields: [specID], references: [id])
 
   PlayerTalent PlayerTalent[]
 }
 
 model PlayerTalent {
-  id       Int    @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
   fightID  Int
   talentID Int
   playerID Int
 
-  fight    Fight  @relation(fields: [fightID], references: [id])
-  player   Player @relation(fields: [playerID], references: [id])
-  talent   Talent @relation(fields: [talentID], references: [id])
+  fight  Fight  @relation(fields: [fightID], references: [id])
+  player Player @relation(fields: [playerID], references: [id])
+  talent Talent @relation(fields: [talentID], references: [id])
 }
 
 model CovenantTrait {
-  id          Int      @id
-  name        String
-  abilityIcon String
-  covenantID  Int
+  id         Int    @id
+  name       String
+  icon       String
+  covenantID Int
 
-  covenant    Covenant @relation(fields: [covenantID], references: [id])
+  covenant Covenant @relation(fields: [covenantID], references: [id])
 
   PlayerCovenantTrait PlayerCovenantTrait[]
 }
 
 model PlayerCovenantTrait {
-  id              Int           @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
   fightID         Int
   covenantTraitID Int
   playerID        Int
 
-  covenantTrait   CovenantTrait @relation(fields: [covenantTraitID], references: [id])
-  fight           Fight         @relation(fields: [fightID], references: [id])
-  player          Player        @relation(fields: [playerID], references: [id])
+  covenantTrait CovenantTrait @relation(fields: [covenantTraitID], references: [id])
+  fight         Fight         @relation(fields: [fightID], references: [id])
+  player        Player        @relation(fields: [playerID], references: [id])
 }
 
 model WCLAuth {
-  id        Int     @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
   token     String?
   expiresAt Int?
 }
 
 model Pull {
-  id        Int   @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
   fightID   Int
   startTime Int
@@ -347,66 +350,169 @@ model Pull {
   minY      Int
   maxY      Int
 
-  fight     Fight @relation(fields: [fightID], references: [id])
+  fight Fight @relation(fields: [fightID], references: [id])
 
-  Event   Event[]
-  PullMap PullMap[]
-  PullNPC PullNPC[]
+  Event    Event[]
+  PullZone PullZone[]
+  PullNPC  PullNPC[]
 }
 
-model Map {
-  id        Int       @id
-  
-  dungeonID Int
-
-  dungeon   Dungeon   @relation(fields: [dungeonID], references: [id])
-
-  PullMap   PullMap[]
-}
-
-model PullMap {
-  id     Int  @id @default(autoincrement())
+model PullZone {
+  id Int @id @default(autoincrement())
 
   pullID Int
-  mapID  Int
+  zoneID Int
 
-  map    Map  @relation(fields: [mapID], references: [id])
-  pull   Pull @relation(fields: [pullID], references: [id])
+  zone Zone @relation(fields: [zoneID], references: [id])
+  pull Pull @relation(fields: [pullID], references: [id])
 }
 
 model PullNPC {
-  id     Int  @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
   count  Int
   pullID Int
   npcID  Int
 
-  npc    NPC  @relation(fields: [npcID], references: [id])
-  pull   Pull @relation(fields: [pullID], references: [id])
+  npc  NPC  @relation(fields: [npcID], references: [id])
+  pull Pull @relation(fields: [pullID], references: [id])
 }
 
 model NPC {
   id   Int    @id
   name String
 
-  Event   Event[]
+  sourceNPC Event[] @relation("sourceNPC")
+  targetNPC Event[] @relation("targetNPC")
+
   PullNPC PullNPC[]
 }
 
-model Event {
-  id             Int     @id @default(autoincrement())
-  timestamp      Int
-  abiltiyID      Int
-  pullID         Int
-  sourcePlayerID Int
-  targetNPCID    Int?
-  targetPlayerID Int?
+// model Event {
+//   id             Int  @id @default(autoincrement())
+//   timestamp      Int
+//   abilityID      Int
+//   pullID         Int
+//   sourcePlayerID Int
+//   targetNPCID    Int?
+//   targetPlayerID Int?
 
-  pull           Pull    @relation(fields: [pullID], references: [id])
-  sourcePlayer   Player  @relation("sourcePlayer", fields: [sourcePlayerID], references: [id])
-  targetNPC      NPC?    @relation(fields: [targetNPCID], references: [id])
+//   pull         Pull    @relation(fields: [pullID], references: [id])
+//   sourcePlayer Player  @relation("sourcePlayer", fields: [sourcePlayerID], references: [id])
+//   targetNPC    NPC?    @relation(fields: [targetNPCID], references: [id])
+//   targetPlayer Player? @relation("targetPlayer", fields: [targetPlayerID], references: [id])
+// }
+
+// Bursting, Explosion, Grievous, Necrotic, Quaking, Sanguine, Spiteful, Storming, Volcanic
+// abilities
+// NW Items
+// SOA Spear
+// pride damage taken, death events
+
+// SD applybuff
+// dos applydebuff
+// theatre applybuff
+// hoa cast
+// pf applybuff, death events
+model Event {
+  id Int @id @default(autoincrement())
+
+  eventType EventType
+  timestamp Int
+  abilityID Int?
+  ability   Ability?  @relation("ability", fields: [abilityID], references: [id])
+
+  // interrupted by quaking
+  interruptedAbilityID Int?
+  interruptedAbility   Ability? @relation("interruptedAbility", fields: [interruptedAbilityID], references: [id])
+
+  // acting player
+  sourcePlayerID Int?
+  sourcePlayer   Player? @relation("sourcePlayer", fields: [sourcePlayerID], references: [id])
+
+  // targeted player
+  targetPlayerID Int?
   targetPlayer   Player? @relation("targetPlayer", fields: [targetPlayerID], references: [id])
+
+  // acting npc
+  sourceNPCID       Int?
+  sourceNPC         NPC? @relation("sourceNPC", fields: [sourceNPCID], references: [id])
+  // in case of deaths to NPCs with multipple instances, e.g. pride
+  sourceNPCInstance Int?
+
+  // targeted npc
+  targetNPCID       Int?
+  targetNPC         NPC? @relation("targetNPC", fields: [targetNPCID], references: [id])
+  // to differentiate e.g. pride or pf slime instances
+  targetNPCInstance Int?
+
+  damage      Int?
+  healingDone Int?
+  // only given in case of Event === ApplyDebuffStack
+  stacks      Int?
+
+  pullID Int
+  pull   Pull @relation(fields: [pullID], references: [id])
 }
+
+model Ability {
+  id Int @id
+
+  name String
+  icon String?
+
+  ability            Event[] @relation("ability")
+  interruptedAbility Event[] @relation("interruptedAbility")
+}
+
+enum EventType {
+  HealingDone
+  DamageDone
+  DamageTaken
+  Cast
+  BeginCast
+  Death
+  ApplyBuff
+  ApplyBuffStack
+  ApplyDebuff
+  ApplyDebuffStack
+  RemoveBuff
+  Interrupt
+}
+
+// model MetaEvent {
+//   id Int @id @default(autoincrement())
+
+//   sumSanguineHealingDone Int?
+//   sumSanguineDamageTaken Int?
+
+//   sumExplosiveDamageTaken Int?
+
+//   sumGrievousDamageTaken Int?
+
+//   sumNecroticDamageTaken  Int?
+//   sumNecroticHighestStack Int?
+
+//   sumStormingDamageTaken Int?
+
+//   sumVolcanicDamageTaken Int?
+
+//   highestBolsteringCount Int?
+
+//   sumPridefulInstancesKilled Int?
+
+//   pfRedSlimeKills    Int?
+//   pfRedSlimeConsumed Int?
+
+//   pfGreenSlimeKills    Int?
+//   pfGreenSlimeConsumed Int?
+
+//   pfPurpleSlimeKills    Int?
+//   pfPurpleSlimeConsumed Int?
+
+//   fightID Int
+//   fight   Fight @relation(fields: [fightID], references: [id])
+// }
 
 enum Role {
   dps

@@ -10,7 +10,7 @@ export const DOS_URN = 228_626;
 export const HOA_GARGOYLE = 342_171;
 export const SD_LANTERN_OPENING = 340_013;
 export const SD_LANTERN_BUFF = 340_433;
-export const TOP_BANNER = -1;
+export const TOP_BANNER_AURA = 340_378;
 
 export const PF_RED_BUFF = {
   unit: 164_705,
@@ -35,14 +35,15 @@ export const SANGUINE_ICHOR_DAMAGE = 226_512;
 
 export const GRIEVOUS_WOUND = 240_559;
 
-export const EXPLOSIVES = 120_651;
-export const EXPLOSION = 240_446;
-
 export const CARDBOARD_ASSASSIN = 51_229;
 
 export const DIMENSIONAL_SHIFTER = 321_422;
 export const POTION_OF_THE_HIDDEN_SPIRIT = 307_195;
 
+export const EXPLOSIVE = {
+  unit: 120_651,
+  ability: 240_446,
+};
 export const NECROTIC = 209_858;
 export const STORMING = 343_520;
 export const VOLCANIC = 209_862;

@@ -9,22 +9,21 @@ type CreateConduit = Omit<Conduit, "total" | "guid"> & {
   itemLevel: Conduit["total"];
 };
 
-export const ConduitRepo = {
-  createMany: withPerformanceLogging(
-    async (data: CreateConduit[]): Promise<void> => {
-      const payload = data.map<PrismaConduit>((conduit) => {
-        return {
-          id: conduit.id,
-          abilityIcon: conduit.abilityIcon,
-          name: conduit.name,
-        };
-      });
+const createMany = async (data: CreateConduit[]): Promise<void> => {
+  const payload = data.map<PrismaConduit>((conduit) => {
+    return {
+      id: conduit.id,
+      icon: conduit.abilityIcon,
+      name: conduit.name,
+    };
+  });
 
-      await prisma.conduit.createMany({
-        data: payload,
-        skipDuplicates: true,
-      });
-    },
-    "ConduitRepo/createMany"
-  ),
+  await prisma.conduit.createMany({
+    data: payload,
+    skipDuplicates: true,
+  });
+};
+
+export const ConduitRepo = {
+  createMany: withPerformanceLogging(createMany, "ConduitRepo/createMany"),
 };

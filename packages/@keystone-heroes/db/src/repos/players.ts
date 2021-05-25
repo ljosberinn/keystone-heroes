@@ -1,4 +1,5 @@
 import { prisma } from "../client";
+import { withPerformanceLogging } from "../utils";
 
 import type {
   Conduit,
@@ -62,45 +63,47 @@ export type PlayerInsert = Pick<
   characterID: Character["id"];
 };
 
+const createMany = async (
+  player: PlayerInsert[],
+  reportID: number
+): Promise<Record<number, number>> => {
+  const payload = player.map<Omit<PrismaPlayer, "id">>((dataset) => {
+    return {
+      dps: dataset.dps,
+      hps: dataset.hps,
+      deaths: dataset.deaths,
+      reportID,
+      itemLevel: dataset.itemLevel,
+      soulbindID: dataset.soulbindID,
+      covenantID: dataset.covenantID,
+      specID: dataset.specID,
+      characterID: dataset.characterID,
+      legendaryID: dataset.legendary?.effectID ?? null,
+      actorID: dataset.actorID,
+    };
+  });
+
+  await prisma.player.createMany({
+    data: payload,
+    skipDuplicates: true,
+  });
+
+  const playerData = await prisma.player.findMany({
+    where: {
+      OR: player.map((dataset) => {
+        return {
+          characterID: dataset.characterID,
+          reportID,
+        };
+      }),
+    },
+  });
+
+  return Object.fromEntries(
+    playerData.map((dataset) => [dataset.characterID, dataset.id])
+  );
+};
+
 export const PlayerRepo = {
-  createMany: async (
-    player: PlayerInsert[],
-    reportID: number
-  ): Promise<Record<number, number>> => {
-    const payload = player.map<Omit<PrismaPlayer, "id">>((dataset) => {
-      return {
-        dps: dataset.dps,
-        hps: dataset.hps,
-        deaths: dataset.deaths,
-        reportID,
-        itemLevel: dataset.itemLevel,
-        soulbindID: dataset.soulbindID,
-        covenantID: dataset.covenantID,
-        specID: dataset.specID,
-        characterID: dataset.characterID,
-        legendaryID: dataset.legendary?.effectID ?? null,
-        actorID: dataset.actorID,
-      };
-    });
-
-    await prisma.player.createMany({
-      data: payload,
-      skipDuplicates: true,
-    });
-
-    const playerData = await prisma.player.findMany({
-      where: {
-        OR: player.map((dataset) => {
-          return {
-            characterID: dataset.characterID,
-            reportID,
-          };
-        }),
-      },
-    });
-
-    return Object.fromEntries(
-      playerData.map((dataset) => [dataset.characterID, dataset.id])
-    );
-  },
+  createMany: withPerformanceLogging(createMany, "PlayerRepo/createMany"),
 };

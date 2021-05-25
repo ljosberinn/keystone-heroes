@@ -1,0 +1,42 @@
+[
+  {
+    "timestamp": 11555435,
+    "type": "begincast",
+    "sourceID": 150,
+    "targetID": -1,
+    "abilityGameID": 340013,
+    "sourceMarker": 2
+  },
+  {
+    "timestamp": 12245987,
+    "type": "begincast",
+    "sourceID": 150,
+    "targetID": -1,
+    "abilityGameID": 340013,
+    "sourceMarker": 2
+  },
+  {
+    "timestamp": 12595765,
+    "type": "begincast",
+    "sourceID": 150,
+    "targetID": -1,
+    "abilityGameID": 340013,
+    "sourceMarker": 2
+  },
+  {
+    "timestamp": 13469368,
+    "type": "begincast",
+    "sourceID": 150,
+    "targetID": -1,
+    "abilityGameID": 340013,
+    "sourceMarker": 2
+  },
+  {
+    "timestamp": 13472946,
+    "type": "begincast",
+    "sourceID": 150,
+    "targetID": -1,
+    "abilityGameID": 340013,
+    "sourceMarker": 2
+  }
+]

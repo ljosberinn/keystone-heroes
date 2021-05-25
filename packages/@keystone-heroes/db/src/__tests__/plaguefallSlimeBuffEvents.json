@@ -1,0 +1,30 @@
+[
+  {
+    "timestamp": 1283097,
+    "type": "applybuff",
+    "sourceID": 11,
+    "targetID": 11,
+    "abilityGameID": 340210
+  },
+  {
+    "timestamp": 1581590,
+    "type": "applybuff",
+    "sourceID": 11,
+    "targetID": 11,
+    "abilityGameID": 340225
+  },
+  {
+    "timestamp": 1581590,
+    "type": "applybuff",
+    "sourceID": 11,
+    "targetID": 11,
+    "abilityGameID": 340210
+  },
+  {
+    "timestamp": 1581590,
+    "type": "applybuff",
+    "sourceID": 11,
+    "targetID": 11,
+    "abilityGameID": 340271
+  }
+]

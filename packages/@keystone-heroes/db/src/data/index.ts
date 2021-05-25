@@ -3,7 +3,6 @@ export * from "./classes";
 export * from "./covenants";
 export * from "./dungeons";
 export * from "./expansions";
-export * from "./maps";
 export * from "./regions";
 export * from "./seasons";
 export * from "./soulbinds";
