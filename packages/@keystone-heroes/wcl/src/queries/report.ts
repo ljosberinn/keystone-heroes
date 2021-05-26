@@ -15,7 +15,7 @@ import type {
   ReportMap,
   ReportMapBoundingBox,
 } from "../types";
-import type { DeepNonNullable } from "../utils";
+import type { DeepNonNullable } from "ts-essentials";
 
 type EnsuredNPC = Omit<ReportFightNpc, "gameID" | "id"> & {
   gameID: number;
@@ -144,95 +144,105 @@ export const loadFightsFromSource = async (
     const sdk = await getCachedSdk();
     const json = await sdk.ExtendedReportData(params);
 
-    if (!json?.reportData?.report) {
+    if (!json?.reportData?.report?.fights) {
       return null;
     }
 
-    const { report } = json.reportData;
+    return json.reportData.report.fights.reduce<ExtendedReportData[]>(
+      (acc, fight) => {
+        if (
+          !fight ||
+          !fight.keystoneAffixes ||
+          !fight.dungeonPulls ||
+          !fight.keystoneBonus ||
+          !fight.keystoneLevel ||
+          !fight.keystoneTime ||
+          !fight.averageItemLevel ||
+          fight.keystoneBonus === 0 ||
+          fight.keystoneLevel < MIN_KEYSTONE_LEVEL ||
+          fight.keystoneAffixes.length === 0 ||
+          fight.keystoneTime === 0 ||
+          fight.averageItemLevel === 0
+        ) {
+          return acc;
+        }
 
-    if (!report.fights) {
-      return null;
-    }
-
-    return report.fights.reduce<ExtendedReportData[]>((acc, fight) => {
-      if (!fight || !fight.keystoneAffixes || !fight.dungeonPulls) {
-        return acc;
-      }
-
-      const keystoneBonus = fight.keystoneBonus ?? 0;
-      const keystoneLevel = fight.keystoneLevel ?? 0;
-      const keystoneTime = fight.keystoneTime ?? 0;
-      const averageItemLevel = fight.averageItemLevel ?? 0;
-      const gameZone = fight.gameZone ?? null;
-      const keystoneAffixes = fight.keystoneAffixes.filter(
-        (affix): affix is number => affix !== null
-      );
-      const dungeonPulls = fight.dungeonPulls.reduce<DungeonPull[]>(
-        (acc, pull) => {
-          if (!pull || !pull.maps || !pull.enemyNPCs || !pull.boundingBox) {
-            return acc;
-          }
-
-          const maps = pull.maps
-            .filter((map): map is ReportMap => map !== null)
-            .map((map) => map.id);
-
-          if (maps.length === 0) {
-            return acc;
-          }
-
-          const enemyNPCs = pull.enemyNPCs.filter(
-            (enemyNPC): enemyNPC is DungeonPull["enemyNPCs"][number] =>
-              enemyNPC !== null
-          );
-
-          if (enemyNPCs.length === 0) {
-            return acc;
-          }
-
-          return [
-            ...acc,
-            {
-              x: pull.x,
-              y: pull.y,
-              startTime: pull.startTime,
-              endTime: pull.endTime,
-              maps,
-              boundingBox: pull.boundingBox,
-              enemyNPCs,
-            },
-          ];
-        },
-        []
-      );
-
-      if (
-        keystoneBonus === 0 ||
-        keystoneLevel < MIN_KEYSTONE_LEVEL ||
-        keystoneAffixes.length === 0 ||
-        keystoneTime === 0 ||
-        averageItemLevel === 0 ||
-        dungeonPulls.length === 0
-      ) {
-        return acc;
-      }
-
-      return [
-        ...acc,
-        {
-          id: fight.id,
-          startTime: fight.startTime,
-          endTime: fight.endTime,
-          keystoneAffixes,
-          averageItemLevel,
-          keystoneTime,
-          keystoneBonus,
+        const {
           keystoneLevel,
-          dungeonPulls,
-          gameZone,
-        },
-      ];
-    }, []);
+          keystoneTime,
+          averageItemLevel,
+          id,
+          startTime,
+          endTime,
+          keystoneBonus,
+          gameZone = null,
+        } = fight;
+
+        const keystoneAffixes = fight.keystoneAffixes.filter(
+          (affix): affix is number => affix !== null
+        );
+
+        const dungeonPulls = fight.dungeonPulls.reduce<DungeonPull[]>(
+          (acc, pull) => {
+            if (!pull || !pull.maps || !pull.enemyNPCs || !pull.boundingBox) {
+              return acc;
+            }
+
+            const maps = pull.maps
+              .filter((map): map is ReportMap => map !== null)
+              .map((map) => map.id);
+
+            if (maps.length === 0) {
+              return acc;
+            }
+
+            const enemyNPCs = pull.enemyNPCs.filter(
+              (enemyNPC): enemyNPC is DungeonPull["enemyNPCs"][number] =>
+                enemyNPC !== null
+            );
+
+            if (enemyNPCs.length === 0) {
+              return acc;
+            }
+
+            return [
+              ...acc,
+              {
+                x: pull.x,
+                y: pull.y,
+                startTime: pull.startTime,
+                endTime: pull.endTime,
+                maps,
+                boundingBox: pull.boundingBox,
+                enemyNPCs,
+              },
+            ];
+          },
+          []
+        );
+
+        if (dungeonPulls.length === 0) {
+          return acc;
+        }
+
+        return [
+          ...acc,
+          {
+            id,
+            startTime,
+            endTime,
+            keystoneAffixes,
+            averageItemLevel,
+            keystoneTime,
+            keystoneBonus,
+            keystoneLevel,
+            dungeonPulls,
+            gameZone,
+          },
+        ];
+      },
+      []
+    );
   } catch (error) {
     // eslint-disable-next-line no-console
     console.trace(error);

@@ -152,11 +152,8 @@ export type DamageEvent = Event<{
   sourceMarker?: number;
   absorbed?: number;
   overkill?: number;
-}>;
-
-export type DamageTakenEvent = DamageEvent & {
   buffs?: string;
-};
+}>;
 
 export type BeginCastEvent = Event<{
   type: "begincast";
@@ -672,8 +669,8 @@ type TotalDamageTakenBySanguineParams = SpiresSpearUsageParams;
 
 export const getSanguineDamageTakenEvents = async (
   params: TotalDamageTakenBySanguineParams,
-  previousEvents: DamageTakenEvent[] = []
-): Promise<DamageTakenEvent[]> => {
+  previousEvents: DamageEvent[] = []
+): Promise<DamageEvent[]> => {
   const sdk = await getCachedSdk();
 
   const response = await sdk.EventData({
@@ -685,7 +682,7 @@ export const getSanguineDamageTakenEvents = async (
 
   const { data = [], nextPageTimestamp = null } =
     response?.reportData?.report?.events ?? {};
-  const allEvents: DamageTakenEvent[] = [...previousEvents, ...data];
+  const allEvents: DamageEvent[] = [...previousEvents, ...data];
 
   if (nextPageTimestamp) {
     return getSanguineDamageTakenEvents(
@@ -701,8 +698,8 @@ type TotalDamageTakenByGrievousWoundParams = SpiresSpearUsageParams;
 
 export const getGrievousDamageTakenEvents = async (
   params: TotalDamageTakenByGrievousWoundParams,
-  previousEvents: DamageTakenEvent[] = []
-): Promise<DamageTakenEvent[]> => {
+  previousEvents: DamageEvent[] = []
+): Promise<DamageEvent[]> => {
   const sdk = await getCachedSdk();
 
   const response = await sdk.EventData({
@@ -714,7 +711,7 @@ export const getGrievousDamageTakenEvents = async (
 
   const { data = [], nextPageTimestamp = null } =
     response?.reportData?.report?.events ?? {};
-  const allEvents: DamageTakenEvent[] = [...previousEvents, ...data];
+  const allEvents: DamageEvent[] = [...previousEvents, ...data];
 
   if (nextPageTimestamp) {
     return getGrievousDamageTakenEvents(
@@ -778,8 +775,8 @@ type TotalDamageTakenBySpitefulParams = SpiresSpearUsageParams & {
 export const getSpitefulDamageTakenEvents = async (
   params: TotalDamageTakenBySpitefulParams,
   spitefulID = -1,
-  previousEvents: DamageTakenEvent[] = []
-): Promise<DamageTakenEvent[]> => {
+  previousEvents: DamageEvent[] = []
+): Promise<DamageEvent[]> => {
   const sourceID =
     spitefulID === -1
       ? await getSpitefulSourceID({
@@ -803,7 +800,7 @@ export const getSpitefulDamageTakenEvents = async (
 
   const { data = [], nextPageTimestamp = null } =
     response?.reportData?.report?.events ?? {};
-  const allEvents: DamageTakenEvent[] = [...previousEvents, ...data];
+  const allEvents: DamageEvent[] = [...previousEvents, ...data];
 
   if (nextPageTimestamp) {
     return getSpitefulDamageTakenEvents(
@@ -820,8 +817,8 @@ type TotalDamageTakenByExplosionParams = SpiresSpearUsageParams;
 
 export const getExplosiveDamageTakenEvents = async (
   params: TotalDamageTakenByExplosionParams,
-  previousEvents: DamageTakenEvent[] = []
-): Promise<DamageTakenEvent[]> => {
+  previousEvents: DamageEvent[] = []
+): Promise<DamageEvent[]> => {
   const sdk = await getCachedSdk();
 
   const response = await sdk.EventData({
@@ -833,7 +830,7 @@ export const getExplosiveDamageTakenEvents = async (
 
   const { data = [], nextPageTimestamp = null } =
     response?.reportData?.report?.events ?? {};
-  const allEvents: DamageTakenEvent[] = [...previousEvents, ...data];
+  const allEvents: DamageEvent[] = [...previousEvents, ...data];
 
   if (nextPageTimestamp) {
     return getExplosiveDamageTakenEvents(
@@ -890,8 +887,8 @@ type TotalDamageTakenByNecroticParams = SpiresSpearUsageParams;
 
 export const getNecroticDamageTakenEvents = async (
   params: TotalDamageTakenByNecroticParams,
-  previousEvents: DamageTakenEvent[] = []
-): Promise<DamageTakenEvent[]> => {
+  previousEvents: DamageEvent[] = []
+): Promise<DamageEvent[]> => {
   const sdk = await getCachedSdk();
 
   const response = await sdk.EventData({
@@ -903,7 +900,7 @@ export const getNecroticDamageTakenEvents = async (
 
   const { data = [], nextPageTimestamp = null } =
     response?.reportData?.report?.events ?? {};
-  const allEvents: DamageTakenEvent[] = [...previousEvents, ...data];
+  const allEvents: DamageEvent[] = [...previousEvents, ...data];
 
   if (nextPageTimestamp) {
     return getNecroticDamageTakenEvents(
@@ -912,32 +909,15 @@ export const getNecroticDamageTakenEvents = async (
     );
   }
 
-  return allEvents.reduce<DamageTakenEvent[]>((arr, event) => {
-    const existingIndex = arr.findIndex(
-      (dataset) => dataset.targetID === event.targetID
-    );
-
-    if (existingIndex > -1) {
-      return arr.map((dataset, index) =>
-        index === existingIndex
-          ? {
-              ...dataset,
-              amount: dataset.amount + event.amount + (event.absorbed ?? 0),
-            }
-          : dataset
-      );
-    }
-
-    return [...arr, event];
-  }, []);
+  return groupDamageEventsByPlayer(allEvents, "targetID");
 };
 
 type TotalDamageTakenByStormingParams = SpiresSpearUsageParams;
 
 export const getStormingDamageTakenEvents = async (
   params: TotalDamageTakenByStormingParams,
-  previousEvents: DamageTakenEvent[] = []
-): Promise<DamageTakenEvent[]> => {
+  previousEvents: DamageEvent[] = []
+): Promise<DamageEvent[]> => {
   const sdk = await getCachedSdk();
 
   const response = await sdk.EventData({
@@ -965,8 +945,8 @@ type TotalDamageTakenByVolcanicParams = SpiresSpearUsageParams;
 
 export const getVolcanicDamageTakenEvents = async (
   params: TotalDamageTakenByVolcanicParams,
-  previousEvents: DamageTakenEvent[] = []
-): Promise<DamageTakenEvent[]> => {
+  previousEvents: DamageEvent[] = []
+): Promise<DamageEvent[]> => {
   const sdk = await getCachedSdk();
 
   const response = await sdk.EventData({
@@ -1242,8 +1222,8 @@ type TotalDamageTakenByBurstingParams = SpiresSpearUsageParams;
 
 export const getBurstingDamageTakenEvents = async (
   params: TotalDamageTakenByBurstingParams,
-  previousEvents: DamageTakenEvent[] = []
-): Promise<DamageTakenEvent[]> => {
+  previousEvents: DamageEvent[] = []
+): Promise<DamageEvent[]> => {
   const sdk = await getCachedSdk();
 
   const response = await sdk.EventData({
@@ -1255,7 +1235,7 @@ export const getBurstingDamageTakenEvents = async (
 
   const { data = [], nextPageTimestamp = null } =
     response?.reportData?.report?.events ?? {};
-  const allEvents: DamageTakenEvent[] = [...previousEvents, ...data];
+  const allEvents: DamageEvent[] = [...previousEvents, ...data];
 
   if (nextPageTimestamp) {
     return getBurstingDamageTakenEvents(
@@ -1264,15 +1244,40 @@ export const getBurstingDamageTakenEvents = async (
     );
   }
 
-  return allEvents;
+  return groupDamageEventsByPlayer(allEvents, "targetID");
+};
+
+const groupDamageEventsByPlayer = (
+  events: DamageEvent[],
+  key: "targetID" | "sourceID"
+) => {
+  const getExistingIndex = (arr: typeof events, event: typeof events[number]) =>
+    arr.findIndex((dataset) => dataset[key] === event[key]);
+
+  return events.reduce<DamageEvent[]>((arr, event) => {
+    const existingIndex = getExistingIndex(arr, event);
+
+    if (existingIndex > -1) {
+      return arr.map((dataset, index) =>
+        index === existingIndex
+          ? {
+              ...dataset,
+              amount: dataset.amount + event.amount + (event.absorbed ?? 0),
+            }
+          : dataset
+      );
+    }
+
+    return [...arr, event];
+  }, []);
 };
 
 type TotalDamageTakenByQuakingParams = SpiresSpearUsageParams;
 
 export const getQuakingDamageTakenEvents = async (
   params: TotalDamageTakenByQuakingParams,
-  previousEvents: DamageTakenEvent[] = []
-): Promise<DamageTakenEvent[]> => {
+  previousEvents: DamageEvent[] = []
+): Promise<DamageEvent[]> => {
   const sdk = await getCachedSdk();
 
   const response = await sdk.EventData({
@@ -1284,7 +1289,7 @@ export const getQuakingDamageTakenEvents = async (
 
   const { data = [], nextPageTimestamp = null } =
     response?.reportData?.report?.events ?? {};
-  const allEvents: DamageTakenEvent[] = [...previousEvents, ...data];
+  const allEvents: DamageEvent[] = [...previousEvents, ...data];
 
   if (nextPageTimestamp) {
     return getQuakingDamageTakenEvents(
@@ -1405,16 +1410,11 @@ type ManifestationOfPrideDamageEventsParams<
   dataType: Type;
 };
 
-const getManifestationOfPrideDamageEvents = async <
-  Type extends EventDataType,
-  ReturnedEvent = Type extends EventDataType.DamageDone
-    ? DamageEvent
-    : DamageTakenEvent
->(
+const getManifestationOfPrideDamageEvents = async <Type extends EventDataType>(
   params: ManifestationOfPrideDamageEventsParams<Type>,
   firstEventOnly = false,
-  previousEvents: ReturnedEvent[] = []
-): Promise<ReturnedEvent[]> => {
+  previousEvents: DamageEvent[] = []
+): Promise<DamageEvent[]> => {
   const sdk = await getCachedSdk();
 
   const response = await sdk.EventData({
@@ -1429,7 +1429,7 @@ const getManifestationOfPrideDamageEvents = async <
     return [data[0]];
   }
 
-  const allEvents: ReturnedEvent[] = [...previousEvents, ...data];
+  const allEvents: DamageEvent[] = [...previousEvents, ...data];
 
   if (nextPageTimestamp) {
     return getManifestationOfPrideDamageEvents(
@@ -1459,25 +1459,7 @@ export const getDamageDoneToManifestationOfPrideEvents = async (
     firstEventOnly
   );
 
-  return events.reduce<DamageEvent[]>((arr, event) => {
-    const existingIndex = arr.findIndex(
-      (dataset) => dataset.sourceID === event.sourceID
-    );
-
-    if (existingIndex > -1) {
-      // eslint-disable-next-line sonarjs/no-identical-functions
-      return arr.map((dataset, index) =>
-        index === existingIndex
-          ? {
-              ...dataset,
-              amount: dataset.amount + event.amount + (event.absorbed ?? 0),
-            }
-          : dataset
-      );
-    }
-
-    return [...arr, event];
-  }, []);
+  return groupDamageEventsByPlayer(events, "sourceID");
 };
 
 type ManifestationOfPrideDamageTakenEventParams = Omit<
@@ -1488,7 +1470,7 @@ type ManifestationOfPrideDamageTakenEventParams = Omit<
 export const getDamageTakenByManifestatioNOfPrideEvents = async (
   params: ManifestationOfPrideDamageTakenEventParams,
   firstEventOnly = false
-): Promise<DamageTakenEvent[]> => {
+): Promise<DamageEvent[]> => {
   const events = await getManifestationOfPrideDamageEvents(
     {
       ...params,
@@ -1497,24 +1479,5 @@ export const getDamageTakenByManifestatioNOfPrideEvents = async (
     firstEventOnly
   );
 
-  // eslint-disable-next-line sonarjs/no-identical-functions
-  return events.reduce<DamageTakenEvent[]>((arr, event) => {
-    const existingIndex = arr.findIndex(
-      (dataset) => dataset.targetID === event.targetID
-    );
-
-    if (existingIndex > -1) {
-      // eslint-disable-next-line sonarjs/no-identical-functions
-      return arr.map((dataset, index) =>
-        index === existingIndex
-          ? {
-              ...dataset,
-              amount: dataset.amount + event.amount + (event.absorbed ?? 0),
-            }
-          : dataset
-      );
-    }
-
-    return [...arr, event];
-  }, []);
+  return groupDamageEventsByPlayer(events, "targetID");
 };

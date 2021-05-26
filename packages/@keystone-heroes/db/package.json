@@ -12,6 +12,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@keystone-heroes/api": "1.0.0",
     "@keystone-heroes/env": "1.0.0",
     "@keystone-heroes/wcl": "1.0.0",
     "@prisma/client": "2.22.1",

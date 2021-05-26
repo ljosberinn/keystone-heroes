@@ -5,7 +5,7 @@ import { withPerformanceLogging } from "../utils";
 import type {
   FurtherExtendedPlayer,
   InsertableFight,
-} from "../../../api/src/handler/fight/utils";
+} from "@keystone-heroes/api/src/handler/fight/utils";
 import type { Prisma } from "@prisma/client";
 
 export type CreateManyFightType_REFACTOR = Omit<
@@ -38,33 +38,35 @@ const createMany = async (
 
         const allEvents = processEvents(pull, actorPlayerMap);
 
-        return prisma.pull.create({
-          data: {
-            fightID: fight.fightID,
-            startTime: pull.startTime,
-            endTime: pull.endTime,
-            x: pull.x,
-            y: pull.y,
-            minX: pull.boundingBox.minX,
-            minY: pull.boundingBox.minY,
-            maxX: pull.boundingBox.maxX,
-            maxY: pull.boundingBox.maxY,
-            PullZone: {
-              createMany: {
-                data: allZones,
-              },
-            },
-            PullNPC: {
-              createMany: {
-                data: allNPCs,
-              },
-            },
-            Event: {
-              createMany: {
-                data: allEvents,
-              },
+        const data: Prisma.PullUncheckedCreateInput = {
+          fightID: fight.fightID,
+          startTime: pull.startTime,
+          endTime: pull.endTime,
+          x: pull.x,
+          y: pull.y,
+          minX: pull.boundingBox.minX,
+          minY: pull.boundingBox.minY,
+          maxX: pull.boundingBox.maxX,
+          maxY: pull.boundingBox.maxY,
+          PullZone: {
+            createMany: {
+              data: allZones,
             },
           },
+          PullNPC: {
+            createMany: {
+              data: allNPCs,
+            },
+          },
+          Event: {
+            createMany: {
+              data: allEvents,
+            },
+          },
+        };
+
+        return prisma.pull.create({
+          data,
         });
       });
     })

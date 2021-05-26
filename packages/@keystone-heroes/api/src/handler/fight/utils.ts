@@ -65,7 +65,6 @@ import type {
   HealEvent,
   InterruptEvent,
   BeginCastEvent,
-  DamageTakenEvent,
   ApplyBuffStackEvent,
   RemoveBuffEvent,
 } from "../../../../wcl/src/queries/events";
@@ -513,13 +512,7 @@ const getAffixSpecificEvents = async (
   reportID: string,
   fight: FightWithTable
 ): Promise<
-  (
-    | HealEvent
-    | DamageTakenEvent
-    | DeathEvent
-    | InterruptEvent
-    | ApplyBuffEvent
-  )[]
+  (HealEvent | DamageEvent | DeathEvent | InterruptEvent | ApplyBuffEvent)[]
 > => {
   const affixes = fight.keystoneAffixes;
 
@@ -604,7 +597,7 @@ const getAffixSpecificEvents = async (
 const getSeasonSpecificEvents = async (
   reportID: string,
   fight: FightWithTable
-): Promise<(DeathEvent | DamageTakenEvent)[]> => {
+): Promise<(DeathEvent | DamageEvent)[]> => {
   const hasPrideful = fight.keystoneAffixes.includes(
     getAffixByName(Affixes.Prideful)
   );

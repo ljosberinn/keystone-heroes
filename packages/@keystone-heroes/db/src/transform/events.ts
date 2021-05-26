@@ -22,6 +22,7 @@ import {
   VOLCANIC,
 } from "../data";
 
+import type { CreateManyFightType_REFACTOR } from "../repos/pull";
 import type {
   ApplyBuffEvent,
   ApplyBuffStackEvent,
@@ -29,36 +30,17 @@ import type {
   BeginCastEvent,
   CastEvent,
   DamageEvent,
-  DamageTakenEvent,
   DeathEvent,
   HealEvent,
   InterruptEvent,
   RemoveBuffEvent,
-} from "../../../wcl/src/queries/events";
-import type { CreateManyFightType_REFACTOR } from "../repos/pull";
+} from "@keystone-heroes/wcl/src/queries/events";
 import type { Prisma } from "@prisma/client";
 
-const environmentalDamageAffixes = new Set([
-  VOLCANIC,
-  STORMING,
-  EXPLOSIVE.ability,
-  GRIEVOUS_WOUND,
-  SANGUINE_ICHOR_DAMAGE,
-  BURSTING,
-  QUAKING,
-  NECROTIC,
-]);
-
-const applyBuffAllowlist = new Set([
-  TOP_BANNER_AURA,
-  PF_GREEN_BUFF.aura,
-  PF_RED_BUFF.aura,
-  PF_PURPLE_BUFF.aura,
-]);
-
-type Event = CreateManyFightType_REFACTOR["pulls"][number]["events"][number];
-
-type Processor<T extends Event, AdditionalParams = Record<string, unknown>> = (
+type Processor<
+  T extends CreateManyFightType_REFACTOR["pulls"][number]["events"][number],
+  AdditionalParams = Record<string, unknown>
+> = (
   event: T,
   params: {
     sourcePlayerID: number | null;
@@ -78,7 +60,10 @@ const applyBuffProcessor: Processor<ApplyBuffEvent & { stacks?: number }> = (
   if (
     sourcePlayerID &&
     targetPlayerID &&
-    applyBuffAllowlist.has(event.abilityGameID)
+    (event.abilityGameID === TOP_BANNER_AURA ||
+      event.abilityGameID === PF_GREEN_BUFF.aura ||
+      event.abilityGameID === PF_RED_BUFF.aura ||
+      event.abilityGameID === PF_PURPLE_BUFF.aura)
   ) {
     return {
       timestamp: event.timestamp,
@@ -118,7 +103,7 @@ const applyBuffStackProcessor: Processor<ApplyBuffStackEvent> = (
   event,
   { targetPlayerID }
 ) => {
-  if (event.abilityGameID === SD_LANTERN_BUFF && targetPlayerID) {
+  if (targetPlayerID && event.abilityGameID === SD_LANTERN_BUFF) {
     return {
       timestamp: event.timestamp,
       eventType: EventType.ApplyBuffStack,
@@ -153,7 +138,7 @@ const beginCastProcessor: Processor<BeginCastEvent> = (
   event,
   { sourcePlayerID }
 ) => {
-  if (event.abilityGameID === SD_LANTERN_OPENING && sourcePlayerID) {
+  if (sourcePlayerID && event.abilityGameID === SD_LANTERN_OPENING) {
     return {
       timestamp: event.timestamp,
       eventType: EventType.BeginCast,
@@ -188,6 +173,16 @@ const castProcessor: Processor<CastEvent> = (
   return null;
 };
 
+const isEnvironmentalDamageAffixAbilityID = (id: number) =>
+  id === VOLCANIC ||
+  id === STORMING ||
+  id === EXPLOSIVE.ability ||
+  id === GRIEVOUS_WOUND ||
+  id === SANGUINE_ICHOR_DAMAGE ||
+  id === BURSTING ||
+  id === QUAKING ||
+  id === NECROTIC;
+
 /**
  * track any damage taken from
  * - affixes
@@ -197,7 +192,7 @@ const castProcessor: Processor<CastEvent> = (
  * - explosives (pre-filtered to only contain lasthits)
  * - prideful in general
  */
-const damageProcessor: Processor<DamageEvent | DamageTakenEvent> = (
+const damageProcessor: Processor<DamageEvent> = (
   event,
   { targetPlayerID, sourcePlayerID, sourceNPCID, targetNPCID }
 ) => {
@@ -207,7 +202,7 @@ const damageProcessor: Processor<DamageEvent | DamageTakenEvent> = (
 
   // player taking damage
   if (targetPlayerID) {
-    if (environmentalDamageAffixes.has(event.abilityGameID)) {
+    if (isEnvironmentalDamageAffixAbilityID(event.abilityGameID)) {
       return {
         timestamp: event.timestamp,
         abilityID: event.abilityGameID,
