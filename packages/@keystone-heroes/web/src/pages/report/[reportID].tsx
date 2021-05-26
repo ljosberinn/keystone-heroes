@@ -38,10 +38,6 @@ function useFights(
       (id) => !fights.some((fight) => fight.fightID === id)
     );
 
-    const controllers = fightsToFetch.map((id) => {
-      return { id, controller: new AbortController() };
-    });
-
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     (async () => {
       for (const id of fightsToFetch) {
@@ -52,11 +48,8 @@ function useFights(
         }).toString();
 
         try {
-          const meta = controllers[fightsToFetch.indexOf(id)];
           // eslint-disable-next-line no-await-in-loop
-          const response = await fetch(`/api/fight?${query}`, {
-            signal: meta.controller.signal,
-          });
+          const response = await fetch(`/api/fight?${query}`);
           // eslint-disable-next-line no-await-in-loop
           const fight: FightResponse[] = await response.json();
           setFights((current) => [...current, fight[0]]);
@@ -66,14 +59,6 @@ function useFights(
         }
       }
     })();
-
-    return () => {
-      controllers.forEach((meta) => {
-        if (!fights.some((fight) => fight.fightID === meta.id)) {
-          meta.controller.abort();
-        }
-      });
-    };
   }, [report, isFallback, initialFights, fights]);
 
   return fights;
@@ -94,11 +79,7 @@ function useReport(cachedReport: ReportResponse | null = null) {
       return;
     }
 
-    const controller = new AbortController();
-
-    fetch(`/api/report?reportID=${query.reportID}`, {
-      signal: controller.signal,
-    })
+    fetch(`/api/report?reportID=${query.reportID}`)
       // eslint-disable-next-line promise/prefer-await-to-then
       .then((response) => response.json())
       // eslint-disable-next-line promise/prefer-await-to-then
@@ -109,10 +90,6 @@ function useReport(cachedReport: ReportResponse | null = null) {
       })
       // eslint-disable-next-line no-console, promise/prefer-await-to-then
       .catch(console.error);
-
-    return () => {
-      controller.abort();
-    };
   }, [query.reportID, report, isFallback]);
 
   return report;
