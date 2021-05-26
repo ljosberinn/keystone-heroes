@@ -1,4 +1,5 @@
 import { FightRepo, ReportRepo } from "@keystone-heroes/db/repos";
+import { IS_DEV } from "@keystone-heroes/env";
 import { isValidReportId } from "@keystone-heroes/wcl/utils";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -33,25 +34,47 @@ function useFights(
       return;
     }
 
-    const params = new URLSearchParams({
-      reportID: report.reportID,
+    const fightsToFetch = report.fights.filter(
+      (id) => !fights.some((fight) => fight.fightID === id)
+    );
+
+    const controllers = fightsToFetch.map((id) => {
+      return { id, controller: new AbortController() };
     });
 
-    report.fights.forEach((id) => {
-      // @ts-expect-error doesn't have to be a string
-      params.append("fightIDs", id);
-    });
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    (async () => {
+      for (const id of fightsToFetch) {
+        // @ts-expect-error doesnt have to be a string
+        const query = new URLSearchParams({
+          reportID: report.reportID,
+          fightIDs: id,
+        }).toString();
 
-    const query = params.toString();
+        try {
+          const meta = controllers[fightsToFetch.indexOf(id)];
+          // eslint-disable-next-line no-await-in-loop
+          const response = await fetch(`/api/fight?${query}`, {
+            signal: meta.controller.signal,
+          });
+          // eslint-disable-next-line no-await-in-loop
+          const fight: FightResponse[] = await response.json();
+          setFights((current) => [...current, fight[0]]);
+        } catch (error) {
+          // eslint-disable-next-line no-console
+          console.error(error);
+        }
+      }
+    })();
 
-    fetch(`/api/fight?${query}`)
-      // eslint-disable-next-line promise/prefer-await-to-then
-      .then((response) => response.json())
-      // eslint-disable-next-line promise/prefer-await-to-then
-      .then(setFights)
-      // eslint-disable-next-line promise/prefer-await-to-then, no-console
-      .catch(console.error);
-  }, [report, isFallback, initialFights]);
+    return () => {
+      controllers.forEach((meta) => {
+        if (!fights.some((fight) => fight.fightID === meta.id)) {
+          meta.controller.abort();
+        }
+      });
+    };
+  }, [report, isFallback, initialFights, fights]);
 
   return fights;
 }
@@ -71,7 +94,11 @@ function useReport(cachedReport: ReportResponse | null = null) {
       return;
     }
 
-    fetch(`/api/report?reportID=${query.reportID}`)
+    const controller = new AbortController();
+
+    fetch(`/api/report?reportID=${query.reportID}`, {
+      signal: controller.signal,
+    })
       // eslint-disable-next-line promise/prefer-await-to-then
       .then((response) => response.json())
       // eslint-disable-next-line promise/prefer-await-to-then
@@ -82,6 +109,10 @@ function useReport(cachedReport: ReportResponse | null = null) {
       })
       // eslint-disable-next-line no-console, promise/prefer-await-to-then
       .catch(console.error);
+
+    return () => {
+      controller.abort();
+    };
   }, [query.reportID, report, isFallback]);
 
   return report;
@@ -104,85 +135,80 @@ export default function Report({ cache }: ReportProps): JSX.Element | null {
     );
   }
 
-  if (fights.length === 0) {
-    return <h1>still loading stuff</h1>;
-  }
+  return (
+    <>
+      {report.fights.map((id) => {
+        const fight = fights.find((fight) => fight.fightID === id);
 
-  return <code>{JSON.stringify({ report, fights }, null, 2)}</code>;
+        if (!fight) {
+          return <h1 key={id}>still loading fight {id}</h1>;
+        }
+
+        return <code key={id}>fight {id} loaded</code>;
+      })}
+    </>
+  );
 }
 
-export const getStaticPaths: GetStaticPaths<{ reportID: string }> =
-  async () => {
-    const reports = await ReportRepo.loadFinishedReports();
-
-    // eslint-disable-next-line no-console
-    console.info(`[Report/getStaticPaths] found ${reports.length} reports`);
-
+export const getStaticPaths: GetStaticPaths<{
+  reportID: string;
+}> = async () => {
+  if (IS_DEV) {
     return {
       fallback: true,
-      paths: reports.map((report) => {
-        return {
-          params: {
-            reportID: report,
-          },
-        };
-      }),
+      paths: [],
     };
-  };
+  }
 
-export const getStaticProps: GetStaticProps<ReportProps, { reportID: string }> =
-  async ({ params }) => {
-    if (
-      !params?.reportID ||
-      Array.isArray(params.reportID) ||
-      params.reportID.includes(".")
-    ) {
-      throw new Error("invalid or missing params.id");
-    }
+  const reports = await ReportRepo.loadFinishedReports();
 
-    const { reportID } = params;
+  // eslint-disable-next-line no-console
+  console.info(`[Report/getStaticPaths] found ${reports.length} reports`);
 
-    try {
-      // eslint-disable-next-line no-console
-      console.info(`[Report/getStaticProps] loading report "${reportID}"`);
-
-      const report = await ReportRepo.load(reportID);
-
-      if (!report) {
-        return {
-          props: {
-            cache: {
-              fights: [],
-              report: null,
-            },
-          },
-        };
-      }
-
-      const { id: dbId, fights: reportFights, ...rest } = report;
-
-      // eslint-disable-next-line no-console
-      console.info(
-        `[Report/getStaticProps] loading fights "${reportFights.join(",")}"`
-      );
-      const fights = await FightRepo.loadFull(reportID, reportFights);
-
+  return {
+    fallback: true,
+    paths: reports.map((report) => {
       return {
-        props: {
-          cache: {
-            fights,
-            report: {
-              ...rest,
-              reportID,
-              fights: reportFights,
-              endTime: rest.endTime,
-              region: report.region.slug,
-              startTime: report.startTime,
-            },
-          },
+        params: {
+          reportID: report,
         },
       };
-    } catch {
+    }),
+  };
+};
+
+export const getStaticProps: GetStaticProps<
+  ReportProps,
+  { reportID: string }
+> = async ({ params }) => {
+  if (IS_DEV) {
+    return {
+      props: {
+        cache: {
+          fights: [],
+          report: null,
+        },
+      },
+    };
+  }
+
+  if (
+    !params?.reportID ||
+    Array.isArray(params.reportID) ||
+    params.reportID.includes(".")
+  ) {
+    throw new Error("invalid or missing params.id");
+  }
+
+  const { reportID } = params;
+
+  try {
+    // eslint-disable-next-line no-console
+    console.info(`[Report/getStaticProps] loading report "${reportID}"`);
+
+    const report = await ReportRepo.load(reportID);
+
+    if (!report) {
       return {
         props: {
           cache: {
@@ -192,4 +218,38 @@ export const getStaticProps: GetStaticProps<ReportProps, { reportID: string }> =
         },
       };
     }
-  };
+
+    const { id: dbId, fights: reportFights, ...rest } = report;
+
+    // eslint-disable-next-line no-console
+    console.info(
+      `[Report/getStaticProps] loading fights "${reportFights.join(",")}"`
+    );
+    const fights = await FightRepo.loadFull(reportID, reportFights);
+
+    return {
+      props: {
+        cache: {
+          fights,
+          report: {
+            ...rest,
+            reportID,
+            fights: reportFights,
+            endTime: rest.endTime,
+            region: report.region.slug,
+            startTime: report.startTime,
+          },
+        },
+      },
+    };
+  } catch {
+    return {
+      props: {
+        cache: {
+          fights: [],
+          report: null,
+        },
+      },
+    };
+  }
+};

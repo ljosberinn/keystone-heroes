@@ -89,6 +89,10 @@ type Pull = Pick<
     ability: Ability | null;
   })[];
   zones: number[];
+  enemies: {
+    count: number;
+    npc: NPC;
+  }[];
 };
 
 type Composition = (Pick<

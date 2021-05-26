@@ -201,6 +201,12 @@ const loadFull = async (
               },
             },
           },
+          PullNPC: {
+            select: {
+              count: true,
+              npc: true,
+            },
+          },
         },
         orderBy: {
           startTime: "asc",
@@ -275,6 +281,7 @@ const loadFull = async (
         endTime: pull.endTime,
         zones: pull.PullZone.map((pullZone) => pullZone.zone.id),
         events: pull.Event,
+        enemies: pull.PullNPC,
       };
     });
 

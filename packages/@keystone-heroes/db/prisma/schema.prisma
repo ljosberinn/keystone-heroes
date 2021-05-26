@@ -355,6 +355,8 @@ model Pull {
   Event    Event[]
   PullZone PullZone[]
   PullNPC  PullNPC[]
+
+  @@unique([fightID, startTime, endTime])
 }
 
 model PullZone {
