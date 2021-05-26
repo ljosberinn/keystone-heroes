@@ -1,8 +1,8 @@
 import { PrismaClient } from "@prisma/client";
 
+import allNPCs from "../raw/all-npcs.json";
+import allAbilities from "../raw/all-spells.json";
 import { affixes } from "../src/data/affixes";
-import allNPCs from "../src/data/all-npcs.json";
-import allAbilities from "../src/data/all-spells.json";
 import { classes } from "../src/data/classes";
 import { covenants } from "../src/data/covenants";
 import { dungeons } from "../src/data/dungeons";

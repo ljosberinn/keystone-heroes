@@ -32,6 +32,6 @@ export type DeepNonNullable<T> = T extends
   ? WeakSet<DeepNonNullable<U>>
   : T extends Promise<infer U>
   ? Promise<DeepNonNullable<U>>
-  : T extends {}
+  : T extends Record<string, unknown>
   ? { [K in keyof T]: DeepNonNullable<T[K]> }
   : NonNullable<T>;

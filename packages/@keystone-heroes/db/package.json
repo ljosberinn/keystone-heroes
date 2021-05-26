@@ -8,7 +8,7 @@
     "push": "prisma db push",
     "seed": "prisma db seed --preview-feature",
     "format": "prettier --write src",
-    "lint": "eslint . --cache",
+    "lint": "eslint src --cache && eslint prisma --cache",
     "test": "jest"
   },
   "dependencies": {

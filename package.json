@@ -19,7 +19,7 @@
     "prepare": "husky install"
   },
   "lint-staged": {
-    "packages/**/*.{js,jsx,ts,tsx,json,css,scss,md,graphql}": "prettier --write",
+    "packages/**/*": "prettier --write --ignore-unknown",
     "package.json": "sort-package-json",
     "packages/**/package.json": "sort-package-json"
   },
