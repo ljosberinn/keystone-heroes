@@ -82,20 +82,22 @@ export const loadReportFromSource = async (
       region: {
         slug: report.region.slug,
       },
-      fights: report.fights.reduce<ReportFight["id"][]>((acc, fight) => {
-        if (!fight) {
-          return acc;
-        }
+      fights: report.fights.reduce<InitialReportData["fights"][number][]>(
+        (acc, fight) => {
+          if (!fight || !fight.keystoneBonus || !fight.keystoneLevel) {
+            return acc;
+          }
 
-        const keystoneBonus = fight.keystoneBonus ?? 0;
-        const keystoneLevel = fight.keystoneLevel ?? 0;
+          const { keystoneBonus, keystoneLevel, id } = fight;
 
-        if (keystoneBonus === 0 || keystoneLevel < MIN_KEYSTONE_LEVEL) {
-          return acc;
-        }
+          if (keystoneBonus === 0 || keystoneLevel < MIN_KEYSTONE_LEVEL) {
+            return acc;
+          }
 
-        return [...acc, fight.id];
-      }, []),
+          return [...acc, id];
+        },
+        []
+      ),
     };
   } catch (error) {
     // eslint-disable-next-line no-console

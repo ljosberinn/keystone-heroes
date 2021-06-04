@@ -33,3 +33,5 @@ yarn-error.log*
 # vercelac
 .vercel
 .eslintcache
+# Supabase
+.supabase

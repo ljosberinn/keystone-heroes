@@ -16,7 +16,9 @@
     "lint:fix": "yarn workspaces run lint --fix && yarn workspaces run format",
     "types": "yarn --cwd packages/@keystone-heroes/web types",
     "install:clean": "rimraf yarn.lock && rimraf packages/@keystone-heroes/**/node_modules && rimraf node_modules && yarn",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "dev-db:start": "supabase start",
+    "dev-db:stop": "supabase stop"
   },
   "lint-staged": {
     "packages/**/*": "prettier --write --ignore-unknown",
