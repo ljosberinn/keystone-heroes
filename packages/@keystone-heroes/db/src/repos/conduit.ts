@@ -1,8 +1,8 @@
-import { prisma } from "../client";
-import { withPerformanceLogging } from "../utils";
-
 import type { Conduit } from "@keystone-heroes/wcl/src/queries";
 import type { Conduit as PrismaConduit } from "@prisma/client";
+
+import { prisma } from "../client";
+import { withPerformanceLogging } from "../utils";
 
 type CreateConduit = Omit<Conduit, "total" | "guid"> & {
   id: Conduit["guid"];

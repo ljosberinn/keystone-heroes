@@ -1,8 +1,8 @@
-import { prisma } from "../client";
-import { withPerformanceLogging } from "../utils";
-
 import type { Talent } from "@keystone-heroes/wcl/src/queries";
 import type { Talent as PrismaTalent } from "@prisma/client";
+
+import { prisma } from "../client";
+import { withPerformanceLogging } from "../utils";
 
 type TalentInsert = Omit<Talent, "type" | "guid"> &
   Pick<PrismaTalent, "classID" | "specID" | "id">;

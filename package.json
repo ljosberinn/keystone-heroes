@@ -26,8 +26,8 @@
     "packages/**/package.json": "sort-package-json"
   },
   "devDependencies": {
-    "eslint": "7.26.0",
-    "eslint-config-galex": "2.15.10",
+    "eslint": "7.27.0",
+    "eslint-config-galex": "2.16.3",
     "husky": "6.0.0",
     "lint-staged": "11.0.0",
     "prettier": "2.3.0",

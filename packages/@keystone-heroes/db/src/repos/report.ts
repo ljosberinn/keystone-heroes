@@ -1,10 +1,9 @@
+import type { InitialReportData } from "@keystone-heroes/wcl/src/queries";
 import { ONGOING_REPORT_THRESHOLD } from "@keystone-heroes/wcl/src/utils";
+import type { Region, Report } from "@prisma/client";
 
 import { prisma } from "../client";
 import { withPerformanceLogging } from "../utils";
-
-import type { InitialReportData } from "@keystone-heroes/wcl/src/queries";
-import type { Region, Report } from "@prisma/client";
 
 const upsert = async (
   report: string,

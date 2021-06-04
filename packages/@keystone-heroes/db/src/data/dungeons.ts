@@ -1,6 +1,6 @@
-import { ExpansionEnum } from "./expansions";
-
 import type { Dungeon, Zone } from "@prisma/client";
+
+import { ExpansionEnum } from "./expansions";
 
 export const createDungeonTimer = (
   initialTime: number

@@ -1,4 +1,17 @@
+import type {
+  ApplyBuffEvent,
+  ApplyBuffStackEvent,
+  ApplyDebuffEvent,
+  BeginCastEvent,
+  CastEvent,
+  DamageEvent,
+  DeathEvent,
+  HealEvent,
+  InterruptEvent,
+  RemoveBuffEvent,
+} from "@keystone-heroes/wcl/src/queries/events";
 import { EventType } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 
 import {
   BOLSTERING,
@@ -21,21 +34,7 @@ import {
   TOP_BANNER_AURA,
   VOLCANIC,
 } from "../data";
-
 import type { CreateManyFightType_REFACTOR } from "../repos/pull";
-import type {
-  ApplyBuffEvent,
-  ApplyBuffStackEvent,
-  ApplyDebuffEvent,
-  BeginCastEvent,
-  CastEvent,
-  DamageEvent,
-  DeathEvent,
-  HealEvent,
-  InterruptEvent,
-  RemoveBuffEvent,
-} from "@keystone-heroes/wcl/src/queries/events";
-import type { Prisma } from "@prisma/client";
 
 type Processor<
   T extends CreateManyFightType_REFACTOR["pulls"][number]["events"][number],

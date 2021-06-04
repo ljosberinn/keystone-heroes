@@ -1,13 +1,12 @@
+import type { FightResponse } from "@keystone-heroes/api/handler/fight";
+import type { ReportResponse } from "@keystone-heroes/api/handler/report";
 import { FightRepo, ReportRepo } from "@keystone-heroes/db/repos";
 import { IS_DEV } from "@keystone-heroes/env";
 import { isValidReportId } from "@keystone-heroes/wcl/utils";
+import type { GetStaticPaths, GetStaticProps } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-
-import type { FightResponse } from "@keystone-heroes/api/handler/fight";
-import type { ReportResponse } from "@keystone-heroes/api/handler/report";
-import type { GetStaticPaths, GetStaticProps } from "next";
 
 type ReportProps = {
   cache?: {
@@ -154,38 +153,9 @@ export const getStaticPaths: GetStaticPaths<{
   };
 };
 
-export const getStaticProps: GetStaticProps<
-  ReportProps,
-  { reportID: string }
-> = async ({ params }) => {
-  if (IS_DEV) {
-    return {
-      props: {
-        cache: {
-          fights: [],
-          report: null,
-        },
-      },
-    };
-  }
-
-  if (
-    !params?.reportID ||
-    Array.isArray(params.reportID) ||
-    params.reportID.includes(".")
-  ) {
-    throw new Error("invalid or missing params.id");
-  }
-
-  const { reportID } = params;
-
-  try {
-    // eslint-disable-next-line no-console
-    console.info(`[Report/getStaticProps] loading report "${reportID}"`);
-
-    const report = await ReportRepo.load(reportID);
-
-    if (!report) {
+export const getStaticProps: GetStaticProps<ReportProps, { reportID: string }> =
+  async ({ params }) => {
+    if (IS_DEV) {
       return {
         props: {
           cache: {
@@ -196,37 +166,64 @@ export const getStaticProps: GetStaticProps<
       };
     }
 
-    const { id: dbId, fights: reportFights, ...rest } = report;
+    if (
+      !params?.reportID ||
+      Array.isArray(params.reportID) ||
+      params.reportID.includes(".")
+    ) {
+      throw new Error("invalid or missing params.id");
+    }
 
-    // eslint-disable-next-line no-console
-    console.info(
-      `[Report/getStaticProps] loading fights "${reportFights.join(",")}"`
-    );
-    const fights = await FightRepo.loadFull(reportID, reportFights);
+    const { reportID } = params;
 
-    return {
-      props: {
-        cache: {
-          fights,
-          report: {
-            ...rest,
-            reportID,
-            fights: reportFights,
-            endTime: rest.endTime,
-            region: report.region.slug,
-            startTime: report.startTime,
+    try {
+      // eslint-disable-next-line no-console
+      console.info(`[Report/getStaticProps] loading report "${reportID}"`);
+
+      const report = await ReportRepo.load(reportID);
+
+      if (!report) {
+        return {
+          props: {
+            cache: {
+              fights: [],
+              report: null,
+            },
+          },
+        };
+      }
+
+      const { id: dbId, fights: reportFights, ...rest } = report;
+
+      // eslint-disable-next-line no-console
+      console.info(
+        `[Report/getStaticProps] loading fights "${reportFights.join(",")}"`
+      );
+      const fights = await FightRepo.loadFull(reportID, reportFights);
+
+      return {
+        props: {
+          cache: {
+            fights,
+            report: {
+              ...rest,
+              reportID,
+              fights: reportFights,
+              endTime: rest.endTime,
+              region: report.region.slug,
+              startTime: report.startTime,
+            },
           },
         },
-      },
-    };
-  } catch {
-    return {
-      props: {
-        cache: {
-          fights: [],
-          report: null,
+      };
+    } catch {
+      return {
+        props: {
+          cache: {
+            fights: [],
+            report: null,
+          },
         },
-      },
-    };
-  }
-};
+      };
+    }
+  };

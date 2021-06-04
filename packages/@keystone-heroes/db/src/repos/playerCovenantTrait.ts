@@ -1,8 +1,8 @@
-import { prisma } from "../client";
-import { withPerformanceLogging } from "../utils";
-
 import type { SoulbindTalent } from "@keystone-heroes/wcl/src/queries";
 import type { PlayerCovenantTrait } from "@prisma/client";
+
+import { prisma } from "../client";
+import { withPerformanceLogging } from "../utils";
 
 export type PlayerCovenantTraitInsert = {
   playerID: number;

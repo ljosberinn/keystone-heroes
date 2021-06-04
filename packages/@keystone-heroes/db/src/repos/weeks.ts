@@ -1,6 +1,6 @@
-import { seasons, weeks } from "../data";
-
 import type { Week } from "@prisma/client";
+
+import { seasons, weeks } from "../data";
 
 export const WeekRepo = {
   findWeekbyTimestamp: (startTime: number, endTime: number): Week => {

@@ -5,10 +5,9 @@ import {
   getAffixById,
   affixes as allAffixes,
 } from "@keystone-heroes/db/data";
-import Link from "next/link";
-
 import type { Affix, Dungeon, Season } from "@prisma/client";
 import type { GetStaticPaths, GetStaticProps } from "next";
+import Link from "next/link";
 
 type AffixesProps = {
   affixSlug: string;

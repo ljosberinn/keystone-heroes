@@ -1,7 +1,7 @@
-import { getCachedSdk } from "../client";
-
-import type { TableQueryVariables } from "../types";
 import type { PlayableClass, Role, SpecName } from "@prisma/client";
+
+import { getCachedSdk } from "../client";
+import type { TableQueryVariables } from "../types";
 
 export const loadTableFromSource = async (
   params: TableQueryVariables

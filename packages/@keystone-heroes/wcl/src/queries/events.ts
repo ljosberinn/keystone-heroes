@@ -33,9 +33,8 @@ import {
 
 import { getCachedSdk } from "../client";
 import { EventDataType, HostilityType } from "../types";
-import { loadEnemyNPCIDs } from "./report";
-
 import type { Sdk } from "../types";
+import { loadEnemyNPCIDs } from "./report";
 
 type Event<T extends Record<string, unknown>> = T & {
   timestamp: number;
@@ -1134,26 +1133,23 @@ export const getPFSlimeKills = async (
 
   const sdk = await getCachedSdk();
 
-  const [
-    redDeathEvents,
-    greenDeathEvents,
-    purpleDeathEvents,
-  ] = await Promise.all<DeathEvent[]>(
-    [red, green, purple].map(async (sourceID) => {
-      if (!sourceID) {
-        return [];
-      }
+  const [redDeathEvents, greenDeathEvents, purpleDeathEvents] =
+    await Promise.all<DeathEvent[]>(
+      [red, green, purple].map(async (sourceID) => {
+        if (!sourceID) {
+          return [];
+        }
 
-      const response = await sdk.EventData({
-        ...params,
-        dataType: EventDataType.Deaths,
-        hostilityType: HostilityType.Enemies,
-        sourceID,
-      });
+        const response = await sdk.EventData({
+          ...params,
+          dataType: EventDataType.Deaths,
+          hostilityType: HostilityType.Enemies,
+          sourceID,
+        });
 
-      return response?.reportData?.report?.events?.data ?? [];
-    })
-  );
+        return response?.reportData?.report?.events?.data ?? [];
+      })
+    );
 
   const earliestUnitDeathTimestamp = [
     ...redDeathEvents,
@@ -1164,34 +1160,31 @@ export const getPFSlimeKills = async (
     Infinity
   );
 
-  const [
-    redAuraApplication,
-    greenAuraApplication,
-    purpleAuraApplication,
-  ] = await Promise.all(
-    [PF_RED_BUFF.aura, PF_GREEN_BUFF.aura, PF_PURPLE_BUFF.aura].map(
-      async (abilityID) => {
-        if (earliestUnitDeathTimestamp === Infinity) {
-          return [];
+  const [redAuraApplication, greenAuraApplication, purpleAuraApplication] =
+    await Promise.all(
+      [PF_RED_BUFF.aura, PF_GREEN_BUFF.aura, PF_PURPLE_BUFF.aura].map(
+        async (abilityID) => {
+          if (earliestUnitDeathTimestamp === Infinity) {
+            return [];
+          }
+
+          const response = await sdk.EventData({
+            ...params,
+            startTime: earliestUnitDeathTimestamp,
+            dataType: EventDataType.Buffs,
+            hostilityType: HostilityType.Friendlies,
+            abilityID,
+          });
+
+          const events: (ApplyBuffEvent | RemoveBuffEvent)[] =
+            response?.reportData?.report?.events?.data ?? [];
+
+          return events.filter(
+            (event): event is ApplyBuffEvent => event.type === "applybuff"
+          );
         }
-
-        const response = await sdk.EventData({
-          ...params,
-          startTime: earliestUnitDeathTimestamp,
-          dataType: EventDataType.Buffs,
-          hostilityType: HostilityType.Friendlies,
-          abilityID,
-        });
-
-        const events: (ApplyBuffEvent | RemoveBuffEvent)[] =
-          response?.reportData?.report?.events?.data ?? [];
-
-        return events.filter(
-          (event): event is ApplyBuffEvent => event.type === "applybuff"
-        );
-      }
-    )
-  );
+      )
+    );
 
   return [
     ...redDeathEvents,
@@ -1402,13 +1395,12 @@ export const getManifestationOfPrideDeathEvents = async (
   return response?.reportData?.report?.events?.data ?? [];
 };
 
-type ManifestationOfPrideDamageEventsParams<
-  Type extends EventDataType
-> = SpiresSpearUsageParams & {
-  targetID: number;
-  targetInstance?: number;
-  dataType: Type;
-};
+type ManifestationOfPrideDamageEventsParams<Type extends EventDataType> =
+  SpiresSpearUsageParams & {
+    targetID: number;
+    targetInstance?: number;
+    dataType: Type;
+  };
 
 const getManifestationOfPrideDamageEvents = async <Type extends EventDataType>(
   params: ManifestationOfPrideDamageEventsParams<Type>,

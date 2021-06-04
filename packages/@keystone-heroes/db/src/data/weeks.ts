@@ -1,9 +1,8 @@
 import { Affixes } from "@prisma/client";
+import type { Week } from "@prisma/client";
 
 import { getAffixByName } from "./affixes";
 import { SeasonID } from "./seasons";
-
-import type { Week } from "@prisma/client";
 
 const createWeek = (
   seasonID: SeasonID,

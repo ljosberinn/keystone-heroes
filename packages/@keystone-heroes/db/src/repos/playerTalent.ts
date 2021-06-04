@@ -1,8 +1,8 @@
+import type { PlayerTalent } from "@prisma/client";
+
 import { prisma } from "../client";
 import { withPerformanceLogging } from "../utils";
-
 import type { Player } from "./players";
-import type { PlayerTalent } from "@prisma/client";
 
 export type PlayerTalentInsert = (Pick<Player, "talents"> & {
   playerID: number;

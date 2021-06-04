@@ -3,11 +3,10 @@ import {
   getAffixById,
   weeks as allWeeks,
 } from "@keystone-heroes/db/data";
-import Head from "next/head";
-import Link from "next/link";
-
 import type { Season as SeasonType } from "@prisma/client";
 import type { GetStaticPaths, GetStaticProps } from "next";
+import Head from "next/head";
+import Link from "next/link";
 
 type SeasonProps = {
   season: Omit<SeasonType, "startTime" | "endTime" | "affixID" | "expansionID">;

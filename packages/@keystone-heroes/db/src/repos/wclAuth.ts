@@ -1,7 +1,7 @@
+import type { WCLAuth } from "@prisma/client";
+
 import { prisma } from "../client";
 import { withPerformanceLogging } from "../utils";
-
-import type { WCLAuth } from "@prisma/client";
 
 export type WCLOAuthResponse = {
   access_token: string;

@@ -1,6 +1,3 @@
-import { prisma } from "../client";
-import { withPerformanceLogging } from "../utils";
-
 import type {
   Conduit,
   LegendaryItem,
@@ -13,6 +10,9 @@ import type {
   Spec,
   Character,
 } from "@prisma/client";
+
+import { prisma } from "../client";
+import { withPerformanceLogging } from "../utils";
 
 export type Player = {
   server: string;

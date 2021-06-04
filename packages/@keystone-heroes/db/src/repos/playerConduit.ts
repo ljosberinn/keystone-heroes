@@ -1,8 +1,8 @@
+import type { PlayerConduit } from "@prisma/client";
+
 import { prisma } from "../client";
 import { withPerformanceLogging } from "../utils";
-
 import type { Player } from "./players";
-import type { PlayerConduit } from "@prisma/client";
 
 export type PlayerConduitInsert = (Pick<Player, "conduits"> & {
   playerID: number;

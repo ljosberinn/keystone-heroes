@@ -1,7 +1,7 @@
+import type { SoulbindTalent } from "@keystone-heroes/wcl/src/queries";
+
 import { prisma } from "../client";
 import { withPerformanceLogging } from "../utils";
-
-import type { SoulbindTalent } from "@keystone-heroes/wcl/src/queries";
 
 type CreateTrait = Omit<SoulbindTalent, "guid"> & {
   id: SoulbindTalent["guid"];

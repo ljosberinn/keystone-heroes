@@ -7,7 +7,6 @@ import {
   getAffixById,
   weeks as allWeeks,
 } from "@keystone-heroes/db/data";
-
 import type { Affix, Dungeon as DungeonType, Season } from "@prisma/client";
 import type { GetStaticPaths, GetStaticProps } from "next";
 

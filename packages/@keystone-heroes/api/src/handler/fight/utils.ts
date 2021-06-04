@@ -19,8 +19,26 @@ import {
   TalentRepo,
   WeekRepo,
 } from "@keystone-heroes/db/repos";
+import type { ReportRepo } from "@keystone-heroes/db/repos";
 import { ItemQuality, wcl } from "@keystone-heroes/wcl/src/queries";
+import type {
+  Conduit,
+  DamageDone,
+  DamageTaken,
+  HealingDone,
+  InDepthCharacterInformation,
+  LegendaryItem,
+  SoulbindTalent,
+  Table,
+  Talent,
+} from "@keystone-heroes/wcl/src/queries";
+import type {
+  DungeonPull,
+  ExtendedReportData,
+  ExtendedReportDataWithGameZone,
+} from "@keystone-heroes/wcl/src/queries/report";
 import { Affixes } from "@prisma/client";
+import type { Region, Character } from "@prisma/client";
 
 import {
   getBolsteringEvents,
@@ -54,8 +72,6 @@ import {
   getDamageDoneToManifestationOfPrideEvents,
   getDamageTakenByManifestatioNOfPrideEvents,
 } from "../../../../wcl/src/queries/events";
-import { toUniqueArray } from "../../utils";
-
 import type {
   CastEvent,
   ApplyBuffEvent,
@@ -68,24 +84,7 @@ import type {
   ApplyBuffStackEvent,
   RemoveBuffEvent,
 } from "../../../../wcl/src/queries/events";
-import type { ReportRepo } from "@keystone-heroes/db/repos";
-import type {
-  Conduit,
-  DamageDone,
-  DamageTaken,
-  HealingDone,
-  InDepthCharacterInformation,
-  LegendaryItem,
-  SoulbindTalent,
-  Table,
-  Talent,
-} from "@keystone-heroes/wcl/src/queries";
-import type {
-  DungeonPull,
-  ExtendedReportData,
-  ExtendedReportDataWithGameZone,
-} from "@keystone-heroes/wcl/src/queries/report";
-import type { Region, Character } from "@prisma/client";
+import { toUniqueArray } from "../../utils";
 
 export const extendPlayersWithServerAndCharacterID = async (
   region: Region,
@@ -622,6 +621,10 @@ const getSeasonSpecificEvents = async (
 
     const damageTakenEvents = await Promise.all(
       pridefulDeathEvents.map(async (event, index, arr) => {
+        if (!event.targetInstance) {
+          return [];
+        }
+
         // on the first pride death event, start searching for damageDone events
         // from the start of the key.
         // on subsequent death events, start searching beginning with the death
@@ -630,18 +633,17 @@ const getSeasonSpecificEvents = async (
           index === 0 ? fight.startTime : arr[index - 1].timestamp;
 
         // retrieve the timestamp at which the first damage was done to pride
-        const [
-          { timestamp: firstDamageDoneTimestamp },
-        ] = await getDamageDoneToManifestationOfPrideEvents(
-          {
-            reportID,
-            endTime: event.timestamp,
-            startTime,
-            targetID: prideSourceID,
-            targetInstance: event.targetInstance,
-          },
-          true
-        );
+        const [{ timestamp: firstDamageDoneTimestamp }] =
+          await getDamageDoneToManifestationOfPrideEvents(
+            {
+              reportID,
+              endTime: event.timestamp,
+              startTime,
+              targetID: prideSourceID,
+              targetInstance: event.targetInstance,
+            },
+            true
+          );
 
         return getDamageTakenByManifestatioNOfPrideEvents({
           reportID,

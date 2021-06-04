@@ -1,5 +1,4 @@
 import { Affixes } from "@prisma/client";
-
 import type { Affix } from "@prisma/client";
 
 export const affixMap: Record<Affix["id"], Omit<Affix, "id">> = {

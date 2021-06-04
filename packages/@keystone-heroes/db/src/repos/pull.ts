@@ -1,12 +1,12 @@
-import { prisma } from "../client";
-import { processEvents } from "../transform/events";
-import { withPerformanceLogging } from "../utils";
-
 import type {
   FurtherExtendedPlayer,
   InsertableFight,
 } from "@keystone-heroes/api/src/handler/fight/utils";
 import type { Prisma } from "@prisma/client";
+
+import { prisma } from "../client";
+import { processEvents } from "../transform/events";
+import { withPerformanceLogging } from "../utils";
 
 export type CreateManyFightType_REFACTOR = Omit<
   InsertableFight,

@@ -1,7 +1,7 @@
 import { MIN_KEYSTONE_LEVEL } from "@keystone-heroes/env";
+import type { DeepNonNullable } from "ts-essentials";
 
 import { getCachedSdk } from "../client";
-
 import type {
   EnemyNpcIdsQueryVariables,
   ExtendedReportDataQueryVariables,
@@ -15,7 +15,6 @@ import type {
   ReportMap,
   ReportMapBoundingBox,
 } from "../types";
-import type { DeepNonNullable } from "ts-essentials";
 
 type EnsuredNPC = Omit<ReportFightNpc, "gameID" | "id"> & {
   gameID: number;

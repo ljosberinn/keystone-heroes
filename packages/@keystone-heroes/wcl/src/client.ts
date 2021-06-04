@@ -1,4 +1,5 @@
 import { WCLAuthRepo } from "@keystone-heroes/db/repos";
+import type { WCLOAuthResponse } from "@keystone-heroes/db/repos";
 import {
   WCL_CLIENT_ID,
   WCL_CLIENT_SECRET,
@@ -8,9 +9,7 @@ import {
 import { GraphQLClient } from "graphql-request";
 
 import { getSdk } from "./types";
-
 import type { Sdk } from "./types";
-import type { WCLOAuthResponse } from "@keystone-heroes/db/repos";
 
 type Cache = {
   sdk: Sdk | null;

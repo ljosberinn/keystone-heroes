@@ -1,8 +1,8 @@
-import { prisma } from "../client";
-import { withPerformanceLogging } from "../utils";
-
 import type { LegendaryItem } from "@keystone-heroes/wcl/src/queries";
 import type { Legendary } from "@prisma/client";
+
+import { prisma } from "../client";
+import { withPerformanceLogging } from "../utils";
 
 const createMany = async (
   data: (Pick<LegendaryItem, "id" | "effectIcon" | "effectName"> & {

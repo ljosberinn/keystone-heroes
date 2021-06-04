@@ -1,7 +1,7 @@
+import type { Season } from "@prisma/client";
+
 import { getAffixByName } from "./affixes";
 import { ExpansionEnum } from "./expansions";
-
-import type { Season } from "@prisma/client";
 
 export enum SeasonID {
   LEGION_7_2_0 = 1,

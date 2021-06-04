@@ -1,7 +1,7 @@
+import type { Region, Server } from "@prisma/client";
+
 import { prisma } from "../client";
 import { withPerformanceLogging } from "../utils";
-
-import type { Region, Server } from "@prisma/client";
 
 const createMany = async (
   region: Region,

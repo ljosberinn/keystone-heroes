@@ -1,4 +1,9 @@
 /* eslint-disable sonarjs/no-identical-functions */
+import type {
+  ApplyBuffEvent,
+  ApplyBuffStackEvent,
+  RemoveBuffEvent,
+} from "../../../wcl/src/queries/events";
 import {
   EXPLOSIVE,
   PF_GREEN_BUFF,
@@ -31,12 +36,6 @@ import spitefulDamageTaken from "./spitefulDamageTaken.json";
 import stormingDamageTakenEvents from "./stormingDamageTakenEvents.json";
 import topBannerAuraBuffEvents from "./topBannerAuraBuffEvents.json";
 import volcanicDamageTakenEvents from "./volcanicDamageTakenEvents.json";
-
-import type {
-  ApplyBuffEvent,
-  ApplyBuffStackEvent,
-  RemoveBuffEvent,
-} from "../../../wcl/src/queries/events";
 
 type Params = Parameters<typeof processEvents>;
 

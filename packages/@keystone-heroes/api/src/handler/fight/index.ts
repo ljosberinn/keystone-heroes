@@ -1,27 +1,5 @@
 import { FightRepo, PullRepo, ReportRepo } from "@keystone-heroes/db/repos";
 import { wcl } from "@keystone-heroes/wcl/src/queries";
-import nc from "next-connect";
-
-import { createValidReportIDMiddleware } from "../../middleware";
-import { BAD_REQUEST, INTERNAL_SERVER_ERROR } from "../../utils/statusCodes";
-import {
-  calcMetricAverage,
-  createConduits,
-  createCovenantTraits,
-  createFights,
-  createLegendaries,
-  createTalents,
-  enhanceFightsWithEvents,
-  enhanceFightsWithTable,
-  extendPlayersWithServerAndCharacterID,
-  extractPlayerData,
-  linkPlayerToConduits,
-  linkPlayerToCovenantTraits,
-  linkPlayerToTalents,
-} from "./utils";
-
-import type { RequestHandler } from "../../utils/types";
-import type { InsertableFight } from "./utils";
 import type { Talent, DungeonPull } from "@keystone-heroes/wcl/src/queries";
 import type {
   Fight,
@@ -42,6 +20,27 @@ import type {
   Event,
   NPC,
 } from "@prisma/client";
+import nc from "next-connect";
+
+import { createValidReportIDMiddleware } from "../../middleware";
+import { BAD_REQUEST, INTERNAL_SERVER_ERROR } from "../../utils/statusCodes";
+import type { RequestHandler } from "../../utils/types";
+import {
+  calcMetricAverage,
+  createConduits,
+  createCovenantTraits,
+  createFights,
+  createLegendaries,
+  createTalents,
+  enhanceFightsWithEvents,
+  enhanceFightsWithTable,
+  extendPlayersWithServerAndCharacterID,
+  extractPlayerData,
+  linkPlayerToConduits,
+  linkPlayerToCovenantTraits,
+  linkPlayerToTalents,
+} from "./utils";
+import type { InsertableFight } from "./utils";
 
 type Request = {
   query: {
@@ -279,10 +278,11 @@ const fightHandler: RequestHandler<Request, FightResponse[]> = async (
       return;
     }
 
-    const insertableFightsWithCharacterID = await extendPlayersWithServerAndCharacterID(
-      report.region,
-      insertableFights
-    );
+    const insertableFightsWithCharacterID =
+      await extendPlayersWithServerAndCharacterID(
+        report.region,
+        insertableFights
+      );
 
     const allPlayers = insertableFightsWithCharacterID.flatMap(
       (fight) => fight.composition

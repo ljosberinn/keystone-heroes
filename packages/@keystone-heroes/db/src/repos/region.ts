@@ -1,7 +1,7 @@
+import type { Region } from "@prisma/client";
+
 import { prisma } from "../client";
 import { withPerformanceLogging } from "../utils";
-
-import type { Region } from "@prisma/client";
 
 const upsert = (slug: string): Promise<Region> => {
   return prisma.region.upsert({

@@ -1,7 +1,6 @@
 import { isValidReportId } from "@keystone-heroes/wcl/src/utils";
 
 import { BAD_REQUEST } from "../utils/statusCodes";
-
 import type { Middleware } from "../utils/types";
 
 export const createValidReportIDMiddleware =

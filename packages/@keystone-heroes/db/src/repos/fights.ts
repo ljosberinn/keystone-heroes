@@ -1,8 +1,8 @@
-import { prisma } from "../client";
-import { withPerformanceLogging } from "../utils";
-
 import type { FightResponse } from "@keystone-heroes/api/handler/fight";
 import type { Fight } from "@prisma/client";
+
+import { prisma } from "../client";
+import { withPerformanceLogging } from "../utils";
 
 const createMany = async (fights: Omit<Fight, "id">[]): Promise<void> => {
   await prisma.fight.createMany({

@@ -1,7 +1,7 @@
+import type { Character } from "@prisma/client";
+
 import { prisma } from "../client";
 import { withPerformanceLogging } from "../utils";
-
-import type { Character } from "@prisma/client";
 
 const createMany = async <
   T extends { server: string; classID: number; name: string }
