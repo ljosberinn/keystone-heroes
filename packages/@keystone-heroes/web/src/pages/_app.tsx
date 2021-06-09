@@ -1,14 +1,12 @@
+import type { NextComponentType, NextPageContext } from "next";
 import { ThemeProvider } from "next-themes";
 import Head from "next/head";
-
 import "../styles/globals.css";
 import type { NextRouter } from "next/router";
 
 import { Footer } from "../components/Footer";
 import { Header } from "../components/Header";
 import { RouteChangeIndicator } from "../components/RouteChangeIndicator";
-
-import type { NextComponentType, NextPageContext } from "next";
 
 export type AppRenderProps = {
   pageProps: Record<string, unknown>;

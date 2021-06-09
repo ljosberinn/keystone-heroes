@@ -19,7 +19,7 @@ import {
   BURSTING,
   QUAKING,
   PRIDE,
-  remarkableSpellIds,
+  remarkableSpellIDs,
   NW_KYRIAN_ORB_HEAL,
   NW_KYRIAN_ORB_DAMAGE,
   NW_HAMMER,
@@ -29,6 +29,7 @@ import {
   EXPLOSIVE,
   SPITEFUL,
   SD_LANTERN_BUFF,
+  TORMENTED,
 } from "@keystone-heroes/db/data";
 
 import { getCachedSdk } from "../client";
@@ -107,7 +108,7 @@ export type ApplyDebuffEvent = Event<{
   targetMarker?: number;
 }>;
 
-type ApplyDebuffStackEvent = Event<{
+export type ApplyDebuffStackEvent = Event<{
   type: "applydebuffstack";
   stack: number;
 }>;
@@ -275,236 +276,234 @@ export type DeathEvent = Event<{
   targetMarker?: number;
 }>;
 
-export const loadRecursiveEventsFromSource = async (
-  reportID: string,
-  startTime: number,
-  endTime: number,
-  sourceID: number,
-  previousEvents: CastEvent[] = []
-): Promise<CastEvent[]> => {
-  try {
-    const sdk = await getCachedSdk();
-
-    const json = await sdk.EventData({
-      reportID,
-      startTime,
-      endTime,
-      sourceID,
-      dataType: EventDataType.Casts,
-      hostilityType: HostilityType.Friendlies,
-    });
-
-    const data: (CastEvent | BeginCastEvent)[] =
-      json?.reportData?.report?.events?.data ?? [];
-    const nextPageTimestamp =
-      json?.reportData?.report?.events?.nextPageTimestamp ?? null;
-
-    const nextEvents = [
-      ...previousEvents,
-      ...data.filter((event): event is CastEvent => event.type === "cast"),
-    ];
-
-    if (nextPageTimestamp) {
-      return await loadRecursiveEventsFromSource(
-        reportID,
-        startTime,
-        nextPageTimestamp,
-        endTime,
-        nextEvents
-      );
-    }
-
-    return nextEvents.filter((event) =>
-      remarkableSpellIds.has(event.abilityGameID)
-    );
-  } catch {
-    return previousEvents;
-  }
-};
-
-type SpiresSpearUsageParams = Pick<
+type GetEventBaseParams<
+  T extends Record<string, unknown> = Record<string, unknown>
+> = Pick<
   Parameters<Sdk["EventData"]>[0],
   "reportID" | "startTime" | "endTime"
->;
+> &
+  T;
 
-export const getSpiresSpearUsage = async (
-  params: SpiresSpearUsageParams
-): Promise<ApplyDebuffEvent[]> => {
+const getEvents = async <T extends Event<Record<string, unknown>>>(
+  params: GetEventBaseParams<{
+    abilityID?: number;
+    dataType: EventDataType;
+    hostilityType: HostilityType;
+    sourceID?: number;
+    targetID?: number;
+  }>,
+  previousEvents: T[] = []
+): Promise<T[]> => {
   const sdk = await getCachedSdk();
+  const response = await sdk.EventData(params);
 
-  const json = await sdk.EventData({
+  const { data = [], nextPageTimestamp = null } =
+    response?.reportData?.report?.events ?? {};
+  const allEvents: T[] = [...previousEvents, ...data];
+
+  if (nextPageTimestamp) {
+    return getEvents<T>({ ...params, startTime: nextPageTimestamp }, allEvents);
+  }
+
+  return allEvents;
+};
+
+type EventFetcherParams = {
+  abilityID?: number;
+  dataType: EventDataType;
+  hostilityType: HostilityType;
+};
+
+const createEventFetcher =
+  <T extends Event<Record<string, unknown>>>(
+    initialParams: EventFetcherParams
+  ) =>
+  (params: GetEventBaseParams) =>
+    getEvents<T>({
+      ...params,
+      ...initialParams,
+    });
+
+const reduceEventsByPlayer = <T extends DamageEvent | HealEvent>(
+  events: T[],
+  key: "targetID" | "sourceID"
+) => {
+  return events.reduce<T[]>((arr, event) => {
+    const existingIndex = arr.findIndex(
+      (dataset) => dataset[key] === event[key]
+    );
+
+    if (existingIndex > -1) {
+      return arr.map((dataset, index) => {
+        return index === existingIndex
+          ? {
+              ...dataset,
+              amount: dataset.amount + event.amount + (event.absorbed ?? 0),
+              overheal:
+                event.type === "heal" && dataset.type === "heal"
+                  ? (dataset?.overheal ?? 0) + (event?.overheal ?? 0)
+                  : undefined,
+            }
+          : dataset;
+      });
+    }
+
+    return [...arr, event];
+  }, []);
+};
+
+export const getRemarkableSpellCastEvents = async (
+  params: GetEventBaseParams<{ sourceID: number }>
+): Promise<CastEvent[]> => {
+  const allEvents = await getEvents<CastEvent | BeginCastEvent>({
     ...params,
     dataType: EventDataType.Casts,
     hostilityType: HostilityType.Friendlies,
-    abilityID: SOA_SPEAR,
   });
 
-  const data: (ApplyDebuffEvent | RemoveDebuffEvent | RefreshDebuffEvent)[] =
-    json?.reportData?.report?.events?.data ?? [];
-
-  return data.filter(
-    (event): event is ApplyDebuffEvent => event.type === "applydebuff"
+  return allEvents.filter(
+    (event): event is CastEvent =>
+      event.type === "cast" && remarkableSpellIDs.has(event.abilityGameID)
   );
 };
 
-type NWKyrianOrbHealParams = SpiresSpearUsageParams;
-
-export const getNecroticWakeKyrianOrbHealEvents = async (
-  params: NWKyrianOrbHealParams,
-  previousEvents: HealEvent[] = []
-): Promise<HealEvent[]> => {
-  const sdk = await getCachedSdk();
-
-  const response = await sdk.EventData({
+export const getSpiresOfAscensionSpearUsage = async (
+  params: GetEventBaseParams
+): Promise<ApplyDebuffEvent[]> => {
+  const allEvents = await getEvents<
+    ApplyDebuffEvent | RemoveDebuffEvent | RefreshDebuffEvent
+  >({
     ...params,
-    dataType: EventDataType.Healing,
-    hostilityType: HostilityType.Friendlies,
-    abilityID: NW_KYRIAN_ORB_HEAL,
+    dataType: EventDataType.Debuffs,
+    hostilityType: HostilityType.Enemies,
+    abilityID: SOA_SPEAR,
   });
 
-  const { data = [], nextPageTimestamp = null } =
-    response?.reportData?.report?.events ?? {};
-  const allEvents: HealEvent[] = [...previousEvents, ...data];
+  // SoA Spear stun lasts 10 seconds
+  // each usage should be thus at least 10s apart of each other
+  const threshold = 10 * 1000;
 
-  if (nextPageTimestamp) {
-    return getNecroticWakeKyrianOrbHealEvents(
-      { ...params, startTime: nextPageTimestamp },
-      allEvents
-    );
+  // picks the first event of each chunk
+  return allEvents
+    .filter((event): event is ApplyDebuffEvent => event.type === "applydebuff")
+    .reduce<ApplyDebuffEvent[][]>(
+      (acc, event) => reduceToChunkByThreshold(acc, event, threshold),
+      []
+    )
+    .flatMap((chunk) => chunk[0]);
+};
+
+export const getNecroticWakeHammerUsage = createEventFetcher<DamageEvent>({
+  dataType: EventDataType.DamageDone,
+  hostilityType: HostilityType.Friendlies,
+  abilityID: NW_HAMMER,
+});
+
+const reduceToChunkByThreshold = <E extends Event<Record<string, unknown>>>(
+  acc: E[][],
+  event: E,
+  threshold: number
+) => {
+  if (acc.length === 0) {
+    return [[event]];
   }
 
-  return allEvents;
+  const lastChunksIndex = acc.length - 1;
+  const lastChunks = acc[lastChunksIndex];
+
+  const lastIndex = lastChunks.length - 1;
+  const lastEvent = lastChunks[lastIndex];
+
+  const timePassed = event.timestamp - lastEvent.timestamp;
+  return timePassed > threshold
+    ? [...acc, [event]]
+    : acc.map((events, index) =>
+        index === lastChunksIndex ? [...events, event] : events
+      );
 };
 
-type NWKyrianOrbDamageParams = SpiresSpearUsageParams;
-
-export const getNecroticWakeKyrianOrbDamageEvents = async (
-  params: NWKyrianOrbDamageParams,
-  previousEvents: DamageEvent[] = []
+export const getNecroticWakeSpearUsage = async (
+  params: GetEventBaseParams
 ): Promise<DamageEvent[]> => {
-  const sdk = await getCachedSdk();
-
-  const response = await sdk.EventData({
-    ...params,
-    dataType: EventDataType.DamageDone,
-    hostilityType: HostilityType.Friendlies,
-    abilityID: NW_KYRIAN_ORB_DAMAGE,
-  });
-
-  const { data = [], nextPageTimestamp = null } =
-    response?.reportData?.report?.events ?? {};
-  const allEvents: DamageEvent[] = [...previousEvents, ...data];
-
-  if (nextPageTimestamp) {
-    return getNecroticWakeKyrianOrbDamageEvents(
-      { ...params, startTime: nextPageTimestamp },
-      allEvents
-    );
-  }
-
-  return allEvents;
-};
-
-type NWHammerUsageParams = SpiresSpearUsageParams;
-
-export const getNwHammerUsage = async (
-  params: NWHammerUsageParams
-): Promise<DamageEvent[]> => {
-  const sdk = await getCachedSdk();
-
-  const json = await sdk.EventData({
-    ...params,
-    dataType: EventDataType.DamageDone,
-    hostilityType: HostilityType.Friendlies,
-    abilityID: NW_HAMMER,
-  });
-
-  return json?.reportData?.report?.events?.data ?? [];
-};
-
-type NWSpearUsageParams = SpiresSpearUsageParams;
-
-export const getNwSpearUsage = async (
-  params: NWSpearUsageParams
-): Promise<DamageEvent[]> => {
-  const sdk = await getCachedSdk();
-
-  const json = await sdk.EventData({
+  const allEvents = await getEvents<DamageEvent>({
     ...params,
     dataType: EventDataType.DamageDone,
     hostilityType: HostilityType.Friendlies,
     abilityID: NW_SPEAR,
   });
 
-  return json?.reportData?.report?.events?.data ?? [];
+  // NW Spear applies a bleed for 16 seconds
+  // each usage is hopefully thus at least 16s apart of each other
+  // may have to adjust later for multi-spearing...
+  const threshold = 16 * 1000;
+
+  const chunks = allEvents.reduce<DamageEvent[][]>(
+    (acc, event) => reduceToChunkByThreshold(acc, event, threshold),
+    []
+  );
+
+  // creates one event per orb usage
+  return chunks.flatMap((chunk) => reduceEventsByPlayer(chunk, "sourceID"));
 };
-
-type NWSOrbUsageParams = SpiresSpearUsageParams;
-
-export const getNwOrbUsage = async (
-  params: NWSOrbUsageParams
+export const getNecroticWakeOrbUsage = async (
+  params: GetEventBaseParams
 ): Promise<DamageEvent[]> => {
-  const sdk = await getCachedSdk();
-
-  const json = await sdk.EventData({
+  const allEvents = await getEvents<DamageEvent>({
     ...params,
     dataType: EventDataType.DamageDone,
     hostilityType: HostilityType.Friendlies,
     abilityID: NW_ORB,
   });
+  // NW Orb pulses every 1s for 8s
+  // each usage is hopefully thus at least 8s apart of each other
+  // may have to adjust later for multi-orbing...
+  const threshold = 8 * 1000;
 
-  return json?.reportData?.report?.events?.data ?? [];
+  const chunks = allEvents.reduce<DamageEvent[][]>(
+    (acc, event) => reduceToChunkByThreshold(acc, event, threshold),
+    []
+  );
+
+  // creates one event per orb usage
+  return chunks.flatMap((chunk) => reduceEventsByPlayer(chunk, "sourceID"));
 };
 
-type TOPBannerUsageParams = SpiresSpearUsageParams;
-
-export const getTopBannerUsage = async (
-  params: TOPBannerUsageParams
+export const getTheaterOfPainBannerUsage = async (
+  params: GetEventBaseParams
 ): Promise<ApplyBuffEvent[]> => {
-  const sdk = await getCachedSdk();
-
-  const json = await sdk.EventData({
+  const data = await getEvents<ApplyBuffEvent | RemoveBuffEvent>({
     ...params,
     dataType: EventDataType.Buffs,
     hostilityType: HostilityType.Friendlies,
     abilityID: TOP_BANNER_AURA,
   });
 
-  const data: (ApplyBuffEvent | RemoveBuffEvent)[] =
-    json?.reportData?.report?.events?.data ?? [];
-
   return data.filter(
     (event): event is ApplyBuffEvent => event.type === "applybuff"
   );
 };
 
-type DOSUrnUsageParams = SpiresSpearUsageParams;
-
-export const getDosUrnUsage = async (
-  params: DOSUrnUsageParams
+export const getDeOtherSideUrnUsage = async (
+  params: GetEventBaseParams
 ): Promise<ApplyDebuffEvent[]> => {
-  const sdk = await getCachedSdk();
-
-  const json = await sdk.EventData({
+  const allEvents = await getEvents<
+    ApplyDebuffEvent | RemoveDebuffEvent | RefreshDebuffEvent
+  >({
     ...params,
     dataType: EventDataType.Debuffs,
     hostilityType: HostilityType.Enemies,
     abilityID: DOS_URN,
   });
 
-  const data: (ApplyDebuffEvent | RemoveDebuffEvent | RefreshDebuffEvent)[] =
-    json?.reportData?.report?.events?.data ?? [];
-
-  return data.filter(
+  return allEvents.filter(
     (event): event is ApplyDebuffEvent => event.type === "applydebuff"
   );
 };
 
-type CardboardAssassinUsageParams = SpiresSpearUsageParams;
 type CardboardAssassinUsages = { events: CastEvent[]; actorId: number | null };
 
 export const getCardboardAssassinUsage = async (
-  params: CardboardAssassinUsageParams
+  params: GetEventBaseParams
 ): Promise<CardboardAssassinUsages[]> => {
   const sdk = await getCachedSdk();
 
@@ -527,14 +526,12 @@ export const getCardboardAssassinUsage = async (
         return null;
       }
 
-      const response = await sdk.EventData({
+      const events = await getEvents<CastEvent>({
         ...params,
         sourceID: instance.id,
         dataType: EventDataType.Threat,
         hostilityType: HostilityType.Friendlies,
       });
-
-      const events = response?.reportData?.report?.events?.data ?? [];
 
       if (events.length === 0) {
         return null;
@@ -552,184 +549,82 @@ export const getCardboardAssassinUsage = async (
   );
 };
 
-type InvisibilityUsageParams = SpiresSpearUsageParams;
-
 export const getInvisibilityUsage = async (
-  params: InvisibilityUsageParams
+  params: GetEventBaseParams
 ): Promise<ApplyBuffEvent[]> => {
-  const sdk = await getCachedSdk();
-
-  const dimensionalShifterUsage = await sdk.EventData({
+  const dimensionalShifterUsage = await getEvents<
+    ApplyBuffEvent | RemoveBuffEvent
+  >({
     ...params,
     dataType: EventDataType.Buffs,
     hostilityType: HostilityType.Friendlies,
     abilityID: DIMENSIONAL_SHIFTER,
   });
 
-  const potionUsage = await sdk.EventData({
+  const potionUsage = await getEvents<ApplyBuffEvent | RemoveBuffEvent>({
     ...params,
     dataType: EventDataType.Buffs,
     hostilityType: HostilityType.Friendlies,
     abilityID: POTION_OF_THE_HIDDEN_SPIRIT,
   });
 
-  const allEvents: (ApplyBuffEvent | RemoveBuffEvent)[] = [
-    ...(dimensionalShifterUsage?.reportData?.report?.events?.data ?? []),
-    ...(potionUsage?.reportData?.report?.events?.data ?? []),
-  ];
-
-  return allEvents.filter(
+  return [...dimensionalShifterUsage, ...potionUsage].filter(
     (event): event is ApplyBuffEvent => event.type === "applybuff"
   );
 };
 
-type HOAGargoyleCharmsParams = SpiresSpearUsageParams;
-
-export const getHoaGargoyleCharms = async (
-  params: HOAGargoyleCharmsParams
+export const getHallsOfAtonementGargoyleCharms = async (
+  params: GetEventBaseParams
 ): Promise<CastEvent[]> => {
-  const sdk = await getCachedSdk();
-
-  const response = await sdk.EventData({
+  const data = await getEvents<CastEvent | BeginCastEvent>({
     ...params,
     dataType: EventDataType.Casts,
     hostilityType: HostilityType.Friendlies,
     abilityID: HOA_GARGOYLE,
   });
 
-  const data: (CastEvent | BeginCastEvent)[] =
-    response?.reportData?.report?.events?.data ?? [];
-
   return data.filter((event): event is CastEvent => event.type === "cast");
 };
 
-type SDLanternUsageParams = SpiresSpearUsageParams;
-
-export const getSdLanternUsages = async (
-  params: SDLanternUsageParams
-): Promise<BeginCastEvent[]> => {
-  const sdk = await getCachedSdk();
-
-  const data = await sdk.EventData({
-    ...params,
+export const getSanguineDepthsLanternUsages =
+  createEventFetcher<BeginCastEvent>({
     dataType: EventDataType.Casts,
     hostilityType: HostilityType.Friendlies,
     abilityID: SD_LANTERN_OPENING,
   });
 
-  return data?.reportData?.report?.events?.data ?? [];
-};
-
-export const getSdBuffEvents = async (
-  params: SDLanternUsageParams
-): Promise<(ApplyBuffEvent | ApplyBuffStackEvent | RemoveBuffEvent)[]> => {
-  const sdk = await getCachedSdk();
-
-  const response = await sdk.EventData({
-    ...params,
-    dataType: EventDataType.Buffs,
-    hostilityType: HostilityType.Friendlies,
-    abilityID: SD_LANTERN_BUFF,
-  });
-
-  return response?.reportData?.report?.events?.data ?? [];
-};
-
-type TotalHealingDoneBySanguineParams = SpiresSpearUsageParams;
+export const getSanguineDepthsBuffEvents = createEventFetcher<
+  ApplyBuffEvent | ApplyBuffStackEvent | RemoveBuffEvent
+>({
+  dataType: EventDataType.Buffs,
+  hostilityType: HostilityType.Friendlies,
+  abilityID: SD_LANTERN_BUFF,
+});
 
 export const getSanguineHealingDoneEvents = async (
-  params: TotalHealingDoneBySanguineParams,
-  previousEvents: HealEvent[] = []
-): Promise<HealEvent[]> => {
-  const sdk = await getCachedSdk();
-
-  const response = await sdk.EventData({
+  params: GetEventBaseParams
+): Promise<[HealEvent]> => {
+  const allEvents = await getEvents<HealEvent>({
     ...params,
     dataType: EventDataType.Healing,
     hostilityType: HostilityType.Enemies,
     abilityID: SANGUINE_ICHOR_HEALING,
   });
 
-  const { data = [], nextPageTimestamp = null } =
-    response?.reportData?.report?.events ?? {};
-  const allEvents: HealEvent[] = [...previousEvents, ...data];
-
-  if (nextPageTimestamp) {
-    return getSanguineHealingDoneEvents(
-      { ...params, startTime: nextPageTimestamp },
-      allEvents
-    );
-  }
-
-  return allEvents;
-};
-
-type TotalDamageTakenBySanguineParams = SpiresSpearUsageParams;
-
-export const getSanguineDamageTakenEvents = async (
-  params: TotalDamageTakenBySanguineParams,
-  previousEvents: DamageEvent[] = []
-): Promise<DamageEvent[]> => {
-  const sdk = await getCachedSdk();
-
-  const response = await sdk.EventData({
-    ...params,
-    dataType: EventDataType.DamageTaken,
-    hostilityType: HostilityType.Friendlies,
-    abilityID: SANGUINE_ICHOR_DAMAGE,
-  });
-
-  const { data = [], nextPageTimestamp = null } =
-    response?.reportData?.report?.events ?? {};
-  const allEvents: DamageEvent[] = [...previousEvents, ...data];
-
-  if (nextPageTimestamp) {
-    return getSanguineDamageTakenEvents(
-      { ...params, startTime: nextPageTimestamp },
-      allEvents
-    );
-  }
-
-  return allEvents;
-};
-
-type TotalDamageTakenByGrievousWoundParams = SpiresSpearUsageParams;
-
-export const getGrievousDamageTakenEvents = async (
-  params: TotalDamageTakenByGrievousWoundParams,
-  previousEvents: DamageEvent[] = []
-): Promise<DamageEvent[]> => {
-  const sdk = await getCachedSdk();
-
-  const response = await sdk.EventData({
-    ...params,
-    dataType: EventDataType.DamageTaken,
-    hostilityType: HostilityType.Friendlies,
-    abilityID: GRIEVOUS_WOUND,
-  });
-
-  const { data = [], nextPageTimestamp = null } =
-    response?.reportData?.report?.events ?? {};
-  const allEvents: DamageEvent[] = [...previousEvents, ...data];
-
-  if (nextPageTimestamp) {
-    return getGrievousDamageTakenEvents(
-      { ...params, startTime: nextPageTimestamp },
-      allEvents
-    );
-  }
-
-  return allEvents;
-};
-
-type ExplosiveKillsParams = SpiresSpearUsageParams & {
-  fightID: number;
+  return [
+    allEvents.reduce<HealEvent>((acc, event) => {
+      return {
+        ...acc,
+        amount: acc.amount + event.amount,
+        overheal: (acc.overheal ?? 0) + (event.overheal ?? 0),
+      };
+    }, allEvents[0]),
+  ];
 };
 
 export const getExplosiveKillEvents = async (
-  params: ExplosiveKillsParams,
-  explosiveID = -1,
-  previousEvents: DamageEvent[] = []
+  params: GetEventBaseParams<{ fightID: number }>,
+  explosiveID = -1
 ): Promise<DamageEvent[]> => {
   const sourceID =
     explosiveID === -1
@@ -743,38 +638,19 @@ export const getExplosiveKillEvents = async (
     return [];
   }
 
-  const sdk = await getCachedSdk();
-
-  const response = await sdk.EventData({
+  const allEvents = await getEvents<DamageEvent>({
     ...params,
     dataType: EventDataType.DamageDone,
     hostilityType: HostilityType.Friendlies,
     targetID: sourceID,
   });
 
-  const { data = [], nextPageTimestamp = null } =
-    response?.reportData?.report?.events ?? {};
-  const allEvents: DamageEvent[] = [...previousEvents, ...data];
-
-  if (nextPageTimestamp) {
-    return getExplosiveKillEvents(
-      { ...params, startTime: nextPageTimestamp },
-      sourceID,
-      allEvents
-    );
-  }
-
   return allEvents.filter((event) => event.overkill);
 };
 
-type TotalDamageTakenBySpitefulParams = SpiresSpearUsageParams & {
-  fightID: number;
-};
-
 export const getSpitefulDamageTakenEvents = async (
-  params: TotalDamageTakenBySpitefulParams,
-  spitefulID = -1,
-  previousEvents: DamageEvent[] = []
+  params: GetEventBaseParams<{ fightID: number }>,
+  spitefulID = -1
 ): Promise<DamageEvent[]> => {
   const sourceID =
     spitefulID === -1
@@ -788,254 +664,75 @@ export const getSpitefulDamageTakenEvents = async (
     return [];
   }
 
-  const sdk = await getCachedSdk();
-
-  const response = await sdk.EventData({
+  return getEvents<DamageEvent>({
     ...params,
     dataType: EventDataType.DamageTaken,
     hostilityType: HostilityType.Friendlies,
     targetID: sourceID,
   });
-
-  const { data = [], nextPageTimestamp = null } =
-    response?.reportData?.report?.events ?? {};
-  const allEvents: DamageEvent[] = [...previousEvents, ...data];
-
-  if (nextPageTimestamp) {
-    return getSpitefulDamageTakenEvents(
-      { ...params, startTime: nextPageTimestamp },
-      sourceID,
-      allEvents
-    );
-  }
-
-  return allEvents;
 };
-
-type TotalDamageTakenByExplosionParams = SpiresSpearUsageParams;
-
-export const getExplosiveDamageTakenEvents = async (
-  params: TotalDamageTakenByExplosionParams,
-  previousEvents: DamageEvent[] = []
-): Promise<DamageEvent[]> => {
-  const sdk = await getCachedSdk();
-
-  const response = await sdk.EventData({
-    ...params,
-    dataType: EventDataType.DamageTaken,
-    hostilityType: HostilityType.Friendlies,
-    abilityID: EXPLOSIVE.ability,
-  });
-
-  const { data = [], nextPageTimestamp = null } =
-    response?.reportData?.report?.events ?? {};
-  const allEvents: DamageEvent[] = [...previousEvents, ...data];
-
-  if (nextPageTimestamp) {
-    return getExplosiveDamageTakenEvents(
-      { ...params, startTime: nextPageTimestamp },
-      allEvents
-    );
-  }
-
-  return allEvents;
-};
-
-type HighestNecroticStackAmountParams = SpiresSpearUsageParams;
 
 export const getHighestNecroticStackAmount = async (
-  params: HighestNecroticStackAmountParams,
-  previousEvents: ApplyDebuffStackEvent[] = []
+  params: GetEventBaseParams
 ): Promise<ApplyDebuffStackEvent[]> => {
-  const sdk = await getCachedSdk();
-
-  const response = await sdk.EventData({
+  const allEvents = await getEvents<ApplyDebuffStackEvent | ApplyDebuffEvent>({
     ...params,
     dataType: EventDataType.Debuffs,
     hostilityType: HostilityType.Friendlies,
     abilityID: NECROTIC,
   });
 
-  const { data = [], nextPageTimestamp = null } =
-    response?.reportData?.report?.events ?? {};
-  const allEvents = [
-    ...previousEvents,
-    ...data.filter(
-      (
-        event: ApplyDebuffStackEvent | ApplyDebuffEvent
-      ): event is ApplyDebuffStackEvent => event.type === "applydebuffstack"
-    ),
-  ];
+  const relevantEvents = allEvents.filter(
+    (event): event is ApplyDebuffStackEvent => event.type === "applydebuffstack"
+  );
 
-  if (nextPageTimestamp) {
-    return getHighestNecroticStackAmount(
-      { ...params, startTime: nextPageTimestamp },
-      allEvents
-    );
-  }
-
-  const highestStack = allEvents.reduce(
+  const highestStack = relevantEvents.reduce(
     (acc, event) => (acc >= event.stack ? acc : event.stack),
     0
   );
 
-  return allEvents.filter((event) => event.stack === highestStack);
+  return relevantEvents.filter((event) => event.stack === highestStack);
 };
 
-type TotalDamageTakenByNecroticParams = SpiresSpearUsageParams;
-
 export const getNecroticDamageTakenEvents = async (
-  params: TotalDamageTakenByNecroticParams,
-  previousEvents: DamageEvent[] = []
+  params: GetEventBaseParams
 ): Promise<DamageEvent[]> => {
-  const sdk = await getCachedSdk();
-
-  const response = await sdk.EventData({
+  const allEvents = await getEvents<DamageEvent>({
     ...params,
     dataType: EventDataType.DamageTaken,
     hostilityType: HostilityType.Friendlies,
     abilityID: NECROTIC,
   });
 
-  const { data = [], nextPageTimestamp = null } =
-    response?.reportData?.report?.events ?? {};
-  const allEvents: DamageEvent[] = [...previousEvents, ...data];
-
-  if (nextPageTimestamp) {
-    return getNecroticDamageTakenEvents(
-      { ...params, startTime: nextPageTimestamp },
-      allEvents
-    );
-  }
-
-  return groupDamageEventsByPlayer(allEvents, "targetID");
+  return reduceEventsByPlayer(allEvents, "targetID");
 };
 
-type TotalDamageTakenByStormingParams = SpiresSpearUsageParams;
+export const getPlayerDeathEvents = createEventFetcher<DeathEvent>({
+  dataType: EventDataType.Deaths,
+  hostilityType: HostilityType.Friendlies,
+});
 
-export const getStormingDamageTakenEvents = async (
-  params: TotalDamageTakenByStormingParams,
-  previousEvents: DamageEvent[] = []
-): Promise<DamageEvent[]> => {
-  const sdk = await getCachedSdk();
-
-  const response = await sdk.EventData({
-    ...params,
-    dataType: EventDataType.DamageTaken,
-    hostilityType: HostilityType.Friendlies,
-    abilityID: STORMING,
-  });
-
-  const { data = [], nextPageTimestamp = null } =
-    response?.reportData?.report?.events ?? {};
-  const allEvents = [...previousEvents, ...data];
-
-  if (nextPageTimestamp) {
-    return getStormingDamageTakenEvents(
-      { ...params, startTime: nextPageTimestamp },
-      allEvents
-    );
-  }
-
-  return allEvents;
+type StackDataset = {
+  targetID: number;
+  targetInstance: number | null;
+  stacks: number;
 };
-
-type TotalDamageTakenByVolcanicParams = SpiresSpearUsageParams;
-
-export const getVolcanicDamageTakenEvents = async (
-  params: TotalDamageTakenByVolcanicParams,
-  previousEvents: DamageEvent[] = []
-): Promise<DamageEvent[]> => {
-  const sdk = await getCachedSdk();
-
-  const response = await sdk.EventData({
-    ...params,
-    dataType: EventDataType.DamageTaken,
-    hostilityType: HostilityType.Friendlies,
-    abilityID: VOLCANIC,
-  });
-
-  const { data = [], nextPageTimestamp = null } =
-    response?.reportData?.report?.events ?? {};
-  const allEvents = [...previousEvents, ...data];
-
-  if (nextPageTimestamp) {
-    return getVolcanicDamageTakenEvents(
-      { ...params, startTime: nextPageTimestamp },
-      allEvents
-    );
-  }
-
-  return allEvents;
-};
-
-type PlayerDeathEventParams = SpiresSpearUsageParams;
-
-export const getPlayerDeathEvents = async (
-  params: PlayerDeathEventParams,
-  previousEvents: DeathEvent[] = []
-): Promise<DeathEvent[]> => {
-  const sdk = await getCachedSdk();
-
-  const response = await sdk.EventData({
-    ...params,
-    dataType: EventDataType.Deaths,
-    hostilityType: HostilityType.Friendlies,
-  });
-
-  const { data = [], nextPageTimestamp = null } =
-    response?.reportData?.report?.events ?? {};
-  const allEvents: DeathEvent[] = [...previousEvents, ...data];
-
-  if (nextPageTimestamp) {
-    return getPlayerDeathEvents(
-      { ...params, startTime: nextPageTimestamp },
-      allEvents
-    );
-  }
-
-  return allEvents;
-};
-
-type HighestBolsteringStackParams = SpiresSpearUsageParams;
 
 export const getBolsteringEvents = async (
-  params: HighestBolsteringStackParams,
-  previousEvents: ApplyBuffEvent[] = []
+  params: GetEventBaseParams
 ): Promise<ApplyBuffEvent[]> => {
-  const sdk = await getCachedSdk();
-
-  const response = await sdk.EventData({
+  const allEvents = await getEvents<ApplyBuffEvent | RemoveBuffEvent>({
     ...params,
     dataType: EventDataType.Buffs,
     hostilityType: HostilityType.Enemies,
     abilityID: BOLSTERING,
   });
 
-  const { data = [], nextPageTimestamp = null } =
-    response?.reportData?.report?.events ?? {};
-  const allEvents: ApplyBuffEvent[] = [
-    ...previousEvents,
-    ...data.filter(
-      (event: ApplyBuffEvent | RemoveBuffEvent): event is ApplyBuffEvent =>
-        event.type === "applybuff"
-    ),
-  ];
+  const relevantEvents = allEvents.filter(
+    (event): event is ApplyBuffEvent => event.type === "applybuff"
+  );
 
-  if (nextPageTimestamp) {
-    return getBolsteringEvents(
-      { ...params, startTime: nextPageTimestamp },
-      allEvents
-    );
-  }
-
-  type StackDataset = {
-    targetID: number;
-    targetInstance: number | null;
-    stacks: number;
-  };
-
-  const stacksPerNPC = allEvents.reduce<StackDataset[]>(
+  const stacksPerNPC = relevantEvents.reduce<StackDataset[]>(
     (acc, { targetID, targetInstance = null }) => {
       const existingIndex = acc.findIndex(
         (dataset) =>
@@ -1071,7 +768,7 @@ export const getBolsteringEvents = async (
     (dataset) => dataset.stacks === highestStack.stacks
   );
 
-  return allEvents.reduce<(ApplyBuffEvent & { stacks: number })[]>(
+  return relevantEvents.reduce<(ApplyBuffEvent & { stacks: number })[]>(
     (acc, event) => {
       const dataset = NPCsWithSameFinalStackAmount.find(
         (npc) =>
@@ -1112,7 +809,7 @@ export const getBolsteringEvents = async (
   );
 };
 
-type PFSlimeKillsParams = SpiresSpearUsageParams & {
+type PFSlimeKillsParams = GetEventBaseParams & {
   fightID: number;
 };
 
@@ -1131,8 +828,6 @@ export const getPFSlimeKills = async (
     [PF_RED_BUFF.unit, PF_GREEN_BUFF.unit, PF_PURPLE_BUFF.unit]
   );
 
-  const sdk = await getCachedSdk();
-
   const [redDeathEvents, greenDeathEvents, purpleDeathEvents] =
     await Promise.all<DeathEvent[]>(
       [red, green, purple].map(async (sourceID) => {
@@ -1140,14 +835,12 @@ export const getPFSlimeKills = async (
           return [];
         }
 
-        const response = await sdk.EventData({
+        return getEvents<DeathEvent>({
           ...params,
           dataType: EventDataType.Deaths,
           hostilityType: HostilityType.Enemies,
           sourceID,
         });
-
-        return response?.reportData?.report?.events?.data ?? [];
       })
     );
 
@@ -1168,16 +861,13 @@ export const getPFSlimeKills = async (
             return [];
           }
 
-          const response = await sdk.EventData({
+          const events = await getEvents<ApplyBuffEvent | RemoveBuffEvent>({
             ...params,
             startTime: earliestUnitDeathTimestamp,
             dataType: EventDataType.Buffs,
             hostilityType: HostilityType.Friendlies,
             abilityID,
           });
-
-          const events: (ApplyBuffEvent | RemoveBuffEvent)[] =
-            response?.reportData?.report?.events?.data ?? [];
 
           return events.filter(
             (event): event is ApplyBuffEvent => event.type === "applybuff"
@@ -1211,124 +901,216 @@ export const getPFSlimeKills = async (
   // };
 };
 
-type TotalDamageTakenByBurstingParams = SpiresSpearUsageParams;
-
 export const getBurstingDamageTakenEvents = async (
-  params: TotalDamageTakenByBurstingParams,
-  previousEvents: DamageEvent[] = []
+  params: GetEventBaseParams
 ): Promise<DamageEvent[]> => {
-  const sdk = await getCachedSdk();
-
-  const response = await sdk.EventData({
+  const allEvents = await getEvents<DamageEvent>({
     ...params,
-    hostilityType: HostilityType.Friendlies,
     dataType: EventDataType.DamageTaken,
+    hostilityType: HostilityType.Friendlies,
     abilityID: BURSTING,
   });
 
-  const { data = [], nextPageTimestamp = null } =
-    response?.reportData?.report?.events ?? {};
-  const allEvents: DamageEvent[] = [...previousEvents, ...data];
-
-  if (nextPageTimestamp) {
-    return getBurstingDamageTakenEvents(
-      { ...params, startTime: nextPageTimestamp },
-      allEvents
-    );
-  }
-
-  return groupDamageEventsByPlayer(allEvents, "targetID");
+  return reduceEventsByPlayer(allEvents, "targetID");
 };
 
-const groupDamageEventsByPlayer = (
-  events: DamageEvent[],
-  key: "targetID" | "sourceID"
-) => {
-  const getExistingIndex = (arr: typeof events, event: typeof events[number]) =>
-    arr.findIndex((dataset) => dataset[key] === event[key]);
-
-  return events.reduce<DamageEvent[]>((arr, event) => {
-    const existingIndex = getExistingIndex(arr, event);
-
-    if (existingIndex > -1) {
-      return arr.map((dataset, index) =>
-        index === existingIndex
-          ? {
-              ...dataset,
-              amount: dataset.amount + event.amount + (event.absorbed ?? 0),
-            }
-          : dataset
-      );
-    }
-
-    return [...arr, event];
-  }, []);
-};
-
-type TotalDamageTakenByQuakingParams = SpiresSpearUsageParams;
-
-export const getQuakingDamageTakenEvents = async (
-  params: TotalDamageTakenByQuakingParams,
-  previousEvents: DamageEvent[] = []
-): Promise<DamageEvent[]> => {
-  const sdk = await getCachedSdk();
-
-  const response = await sdk.EventData({
+export const getNecroticWakeKyrianOrbHealEvents = async (
+  params: GetEventBaseParams
+): Promise<HealEvent[]> => {
+  const allEvents = await getEvents<HealEvent>({
     ...params,
+    dataType: EventDataType.Healing,
     hostilityType: HostilityType.Friendlies,
-    dataType: EventDataType.DamageTaken,
-    abilityID: QUAKING,
+    abilityID: NW_KYRIAN_ORB_HEAL,
   });
 
-  const { data = [], nextPageTimestamp = null } =
-    response?.reportData?.report?.events ?? {};
-  const allEvents: DamageEvent[] = [...previousEvents, ...data];
-
-  if (nextPageTimestamp) {
-    return getQuakingDamageTakenEvents(
-      { ...params, startTime: nextPageTimestamp },
-      allEvents
-    );
-  }
-
-  return allEvents;
+  return reduceEventsByPlayer(allEvents, "targetID");
 };
 
-type InterrutpsByQuakingParams = SpiresSpearUsageParams;
+export const getNecroticWakeKyrianOrbDamageEvents = async (
+  params: GetEventBaseParams
+): Promise<DamageEvent[]> => {
+  const allEvents = await getEvents<DamageEvent>({
+    ...params,
+    dataType: EventDataType.DamageDone,
+    hostilityType: HostilityType.Friendlies,
+    abilityID: NW_KYRIAN_ORB_DAMAGE,
+  });
+
+  return reduceEventsByPlayer(allEvents, "targetID");
+};
+
+export const getSanguineDamageTakenEvents = async (
+  params: GetEventBaseParams
+): Promise<DamageEvent[]> => {
+  const allEvents = await getEvents<DamageEvent>({
+    ...params,
+    dataType: EventDataType.DamageTaken,
+    hostilityType: HostilityType.Friendlies,
+    abilityID: SANGUINE_ICHOR_DAMAGE,
+  });
+
+  return reduceEventsByPlayer(allEvents, "targetID");
+};
+
+export const getGrievousDamageTakenEvents = async (
+  params: GetEventBaseParams
+): Promise<DamageEvent[]> => {
+  const allEvents = await getEvents<DamageEvent>({
+    ...params,
+    dataType: EventDataType.DamageTaken,
+    hostilityType: HostilityType.Friendlies,
+    abilityID: GRIEVOUS_WOUND,
+  });
+
+  return reduceEventsByPlayer(allEvents, "targetID");
+};
+
+export const getExplosiveDamageTakenEvents = createEventFetcher<DamageEvent>({
+  dataType: EventDataType.DamageTaken,
+  hostilityType: HostilityType.Friendlies,
+  abilityID: EXPLOSIVE.ability,
+});
+
+export const getStormingDamageTakenEvents = createEventFetcher<DamageEvent>({
+  dataType: EventDataType.DamageTaken,
+  hostilityType: HostilityType.Friendlies,
+  abilityID: STORMING,
+});
+
+export const getVolcanicDamageTakenEvents = createEventFetcher<DamageEvent>({
+  dataType: EventDataType.DamageTaken,
+  hostilityType: HostilityType.Friendlies,
+  abilityID: VOLCANIC,
+});
+
+export const getQuakingDamageTakenEvents = createEventFetcher<DamageEvent>({
+  dataType: EventDataType.DamageTaken,
+  hostilityType: HostilityType.Friendlies,
+  abilityID: QUAKING,
+});
+
+export const getStygianKingsBarbsDamageEvents = async (
+  params: GetEventBaseParams
+): Promise<DamageEvent[]> => {
+  const events = await getEvents<DamageEvent>({
+    ...params,
+    dataType: EventDataType.DamageDone,
+    hostilityType: HostilityType.Friendlies,
+    abilityID: TORMENTED.damageDone.STYGIAN_KINGS_BARBS,
+  });
+
+  return reduceEventsByPlayer(events, "sourceID");
+};
+
+export const getFifthSkullDamageEvents = async (
+  params: GetEventBaseParams
+): Promise<DamageEvent[]> => {
+  const events = await getEvents<DamageEvent>({
+    ...params,
+    dataType: EventDataType.DamageDone,
+    hostilityType: HostilityType.Friendlies,
+    abilityID: TORMENTED.damageDone.THE_FIFTH_SKULL,
+  });
+
+  return reduceEventsByPlayer(events, "sourceID");
+};
+
+export const getBottleOfSanguineIchorDamageEvents = async (
+  params: GetEventBaseParams
+): Promise<DamageEvent[]> => {
+  const events = await getEvents<DamageEvent>({
+    ...params,
+    dataType: EventDataType.DamageDone,
+    hostilityType: HostilityType.Friendlies,
+    abilityID: TORMENTED.damageDone.BOTTLE_OF_SANGUINE_ICHOR,
+  });
+
+  return reduceEventsByPlayer(events, "sourceID");
+};
+
+export const getBottleOfSanguineIchorHealEvents = createEventFetcher<HealEvent>(
+  {
+    dataType: EventDataType.Healing,
+    hostilityType: HostilityType.Friendlies,
+    abilityID: TORMENTED.healingDone.BOTTLE_OF_SANGUINE_ICHOR,
+  }
+);
+
+export const getStoneWardHealEvents = createEventFetcher<HealEvent>({
+  dataType: EventDataType.Healing,
+  hostilityType: HostilityType.Friendlies,
+  abilityID: TORMENTED.healingDone.STONE_WARD,
+});
+
+export const getMassiveSmashDamageTakenEvents = createEventFetcher<DamageEvent>(
+  {
+    dataType: EventDataType.DamageTaken,
+    hostilityType: HostilityType.Friendlies,
+    abilityID: TORMENTED.damageTaken.MASSIVE_SMASH,
+  }
+);
+
+export const getRazeDamageTakenEvents = createEventFetcher<DamageEvent>({
+  dataType: EventDataType.DamageTaken,
+  hostilityType: HostilityType.Friendlies,
+  abilityID: TORMENTED.damageTaken.RAZE,
+});
+
+export const getDecapitateDamageTakenEvents = createEventFetcher<DamageEvent>({
+  dataType: EventDataType.DamageTaken,
+  hostilityType: HostilityType.Friendlies,
+  abilityID: TORMENTED.damageTaken.DECAPITATE,
+});
+
+export const getSoulforgeFlamesDamageTakenEvents =
+  createEventFetcher<DamageEvent>({
+    dataType: EventDataType.DamageTaken,
+    hostilityType: HostilityType.Friendlies,
+    abilityID: TORMENTED.damageTaken.SOULFORGE_FLAMES,
+  });
+
+export const getBitingColdDamageTakenEvents = createEventFetcher<DamageEvent>({
+  dataType: EventDataType.DamageTaken,
+  hostilityType: HostilityType.Friendlies,
+  abilityID: TORMENTED.damageTaken.BITING_COLD,
+});
+
+export const getFrostLanceDamageTakenEvents = createEventFetcher<DamageEvent>({
+  dataType: EventDataType.DamageTaken,
+  hostilityType: HostilityType.Friendlies,
+  abilityID: TORMENTED.damageTaken.FROST_LANCE,
+});
+
+export const getVolcanicPlumeDamageDoneEvents = async (
+  params: GetEventBaseParams
+): Promise<DamageEvent[]> => {
+  const events = await getEvents<DamageEvent>({
+    ...params,
+    dataType: EventDataType.DamageDone,
+    hostilityType: HostilityType.Friendlies,
+    abilityID: TORMENTED.damageDone.VOLCANIC_PLUME,
+  });
+
+  return reduceEventsByPlayer(events, "sourceID");
+};
 
 export const getQuakingInterruptEvents = async (
-  params: InterrutpsByQuakingParams,
-  previousEvents: InterruptEvent[] = []
+  params: GetEventBaseParams
 ): Promise<InterruptEvent[]> => {
-  const sdk = await getCachedSdk();
-
-  const response = await sdk.EventData({
+  const allEvents = await getEvents<InterruptEvent>({
     ...params,
-    hostilityType: HostilityType.Friendlies,
     dataType: EventDataType.Interrupts,
+    hostilityType: HostilityType.Friendlies,
     abilityID: QUAKING,
   });
 
-  const { data = [], nextPageTimestamp = null } =
-    response?.reportData?.report?.events ?? {};
-  const allEvents: InterruptEvent[] = [...previousEvents, ...data];
-
-  if (nextPageTimestamp) {
-    return getQuakingInterruptEvents(
-      { ...params, startTime: nextPageTimestamp },
-      allEvents
-    );
-  }
-
-  return (
-    allEvents
-      // see https://canary.discord.com/channels/180033360939319296/681904912090529801/842578775840391188
-      .filter((event) => event.abilityGameID === QUAKING)
-  );
+  // see https://canary.discord.com/channels/180033360939319296/681904912090529801/842578775840391188
+  return allEvents.filter((event) => event.abilityGameID === QUAKING);
 };
 
 type ManifestationOfPrideSourceIDParams = Pick<
-  SpiresSpearUsageParams,
+  GetEventBaseParams,
   "reportID"
 > & {
   fightID: number;
@@ -1376,31 +1158,24 @@ const getExplosiveSourceID = async (params: ExplosiveSourceIDParams) => {
   return response[EXPLOSIVE.unit] ?? null;
 };
 
-type ManifestationOfPrideDeathEvents = SpiresSpearUsageParams & {
-  fightID: number;
-  sourceID: number;
-};
-
-export const getManifestationOfPrideDeathEvents = async (
-  params: ManifestationOfPrideDeathEvents
-): Promise<DeathEvent[]> => {
-  const sdk = await getCachedSdk();
-
-  const response = await sdk.EventData({
+export const getManifestationOfPrideDeathEvents = (
+  params: GetEventBaseParams<{
+    fightID: number;
+    sourceID: number;
+  }>
+): Promise<DeathEvent[]> =>
+  getEvents<DeathEvent>({
     ...params,
     dataType: EventDataType.Deaths,
     hostilityType: HostilityType.Enemies,
   });
 
-  return response?.reportData?.report?.events?.data ?? [];
-};
-
 type ManifestationOfPrideDamageEventsParams<Type extends EventDataType> =
-  SpiresSpearUsageParams & {
+  GetEventBaseParams<{
     targetID: number;
     targetInstance?: number;
     dataType: Type;
-  };
+  }>;
 
 const getManifestationOfPrideDamageEvents = async <Type extends EventDataType>(
   params: ManifestationOfPrideDamageEventsParams<Type>,
@@ -1408,7 +1183,6 @@ const getManifestationOfPrideDamageEvents = async <Type extends EventDataType>(
   previousEvents: DamageEvent[] = []
 ): Promise<DamageEvent[]> => {
   const sdk = await getCachedSdk();
-
   const response = await sdk.EventData({
     ...params,
     hostilityType: HostilityType.Friendlies,
@@ -1451,7 +1225,7 @@ export const getDamageDoneToManifestationOfPrideEvents = async (
     firstEventOnly
   );
 
-  return groupDamageEventsByPlayer(events, "sourceID");
+  return reduceEventsByPlayer(events, "sourceID");
 };
 
 type ManifestationOfPrideDamageTakenEventParams = Omit<
@@ -1471,5 +1245,5 @@ export const getDamageTakenByManifestatioNOfPrideEvents = async (
     firstEventOnly
   );
 
-  return groupDamageEventsByPlayer(events, "targetID");
+  return reduceEventsByPlayer(events, "targetID");
 };

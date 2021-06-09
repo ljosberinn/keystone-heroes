@@ -102,6 +102,11 @@ export const affixMap: Record<Affix["id"], Omit<Affix, "id">> = {
     icon: "spell_nature_cyclone.jpg",
     seasonal: false,
   },
+  128: {
+    name: Affixes.Tormented,
+    icon: "spell_animamaw_orb.jpg",
+    seasonal: true,
+  },
 };
 
 export const affixes = Object.entries(affixMap).map(([key, dataset]) => ({
@@ -121,7 +126,7 @@ export const getAffixByName = (name: Affixes): number => {
   throw new Error("impossible");
 };
 
-export const getAffixById = (id: Affix["id"] | null): Affix => {
+export const getAffixByID = (id: Affix["id"] | null): Affix => {
   const match = affixes.find((affix) => affix.id === id);
 
   if (match) {

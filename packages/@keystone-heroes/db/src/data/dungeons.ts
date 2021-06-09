@@ -58,7 +58,7 @@ enum Boss {
   MARGRAVE_STRADAMA = 164_267,
 }
 
-export enum DungeonIds {
+export enum DungeonIDs {
   SANGUINE_DEPTHS = 2284,
   SPIRES_OF_ASCENSION = 2285,
   THE_NECROTIC_WAKE = 2286,
@@ -78,7 +78,7 @@ export const dungeonMap: Record<
     zones: Omit<Zone, "dungeonID">[];
   }
 > = {
-  [DungeonIds.SANGUINE_DEPTHS]: {
+  [DungeonIDs.SANGUINE_DEPTHS]: {
     name: "Sanguine Depths",
     timer: createDungeonTimer(41),
     slug: "SD",
@@ -94,7 +94,7 @@ export const dungeonMap: Record<
       { id: 1676, name: "Amphitheater of Sorrow", order: 2 },
     ],
   },
-  [DungeonIds.SPIRES_OF_ASCENSION]: {
+  [DungeonIDs.SPIRES_OF_ASCENSION]: {
     name: "Spires of Ascension",
     timer: createDungeonTimer(39),
     slug: "SoA",
@@ -113,7 +113,7 @@ export const dungeonMap: Record<
       { id: 1695, name: "Seat of the Archon", order: 4 },
     ],
   },
-  [DungeonIds.THE_NECROTIC_WAKE]: {
+  [DungeonIDs.THE_NECROTIC_WAKE]: {
     name: "The Necrotic Wake",
     timer: createDungeonTimer(36),
     slug: "NW",
@@ -130,7 +130,7 @@ export const dungeonMap: Record<
       { id: 1668, name: "Zolramus", order: 3 },
     ],
   },
-  [DungeonIds.HALLS_OF_ATONEMENT]: {
+  [DungeonIDs.HALLS_OF_ATONEMENT]: {
     name: "Halls of Atonement",
     timer: createDungeonTimer(31),
     slug: "HoA",
@@ -147,7 +147,7 @@ export const dungeonMap: Record<
       { id: 1665, name: "The Sanctuary of Souls", order: 3 },
     ],
   },
-  [DungeonIds.PLAGUEFALL]: {
+  [DungeonIDs.PLAGUEFALL]: {
     name: "Plaguefall",
     timer: createDungeonTimer(38),
     slug: "PF",
@@ -163,7 +163,7 @@ export const dungeonMap: Record<
       { id: 1697, name: "The Festering Sanctum", order: 2 },
     ],
   },
-  [DungeonIds.MISTS_OF_TIRNA_SCITHE]: {
+  [DungeonIDs.MISTS_OF_TIRNA_SCITHE]: {
     name: "Mists of Tirna Scithe",
     timer: createDungeonTimer(30),
     slug: "MoTS",
@@ -176,7 +176,7 @@ export const dungeonMap: Record<
     expansionID: ExpansionEnum.SHADOWLANDS,
     zones: [{ id: 1669, name: "Mists of Tirna Scithe", order: 1 }],
   },
-  [DungeonIds.DE_OTHER_SIDE]: {
+  [DungeonIDs.DE_OTHER_SIDE]: {
     name: "De Other Side",
     timer: createDungeonTimer(43),
     slug: "DOS",
@@ -195,7 +195,7 @@ export const dungeonMap: Record<
       { id: 1680, name: "De Other Side", order: 1 },
     ],
   },
-  [DungeonIds.THEATRE_OF_PAIN]: {
+  [DungeonIDs.THEATRE_OF_PAIN]: {
     name: "Theatre of Pain",
     timer: createDungeonTimer(37),
     slug: "TOP",

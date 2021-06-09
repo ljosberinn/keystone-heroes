@@ -20,6 +20,7 @@
     "baseUrl": ".",
     "paths": {
       "@keystone-heroes/db/repos": ["../db/src/repos/index.ts"],
+      "@keystone-heroes/db/prisma": ["../db/src/prisma.ts"],
       "@keystone-heroes/db/data": ["../db/src/data/index.ts"],
       "@keystone-heroes/api/handler/report": [
         "../api/src/handler/report/index.ts"
@@ -29,7 +30,8 @@
       ],
       "@keystone-heroes/env": ["../env/src/index.ts"],
       "@keystone-heroes/wcl/utils": ["../wcl/src/utils.ts"],
-      "@keystone-heroes/wcl/queries": ["../wcl/src/queries/index.ts"]
+      "@keystone-heroes/wcl/queries": ["../wcl/src/queries/index.ts"],
+      "@keystone-heroes/wcl/types": ["../wcl/src/types.ts"]
     }
   },
   "exclude": ["node_modules"],

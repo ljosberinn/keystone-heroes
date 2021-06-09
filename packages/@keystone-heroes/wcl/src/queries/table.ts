@@ -1,21 +1,5 @@
 import type { PlayableClass, Role, SpecName } from "@prisma/client";
 
-import { getCachedSdk } from "../client";
-import type { TableQueryVariables } from "../types";
-
-export const loadTableFromSource = async (
-  params: TableQueryVariables
-): Promise<Table | null> => {
-  try {
-    const sdk = await getCachedSdk();
-    const json = await sdk.Table(params);
-
-    return json?.reportData?.report?.table.data ?? null;
-  } catch {
-    return null;
-  }
-};
-
 export type Table = {
   totalTime: number;
   itemLevel: number;
@@ -38,7 +22,7 @@ type Composition = {
 };
 
 type SpecMeta = {
-  spec: string;
+  spec: SpecName;
   role: Role;
 };
 
@@ -177,5 +161,5 @@ type HeartOfAzeroth = {
   total: number;
 };
 
-export type Conduit = Omit<HeartOfAzeroth, "type">;
-export type SoulbindTalent = Omit<Artifact, "type" | "total">;
+export type Conduit = HeartOfAzeroth;
+export type CovenantTrait = Artifact;

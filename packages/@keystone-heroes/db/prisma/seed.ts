@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import type { Class, Zone } from "@prisma/client";
 
 import allNPCs from "../raw/all-npcs.json";
 import allAbilities from "../raw/all-spells.json";
@@ -13,7 +14,6 @@ import { soulbinds } from "../src/data/soulbinds";
 import { specs } from "../src/data/specs";
 import { weeks } from "../src/data/weeks";
 
-import type { Class, Zone } from "@prisma/client";
 import "@keystone-heroes/env/src/loader";
 
 const prisma = new PrismaClient();
@@ -107,7 +107,7 @@ function seedAffixes() {
 
 function seedExpansions() {
   return Promise.all(
-    expansions.map(({ dungeonIds, ...expansion }) =>
+    expansions.map(({ DungeonIDs, ...expansion }) =>
       prisma.expansion.upsert({
         create: expansion,
         where: {
@@ -183,7 +183,7 @@ function seedRegions() {
           slug: region.slug,
         },
         where: {
-          id: region.id,
+          slug: region.slug,
         },
         update: {},
       })

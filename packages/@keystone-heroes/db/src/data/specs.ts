@@ -1,4 +1,4 @@
-import type { Spec, SpecName } from "@prisma/client";
+import type { Spec } from "@prisma/client";
 
 import { classes } from "./classes";
 
@@ -15,7 +15,3 @@ export const specs = classes
 export const specMapById = Object.fromEntries(
   specs.map((spec) => [spec.id, spec.name])
 );
-
-export const specMapByName = Object.fromEntries(
-  specs.map((spec) => [spec.name, spec.id])
-) as Record<SpecName, number>;

@@ -3,7 +3,12 @@ import type { Week } from "@prisma/client";
 import { seasons, weeks } from "../data";
 
 export const WeekRepo = {
-  findWeekbyTimestamp: (startTime: number, endTime: number): Week => {
+  findWeekbyTimestamp: (
+    startTime: number,
+    endTime: number
+    // TODO: adjust season start time based on region
+    // region: string
+  ): Week => {
     const season = seasons.find((season) => {
       const startedAfterThisSeason = startTime > season.startTime.getTime();
       const endedWithinThisSeason = season.endTime
@@ -22,7 +27,8 @@ export const WeekRepo = {
     );
 
     const amountOfWeeksThisSeason = thisSeasonsWeeks.length;
-    const timePassedSinceSeasonStart = startTime - season.startTime.getTime();
+    const seasonStartTime = season.startTime.getTime();
+    const timePassedSinceSeasonStart = startTime - seasonStartTime;
 
     const weeksPassedSinceSeasonStart = Math.floor(
       timePassedSinceSeasonStart / 1000 / 60 / 60 / 24 / 7

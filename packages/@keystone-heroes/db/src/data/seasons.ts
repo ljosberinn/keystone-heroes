@@ -18,6 +18,7 @@ export enum SeasonID {
   BFA_SEASON_4 = 12,
   BFA_POST_SEASON_4 = 13,
   SL_SEASON_1 = 14,
+  SL_SEASON_2 = 15,
 }
 
 // via https://raider.io/api#/mythic_plus/getApiV1MythicplusStaticdata
@@ -146,9 +147,18 @@ export const seasons: Season[] = [
     slug: "sl-1",
     name: "SL Season 1",
     expansionID: ExpansionEnum.SHADOWLANDS,
-    startTime: new Date(1_607_385_600 * 1000),
+    startTime: new Date(1_607_500_800 * 1000),
     endTime: null,
     affixID: getAffixByName("Prideful"),
     id: SeasonID.SL_SEASON_1,
   },
+  // {
+  //   slug: "sl-2",
+  //   name: "SL Season 2",
+  //   expansionID: ExpansionEnum.SHADOWLANDS,
+  //   startTime: new Date(1_607_385_600 * 1000),
+  //   endTime: null,
+  //   affixID: getAffixByName("Tormented"),
+  //   id: SeasonID.SL_SEASON_2,
+  // },
 ];
