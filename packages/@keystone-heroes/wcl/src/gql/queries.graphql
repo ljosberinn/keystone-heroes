@@ -111,6 +111,7 @@ query FightPulls($reportID: String!, $fightIDs: [Int]!) {
         dungeonPulls {
           startTime
           endTime
+
           x
           y
 

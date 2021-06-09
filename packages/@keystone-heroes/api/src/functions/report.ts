@@ -2,9 +2,11 @@ import {
   classMapByName,
   dungeonMap,
   getAffixByID,
+  seasons,
   specs,
+  weeks,
 } from "@keystone-heroes/db/data";
-import { Role } from "@keystone-heroes/db/prisma";
+import { Role, prisma } from "@keystone-heroes/db/prisma";
 import type {
   PlayableClass,
   SpecName,
@@ -12,7 +14,6 @@ import type {
   Affix,
   Dungeon,
 } from "@keystone-heroes/db/prisma";
-import { WeekRepo } from "@keystone-heroes/db/repos";
 import { MIN_KEYSTONE_LEVEL } from "@keystone-heroes/env";
 import type {
   Conduit,
@@ -27,13 +28,13 @@ import {
 } from "@keystone-heroes/wcl/src/queries";
 import type { Report, Region, GameZone } from "@keystone-heroes/wcl/types";
 import { maybeOngoingReport } from "@keystone-heroes/wcl/utils";
+import type { Week } from "@prisma/client";
 import nc from "next-connect";
 import type { Awaited, DeepRequired } from "ts-essentials";
 
-import { prisma } from "../../../../db/src/client";
-import { createValidReportIDMiddleware } from "../../middleware";
-import { NO_CONTENT } from "../../utils/statusCodes";
-import type { RequestHandler } from "../../utils/types";
+import { createValidReportIDMiddleware } from "../middleware";
+import { NO_CONTENT } from "../utils/statusCodes";
+import type { RequestHandler } from "../utils/types";
 
 type Request = {
   query: {
@@ -340,10 +341,7 @@ const sortByRole = (a: Role, b: Role) => {
   return 0;
 };
 
-const reportHandler: RequestHandler<Request, ReportResponse> = async (
-  req,
-  res
-) => {
+const handler: RequestHandler<Request, ReportResponse> = async (req, res) => {
   const { reportID } = req.query;
   console.time(reportID);
 
@@ -673,7 +671,7 @@ const reportHandler: RequestHandler<Request, ReportResponse> = async (
     update: {},
   });
 
-  const week = WeekRepo.findWeekbyTimestamp(startTime, endTime);
+  const week = findWeekbyTimestamp(startTime, endTime);
 
   const reportCreateInput: Prisma.ReportCreateInput = {
     startTime: new Date(startTime),
@@ -1012,6 +1010,50 @@ const reportHandler: RequestHandler<Request, ReportResponse> = async (
   // });
 };
 
-export const handler = nc()
+const findWeekbyTimestamp = (
+  startTime: number,
+  endTime: number
+  // TODO: adjust season start time based on region
+  // region: string
+): Week => {
+  const season = seasons.find((season) => {
+    const startedAfterThisSeason = startTime > season.startTime.getTime();
+    const endedWithinThisSeason = season.endTime
+      ? endTime < season.endTime.getTime()
+      : true;
+
+    return startedAfterThisSeason && endedWithinThisSeason;
+  });
+
+  if (!season) {
+    throw new Error("season not implemented");
+  }
+
+  const thisSeasonsWeeks = weeks.filter((week) => week.seasonID === season.id);
+
+  const amountOfWeeksThisSeason = thisSeasonsWeeks.length;
+  const seasonStartTime = season.startTime.getTime();
+  const timePassedSinceSeasonStart = startTime - seasonStartTime;
+
+  const weeksPassedSinceSeasonStart = Math.floor(
+    timePassedSinceSeasonStart / 1000 / 60 / 60 / 24 / 7
+  );
+
+  // report is within the first rotation of affixes of this season
+  if (amountOfWeeksThisSeason > weeksPassedSinceSeasonStart) {
+    return thisSeasonsWeeks[weeksPassedSinceSeasonStart];
+  }
+
+  const cycles = Math.floor(
+    weeksPassedSinceSeasonStart / amountOfWeeksThisSeason
+  );
+
+  const excessWeeks =
+    weeksPassedSinceSeasonStart - amountOfWeeksThisSeason * cycles;
+
+  return thisSeasonsWeeks[excessWeeks];
+};
+
+export const reportHandler = nc()
   .get(createValidReportIDMiddleware("reportID"))
-  .use(reportHandler);
+  .use(handler);

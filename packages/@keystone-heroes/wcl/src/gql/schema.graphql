@@ -701,7 +701,7 @@ type Bracket {
   """
   The localized name of the bracket type.
   """
-  type: String!
+  type: String
 }
 
 """

@@ -30,7 +30,7 @@ export type Bracket = {
   /** A float representing the value to increment when moving from bracket 1 to bracket N, etc. */
   bucket: Scalars["Float"];
   /** The localized name of the bracket type. */
-  type: Scalars["String"];
+  type?: Maybe<Scalars["String"]>;
 };
 
 /** A player character. Characters can earn individual rankings and appear in reports. */

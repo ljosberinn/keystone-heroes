@@ -1,7 +1,6 @@
 import type { WCLAuth } from "@prisma/client";
 
-import { prisma } from "../client";
-import { withPerformanceLogging } from "../utils";
+import { prisma } from "./prisma";
 
 export type WCLOAuthResponse = {
   access_token: string;
@@ -9,7 +8,7 @@ export type WCLOAuthResponse = {
   token_type: "Bearer";
 };
 
-const upsert = async ({
+export const setWCLAuthentication = async ({
   access_token,
   expires_in,
 }: WCLOAuthResponse): Promise<void> => {
@@ -27,9 +26,5 @@ const upsert = async ({
   });
 };
 
-const load = (): Promise<WCLAuth | null> => prisma.wCLAuth.findFirst();
-
-export const WCLAuthRepo = {
-  upsert: withPerformanceLogging(upsert, "WCLAuthRepo/upsert"),
-  load: withPerformanceLogging(load, "WCLAuthRepo/load"),
-};
+export const getWCLAuthentication = (): Promise<WCLAuth | null> =>
+  prisma.wCLAuth.findFirst();

@@ -1,5 +1,6 @@
-import { WCLAuthRepo } from "@keystone-heroes/db/repos";
-import type { WCLOAuthResponse } from "@keystone-heroes/db/repos";
+import type { WCLOAuthResponse } from "@keystone-heroes/db/wcl";
+import { setWCLAuthentication } from "@keystone-heroes/db/wcl";
+import { getWCLAuthentication } from "@keystone-heroes/db/wcl";
 import {
   WCL_CLIENT_ID,
   WCL_CLIENT_SECRET,
@@ -14,13 +15,13 @@ import type { Sdk } from "./types";
 type Cache = {
   sdk: Sdk | null;
   client: GraphQLClient | null;
-  expiresAt: number;
+  expiresAt: number | null;
 };
 
 const cache: Cache = {
   sdk: null,
   client: null,
-  expiresAt: -1,
+  expiresAt: null,
 };
 
 export const getCachedSdk = async (): Promise<Sdk> => {
@@ -29,32 +30,31 @@ export const getCachedSdk = async (): Promise<Sdk> => {
   }
 
   const client = await getGqlClient();
-
-  if (!cache.sdk) {
-    cache.sdk = getSdk(client);
-  }
+  cache.sdk = cache.sdk ?? getSdk(client);
 
   return cache.sdk;
 };
 
 export const getGqlClient = async (): Promise<GraphQLClient> => {
-  if (cache.client && cache.expiresAt > Date.now() + 60 * 1000) {
+  if (
+    cache.client &&
+    cache.expiresAt &&
+    cache?.expiresAt > Date.now() + 60 * 1000
+  ) {
     return cache.client;
   }
 
-  const cached = await WCLAuthRepo.load();
+  const cached = await getWCLAuthentication();
 
-  if (cached?.token && cached?.expiresAt) {
+  if (cached?.token && cached?.expiresAt && !cache.client && !cache.expiresAt) {
     const { token, expiresAt } = cached;
 
-    // eslint-disable-next-line require-atomic-updates
     cache.client = new GraphQLClient(WCL_GQL_ENDPOINT, {
       headers: {
         authorization: `Bearer ${token}`,
       },
     });
 
-    // eslint-disable-next-line require-atomic-updates
     cache.expiresAt = expiresAt * 1000;
 
     return cache.client;
@@ -78,17 +78,17 @@ export const getGqlClient = async (): Promise<GraphQLClient> => {
     if (response.ok) {
       const json: WCLOAuthResponse = await response.json();
 
-      await WCLAuthRepo.upsert(json);
+      await setWCLAuthentication(json);
 
-      // eslint-disable-next-line require-atomic-updates
-      cache.client = new GraphQLClient(WCL_GQL_ENDPOINT, {
-        headers: {
-          authorization: `Bearer ${json.access_token}`,
-        },
-      });
+      cache.client =
+        cache.client ??
+        new GraphQLClient(WCL_GQL_ENDPOINT, {
+          headers: {
+            authorization: `Bearer ${json.access_token}`,
+          },
+        });
 
-      // eslint-disable-next-line require-atomic-updates
-      cache.expiresAt = Date.now() + json.expires_in;
+      cache.expiresAt = cache.expiresAt ?? Date.now() + json.expires_in;
 
       return cache.client;
     }

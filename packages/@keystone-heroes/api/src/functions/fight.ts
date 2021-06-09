@@ -1,5 +1,5 @@
 import { DungeonIDs, dungeons } from "@keystone-heroes/db/data";
-import { Affixes } from "@keystone-heroes/db/prisma";
+import { Affixes, prisma } from "@keystone-heroes/db/prisma";
 import {
   getBolsteringEvents,
   getBurstingDamageTakenEvents,
@@ -66,15 +66,14 @@ import type {
   ReportMapBoundingBox,
 } from "@keystone-heroes/wcl/types";
 import nc from "next-connect";
-import type { Awaited, DeepNonNullable } from "ts-essentials";
+import type { DeepNonNullable } from "ts-essentials";
 
-import { prisma } from "../../../../db/src/client";
 import {
   createValidReportIDMiddleware,
   validFightIDMiddleware,
-} from "../../middleware";
-import { BAD_REQUEST } from "../../utils/statusCodes";
-import type { RequestHandler } from "../../utils/types";
+} from "../middleware";
+import { BAD_REQUEST } from "../utils/statusCodes";
+import type { RequestHandler } from "../utils/types";
 
 // export type FightResponse = Pick<
 //   Fight,
@@ -376,7 +375,7 @@ type Request = {
 
 export type Response = {};
 
-const fightHandler: RequestHandler<Request, Response> = async (req, res) => {
+const handler: RequestHandler<Request, Response> = async (req, res) => {
   const { reportID } = req.query;
   const fightID = Number.parseInt(req.query.fightID);
 
@@ -620,6 +619,26 @@ const fightHandler: RequestHandler<Request, Response> = async (req, res) => {
       return;
     }
 
+    const timeSpentOutOfCombat =
+      maybeFightPulls.reportData.report.fights[0].dungeonPulls.reduce(
+        (acc, pull) => {
+          if (!pull) {
+            return acc;
+          }
+
+          return acc - (pull.endTime - pull.startTime);
+        },
+        maybeStoredFight.keystoneTime
+      );
+
+    const timeSpentInCombat =
+      maybeStoredFight.keystoneTime - timeSpentOutOfCombat;
+
+    console.log({
+      timeSpentOutOfCombat,
+      timeSpentInCombat,
+    });
+
     const dungeonPulls =
       maybeFightPulls.reportData.report.fights[0].dungeonPulls.reduce<
         DungeonPull[]
@@ -728,6 +747,8 @@ const fightHandler: RequestHandler<Request, Response> = async (req, res) => {
       ...affixEvents,
       ...seasonEvents,
     ].sort((a, b) => a.timestamp - b.timestamp);
+
+    console.log(allEvents.length);
 
     res.json({
       dungeonEvents,
@@ -1038,7 +1059,7 @@ const ensureCorrectDungeonID = (
   return null;
 };
 
-export const handler = nc()
+export const fightHandler = nc()
   .get(createValidReportIDMiddleware("reportID"))
   .get(validFightIDMiddleware)
-  .get(fightHandler);
+  .get(handler);

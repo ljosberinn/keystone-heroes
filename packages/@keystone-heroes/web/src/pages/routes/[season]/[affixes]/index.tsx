@@ -2,7 +2,7 @@ import {
   weeks as allWeeks,
   seasons,
   dungeons,
-  getAffixById,
+  getAffixByID,
   affixes as allAffixes,
 } from "@keystone-heroes/db/data";
 import type { Affix, Dungeon, Season } from "@prisma/client";
@@ -62,10 +62,10 @@ export const getStaticPaths: GetStaticPaths<StaticParams> = async () => {
 
     return weeks.map((week) => {
       const affixSlug = [
-        getAffixById(week.affix1ID),
-        getAffixById(week.affix2ID),
-        getAffixById(week.affix3ID),
-        getAffixById(season.affixID),
+        getAffixByID(week.affix1ID),
+        getAffixByID(week.affix2ID),
+        getAffixByID(week.affix3ID),
+        getAffixByID(season.affixID),
       ]
         .map((affix) => affix.name.toLowerCase())
         .join("-");

@@ -1,4 +1,4 @@
-import type { ReportResponse } from "@keystone-heroes/api/handler/report";
+import type { ReportResponse } from "@keystone-heroes/api/functions";
 import { isValidReportId } from "@keystone-heroes/wcl/utils";
 import type { GetStaticPaths, GetStaticProps } from "next";
 import Head from "next/head";
@@ -59,7 +59,15 @@ export default function Report({ cache }: ReportProps): JSX.Element | null {
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 2xl:grid-cols-3 2xl:gap-8">
         {fights.map((fight, index) => {
           return (
-            <FightCard reportID={query.reportID} fight={fight} key={index} />
+            <FightCard
+              reportID={
+                Array.isArray(query.reportID) || !query.reportID
+                  ? ""
+                  : query.reportID
+              }
+              fight={fight}
+              key={index}
+            />
           );
         })}
       </div>
@@ -147,7 +155,7 @@ export const getStaticPaths: GetStaticPaths<{
 };
 
 export const getStaticProps: GetStaticProps<ReportProps, { reportID: string }> =
-  async ({ params }) => {
+  async () => {
     return {
       props: {
         cache: {
