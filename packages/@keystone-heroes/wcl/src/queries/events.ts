@@ -30,76 +30,78 @@ import {
   SPITEFUL,
   SD_LANTERN_BUFF,
   TORMENTED,
+  DungeonIDs,
 } from "@keystone-heroes/db/data";
+import { Affixes } from "@keystone-heroes/db/prisma";
 
 import { getCachedSdk } from "../client";
 import { EventDataType, HostilityType } from "../types";
 import type { Sdk } from "../types";
 import { loadEnemyNPCIDs } from "./report";
 
-type Event<T extends Record<string, unknown>> = T & {
+type BaseEvent<T extends Record<string, unknown>> = T & {
   timestamp: number;
 };
 
-// type EncounterStartEvent = Event<{
-//   type: "encounterstart";
-//   encounterID: number;
-//   name: string;
-//   difficulty: number;
-//   size: number;
-//   level: number;
-//   affixes: number[];
-// }>;
+type EncounterStartEvent = BaseEvent<{
+  type: "encounterstart";
+  encounterID: number;
+  name: string;
+  difficulty: number;
+  size: number;
+  level: number;
+  affixes: number[];
+}>;
 
-// type CombatantInfoEvent = Event<{
-//   type: "combatantinfo";
-//   sourceID: number;
-//   gear: [];
-//   auras: {
-//     source: number;
-//     ability: number;
-//     stacks: number;
-//     icon: string;
-//     name?: string;
-//   }[];
-//   expansion: string;
-//   faction: number;
-//   specID: number;
-//   covenantID: number;
-//   soulbindID: number;
-//   strength: number;
-//   agility: number;
-//   stamina: number;
-//   intellect: number;
-//   dodge: number;
-//   parry: number;
-//   block: number;
-//   armor: number;
-//   critMelee: number;
-//   critRanged: number;
-//   critSpell: number;
-//   speed: number;
-//   leech: number;
-//   hasteMelee: number;
-//   hasteRanged: number;
-//   hasteSpell: number;
-//   avoidance: number;
-//   mastery: number;
-//   versatilityDamageDone: number;
-//   versatilityHealingDone: number;
-//   versatilityDamageReduction: number;
-//   talents: { id: number; icon: string }[];
-//   pvpTalents: { id: number; icon: string }[];
-//   artifact: { traitID: number; rank: number; spellID: number; icon: string }[];
-//   heartOfAzeroth: {
-//     traitID: number;
-//     rank: number;
-//     spellID: number;
-//     icon: string;
-//   }[];
-// }>;
+type CombatantInfoEvent = BaseEvent<{
+  type: "combatantinfo";
+  sourceID: number;
+  gear: [];
+  auras: {
+    source: number;
+    ability: number;
+    stacks: number;
+    icon: string;
+    name?: string;
+  }[];
+  expansion: string;
+  faction: number;
+  specID: number;
+  covenantID: number;
+  soulbindID: number;
+  strength: number;
+  agility: number;
+  stamina: number;
+  intellect: number;
+  dodge: number;
+  parry: number;
+  block: number;
+  armor: number;
+  critMelee: number;
+  critRanged: number;
+  critSpell: number;
+  speed: number;
+  leech: number;
+  hasteMelee: number;
+  hasteRanged: number;
+  hasteSpell: number;
+  avoidance: number;
+  mastery: number;
+  versatilityDamageDone: number;
+  versatilityHealingDone: number;
+  versatilityDamageReduction: number;
+  talents: { id: number; icon: string }[];
+  pvpTalents: { id: number; icon: string }[];
+  artifact: { traitID: number; rank: number; spellID: number; icon: string }[];
+  heartOfAzeroth: {
+    traitID: number;
+    rank: number;
+    spellID: number;
+    icon: string;
+  }[];
+}>;
 
-export type ApplyDebuffEvent = Event<{
+export type ApplyDebuffEvent = BaseEvent<{
   type: "applydebuff";
   sourceID: number;
   targetID: number;
@@ -108,12 +110,12 @@ export type ApplyDebuffEvent = Event<{
   targetMarker?: number;
 }>;
 
-export type ApplyDebuffStackEvent = Event<{
+export type ApplyDebuffStackEvent = BaseEvent<{
   type: "applydebuffstack";
   stack: number;
 }>;
 
-export type ApplyBuffEvent = Event<{
+export type ApplyBuffEvent = BaseEvent<{
   type: "applybuff";
   sourceID: number;
   sourceInstance?: number;
@@ -122,7 +124,7 @@ export type ApplyBuffEvent = Event<{
   abilityGameID: number;
 }>;
 
-export type RemoveBuffEvent = Event<{
+export type RemoveBuffEvent = BaseEvent<{
   type: "removebuff";
   sourceID: number;
   targetID: number;
@@ -131,7 +133,7 @@ export type RemoveBuffEvent = Event<{
   targetMarker: number;
 }>;
 
-export type CastEvent = Event<{
+export type CastEvent = BaseEvent<{
   type: "cast";
   sourceID: number;
   targetID: number;
@@ -139,7 +141,7 @@ export type CastEvent = Event<{
   sourceMarker?: number;
 }>;
 
-export type DamageEvent = Event<{
+export type DamageEvent = BaseEvent<{
   type: "damage";
   sourceID: number;
   targetID: number;
@@ -155,14 +157,14 @@ export type DamageEvent = Event<{
   buffs?: string;
 }>;
 
-export type BeginCastEvent = Event<{
+export type BeginCastEvent = BaseEvent<{
   type: "begincast";
   sourceID: number;
   targetID: number;
   abilityGameID: number;
 }>;
 
-type RemoveDebuffEvent = Event<{
+type RemoveDebuffEvent = BaseEvent<{
   type: "removedebuff";
   sourceID: number;
   targetID: number;
@@ -170,23 +172,23 @@ type RemoveDebuffEvent = Event<{
   abilityGameID: number;
 }>;
 
-// type SummonEvent = Event<{
-//   type: "summon";
-//   sourceID: number;
-//   targetID: number;
-//   targetInstance: number;
-//   abilityGameID: number;
-// }>;
+type SummonEvent = BaseEvent<{
+  type: "summon";
+  sourceID: number;
+  targetID: number;
+  targetInstance: number;
+  abilityGameID: number;
+}>;
 
-// type PhaseStartEvent = Event<{
-//   type: "phasestart";
-//   encounterID: number;
-//   name: string;
-//   difficulty: number;
-//   size: number;
-// }>;
+type PhaseStartEvent = BaseEvent<{
+  type: "phasestart";
+  encounterID: number;
+  name: string;
+  difficulty: number;
+  size: number;
+}>;
 
-export type HealEvent = Event<{
+export type HealEvent = BaseEvent<{
   type: "heal";
   sourceID: number;
   targetID: number;
@@ -201,20 +203,20 @@ export type HealEvent = Event<{
   absorbed?: number;
 }>;
 
-// type EnergizeEvent = Event<{
-//   type: "energize";
-//   sourceID: number;
-//   targetID: number;
-//   abilityGameID: number;
-//   resourceChange: number;
-//   resourceChangeType: number;
-//   otherResourceChange: number;
-//   waste: number;
-//   sourceMarker?: number;
-//   targetMarker?: number;
-// }>;
+type EnergizeEvent = BaseEvent<{
+  type: "energize";
+  sourceID: number;
+  targetID: number;
+  abilityGameID: number;
+  resourceChange: number;
+  resourceChangeType: number;
+  otherResourceChange: number;
+  waste: number;
+  sourceMarker?: number;
+  targetMarker?: number;
+}>;
 
-export type ApplyBuffStackEvent = Event<{
+export type ApplyBuffStackEvent = BaseEvent<{
   type: "applybuffstack";
   sourceID: number;
   targetID: number;
@@ -224,7 +226,7 @@ export type ApplyBuffStackEvent = Event<{
   targetMarker?: number;
 }>;
 
-export type InterruptEvent = Event<{
+export type InterruptEvent = BaseEvent<{
   type: "interrupt";
   sourceID: number;
   targetID: number;
@@ -233,37 +235,37 @@ export type InterruptEvent = Event<{
   sourceMarker?: number;
 }>;
 
-// type AbsorbEvent = Event<{
-//   type: "absorbed";
-//   sourceID: number;
-//   targetID: number;
-//   abilityGameID: number;
-//   attackerID: number;
-//   amount: number;
-//   extraAbilityGameID: number;
-//   sourceMarker: number;
-//   targetMarker: number;
-// }>;
+type AbsorbEvent = BaseEvent<{
+  type: "absorbed";
+  sourceID: number;
+  targetID: number;
+  abilityGameID: number;
+  attackerID: number;
+  amount: number;
+  extraAbilityGameID: number;
+  sourceMarker: number;
+  targetMarker: number;
+}>;
 
-type RefreshDebuffEvent = Event<{
+type RefreshDebuffEvent = BaseEvent<{
   type: "refreshdebuff";
   sourceID: number;
   targetID: number;
   abilityGameID: number;
 }>;
 
-// type DispelEvent = Event<{
-//   type: "dispel";
-//   sourceID: number;
-//   targetID: number;
-//   abilityGameID: number;
-//   extraAbilityGameID: number;
-//   isBuff: boolean;
-//   sourceMarker: number;
-//   targetMarker: number;
-// }>;
+type DispelEvent = BaseEvent<{
+  type: "dispel";
+  sourceID: number;
+  targetID: number;
+  abilityGameID: number;
+  extraAbilityGameID: number;
+  isBuff: boolean;
+  sourceMarker: number;
+  targetMarker: number;
+}>;
 
-export type DeathEvent = Event<{
+export type DeathEvent = BaseEvent<{
   type: "death";
   sourceID: number;
   targetID: number;
@@ -276,7 +278,29 @@ export type DeathEvent = Event<{
   targetMarker?: number;
 }>;
 
-type GetEventBaseParams<
+export type AnyEvent =
+  | DeathEvent
+  | DispelEvent
+  | RefreshDebuffEvent
+  | AbsorbEvent
+  | InterruptEvent
+  | ApplyBuffStackEvent
+  | EnergizeEvent
+  | HealEvent
+  | PhaseStartEvent
+  | SummonEvent
+  | RemoveDebuffEvent
+  | BeginCastEvent
+  | DamageEvent
+  | CastEvent
+  | RemoveBuffEvent
+  | ApplyBuffEvent
+  | ApplyDebuffStackEvent
+  | ApplyDebuffEvent
+  | CombatantInfoEvent
+  | EncounterStartEvent;
+
+export type GetEventBaseParams<
   T extends Record<string, unknown> = Record<string, unknown>
 > = Pick<
   Parameters<Sdk["EventData"]>[0],
@@ -284,7 +308,7 @@ type GetEventBaseParams<
 > &
   T;
 
-const getEvents = async <T extends Event<Record<string, unknown>>>(
+const getEvents = async <T extends AnyEvent>(
   params: GetEventBaseParams<{
     abilityID?: number;
     dataType: EventDataType;
@@ -315,9 +339,7 @@ type EventFetcherParams = {
 };
 
 const createEventFetcher =
-  <T extends Event<Record<string, unknown>>>(
-    initialParams: EventFetcherParams
-  ) =>
+  <T extends AnyEvent>(initialParams: EventFetcherParams) =>
   (params: GetEventBaseParams) =>
     getEvents<T>({
       ...params,
@@ -367,7 +389,7 @@ export const getRemarkableSpellCastEvents = async (
   );
 };
 
-export const getSpiresOfAscensionSpearUsage = async (
+const getSpiresOfAscensionSpearUsage = async (
   params: GetEventBaseParams
 ): Promise<ApplyDebuffEvent[]> => {
   const allEvents = await getEvents<
@@ -393,15 +415,15 @@ export const getSpiresOfAscensionSpearUsage = async (
     .flatMap((chunk) => chunk[0]);
 };
 
-export const getNecroticWakeHammerUsage = createEventFetcher<DamageEvent>({
+const getNecroticWakeHammerUsage = createEventFetcher<DamageEvent>({
   dataType: EventDataType.DamageDone,
   hostilityType: HostilityType.Friendlies,
   abilityID: NW_HAMMER,
 });
 
-const reduceToChunkByThreshold = <E extends Event<Record<string, unknown>>>(
-  acc: E[][],
-  event: E,
+const reduceToChunkByThreshold = <Event extends AnyEvent>(
+  acc: Event[][],
+  event: Event,
   threshold: number
 ) => {
   if (acc.length === 0) {
@@ -422,7 +444,7 @@ const reduceToChunkByThreshold = <E extends Event<Record<string, unknown>>>(
       );
 };
 
-export const getNecroticWakeSpearUsage = async (
+const getNecroticWakeSpearUsage = async (
   params: GetEventBaseParams
 ): Promise<DamageEvent[]> => {
   const allEvents = await getEvents<DamageEvent>({
@@ -445,7 +467,8 @@ export const getNecroticWakeSpearUsage = async (
   // creates one event per orb usage
   return chunks.flatMap((chunk) => reduceEventsByPlayer(chunk, "sourceID"));
 };
-export const getNecroticWakeOrbUsage = async (
+
+const getNecroticWakeOrbUsage = async (
   params: GetEventBaseParams
 ): Promise<DamageEvent[]> => {
   const allEvents = await getEvents<DamageEvent>({
@@ -468,7 +491,7 @@ export const getNecroticWakeOrbUsage = async (
   return chunks.flatMap((chunk) => reduceEventsByPlayer(chunk, "sourceID"));
 };
 
-export const getTheaterOfPainBannerUsage = async (
+const getTheaterOfPainBannerUsage = async (
   params: GetEventBaseParams
 ): Promise<ApplyBuffEvent[]> => {
   const data = await getEvents<ApplyBuffEvent | RemoveBuffEvent>({
@@ -483,7 +506,7 @@ export const getTheaterOfPainBannerUsage = async (
   );
 };
 
-export const getDeOtherSideUrnUsage = async (
+const getDeOtherSideUrnUsage = async (
   params: GetEventBaseParams
 ): Promise<ApplyDebuffEvent[]> => {
   const allEvents = await getEvents<
@@ -502,7 +525,7 @@ export const getDeOtherSideUrnUsage = async (
 
 type CardboardAssassinUsages = { events: CastEvent[]; actorId: number | null };
 
-export const getCardboardAssassinUsage = async (
+const getCardboardAssassinUsage = async (
   params: GetEventBaseParams
 ): Promise<CardboardAssassinUsages[]> => {
   const sdk = await getCachedSdk();
@@ -549,7 +572,7 @@ export const getCardboardAssassinUsage = async (
   );
 };
 
-export const getInvisibilityUsage = async (
+const getInvisibilityUsage = async (
   params: GetEventBaseParams
 ): Promise<ApplyBuffEvent[]> => {
   const dimensionalShifterUsage = await getEvents<
@@ -573,7 +596,7 @@ export const getInvisibilityUsage = async (
   );
 };
 
-export const getHallsOfAtonementGargoyleCharms = async (
+const getHallsOfAtonementGargoyleCharms = async (
   params: GetEventBaseParams
 ): Promise<CastEvent[]> => {
   const data = await getEvents<CastEvent | BeginCastEvent>({
@@ -586,14 +609,13 @@ export const getHallsOfAtonementGargoyleCharms = async (
   return data.filter((event): event is CastEvent => event.type === "cast");
 };
 
-export const getSanguineDepthsLanternUsages =
-  createEventFetcher<BeginCastEvent>({
-    dataType: EventDataType.Casts,
-    hostilityType: HostilityType.Friendlies,
-    abilityID: SD_LANTERN_OPENING,
-  });
+const getSanguineDepthsLanternUsages = createEventFetcher<BeginCastEvent>({
+  dataType: EventDataType.Casts,
+  hostilityType: HostilityType.Friendlies,
+  abilityID: SD_LANTERN_OPENING,
+});
 
-export const getSanguineDepthsBuffEvents = createEventFetcher<
+const getSanguineDepthsBuffEvents = createEventFetcher<
   ApplyBuffEvent | ApplyBuffStackEvent | RemoveBuffEvent
 >({
   dataType: EventDataType.Buffs,
@@ -601,7 +623,7 @@ export const getSanguineDepthsBuffEvents = createEventFetcher<
   abilityID: SD_LANTERN_BUFF,
 });
 
-export const getSanguineHealingDoneEvents = async (
+const getSanguineHealingDoneEvents = async (
   params: GetEventBaseParams
 ): Promise<[HealEvent]> => {
   const allEvents = await getEvents<HealEvent>({
@@ -622,7 +644,7 @@ export const getSanguineHealingDoneEvents = async (
   ];
 };
 
-export const getExplosiveKillEvents = async (
+const getExplosiveKillEvents = async (
   params: GetEventBaseParams<{ fightID: number }>,
   explosiveID = -1
 ): Promise<DamageEvent[]> => {
@@ -648,7 +670,7 @@ export const getExplosiveKillEvents = async (
   return allEvents.filter((event) => event.overkill);
 };
 
-export const getSpitefulDamageTakenEvents = async (
+const getSpitefulDamageTakenEvents = async (
   params: GetEventBaseParams<{ fightID: number }>,
   spitefulID = -1
 ): Promise<DamageEvent[]> => {
@@ -672,7 +694,7 @@ export const getSpitefulDamageTakenEvents = async (
   });
 };
 
-export const getHighestNecroticStackAmount = async (
+const getHighestNecroticStackAmount = async (
   params: GetEventBaseParams
 ): Promise<ApplyDebuffStackEvent[]> => {
   const allEvents = await getEvents<ApplyDebuffStackEvent | ApplyDebuffEvent>({
@@ -694,7 +716,7 @@ export const getHighestNecroticStackAmount = async (
   return relevantEvents.filter((event) => event.stack === highestStack);
 };
 
-export const getNecroticDamageTakenEvents = async (
+const getNecroticDamageTakenEvents = async (
   params: GetEventBaseParams
 ): Promise<DamageEvent[]> => {
   const allEvents = await getEvents<DamageEvent>({
@@ -718,7 +740,7 @@ type StackDataset = {
   stacks: number;
 };
 
-export const getBolsteringEvents = async (
+const getBolsteringEvents = async (
   params: GetEventBaseParams
 ): Promise<ApplyBuffEvent[]> => {
   const allEvents = await getEvents<ApplyBuffEvent | RemoveBuffEvent>({
@@ -813,7 +835,7 @@ type PFSlimeKillsParams = GetEventBaseParams & {
   fightID: number;
 };
 
-export const getPFSlimeKills = async (
+const getPFSlimeKills = async (
   params: PFSlimeKillsParams
 ): Promise<(DeathEvent | ApplyBuffEvent)[]> => {
   const {
@@ -901,7 +923,7 @@ export const getPFSlimeKills = async (
   // };
 };
 
-export const getBurstingDamageTakenEvents = async (
+const getBurstingDamageTakenEvents = async (
   params: GetEventBaseParams
 ): Promise<DamageEvent[]> => {
   const allEvents = await getEvents<DamageEvent>({
@@ -914,7 +936,7 @@ export const getBurstingDamageTakenEvents = async (
   return reduceEventsByPlayer(allEvents, "targetID");
 };
 
-export const getNecroticWakeKyrianOrbHealEvents = async (
+const getNecroticWakeKyrianOrbHealEvents = async (
   params: GetEventBaseParams
 ): Promise<HealEvent[]> => {
   const allEvents = await getEvents<HealEvent>({
@@ -927,7 +949,7 @@ export const getNecroticWakeKyrianOrbHealEvents = async (
   return reduceEventsByPlayer(allEvents, "targetID");
 };
 
-export const getNecroticWakeKyrianOrbDamageEvents = async (
+const getNecroticWakeKyrianOrbDamageEvents = async (
   params: GetEventBaseParams
 ): Promise<DamageEvent[]> => {
   const allEvents = await getEvents<DamageEvent>({
@@ -940,7 +962,7 @@ export const getNecroticWakeKyrianOrbDamageEvents = async (
   return reduceEventsByPlayer(allEvents, "targetID");
 };
 
-export const getSanguineDamageTakenEvents = async (
+const getSanguineDamageTakenEvents = async (
   params: GetEventBaseParams
 ): Promise<DamageEvent[]> => {
   const allEvents = await getEvents<DamageEvent>({
@@ -953,7 +975,7 @@ export const getSanguineDamageTakenEvents = async (
   return reduceEventsByPlayer(allEvents, "targetID");
 };
 
-export const getGrievousDamageTakenEvents = async (
+const getGrievousDamageTakenEvents = async (
   params: GetEventBaseParams
 ): Promise<DamageEvent[]> => {
   const allEvents = await getEvents<DamageEvent>({
@@ -966,31 +988,31 @@ export const getGrievousDamageTakenEvents = async (
   return reduceEventsByPlayer(allEvents, "targetID");
 };
 
-export const getExplosiveDamageTakenEvents = createEventFetcher<DamageEvent>({
+const getExplosiveDamageTakenEvents = createEventFetcher<DamageEvent>({
   dataType: EventDataType.DamageTaken,
   hostilityType: HostilityType.Friendlies,
   abilityID: EXPLOSIVE.ability,
 });
 
-export const getStormingDamageTakenEvents = createEventFetcher<DamageEvent>({
+const getStormingDamageTakenEvents = createEventFetcher<DamageEvent>({
   dataType: EventDataType.DamageTaken,
   hostilityType: HostilityType.Friendlies,
   abilityID: STORMING,
 });
 
-export const getVolcanicDamageTakenEvents = createEventFetcher<DamageEvent>({
+const getVolcanicDamageTakenEvents = createEventFetcher<DamageEvent>({
   dataType: EventDataType.DamageTaken,
   hostilityType: HostilityType.Friendlies,
   abilityID: VOLCANIC,
 });
 
-export const getQuakingDamageTakenEvents = createEventFetcher<DamageEvent>({
+const getQuakingDamageTakenEvents = createEventFetcher<DamageEvent>({
   dataType: EventDataType.DamageTaken,
   hostilityType: HostilityType.Friendlies,
   abilityID: QUAKING,
 });
 
-export const getStygianKingsBarbsDamageEvents = async (
+const getStygianKingsBarbsDamageEvents = async (
   params: GetEventBaseParams
 ): Promise<DamageEvent[]> => {
   const events = await getEvents<DamageEvent>({
@@ -1003,7 +1025,7 @@ export const getStygianKingsBarbsDamageEvents = async (
   return reduceEventsByPlayer(events, "sourceID");
 };
 
-export const getFifthSkullDamageEvents = async (
+const getFifthSkullDamageEvents = async (
   params: GetEventBaseParams
 ): Promise<DamageEvent[]> => {
   const events = await getEvents<DamageEvent>({
@@ -1016,7 +1038,7 @@ export const getFifthSkullDamageEvents = async (
   return reduceEventsByPlayer(events, "sourceID");
 };
 
-export const getBottleOfSanguineIchorDamageEvents = async (
+const getBottleOfSanguineIchorDamageEvents = async (
   params: GetEventBaseParams
 ): Promise<DamageEvent[]> => {
   const events = await getEvents<DamageEvent>({
@@ -1029,60 +1051,55 @@ export const getBottleOfSanguineIchorDamageEvents = async (
   return reduceEventsByPlayer(events, "sourceID");
 };
 
-export const getBottleOfSanguineIchorHealEvents = createEventFetcher<HealEvent>(
-  {
-    dataType: EventDataType.Healing,
-    hostilityType: HostilityType.Friendlies,
-    abilityID: TORMENTED.healingDone.BOTTLE_OF_SANGUINE_ICHOR,
-  }
-);
+const getBottleOfSanguineIchorHealEvents = createEventFetcher<HealEvent>({
+  dataType: EventDataType.Healing,
+  hostilityType: HostilityType.Friendlies,
+  abilityID: TORMENTED.healingDone.BOTTLE_OF_SANGUINE_ICHOR,
+});
 
-export const getStoneWardHealEvents = createEventFetcher<HealEvent>({
+const getStoneWardHealEvents = createEventFetcher<HealEvent>({
   dataType: EventDataType.Healing,
   hostilityType: HostilityType.Friendlies,
   abilityID: TORMENTED.healingDone.STONE_WARD,
 });
 
-export const getMassiveSmashDamageTakenEvents = createEventFetcher<DamageEvent>(
-  {
-    dataType: EventDataType.DamageTaken,
-    hostilityType: HostilityType.Friendlies,
-    abilityID: TORMENTED.damageTaken.MASSIVE_SMASH,
-  }
-);
+const getMassiveSmashDamageTakenEvents = createEventFetcher<DamageEvent>({
+  dataType: EventDataType.DamageTaken,
+  hostilityType: HostilityType.Friendlies,
+  abilityID: TORMENTED.damageTaken.MASSIVE_SMASH,
+});
 
-export const getRazeDamageTakenEvents = createEventFetcher<DamageEvent>({
+const getRazeDamageTakenEvents = createEventFetcher<DamageEvent>({
   dataType: EventDataType.DamageTaken,
   hostilityType: HostilityType.Friendlies,
   abilityID: TORMENTED.damageTaken.RAZE,
 });
 
-export const getDecapitateDamageTakenEvents = createEventFetcher<DamageEvent>({
+const getDecapitateDamageTakenEvents = createEventFetcher<DamageEvent>({
   dataType: EventDataType.DamageTaken,
   hostilityType: HostilityType.Friendlies,
   abilityID: TORMENTED.damageTaken.DECAPITATE,
 });
 
-export const getSoulforgeFlamesDamageTakenEvents =
-  createEventFetcher<DamageEvent>({
-    dataType: EventDataType.DamageTaken,
-    hostilityType: HostilityType.Friendlies,
-    abilityID: TORMENTED.damageTaken.SOULFORGE_FLAMES,
-  });
+const getSoulforgeFlamesDamageTakenEvents = createEventFetcher<DamageEvent>({
+  dataType: EventDataType.DamageTaken,
+  hostilityType: HostilityType.Friendlies,
+  abilityID: TORMENTED.damageTaken.SOULFORGE_FLAMES,
+});
 
-export const getBitingColdDamageTakenEvents = createEventFetcher<DamageEvent>({
+const getBitingColdDamageTakenEvents = createEventFetcher<DamageEvent>({
   dataType: EventDataType.DamageTaken,
   hostilityType: HostilityType.Friendlies,
   abilityID: TORMENTED.damageTaken.BITING_COLD,
 });
 
-export const getFrostLanceDamageTakenEvents = createEventFetcher<DamageEvent>({
+const getFrostLanceDamageTakenEvents = createEventFetcher<DamageEvent>({
   dataType: EventDataType.DamageTaken,
   hostilityType: HostilityType.Friendlies,
   abilityID: TORMENTED.damageTaken.FROST_LANCE,
 });
 
-export const getVolcanicPlumeDamageDoneEvents = async (
+const getVolcanicPlumeDamageDoneEvents = async (
   params: GetEventBaseParams
 ): Promise<DamageEvent[]> => {
   const events = await getEvents<DamageEvent>({
@@ -1095,7 +1112,7 @@ export const getVolcanicPlumeDamageDoneEvents = async (
   return reduceEventsByPlayer(events, "sourceID");
 };
 
-export const getQuakingInterruptEvents = async (
+const getQuakingInterruptEvents = async (
   params: GetEventBaseParams
 ): Promise<InterruptEvent[]> => {
   const allEvents = await getEvents<InterruptEvent>({
@@ -1116,7 +1133,7 @@ type ManifestationOfPrideSourceIDParams = Pick<
   fightID: number;
 };
 
-export const getManifestationOfPrideSourceID = async (
+const getManifestationOfPrideSourceID = async (
   params: ManifestationOfPrideSourceIDParams
 ): Promise<number | null> => {
   const response = await loadEnemyNPCIDs(
@@ -1158,7 +1175,7 @@ const getExplosiveSourceID = async (params: ExplosiveSourceIDParams) => {
   return response[EXPLOSIVE.unit] ?? null;
 };
 
-export const getManifestationOfPrideDeathEvents = (
+const getManifestationOfPrideDeathEvents = (
   params: GetEventBaseParams<{
     fightID: number;
     sourceID: number;
@@ -1213,7 +1230,7 @@ type ManifestationOfPrideDamageDoneEventParams = Omit<
   "dataType"
 >;
 
-export const getDamageDoneToManifestationOfPrideEvents = async (
+const getDamageDoneToManifestationOfPrideEvents = async (
   params: ManifestationOfPrideDamageDoneEventParams,
   firstEventOnly = false
 ): Promise<DamageEvent[]> => {
@@ -1233,7 +1250,7 @@ type ManifestationOfPrideDamageTakenEventParams = Omit<
   "dataType"
 >;
 
-export const getDamageTakenByManifestatioNOfPrideEvents = async (
+const getDamageTakenByManifestatioNOfPrideEvents = async (
   params: ManifestationOfPrideDamageTakenEventParams,
   firstEventOnly = false
 ): Promise<DamageEvent[]> => {
@@ -1246,4 +1263,180 @@ export const getDamageTakenByManifestatioNOfPrideEvents = async (
   );
 
   return reduceEventsByPlayer(events, "targetID");
+};
+
+export type EventParams = {
+  reportID: string;
+  startTime: number;
+  endTime: number;
+  dungeonID: DungeonIDs;
+  fightID: number;
+  affixes: Affixes[];
+};
+
+type DungeonWithEvents = Exclude<DungeonIDs, DungeonIDs.MISTS_OF_TIRNA_SCITHE>;
+
+const dungeonEventGetterMap: Record<
+  DungeonWithEvents,
+  ((params: EventParams) => Promise<AnyEvent[]>)[]
+> = {
+  [DungeonIDs.DE_OTHER_SIDE]: [getDeOtherSideUrnUsage],
+  [DungeonIDs.HALLS_OF_ATONEMENT]: [getHallsOfAtonementGargoyleCharms],
+  [DungeonIDs.PLAGUEFALL]: [getPFSlimeKills],
+  [DungeonIDs.SANGUINE_DEPTHS]: [
+    getSanguineDepthsLanternUsages,
+    getSanguineDepthsBuffEvents,
+  ],
+  [DungeonIDs.SPIRES_OF_ASCENSION]: [getSpiresOfAscensionSpearUsage],
+  [DungeonIDs.THEATRE_OF_PAIN]: [getTheaterOfPainBannerUsage],
+  [DungeonIDs.THE_NECROTIC_WAKE]: [
+    getNecroticWakeKyrianOrbHealEvents,
+    getNecroticWakeKyrianOrbDamageEvents,
+    getNecroticWakeOrbUsage,
+    getNecroticWakeSpearUsage,
+    getNecroticWakeHammerUsage,
+  ],
+};
+
+const isDungeonWithEvent = (id: DungeonIDs): id is DungeonWithEvents =>
+  id in dungeonEventGetterMap;
+
+export const getDungeonSpecificEvents = async (
+  params: EventParams
+): Promise<AnyEvent[]> => {
+  if (!isDungeonWithEvent(params.dungeonID)) {
+    return [];
+  }
+
+  const nestedEvents = await Promise.all(
+    dungeonEventGetterMap[params.dungeonID].map((fn) => fn(params))
+  );
+
+  return nestedEvents.flat();
+};
+
+type AffixWithEvents = Exclude<
+  Affixes,
+  | "Awakened"
+  | "Beguiling"
+  | "Tyrannical"
+  | "Fortified"
+  | "Prideful"
+  | "Raging"
+  | "Infested"
+  | "Inspiring"
+  | "Reaping"
+  | "Skittish"
+  | "Tormented"
+>;
+
+const affixEventGetterMap: Record<
+  AffixWithEvents,
+  ((params: EventParams) => Promise<AnyEvent[]>)[]
+> = {
+  [Affixes.Sanguine]: [
+    getSanguineDamageTakenEvents,
+    getSanguineHealingDoneEvents,
+  ],
+  [Affixes.Explosive]: [getExplosiveDamageTakenEvents, getExplosiveKillEvents],
+  [Affixes.Grievous]: [getGrievousDamageTakenEvents],
+  [Affixes.Necrotic]: [
+    getNecroticDamageTakenEvents,
+    getHighestNecroticStackAmount,
+  ],
+  [Affixes.Volcanic]: [getVolcanicDamageTakenEvents],
+  [Affixes.Bursting]: [getBurstingDamageTakenEvents],
+  [Affixes.Spiteful]: [getSpitefulDamageTakenEvents],
+  [Affixes.Quaking]: [getQuakingDamageTakenEvents, getQuakingInterruptEvents],
+  [Affixes.Storming]: [getStormingDamageTakenEvents],
+  [Affixes.Bolstering]: [getBolsteringEvents],
+};
+
+export const getAffixSpecificEvents = async (
+  params: EventParams
+): Promise<AnyEvent[]> => {
+  const allEvents = await Promise.all(
+    params.affixes
+      .filter((affix): affix is AffixWithEvents => affix in affixEventGetterMap)
+      .flatMap((affix) => affixEventGetterMap[affix])
+      .map((fn) => fn(params))
+  );
+
+  return allEvents.flat();
+};
+
+export const getSeasonSpecificEvents = async (
+  params: EventParams
+): Promise<AnyEvent[]> => {
+  if (params.affixes.includes(Affixes.Prideful)) {
+    const prideSourceID = await getManifestationOfPrideSourceID(params);
+
+    if (!prideSourceID) {
+      return [];
+    }
+
+    const pridefulDeathEvents = await getManifestationOfPrideDeathEvents({
+      ...params,
+      sourceID: prideSourceID,
+    });
+
+    const damageTakenEvents = await Promise.all(
+      pridefulDeathEvents.map(async (event, index, arr) => {
+        if (!event.targetInstance) {
+          return [];
+        }
+
+        // on the first pride death event, start searching for damageDone events
+        // from the start of the key.
+        // on subsequent death events, start searching beginning with the death
+        // timestamp of the previous pride
+        const startTime =
+          index === 0 ? params.startTime : arr[index - 1].timestamp;
+
+        // retrieve the timestamp at which the first damage was done to pride
+        const [{ timestamp: firstDamageDoneTimestamp }] =
+          await getDamageDoneToManifestationOfPrideEvents(
+            {
+              reportID: params.reportID,
+              endTime: event.timestamp,
+              startTime,
+              targetID: prideSourceID,
+              targetInstance: event.targetInstance,
+            },
+            true
+          );
+
+        return getDamageTakenByManifestatioNOfPrideEvents({
+          reportID: params.reportID,
+          targetID: prideSourceID,
+          startTime: firstDamageDoneTimestamp,
+          endTime: event.timestamp,
+          targetInstance: event.targetInstance,
+        });
+      })
+    );
+
+    return [...pridefulDeathEvents, ...damageTakenEvents.flat()];
+  }
+
+  if (params.affixes.includes(Affixes.Tormented)) {
+    const nestedEvents = await Promise.all<AnyEvent[]>([
+      getBottleOfSanguineIchorHealEvents(params),
+      getStoneWardHealEvents(params),
+      getMassiveSmashDamageTakenEvents(params),
+      getRazeDamageTakenEvents(params),
+      getDecapitateDamageTakenEvents(params),
+      getSoulforgeFlamesDamageTakenEvents(params),
+      getFrostLanceDamageTakenEvents(params),
+      getBottleOfSanguineIchorDamageEvents(params),
+      getVolcanicPlumeDamageDoneEvents(params),
+      getStygianKingsBarbsDamageEvents(params),
+      getFifthSkullDamageEvents(params),
+      getBitingColdDamageTakenEvents(params),
+    ]);
+
+    return nestedEvents.flat();
+  }
+
+  return [];
 };

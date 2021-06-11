@@ -40,8 +40,8 @@ import volcanicDamageTakenEvents from "./volcanicDamageTakenEvents.json";
 type Params = Parameters<typeof processEvents>;
 
 const defaultPull: Params[0] = {
-  events: [],
-  npcs: [],
+  id: 1,
+  enemyNPCs: [],
   startTime: 0,
   endTime: 1,
   x: 1,
@@ -61,7 +61,7 @@ const actorOnePlayerID = 2;
 const actorTwoID = 3;
 const actorTwoPlayerID = 4;
 
-const actorPlayerMap: Params[1] = new Map([
+const actorPlayerMap: Params[2] = new Map([
   [actorOneID, actorOnePlayerID],
   [actorTwoID, actorTwoPlayerID],
 ]);
@@ -71,49 +71,7 @@ describe("Death Events", () => {
     test("Player kills Manifestation of Pride", () => {
       const pull: Params[0] = {
         ...defaultPull,
-        events: [
-          {
-            timestamp: 1_976_727,
-            type: "death",
-            sourceID: -1,
-            targetID: 31,
-            targetInstance: 1,
-            abilityGameID: 0,
-          },
-          {
-            timestamp: 2_323_231,
-            type: "death",
-            sourceID: -1,
-            targetID: 31,
-            targetInstance: 2,
-            abilityGameID: 0,
-          },
-          {
-            timestamp: 2_608_462,
-            type: "death",
-            sourceID: -1,
-            targetID: 31,
-            targetInstance: 3,
-            abilityGameID: 0,
-          },
-          {
-            timestamp: 3_041_341,
-            type: "death",
-            sourceID: -1,
-            targetID: 31,
-            targetInstance: 4,
-            abilityGameID: 0,
-          },
-          {
-            timestamp: 3_413_149,
-            type: "death",
-            sourceID: -1,
-            targetID: 31,
-            targetInstance: 5,
-            abilityGameID: 0,
-          },
-        ],
-        npcs: [
+        enemyNPCs: [
           {
             id: 31,
             gameID: PRIDE.unit,
@@ -123,17 +81,56 @@ describe("Death Events", () => {
         ],
       };
 
-      expect(processEvents(pull, actorPlayerMap)).toMatchSnapshot();
+      const events: Params[1] = [
+        {
+          timestamp: 1_976_727,
+          type: "death",
+          sourceID: -1,
+          targetID: 31,
+          targetInstance: 1,
+          abilityGameID: 0,
+        },
+        {
+          timestamp: 2_323_231,
+          type: "death",
+          sourceID: -1,
+          targetID: 31,
+          targetInstance: 2,
+          abilityGameID: 0,
+        },
+        {
+          timestamp: 2_608_462,
+          type: "death",
+          sourceID: -1,
+          targetID: 31,
+          targetInstance: 3,
+          abilityGameID: 0,
+        },
+        {
+          timestamp: 3_041_341,
+          type: "death",
+          sourceID: -1,
+          targetID: 31,
+          targetInstance: 4,
+          abilityGameID: 0,
+        },
+        {
+          timestamp: 3_413_149,
+          type: "death",
+          sourceID: -1,
+          targetID: 31,
+          targetInstance: 5,
+          abilityGameID: 0,
+        },
+      ];
+
+      expect(processEvents(pull, events, actorPlayerMap)).toMatchSnapshot();
     });
 
     test("Player kills Plaguefall Slimes", () => {
       const pull: Params[0] = {
         ...defaultPull,
-        events: plaguefallSlimeDeathEvents.map((event) => ({
-          ...event,
-          type: "death",
-        })),
-        npcs: [
+        enemyNPCs: [
           {
             id: 28,
             gameID: PF_GREEN_BUFF.unit,
@@ -155,7 +152,12 @@ describe("Death Events", () => {
         ],
       };
 
-      expect(processEvents(pull, actorPlayerMap)).toMatchSnapshot();
+      const events: Params[1] = plaguefallSlimeDeathEvents.map((event) => ({
+        ...event,
+        type: "death",
+      }));
+
+      expect(processEvents(pull, events, actorPlayerMap)).toMatchSnapshot();
     });
   });
 
@@ -163,39 +165,7 @@ describe("Death Events", () => {
     test("Manifestation of Pride", () => {
       const pull: Params[0] = {
         ...defaultPull,
-        events: [
-          {
-            timestamp: 2_538_004,
-            type: "death",
-            sourceID: -1,
-            targetID: actorOneID,
-            abilityGameID: 0,
-            killerID: 31,
-            killerInstance: 4,
-            killingAbilityGameID: 324_323,
-          },
-          {
-            timestamp: 2_922_258,
-            type: "death",
-            sourceID: -1,
-            targetID: actorOneID,
-            abilityGameID: 0,
-            killerID: 31,
-            killerInstance: 15,
-            killingAbilityGameID: 1,
-          },
-          {
-            timestamp: 3_037_098,
-            type: "death",
-            sourceID: -1,
-            targetID: actorOneID,
-            abilityGameID: 0,
-            killerID: 31,
-            killerInstance: 4,
-            killingAbilityGameID: 342_332,
-          },
-        ],
-        npcs: [
+        enemyNPCs: [
           {
             id: 31,
             gameID: PRIDE.unit,
@@ -205,15 +175,47 @@ describe("Death Events", () => {
         ],
       };
 
-      expect(processEvents(pull, actorPlayerMap)).toMatchSnapshot();
+      const events: Params[1] = [
+        {
+          timestamp: 2_538_004,
+          type: "death",
+          sourceID: -1,
+          targetID: actorOneID,
+          abilityGameID: 0,
+          killerID: 31,
+          killerInstance: 4,
+          killingAbilityGameID: 324_323,
+        },
+        {
+          timestamp: 2_922_258,
+          type: "death",
+          sourceID: -1,
+          targetID: actorOneID,
+          abilityGameID: 0,
+          killerID: 31,
+          killerInstance: 15,
+          killingAbilityGameID: 1,
+        },
+        {
+          timestamp: 3_037_098,
+          type: "death",
+          sourceID: -1,
+          targetID: actorOneID,
+          abilityGameID: 0,
+          killerID: 31,
+          killerInstance: 4,
+          killingAbilityGameID: 342_332,
+        },
+      ];
+
+      expect(processEvents(pull, events, actorPlayerMap)).toMatchSnapshot();
     });
   });
 
   test("Player dying", () => {
     const pull: Params[0] = {
       ...defaultPull,
-      events: deathEvents.map((event) => ({ ...event, type: "death" })),
-      npcs: [...new Set(deathEvents.map((event) => event.killerID))].map(
+      enemyNPCs: [...new Set(deathEvents.map((event) => event.killerID))].map(
         (id, index) => ({
           id,
           gameID: index + 1,
@@ -223,11 +225,16 @@ describe("Death Events", () => {
       ),
     };
 
+    const events: Params[1] = deathEvents.map((event) => ({
+      ...event,
+      type: "death",
+    }));
+
     const actorPlayerMap = new Map(
       deathEvents.map((event) => [event.targetID, event.targetID])
     );
 
-    expect(processEvents(pull, actorPlayerMap)).toMatchSnapshot();
+    expect(processEvents(pull, events, actorPlayerMap)).toMatchSnapshot();
   });
 });
 
@@ -235,94 +242,82 @@ describe("Heal Events", () => {
   test("Sanguine", () => {
     const pull: Params[0] = {
       ...defaultPull,
-      events: sanguineHealEvents.map((event) => ({
-        ...event,
-        type: "heal",
+      enemyNPCs: [
+        ...new Set(sanguineHealEvents.map((event) => event.targetID)),
+      ].map((id, index) => ({
+        id,
+        gameID: index,
+        maximumInstanceID: 1,
+        minimumInstanceID: 1,
       })),
-      npcs: [...new Set(sanguineHealEvents.map((event) => event.targetID))].map(
-        (id, index) => ({
-          id,
-          gameID: index,
-          maximumInstanceID: 1,
-          minimumInstanceID: 1,
-        })
-      ),
     };
 
-    expect(processEvents(pull, actorPlayerMap)).toMatchSnapshot();
+    const events: Params[1] = sanguineHealEvents.map((event) => ({
+      ...event,
+      type: "heal",
+    }));
+
+    expect(processEvents(pull, events, actorPlayerMap)).toMatchSnapshot();
   });
 
   test("Kyrian Orb", () => {
-    const pull: Params[0] = {
-      ...defaultPull,
-      events: kyrianOrbHealEvents.map((event) => ({
-        ...event,
-        type: "heal",
-      })),
-    };
+    const events: Params[1] = kyrianOrbHealEvents.map((event) => ({
+      ...event,
+      type: "heal",
+    }));
 
     const actorPlayerMap = new Map(
       kyrianOrbHealEvents.map((event) => [event.sourceID, event.sourceID])
     );
 
-    expect(processEvents(pull, actorPlayerMap)).toMatchSnapshot();
+    expect(
+      processEvents(defaultPull, events, actorPlayerMap)
+    ).toMatchSnapshot();
   });
 
   test("skips any other heal event", () => {
-    const pull: Params[0] = {
-      ...defaultPull,
-      events: [
-        {
-          type: "heal",
-          amount: 1,
-          abilityGameID: 123,
-          hitType: 1,
-          sourceID: 1,
-          targetID: 1,
-          timestamp: 1,
-        },
-      ],
-    };
-
-    expect(processEvents(pull, actorPlayerMap)).toStrictEqual([]);
+    const events: Params[1] = [
+      {
+        type: "heal",
+        amount: 1,
+        abilityGameID: 123,
+        hitType: 1,
+        sourceID: 1,
+        targetID: 1,
+        timestamp: 1,
+      },
+    ];
+    expect(processEvents(defaultPull, events, actorPlayerMap)).toStrictEqual(
+      []
+    );
   });
 });
 
 describe("Damage Events", () => {
   test("skips events doing 0 damage", () => {
-    const pull: Params[0] = {
-      ...defaultPull,
-      events: playerDamagesNPCEvents.map((event) => ({
-        ...event,
-        type: "damage",
-        amount: 0,
-      })),
-    };
+    const events: Params[1] = playerDamagesNPCEvents.map((event) => ({
+      ...event,
+      type: "damage",
+      amount: 0,
+    }));
 
-    expect(processEvents(pull, new Map())).toStrictEqual([]);
+    expect(processEvents(defaultPull, events, new Map())).toStrictEqual([]);
   });
 
   describe("DamageDone", () => {
     test("skips events without targetNPCID or sourcePlayerID", () => {
-      const pull: Params[0] = {
-        ...defaultPull,
-        events: playerDamagesNPCEvents.map((event) => ({
-          ...event,
-          type: "damage",
-        })),
-      };
+      const events: Params[1] = playerDamagesNPCEvents.map((event) => ({
+        ...event,
+        type: "damage",
+      }));
 
-      expect(processEvents(pull, new Map())).toStrictEqual([]);
+      expect(processEvents(defaultPull, events, new Map())).toStrictEqual([]);
     });
 
     test("normal mobs", () => {
       const pull: Params[0] = {
         ...defaultPull,
-        events: playerDamagesNPCEvents.map((event) => ({
-          ...event,
-          type: "damage",
-        })),
-        npcs: [
+        enemyNPCs: [
           ...new Set(playerDamagesNPCEvents.map((event) => event.targetID)),
         ].map((id, index) => ({
           id,
@@ -332,22 +327,22 @@ describe("Damage Events", () => {
         })),
       };
 
+      const events: Params[1] = playerDamagesNPCEvents.map((event) => ({
+        ...event,
+        type: "damage",
+      }));
+
       const actorPlayerMap = new Map(
         playerDamagesNPCEvents.map((event) => [event.sourceID, event.sourceID])
       );
 
-      expect(processEvents(pull, actorPlayerMap)).toMatchSnapshot();
+      expect(processEvents(pull, events, actorPlayerMap)).toMatchSnapshot();
     });
 
     test("Explosive", () => {
       const pull: Params[0] = {
         ...defaultPull,
-        events: playerDamagesNPCEvents.map((event) => ({
-          ...event,
-          type: "damage",
-          targetID: 1000,
-        })),
-        npcs: [
+        enemyNPCs: [
           {
             id: 1000,
             gameID: EXPLOSIVE.unit,
@@ -357,11 +352,17 @@ describe("Damage Events", () => {
         ],
       };
 
+      const events: Params[1] = playerDamagesNPCEvents.map((event) => ({
+        ...event,
+        type: "damage",
+        targetID: 1000,
+      }));
+
       const actorPlayerMap = new Map(
         playerDamagesNPCEvents.map((event) => [event.sourceID, event.sourceID])
       );
 
-      expect(processEvents(pull, actorPlayerMap)).toMatchSnapshot();
+      expect(processEvents(pull, events, actorPlayerMap)).toMatchSnapshot();
     });
   });
 
@@ -369,11 +370,7 @@ describe("Damage Events", () => {
     test("works", () => {
       const pull: Params[0] = {
         ...defaultPull,
-        events: NPCDamagesPlayerEvents.map((event) => ({
-          ...event,
-          type: "damage",
-        })),
-        npcs: [
+        enemyNPCs: [
           ...new Set(NPCDamagesPlayerEvents.map((event) => event.sourceID)),
         ].map((id, index) => ({
           id,
@@ -383,23 +380,23 @@ describe("Damage Events", () => {
         })),
       };
 
+      const events: Params[1] = NPCDamagesPlayerEvents.map((event) => ({
+        ...event,
+        type: "damage",
+      }));
+
       const actorPlayerMap = new Map(
         NPCDamagesPlayerEvents.map((event) => [event.targetID, event.targetID])
       );
 
-      expect(processEvents(pull, actorPlayerMap)).toMatchSnapshot();
+      expect(processEvents(pull, events, actorPlayerMap)).toMatchSnapshot();
     });
 
     describe("DamageTaken from affixes", () => {
       test("spiteful", () => {
         const pull: Params[0] = {
           ...defaultPull,
-          events: spitefulDamageTaken.map((event) => ({
-            ...event,
-            type: "damage",
-            sourceID: 1000,
-          })),
-          npcs: [
+          enemyNPCs: [
             {
               id: 1000,
               gameID: SPITEFUL,
@@ -409,21 +406,24 @@ describe("Damage Events", () => {
           ],
         };
 
+        const events: Params[1] = spitefulDamageTaken.map((event) => ({
+          ...event,
+          type: "damage",
+          sourceID: 1000,
+        }));
+
         const actorPlayerMap = new Map(
           spitefulDamageTaken.map((event) => [event.targetID, event.targetID])
         );
 
-        expect(processEvents(pull, actorPlayerMap)).toMatchSnapshot();
+        expect(processEvents(pull, events, actorPlayerMap)).toMatchSnapshot();
       });
 
       test("volcanic", () => {
-        const pull: Params[0] = {
-          ...defaultPull,
-          events: volcanicDamageTakenEvents.map((event) => ({
-            ...event,
-            type: "damage",
-          })),
-        };
+        const events: Params[1] = volcanicDamageTakenEvents.map((event) => ({
+          ...event,
+          type: "damage",
+        }));
 
         const actorPlayerMap = new Map(
           volcanicDamageTakenEvents.map((event) => [
@@ -432,17 +432,16 @@ describe("Damage Events", () => {
           ])
         );
 
-        expect(processEvents(pull, actorPlayerMap)).toMatchSnapshot();
+        expect(
+          processEvents(defaultPull, events, actorPlayerMap)
+        ).toMatchSnapshot();
       });
 
       test("quaking", () => {
-        const pull: Params[0] = {
-          ...defaultPull,
-          events: quakingDamageTakenEvents.map((event) => ({
-            ...event,
-            type: "damage",
-          })),
-        };
+        const events: Params[1] = quakingDamageTakenEvents.map((event) => ({
+          ...event,
+          type: "damage",
+        }));
 
         const actorPlayerMap = new Map(
           quakingDamageTakenEvents.map((event) => [
@@ -451,17 +450,16 @@ describe("Damage Events", () => {
           ])
         );
 
-        expect(processEvents(pull, actorPlayerMap)).toMatchSnapshot();
+        expect(
+          processEvents(defaultPull, events, actorPlayerMap)
+        ).toMatchSnapshot();
       });
 
       test("necrotic", () => {
-        const pull: Params[0] = {
-          ...defaultPull,
-          events: necroticDamageTakenEvents.map((event) => ({
-            ...event,
-            type: "damage",
-          })),
-        };
+        const events: Params[1] = necroticDamageTakenEvents.map((event) => ({
+          ...event,
+          type: "damage",
+        }));
 
         const actorPlayerMap = new Map(
           necroticDamageTakenEvents.map((event) => [
@@ -470,17 +468,16 @@ describe("Damage Events", () => {
           ])
         );
 
-        expect(processEvents(pull, actorPlayerMap)).toMatchSnapshot();
+        expect(
+          processEvents(defaultPull, events, actorPlayerMap)
+        ).toMatchSnapshot();
       });
 
       test("sanguine", () => {
-        const pull: Params[0] = {
-          ...defaultPull,
-          events: sanguineDamageTakenEvents.map((event) => ({
-            ...event,
-            type: "damage",
-          })),
-        };
+        const events: Params[1] = sanguineDamageTakenEvents.map((event) => ({
+          ...event,
+          type: "damage",
+        }));
 
         const actorPlayerMap = new Map(
           sanguineDamageTakenEvents.map((event) => [
@@ -489,17 +486,16 @@ describe("Damage Events", () => {
           ])
         );
 
-        expect(processEvents(pull, actorPlayerMap)).toMatchSnapshot();
+        expect(
+          processEvents(defaultPull, events, actorPlayerMap)
+        ).toMatchSnapshot();
       });
 
       test("storming", () => {
-        const pull: Params[0] = {
-          ...defaultPull,
-          events: stormingDamageTakenEvents.map((event) => ({
-            ...event,
-            type: "damage",
-          })),
-        };
+        const events: Params[1] = stormingDamageTakenEvents.map((event) => ({
+          ...event,
+          type: "damage",
+        }));
 
         const actorPlayerMap = new Map(
           stormingDamageTakenEvents.map((event) => [
@@ -508,17 +504,16 @@ describe("Damage Events", () => {
           ])
         );
 
-        expect(processEvents(pull, actorPlayerMap)).toMatchSnapshot();
+        expect(
+          processEvents(defaultPull, events, actorPlayerMap)
+        ).toMatchSnapshot();
       });
 
       test("explosive", () => {
-        const pull: Params[0] = {
-          ...defaultPull,
-          events: explosiveDamageTakenEvents.map((event) => ({
-            ...event,
-            type: "damage",
-          })),
-        };
+        const events: Params[1] = explosiveDamageTakenEvents.map((event) => ({
+          ...event,
+          type: "damage",
+        }));
 
         const actorPlayerMap = new Map(
           explosiveDamageTakenEvents.map((event) => [
@@ -527,17 +522,16 @@ describe("Damage Events", () => {
           ])
         );
 
-        expect(processEvents(pull, actorPlayerMap)).toMatchSnapshot();
+        expect(
+          processEvents(defaultPull, events, actorPlayerMap)
+        ).toMatchSnapshot();
       });
 
       test("bursting", () => {
-        const pull: Params[0] = {
-          ...defaultPull,
-          events: burstingDamageTakenEvents.map((event) => ({
-            ...event,
-            type: "damage",
-          })),
-        };
+        const events: Params[1] = burstingDamageTakenEvents.map((event) => ({
+          ...event,
+          type: "damage",
+        }));
 
         const actorPlayerMap = new Map(
           burstingDamageTakenEvents.map((event) => [
@@ -546,7 +540,9 @@ describe("Damage Events", () => {
           ])
         );
 
-        expect(processEvents(pull, actorPlayerMap)).toMatchSnapshot();
+        expect(
+          processEvents(defaultPull, events, actorPlayerMap)
+        ).toMatchSnapshot();
       });
     });
   });
@@ -554,53 +550,50 @@ describe("Damage Events", () => {
 
 describe("Interrupt Events", () => {
   test("works", () => {
-    const pull: Params[0] = {
-      ...defaultPull,
-      events: quakingInterruptEvents.map((event) => ({
-        ...event,
-        type: "interrupt",
-      })),
-    };
+    const events: Params[1] = quakingInterruptEvents.map((event) => ({
+      ...event,
+      type: "interrupt",
+    }));
 
     const actorPlayerMap = new Map(
       quakingInterruptEvents.map((event) => [event.sourceID, event.sourceID])
     );
 
-    expect(processEvents(pull, actorPlayerMap)).toMatchSnapshot();
+    expect(
+      processEvents(defaultPull, events, actorPlayerMap)
+    ).toMatchSnapshot();
   });
 });
 
 describe("ApplyBuff Events", () => {
   test("Plaguefall Slime Buffs", () => {
-    const pull: Params[0] = {
-      ...defaultPull,
-      events: plaguefallSlimeBuffEvents.map((event) => ({
-        ...event,
-        type: "applybuff",
-      })),
-    };
+    const events: Params[1] = plaguefallSlimeBuffEvents.map((event) => ({
+      ...event,
+      type: "applybuff",
+    }));
 
     const actorPlayerMap = new Map(
       plaguefallSlimeBuffEvents.map((event) => [event.sourceID, event.sourceID])
     );
 
-    expect(processEvents(pull, actorPlayerMap)).toMatchSnapshot();
+    expect(
+      processEvents(defaultPull, events, actorPlayerMap)
+    ).toMatchSnapshot();
   });
 
   test("Theatre of Pain Banner Aura", () => {
-    const pull: Params[0] = {
-      ...defaultPull,
-      events: topBannerAuraBuffEvents.map((event) => ({
-        ...event,
-        type: "applybuff",
-      })),
-    };
+    const events: Params[1] = topBannerAuraBuffEvents.map((event) => ({
+      ...event,
+      type: "applybuff",
+    }));
 
     const actorPlayerMap = new Map(
       topBannerAuraBuffEvents.map((event) => [event.sourceID, event.sourceID])
     );
 
-    expect(processEvents(pull, actorPlayerMap)).toMatchSnapshot();
+    expect(
+      processEvents(defaultPull, events, actorPlayerMap)
+    ).toMatchSnapshot();
   });
 
   test("Bolstering", () => {
@@ -608,11 +601,7 @@ describe("ApplyBuff Events", () => {
     // within `getBolsteringEvents`
     const pull: Params[0] = {
       ...defaultPull,
-      events: bolsteringApplyBuffEvents.map((event) => ({
-        ...event,
-        type: "applybuff",
-      })),
-      npcs: [
+      enemyNPCs: [
         ...new Set(bolsteringApplyBuffEvents.map((event) => event.targetID)),
       ].map((id) => ({
         id,
@@ -622,59 +611,61 @@ describe("ApplyBuff Events", () => {
       })),
     };
 
-    expect(processEvents(pull, new Map())).toMatchSnapshot();
+    const events: Params[1] = bolsteringApplyBuffEvents.map((event) => ({
+      ...event,
+      type: "applybuff",
+    }));
+
+    expect(processEvents(pull, events, new Map())).toMatchSnapshot();
   });
 });
 
 describe("ApplyDebuff Events", () => {
   test("SoA Spear", () => {
-    const pull: Params[0] = {
-      ...defaultPull,
-      events: soaSpearDebuffEvents.map((event) => ({
-        ...event,
-        type: "applydebuff",
-      })),
-    };
+    const events: Params[1] = soaSpearDebuffEvents.map((event) => ({
+      ...event,
+      type: "applydebuff",
+    }));
 
     const actorPlayerMap = new Map(
       soaSpearDebuffEvents.map((event) => [event.sourceID, event.sourceID])
     );
 
-    expect(processEvents(pull, actorPlayerMap)).toMatchSnapshot();
+    expect(
+      processEvents(defaultPull, events, actorPlayerMap)
+    ).toMatchSnapshot();
   });
 
   test("DOS Urn", () => {
-    const pull: Params[0] = {
-      ...defaultPull,
-      events: dosUrnDebuffEvents.map((event) => ({
-        ...event,
-        type: "applydebuff",
-      })),
-    };
+    const events: Params[1] = dosUrnDebuffEvents.map((event) => ({
+      ...event,
+      type: "applydebuff",
+    }));
 
     const actorPlayerMap = new Map(
       dosUrnDebuffEvents.map((event) => [event.sourceID, event.sourceID])
     );
 
-    expect(processEvents(pull, actorPlayerMap)).toMatchSnapshot();
+    expect(
+      processEvents(defaultPull, events, actorPlayerMap)
+    ).toMatchSnapshot();
   });
 });
 
 describe("BeginCast Events", () => {
   test("SD Lantern", () => {
-    const pull: Params[0] = {
-      ...defaultPull,
-      events: sdLanternBeginCastEvents.map((event) => ({
-        ...event,
-        type: "begincast",
-      })),
-    };
+    const events: Params[1] = sdLanternBeginCastEvents.map((event) => ({
+      ...event,
+      type: "begincast",
+    }));
 
     const actorPlayerMap = new Map(
       sdLanternBeginCastEvents.map((event) => [event.sourceID, event.sourceID])
     );
 
-    expect(processEvents(pull, actorPlayerMap)).toMatchSnapshot();
+    expect(
+      processEvents(defaultPull, events, actorPlayerMap)
+    ).toMatchSnapshot();
   });
 });
 
@@ -686,27 +677,22 @@ describe("RemoveBuff Events", () => {
       | RemoveBuffEvent
     )[];
 
-    const pull: Params[0] = {
-      ...defaultPull,
-      events,
-    };
-
     const actorPlayerMap = new Map(
       events.map((event) => [event.targetID, event.targetID])
     );
-    expect(processEvents(pull, actorPlayerMap)).toMatchSnapshot();
+
+    expect(
+      processEvents(defaultPull, events, actorPlayerMap)
+    ).toMatchSnapshot();
   });
 });
 
 describe("CastEvents", () => {
   test("Halls of Atonement Gargoyle Charm", () => {
-    const pull: Params[0] = {
-      ...defaultPull,
-      events: hoaGargoyleCharmCastEvents.map((event) => ({
-        ...event,
-        type: "cast",
-      })),
-    };
+    const events: Params[1] = hoaGargoyleCharmCastEvents.map((event) => ({
+      ...event,
+      type: "cast",
+    }));
 
     const actorPlayerMap = new Map(
       hoaGargoyleCharmCastEvents.map((event) => [
@@ -715,6 +701,8 @@ describe("CastEvents", () => {
       ])
     );
 
-    expect(processEvents(pull, actorPlayerMap)).toMatchSnapshot();
+    expect(
+      processEvents(defaultPull, events, actorPlayerMap)
+    ).toMatchSnapshot();
   });
 });

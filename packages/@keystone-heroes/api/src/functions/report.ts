@@ -495,9 +495,9 @@ const handler: RequestHandler<Request, ReportResponse> = async (req, res) => {
     return;
   }
 
-  console.time("wcl.report");
+  console.time(`wcl.report${reportID}`);
   const report = await getInitialReportData({ reportID });
-  console.timeEnd("wcl.report");
+  console.timeEnd(`wcl.report${reportID}`);
 
   if (
     !report ||
@@ -521,7 +521,7 @@ const handler: RequestHandler<Request, ReportResponse> = async (req, res) => {
     region: { slug: region },
   } = report.reportData.report;
 
-  console.time("fightfiltering");
+  console.time(`fightfiltering${reportID}`);
   const fights = report.reportData.report.fights
     .filter(
       (fight): fight is Fight =>
@@ -537,14 +537,14 @@ const handler: RequestHandler<Request, ReportResponse> = async (req, res) => {
         maps: [...new Set(fight.maps.map((map) => map.id))],
       };
     });
-  console.timeEnd("fightfiltering");
+  console.timeEnd(`fightfiltering${reportID}`);
 
   if (fights.length === 0) {
     res.status(NO_CONTENT).end();
     return;
   }
 
-  console.time("maybeFightsWithMeta");
+  console.time(`maybeFightsWithMeta${reportID}`);
   const maybeFightsWithMeta: (FightWithMeta | null)[] = await Promise.all(
     fights.map(async (fight) => {
       const table = await getTableData({
@@ -647,7 +647,7 @@ const handler: RequestHandler<Request, ReportResponse> = async (req, res) => {
       };
     })
   );
-  console.timeEnd("maybeFightsWithMeta");
+  console.timeEnd(`maybeFightsWithMeta${reportID}`);
 
   const fightsWithMeta = maybeFightsWithMeta.filter(
     (fight): fight is FightWithMeta => fight !== null
@@ -799,7 +799,7 @@ const handler: RequestHandler<Request, ReportResponse> = async (req, res) => {
     })
   );
 
-  console.time("fightsCreateInput");
+  console.time(`fightsCreateInput${reportID}`);
   const fightsCreateInput = await Promise.all(
     fightsWithMeta.map<Promise<Prisma.FightCreateInput>>(async (fight) => {
       const {
@@ -866,9 +866,9 @@ const handler: RequestHandler<Request, ReportResponse> = async (req, res) => {
       };
     })
   );
-  console.timeEnd("fightsCreateInput");
+  console.timeEnd(`fightsCreateInput${reportID}`);
 
-  console.time("prisma.fight.create");
+  console.time(`prisma.fight.create${reportID}`);
   await Promise.all(
     fightsCreateInput.map((data) =>
       prisma.fight.create({
@@ -876,7 +876,7 @@ const handler: RequestHandler<Request, ReportResponse> = async (req, res) => {
       })
     )
   );
-  console.timeEnd("prisma.fight.create");
+  console.timeEnd(`prisma.fight.create${reportID}`);
 
   const response: ReportResponse = {
     endTime,

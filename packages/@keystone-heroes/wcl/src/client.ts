@@ -1,6 +1,8 @@
 import type { WCLOAuthResponse } from "@keystone-heroes/db/wcl";
-import { setWCLAuthentication } from "@keystone-heroes/db/wcl";
-import { getWCLAuthentication } from "@keystone-heroes/db/wcl";
+import {
+  setWCLAuthentication,
+  getWCLAuthentication,
+} from "@keystone-heroes/db/wcl";
 import {
   WCL_CLIENT_ID,
   WCL_CLIENT_SECRET,

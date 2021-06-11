@@ -9,9 +9,15 @@ import type {
   HealEvent,
   InterruptEvent,
   RemoveBuffEvent,
+  AnyEvent,
 } from "@keystone-heroes/wcl/src/queries/events";
+import type {
+  ReportDungeonPullNpc,
+  ReportMapBoundingBox,
+} from "@keystone-heroes/wcl/types";
 import { EventType } from "@prisma/client";
 import type { Prisma } from "@prisma/client";
+import type { DeepNonNullable } from "ts-essentials";
 
 import {
   BOLSTERING,
@@ -34,12 +40,8 @@ import {
   TOP_BANNER_AURA,
   VOLCANIC,
 } from "../data";
-import type { CreateManyFightType_REFACTOR } from "../repos/pull";
 
-type Processor<
-  T extends CreateManyFightType_REFACTOR["pulls"][number]["events"][number],
-  AdditionalParams = Record<string, unknown>
-> = (
+type Processor<T extends AnyEvent, AdditionalParams = Record<string, null>> = (
   event: T,
   params: {
     sourcePlayerID: number | null;
@@ -248,12 +250,12 @@ const damageProcessor: Processor<DamageEvent> = (
  * - prideful deaths
  * - PF slimes
  */
-const deathProcessor: Processor<
-  DeathEvent,
-  { pull: CreateManyFightType_REFACTOR["pulls"][number] }
-> = (event, { targetNPCID, targetPlayerID, pull }) => {
+const deathProcessor: Processor<DeathEvent, { pull: PersistedDungeonPull }> = (
+  event,
+  { targetNPCID, targetPlayerID, pull }
+) => {
   const sourceNPCID =
-    pull.npcs.find((npc) => npc.id === event.killerID)?.gameID ?? null;
+    pull.enemyNPCs.find((npc) => npc.id === event.killerID)?.gameID ?? null;
 
   // player death
   if (targetPlayerID) {
@@ -355,28 +357,55 @@ const removeBuffProcessor: Processor<RemoveBuffEvent> = (
   return null;
 };
 
-export const processEvents = (
-  pull: CreateManyFightType_REFACTOR["pulls"][number],
+export type PersistedDungeonPull = {
+  id: number;
+  x: number;
+  y: number;
+  startTime: number;
+  endTime: number;
+  maps: number[];
+  boundingBox: ReportMapBoundingBox;
+  enemyNPCs: Pick<
+    Required<DeepNonNullable<ReportDungeonPullNpc>>,
+    "gameID" | "minimumInstanceID" | "maximumInstanceID" | "id"
+  >[];
+};
+
+const getProcessorParams = (
+  event: AnyEvent,
+  pull: PersistedDungeonPull,
   actorPlayerMap: Map<number, number>
-): Prisma.EventCreateManyPullInput[] => {
-  return pull.events
-    .map<Prisma.EventCreateManyPullInput | null>((event) => {
-      const sourcePlayerID = actorPlayerMap.get(event.sourceID) ?? null;
-      const targetPlayerID = actorPlayerMap.get(event.targetID) ?? null;
+): Parameters<Processor<AnyEvent>>[1] => {
+  const params: Parameters<Processor<AnyEvent>>[1] = {
+    sourceNPCID: null,
+    sourcePlayerID: null,
+    targetNPCID: null,
+    targetPlayerID: null,
+  };
 
-      const sourceNPCID =
-        pull.npcs.find((npc) => npc.id === event.sourceID)?.gameID ?? null;
-      const targetNPCID =
-        event.targetID === -1
-          ? null
-          : pull.npcs.find((npc) => npc.id === event.targetID)?.gameID ?? null;
+  if ("sourceID" in event) {
+    params.sourcePlayerID = actorPlayerMap.get(event.sourceID) ?? null;
+    params.sourceNPCID =
+      pull.enemyNPCs.find((npc) => npc.id === event.sourceID)?.gameID ?? null;
+  }
 
-      const params = {
-        sourceNPCID,
-        sourcePlayerID,
-        targetNPCID,
-        targetPlayerID,
-      };
+  if ("targetID" in event) {
+    params.targetPlayerID = actorPlayerMap.get(event.targetID) ?? null;
+    params.targetNPCID =
+      pull.enemyNPCs.find((npc) => npc.id === event.targetID)?.gameID ?? null;
+  }
+
+  return params;
+};
+
+export const processEvents = (
+  pull: PersistedDungeonPull,
+  events: AnyEvent[],
+  actorPlayerMap: Map<number, number>
+): Omit<Prisma.EventCreateManyInput, "pullID">[] => {
+  return events
+    .map<Omit<Prisma.EventCreateManyInput, "pullID"> | null>((event) => {
+      const params = getProcessorParams(event, pull, actorPlayerMap);
 
       switch (event.type) {
         case "applybuff":
@@ -404,6 +433,7 @@ export const processEvents = (
       }
     })
     .filter(
-      (dataset): dataset is Prisma.EventCreateManyPullInput => dataset !== null
+      (dataset): dataset is Omit<Prisma.EventCreateManyInput, "pullID"> =>
+        dataset !== null
     );
 };

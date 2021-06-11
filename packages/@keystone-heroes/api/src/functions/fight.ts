@@ -1,72 +1,19 @@
-import { DungeonIDs, dungeons } from "@keystone-heroes/db/data";
-import { Affixes, prisma } from "@keystone-heroes/db/prisma";
+import { dungeons } from "@keystone-heroes/db/data";
+import { prisma } from "@keystone-heroes/db/prisma";
+import type { Prisma } from "@keystone-heroes/db/prisma";
+import type { PersistedDungeonPull } from "@keystone-heroes/db/wcl";
+import { processEvents } from "@keystone-heroes/db/wcl";
+import type { EventParams } from "@keystone-heroes/wcl/queries";
 import {
-  getBolsteringEvents,
-  getBurstingDamageTakenEvents,
-  getExplosiveDamageTakenEvents,
-  getExplosiveKillEvents,
-  getGrievousDamageTakenEvents,
-  getManifestationOfPrideDeathEvents,
-  getManifestationOfPrideSourceID,
-  getNecroticDamageTakenEvents,
-  getNecroticWakeKyrianOrbDamageEvents,
-  getNecroticWakeKyrianOrbHealEvents,
-  getPFSlimeKills,
   getPlayerDeathEvents,
-  getQuakingDamageTakenEvents,
-  getQuakingInterruptEvents,
-  getSanguineDamageTakenEvents,
-  getSanguineHealingDoneEvents,
-  getSpitefulDamageTakenEvents,
-  getStormingDamageTakenEvents,
-  getVolcanicDamageTakenEvents,
-  getDamageDoneToManifestationOfPrideEvents,
-  getDamageTakenByManifestatioNOfPrideEvents,
-  getBitingColdDamageTakenEvents,
-  getBottleOfSanguineIchorDamageEvents,
-  getBottleOfSanguineIchorHealEvents,
-  getDeOtherSideUrnUsage,
-  getDecapitateDamageTakenEvents,
-  getSanguineDepthsBuffEvents,
-  getSanguineDepthsLanternUsages,
-  getNecroticWakeHammerUsage,
-  getNecroticWakeOrbUsage,
-  getNecroticWakeSpearUsage,
-  getSpiresOfAscensionSpearUsage,
-  getHallsOfAtonementGargoyleCharms,
-  getFifthSkullDamageEvents,
-  getFrostLanceDamageTakenEvents,
-  getSoulforgeFlamesDamageTakenEvents,
-  getMassiveSmashDamageTakenEvents,
-  getRazeDamageTakenEvents,
-  getStoneWardHealEvents,
-  getStygianKingsBarbsDamageEvents,
-  getVolcanicPlumeDamageDoneEvents,
-  getTheaterOfPainBannerUsage,
-  getHighestNecroticStackAmount,
+  getDungeonSpecificEvents,
+  getSeasonSpecificEvents,
+  getAffixSpecificEvents,
   getRemarkableSpellCastEvents,
   getFightPulls,
 } from "@keystone-heroes/wcl/queries";
-import type {
-  ApplyBuffEvent,
-  ApplyBuffStackEvent,
-  ApplyDebuffEvent,
-  BeginCastEvent,
-  CastEvent,
-  DamageEvent,
-  DeathEvent,
-  HealEvent,
-  RemoveBuffEvent,
-  InterruptEvent,
-  ApplyDebuffStackEvent,
-} from "@keystone-heroes/wcl/src/queries";
-import type {
-  ReportDungeonPullNpc,
-  ReportMap,
-  ReportMapBoundingBox,
-} from "@keystone-heroes/wcl/types";
+import type { ReportMap } from "@keystone-heroes/wcl/types";
 import nc from "next-connect";
-import type { DeepNonNullable } from "ts-essentials";
 
 import {
   createValidReportIDMiddleware,
@@ -387,6 +334,7 @@ const handler: RequestHandler<Request, Response> = async (req, res) => {
       fightID,
     },
     select: {
+      id: true,
       startTime: true,
       endTime: true,
       fightID: true,
@@ -413,6 +361,7 @@ const handler: RequestHandler<Request, Response> = async (req, res) => {
         select: {
           player: {
             select: {
+              id: true,
               spec: {
                 select: {
                   name: true,
@@ -607,41 +556,19 @@ const handler: RequestHandler<Request, Response> = async (req, res) => {
   }
 
   if (maybeStoredFight.Pull.length === 0) {
-    console.time("getFightPulls");
     const maybeFightPulls = await getFightPulls({
       reportID,
       fightIDs: [maybeStoredFight.fightID],
     });
-    console.timeEnd("getFightPulls");
 
     if (!maybeFightPulls.reportData?.report?.fights?.[0]?.dungeonPulls) {
       res.status(BAD_REQUEST).end();
       return;
     }
 
-    const timeSpentOutOfCombat =
-      maybeFightPulls.reportData.report.fights[0].dungeonPulls.reduce(
-        (acc, pull) => {
-          if (!pull) {
-            return acc;
-          }
-
-          return acc - (pull.endTime - pull.startTime);
-        },
-        maybeStoredFight.keystoneTime
-      );
-
-    const timeSpentInCombat =
-      maybeStoredFight.keystoneTime - timeSpentOutOfCombat;
-
-    console.log({
-      timeSpentOutOfCombat,
-      timeSpentInCombat,
-    });
-
     const dungeonPulls =
       maybeFightPulls.reportData.report.fights[0].dungeonPulls.reduce<
-        DungeonPull[]
+        Omit<PersistedDungeonPull, "id">[]
       >((acc, pull) => {
         if (!pull || !pull.maps || !pull.enemyNPCs || !pull.boundingBox) {
           return acc;
@@ -656,8 +583,12 @@ const handler: RequestHandler<Request, Response> = async (req, res) => {
         }
 
         const enemyNPCs = pull.enemyNPCs.filter(
-          (enemyNPC): enemyNPC is DungeonPull["enemyNPCs"][number] =>
-            enemyNPC !== null
+          (
+            enemyNPC
+          ): enemyNPC is Omit<
+            PersistedDungeonPull,
+            "id"
+          >["enemyNPCs"][number] => enemyNPC !== null
         );
 
         if (enemyNPCs.length === 0) {
@@ -702,20 +633,24 @@ const handler: RequestHandler<Request, Response> = async (req, res) => {
       });
     }
 
+    const persistedPulls = await persistPulls(
+      dungeonPulls,
+      maybeStoredFight.id
+    );
+
     const params: EventParams = {
       reportID,
       startTime: maybeStoredFight.startTime,
       endTime: maybeStoredFight.endTime,
       fightID: maybeStoredFight.fightID,
       dungeonID,
-      affixes: new Set([
+      affixes: [
         maybeStoredFight.Report.week.affix1.name,
         maybeStoredFight.Report.week.affix2.name,
         maybeStoredFight.Report.week.affix3.name,
         maybeStoredFight.Report.week.season.affix.name,
-      ]),
+      ],
     };
-    console.time("events");
 
     const events = await Promise.all(
       maybeStoredFight.PlayerFight.map((playerFight) =>
@@ -725,20 +660,11 @@ const handler: RequestHandler<Request, Response> = async (req, res) => {
         })
       )
     );
-    console.timeEnd("events");
 
-    console.time("playerDeathEvents");
     const playerDeathEvents = await getPlayerDeathEvents(params);
-    console.timeEnd("playerDeathEvents");
-    console.time("dungeonEvents");
     const dungeonEvents = await getDungeonSpecificEvents(params);
-    console.timeEnd("dungeonEvents");
-    console.time("affixEvents");
     const affixEvents = await getAffixSpecificEvents(params);
-    console.timeEnd("affixEvents");
-    console.time("seasonEvents");
     const seasonEvents = await getSeasonSpecificEvents(params);
-    console.timeEnd("seasonEvents");
 
     const allEvents = [
       ...events.flat(),
@@ -748,279 +674,88 @@ const handler: RequestHandler<Request, Response> = async (req, res) => {
       ...seasonEvents,
     ].sort((a, b) => a.timestamp - b.timestamp);
 
-    console.log(allEvents.length);
+    const persistableMaps =
+      persistedPulls.flatMap<Prisma.PullZoneCreateManyInput>((pull) => {
+        return pull.maps.map((map) => {
+          return {
+            pullID: pull.id,
+            zoneID: map,
+          };
+        });
+      });
+
+    const persistableNPCs =
+      persistedPulls.flatMap<Prisma.PullNPCCreateManyInput>((pull) => {
+        return pull.enemyNPCs.map((npc) => {
+          return {
+            npcID: npc.gameID,
+            count: npc.maximumInstanceID,
+            pullID: pull.id,
+          };
+        });
+      });
+
+    const actorPlayerMap = new Map(
+      maybeStoredFight.PlayerFight.map((playerFight) => [
+        playerFight.player.actorID,
+        playerFight.player.id,
+      ])
+    );
+
+    const persistablePullEvents = persistedPulls.flatMap((pull) => {
+      const thisPullsEvents = allEvents.filter(
+        (event) =>
+          event.timestamp >= pull.startTime && event.timestamp <= pull.endTime
+      );
+
+      const processedEvents = processEvents(
+        pull,
+        thisPullsEvents,
+        actorPlayerMap
+      );
+
+      return processedEvents.map<Prisma.EventCreateManyInput>((event) => {
+        return {
+          ...event,
+          pullID: pull.id,
+        };
+      });
+    });
+
+    await prisma.$transaction([
+      prisma.pullZone.createMany({
+        skipDuplicates: true,
+        data: persistableMaps,
+      }),
+      prisma.pullNPC.createMany({
+        skipDuplicates: true,
+        data: persistableNPCs,
+      }),
+      prisma.event.createMany({
+        skipDuplicates: true,
+        data: persistablePullEvents,
+      }),
+    ]);
+
+    const { inCombatTime, outOfCombatTime } = calculateCombatTime(
+      maybeStoredFight.keystoneTime,
+      dungeonPulls
+    );
 
     res.json({
-      dungeonEvents,
-      affixEvents,
-      seasonEvents,
+      inCombatTime,
+      outOfCombatTime,
+      data: "new",
     });
     return;
   }
 
-  res.json(maybeStoredFight);
-};
+  const { inCombatTime, outOfCombatTime } = calculateCombatTime(
+    maybeStoredFight.keystoneTime,
+    maybeStoredFight.Pull
+  );
 
-type EventParams = {
-  reportID: string;
-  startTime: number;
-  endTime: number;
-  dungeonID: DungeonIDs;
-  fightID: number;
-  affixes: Set<Affixes>;
-};
-
-const getDungeonSpecificEvents = async (
-  params: EventParams
-): Promise<
-  (
-    | ApplyDebuffEvent
-    | DeathEvent
-    | ApplyBuffEvent
-    | CastEvent
-    | BeginCastEvent
-    | HealEvent
-    | DamageEvent
-    | ApplyBuffStackEvent
-    | RemoveBuffEvent
-  )[]
-> => {
-  switch (params.dungeonID) {
-    case DungeonIDs.DE_OTHER_SIDE:
-      return getDeOtherSideUrnUsage(params);
-    case DungeonIDs.HALLS_OF_ATONEMENT:
-      return getHallsOfAtonementGargoyleCharms(params);
-    case DungeonIDs.PLAGUEFALL:
-      return getPFSlimeKills(params);
-    case DungeonIDs.SANGUINE_DEPTHS: {
-      const lanternBeginCastEvents = await getSanguineDepthsLanternUsages(
-        params
-      );
-      const sinfallBoonEvents = await getSanguineDepthsBuffEvents(params);
-
-      // const chunks = lanternBeginCastEvents
-      //   .map((beginCastEvent, index, arr) => {
-      //     const applicationOrRefresh = sinfallBoonEvents.find(
-      //       (event) =>
-      //         event.timestamp > beginCastEvent.timestamp &&
-      //         (event.type === "applybuff" || event.type === "applybuffstack")
-      //     );
-
-      //     if (!applicationOrRefresh) {
-      //       return null;
-      //     }
-
-      //     const nextBeginCastEvent = arr[index + 1];
-      //     const nextEvents = sinfallBoonEvents.filter((event) => {
-      //       return (
-      //         event.timestamp >= applicationOrRefresh.timestamp &&
-      //         (nextBeginCastEvent
-      //           ? event.timestamp < nextBeginCastEvent.timestamp
-      //           : true)
-      //       );
-      //     });
-
-      //     if (nextEvents.length === 0) {
-      //       return null;
-      //     }
-
-      //     return [beginCastEvent, ...nextEvents];
-      //   })
-      //   .filter((arr) => arr !== null);
-
-      return [...lanternBeginCastEvents, ...sinfallBoonEvents];
-    }
-    case DungeonIDs.SPIRES_OF_ASCENSION:
-      return getSpiresOfAscensionSpearUsage(params);
-    case DungeonIDs.THEATRE_OF_PAIN:
-      return getTheaterOfPainBannerUsage(params);
-    case DungeonIDs.THE_NECROTIC_WAKE: {
-      return [
-        ...(await getNecroticWakeKyrianOrbHealEvents(params)),
-        ...(await getNecroticWakeKyrianOrbDamageEvents(params)),
-        ...(await getNecroticWakeOrbUsage(params)),
-        ...(await getNecroticWakeSpearUsage(params)),
-        ...(await getNecroticWakeHammerUsage(params)),
-      ];
-    }
-    default:
-      return [];
-  }
-};
-
-const getAffixSpecificEvents = async (
-  params: EventParams
-): Promise<
-  (
-    | HealEvent
-    | DamageEvent
-    | DeathEvent
-    | InterruptEvent
-    | ApplyBuffEvent
-    | ApplyDebuffStackEvent
-  )[]
-> => {
-  const hasSanguineAffix = params.affixes.has(Affixes.Sanguine);
-  const hasExplosiveAffix = params.affixes.has(Affixes.Explosive);
-  const hasGrievousAffix = params.affixes.has(Affixes.Grievous);
-  const hasSpitefulAffix = params.affixes.has(Affixes.Spiteful);
-  const hasNecroticAffix = params.affixes.has(Affixes.Necrotic);
-  const hasStormingAffix = params.affixes.has(Affixes.Storming);
-  const hasVolcanicAffix = params.affixes.has(Affixes.Volcanic);
-  const hasBolsteringAffix = params.affixes.has(Affixes.Bolstering);
-  const hasBurstingAffix = params.affixes.has(Affixes.Bursting);
-  const hasQuakingAffix = params.affixes.has(Affixes.Quaking);
-
-  const sanguineDamageEvents = hasSanguineAffix
-    ? await getSanguineDamageTakenEvents(params)
-    : [];
-  const sanguineHealingEvents = hasSanguineAffix
-    ? await getSanguineHealingDoneEvents(params)
-    : [];
-  const explosiveDamageTakenEvents = hasExplosiveAffix
-    ? await getExplosiveDamageTakenEvents(params)
-    : [];
-  const explosiveKillEvents = hasExplosiveAffix
-    ? await getExplosiveKillEvents(params)
-    : [];
-  const grievousDamageTakenEvents = hasGrievousAffix
-    ? await getGrievousDamageTakenEvents(params)
-    : [];
-  const necroticDamageTakenEvents = hasNecroticAffix
-    ? await getNecroticDamageTakenEvents(params)
-    : [];
-  const highestNecroticStackEvent = hasNecroticAffix
-    ? await getHighestNecroticStackAmount(params)
-    : [];
-  const volcanicDamageTakenEvents = hasVolcanicAffix
-    ? await getVolcanicDamageTakenEvents(params)
-    : [];
-  const burstingDamageTakenEvents = hasBurstingAffix
-    ? await getBurstingDamageTakenEvents(params)
-    : [];
-  const spitefulDamageTakenEvents = hasSpitefulAffix
-    ? await getSpitefulDamageTakenEvents(params)
-    : [];
-  const quakingDamageTakenEvents = hasQuakingAffix
-    ? await getQuakingDamageTakenEvents(params)
-    : [];
-  const quakingInterruptEvents = hasQuakingAffix
-    ? await getQuakingInterruptEvents(params)
-    : [];
-  const stormingDamageTakenEvents = hasStormingAffix
-    ? await getStormingDamageTakenEvents(params)
-    : [];
-
-  const bolsteringEvents = hasBolsteringAffix
-    ? await getBolsteringEvents(params)
-    : [];
-
-  return [
-    ...sanguineDamageEvents,
-    ...sanguineHealingEvents,
-    ...explosiveDamageTakenEvents,
-    ...explosiveKillEvents,
-    ...grievousDamageTakenEvents,
-    ...necroticDamageTakenEvents,
-    ...highestNecroticStackEvent,
-    ...volcanicDamageTakenEvents,
-    ...burstingDamageTakenEvents,
-    ...spitefulDamageTakenEvents,
-    ...quakingDamageTakenEvents,
-    ...quakingInterruptEvents,
-    ...stormingDamageTakenEvents,
-    ...bolsteringEvents,
-  ];
-};
-
-const getSeasonSpecificEvents = async (
-  params: EventParams
-): Promise<(DeathEvent | DamageEvent | HealEvent)[]> => {
-  const hasPrideful = params.affixes.has(Affixes.Prideful);
-  const hasTormented = params.affixes.has(Affixes.Tormented);
-
-  if (hasPrideful) {
-    const prideSourceID = await getManifestationOfPrideSourceID(params);
-
-    if (!prideSourceID) {
-      return [];
-    }
-
-    const pridefulDeathEvents = await getManifestationOfPrideDeathEvents({
-      ...params,
-      sourceID: prideSourceID,
-    });
-
-    const damageTakenEvents = await Promise.all(
-      pridefulDeathEvents.map(async (event, index, arr) => {
-        if (!event.targetInstance) {
-          return [];
-        }
-
-        // on the first pride death event, start searching for damageDone events
-        // from the start of the key.
-        // on subsequent death events, start searching beginning with the death
-        // timestamp of the previous pride
-        const startTime =
-          index === 0 ? params.startTime : arr[index - 1].timestamp;
-
-        // retrieve the timestamp at which the first damage was done to pride
-        const [{ timestamp: firstDamageDoneTimestamp }] =
-          await getDamageDoneToManifestationOfPrideEvents(
-            {
-              reportID: params.reportID,
-              endTime: event.timestamp,
-              startTime,
-              targetID: prideSourceID,
-              targetInstance: event.targetInstance,
-            },
-            true
-          );
-
-        return getDamageTakenByManifestatioNOfPrideEvents({
-          reportID: params.reportID,
-          targetID: prideSourceID,
-          startTime: firstDamageDoneTimestamp,
-          endTime: event.timestamp,
-          targetInstance: event.targetInstance,
-        });
-      })
-    );
-
-    return [...pridefulDeathEvents, ...damageTakenEvents.flat()];
-  }
-
-  if (hasTormented) {
-    return [
-      ...(await getBottleOfSanguineIchorHealEvents(params)),
-      ...(await getStoneWardHealEvents(params)),
-      ...(await getMassiveSmashDamageTakenEvents(params)),
-      ...(await getRazeDamageTakenEvents(params)),
-      ...(await getDecapitateDamageTakenEvents(params)),
-      ...(await getSoulforgeFlamesDamageTakenEvents(params)),
-      ...(await getFrostLanceDamageTakenEvents(params)),
-      ...(await getBottleOfSanguineIchorDamageEvents(params)),
-      ...(await getVolcanicPlumeDamageDoneEvents(params)),
-      ...(await getStygianKingsBarbsDamageEvents(params)),
-      ...(await getFifthSkullDamageEvents(params)),
-      ...(await getBitingColdDamageTakenEvents(params)),
-    ];
-  }
-
-  return [];
-};
-
-type DungeonPull = {
-  x: number;
-  y: number;
-  startTime: number;
-  endTime: number;
-  maps: number[];
-  boundingBox: ReportMapBoundingBox;
-  enemyNPCs: Pick<
-    Required<DeepNonNullable<ReportDungeonPullNpc>>,
-    "gameID" | "minimumInstanceID" | "maximumInstanceID" | "id"
-  >[];
+  res.json({ inCombatTime, outOfCombatTime, data: "old" });
 };
 
 const ensureCorrectDungeonID = (
@@ -1033,7 +768,7 @@ const ensureCorrectDungeonID = (
     name: string;
     time: number;
   } | null,
-  pulls: DungeonPull[]
+  pulls: Omit<PersistedDungeonPull, "id">[]
 ) => {
   const allNPCIDs = new Set(
     pulls.flatMap((pull) => pull.enemyNPCs.map((npc) => npc.gameID))
@@ -1057,6 +792,76 @@ const ensureCorrectDungeonID = (
   }
 
   return null;
+};
+
+const persistPulls = async (
+  dungeonPulls: Omit<PersistedDungeonPull, "id">[],
+  fightID: number
+): Promise<PersistedDungeonPull[]> => {
+  const pulls = dungeonPulls.map<Prisma.PullCreateManyInput>((pull) => {
+    return {
+      startTime: pull.startTime,
+      endTime: pull.endTime,
+      x: pull.x,
+      y: pull.y,
+      minX: pull.boundingBox.minX,
+      maxX: pull.boundingBox.maxX,
+      minY: pull.boundingBox.minY,
+      maxY: pull.boundingBox.maxY,
+      fightID,
+    };
+  });
+
+  await prisma.pull.createMany({
+    skipDuplicates: true,
+    data: pulls,
+  });
+
+  const storedPulls = await prisma.pull.findMany({
+    where: {
+      OR: pulls,
+    },
+    select: {
+      startTime: true,
+      endTime: true,
+      id: true,
+    },
+  });
+
+  return dungeonPulls
+    .map<PersistedDungeonPull | null>((pull) => {
+      const match = storedPulls.find(
+        (storedPull) =>
+          storedPull.startTime === pull.startTime &&
+          storedPull.endTime === pull.endTime
+      );
+
+      if (!match) {
+        return null;
+      }
+
+      return {
+        ...pull,
+        id: match.id,
+      };
+    })
+    .filter((pull): pull is PersistedDungeonPull => pull !== null);
+};
+
+const calculateCombatTime = <
+  Pull extends { startTime: number; endTime: number }
+>(
+  keystoneTime: number,
+  pulls: Pull[]
+) => {
+  const outOfCombatTime = pulls.reduce((acc, pull) => {
+    return acc - (pull.endTime - pull.startTime);
+  }, keystoneTime);
+
+  return {
+    inCombatTime: keystoneTime - outOfCombatTime,
+    outOfCombatTime,
+  };
 };
 
 export const fightHandler = nc()
