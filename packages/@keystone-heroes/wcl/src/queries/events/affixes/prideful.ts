@@ -33,13 +33,12 @@ export const getManifestationOfPrideDeathEvents = (
     hostilityType: HostilityType.Enemies,
   });
 
-type ManifestationOfPrideDamageEventsParams<
-  Type extends EventDataType
-> = GetEventBaseParams<{
-  targetID: number;
-  targetInstance?: number;
-  dataType: Type;
-}>;
+type ManifestationOfPrideDamageEventsParams<Type extends EventDataType> =
+  GetEventBaseParams<{
+    targetID: number;
+    targetInstance?: number;
+    dataType: Type;
+  }>;
 
 export const getManifestationOfPrideDamageEvents = async <
   Type extends EventDataType

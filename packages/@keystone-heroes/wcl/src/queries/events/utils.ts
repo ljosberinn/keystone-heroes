@@ -49,13 +49,13 @@ type EventFetcherParams = {
   hostilityType: HostilityType;
 };
 
-export const createEventFetcher = <T extends AnyEvent>(
-  initialParams: EventFetcherParams
-) => (params: GetEventBaseParams): Promise<T[]> =>
-  getEvents<T>({
-    ...params,
-    ...initialParams,
-  });
+export const createEventFetcher =
+  <T extends AnyEvent>(initialParams: EventFetcherParams) =>
+  (params: GetEventBaseParams): Promise<T[]> =>
+    getEvents<T>({
+      ...params,
+      ...initialParams,
+    });
 
 export const reduceEventsByPlayer = <T extends DamageEvent | HealEvent>(
   events: T[],

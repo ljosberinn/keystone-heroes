@@ -13,9 +13,16 @@ const jestOverride = createJestOverride({
   rules: { "jest/require-top-level-describe": "off" },
 });
 
+const jestConfigOverride = {
+  files: ["jest.config.ts"],
+  rules: {
+    "import/no-default-export": "off",
+  },
+};
+
 module.exports = {
   ...createConfig({
-    overrides: [jestOverride],
+    overrides: [jestOverride, jestConfigOverride],
   }),
   root: true,
 };

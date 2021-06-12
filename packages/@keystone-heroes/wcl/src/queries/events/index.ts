@@ -300,18 +300,17 @@ export const getSeasonSpecificEvents = async (
           index === 0 ? params.startTime : arr[index - 1].timestamp;
 
         // retrieve the timestamp at which the first damage was done to pride
-        const [
-          { timestamp: firstDamageDoneTimestamp },
-        ] = await getDamageDoneToManifestationOfPrideEvents(
-          {
-            reportID: params.reportID,
-            endTime: event.timestamp,
-            startTime,
-            targetID: prideSourceID,
-            targetInstance: event.targetInstance,
-          },
-          true
-        );
+        const [{ timestamp: firstDamageDoneTimestamp }] =
+          await getDamageDoneToManifestationOfPrideEvents(
+            {
+              reportID: params.reportID,
+              endTime: event.timestamp,
+              startTime,
+              targetID: prideSourceID,
+              targetInstance: event.targetInstance,
+            },
+            true
+          );
 
         return getDamageTakenByManifestatioNOfPrideEvents({
           reportID: params.reportID,

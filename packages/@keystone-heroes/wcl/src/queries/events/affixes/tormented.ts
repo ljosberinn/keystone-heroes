@@ -78,13 +78,12 @@ export const getDecapitateDamageTakenEvents = createEventFetcher<DamageEvent>({
   abilityID: TORMENTED.damageTaken.DECAPITATE,
 });
 
-export const getSoulforgeFlamesDamageTakenEvents = createEventFetcher<DamageEvent>(
-  {
+export const getSoulforgeFlamesDamageTakenEvents =
+  createEventFetcher<DamageEvent>({
     dataType: EventDataType.DamageTaken,
     hostilityType: HostilityType.Friendlies,
     abilityID: TORMENTED.damageTaken.SOULFORGE_FLAMES,
-  }
-);
+  });
 
 export const getBitingColdDamageTakenEvents = createEventFetcher<DamageEvent>({
   dataType: EventDataType.DamageTaken,

@@ -29,24 +29,21 @@ export const getPFSlimeKills = async (
     [PF_RED_BUFF.unit, PF_GREEN_BUFF.unit, PF_PURPLE_BUFF.unit]
   );
 
-  const [
-    redDeathEvents,
-    greenDeathEvents,
-    purpleDeathEvents,
-  ] = await Promise.all<DeathEvent[]>(
-    [red, green, purple].map(async (sourceID) => {
-      if (!sourceID) {
-        return [];
-      }
+  const [redDeathEvents, greenDeathEvents, purpleDeathEvents] =
+    await Promise.all<DeathEvent[]>(
+      [red, green, purple].map(async (sourceID) => {
+        if (!sourceID) {
+          return [];
+        }
 
-      return getEvents<DeathEvent>({
-        ...params,
-        dataType: EventDataType.Deaths,
-        hostilityType: HostilityType.Enemies,
-        sourceID,
-      });
-    })
-  );
+        return getEvents<DeathEvent>({
+          ...params,
+          dataType: EventDataType.Deaths,
+          hostilityType: HostilityType.Enemies,
+          sourceID,
+        });
+      })
+    );
 
   const earliestUnitDeathTimestamp = [
     ...redDeathEvents,
@@ -57,31 +54,28 @@ export const getPFSlimeKills = async (
     Infinity
   );
 
-  const [
-    redAuraApplication,
-    greenAuraApplication,
-    purpleAuraApplication,
-  ] = await Promise.all(
-    [PF_RED_BUFF.aura, PF_GREEN_BUFF.aura, PF_PURPLE_BUFF.aura].map(
-      async (abilityID) => {
-        if (earliestUnitDeathTimestamp === Infinity) {
-          return [];
+  const [redAuraApplication, greenAuraApplication, purpleAuraApplication] =
+    await Promise.all(
+      [PF_RED_BUFF.aura, PF_GREEN_BUFF.aura, PF_PURPLE_BUFF.aura].map(
+        async (abilityID) => {
+          if (earliestUnitDeathTimestamp === Infinity) {
+            return [];
+          }
+
+          const events = await getEvents<ApplyBuffEvent | RemoveBuffEvent>({
+            ...params,
+            startTime: earliestUnitDeathTimestamp,
+            dataType: EventDataType.Buffs,
+            hostilityType: HostilityType.Friendlies,
+            abilityID,
+          });
+
+          return events.filter(
+            (event): event is ApplyBuffEvent => event.type === "applybuff"
+          );
         }
-
-        const events = await getEvents<ApplyBuffEvent | RemoveBuffEvent>({
-          ...params,
-          startTime: earliestUnitDeathTimestamp,
-          dataType: EventDataType.Buffs,
-          hostilityType: HostilityType.Friendlies,
-          abilityID,
-        });
-
-        return events.filter(
-          (event): event is ApplyBuffEvent => event.type === "applybuff"
-        );
-      }
-    )
-  );
+      )
+    );
 
   return [
     ...redDeathEvents,
