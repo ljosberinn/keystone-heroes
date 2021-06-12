@@ -2,8 +2,6 @@ import type { WCLAuth } from "@prisma/client";
 
 import { prisma } from "./prisma";
 
-export * from "./transform/events";
-
 export type WCLOAuthResponse = {
   access_token: string;
   expires_in: number;

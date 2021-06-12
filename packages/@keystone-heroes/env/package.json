@@ -11,8 +11,6 @@
   },
   "devDependencies": {
     "dotenv": "10.0.0",
-    "eslint": "7.28.0",
-    "eslint-config-galex": "2.16.4",
     "typescript": "4.3.2"
   }
 }

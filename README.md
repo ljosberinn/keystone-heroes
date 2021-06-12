@@ -1,27 +1,17 @@
-# Keystone Heroes
+```sh
+cd packages/@keystone-heroes/env
+cp .env.example .env
+```
 
-## Monorepo Overview
+Add a database url.
+Then, in the same directory:
 
-### Prerequisites
+```sh
+yarn copy-env-to-db
+cd ../wcl
+yarn introspection
+```
 
-- [Node.js](https://nodejs.org/en/)
-- docker-compose (see [here](https://docs.docker.com/compose/install/) on how to install on your machine)
-- supabase (see [here](https://supabase.io/docs/reference/cli/getting-started) on how to get started)
+This will _work_ with v 2.23.0 and break in v 2.24.0 (or 2.24.1).
 
-### /api
-
-- contains any Next.js API routes logic
-
-### /db
-
-- contains all db operations
-
-### /env
-
-### /wcl
-
-- contains any logic related to getting data from WarcraftLogs
-
-### /web
-
-- contains the actual website, consumes all other repos
+When changing dependencies, you need to run `yarn` on the root level due to yarn workspaces.

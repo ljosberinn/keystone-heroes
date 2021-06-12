@@ -11,29 +11,15 @@
     "start": "yarn --cwd packages/@keystone-heroes/web start",
     "storybook": "yarn --cwd packages/@keystone-heroes/web storybook",
     "test": "yarn workspaces -p run test",
-    "postinstall": "yarn-deduplicate -l && yarn --cwd packages/@keystone-heroes/db generate",
+    "postinstall": "yarn --cwd packages/@keystone-heroes/db generate",
     "lint": "yarn workspaces run lint",
     "lint:fix": "yarn workspaces run lint --fix && yarn workspaces run format",
     "types": "yarn --cwd packages/@keystone-heroes/web types",
     "install:clean": "rimraf yarn.lock && rimraf packages/@keystone-heroes/**/node_modules && rimraf node_modules && yarn",
-    "prepare": "husky install",
     "dev-db:start": "supabase start",
     "dev-db:stop": "supabase stop"
   },
-  "lint-staged": {
-    "packages/**/*": "prettier --write --ignore-unknown",
-    "package.json": "sort-package-json",
-    "packages/**/package.json": "sort-package-json"
-  },
   "devDependencies": {
-    "husky": "6.0.0",
-    "lint-staged": "11.0.0",
-    "prettier": "2.3.1",
-    "rimraf": "3.0.2",
-    "sort-package-json": "1.50.0",
-    "yarn-deduplicate": "3.1.0"
-  },
-  "hooks": {
-    "pre-commit": "lint-staged"
+    "rimraf": "3.0.2"
   }
 }
