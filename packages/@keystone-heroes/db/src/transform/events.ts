@@ -15,6 +15,8 @@ import type {
   ReportDungeonPullNpc,
   ReportMapBoundingBox,
 } from "@keystone-heroes/wcl/types";
+import { EventType } from "@prisma/client";
+import type { Prisma, Pull, PullZone } from "@prisma/client";
 import type { DeepNonNullable } from "ts-essentials";
 
 import {
@@ -38,8 +40,6 @@ import {
   TOP_BANNER_AURA,
   VOLCANIC,
 } from "../data";
-import { EventType } from "../prisma";
-import type { Prisma, Pull, PullZone } from "../prisma";
 
 type Processor<T extends AnyEvent, AdditionalParams = Record<string, null>> = (
   event: T,
