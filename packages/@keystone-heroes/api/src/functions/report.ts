@@ -33,7 +33,7 @@ import nc from "next-connect";
 import type { Awaited, DeepRequired } from "ts-essentials";
 
 import { createValidReportIDMiddleware } from "../middleware";
-import { NO_CONTENT } from "../utils/statusCodes";
+import { SERVICE_UNAVAILABLE, BAD_REQUEST } from "../utils/statusCodes";
 import type { RequestHandler } from "../utils/types";
 
 type Request = {
@@ -42,21 +42,36 @@ type Request = {
   };
 };
 
-export type ReportResponse = Pick<Report, "title" | "startTime" | "endTime"> & {
-  region: Region["slug"];
-  fights: (Omit<
-    FightWithMeta,
-    "gameZone" | "player" | "startTime" | "endTime"
-  > & {
-    dungeon: Pick<Dungeon, "name" | "time" | "id"> | null;
-    player: (Pick<Player, "soulbindID" | "covenantID"> & {
-      class: string;
-      spec: string;
-      legendary: Pick<LegendaryItem, "id" | "effectIcon" | "effectName"> | null;
-    })[];
-  })[];
-  affixes: Omit<Affix, "id" | "seasonal">[];
-};
+export type ReportResponse =
+  | (Pick<Report, "title" | "startTime" | "endTime"> & {
+      region: Region["slug"];
+      fights: (Omit<
+        FightWithMeta,
+        "gameZone" | "player" | "startTime" | "endTime"
+      > & {
+        dungeon: Pick<Dungeon, "name" | "time" | "id"> | null;
+        player: (Pick<Player, "soulbindID" | "covenantID"> & {
+          class: string;
+          spec: string;
+          legendary: Pick<
+            LegendaryItem,
+            "id" | "effectIcon" | "effectName"
+          > | null;
+        })[];
+      })[];
+      affixes: Omit<Affix, "id" | "seasonal">[];
+    })
+  | {
+      error: typeof reportHandlerError[keyof typeof reportHandlerError];
+    };
+
+export const reportHandlerError = {
+  NO_TIMED_KEYS: `This report does not appear to contain any timed keys above or matching the key level requirement (${MIN_KEYSTONE_LEVEL}).`,
+  BROKEN_LOG_OR_WCL_UNAVAILABLE:
+    "This report is either broken or the request to Warcraftlogs failed. Please try again at a later time.",
+  SECONDARY_REQUEST_FAILED:
+    "Warcraftlogs could not be reached or the API request limit has been reached. Please try again at a later time.",
+} as const;
 
 type DeepNullablePath<T, P> = P extends []
   ? T
@@ -510,7 +525,9 @@ const handler: RequestHandler<Request, ReportResponse> = async (req, res) => {
     report.reportData.report.fights.length === 0 ||
     report.reportData.report.startTime === report.reportData.report.endTime
   ) {
-    res.status(NO_CONTENT).end();
+    res.status(SERVICE_UNAVAILABLE).json({
+      error: reportHandlerError.BROKEN_LOG_OR_WCL_UNAVAILABLE,
+    });
     return;
   }
 
@@ -540,7 +557,9 @@ const handler: RequestHandler<Request, ReportResponse> = async (req, res) => {
   console.timeEnd(`fightfiltering${reportID}`);
 
   if (fights.length === 0) {
-    res.status(NO_CONTENT).end();
+    res.status(BAD_REQUEST).json({
+      error: reportHandlerError.NO_TIMED_KEYS,
+    });
     return;
   }
 
@@ -654,7 +673,9 @@ const handler: RequestHandler<Request, ReportResponse> = async (req, res) => {
   );
 
   if (fightsWithMeta.length === 0) {
-    res.status(NO_CONTENT).end();
+    res.status(SERVICE_UNAVAILABLE).json({
+      error: reportHandlerError.SECONDARY_REQUEST_FAILED,
+    });
     return;
   }
 
@@ -927,87 +948,6 @@ const handler: RequestHandler<Request, ReportResponse> = async (req, res) => {
   console.timeEnd(reportID);
 
   res.json(response);
-
-  // const report = await ReportRepo.load(reportID);
-
-  // if (report) {
-  //   if (!maybeOngoingReport(report.endTime)) {
-  //     // eslint-disable-next-line no-console
-  //     console.info("[api/report] known & finished report");
-  //     const { id: dbId, region, ...rest } = report;
-
-  //     //   setCacheControl(res, CacheControl.ONE_MONTH);
-
-  //     res.json({
-  //       ...rest,
-  //       reportID,
-  //       region: region.slug,
-  //     });
-  //     return;
-  //   }
-
-  //   const rawReport = await wcl.report({ reportID });
-
-  //   if (!rawReport) {
-  //     // eslint-disable-next-line no-console
-  //     console.info(
-  //       "[api/report] known report - failed to load report from WCL"
-  //     );
-
-  //     const { id: dbId, region, ...rest } = report;
-
-  //     //   setCacheControl(res, CacheControl.ONE_HOUR);
-
-  //     res.json({
-  //       ...rest,
-  //       reportID,
-  //       region: region.slug,
-  //     });
-  //     return;
-  //   }
-
-  //   await ReportRepo.upsert(reportID, rawReport);
-
-  //   res.json({
-  //     reportID,
-  //     endTime: rawReport.endTime,
-  //     startTime: rawReport.startTime,
-  //     title: rawReport.title,
-  //     region: rawReport.region.slug,
-  //     fights: rawReport.fights,
-  //   });
-  //   return;
-  // }
-
-  // const rawReport = await wcl.report({ reportID });
-
-  // if (!rawReport) {
-  //   // eslint-disable-next-line no-console
-  //   console.info(
-  //     "[api/report] unknown report - failed to load report from WCL"
-  //   );
-
-  //   res.status(NO_CONTENT).end();
-  //   return;
-  // }
-
-  // await ReportRepo.upsert(reportID, rawReport);
-
-  // //   setCacheControl(
-  // //     res,
-  // //     maybeOngoingReport(rawReport.endTime)
-  // //       ? CacheControl.ONE_HOUR
-  // //       : CacheControl.ONE_MONTH
-  // //   );
-
-  // res.json({
-  //   reportID,
-  //   endTime: rawReport.endTime,
-  //   startTime: rawReport.startTime,
-  //   title: rawReport.title,
-  //   region: rawReport.region.slug,
-  //   fights: rawReport.fights,
-  // });
 };
 
 const findWeekbyTimestamp = (

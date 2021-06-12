@@ -349,6 +349,7 @@ model Pull {
   maxX      Int
   minY      Int
   maxY      Int
+  isWipe    Boolean
 
   fight Fight @relation(fields: [fightID], references: [id])
 

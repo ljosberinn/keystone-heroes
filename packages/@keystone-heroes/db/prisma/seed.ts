@@ -107,7 +107,7 @@ function seedAffixes() {
 
 function seedExpansions() {
   return Promise.all(
-    expansions.map(({ DungeonIDs, ...expansion }) =>
+    expansions.map(({ dungeonIDs, ...expansion }) =>
       prisma.expansion.upsert({
         create: expansion,
         where: {

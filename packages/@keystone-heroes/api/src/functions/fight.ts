@@ -19,299 +19,13 @@ import {
   createValidReportIDMiddleware,
   validFightIDMiddleware,
 } from "../middleware";
-import { BAD_REQUEST } from "../utils/statusCodes";
+import {
+  BAD_REQUEST,
+  NOT_FOUND,
+  UNPROCESSABLE_ENTITY,
+} from "../utils/statusCodes";
 import type { RequestHandler } from "../utils/types";
-
-// export type FightResponse = Pick<
-//   Fight,
-//   | "averageItemLevel"
-//   | "chests"
-//   | "dps"
-//   | "dtps"
-//   | "hps"
-//   | "keystoneLevel"
-//   | "keystoneTime"
-//   | "totalDeaths"
-//   | "fightID"
-// > & {
-//   dungeon: Dungeon & {
-//     zones: Omit<Zone, "dungeonID" | "order">[];
-//   };
-//   affixes: Omit<Affix, "seasonal">[];
-//   composition: Composition;
-//   pulls: Pull[];
-// };
-
-// type Pull = Pick<
-//   DungeonPull,
-//   "x" | "y" | "startTime" | "endTime" | "boundingBox"
-// > & {
-//   events: (Omit<
-//     Event,
-//     | "pullID"
-//     | "id"
-//     | "sourceNPCID"
-//     | "targetNPCID"
-//     | "interruptedAbilityID"
-//     | "abilityID"
-//   > & {
-//     sourceNPC: NPC | null;
-//     targetNPC: NPC | null;
-//     interruptedAbility: Ability | null;
-//     ability: Ability | null;
-//   })[];
-//   zones: number[];
-//   enemies: {
-//     count: number;
-//     npc: NPC;
-//   }[];
-// };
-
-// type Composition = (Pick<
-//   PrismaPlayer,
-//   "dps" | "hps" | "deaths" | "itemLevel" | "actorID"
-// > & {
-//   playerID: PrismaPlayer["id"];
-//   legendary: Legendary | null;
-//   covenant: Pick<Covenant, "icon" | "name"> | null;
-//   soulbind: Pick<Soulbind, "icon" | "name"> | null;
-//   character: Pick<Character, "name"> & {
-//     class: Class;
-//     spec: Pick<Spec, "id" | "name">;
-//     server: Pick<Server, "name">;
-//   };
-//   talents: (Omit<Talent, "guid" | "type" | "abilityIcon"> & {
-//     id: number;
-//     icon: string;
-//   })[];
-//   covenantTraits: Omit<CovenantTrait, "covenantID">[];
-//   conduits: (Omit<Conduit, "guid" | "total"> & {
-//     itemLevel: number;
-//     id: number;
-//   })[];
-// })[];
-
-// const extractQueryParams = (query: Required<Request["query"]>) => {
-//   const { reportID, fightIDs } = query;
-
-//   const ids = Array.isArray(fightIDs) ? fightIDs : [fightIDs];
-
-//   return {
-//     reportID,
-//     fightIDs: ids.map((id) => Number.parseInt(id)),
-//   };
-// };
-
-// const fightHandler: RequestHandler<Request, FightResponse[]> = async (
-//   req,
-//   res
-// ) => {
-//   if (!req.query.fightIDs) {
-//     res.status(BAD_REQUEST).end();
-//     return;
-//   }
-
-//   const { reportID, fightIDs } = extractQueryParams({
-//     reportID: req.query.reportID,
-//     fightIDs: req.query.fightIDs,
-//   });
-
-//   try {
-//     const report = await ReportRepo.load(reportID);
-
-//     if (!report) {
-//       res.status(INTERNAL_SERVER_ERROR).end();
-//       return;
-//     }
-
-//     // const ongoing = maybeOngoingReport(report.endTime);
-
-//     const persistedFights = await FightRepo.loadFull(reportID, fightIDs);
-//     const unseenFightIDs = fightIDs.filter(
-//       (id) => !persistedFights.some((fight) => fight.fightID === id)
-//     );
-
-//     if (unseenFightIDs.length === 0) {
-//       //   setCacheControl(
-//       //     res,
-//       //     ongoing ? CacheControl.ONE_MONTH : CacheControl.ONE_HOUR
-//       //   );
-//       res.json(persistedFights);
-//       return;
-//     }
-
-//     const newFights = await wcl.fights({
-//       reportID,
-//       fightIDs: unseenFightIDs,
-//     });
-
-//     if (!newFights) {
-//       // eslint-disable-next-line no-console
-//       console.info(
-//         `[api/fight] failed to load new fights from wcl for "${reportID}`
-//       );
-
-//       //   setCacheControl(res, CacheControl.ONE_HOUR);
-//       res.json(persistedFights);
-//       return;
-//     }
-
-//     if (newFights.length === 0) {
-//       // eslint-disable-next-line no-console
-//       console.info(`[api/fight] no new fights present for "${reportID}"`);
-
-//       //   setCacheControl(
-//       //     res,
-//       //     ongoing ? CacheControl.ONE_HOUR : CacheControl.ONE_MONTH
-//       //   );
-//       res.json(persistedFights);
-//       return;
-//     }
-
-//     const fightsWithTable = await enhanceFightsWithTable(reportID, newFights);
-//     const fightsWithEvents = await enhanceFightsWithEvents(
-//       reportID,
-//       fightsWithTable
-//     );
-
-//     const insertableFights = fightsWithEvents.map<InsertableFight>((fight) => {
-//       return {
-//         id: fight.id,
-//         startTime: fight.startTime,
-//         endTime: fight.endTime,
-//         keystoneLevel: fight.keystoneLevel,
-//         keystoneTime: fight.keystoneTime,
-//         chests: fight.keystoneBonus,
-//         averageItemLevel: fight.averageItemLevel,
-//         affixes: fight.keystoneAffixes,
-//         dungeon: fight.gameZone.id,
-//         totalDeaths: fight.table.deathEvents.length,
-//         dps: calcMetricAverage(fight.keystoneTime, fight.table.damageDone),
-//         dtps: calcMetricAverage(fight.keystoneTime, fight.table.damageTaken),
-//         hps: calcMetricAverage(fight.keystoneTime, fight.table.healingDone),
-//         pulls: fight.dungeonPulls.map<InsertableFight["pulls"][number]>(
-//           (pull) => {
-//             const eventsOfThisPull = fight.events.filter(
-//               (event) =>
-//                 event.timestamp >= pull.startTime &&
-//                 event.timestamp <= pull.endTime
-//             );
-
-//             return {
-//               startTime: pull.startTime,
-//               endTime: pull.endTime,
-//               x: pull.x,
-//               y: pull.y,
-//               maps: pull.maps,
-//               events: eventsOfThisPull,
-//               boundingBox: pull.boundingBox,
-//               npcs: pull.enemyNPCs,
-//             };
-//           }
-//         ),
-//         composition: [
-//           extractPlayerData(
-//             fight.table.playerDetails.tanks[0],
-//             fight.table,
-//             fight.keystoneTime
-//           ),
-//           extractPlayerData(
-//             fight.table.playerDetails.healers[0],
-//             fight.table,
-//             fight.keystoneTime
-//           ),
-//           extractPlayerData(
-//             fight.table.playerDetails.dps[0],
-//             fight.table,
-//             fight.keystoneTime
-//           ),
-//           extractPlayerData(
-//             fight.table.playerDetails.dps[1],
-//             fight.table,
-//             fight.keystoneTime
-//           ),
-//           extractPlayerData(
-//             fight.table.playerDetails.dps[2],
-//             fight.table,
-//             fight.keystoneTime
-//           ),
-//         ],
-//       };
-//     });
-
-//     if (insertableFights.length === 0) {
-//       // eslint-disable-next-line no-console
-//       console.info("[api/fight] no insertable fights found");
-
-//       //   setCacheControl(
-//       //     res,
-//       //     ongoing ? CacheControl.ONE_HOUR : CacheControl.ONE_MONTH
-//       //   );
-//       res.json(persistedFights);
-//       return;
-//     }
-
-//     const insertableFightsWithCharacterID =
-//       await extendPlayersWithServerAndCharacterID(
-//         report.region,
-//         insertableFights
-//       );
-
-//     const allPlayers = insertableFightsWithCharacterID.flatMap(
-//       (fight) => fight.composition
-//     );
-
-//     await Promise.all(
-//       [
-//         createLegendaries,
-//         createConduits,
-//         createTalents,
-//         createCovenantTraits,
-//       ].map((fn) => fn(allPlayers))
-//     );
-
-//     const fightsWithExtendedPlayers = await createFights(
-//       report,
-//       allPlayers,
-//       insertableFightsWithCharacterID
-//     );
-
-//     const playersTODO_REFACTOR = fightsWithExtendedPlayers.flatMap(
-//       (fight) => fight.composition
-//     );
-
-//     const actorPlayerMap = new Map(
-//       fightsWithExtendedPlayers.flatMap((fight) =>
-//         fight.composition.map((player) => [player.actorID, player.playerID])
-//       )
-//     );
-
-//     await PullRepo.createMany(fightsWithExtendedPlayers, actorPlayerMap);
-
-//     await Promise.all(
-//       [
-//         linkPlayerToConduits,
-//         linkPlayerToTalents,
-//         linkPlayerToCovenantTraits,
-//       ].map((fn) => fn(playersTODO_REFACTOR))
-//     );
-
-//     const fullPersistedFights = await FightRepo.loadFull(
-//       reportID,
-//       unseenFightIDs
-//     );
-
-//     // setCacheControl(
-//     //   res,
-//     //   ongoing ? CacheControl.ONE_HOUR : CacheControl.ONE_MONTH
-//     // );
-//     res.json([...persistedFights, ...fullPersistedFights]);
-//   } catch (error) {
-//     // eslint-disable-next-line no-console
-//     console.error(error);
-//     res.json([]);
-//   }
-// };
+import { reportHandlerError } from "./report";
 
 type Request = {
   query: {
@@ -320,7 +34,19 @@ type Request = {
   };
 };
 
-export type Response = {};
+export type Response =
+  | {
+      error: typeof fightHandlerError[keyof typeof fightHandlerError];
+    }
+  | (ReturnType<typeof calculateCombatTime> & {});
+
+export const fightHandlerError = {
+  UNKNOWN_REPORT: "Unknown report.",
+  BROKEN_LOG_OR_WCL_UNAVAILABLE:
+    reportHandlerError.BROKEN_LOG_OR_WCL_UNAVAILABLE,
+  MISSING_DUNGEON:
+    "This fight appears to be broken and could not successfully be linked to a specific dungeon.",
+} as const;
 
 const handler: RequestHandler<Request, Response> = async (req, res) => {
   const { reportID } = req.query;
@@ -468,6 +194,7 @@ const handler: RequestHandler<Request, Response> = async (req, res) => {
           maxX: true,
           minY: true,
           maxY: true,
+          isWipe: true,
           Event: {
             select: {
               eventType: true,
@@ -551,7 +278,7 @@ const handler: RequestHandler<Request, Response> = async (req, res) => {
   });
 
   if (!maybeStoredFight) {
-    res.status(BAD_REQUEST).end();
+    res.status(NOT_FOUND).json({ error: fightHandlerError.UNKNOWN_REPORT });
     return;
   }
 
@@ -562,13 +289,15 @@ const handler: RequestHandler<Request, Response> = async (req, res) => {
     });
 
     if (!maybeFightPulls.reportData?.report?.fights?.[0]?.dungeonPulls) {
-      res.status(BAD_REQUEST).end();
+      res.status(BAD_REQUEST).end({
+        error: fightHandlerError.BROKEN_LOG_OR_WCL_UNAVAILABLE,
+      });
       return;
     }
 
     const dungeonPulls =
       maybeFightPulls.reportData.report.fights[0].dungeonPulls.reduce<
-        Omit<PersistedDungeonPull, "id">[]
+        Omit<PersistedDungeonPull, "id" | "isWipe">[]
       >((acc, pull) => {
         if (!pull || !pull.maps || !pull.enemyNPCs || !pull.boundingBox) {
           return acc;
@@ -615,7 +344,9 @@ const handler: RequestHandler<Request, Response> = async (req, res) => {
     );
 
     if (!dungeonID) {
-      res.status(BAD_REQUEST).end();
+      res.status(UNPROCESSABLE_ENTITY).end({
+        error: fightHandlerError.MISSING_DUNGEON,
+      });
       return;
     }
 
@@ -633,11 +364,6 @@ const handler: RequestHandler<Request, Response> = async (req, res) => {
       });
     }
 
-    const persistedPulls = await persistPulls(
-      dungeonPulls,
-      maybeStoredFight.id
-    );
-
     const params: EventParams = {
       reportID,
       startTime: maybeStoredFight.startTime,
@@ -652,6 +378,40 @@ const handler: RequestHandler<Request, Response> = async (req, res) => {
       ],
     };
 
+    const playerDeathEvents = await getPlayerDeathEvents(params);
+    const hasNoWipes = playerDeathEvents.length < 5;
+
+    const pullsWithWipes = dungeonPulls.map<Omit<PersistedDungeonPull, "id">>(
+      (pull) => {
+        if (hasNoWipes) {
+          return { ...pull, isWipe: false };
+        }
+
+        const deathsDuringThisPull = playerDeathEvents.filter(
+          (event) =>
+            event.timestamp >= pull.startTime && event.timestamp <= pull.endTime
+        );
+
+        if (deathsDuringThisPull.length === 0) {
+          return { ...pull, isWipe: false };
+        }
+
+        const fiveDifferentPlayersHaveDied =
+          [...new Set(deathsDuringThisPull.map((event) => event.targetID))]
+            .length === 5;
+
+        return {
+          ...pull,
+          isWipe: fiveDifferentPlayersHaveDied,
+        };
+      }
+    );
+
+    const persistedPulls = await persistPulls(
+      pullsWithWipes,
+      maybeStoredFight.id
+    );
+
     const events = await Promise.all(
       maybeStoredFight.PlayerFight.map((playerFight) =>
         getRemarkableSpellCastEvents({
@@ -661,7 +421,6 @@ const handler: RequestHandler<Request, Response> = async (req, res) => {
       )
     );
 
-    const playerDeathEvents = await getPlayerDeathEvents(params);
     const dungeonEvents = await getDungeonSpecificEvents(params);
     const affixEvents = await getAffixSpecificEvents(params);
     const seasonEvents = await getSeasonSpecificEvents(params);
@@ -745,7 +504,6 @@ const handler: RequestHandler<Request, Response> = async (req, res) => {
     res.json({
       inCombatTime,
       outOfCombatTime,
-      data: "new",
     });
     return;
   }
@@ -755,7 +513,7 @@ const handler: RequestHandler<Request, Response> = async (req, res) => {
     maybeStoredFight.Pull
   );
 
-  res.json({ inCombatTime, outOfCombatTime, data: "old" });
+  res.json({ inCombatTime, outOfCombatTime });
 };
 
 const ensureCorrectDungeonID = (
@@ -768,7 +526,7 @@ const ensureCorrectDungeonID = (
     name: string;
     time: number;
   } | null,
-  pulls: Omit<PersistedDungeonPull, "id">[]
+  pulls: Omit<PersistedDungeonPull, "id" | "isWipe">[]
 ) => {
   const allNPCIDs = new Set(
     pulls.flatMap((pull) => pull.enemyNPCs.map((npc) => npc.gameID))
@@ -809,6 +567,7 @@ const persistPulls = async (
       minY: pull.boundingBox.minY,
       maxY: pull.boundingBox.maxY,
       fightID,
+      isWipe: pull.isWipe,
     };
   });
 

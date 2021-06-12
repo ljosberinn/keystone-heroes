@@ -15,8 +15,6 @@ import type {
   ReportDungeonPullNpc,
   ReportMapBoundingBox,
 } from "@keystone-heroes/wcl/types";
-import { EventType } from "@prisma/client";
-import type { Prisma } from "@prisma/client";
 import type { DeepNonNullable } from "ts-essentials";
 
 import {
@@ -40,6 +38,8 @@ import {
   TOP_BANNER_AURA,
   VOLCANIC,
 } from "../data";
+import { EventType } from "../prisma";
+import type { Prisma, Pull, PullZone } from "../prisma";
 
 type Processor<T extends AnyEvent, AdditionalParams = Record<string, null>> = (
   event: T,
@@ -357,13 +357,11 @@ const removeBuffProcessor: Processor<RemoveBuffEvent> = (
   return null;
 };
 
-export type PersistedDungeonPull = {
-  id: number;
-  x: number;
-  y: number;
-  startTime: number;
-  endTime: number;
-  maps: number[];
+export type PersistedDungeonPull = Pick<
+  Pull,
+  "id" | "x" | "y" | "startTime" | "endTime" | "isWipe"
+> & {
+  maps: PullZone["zoneID"][];
   boundingBox: ReportMapBoundingBox;
   enemyNPCs: Pick<
     Required<DeepNonNullable<ReportDungeonPullNpc>>,
