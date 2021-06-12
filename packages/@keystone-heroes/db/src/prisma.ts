@@ -1,4 +1,4 @@
-import { IS_PROD } from "@keystone-heroes/env/src";
+import { IS_PROD } from "@keystone-heroes/env";
 import { PrismaClient } from "@prisma/client";
 
 export {

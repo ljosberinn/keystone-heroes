@@ -3,7 +3,8 @@ import type {
   ApplyBuffEvent,
   ApplyBuffStackEvent,
   RemoveBuffEvent,
-} from "../../../wcl/src/queries/events";
+} from "@keystone-heroes/wcl/src/queries/events";
+
 import {
   EXPLOSIVE,
   PF_GREEN_BUFF,
@@ -52,6 +53,7 @@ const defaultPull: Params[0] = {
     minY: 0,
     maxY: 0,
   },
+  isWipe: false,
   maps: [],
 };
 

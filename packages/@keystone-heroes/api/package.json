@@ -5,7 +5,8 @@
   "main": "src",
   "scripts": {
     "format": "prettier --write src",
-    "lint": "set TIMING=1 && eslint src --cache"
+    "lint": "set TIMING=1 && eslint src --cache",
+    "test": "exit 0"
   },
   "dependencies": {
     "@keystone-heroes/db": "1.0.0",

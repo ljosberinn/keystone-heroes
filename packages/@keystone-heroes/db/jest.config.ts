@@ -1,9 +1,11 @@
-module.exports = {
+import type { Config } from "@jest/types";
+
+const config: Config.InitialOptions = {
+  collectCoverage: true,
   collectCoverageFrom: ["src/**/*.{ts}"],
   transform: {
     "^.+\\.(js|jsx|ts|tsx)$": "<rootDir>/../../../node_modules/babel-jest",
   },
-  transformIgnorePatterns: ["/node_modules/"],
   modulePaths: ["<rootDir>"],
   coverageDirectory: "coverage",
   watchPlugins: [
@@ -13,4 +15,9 @@ module.exports = {
   clearMocks: true,
   restoreMocks: true,
   resetMocks: true,
+  displayName: "db",
+  errorOnDeprecated: true,
 };
+
+// eslint-disable-next-line import/no-default-export
+export default config;

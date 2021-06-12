@@ -1,3 +1,4 @@
+// @ts-check
 const withTM = require("next-transpile-modules")([
   "@keystone-heroes/db",
   "@keystone-heroes/wcl",
@@ -8,7 +9,10 @@ require("@keystone-heroes/env/src/loader");
 
 const date = new Date();
 
-module.exports = withTM({
+/**
+ * @type {import('next/dist/next-server/server/config').NextConfig}
+ **/
+const config = {
   typescript: {
     /**
      * `yarn lint:types` ran in CI already so we can safely assume no errors
@@ -28,13 +32,20 @@ module.exports = withTM({
     NEXT_PUBLIC_BUILD_TIMESTAMP: Number(date),
   },
   experimental: {
-    modern: true,
     turboMode: true,
   },
   future: {
     webpack5: true,
+    strictPostcssConfiguration: true,
   },
-  headers: () => {
+  webpack: (config, options) => {
+    // disables transpiling all `__tests__` files, speeding up build process
+    // this reduces build time by ~ 25%
+    config.plugins.push(new options.webpack.IgnorePlugin(/\/__tests__\//u));
+
+    return config;
+  },
+  headers: async () => {
     return [
       {
         source: "/(.*)",
@@ -42,7 +53,8 @@ module.exports = withTM({
       },
     ];
   },
-});
+};
+module.exports = withTM(config);
 
 // https://securityheaders.com
 const ContentSecurityPolicy = `

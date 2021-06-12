@@ -6,7 +6,8 @@
   "scripts": {
     "format": "prettier --write ./src/index.ts",
     "copy-env-to-db": "cp .env ../db/.env",
-    "lint": "eslint . --cache"
+    "lint": "eslint . --cache",
+    "test": "exit 0"
   },
   "devDependencies": {
     "dotenv": "10.0.0",

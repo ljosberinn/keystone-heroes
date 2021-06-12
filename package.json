@@ -10,7 +10,7 @@
     "build": "yarn --cwd packages/@keystone-heroes/web build",
     "start": "yarn --cwd packages/@keystone-heroes/web start",
     "storybook": "yarn --cwd packages/@keystone-heroes/web storybook",
-    "test": "yarn --cwd packages/@keystone-heroes/web test",
+    "test": "yarn workspaces -p run test",
     "postinstall": "yarn-deduplicate -l && yarn --cwd packages/@keystone-heroes/db generate",
     "lint": "yarn workspaces run lint",
     "lint:fix": "yarn workspaces run lint --fix && yarn workspaces run format",

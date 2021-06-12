@@ -38,6 +38,10 @@ export default function Report({ cache }: ReportProps): JSX.Element | null {
       .catch(console.error);
   }, [isFallback, query, validReportID]);
 
+  if (report && "error" in report) {
+    return <h1>{report.error}</h1>;
+  }
+
   const fights = report?.fights ?? Array.from({ length: 4 });
 
   return (
