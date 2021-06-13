@@ -1,8 +1,6 @@
-import type { WCLAuth } from "@prisma/client";
-
-import { prisma } from "./prisma";
-
-export * from "./transform/events";
+import { prisma } from "@keystone-heroes/db/prisma";
+import type { WCLAuth } from "@keystone-heroes/db/types";
+import { IS_TEST } from "@keystone-heroes/env";
 
 export type WCLOAuthResponse = {
   access_token: string;
@@ -28,5 +26,14 @@ export const setWCLAuthentication = async ({
   });
 };
 
-export const getWCLAuthentication = (): Promise<WCLAuth | null> =>
-  prisma.wCLAuth.findFirst();
+export const getWCLAuthentication = (): Promise<WCLAuth | null> => {
+  if (IS_TEST) {
+    return Promise.resolve({
+      id: 1,
+      token: "mock-token",
+      expiresAt: Date.now() + 28 * 24 * 60 * 60 * 1000,
+    });
+  }
+
+  return prisma.wCLAuth.findFirst();
+};

@@ -1,0 +1,181 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`other getEngineeringBattleRezCastEvents 1`] = `
+Array [
+  Object {
+    "abilityGameID": 345130,
+    "sourceID": 5,
+    "targetID": 103,
+    "timestamp": 2826042,
+    "type": "cast",
+  },
+]
+`;
+
+exports[`other getInvisibilityUsage 1`] = `
+Array [
+  Object {
+    "abilityGameID": 307195,
+    "sourceID": 1859,
+    "sourceMarker": 6,
+    "targetID": 1859,
+    "targetMarker": 6,
+    "timestamp": 12294824,
+    "type": "applybuff",
+  },
+  Object {
+    "abilityGameID": 321422,
+    "sourceID": 4,
+    "targetID": 4,
+    "timestamp": 12295325,
+    "type": "applybuff",
+  },
+  Object {
+    "abilityGameID": 321422,
+    "sourceID": 1846,
+    "sourceMarker": 2,
+    "targetID": 1846,
+    "targetMarker": 2,
+    "timestamp": 12297167,
+    "type": "applybuff",
+  },
+  Object {
+    "abilityGameID": 307195,
+    "sourceID": 1859,
+    "sourceMarker": 6,
+    "targetID": 1859,
+    "targetMarker": 6,
+    "timestamp": 12294824,
+    "type": "applybuff",
+  },
+  Object {
+    "abilityGameID": 321422,
+    "sourceID": 4,
+    "targetID": 4,
+    "timestamp": 12295325,
+    "type": "applybuff",
+  },
+  Object {
+    "abilityGameID": 321422,
+    "sourceID": 1846,
+    "sourceMarker": 2,
+    "targetID": 1846,
+    "targetMarker": 2,
+    "timestamp": 12297167,
+    "type": "applybuff",
+  },
+]
+`;
+
+exports[`other getRemarkableSpellCastEvents 1`] = `
+Array [
+  Object {
+    "abilityGameID": 186257,
+    "sourceID": 104,
+    "targetID": -1,
+    "timestamp": 2363666,
+    "type": "cast",
+  },
+  Object {
+    "abilityGameID": 204021,
+    "sourceID": 5,
+    "targetID": 96,
+    "targetInstance": 5,
+    "timestamp": 2370826,
+    "type": "cast",
+  },
+  Object {
+    "abilityGameID": 306830,
+    "sourceID": 5,
+    "targetID": -1,
+    "timestamp": 2375912,
+    "type": "cast",
+  },
+  Object {
+    "abilityGameID": 323639,
+    "sourceID": 105,
+    "targetID": 96,
+    "targetInstance": 3,
+    "timestamp": 2378637,
+    "type": "cast",
+  },
+  Object {
+    "abilityGameID": 258925,
+    "sourceID": 105,
+    "targetID": -1,
+    "timestamp": 2379268,
+    "type": "cast",
+  },
+  Object {
+    "abilityGameID": 200174,
+    "sourceID": 103,
+    "targetID": -1,
+    "timestamp": 2379542,
+    "type": "cast",
+  },
+  Object {
+    "abilityGameID": 202138,
+    "sourceID": 5,
+    "targetID": -1,
+    "timestamp": 2393784,
+    "type": "cast",
+  },
+  Object {
+    "abilityGameID": 260402,
+    "sourceID": 104,
+    "targetID": -1,
+    "timestamp": 2394097,
+    "type": "cast",
+  },
+  Object {
+    "abilityGameID": 202137,
+    "sourceID": 5,
+    "targetID": -1,
+    "timestamp": 2395049,
+    "type": "cast",
+  },
+  Object {
+    "abilityGameID": 212084,
+    "sourceID": 5,
+    "targetID": -1,
+    "timestamp": 2397603,
+    "type": "cast",
+  },
+  Object {
+    "abilityGameID": 328231,
+    "sourceID": 104,
+    "targetID": -1,
+    "timestamp": 2402325,
+    "type": "cast",
+  },
+  Object {
+    "abilityGameID": 288613,
+    "sourceID": 104,
+    "targetID": -1,
+    "timestamp": 2404001,
+    "type": "cast",
+  },
+  Object {
+    "abilityGameID": 204021,
+    "sourceID": 5,
+    "targetID": 99,
+    "targetInstance": 3,
+    "timestamp": 2405723,
+    "type": "cast",
+  },
+  Object {
+    "abilityGameID": 207684,
+    "sourceID": 5,
+    "targetID": -1,
+    "timestamp": 2412093,
+    "type": "cast",
+  },
+  Object {
+    "abilityGameID": 198589,
+    "sourceID": 105,
+    "targetID": -1,
+    "timestamp": 2412874,
+    "type": "cast",
+  },
+]
+`;

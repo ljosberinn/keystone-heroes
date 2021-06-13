@@ -20,13 +20,11 @@
     "baseUrl": ".",
     "paths": {
       "@keystone-heroes/db/prisma": ["../db/src/prisma.ts"],
-      "@keystone-heroes/db/wcl": ["../db/src/wcl.ts"],
+      "@keystone-heroes/db/types": ["../db/src/types.ts"],
       "@keystone-heroes/db/data": ["../db/src/data/index.ts"],
-      "@keystone-heroes/api/functions": ["../api/src/functions/index.ts"],
+      "@keystone-heroes/api": ["../api/src/index.ts"],
       "@keystone-heroes/env": ["../env/src/index.ts"],
-      "@keystone-heroes/wcl/utils": ["../wcl/src/utils.ts"],
-      "@keystone-heroes/wcl/queries": ["../wcl/src/queries/index.ts"],
-      "@keystone-heroes/wcl/types": ["../wcl/src/types.ts"]
+      "@keystone-heroes/wcl": ["../wcl/src/index.ts"]
     }
   },
   "exclude": ["node_modules"],

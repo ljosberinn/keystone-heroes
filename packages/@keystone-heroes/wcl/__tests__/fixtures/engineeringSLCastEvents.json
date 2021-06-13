@@ -1,0 +1,16 @@
+[
+  {
+    "timestamp": 2822657,
+    "type": "begincast",
+    "sourceID": 5,
+    "targetID": -1,
+    "abilityGameID": 345130
+  },
+  {
+    "timestamp": 2826042,
+    "type": "cast",
+    "sourceID": 5,
+    "targetID": 103,
+    "abilityGameID": 345130
+  }
+]

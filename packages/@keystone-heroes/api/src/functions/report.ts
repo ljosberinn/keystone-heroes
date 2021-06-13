@@ -6,28 +6,31 @@ import {
   specs,
   weeks,
 } from "@keystone-heroes/db/data";
-import { Role, prisma } from "@keystone-heroes/db/prisma";
+import { prisma } from "@keystone-heroes/db/prisma";
 import type {
   PlayableClass,
   SpecName,
   Prisma,
   Affix,
   Dungeon,
-} from "@keystone-heroes/db/prisma";
+} from "@keystone-heroes/db/types";
+import { Role } from "@keystone-heroes/db/types";
 import { MIN_KEYSTONE_LEVEL } from "@keystone-heroes/env";
 import type {
   Conduit,
   LegendaryItem,
   CovenantTrait,
   Talent,
-} from "@keystone-heroes/wcl/src/queries";
+  Report,
+  Region,
+  GameZone,
+} from "@keystone-heroes/wcl";
 import {
   ItemQuality,
   getInitialReportData,
   getTableData,
-} from "@keystone-heroes/wcl/src/queries";
-import type { Report, Region, GameZone } from "@keystone-heroes/wcl/types";
-import { maybeOngoingReport } from "@keystone-heroes/wcl/utils";
+  maybeOngoingReport,
+} from "@keystone-heroes/wcl";
 import type { Week } from "@prisma/client";
 import nc from "next-connect";
 import type { Awaited, DeepRequired } from "ts-essentials";

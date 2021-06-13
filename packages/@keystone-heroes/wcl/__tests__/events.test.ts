@@ -1,42 +1,43 @@
-/* eslint-disable sonarjs/no-identical-functions */
 import type {
   ApplyBuffEvent,
   ApplyBuffStackEvent,
   RemoveBuffEvent,
 } from "@keystone-heroes/wcl/src/queries/events";
 
+import { EXPLOSIVE } from "../src/queries/events/affixes/explosive";
+import { PRIDE } from "../src/queries/events/affixes/prideful";
+import { SPITEFUL } from "../src/queries/events/affixes/spiteful";
 import {
-  EXPLOSIVE,
   PF_GREEN_BUFF,
-  PF_PURPLE_BUFF,
   PF_RED_BUFF,
-  PRIDE,
-  SPITEFUL,
-} from "../data";
-import { processEvents } from "../transform/events";
-import NPCDamagesPlayerEvents from "./NPCDamagesPlayerEvents.json";
-import bolsteringApplyBuffEvents from "./bolsteringApplyBuffEvents.json";
-import burstingDamageTakenEvents from "./burstingDamageTakenEvents.json";
-import deathEvents from "./deathEvents.json";
-import dosUrnDebuffEvents from "./dosUrnDebuffEvents.json";
-import explosiveDamageTakenEvents from "./explosiveDamageTakenEvents.json";
-import hoaGargoyleCharmCastEvents from "./hoaGargoyleCharmCastEvents.json";
-import kyrianOrbHealEvents from "./kyrianOrbHealEvents.json";
-import necroticDamageTakenEvents from "./necroticDamageTakenEvents.json";
-import plaguefallSlimeBuffEvents from "./plaguefallSlimeBuffEvents.json";
-import plaguefallSlimeDeathEvents from "./plaguefallSlimeDeathEvents.json";
-import playerDamagesNPCEvents from "./playerDamagesNPCEvents.json";
-import quakingDamageTakenEvents from "./quakingDamageTakenEvents.json";
-import quakingInterruptEvents from "./quakingInterruptEvents.json";
-import sanguineDamageTakenEvents from "./sanguineDamageTakenEvents.json";
-import sanguineHealEvents from "./sanguineHealEvents.json";
-import sdBuffEvents from "./sdBuffEvents.json";
-import sdLanternBeginCastEvents from "./sdLanternBeginCastEvents.json";
-import soaSpearDebuffEvents from "./soaSpearDebuffEvents.json";
-import spitefulDamageTaken from "./spitefulDamageTaken.json";
-import stormingDamageTakenEvents from "./stormingDamageTakenEvents.json";
-import topBannerAuraBuffEvents from "./topBannerAuraBuffEvents.json";
-import volcanicDamageTakenEvents from "./volcanicDamageTakenEvents.json";
+  PF_PURPLE_BUFF,
+} from "../src/queries/events/dungeons/shadowlands/pf";
+import { processEvents } from "../src/transform/events";
+import NPCDamagesPlayerEvents from "./fixtures/NPCDamagesPlayerEvents.json";
+import bolsteringApplyBuffEvents from "./fixtures/bolsteringApplyBuffEvents.json";
+import burstingDamageTakenEvents from "./fixtures/burstingDamageTakenEvents.json";
+import deathEvents from "./fixtures/deathEvents.json";
+import dimensionalShifterEvents from "./fixtures/dimensionalShifterEvents.json";
+import dosUrnDebuffEvents from "./fixtures/dosUrnDebuffEvents.json";
+import explosiveDamageTakenEvents from "./fixtures/explosiveDamageTakenEvents.json";
+import hoaGargoyleCharmCastEvents from "./fixtures/hoaGargoyleCharmCastEvents.json";
+import kyrianOrbHealEvents from "./fixtures/kyrianOrbHealEvents.json";
+import necroticDamageTakenEvents from "./fixtures/necroticDamageTakenEvents.json";
+import plaguefallSlimeBuffEvents from "./fixtures/plaguefallSlimeBuffEvents.json";
+import plaguefallSlimeDeathEvents from "./fixtures/plaguefallSlimeDeathEvents.json";
+import playerDamagesNPCEvents from "./fixtures/playerDamagesNPCEvents.json";
+import potionOfTheHiddenSpiritEvents from "./fixtures/potionOfTheHiddenSpiritEvents.json";
+import quakingDamageTakenEvents from "./fixtures/quakingDamageTakenEvents.json";
+import quakingInterruptEvents from "./fixtures/quakingInterruptEvents.json";
+import sanguineDamageTakenEvents from "./fixtures/sanguineDamageTakenEvents.json";
+import sanguineHealEvents from "./fixtures/sanguineHealEvents.json";
+import sdBuffEvents from "./fixtures/sdBuffEvents.json";
+import sdLanternBeginCastEvents from "./fixtures/sdLanternBeginCastEvents.json";
+import soaSpearDebuffEvents from "./fixtures/soaSpearDebuffEvents.json";
+import spitefulDamageTaken from "./fixtures/spitefulDamageTaken.json";
+import stormingDamageTakenEvents from "./fixtures/stormingDamageTakenEvents.json";
+import topBannerAuraBuffEvents from "./fixtures/topBannerAuraBuffEvents.json";
+import volcanicDamageTakenEvents from "./fixtures/volcanicDamageTakenEvents.json";
 
 type Params = Parameters<typeof processEvents>;
 
@@ -289,6 +290,7 @@ describe("Heal Events", () => {
         timestamp: 1,
       },
     ];
+
     expect(processEvents(defaultPull, events, actorPlayerMap)).toStrictEqual(
       []
     );
@@ -619,6 +621,40 @@ describe("ApplyBuff Events", () => {
     }));
 
     expect(processEvents(pull, events, new Map())).toMatchSnapshot();
+  });
+
+  test("Potion of the Hidden Spirit", () => {
+    const events: Params[1] = potionOfTheHiddenSpiritEvents.map((event) => ({
+      ...event,
+      type: event.type === "applybuff" ? "applybuff" : "removebuff",
+    }));
+
+    const actorPlayerMap = new Map(
+      potionOfTheHiddenSpiritEvents.map((event) => [
+        event.sourceID,
+        event.sourceID,
+      ])
+    );
+
+    expect(
+      processEvents(defaultPull, events, actorPlayerMap)
+    ).toMatchSnapshot();
+  });
+
+  test("Dimensional Shifter", () => {
+    const events: Params[1] = dimensionalShifterEvents.filter(
+      (event): event is ApplyBuffEvent | RemoveBuffEvent => {
+        return event.type === "applybuff" || event.type === "removebuff";
+      }
+    );
+
+    const actorPlayerMap = new Map(
+      dimensionalShifterEvents.map((event) => [event.sourceID, event.sourceID])
+    );
+
+    expect(
+      processEvents(defaultPull, events, actorPlayerMap)
+    ).toMatchSnapshot();
   });
 });
 

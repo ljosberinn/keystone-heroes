@@ -1,9 +1,9 @@
-import { QUAKING } from "@keystone-heroes/db/data";
-import { EventDataType, HostilityType } from "@keystone-heroes/wcl/types";
-
+import { EventDataType, HostilityType } from "../../../types";
 import type { DamageEvent, InterruptEvent } from "../types";
 import type { GetEventBaseParams } from "../utils";
 import { createEventFetcher, getEvents } from "../utils";
+
+export const QUAKING = 240_448;
 
 export const getQuakingDamageTakenEvents = createEventFetcher<DamageEvent>({
   dataType: EventDataType.DamageTaken,

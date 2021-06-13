@@ -1,5 +1,5 @@
-import type { ReportResponse } from "@keystone-heroes/api/functions";
-import { isValidReportId } from "@keystone-heroes/wcl/utils";
+import type { ReportResponse } from "@keystone-heroes/api";
+import { isValidReportId } from "@keystone-heroes/wcl";
 import type { GetStaticPaths, GetStaticProps } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";

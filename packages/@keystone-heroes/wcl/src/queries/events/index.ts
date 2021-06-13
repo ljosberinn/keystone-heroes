@@ -1,14 +1,7 @@
-import {
-  DIMENSIONAL_SHIFTER,
-  POTION_OF_THE_HIDDEN_SPIRIT,
-  CARDBOARD_ASSASSIN,
-  remarkableSpellIDs,
-  DungeonIDs,
-} from "@keystone-heroes/db/data";
-import { Affixes } from "@keystone-heroes/db/prisma";
-import { EventDataType, HostilityType } from "@keystone-heroes/wcl/types";
+import { DungeonIDs } from "@keystone-heroes/db/data";
+import { Affixes } from "@keystone-heroes/db/types";
 
-import { getCachedSdk } from "../../client";
+import { EventDataType, HostilityType } from "../../types";
 import { getBolsteringEvents } from "./affixes/bolstering";
 import { getBurstingDamageTakenEvents } from "./affixes/bursting";
 import {
@@ -24,14 +17,13 @@ import {
   getManifestationOfPrideSourceID,
   getManifestationOfPrideDeathEvents,
   getDamageDoneToManifestationOfPrideEvents,
-  getDamageTakenByManifestatioNOfPrideEvents,
+  getDamageTakenByManifestationOfPrideEvents,
 } from "./affixes/prideful";
 import {
   getQuakingDamageTakenEvents,
   getQuakingInterruptEvents,
 } from "./affixes/quaking";
 import {
-  getSanguineDepthsBuffEvents,
   getSanguineDamageTakenEvents,
   getSanguineHealingDoneEvents,
 } from "./affixes/sanguine";
@@ -62,109 +54,17 @@ import {
   getNecroticWakeHammerUsage,
 } from "./dungeons/shadowlands/nw";
 import { getPFSlimeKills } from "./dungeons/shadowlands/pf";
-import { getSanguineDepthsLanternUsages } from "./dungeons/shadowlands/sd";
+import {
+  getSanguineDepthsBuffEvents,
+  getSanguineDepthsLanternUsages,
+} from "./dungeons/shadowlands/sd";
 import { getSpiresOfAscensionSpearUsage } from "./dungeons/shadowlands/soa";
 import { getTheaterOfPainBannerUsage } from "./dungeons/shadowlands/top";
-import type {
-  CastEvent,
-  BeginCastEvent,
-  ApplyBuffEvent,
-  RemoveBuffEvent,
-  AnyEvent,
-  DeathEvent,
-} from "./types";
-import type { GetEventBaseParams } from "./utils";
-import { getEvents, createEventFetcher } from "./utils";
+import type { AnyEvent, DeathEvent } from "./types";
+import { createEventFetcher } from "./utils";
 
+export * from "./other";
 export * from "./types";
-
-export const getRemarkableSpellCastEvents = async (
-  params: GetEventBaseParams<{ sourceID: number }>
-): Promise<CastEvent[]> => {
-  const allEvents = await getEvents<CastEvent | BeginCastEvent>({
-    ...params,
-    dataType: EventDataType.Casts,
-    hostilityType: HostilityType.Friendlies,
-  });
-
-  return allEvents.filter(
-    (event): event is CastEvent =>
-      event.type === "cast" && remarkableSpellIDs.has(event.abilityGameID)
-  );
-};
-
-type CardboardAssassinUsages = { events: CastEvent[]; actorId: number | null };
-
-const getCardboardAssassinUsage = async (
-  params: GetEventBaseParams
-): Promise<CardboardAssassinUsages[]> => {
-  const sdk = await getCachedSdk();
-
-  const data = await sdk.PetActors({
-    reportID: params.reportID,
-  });
-
-  const cardboardAssassinInstances =
-    data?.reportData?.report?.masterData?.actors?.filter(
-      (pet) => pet?.gameID === CARDBOARD_ASSASSIN
-    ) ?? [];
-
-  if (cardboardAssassinInstances.length === 0) {
-    return [];
-  }
-
-  const eventGroup = await Promise.all(
-    cardboardAssassinInstances.map(async (instance) => {
-      if (!instance?.id) {
-        return null;
-      }
-
-      const events = await getEvents<CastEvent>({
-        ...params,
-        sourceID: instance.id,
-        dataType: EventDataType.Threat,
-        hostilityType: HostilityType.Friendlies,
-      });
-
-      if (events.length === 0) {
-        return null;
-      }
-
-      return {
-        actorId: instance.petOwner,
-        events,
-      };
-    })
-  );
-
-  return eventGroup.filter(
-    (dataset): dataset is CardboardAssassinUsages => dataset !== null
-  );
-};
-
-const getInvisibilityUsage = async (
-  params: GetEventBaseParams
-): Promise<ApplyBuffEvent[]> => {
-  const dimensionalShifterUsage = await getEvents<
-    ApplyBuffEvent | RemoveBuffEvent
-  >({
-    ...params,
-    dataType: EventDataType.Buffs,
-    hostilityType: HostilityType.Friendlies,
-    abilityID: DIMENSIONAL_SHIFTER,
-  });
-
-  const potionUsage = await getEvents<ApplyBuffEvent | RemoveBuffEvent>({
-    ...params,
-    dataType: EventDataType.Buffs,
-    hostilityType: HostilityType.Friendlies,
-    abilityID: POTION_OF_THE_HIDDEN_SPIRIT,
-  });
-
-  return [...dimensionalShifterUsage, ...potionUsage].filter(
-    (event): event is ApplyBuffEvent => event.type === "applybuff"
-  );
-};
 
 export const getPlayerDeathEvents = createEventFetcher<DeathEvent>({
   dataType: EventDataType.Deaths,
@@ -312,7 +212,7 @@ export const getSeasonSpecificEvents = async (
             true
           );
 
-        return getDamageTakenByManifestatioNOfPrideEvents({
+        return getDamageTakenByManifestationOfPrideEvents({
           reportID: params.reportID,
           targetID: prideSourceID,
           startTime: firstDamageDoneTimestamp,

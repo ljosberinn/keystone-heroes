@@ -1,6 +1,4 @@
-import { NECROTIC } from "@keystone-heroes/db/data";
-import { EventDataType, HostilityType } from "@keystone-heroes/wcl/types";
-
+import { EventDataType, HostilityType } from "../../../types";
 import type {
   ApplyDebuffStackEvent,
   ApplyDebuffEvent,
@@ -8,6 +6,8 @@ import type {
 } from "../types";
 import type { GetEventBaseParams } from "../utils";
 import { getEvents, reduceEventsByPlayer } from "../utils";
+
+export const NECROTIC = 209_858;
 
 export const getHighestNecroticStackAmount = async (
   params: GetEventBaseParams

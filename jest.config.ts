@@ -12,6 +12,14 @@ const config: Config.InitialOptions = {
   collectCoverage: true,
   coverageDirectory: "coverage",
   modulePaths: ["<rootDir>"],
+  globals: {
+    "ts-jest": {
+      diagnostics: {
+        warnOnly: true,
+      },
+      isolatedModules: true,
+    },
+  },
 };
 
 export default config;

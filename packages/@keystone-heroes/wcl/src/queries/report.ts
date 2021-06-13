@@ -1,19 +1,12 @@
 import { getCachedSdk } from "../client";
-import type {
-  EnemyNpcIdsQueryVariables,
-  GameZone,
-  Region,
-  Report,
-  ReportFight,
-  ReportFightNpc,
-} from "../types";
+import type { EnemyNpcIdsQueryVariables, ReportFightNpc } from "../types";
 
 type EnsuredNPC = Omit<ReportFightNpc, "gameID" | "id"> & {
   gameID: number;
   id: number;
 };
 
-export const loadEnemyNPCIDs = async (
+export const getEnemyNPCIDs = async (
   params: EnemyNpcIdsQueryVariables,
   gameIdOrIds: number | number[]
 ): Promise<Record<number, number>> => {
@@ -22,7 +15,7 @@ export const loadEnemyNPCIDs = async (
 
   const ids = new Set(Array.isArray(gameIdOrIds) ? gameIdOrIds : [gameIdOrIds]);
 
-  return (
+  return Object.fromEntries(
     response?.reportData?.report?.fights?.[0]?.enemyNPCs
       ?.filter(
         (npc): npc is EnsuredNPC =>
@@ -31,39 +24,6 @@ export const loadEnemyNPCIDs = async (
           ids.has(npc.gameID) &&
           typeof npc.id === "number"
       )
-      .reduce<Record<number, number>>(
-        (acc, npc) => ({
-          ...acc,
-          [npc.gameID]: npc.id,
-        }),
-        {}
-      ) ?? {}
+      .map((npc) => [npc.gameID, npc.id]) ?? []
   );
-};
-
-export type InitialReportData = Pick<
-  Report,
-  "startTime" | "endTime" | "title"
-> & {
-  region: Pick<Region, "slug">;
-  fights: ReportFight["id"][];
-};
-
-export type ExtendedReportData = {
-  averageItemLevel: number;
-  keystoneTime: number;
-  keystoneBonus: number;
-  keystoneLevel: number;
-  startTime: number;
-  endTime: number;
-  keystoneAffixes: number[];
-  id: number;
-  gameZone: Pick<GameZone, "id"> | null;
-};
-
-export type ExtendedReportDataWithGameZone = Omit<
-  ExtendedReportData,
-  "gameZone"
-> & {
-  gameZone: Pick<GameZone, "id">;
 };

@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`bolstering getBolsteringEvents 1`] = `
+Array [
+  Object {
+    "abilityGameID": 209859,
+    "sourceID": 174,
+    "sourceInstance": 2,
+    "stacks": 1,
+    "targetID": 173,
+    "targetInstance": 3,
+    "timestamp": 6143395,
+    "type": "applybuff",
+  },
+]
+`;

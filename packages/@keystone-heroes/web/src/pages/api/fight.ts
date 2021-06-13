@@ -1,4 +1,4 @@
-import { fightHandler } from "@keystone-heroes/api/functions";
+import { fightHandler } from "@keystone-heroes/api";
 import nc from "next-connect";
 
 export default nc().get(fightHandler);

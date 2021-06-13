@@ -1,8 +1,4 @@
-import type {
-  EventDataType,
-  HostilityType,
-  Sdk,
-} from "@keystone-heroes/wcl/types";
+import type { EventDataType, HostilityType, Sdk } from "@keystone-heroes/wcl";
 
 import { getCachedSdk } from "../../client";
 import type { AnyEvent, DamageEvent, HealEvent } from "./types";
@@ -85,26 +81,24 @@ export const reduceEventsByPlayer = <T extends DamageEvent | HealEvent>(
   }, []);
 };
 
-export const reduceToChunkByThreshold = <Event extends AnyEvent>(
-  acc: Event[][],
-  event: Event,
-  threshold: number
-): Event[][] => {
-  if (acc.length === 0) {
-    return [[event]];
-  }
+export const createChunkByThresholdReducer =
+  (threshold: number) =>
+  <Event extends AnyEvent>(acc: Event[][], event: Event): Event[][] => {
+    if (acc.length === 0) {
+      return [[event]];
+    }
 
-  const lastChunksIndex = acc.length - 1;
-  const lastChunks = acc[lastChunksIndex];
+    const lastChunksIndex = acc.length - 1;
+    const lastChunks = acc[lastChunksIndex];
 
-  const lastIndex = lastChunks.length - 1;
-  const lastEvent = lastChunks[lastIndex];
+    const lastIndex = lastChunks.length - 1;
+    const lastEvent = lastChunks[lastIndex];
 
-  const timePassed = event.timestamp - lastEvent.timestamp;
+    const timePassed = event.timestamp - lastEvent.timestamp;
 
-  return timePassed > threshold
-    ? [...acc, [event]]
-    : acc.map((events, index) =>
-        index === lastChunksIndex ? [...events, event] : events
-      );
-};
+    return timePassed > threshold
+      ? [...acc, [event]]
+      : acc.map((events, index) =>
+          index === lastChunksIndex ? [...events, event] : events
+        );
+  };

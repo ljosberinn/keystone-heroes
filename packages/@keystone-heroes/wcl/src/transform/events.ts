@@ -1,4 +1,35 @@
+import { EventType } from "@keystone-heroes/db/types";
+import type { Prisma, Pull, PullZone } from "@keystone-heroes/db/types";
+import type { DeepNonNullable } from "ts-essentials";
+
+import { INVISIBILITY } from "../queries";
+import { BOLSTERING } from "../queries/events/affixes/bolstering";
+import { BURSTING } from "../queries/events/affixes/bursting";
+import { EXPLOSIVE } from "../queries/events/affixes/explosive";
+import { GRIEVOUS_WOUND } from "../queries/events/affixes/grievous";
+import { NECROTIC } from "../queries/events/affixes/necrotic";
+import { QUAKING } from "../queries/events/affixes/quaking";
+import {
+  SANGUINE_ICHOR_DAMAGE,
+  SANGUINE_ICHOR_HEALING,
+} from "../queries/events/affixes/sanguine";
+import { STORMING } from "../queries/events/affixes/storming";
+import { VOLCANIC } from "../queries/events/affixes/volcanic";
+import { DOS_URN } from "../queries/events/dungeons/shadowlands/dos";
+import { NW } from "../queries/events/dungeons/shadowlands/nw";
+import {
+  PF_GREEN_BUFF,
+  PF_RED_BUFF,
+  PF_PURPLE_BUFF,
+} from "../queries/events/dungeons/shadowlands/pf";
+import {
+  SD_LANTERN_BUFF,
+  SD_LANTERN_OPENING,
+} from "../queries/events/dungeons/shadowlands/sd";
+import { SOA_SPEAR } from "../queries/events/dungeons/shadowlands/soa";
+import { TOP_BANNER_AURA } from "../queries/events/dungeons/shadowlands/top";
 import type {
+  AnyEvent,
   ApplyBuffEvent,
   ApplyBuffStackEvent,
   ApplyDebuffEvent,
@@ -9,37 +40,8 @@ import type {
   HealEvent,
   InterruptEvent,
   RemoveBuffEvent,
-  AnyEvent,
-} from "@keystone-heroes/wcl/src/queries/events";
-import type {
-  ReportDungeonPullNpc,
-  ReportMapBoundingBox,
-} from "@keystone-heroes/wcl/types";
-import { EventType } from "@prisma/client";
-import type { Prisma, Pull, PullZone } from "@prisma/client";
-import type { DeepNonNullable } from "ts-essentials";
-
-import {
-  BOLSTERING,
-  BURSTING,
-  DOS_URN,
-  EXPLOSIVE,
-  GRIEVOUS_WOUND,
-  NECROTIC,
-  NW_KYRIAN_ORB_HEAL,
-  PF_GREEN_BUFF,
-  PF_PURPLE_BUFF,
-  PF_RED_BUFF,
-  QUAKING,
-  SANGUINE_ICHOR_DAMAGE,
-  SANGUINE_ICHOR_HEALING,
-  SD_LANTERN_BUFF,
-  SD_LANTERN_OPENING,
-  SOA_SPEAR,
-  STORMING,
-  TOP_BANNER_AURA,
-  VOLCANIC,
-} from "../data";
+} from "../queries/events/types";
+import type { ReportMapBoundingBox, ReportDungeonPullNpc } from "../types";
 
 type Processor<T extends AnyEvent, AdditionalParams = Record<string, null>> = (
   event: T,
@@ -52,27 +54,40 @@ type Processor<T extends AnyEvent, AdditionalParams = Record<string, null>> = (
 ) => Prisma.EventCreateManyPullInput | null;
 
 /**
- * track bolstering, ToP and PF buffs
+ * track invis potion, bolstering, ToP and PF buffs
  */
 const applyBuffProcessor: Processor<ApplyBuffEvent & { stacks?: number }> = (
   event,
   { sourcePlayerID, targetPlayerID, targetNPCID }
 ) => {
-  if (
-    sourcePlayerID &&
-    targetPlayerID &&
-    (event.abilityGameID === TOP_BANNER_AURA ||
+  if (sourcePlayerID && targetPlayerID) {
+    if (
+      sourcePlayerID === targetPlayerID &&
+      (event.abilityGameID === INVISIBILITY.POTION_OF_THE_HIDDEN_SPIRIT ||
+        event.abilityGameID === INVISIBILITY.DIMENSIONAL_SHIFTER)
+    ) {
+      return {
+        timestamp: event.timestamp,
+        sourcePlayerID,
+        abilityID: event.abilityGameID,
+        eventType: EventType.ApplyBuff,
+      };
+    }
+
+    if (
+      event.abilityGameID === TOP_BANNER_AURA ||
       event.abilityGameID === PF_GREEN_BUFF.aura ||
       event.abilityGameID === PF_RED_BUFF.aura ||
-      event.abilityGameID === PF_PURPLE_BUFF.aura)
-  ) {
-    return {
-      timestamp: event.timestamp,
-      eventType: EventType.ApplyBuff,
-      abilityID: event.abilityGameID,
-      sourcePlayerID,
-      targetPlayerID,
-    };
+      event.abilityGameID === PF_PURPLE_BUFF.aura
+    ) {
+      return {
+        timestamp: event.timestamp,
+        eventType: EventType.ApplyBuff,
+        abilityID: event.abilityGameID,
+        sourcePlayerID,
+        targetPlayerID,
+      };
+    }
   }
 
   if (event.abilityGameID === BOLSTERING && targetNPCID) {
@@ -291,14 +306,14 @@ const healProcessor: Processor<HealEvent> = (
   }
 
   if (
-    event.abilityGameID === NW_KYRIAN_ORB_HEAL &&
+    event.abilityGameID === NW.KYRIAN_ORB.heal &&
     sourcePlayerID &&
     targetPlayerID
   ) {
     return {
       timestamp: event.timestamp,
       eventType: EventType.HealingDone,
-      abilityID: NW_KYRIAN_ORB_HEAL,
+      abilityID: NW.KYRIAN_ORB.heal,
       healingDone: event.amount,
       sourcePlayerID,
       targetPlayerID,

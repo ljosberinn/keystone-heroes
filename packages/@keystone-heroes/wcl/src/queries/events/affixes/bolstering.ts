@@ -1,6 +1,4 @@
-import { BOLSTERING } from "@keystone-heroes/db/data";
-import { EventDataType, HostilityType } from "@keystone-heroes/wcl/types";
-
+import { EventDataType, HostilityType } from "../../../types";
 import type { ApplyBuffEvent, RemoveBuffEvent } from "../types";
 import type { GetEventBaseParams } from "../utils";
 import { getEvents } from "../utils";
@@ -10,6 +8,8 @@ type StackDataset = {
   targetInstance: number | null;
   stacks: number;
 };
+
+export const BOLSTERING = 209_859;
 
 export const getBolsteringEvents = async (
   params: GetEventBaseParams

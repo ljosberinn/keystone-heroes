@@ -1,10 +1,10 @@
-import { SPITEFUL } from "@keystone-heroes/db/data";
-import { EventDataType, HostilityType } from "@keystone-heroes/wcl/types";
-
-import { loadEnemyNPCIDs } from "../../report";
+import { EventDataType, HostilityType } from "../../../types";
+import { getEnemyNPCIDs } from "../../report";
 import type { DamageEvent } from "../types";
 import type { GetEventBaseParams, GetSourceIDParams } from "../utils";
 import { getEvents } from "../utils";
+
+export const SPITEFUL = 174_773;
 
 export const getSpitefulDamageTakenEvents = async (
   params: GetEventBaseParams<{ fightID: number }>,
@@ -31,7 +31,7 @@ export const getSpitefulDamageTakenEvents = async (
 };
 
 const getSpitefulSourceID = async (params: GetSourceIDParams) => {
-  const response = await loadEnemyNPCIDs(
+  const response = await getEnemyNPCIDs(
     {
       fightIDs: [params.fightID],
       reportID: params.reportID,

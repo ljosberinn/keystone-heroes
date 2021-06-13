@@ -1,8 +1,3 @@
-import type { WCLOAuthResponse } from "@keystone-heroes/db/wcl";
-import {
-  setWCLAuthentication,
-  getWCLAuthentication,
-} from "@keystone-heroes/db/wcl";
 import {
   WCL_CLIENT_ID,
   WCL_CLIENT_SECRET,
@@ -11,6 +6,8 @@ import {
 } from "@keystone-heroes/env";
 import { GraphQLClient } from "graphql-request";
 
+import type { WCLOAuthResponse } from "./auth";
+import { getWCLAuthentication, setWCLAuthentication } from "./auth";
 import { getSdk } from "./types";
 import type { Sdk } from "./types";
 
@@ -49,15 +46,13 @@ export const getGqlClient = async (): Promise<GraphQLClient> => {
   const cached = await getWCLAuthentication();
 
   if (cached?.token && cached?.expiresAt && !cache.client && !cache.expiresAt) {
-    const { token, expiresAt } = cached;
-
     cache.client = new GraphQLClient(WCL_GQL_ENDPOINT, {
       headers: {
-        authorization: `Bearer ${token}`,
+        authorization: `Bearer ${cached.token}`,
       },
     });
 
-    cache.expiresAt = expiresAt * 1000;
+    cache.expiresAt = cached.expiresAt * 1000;
 
     return cache.client;
   }

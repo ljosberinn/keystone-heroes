@@ -1,9 +1,9 @@
-import { HOA_GARGOYLE } from "@keystone-heroes/db/data";
-import { EventDataType, HostilityType } from "@keystone-heroes/wcl/types";
-
+import { EventDataType, HostilityType } from "../../../../types";
 import type { CastEvent, BeginCastEvent } from "../../types";
 import type { GetEventBaseParams } from "../../utils";
 import { getEvents } from "../../utils";
+
+export const HOA_GARGOYLE = 342_171;
 
 export const getHallsOfAtonementGargoyleCharms = async (
   params: GetEventBaseParams

@@ -1,16 +1,19 @@
-import { PRIDE } from "@keystone-heroes/db/data";
-import { EventDataType, HostilityType } from "@keystone-heroes/wcl/types";
-
 import { getCachedSdk } from "../../../client";
-import { loadEnemyNPCIDs } from "../../report";
+import { EventDataType, HostilityType } from "../../../types";
+import { getEnemyNPCIDs } from "../../report";
 import type { DeathEvent, DamageEvent } from "../types";
 import type { GetEventBaseParams, GetSourceIDParams } from "../utils";
 import { getEvents, reduceEventsByPlayer } from "../utils";
 
+export const PRIDE = {
+  unit: 173_729,
+  aoe: 342_332,
+} as const;
+
 export const getManifestationOfPrideSourceID = async (
   params: GetSourceIDParams
 ): Promise<number | null> => {
-  const response = await loadEnemyNPCIDs(
+  const response = await getEnemyNPCIDs(
     {
       fightIDs: [params.fightID],
       reportID: params.reportID,
@@ -40,9 +43,7 @@ type ManifestationOfPrideDamageEventsParams<Type extends EventDataType> =
     dataType: Type;
   }>;
 
-export const getManifestationOfPrideDamageEvents = async <
-  Type extends EventDataType
->(
+const getManifestationOfPrideDamageEvents = async <Type extends EventDataType>(
   params: ManifestationOfPrideDamageEventsParams<Type>,
   firstEventOnly = false,
   previousEvents: DamageEvent[] = []
@@ -55,6 +56,10 @@ export const getManifestationOfPrideDamageEvents = async <
 
   const { data = [], nextPageTimestamp = null } =
     response?.reportData?.report?.events ?? {};
+
+  if (data.length === 0) {
+    return [];
+  }
 
   if (firstEventOnly) {
     return [data[0]];
@@ -90,6 +95,10 @@ export const getDamageDoneToManifestationOfPrideEvents = async (
     firstEventOnly
   );
 
+  if (firstEventOnly) {
+    return events;
+  }
+
   return reduceEventsByPlayer(events, "sourceID");
 };
 
@@ -98,7 +107,7 @@ type ManifestationOfPrideDamageTakenEventParams = Omit<
   "dataType"
 >;
 
-export const getDamageTakenByManifestatioNOfPrideEvents = async (
+export const getDamageTakenByManifestationOfPrideEvents = async (
   params: ManifestationOfPrideDamageTakenEventParams,
   firstEventOnly = false
 ): Promise<DamageEvent[]> => {

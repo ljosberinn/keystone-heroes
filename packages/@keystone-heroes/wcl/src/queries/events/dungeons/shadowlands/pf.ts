@@ -1,14 +1,26 @@
-import {
-  PF_RED_BUFF,
-  PF_GREEN_BUFF,
-  PF_PURPLE_BUFF,
-} from "@keystone-heroes/db/data";
-import { EventDataType, HostilityType } from "@keystone-heroes/wcl/types";
-
-import { loadEnemyNPCIDs } from "../../../report";
+import { EventDataType, HostilityType } from "../../../../types";
+import { getEnemyNPCIDs } from "../../../report";
 import type { DeathEvent, ApplyBuffEvent, RemoveBuffEvent } from "../../types";
 import type { GetEventBaseParams } from "../../utils";
 import { getEvents } from "../../utils";
+
+export const PF_RED_BUFF = {
+  unit: 164_705,
+  aura: 340_225,
+  buff: 340_227,
+} as const;
+
+export const PF_PURPLE_BUFF = {
+  unit: 164_707,
+  aura: 340_271,
+  buff: 340_273,
+} as const;
+
+export const PF_GREEN_BUFF = {
+  unit: 163_891,
+  aura: 340_210,
+  buff: 340_211,
+} as const;
 
 type PFSlimeKillsParams = GetEventBaseParams & {
   fightID: number;
@@ -21,7 +33,7 @@ export const getPFSlimeKills = async (
     [PF_RED_BUFF.unit]: red,
     [PF_GREEN_BUFF.unit]: green,
     [PF_PURPLE_BUFF.unit]: purple,
-  } = await loadEnemyNPCIDs(
+  } = await getEnemyNPCIDs(
     {
       fightIDs: [params.fightID],
       reportID: params.reportID,

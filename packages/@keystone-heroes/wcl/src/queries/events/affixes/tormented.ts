@@ -1,9 +1,30 @@
-import { TORMENTED } from "@keystone-heroes/db/data";
-import { EventDataType, HostilityType } from "@keystone-heroes/wcl/types";
-
+import { EventDataType, HostilityType } from "../../../types";
 import type { DamageEvent, HealEvent } from "../types";
 import type { GetEventBaseParams } from "../utils";
 import { getEvents, reduceEventsByPlayer, createEventFetcher } from "../utils";
+
+const BOTTLE_OF_SANGUINE_ICHOR = 357_901;
+
+export const TORMENTED = {
+  damageDone: {
+    STYGIAN_KINGS_BARBS: 357_865,
+    THE_FIFTH_SKULL: 357_841,
+    VOLCANIC_PLUME: 357_708,
+    BOTTLE_OF_SANGUINE_ICHOR,
+  },
+  damageTaken: {
+    RAZE: 356_925,
+    MASSIVE_SMASH: 355_806,
+    BITING_COLD: 356_667,
+    FROST_LANCE: 356_414,
+    SOULFORGE_FLAMES: 355_709,
+    DECAPITATE: 356_923,
+  },
+  healingDone: {
+    STONE_WARD: 357_525,
+    BOTTLE_OF_SANGUINE_ICHOR,
+  },
+};
 
 export const getStygianKingsBarbsDamageEvents = async (
   params: GetEventBaseParams

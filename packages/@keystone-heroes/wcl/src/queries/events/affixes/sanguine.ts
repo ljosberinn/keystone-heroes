@@ -1,27 +1,10 @@
-import {
-  SD_LANTERN_BUFF,
-  SANGUINE_ICHOR_HEALING,
-  SANGUINE_ICHOR_DAMAGE,
-} from "@keystone-heroes/db/data";
-import { EventDataType, HostilityType } from "@keystone-heroes/wcl/types";
-
-import type {
-  ApplyBuffEvent,
-  ApplyBuffStackEvent,
-  RemoveBuffEvent,
-  HealEvent,
-  DamageEvent,
-} from "../types";
+import { EventDataType, HostilityType } from "../../../types";
+import type { HealEvent, DamageEvent } from "../types";
 import type { GetEventBaseParams } from "../utils";
-import { createEventFetcher, getEvents, reduceEventsByPlayer } from "../utils";
+import { getEvents, reduceEventsByPlayer } from "../utils";
 
-export const getSanguineDepthsBuffEvents = createEventFetcher<
-  ApplyBuffEvent | ApplyBuffStackEvent | RemoveBuffEvent
->({
-  dataType: EventDataType.Buffs,
-  hostilityType: HostilityType.Friendlies,
-  abilityID: SD_LANTERN_BUFF,
-});
+export const SANGUINE_ICHOR_HEALING = 226_510;
+export const SANGUINE_ICHOR_DAMAGE = 226_512;
 
 export const getSanguineHealingDoneEvents = async (
   params: GetEventBaseParams

@@ -9,7 +9,7 @@
     "seed": "prisma db seed --preview-feature",
     "format": "prettier --write src",
     "lint": "set TIMING=1 && eslint src --cache",
-    "test": "jest"
+    "test": "jest --passWithNoTests"
   },
   "dependencies": {
     "@keystone-heroes/api": "1.0.0",

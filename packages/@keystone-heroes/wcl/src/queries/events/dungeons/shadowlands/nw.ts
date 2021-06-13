@@ -1,20 +1,27 @@
-import {
-  NW_SPEAR,
-  NW_ORB,
-  NW_HAMMER,
-  NW_KYRIAN_ORB_HEAL,
-  NW_KYRIAN_ORB_DAMAGE,
-} from "@keystone-heroes/db/data";
-import { EventDataType, HostilityType } from "@keystone-heroes/wcl/types";
-
+import { EventDataType, HostilityType } from "../../../../types";
 import type { DamageEvent, HealEvent } from "../../types";
 import type { GetEventBaseParams } from "../../utils";
 import {
   getEvents,
-  reduceToChunkByThreshold,
   reduceEventsByPlayer,
   createEventFetcher,
+  createChunkByThresholdReducer,
 } from "../../utils";
+
+export const NW = {
+  ORB: 328_406,
+  HAMMER: 328_128,
+  SPEAR: 328_351,
+  KYRIAN_ORB: {
+    heal: 344_422,
+    damage: 344_421,
+  },
+};
+
+// NW Spear applies a bleed for 16 seconds
+// each usage is hopefully thus at least 16s apart of each other
+// may have to adjust later for multi-spearing...
+const spearReducer = createChunkByThresholdReducer(16 * 1000);
 
 export const getNecroticWakeSpearUsage = async (
   params: GetEventBaseParams
@@ -23,22 +30,21 @@ export const getNecroticWakeSpearUsage = async (
     ...params,
     dataType: EventDataType.DamageDone,
     hostilityType: HostilityType.Friendlies,
-    abilityID: NW_SPEAR,
+    abilityID: NW.SPEAR,
   });
 
-  // NW Spear applies a bleed for 16 seconds
-  // each usage is hopefully thus at least 16s apart of each other
-  // may have to adjust later for multi-spearing...
-  const threshold = 16 * 1000;
-
-  const chunks = allEvents.reduce<DamageEvent[][]>(
-    (acc, event) => reduceToChunkByThreshold(acc, event, threshold),
-    []
+  return (
+    allEvents
+      .reduce<DamageEvent[][]>(spearReducer, [])
+      // creates one event per spear usage
+      .flatMap((chunk) => reduceEventsByPlayer(chunk, "sourceID"))
   );
-
-  // creates one event per orb usage
-  return chunks.flatMap((chunk) => reduceEventsByPlayer(chunk, "sourceID"));
 };
+
+// NW Orb pulses every 1s for 8s
+// each usage is hopefully thus at least 8s apart of each other
+// may have to adjust later for multi-orbing...
+const orbReducer = createChunkByThresholdReducer(8 * 1000);
 
 export const getNecroticWakeOrbUsage = async (
   params: GetEventBaseParams
@@ -47,26 +53,21 @@ export const getNecroticWakeOrbUsage = async (
     ...params,
     dataType: EventDataType.DamageDone,
     hostilityType: HostilityType.Friendlies,
-    abilityID: NW_ORB,
+    abilityID: NW.ORB,
   });
-  // NW Orb pulses every 1s for 8s
-  // each usage is hopefully thus at least 8s apart of each other
-  // may have to adjust later for multi-orbing...
-  const threshold = 8 * 1000;
 
-  const chunks = allEvents.reduce<DamageEvent[][]>(
-    (acc, event) => reduceToChunkByThreshold(acc, event, threshold),
-    []
+  return (
+    allEvents
+      .reduce<DamageEvent[][]>(orbReducer, [])
+      // creates one event per orb usage
+      .flatMap((chunk) => reduceEventsByPlayer(chunk, "sourceID"))
   );
-
-  // creates one event per orb usage
-  return chunks.flatMap((chunk) => reduceEventsByPlayer(chunk, "sourceID"));
 };
 
 export const getNecroticWakeHammerUsage = createEventFetcher<DamageEvent>({
   dataType: EventDataType.DamageDone,
   hostilityType: HostilityType.Friendlies,
-  abilityID: NW_HAMMER,
+  abilityID: NW.HAMMER,
 });
 
 export const getNecroticWakeKyrianOrbHealEvents = async (
@@ -76,7 +77,7 @@ export const getNecroticWakeKyrianOrbHealEvents = async (
     ...params,
     dataType: EventDataType.Healing,
     hostilityType: HostilityType.Friendlies,
-    abilityID: NW_KYRIAN_ORB_HEAL,
+    abilityID: NW.KYRIAN_ORB.heal,
   });
 
   return reduceEventsByPlayer(allEvents, "targetID");
@@ -89,7 +90,7 @@ export const getNecroticWakeKyrianOrbDamageEvents = async (
     ...params,
     dataType: EventDataType.DamageDone,
     hostilityType: HostilityType.Friendlies,
-    abilityID: NW_KYRIAN_ORB_DAMAGE,
+    abilityID: NW.KYRIAN_ORB.damage,
   });
 
   return reduceEventsByPlayer(allEvents, "targetID");

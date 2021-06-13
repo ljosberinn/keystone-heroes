@@ -1,8 +1,8 @@
-import { STORMING } from "@keystone-heroes/db/data";
-import { EventDataType, HostilityType } from "@keystone-heroes/wcl/types";
-
+import { EventDataType, HostilityType } from "../../../types";
 import type { DamageEvent } from "../types";
 import { createEventFetcher } from "../utils";
+
+export const STORMING = 343_520;
 
 export const getStormingDamageTakenEvents = createEventFetcher<DamageEvent>({
   dataType: EventDataType.DamageTaken,

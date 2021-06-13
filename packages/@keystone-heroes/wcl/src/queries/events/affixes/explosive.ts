@@ -1,10 +1,13 @@
-import { EXPLOSIVE } from "@keystone-heroes/db/data";
-import { EventDataType, HostilityType } from "@keystone-heroes/wcl/types";
-
-import { loadEnemyNPCIDs } from "../../report";
+import { EventDataType, HostilityType } from "../../../types";
+import { getEnemyNPCIDs } from "../../report";
 import type { DamageEvent } from "../types";
 import type { GetEventBaseParams, GetSourceIDParams } from "../utils";
 import { getEvents, createEventFetcher } from "../utils";
+
+export const EXPLOSIVE = {
+  unit: 120_651,
+  ability: 240_446,
+};
 
 export const getExplosiveKillEvents = async (
   params: GetEventBaseParams<{ fightID: number }>,
@@ -39,7 +42,7 @@ export const getExplosiveDamageTakenEvents = createEventFetcher<DamageEvent>({
 });
 
 const getExplosiveSourceID = async (params: GetSourceIDParams) => {
-  const response = await loadEnemyNPCIDs(
+  const response = await getEnemyNPCIDs(
     {
       fightIDs: [params.fightID],
       reportID: params.reportID,

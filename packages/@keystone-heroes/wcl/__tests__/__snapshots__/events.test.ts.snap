@@ -12,6 +12,23 @@ Array [
 ]
 `;
 
+exports[`ApplyBuff Events Dimensional Shifter 1`] = `
+Array [
+  Object {
+    "abilityID": 321422,
+    "eventType": "ApplyBuff",
+    "sourcePlayerID": 4,
+    "timestamp": 12295325,
+  },
+  Object {
+    "abilityID": 321422,
+    "eventType": "ApplyBuff",
+    "sourcePlayerID": 1846,
+    "timestamp": 12297167,
+  },
+]
+`;
+
 exports[`ApplyBuff Events Plaguefall Slime Buffs 1`] = `
 Array [
   Object {
@@ -41,6 +58,17 @@ Array [
     "sourcePlayerID": 11,
     "targetPlayerID": 11,
     "timestamp": 1581590,
+  },
+]
+`;
+
+exports[`ApplyBuff Events Potion of the Hidden Spirit 1`] = `
+Array [
+  Object {
+    "abilityID": 307195,
+    "eventType": "ApplyBuff",
+    "sourcePlayerID": 1859,
+    "timestamp": 12294824,
   },
 ]
 `;
