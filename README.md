@@ -1,9 +1,15 @@
 ```sh
+yarn
+```
+
+Then:
+
+```sh
 cd packages/@keystone-heroes/env
 cp .env.example .env
 ```
 
-Add a database url.
+Add a database url. (Not strictly necessary for reproduction).  
 Then, in the same directory:
 
 ```sh
