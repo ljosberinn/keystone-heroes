@@ -35,9 +35,9 @@ const config = {
     NEXT_PUBLIC_BUILD_TIMESTAMP: Number(date),
   },
   experimental: {
-    turboMode: true,
+    // conformance: true,
+    reactRoot: true,
   },
-  webpack5: true,
   future: {
     strictPostcssConfiguration: true,
   },

@@ -4,8 +4,6 @@ import baseConfig from "../../../jest.config";
 
 const config: Config.InitialOptions = {
   ...baseConfig,
-  collectCoverageFrom: ["src/**/*.{ts}"],
-  preset: "ts-jest",
   displayName: "db",
 };
 

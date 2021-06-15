@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/react";
-import { ExternalLink } from "src/components/ExternalLink";
+
+import { ExternalLink } from "../components/ExternalLink";
 
 test('has target="_blank"', () => {
   render(<ExternalLink href="/">target</ExternalLink>);
