@@ -21,6 +21,9 @@ const config = {
      */
     ignoreBuildErrors: true,
   },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   reactStrictMode: true,
   productionBrowserSourceMaps: true,
   env: {
@@ -34,8 +37,8 @@ const config = {
   experimental: {
     turboMode: true,
   },
+  webpack5: true,
   future: {
-    webpack5: true,
     strictPostcssConfiguration: true,
   },
   webpack: (config, options) => {
