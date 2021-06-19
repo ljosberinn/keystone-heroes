@@ -52,6 +52,7 @@ const getManifestationOfPrideDamageEvents = async <Type extends EventDataType>(
   const response = await sdk.EventData({
     ...params,
     hostilityType: HostilityType.Friendlies,
+    limit: 5000,
   });
 
   const { data = [], nextPageTimestamp = null } =

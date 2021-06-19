@@ -38,12 +38,14 @@ query EventData(
   $reportID: String!
   $startTime: Float!
   $endTime: Float!
-  $hostilityType: HostilityType!
+  $hostilityType: HostilityType
   $sourceID: Int
   $dataType: EventDataType
   $abilityID: Float
   $targetID: Int
   $targetInstance: Int
+  $limit: Int
+  $filterExpression: String
 ) {
   reportData {
     report(code: $reportID) {
@@ -56,6 +58,8 @@ query EventData(
         abilityID: $abilityID
         targetID: $targetID
         targetInstanceID: $targetInstance
+        limit: $limit
+        filterExpression: $filterExpression
       ) {
         data
         nextPageTimestamp

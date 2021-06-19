@@ -1,5 +1,6 @@
-type BaseEvent<T extends Record<string, unknown>> = T & {
+export type BaseEvent<T extends Record<string, unknown>> = T & {
   timestamp: number;
+  // pin: "0" but irrelevant
 };
 
 type EncounterStartEvent = BaseEvent<{
@@ -194,7 +195,7 @@ export type InterruptEvent = BaseEvent<{
   sourceMarker?: number;
 }>;
 
-type AbsorbEvent = BaseEvent<{
+export type AbsorbEvent = BaseEvent<{
   type: "absorbed";
   sourceID: number;
   targetID: number;

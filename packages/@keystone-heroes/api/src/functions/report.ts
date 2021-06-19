@@ -18,19 +18,17 @@ import { Role } from "@keystone-heroes/db/types";
 import { MIN_KEYSTONE_LEVEL } from "@keystone-heroes/env";
 import type {
   Conduit,
-  LegendaryItem,
   CovenantTrait,
+  LegendaryItem,
   Talent,
-  Report,
-  Region,
-  GameZone,
-} from "@keystone-heroes/wcl";
+} from "@keystone-heroes/wcl/queries";
 import {
   ItemQuality,
   getInitialReportData,
   getTableData,
-  maybeOngoingReport,
-} from "@keystone-heroes/wcl";
+} from "@keystone-heroes/wcl/queries";
+import type { Report, Region, GameZone } from "@keystone-heroes/wcl/types";
+import { maybeOngoingReport } from "@keystone-heroes/wcl/utils";
 import type { Week } from "@prisma/client";
 import nc from "next-connect";
 import type { Awaited, DeepRequired } from "ts-essentials";

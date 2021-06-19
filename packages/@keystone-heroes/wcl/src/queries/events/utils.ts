@@ -1,4 +1,8 @@
-import type { EventDataType, HostilityType, Sdk } from "@keystone-heroes/wcl";
+import type {
+  EventDataType,
+  HostilityType,
+  Sdk,
+} from "@keystone-heroes/wcl/types";
 
 import { getCachedSdk } from "../../client";
 import type { AnyEvent, DamageEvent, HealEvent } from "./types";
@@ -15,25 +19,29 @@ export type GetSourceIDParams = Pick<GetEventBaseParams, "reportID"> & {
   fightID: number;
 };
 
-export const getEvents = async <T extends AnyEvent>(
+export const recursiveGetEvents = async <T extends AnyEvent>(
   params: GetEventBaseParams<{
     abilityID?: number;
-    dataType: EventDataType;
-    hostilityType: HostilityType;
+    dataType?: EventDataType;
+    hostilityType?: HostilityType;
     sourceID?: number;
     targetID?: number;
+    filterExpression?: string;
   }>,
   previousEvents: T[] = []
 ): Promise<T[]> => {
   const sdk = await getCachedSdk();
-  const response = await sdk.EventData(params);
+  const response = await sdk.EventData({ ...params, limit: 10_000 });
 
   const { data = [], nextPageTimestamp = null } =
     response?.reportData?.report?.events ?? {};
   const allEvents: T[] = [...previousEvents, ...data];
 
   if (nextPageTimestamp) {
-    return getEvents<T>({ ...params, startTime: nextPageTimestamp }, allEvents);
+    return recursiveGetEvents<T>(
+      { ...params, startTime: nextPageTimestamp },
+      allEvents
+    );
   }
 
   return allEvents;
@@ -41,14 +49,15 @@ export const getEvents = async <T extends AnyEvent>(
 
 type EventFetcherParams = {
   abilityID?: number;
-  dataType: EventDataType;
-  hostilityType: HostilityType;
+  dataType?: EventDataType;
+  hostilityType?: HostilityType;
+  filterExpression?: string;
 };
 
 export const createEventFetcher =
   <T extends AnyEvent>(initialParams: EventFetcherParams) =>
   (params: GetEventBaseParams): Promise<T[]> =>
-    getEvents<T>({
+    recursiveGetEvents<T>({
       ...params,
       ...initialParams,
     });
@@ -102,3 +111,29 @@ export const createChunkByThresholdReducer =
           index === lastChunksIndex ? [...events, event] : events
         );
   };
+
+type CreateIsSpecificEventParameters<Type extends AnyEvent["type"]> = {
+  abilityGameID: number | number[];
+  type: Type;
+};
+
+export const createIsSpecificEvent =
+  <
+    Expected extends AnyEvent,
+    Type extends Expected["type"] = Expected["type"]
+  >({
+    type,
+    abilityGameID,
+  }: CreateIsSpecificEventParameters<Type>) =>
+  (event: AnyEvent): event is Expected => {
+    return (
+      event.type === type &&
+      "abilityGameID" in event &&
+      (Array.isArray(abilityGameID)
+        ? abilityGameID.includes(event.abilityGameID)
+        : event.abilityGameID === abilityGameID)
+    );
+  };
+
+export const chainFilterExpression = (parts: string[]): string =>
+  parts.map((part) => `(${part})`).join(" or ");

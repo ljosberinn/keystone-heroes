@@ -202,11 +202,9 @@ const isEnvironmentalDamageAffixAbilityID = (id: number) =>
 /**
  * track any damage taken from
  * - affixes
- * - prideful in general
  *
  * track any player damage done to
  * - explosives (pre-filtered to only contain lasthits)
- * - prideful in general
  */
 const damageProcessor: Processor<DamageEvent> = (
   event,
@@ -262,15 +260,16 @@ const damageProcessor: Processor<DamageEvent> = (
 /**
  * track deaths:
  * - all player deaths
- * - prideful deaths
  * - PF slimes
  */
 const deathProcessor: Processor<DeathEvent, { pull: PersistedDungeonPull }> = (
   event,
   { targetNPCID, targetPlayerID, pull }
 ) => {
-  const sourceNPCID =
-    pull.enemyNPCs.find((npc) => npc.id === event.killerID)?.gameID ?? null;
+  console.log(event.killerID);
+  const sourceNPCID = event.killerID
+    ? pull.enemyNPCs.find((npc) => npc.id === event.killerID)?.gameID ?? null
+    : null;
 
   // player death
   if (targetPlayerID) {
@@ -442,6 +441,7 @@ export const processEvents = (
         case "removebuff":
           return removeBuffProcessor(event, params);
         default:
+          console.log(event);
           return null;
       }
     })

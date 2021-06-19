@@ -1,41 +1,77 @@
-import { EventDataType, HostilityType } from "../../../types";
-import type { HealEvent, DamageEvent } from "../types";
-import type { GetEventBaseParams } from "../utils";
-import { getEvents, reduceEventsByPlayer } from "../utils";
+import type { DamageEvent, HealEvent } from "../types";
+import { createIsSpecificEvent } from "../utils";
 
 export const SANGUINE_ICHOR_HEALING = 226_510;
 export const SANGUINE_ICHOR_DAMAGE = 226_512;
 
-export const getSanguineHealingDoneEvents = async (
-  params: GetEventBaseParams
-): Promise<[HealEvent]> => {
-  const allEvents = await getEvents<HealEvent>({
-    ...params,
-    dataType: EventDataType.Healing,
-    hostilityType: HostilityType.Enemies,
-    abilityID: SANGUINE_ICHOR_HEALING,
-  });
-
-  return [
-    allEvents.reduce<HealEvent>((acc, event) => {
-      return {
-        ...acc,
-        amount: acc.amount + event.amount,
-        overheal: (acc.overheal ?? 0) + (event.overheal ?? 0),
-      };
-    }, allEvents[0]),
-  ];
+/**
+ * @see https://www.warcraftlogs.com/reports/NVZndMKc7jJr6GpF#fight=30&type=summary&view=events&pins=2%24Off%24%23244F4B%24expression%24target.type%20%3D%20%22player%22%20and%20type%20%3D%20%22damage%22%20and%20ability.name%20%3D%20%22Sanguine%20Ichor%22%5E2%24Off%24%23909049%24expression%24target.type%20%3D%20%22NPC%22%20and%20type%20%3D%20%22heal%22%20and%20ability.name%20%3D%20%22Sanguine%20Ichor%22
+ * ```gql
+ * {
+ *   reportData {
+ *     report(code: "NVZndMKc7jJr6GpF") {
+ *       fights(fightIDs: [30]) {
+ *         startTime
+ *         endTime
+ *       }
+ *       events(startTime: 12782664, endTime: 14618665, limit: 2000, filterExpression: "ability.name = \"Sanguine Ichor\" AND ((target.type = \"player\" and type = \"damage\") OR (target.type = \"NPC\" and type = \"heal\"))") {
+ *         data
+ *       }
+ *     }
+ *   }
+ * }
+ * ```
+ */
+const expressions = {
+  base: 'ability.name = "Sanguine Ichor"',
+  damage: 'target.type = "player" and type = "damage"',
+  heal: 'target.type = "NPC" and type = "heal"',
 };
 
-export const getSanguineDamageTakenEvents = async (
-  params: GetEventBaseParams
-): Promise<DamageEvent[]> => {
-  const allEvents = await getEvents<DamageEvent>({
-    ...params,
-    dataType: EventDataType.DamageTaken,
-    hostilityType: HostilityType.Friendlies,
-    abilityID: SANGUINE_ICHOR_DAMAGE,
-  });
+export const filterExpression = `${expressions.base} AND ((${expressions.damage}) OR (${expressions.heal}))`;
 
-  return reduceEventsByPlayer(allEvents, "targetID");
-};
+export const isSanguineDamageEvent = createIsSpecificEvent<DamageEvent>({
+  type: "damage",
+  abilityGameID: SANGUINE_ICHOR_DAMAGE,
+});
+
+export const isSanguineHealEvent = createIsSpecificEvent<HealEvent>({
+  type: "heal",
+  abilityGameID: SANGUINE_ICHOR_HEALING,
+});
+
+// type SanguineEvents = {
+//   damageTakenBySanguine: ReturnType<typeof reduceEventsByPlayer>;
+//   healingDoneBySanguine: HealEvent;
+// };
+
+// export const getSanguineEvents = async (
+//   params: GetEventBaseParams
+// ): Promise<SanguineEvents> => {
+//   const allEvents = await getEvents<HealEvent | DamageEvent>({
+//     ...params,
+//     filterExpression,
+//   });
+
+//   const healEvents = allEvents.filter(
+//     (event): event is HealEvent => event.type === "heal"
+//   );
+
+//   const healingDoneBySanguine = healEvents.reduce<HealEvent>((acc, event) => {
+//     return {
+//       ...acc,
+//       amount: acc.amount + event.amount,
+//       overheal: (acc.overheal ?? 0) + (event.overheal ?? 0),
+//     };
+//   }, healEvents[0]);
+
+//   const damageTakenBySanguine = reduceEventsByPlayer(
+//     allEvents.filter((event): event is DamageEvent => event.type === "damage"),
+//     "targetID"
+//   );
+
+//   return {
+//     damageTakenBySanguine,
+//     healingDoneBySanguine,
+//   };
+// };

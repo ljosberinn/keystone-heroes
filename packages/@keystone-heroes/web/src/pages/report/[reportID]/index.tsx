@@ -1,5 +1,5 @@
 import type { ReportResponse } from "@keystone-heroes/api";
-import { isValidReportId } from "@keystone-heroes/wcl";
+import { isValidReportId } from "@keystone-heroes/wcl/utils";
 import type { GetStaticPaths, GetStaticProps } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -20,7 +20,7 @@ export default function Report({ cache }: ReportProps): JSX.Element | null {
 
   const validReportID = cache
     ? true
-    : !!(query.reportID && isValidReportId(query.reportID));
+    : !!query.reportID && isValidReportId(query.reportID);
 
   useEffect(() => {
     if (
@@ -79,8 +79,12 @@ export default function Report({ cache }: ReportProps): JSX.Element | null {
   );
 }
 
+type PickFromUnion<T, K extends string> = T extends { [P in K]: unknown }
+  ? T[K]
+  : never;
+
 type FightCardProps = {
-  fight?: ReportResponse["fights"][number];
+  fight?: PickFromUnion<ReportResponse, "fights">[number];
   reportID: string;
 };
 

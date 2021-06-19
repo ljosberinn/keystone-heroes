@@ -1,22 +1,11 @@
 import { dungeons } from "@keystone-heroes/db/data";
 import { prisma } from "@keystone-heroes/db/prisma";
 import type { Prisma } from "@keystone-heroes/db/types";
-import {
-  getPlayerDeathEvents,
-  getDungeonSpecificEvents,
-  getSeasonSpecificEvents,
-  getAffixSpecificEvents,
-  getRemarkableSpellCastEvents,
-  getFightPulls,
-  processEvents,
-  getInvisibilityUsage,
-  getEngineeringBattleRezCastEvents,
-} from "@keystone-heroes/wcl";
-import type {
-  PersistedDungeonPull,
-  EventParams,
-  ReportMap,
-} from "@keystone-heroes/wcl";
+import type { EventParams } from "@keystone-heroes/wcl/queries";
+import { getFightPulls, getEvents } from "@keystone-heroes/wcl/queries";
+import type { PersistedDungeonPull } from "@keystone-heroes/wcl/transform";
+import { processEvents } from "@keystone-heroes/wcl/transform";
+import type { ReportMap } from "@keystone-heroes/wcl/types";
 import nc from "next-connect";
 
 import {
@@ -382,7 +371,16 @@ const handler: RequestHandler<Request, Response> = async (req, res) => {
       ],
     };
 
-    const playerDeathEvents = await getPlayerDeathEvents(params);
+    const playerActorIDs = new Set(
+      maybeStoredFight.PlayerFight.map(
+        (playerFight) => playerFight.player.actorID
+      )
+    );
+
+    const { allEvents, playerDeathEvents } = await getEvents(
+      params,
+      playerActorIDs
+    );
     const hasNoWipes = playerDeathEvents.length < 5;
 
     const pullsWithWipes = dungeonPulls.map<Omit<PersistedDungeonPull, "id">>(
@@ -415,32 +413,6 @@ const handler: RequestHandler<Request, Response> = async (req, res) => {
       pullsWithWipes,
       maybeStoredFight.id
     );
-
-    const playerActorIDs = new Set(
-      maybeStoredFight.PlayerFight.map(
-        (playerFight) => playerFight.player.actorID
-      )
-    );
-
-    const events = await getRemarkableSpellCastEvents(params, playerActorIDs);
-    const dungeonEvents = await getDungeonSpecificEvents(params);
-    const affixEvents = await getAffixSpecificEvents(params);
-    const seasonEvents = await getSeasonSpecificEvents(params);
-    const invisibilityEvents = await getInvisibilityUsage(params);
-    const engineeringBattleRezEvents =
-      playerDeathEvents.length > 0
-        ? await getEngineeringBattleRezCastEvents(params)
-        : [];
-
-    const allEvents = [
-      ...events,
-      ...playerDeathEvents,
-      ...dungeonEvents,
-      ...affixEvents,
-      ...seasonEvents,
-      ...invisibilityEvents,
-      ...engineeringBattleRezEvents,
-    ].sort((a, b) => a.timestamp - b.timestamp);
 
     const persistableMaps =
       persistedPulls.flatMap<Prisma.PullZoneCreateManyInput>((pull) => {

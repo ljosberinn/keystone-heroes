@@ -391,32 +391,6 @@ model NPC {
   PullNPC PullNPC[]
 }
 
-// model Event {
-//   id             Int  @id @default(autoincrement())
-//   timestamp      Int
-//   abilityID      Int
-//   pullID         Int
-//   sourcePlayerID Int
-//   targetNPCID    Int?
-//   targetPlayerID Int?
-
-//   pull         Pull    @relation(fields: [pullID], references: [id])
-//   sourcePlayer Player  @relation("sourcePlayer", fields: [sourcePlayerID], references: [id])
-//   targetNPC    NPC?    @relation(fields: [targetNPCID], references: [id])
-//   targetPlayer Player? @relation("targetPlayer", fields: [targetPlayerID], references: [id])
-// }
-
-// Bursting, Explosion, Grievous, Necrotic, Quaking, Sanguine, Spiteful, Storming, Volcanic
-// abilities
-// NW Items
-// SOA Spear
-// pride damage taken, death events
-
-// SD applybuff
-// dos applydebuff
-// theatre applybuff
-// hoa cast
-// pf applybuff, death events
 model Event {
   id Int @id @default(autoincrement())
 
@@ -482,40 +456,6 @@ enum EventType {
   RemoveBuff
   Interrupt
 }
-
-// model MetaEvent {
-//   id Int @id @default(autoincrement())
-
-//   sumSanguineHealingDone Int?
-//   sumSanguineDamageTaken Int?
-
-//   sumExplosiveDamageTaken Int?
-
-//   sumGrievousDamageTaken Int?
-
-//   sumNecroticDamageTaken  Int?
-//   sumNecroticHighestStack Int?
-
-//   sumStormingDamageTaken Int?
-
-//   sumVolcanicDamageTaken Int?
-
-//   highestBolsteringCount Int?
-
-//   sumPridefulInstancesKilled Int?
-
-//   pfRedSlimeKills    Int?
-//   pfRedSlimeConsumed Int?
-
-//   pfGreenSlimeKills    Int?
-//   pfGreenSlimeConsumed Int?
-
-//   pfPurpleSlimeKills    Int?
-//   pfPurpleSlimeConsumed Int?
-
-//   fightID Int
-//   fight   Fight @relation(fields: [fightID], references: [id])
-// }
 
 enum Role {
   dps
