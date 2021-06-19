@@ -40,38 +40,16 @@ export const isSanguineHealEvent = createIsSpecificEvent<HealEvent>({
   abilityGameID: SANGUINE_ICHOR_HEALING,
 });
 
-// type SanguineEvents = {
-//   damageTakenBySanguine: ReturnType<typeof reduceEventsByPlayer>;
-//   healingDoneBySanguine: HealEvent;
-// };
-
-// export const getSanguineEvents = async (
-//   params: GetEventBaseParams
-// ): Promise<SanguineEvents> => {
-//   const allEvents = await getEvents<HealEvent | DamageEvent>({
-//     ...params,
-//     filterExpression,
-//   });
-
-//   const healEvents = allEvents.filter(
-//     (event): event is HealEvent => event.type === "heal"
-//   );
-
-//   const healingDoneBySanguine = healEvents.reduce<HealEvent>((acc, event) => {
-//     return {
-//       ...acc,
-//       amount: acc.amount + event.amount,
-//       overheal: (acc.overheal ?? 0) + (event.overheal ?? 0),
-//     };
-//   }, healEvents[0]);
-
-//   const damageTakenBySanguine = reduceEventsByPlayer(
-//     allEvents.filter((event): event is DamageEvent => event.type === "damage"),
-//     "targetID"
-//   );
-
-//   return {
-//     damageTakenBySanguine,
-//     healingDoneBySanguine,
-//   };
-// };
+export const reduceHealingDoneBySanguine = (
+  events: HealEvent[]
+): HealEvent[] => {
+  return [
+    events.reduce<HealEvent>((acc, event) => {
+      return {
+        ...acc,
+        amount: acc.amount + event.amount,
+        overheal: (acc.overheal ?? 0) + (event.overheal ?? 0),
+      };
+    }, events[0]),
+  ];
+};

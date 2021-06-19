@@ -4,7 +4,7 @@
   "private": true,
   "main": "src",
   "scripts": {
-    "lint": "set TIMING=1 && eslint . --cache",
+    "lint": "set TIMING=1 && eslint src --cache",
     "format": "prettier --write src",
     "introspection": "ts-node -r tsconfig-paths/register src/queries/introspection.ts --project tsconfig.json",
     "generate": "graphql-codegen --config codegen.yml && prettier --write src/types.ts && prettier --write schema.json",

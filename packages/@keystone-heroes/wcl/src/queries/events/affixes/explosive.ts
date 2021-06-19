@@ -34,7 +34,7 @@ export const isExplosiveDamageEvent = createIsSpecificEvent<DamageEvent>({
   abilityGameID: EXPLOSIVE.ability,
 });
 
-// TODO
+// TODO: separate from e.g. PF Slimes and Player Deaths
 export const isExplosiveDeathEvent = (event: AnyEvent): event is DeathEvent => {
   return event.type === "death" && !("killerID" in event);
 };

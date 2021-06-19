@@ -12,14 +12,3 @@ export const isGrievousDamageEvent = createIsSpecificEvent<DamageEvent>({
   type: "damage",
   abilityGameID: GRIEVOUS_WOUND,
 });
-
-// export const getGrievousDamageTakenEvents = async (
-//   params: GetEventBaseParams
-// ): Promise<DamageEvent[]> => {
-//   const allEvents = await getEvents<DamageEvent>({
-//     ...params,
-//     filterExpression,
-//   });
-
-//   return reduceEventsByPlayer(allEvents, "targetID");
-// };

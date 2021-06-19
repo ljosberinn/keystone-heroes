@@ -27,14 +27,3 @@ export const isBurstingEvent = createIsSpecificEvent<DamageEvent>({
   type: "damage",
   abilityGameID: BURSTING,
 });
-
-// export const getBurstingDamageTakenEvents = async (
-//   params: GetEventBaseParams
-// ): Promise<DamageEvent[]> => {
-//   const allEvents = await getEvents<DamageEvent>({
-//     ...params,
-//     filterExpression,
-//   });
-
-//   return reduceEventsByPlayer(allEvents, "targetID");
-// };

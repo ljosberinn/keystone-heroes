@@ -1,9 +1,3 @@
-// type StackDataset = {
-//   targetID: number;
-//   targetInstance: number | null;
-//   stacks: number;
-// };
-
 import type { ApplyBuffEvent } from "..";
 import { createIsSpecificEvent } from "../utils";
 
@@ -35,87 +29,88 @@ export const isBolsteringEvent = createIsSpecificEvent<ApplyBuffEvent>({
   abilityGameID: BOLSTERING,
 });
 
-// export const getBolsteringEvents = async (
-//   params: GetEventBaseParams
-// ): Promise<ApplyBuffEvent[]> => {
-//   const allEvents = await getEvents<ApplyBuffEvent>({
-//     ...params,
-//     filterExpression,
-//   });
+type StackDataset = {
+  targetID: number;
+  targetInstance: number | null;
+  stacks: number;
+};
 
-//   const stacksPerNPC = allEvents.reduce<StackDataset[]>(
-//     (acc, { targetID, targetInstance = null }) => {
-//       const existingIndex = acc.findIndex(
-//         (dataset) =>
-//           dataset.targetInstance === targetInstance &&
-//           targetID === dataset.targetID
-//       );
+export const getHighestBolsteringStack = (
+  allEvents: ApplyBuffEvent[]
+): ApplyBuffEvent[] => {
+  const stacksPerNPC = allEvents.reduce<StackDataset[]>(
+    (acc, { targetID, targetInstance = null }) => {
+      const existingIndex = acc.findIndex(
+        (dataset) =>
+          dataset.targetInstance === targetInstance &&
+          targetID === dataset.targetID
+      );
 
-//       if (existingIndex > -1) {
-//         return acc.map((dataset, index) =>
-//           index === existingIndex
-//             ? { ...dataset, stacks: dataset.stacks + 1 }
-//             : dataset
-//         );
-//       }
+      if (existingIndex > -1) {
+        return acc.map((dataset, index) =>
+          index === existingIndex
+            ? { ...dataset, stacks: dataset.stacks + 1 }
+            : dataset
+        );
+      }
 
-//       return [
-//         ...acc,
-//         {
-//           targetID,
-//           targetInstance,
-//           stacks: 1,
-//         },
-//       ];
-//     },
-//     []
-//   );
+      return [
+        ...acc,
+        {
+          targetID,
+          targetInstance,
+          stacks: 1,
+        },
+      ];
+    },
+    []
+  );
 
-//   const highestStack = stacksPerNPC.reduce((acc, dataset) =>
-//     acc?.stacks >= dataset.stacks ? acc : dataset
-//   );
+  const highestStack = stacksPerNPC.reduce((acc, dataset) =>
+    acc?.stacks >= dataset.stacks ? acc : dataset
+  );
 
-//   const NPCsWithSameFinalStackAmount = stacksPerNPC.filter(
-//     (dataset) => dataset.stacks === highestStack.stacks
-//   );
+  const NPCsWithSameFinalStackAmount = stacksPerNPC.filter(
+    (dataset) => dataset.stacks === highestStack.stacks
+  );
 
-//   return allEvents.reduce<(ApplyBuffEvent & { stacks: number })[]>(
-//     (acc, event) => {
-//       const dataset = NPCsWithSameFinalStackAmount.find(
-//         (npc) =>
-//           npc.targetID === event.targetID &&
-//           npc.targetInstance === event.targetInstance
-//       );
+  return allEvents.reduce<(ApplyBuffEvent & { stacks: number })[]>(
+    (acc, event) => {
+      const dataset = NPCsWithSameFinalStackAmount.find(
+        (npc) =>
+          npc.targetID === event.targetID &&
+          npc.targetInstance === event.targetInstance
+      );
 
-//       if (!dataset) {
-//         return acc;
-//       }
+      if (!dataset) {
+        return acc;
+      }
 
-//       const previousMatch = acc.find(
-//         (oldEvent) =>
-//           oldEvent.targetID === event.targetID &&
-//           oldEvent.targetInstance === event.targetInstance
-//       );
+      const previousMatch = acc.find(
+        (oldEvent) =>
+          oldEvent.targetID === event.targetID &&
+          oldEvent.targetInstance === event.targetInstance
+      );
 
-//       const enhancedEvent = { ...event, stacks: dataset.stacks };
+      const enhancedEvent = { ...event, stacks: dataset.stacks };
 
-//       if (!previousMatch) {
-//         return [...acc, enhancedEvent];
-//       }
+      if (!previousMatch) {
+        return [...acc, enhancedEvent];
+      }
 
-//       // implicitly means it must be a higher stack amount as targetID and
-//       // targetInstance match
-//       const isNewer = event.timestamp > previousMatch.timestamp;
+      // implicitly means it must be a higher stack amount as targetID and
+      // targetInstance match
+      const isNewer = event.timestamp > previousMatch.timestamp;
 
-//       if (isNewer) {
-//         return [
-//           ...acc.filter((oldEvent) => oldEvent !== previousMatch),
-//           enhancedEvent,
-//         ];
-//       }
+      if (isNewer) {
+        return [
+          ...acc.filter((oldEvent) => oldEvent !== previousMatch),
+          enhancedEvent,
+        ];
+      }
 
-//       return acc;
-//     },
-//     []
-//   );
-// };
+      return acc;
+    },
+    []
+  );
+};

@@ -26,14 +26,3 @@ export const isStormingEvent = createIsSpecificEvent<DamageEvent>({
   type: "damage",
   abilityGameID: STORMING,
 });
-
-// export const getStormingDamageTakenEvents = async (
-//   params: GetEventBaseParams
-// ): Promise<DamageEvent[]> => {
-//   const allEvents = await getEvents<DamageEvent>({
-//     ...params,
-//     filterExpression,
-//   });
-
-//   return reduceEventsByPlayer(allEvents, "targetID");
-// };

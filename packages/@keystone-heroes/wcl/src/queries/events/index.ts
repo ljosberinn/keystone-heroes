@@ -10,6 +10,7 @@ import {
 import type { AnyEvent } from "../events/types";
 import {
   filterExpression as bolsteringFilterExpression,
+  getHighestBolsteringStack,
   isBolsteringEvent,
 } from "./affixes/bolstering";
 import {
@@ -27,6 +28,7 @@ import {
 } from "./affixes/grievous";
 import {
   filterExpression as necroticFilterExpression,
+  getHighestNecroticStack,
   isNecroticDamageEvent,
   isNecroticStackEvent,
 } from "./affixes/necrotic";
@@ -39,6 +41,7 @@ import {
   filterExpression as sanguineFilterExpression,
   isSanguineDamageEvent,
   isSanguineHealEvent,
+  reduceHealingDoneBySanguine,
 } from "./affixes/sanguine";
 import {
   filterExpression as spitefulFilterExpression,
@@ -65,6 +68,7 @@ import {
   isStoneWardEvent,
   isStygianKingsBarbsEvent,
   isTheFifthSkullDamageEvent,
+  isVolcanicPlumeDamageEvent,
 } from "./affixes/tormented";
 import {
   filterExpression as volcanicFilterExpression,
@@ -229,31 +233,80 @@ const filterDungeonEvents = (allEvents: AnyEvent[], dungeonID: DungeonIDs) => {
 };
 
 const filterTormentedEvents = (allEvents: AnyEvent[]) => {
-  const stygianKingsBarbs = allEvents.filter(isStygianKingsBarbsEvent);
-  const bottleOfSanguineIchorDamage = allEvents.filter(
-    isBottleOfSanguineIchorDamageEvent
+  // powers
+  const stygianKingsBarbs = reduceEventsByPlayer(
+    allEvents.filter(isStygianKingsBarbsEvent),
+    "sourceID"
   );
-  const bottleOfSanguineIchorHeal = allEvents.filter(
-    isBottleOfSanguineIchorHealEvent
+  const theFifthSkulL = reduceEventsByPlayer(
+    allEvents.filter(isTheFifthSkullDamageEvent),
+    "sourceID"
   );
-  const infernoDamageEvent = allEvents.filter(isInfernoDamageEvent);
-  const scorchingBlast = allEvents.filter(isScorchingBlastDamageEvent);
-  const soulforgeFlame = allEvents.filter(isSoulforgeFlamesDamageEvent);
-  const coldSnap = allEvents.filter(isColdSnapDamageEvent);
-  const frostLance = allEvents.filter(isFrostLanceDamageEvent);
-  const bitingCold = allEvents.filter(isBitingColdDamageEvent);
-  const seismicWave = allEvents.filter(isSeismicWaveDamageEvent);
-  const crush = allEvents.filter(isCrushDamageEvent);
-  const sever = allEvents.filter(isSeverDamageEvent);
-  const raze = allEvents.filter(isRazeDamageEvent);
-  const theFifthSkulL = allEvents.filter(isTheFifthSkullDamageEvent);
-  const stoneWard = allEvents.filter(isStoneWardEvent);
+  const bottleOfSanguineIchorDamage = reduceEventsByPlayer(
+    allEvents.filter(isBottleOfSanguineIchorDamageEvent),
+    "sourceID"
+  );
+  const bottleOfSanguineIchorHeal = reduceEventsByPlayer(
+    allEvents.filter(isBottleOfSanguineIchorHealEvent),
+    "sourceID"
+  );
+  const volcanicPlume = reduceEventsByPlayer(
+    allEvents.filter(isVolcanicPlumeDamageEvent),
+    "sourceID"
+  );
+  const stoneWard = reduceEventsByPlayer(
+    allEvents.filter(isStoneWardEvent),
+    "sourceID"
+  );
+
+  // lieutenant abilities
+  const infernoDamageEvent = reduceEventsByPlayer(
+    allEvents.filter(isInfernoDamageEvent),
+    "targetID"
+  );
+  const scorchingBlast = reduceEventsByPlayer(
+    allEvents.filter(isScorchingBlastDamageEvent),
+    "targetID"
+  );
+  const soulforgeFlame = reduceEventsByPlayer(
+    allEvents.filter(isSoulforgeFlamesDamageEvent),
+    "targetID"
+  );
+  const coldSnap = reduceEventsByPlayer(
+    allEvents.filter(isColdSnapDamageEvent),
+    "targetID"
+  );
+  const frostLance = reduceEventsByPlayer(
+    allEvents.filter(isFrostLanceDamageEvent),
+    "targetID"
+  );
+  const bitingCold = reduceEventsByPlayer(
+    allEvents.filter(isBitingColdDamageEvent),
+    "targetID"
+  );
+  const seismicWave = reduceEventsByPlayer(
+    allEvents.filter(isSeismicWaveDamageEvent),
+    "targetID"
+  );
+  const crush = reduceEventsByPlayer(
+    allEvents.filter(isCrushDamageEvent),
+    "targetID"
+  );
+  const sever = reduceEventsByPlayer(
+    allEvents.filter(isSeverDamageEvent),
+    "targetID"
+  );
+  const raze = reduceEventsByPlayer(
+    allEvents.filter(isRazeDamageEvent),
+    "targetID"
+  );
 
   return [
     ...stygianKingsBarbs,
     ...bottleOfSanguineIchorDamage,
     ...bottleOfSanguineIchorHeal,
     ...infernoDamageEvent,
+    ...volcanicPlume,
     ...scorchingBlast,
     ...soulforgeFlame,
     ...coldSnap,
@@ -297,7 +350,9 @@ const filterAffixEvents = (
   const sanguineDamage = hasSanguine
     ? reduceEventsByPlayer(allEvents.filter(isSanguineDamageEvent), "targetID")
     : [];
-  const sanguineHeal = hasSanguine ? allEvents.filter(isSanguineHealEvent) : [];
+  const sanguineHeal = hasSanguine
+    ? reduceHealingDoneBySanguine(allEvents.filter(isSanguineHealEvent))
+    : [];
   const volcanic = affixSet.has(Affixes.Volcanic)
     ? reduceEventsByPlayer(allEvents.filter(isVolcanicEvent), "targetID")
     : [];
@@ -309,7 +364,7 @@ const filterAffixEvents = (
     ? allEvents.filter(isQuakingInterruptEvent)
     : [];
   const bolstering = affixSet.has(Affixes.Bolstering)
-    ? allEvents.filter(isBolsteringEvent)
+    ? getHighestBolsteringStack(allEvents.filter(isBolsteringEvent))
     : [];
   const bursting = affixSet.has(Affixes.Bursting)
     ? reduceEventsByPlayer(allEvents.filter(isBurstingEvent), "targetID")
@@ -325,7 +380,7 @@ const filterAffixEvents = (
     ? reduceEventsByPlayer(allEvents.filter(isGrievousDamageEvent), "targetID")
     : [];
   const necroticStacks = hasNecrotic
-    ? allEvents.filter(isNecroticStackEvent)
+    ? getHighestNecroticStack(allEvents.filter(isNecroticStackEvent))
     : [];
   const necroticDamage = hasNecrotic
     ? reduceEventsByPlayer(allEvents.filter(isNecroticDamageEvent), "targetID")

@@ -26,14 +26,3 @@ export const isVolcanicEvent = (event: AnyEvent): event is DamageEvent =>
   event.type === "damage" &&
   "abilityGameID" in event &&
   event.abilityGameID === VOLCANIC;
-
-// export const getVolcanicDamageTakenEvents = async (
-//   params: GetEventBaseParams
-// ): Promise<DamageEvent[]> => {
-//   const allEvents = await getEvents<DamageEvent>({
-//     ...params,
-//     filterExpression,
-//   });
-
-//   return reduceEventsByPlayer(allEvents, "targetID");
-// };

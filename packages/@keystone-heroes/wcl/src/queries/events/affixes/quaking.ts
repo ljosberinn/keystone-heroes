@@ -38,30 +38,3 @@ export const isQuakingDamageEvent = createIsSpecificEvent<DamageEvent>({
   type: "damage",
   abilityGameID: QUAKING,
 });
-
-// type QuakingEvents = {
-//   damageTakenByQuakingEvents: ReturnType<typeof reduceEventsByPlayer>;
-//   interruptsByQuakingEvents: InterruptEvent[];
-// };
-
-// export const getQuakingEvents = async (
-//   params: GetEventBaseParams
-// ): Promise<QuakingEvents> => {
-//   const allEvents = await getEvents<InterruptEvent | DamageEvent>({
-//     ...params,
-//     filterExpression,
-//   });
-
-//   const damageTakenByQuakingEvents = reduceEventsByPlayer(
-//     allEvents.filter((event): event is DamageEvent => event.type === "damage"),
-//     "targetID"
-//   );
-//   const interruptsByQuakingEvents = allEvents.filter(
-//     (event): event is InterruptEvent => event.type === "interrupt"
-//   );
-
-//   return {
-//     interruptsByQuakingEvents,
-//     damageTakenByQuakingEvents,
-//   };
-// };

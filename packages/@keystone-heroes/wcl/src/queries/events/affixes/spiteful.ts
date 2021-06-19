@@ -27,14 +27,3 @@ export const isSpitefulDamageEvent = createIsSpecificEvent<DamageEvent>({
   type: "damage",
   abilityGameID: SPITEFUL,
 });
-
-// export const getSpitefulDamageTakenEvents = async (
-//   params: GetEventBaseParams
-// ): Promise<DamageEvent[]> => {
-//   const allEvents = await getEvents<DamageEvent>({
-//     ...params,
-//     filterExpression,
-//   });
-
-//   return reduceEventsByPlayer(allEvents, "targetID");
-// };

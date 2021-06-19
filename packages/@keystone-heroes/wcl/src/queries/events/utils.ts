@@ -4,6 +4,7 @@ import type {
   Sdk,
 } from "@keystone-heroes/wcl/types";
 
+import type { AbsorbEvent } from "..";
 import { getCachedSdk } from "../../client";
 import type { AnyEvent, DamageEvent, HealEvent } from "./types";
 
@@ -62,7 +63,9 @@ export const createEventFetcher =
       ...initialParams,
     });
 
-export const reduceEventsByPlayer = <T extends DamageEvent | HealEvent>(
+export const reduceEventsByPlayer = <
+  T extends DamageEvent | HealEvent | AbsorbEvent
+>(
   events: T[],
   key: "targetID" | "sourceID"
 ): T[] => {
