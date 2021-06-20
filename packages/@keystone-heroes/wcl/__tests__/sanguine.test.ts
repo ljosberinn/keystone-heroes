@@ -1,18 +1,16 @@
 import { Affixes } from "@keystone-heroes/db/types";
-import type { HealEvent } from "@keystone-heroes/wcl/queries";
 
 import { getSanguineEvents } from "../src/queries/events/affixes/sanguine";
-import sanguineHealEvents from "./fixtures/sanguineHealEvents.json";
+import allEvents from "./fixtures/allEvents.json";
 
-describe("sanguine", () => {
-  test("reduceHealingDoneBySanguine", () => {
-    const events = sanguineHealEvents.map<HealEvent>((event) => ({
-      ...event,
-      type: "heal",
-    }));
-
+describe("getSanguineEvents", () => {
+  test("works", () => {
     expect(
-      getSanguineEvents(events, new Set([Affixes.Sanguine]))
+      getSanguineEvents(allEvents, new Set([Affixes.Sanguine]))
     ).toMatchSnapshot();
+  });
+
+  test("does nothing if affix is absent", () => {
+    expect(getSanguineEvents(allEvents, new Set())).toHaveLength(0);
   });
 });

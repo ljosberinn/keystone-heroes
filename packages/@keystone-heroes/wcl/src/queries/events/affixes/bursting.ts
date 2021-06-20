@@ -10,12 +10,12 @@ export const BURSTING = 243_237;
  * ```gql
  * {
  *   reportData {
- *     report(code: "1rnWqNzBwgA4McFL") {
+ *     report(code: "hFj3wLzrapC4KvZk") {
  *       fights(fightIDs: [2]) {
  *         startTime
  *         endTime
  *       }
- *       events(startTime: 5987472, endTime: 7736379, limit: 2000, filterExpression: "type = \"damage\" and target.type = \"player\" and ability.id = 240237 and rawDamage > 0") {
+ *       events(startTime: 5987472, endTime: 7736379, limit: 2000, filterExpression: "type = \"damage\" and target.type = \"player\" and ability.id = 243237 and rawDamage > 0") {
  *         data
  *       }
  *     }

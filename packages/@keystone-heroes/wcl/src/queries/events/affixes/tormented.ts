@@ -35,13 +35,30 @@ export const TORMENTED = {
   INFERNO: 358_967,
 };
 
+/**
+ * @see https://www.warcraftlogs.com/reports/J3WKacdjpntmLT7C/#fight=3&type=damage-done&view=events&pins=2%24Off%24%23244F4B%24expression%24(type%20%3D%20%22damage%22%20and%20ability.id%20in%20(357865,%20357841,%20357708,%20357901,%20357525,%20356925,%20356923,%20355806,%20358784,%20358970,%20356667,%20356414,%20358894,%20355709,%20355737,%20358967))%20or%20(type%20%3D%20%22heal%22%20and%20ability.id%20%3D%20357901)
+ * @example
+ * ```gql
+ * {
+ *   reportData {
+ *     report(code: "J3WKacdjpntmLT7C") {
+ *       fights(fightIDs: [3]) {
+ *         startTime
+ *         endTime
+ *       }
+ *       events(startTime: 2948263, endTime: 4818150, filterExpression: "(type = \"damage\" and ability.id in (357865, 357841, 357708, 357901, 357525, 356925, 356923, 355806, 358784, 358970, 356667, 356414, 358894, 355709, 355737, 358967)) or (type = \"heal\" and ability.id = 357901)") {
+ *         data
+ *       }
+ *     }
+ *   }
+ * }
+ * ```
+ */
 export const filterExpression = [
-  `ability.id = ${TORMENTED.BOTTLE_OF_SANGUINE_ICHOR} and type in ("damage", "heal")`,
-  `type = "damage" and ability.id in (${[
-    ...Object.values(TORMENTED).filter(
-      (id) => id !== TORMENTED.BOTTLE_OF_SANGUINE_ICHOR
-    ),
-  ].join(", ")})`,
+  `ability.id = ${TORMENTED.BOTTLE_OF_SANGUINE_ICHOR} and type = "heal"`,
+  `type = "damage" and ability.id in (${[Object.values(TORMENTED)].join(
+    ", "
+  )})`,
 ];
 
 const isStygianKingsBarbsEvent = createIsSpecificEvent<DamageEvent>({
@@ -132,27 +149,32 @@ export const getTormentedEvents = (
     return [];
   }
 
-  // powers
+  // powers;
   const stygianKingsBarbs = reduceEventsByPlayer(
     allEvents.filter(isStygianKingsBarbsEvent),
     "sourceID"
   );
+
   const theFifthSkulL = reduceEventsByPlayer(
     allEvents.filter(isTheFifthSkullDamageEvent),
     "sourceID"
   );
+
   const bottleOfSanguineIchorDamage = reduceEventsByPlayer(
     allEvents.filter(isBottleOfSanguineIchorDamageEvent),
     "sourceID"
   );
+
   const bottleOfSanguineIchorHeal = reduceEventsByPlayer(
     allEvents.filter(isBottleOfSanguineIchorHealEvent),
     "sourceID"
   );
+
   const volcanicPlume = reduceEventsByPlayer(
     allEvents.filter(isVolcanicPlumeDamageEvent),
     "sourceID"
   );
+
   const stoneWard = reduceEventsByPlayer(
     allEvents.filter(isStoneWardEvent),
     "sourceID"
@@ -163,38 +185,47 @@ export const getTormentedEvents = (
     allEvents.filter(isInfernoDamageEvent),
     "targetID"
   );
+
   const scorchingBlast = reduceEventsByPlayer(
     allEvents.filter(isScorchingBlastDamageEvent),
     "targetID"
   );
+
   const soulforgeFlame = reduceEventsByPlayer(
     allEvents.filter(isSoulforgeFlamesDamageEvent),
     "targetID"
   );
+
   const coldSnap = reduceEventsByPlayer(
     allEvents.filter(isColdSnapDamageEvent),
     "targetID"
   );
+
   const frostLance = reduceEventsByPlayer(
     allEvents.filter(isFrostLanceDamageEvent),
     "targetID"
   );
+
   const bitingCold = reduceEventsByPlayer(
     allEvents.filter(isBitingColdDamageEvent),
     "targetID"
   );
+
   const seismicWave = reduceEventsByPlayer(
     allEvents.filter(isSeismicWaveDamageEvent),
     "targetID"
   );
+
   const crush = reduceEventsByPlayer(
     allEvents.filter(isCrushDamageEvent),
     "targetID"
   );
+
   const sever = reduceEventsByPlayer(
     allEvents.filter(isSeverDamageEvent),
     "targetID"
   );
+
   const raze = reduceEventsByPlayer(
     allEvents.filter(isRazeDamageEvent),
     "targetID"

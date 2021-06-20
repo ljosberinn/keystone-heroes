@@ -40,19 +40,28 @@ export const PF = {
 };
 
 /**
- * @see https://www.warcraftlogs.com/reports/MDF7g3JLzjR2xGHK#fight=9&type=summary&view=events&pins=2%24Off%24%23909049%24expression%24type%20%3D%20%22death%22%20and%20target.type%20%3D%20%22npc%22%20and%20target.id%20in%20(164705,%20164707,%20163891)
+ * @see https://www.warcraftlogs.com/reports/qGV26X4kLbRFBJDt#fight=5&type=summary&view=events&pins=2%24Off%24%23244F4B%24expression%24(type%20%3D%20%22death%22%20and%20target.type%20%3D%20%22npc%22%20and%20target.id%20in%20(164705,164707,%20163891))%20or%20(type%20%3D%20%22applybuff%22%20and%20target.type%20%3D%20%22player%22%20and%20ability.id%20in%20(340225,%20340271,%20340210))%20or%20(type%20%3D%20%22damage%22%20and%20ability.id%20%3D%20328501)
+ * @example
+ * ```gql
+ * {
+ *   reportData {
+ *     report(code: "qGV26X4kLbRFBJDt") {
+ *       fights(fightIDs: [5]) {
+ *         startTime
+ *         endTime
+ *       }
+ *       events(: 3958680, endTime: 6113126, filterExpression: "(type = \"death\" and target.type = \"npc\" and target.id in (164705,164707, 163891)) or (type = \"applybuff\" and target.type = \"player\" and ability.id in (340225, 340271, 340210)) or (type = \"damage\" and ability.id = 328501)") {
+ *         data
+ *       }
+ *     }
+ *   }
+ * }
+ * ```
  */
-const unitIDExpression = `type = "death" and target.type = "npc" and target.id in (${RED_BUFF.unit}, ${PURPLE_BUFF.unit}, ${GREEN_BUFF.unit})`;
-/**
- * @see https://www.warcraftlogs.com/reports/qGV26X4kLbRFBJDt#fight=5&type=auras&view=events&pins=2%24Off%24%23244F4B%24expression%24type%20%3D%20%22applybuff%22%20and%20target.type%20%3D%20%22player%22%20and%20ability.id%20in%20(340225,%20340271,%20340210)
- */
-const auraExpression = `type = "applybuff" and target.type = "player" and ability.id in (${RED_BUFF.aura}, ${PURPLE_BUFF.aura}, ${GREEN_BUFF.aura})`;
-const debuffExpression = `type = "damage" and ability.id = ${PF.PLAGUE_BOMB}`;
-
 export const filterExpression = [
-  unitIDExpression,
-  auraExpression,
-  debuffExpression,
+  `type = "death" and target.type = "npc" and target.id in (${RED_BUFF.unit}, ${PURPLE_BUFF.unit}, ${GREEN_BUFF.unit})`,
+  `type = "applybuff" and target.type = "player" and ability.id in (${RED_BUFF.aura}, ${PURPLE_BUFF.aura}, ${GREEN_BUFF.aura})`,
+  `type = "damage" and ability.id = ${PF.PLAGUE_BOMB}`,
 ];
 
 const createIsPfSlimeDeathEvent =

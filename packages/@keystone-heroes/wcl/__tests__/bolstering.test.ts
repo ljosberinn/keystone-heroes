@@ -1,18 +1,16 @@
 import { Affixes } from "@keystone-heroes/db/types";
-import type { ApplyBuffEvent } from "@keystone-heroes/wcl/queries";
 
 import { getBolsteringEvents } from "../src/queries/events/affixes/bolstering";
-import bolsteringApplyBuffEvents from "./fixtures/bolsteringApplyBuffEvents.json";
+import allEvents from "./fixtures/allEvents.json";
 
-describe("bolstering", () => {
-  test("getHighestBolsteringStack", () => {
-    const events = bolsteringApplyBuffEvents.map<ApplyBuffEvent>((event) => ({
-      ...event,
-      type: "applybuff",
-    }));
-
+describe("getHighestBolsteringStack", () => {
+  test("works", () => {
     expect(
-      getBolsteringEvents(events, new Set([Affixes.Bolstering]))
+      getBolsteringEvents(allEvents, new Set([Affixes.Bolstering]))
     ).toMatchSnapshot();
+  });
+
+  test("does nothing if affix is absent", () => {
+    expect(getBolsteringEvents(allEvents, new Set())).toHaveLength(0);
   });
 });

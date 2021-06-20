@@ -1,21 +1,16 @@
 import { Affixes } from "@keystone-heroes/db/types";
-import type { ApplyDebuffStackEvent } from "@keystone-heroes/wcl/queries";
+import { getNecroticEvents } from "@keystone-heroes/wcl/queries/events/affixes/necrotic";
 
-import { getNecroticEvents } from "../src/queries/events/affixes/necrotic";
-import necroticApplyDebuffEvents from "./fixtures/necroticApplyDebuffEvents.json";
+import allEvents from "./fixtures/allEvents.json";
 
-describe("necrotic", () => {
-  test("getHighestNecroticStack", () => {
-    const events = necroticApplyDebuffEvents
-      .filter((event) => event.type === "applydebuffstack")
-      .map<ApplyDebuffStackEvent>((event) => ({
-        ...event,
-        type: "applydebuffstack",
-        stack: event.stack ?? 0,
-      }));
-
+describe("getNecroticEvents", () => {
+  test("works", () => {
     expect(
-      getNecroticEvents(events, new Set([Affixes.Necrotic]))
+      getNecroticEvents(allEvents, new Set([Affixes.Necrotic]))
     ).toMatchSnapshot();
+  });
+
+  test("does nothing if affix is absent", () => {
+    expect(getNecroticEvents(allEvents, new Set())).toHaveLength(0);
   });
 });

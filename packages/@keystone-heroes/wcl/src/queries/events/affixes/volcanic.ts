@@ -10,7 +10,7 @@ export const VOLCANIC = 209_862;
  * ```gql
  * {
  *   reportData {
- *     report(code: "1rnWqNzBwgA4McFL") {
+ *     report(code: "LafTw4CxyAjkVHv6") {
  *       fights(fightIDs: [2]) {
  *         startTime
  *         endTime

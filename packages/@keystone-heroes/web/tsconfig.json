@@ -26,8 +26,7 @@
       "@keystone-heroes/env": ["../env/src/index.ts"],
       "@keystone-heroes/wcl/*": ["../wcl/src/*"]
     },
-    "types": ["react/next", "react-dom/next"]
+    "types": ["react/next", "react-dom/next", "@testing-library/jest-dom"]
   },
-  "exclude": ["node_modules"],
   "include": ["**/*.ts", "**/*.tsx"]
 }

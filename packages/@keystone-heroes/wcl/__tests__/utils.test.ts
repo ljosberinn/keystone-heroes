@@ -1,6 +1,8 @@
 import { graphql } from "msw";
 import { setupServer } from "msw/node";
 
+import { NW } from "../src/queries/events/dungeons/nw";
+import { PF } from "../src/queries/events/dungeons/pf";
 import type { DamageEvent, HealEvent } from "../src/queries/events/types";
 import {
   createChunkByThresholdReducer,
@@ -8,9 +10,7 @@ import {
   reduceEventsByPlayer,
 } from "../src/queries/events/utils";
 import { EventDataType, HostilityType } from "../src/types";
-import NPCDamagesPlayerEvents from "./fixtures/NPCDamagesPlayerEvents.json";
-import kyrianOrbHealEvents from "./fixtures/kyrianOrbHealEvents.json";
-import playerDamagesNPCEvents from "./fixtures/playerDamagesNPCEvents.json";
+import allEvents from "./fixtures/allEvents.json";
 
 describe("recursiveGetEvents", () => {
   const server = setupServer();
@@ -170,41 +170,47 @@ describe("recursiveGetEvents", () => {
 describe("reduceEventsByPlayer", () => {
   describe("DamageEvents", () => {
     test("targetID === damageTaken by player", () => {
-      const events: DamageEvent[] = NPCDamagesPlayerEvents.map((event) => ({
-        ...event,
-        type: "damage",
-      }));
+      const events = allEvents.filter(
+        (event): event is DamageEvent =>
+          event.type === "damage" && event.abilityGameID === PF.PLAGUE_BOMB
+      );
 
       expect(reduceEventsByPlayer(events, "targetID")).toMatchSnapshot();
     });
 
     test("sourceID === damageDone by player", () => {
-      const events: DamageEvent[] = playerDamagesNPCEvents.map((event) => ({
-        ...event,
-        type: "damage",
-      }));
+      const kyrianOrbDamageEvents = allEvents.filter(
+        (event): event is DamageEvent =>
+          event.type === "damage" && event.abilityGameID === NW.KYRIAN_ORB_HEAL
+      );
 
-      expect(reduceEventsByPlayer(events, "sourceID")).toMatchSnapshot();
+      expect(
+        reduceEventsByPlayer(kyrianOrbDamageEvents, "sourceID")
+      ).toMatchSnapshot();
     });
   });
 
   describe("HealEvents", () => {
     test("targetID === healing received by target", () => {
-      const events: HealEvent[] = kyrianOrbHealEvents.map((event) => ({
-        ...event,
-        type: "heal",
-      }));
+      const kyrianOrbHealEvents = allEvents.filter(
+        (event): event is HealEvent =>
+          event.type === "heal" && event.abilityGameID === NW.KYRIAN_ORB_HEAL
+      );
 
-      expect(reduceEventsByPlayer(events, "targetID")).toMatchSnapshot();
+      expect(
+        reduceEventsByPlayer(kyrianOrbHealEvents, "targetID")
+      ).toMatchSnapshot();
     });
 
     test("sourceID === healingDone by source", () => {
-      const events: HealEvent[] = kyrianOrbHealEvents.map((event) => ({
-        ...event,
-        type: "heal",
-      }));
+      const kyrianOrbHealEvents = allEvents.filter(
+        (event): event is HealEvent =>
+          event.type === "heal" && event.abilityGameID === NW.KYRIAN_ORB_HEAL
+      );
 
-      expect(reduceEventsByPlayer(events, "sourceID")).toMatchSnapshot();
+      expect(
+        reduceEventsByPlayer(kyrianOrbHealEvents, "sourceID")
+      ).toMatchSnapshot();
     });
   });
 });

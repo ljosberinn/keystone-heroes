@@ -1,53 +1,29 @@
-import type {
-  AllTrackedEventTypes,
-  ApplyBuffEvent,
-  BeginCastEvent,
-  CastEvent,
-} from "@keystone-heroes/wcl/queries";
+import { PlayableClass } from "@keystone-heroes/db/types";
 
-import { filterProfessionEvents } from "../src/queries/events/other";
-import dimensionalShifterEvents from "./fixtures/dimensionalShifterEvents.json";
-import engineeringSLCastEvents from "./fixtures/engineeringSLCastEvents.json";
-import potionOfTheHiddenSpiritEvents from "./fixtures/potionOfTheHiddenSpiritEvents.json";
-import spellCastEvents from "./fixtures/spellCastEvents.json";
+import {
+  filterProfessionEvents,
+  filterPlayerDeathEvents,
+} from "../src/queries/events/other";
+import allEvents from "./fixtures/allEvents.json";
 
 describe("other", () => {
   test("filterProfessionEvents", () => {
-    const invis1 = dimensionalShifterEvents.map<ApplyBuffEvent>((event) => ({
-      ...event,
-      type: "applybuff",
-    }));
-
-    const invis2 = potionOfTheHiddenSpiritEvents.map<ApplyBuffEvent>(
-      (event) => ({
-        ...event,
-        type: "applybuff",
-      })
-    );
-
-    const rez = engineeringSLCastEvents.map<BeginCastEvent | CastEvent>(
-      (event) => ({
-        ...event,
-        type: event.type === "begincast" ? "begincast" : "cast",
-      })
-    );
-
-    const casts = spellCastEvents.map<CastEvent>((event) => ({
-      ...event,
-      type: "cast",
-    }));
-
-    const events: AllTrackedEventTypes = [
-      ...invis1,
-      ...invis2,
-      ...rez,
-      ...casts,
-    ].sort((a, b) => a.timestamp - b.timestamp);
-
-    expect(filterProfessionEvents(events)).toMatchSnapshot();
+    expect(filterProfessionEvents(allEvents)).toMatchSnapshot();
   });
 
-  // events from https://www.warcraftlogs.com/reports/fxq2w3aAW49dHhjb#fight=3
+  test("filterPlayerDeathEvents", () => {
+    // PTR log https://www.warcraftlogs.com/reports/J3WKacdjpntmLT7C#fight=3&type=damage-done
+    const metaInfo: Parameters<typeof filterPlayerDeathEvents>[1] = [
+      { actorID: 1, class: PlayableClass.Rogue },
+      { actorID: 2, class: PlayableClass.Rogue },
+      { actorID: 3, class: PlayableClass.Mage },
+      { actorID: 5, class: PlayableClass.DemonHunter },
+      { actorID: 60, class: PlayableClass.Shaman },
+    ];
 
-  // events from https://www.warcraftlogs.com/reports/fxq2w3aAW49dHhjb#fight=3
+    const result = filterPlayerDeathEvents(allEvents, metaInfo, []);
+
+    expect(result).toHaveLength(23);
+    expect(result).toMatchSnapshot();
+  });
 });

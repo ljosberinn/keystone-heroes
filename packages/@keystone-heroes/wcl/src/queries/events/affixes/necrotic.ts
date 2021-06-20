@@ -20,7 +20,7 @@ export const NECROTIC = 209_858;
  *         startTime
  *         endTime
  *       }
- *       events(startTime: 0, endTime: 1414930, filterExpression: "(target.type = \"player\" and ability.id = 209858 AND ((type = \"applydebuffstack\" and stack > 10) OR (type = \"damage\" and rawDamage > 0))") {
+ *        events(startTime: 0, endTime: 1414930, filterExpression: "(target.type = \"player\" and ability.id = 209858) and ((type = \"applydebuffstack\" and stack > 10) or (type = \"damage\" and rawDamage > 0))") {
  *         data
  *       }
  *     }

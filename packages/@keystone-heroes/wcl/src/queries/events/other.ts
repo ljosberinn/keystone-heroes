@@ -67,11 +67,11 @@ export const remarkableSpellFilterExpression = `source.type = "player" and type 
 export const filterProfessionEvents = (
   allEvents: AllTrackedEventTypes
 ): (CastEvent | ApplyBuffEvent)[] => {
-  const leatherworkingDrums = allEvents.filter(isLeatherworkingDrumsEvent);
-  const invisibility = allEvents.filter(isInvisibilityEvent);
-  const engineeringBattleRez = allEvents.filter(isEngineeringBattleRezEvent);
-
-  return [...leatherworkingDrums, ...invisibility, ...engineeringBattleRez];
+  return [
+    ...allEvents.filter(isLeatherworkingDrumsEvent),
+    ...allEvents.filter(isInvisibilityEvent),
+    ...allEvents.filter(isEngineeringBattleRezEvent),
+  ];
 };
 
 export const filterPlayerDeathEvents = (

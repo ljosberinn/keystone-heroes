@@ -126,20 +126,21 @@ type CreateIsSpecificEventParameters<Type extends AnyEvent["type"]> = {
   type: Type;
 };
 
-export const createIsSpecificEvent =
-  <
-    Expected extends AnyEvent,
-    Type extends Expected["type"] = Expected["type"]
-  >({
-    type,
-    abilityGameID,
-  }: CreateIsSpecificEventParameters<Type>) =>
-  (event: AnyEvent): event is Expected => {
-    return (
-      event.type === type &&
-      "abilityGameID" in event &&
-      (Array.isArray(abilityGameID)
-        ? abilityGameID.includes(event.abilityGameID)
-        : event.abilityGameID === abilityGameID)
-    );
-  };
+export const createIsSpecificEvent = <
+  Expected extends AnyEvent,
+  Type extends Expected["type"] = Expected["type"]
+>({
+  type,
+  abilityGameID,
+}: CreateIsSpecificEventParameters<Type>): ((
+  event: AnyEvent
+) => event is Expected) => {
+  const abilities = new Set(
+    Array.isArray(abilityGameID) ? abilityGameID : [abilityGameID]
+  );
+
+  return (event: AnyEvent): event is Expected =>
+    event.type === type &&
+    "abilityGameID" in event &&
+    abilities.has(event.abilityGameID);
+};

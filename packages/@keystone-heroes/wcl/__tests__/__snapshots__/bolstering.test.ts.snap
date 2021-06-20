@@ -1,12 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`bolstering getHighestBolsteringStack 1`] = `
+exports[`getHighestBolsteringStack works 1`] = `
 Array [
   Object {
     "abilityGameID": 209859,
+    "pin": "0",
     "sourceID": 174,
     "sourceInstance": 2,
-    "stacks": 1,
+    "stacks": 8,
     "targetID": 173,
     "targetInstance": 3,
     "timestamp": 6143395,

@@ -15,8 +15,23 @@ export const NW = {
 
 /**
  * @see https://www.warcraftlogs.com/reports/Jq7KrbYV1hmTWMyw#fight=4&type=summary&view=events&pins=2%24Off%24%23909049%24expression%24type%20%3D%20%22heal%22%20and%20source.type%20%3D%20%22player%22%20and%20ability.id%20%3D344422%5E2%24Off%24%23909049%24expression%24type%20%3D%20%22damage%22%20and%20source.type%20%3D%20%22player%22%20and%20ability.id%20%3D328406%5E2%24Off%24%23a04D8A%24expression%24type%20%3D%20%22damage%22%20and%20source.type%20%3D%20%22player%22%20and%20ability.id%20%3D328128%5E2%24Off%24%23DF5353%24expression%24type%20%3D%20%22damage%22%20and%20source.type%20%3D%20%22player%22%20and%20ability.id%20%3D328351%5E2%24Off%24rgb(78%25,%2061%25,%2043%25)%24expression%24type%20%3D%20%22damage%22%20and%20source.type%20%3D%20%22player%22%20and%20ability.id%20%3D344421
+ * @example
+ * ```gql
+ * {
+ *   reportData {
+ *     report(code: "Jq7KrbYV1hmTWMyw") {
+ *       fights(fightIDs: [4]) {
+ *         startTime
+ *         endTime
+ *       }
+ *       events(startTime: 1764363, endTime: 3716117, filterExpression: "(type = \"heal\" and source.type = \"player\" and ability.id = 344422) or (type = \"damage\" and source.type = \"player\" and ability.id in (328406, 328128, 328351, 344421))") {
+ *         data
+ *       }
+ *     }
+ *   }
+ * }
+ * ```
  */
-
 export const filterExpression = [
   `type = "heal" and source.type = "player" and ability.id = ${NW.KYRIAN_ORB_HEAL}`,
   `type = "damage" and source.type = "player" and ability.id in (${Object.values(
