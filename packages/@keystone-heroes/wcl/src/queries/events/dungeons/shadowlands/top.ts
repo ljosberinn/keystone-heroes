@@ -14,18 +14,3 @@ export const isTopBannerAuraEvent = createIsSpecificEvent<ApplyBuffEvent>({
   type: "applybuff",
   abilityGameID: TOP_BANNER_AURA,
 });
-
-// export const getTheaterOfPainBannerUsage = async (
-//   params: GetEventBaseParams
-// ): Promise<ApplyBuffEvent[]> => {
-//   const data = await getEvents<ApplyBuffEvent | RemoveBuffEvent>({
-//     ...params,
-//     dataType: EventDataType.Buffs,
-//     hostilityType: HostilityType.Friendlies,
-//     abilityID: TOP_BANNER_AURA,
-//   });
-
-//   return data.filter(
-//     (event): event is ApplyBuffEvent => event.type === "applybuff"
-//   );
-// };

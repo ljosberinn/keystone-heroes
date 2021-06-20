@@ -13,16 +13,3 @@ export const isHoaGargoyleEvent = createIsSpecificEvent<CastEvent>({
   type: "cast",
   abilityGameID: HOA_GARGOYLE,
 });
-
-// export const getHallsOfAtonementGargoyleCharms = async (
-//   params: GetEventBaseParams
-// ): Promise<CastEvent[]> => {
-//   const data = await getEvents<CastEvent | BeginCastEvent>({
-//     ...params,
-//     dataType: EventDataType.Casts,
-//     hostilityType: HostilityType.Friendlies,
-//     abilityID: HOA_GARGOYLE,
-//   });
-
-//   return data.filter((event): event is CastEvent => event.type === "cast");
-// };

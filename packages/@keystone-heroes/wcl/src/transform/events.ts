@@ -266,7 +266,6 @@ const deathProcessor: Processor<DeathEvent, { pull: PersistedDungeonPull }> = (
   event,
   { targetNPCID, targetPlayerID, pull }
 ) => {
-  console.log(event.killerID);
   const sourceNPCID = event.killerID
     ? pull.enemyNPCs.find((npc) => npc.id === event.killerID)?.gameID ?? null
     : null;

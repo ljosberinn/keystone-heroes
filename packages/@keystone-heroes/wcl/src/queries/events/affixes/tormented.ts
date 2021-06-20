@@ -1,5 +1,5 @@
 import type { AbsorbEvent, DamageEvent, HealEvent } from "../types";
-import { chainFilterExpression, createIsSpecificEvent } from "../utils";
+import { createIsSpecificEvent } from "../utils";
 
 const BOTTLE_OF_SANGUINE_ICHOR = 357_901;
 const STYGIAN_KINGS_BARBS = 357_865;
@@ -74,9 +74,7 @@ const expressions = {
   interno: `type = "damage" and ability.id = ${TORMENTED.damageTaken.INFERNO}`,
 };
 
-export const filterExpression = chainFilterExpression(
-  Object.values(expressions)
-);
+export const filterExpression = Object.values(expressions);
 
 export const isStygianKingsBarbsEvent = createIsSpecificEvent<DamageEvent>({
   type: "damage",

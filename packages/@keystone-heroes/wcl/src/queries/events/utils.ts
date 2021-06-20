@@ -4,9 +4,8 @@ import type {
   Sdk,
 } from "@keystone-heroes/wcl/types";
 
-import type { AbsorbEvent } from "..";
 import { getCachedSdk } from "../../client";
-import type { AnyEvent, DamageEvent, HealEvent } from "./types";
+import type { AnyEvent, DamageEvent, HealEvent, AbsorbEvent } from "./types";
 
 export type GetEventBaseParams<
   T extends Record<string, unknown> = Record<string, unknown>
@@ -48,21 +47,6 @@ export const recursiveGetEvents = async <T extends AnyEvent>(
   return allEvents;
 };
 
-type EventFetcherParams = {
-  abilityID?: number;
-  dataType?: EventDataType;
-  hostilityType?: HostilityType;
-  filterExpression?: string;
-};
-
-export const createEventFetcher =
-  <T extends AnyEvent>(initialParams: EventFetcherParams) =>
-  (params: GetEventBaseParams): Promise<T[]> =>
-    recursiveGetEvents<T>({
-      ...params,
-      ...initialParams,
-    });
-
 export const reduceEventsByPlayer = <
   T extends DamageEvent | HealEvent | AbsorbEvent
 >(
@@ -76,16 +60,36 @@ export const reduceEventsByPlayer = <
 
     if (existingIndex > -1) {
       return arr.map((dataset, index) => {
-        return index === existingIndex
-          ? {
-              ...dataset,
-              amount: dataset.amount + event.amount + (event.absorbed ?? 0),
-              overheal:
-                event.type === "heal" && dataset.type === "heal"
-                  ? (dataset?.overheal ?? 0) + (event?.overheal ?? 0)
-                  : undefined,
-            }
-          : dataset;
+        if (index === existingIndex) {
+          switch (event.type) {
+            case "absorbed":
+              return {
+                ...dataset,
+                amount: dataset.amount + event.amount,
+              };
+            case "heal":
+              // type guard for overheal; when reducing HealEvents,
+              // dataset must also be of type heal, TS doesn't know this however
+              if (dataset.type === "heal") {
+                return {
+                  ...dataset,
+                  amount: dataset.amount + event.amount + (event.absorbed ?? 0),
+                  overheal: (dataset?.overheal ?? 0) + (event?.overheal ?? 0),
+                };
+              }
+
+              return dataset;
+            case "damage":
+              return {
+                ...dataset,
+                amount: dataset.amount + event.amount + (event.absorbed ?? 0),
+              };
+            default:
+              return dataset;
+          }
+        }
+
+        return dataset;
       });
     }
 
@@ -137,6 +141,3 @@ export const createIsSpecificEvent =
         : event.abilityGameID === abilityGameID)
     );
   };
-
-export const chainFilterExpression = (parts: string[]): string =>
-  parts.map((part) => `(${part})`).join(" or ");

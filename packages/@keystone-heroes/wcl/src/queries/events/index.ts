@@ -1,118 +1,85 @@
 import { DungeonIDs, remarkableSpellIDs } from "@keystone-heroes/db/data";
 import { Affixes } from "@keystone-heroes/db/types";
 
-import type { DeathEvent } from "..";
+import { filterProfessionEvents } from "../events/other";
+import type {
+  AnyEvent,
+  ApplyDebuffEvent,
+  DamageEvent,
+  DeathEvent,
+} from "../events/types";
 import {
-  isEngineeringBattleRezEvent,
-  isInvisibilityEvent,
-  isLeatherworkingDrumsEvent,
-} from "..";
-import type { AnyEvent } from "../events/types";
-import {
-  filterExpression as bolsteringFilterExpression,
-  getHighestBolsteringStack,
-  isBolsteringEvent,
-} from "./affixes/bolstering";
-import {
-  filterExpression as burstingFilterExpression,
-  isBurstingEvent,
-} from "./affixes/bursting";
-import {
-  filterExpression as explosiveFilterExpression,
-  isExplosiveDamageEvent,
-  isExplosiveDeathEvent,
-} from "./affixes/explosive";
-import {
-  filterExpression as grievousFilterExpression,
-  isGrievousDamageEvent,
-} from "./affixes/grievous";
-import {
-  filterExpression as necroticFilterExpression,
-  getHighestNecroticStack,
-  isNecroticDamageEvent,
-  isNecroticStackEvent,
-} from "./affixes/necrotic";
-import {
-  filterExpression as quakingFilterExpression,
-  isQuakingDamageEvent,
-  isQuakingInterruptEvent,
-} from "./affixes/quaking";
-import {
-  filterExpression as sanguineFilterExpression,
-  isSanguineDamageEvent,
-  isSanguineHealEvent,
-  reduceHealingDoneBySanguine,
-} from "./affixes/sanguine";
-import {
-  filterExpression as spitefulFilterExpression,
-  isSpitefulDamageEvent,
-} from "./affixes/spiteful";
-import {
-  filterExpression as stormingFilterExpression,
-  isStormingEvent,
-} from "./affixes/storming";
-import {
-  filterExpression as tormentedFilterExpression,
-  isBitingColdDamageEvent,
-  isBottleOfSanguineIchorDamageEvent,
-  isBottleOfSanguineIchorHealEvent,
-  isColdSnapDamageEvent,
-  isCrushDamageEvent,
-  isFrostLanceDamageEvent,
-  isInfernoDamageEvent,
-  isRazeDamageEvent,
-  isScorchingBlastDamageEvent,
-  isSeismicWaveDamageEvent,
-  isSeverDamageEvent,
-  isSoulforgeFlamesDamageEvent,
-  isStoneWardEvent,
+  sanguineFilterExpression,
+  explosiveFilterExpression,
+  grievousFilterExpression,
+  necroticFilterExpression,
+  volcanicFilterExpression,
+  burstingFilterExpression,
+  spitefulFilterExpression,
+  quakingFilterExpression,
+  stormingFilterExpression,
+  bolsteringFilterExpression,
+  tormentedFilterExpression,
   isStygianKingsBarbsEvent,
   isTheFifthSkullDamageEvent,
+  isBottleOfSanguineIchorDamageEvent,
+  isBottleOfSanguineIchorHealEvent,
   isVolcanicPlumeDamageEvent,
-} from "./affixes/tormented";
-import {
-  filterExpression as volcanicFilterExpression,
+  isStoneWardEvent,
+  isInfernoDamageEvent,
+  isScorchingBlastDamageEvent,
+  isSoulforgeFlamesDamageEvent,
+  isColdSnapDamageEvent,
+  isFrostLanceDamageEvent,
+  isBitingColdDamageEvent,
+  isSeismicWaveDamageEvent,
+  isCrushDamageEvent,
+  isSeverDamageEvent,
+  isRazeDamageEvent,
+  isStormingEvent,
+  isSpitefulDamageEvent,
+  isSanguineDamageEvent,
+  reduceHealingDoneBySanguine,
+  isSanguineHealEvent,
   isVolcanicEvent,
-} from "./affixes/volcanic";
+  isQuakingDamageEvent,
+  isQuakingInterruptEvent,
+  getHighestBolsteringStack,
+  isBolsteringEvent,
+  isBurstingEvent,
+  isExplosiveDamageEvent,
+  isExplosiveDeathEvent,
+  isGrievousDamageEvent,
+  getHighestNecroticStack,
+  isNecroticStackEvent,
+  isNecroticDamageEvent,
+} from "./affixes";
 import {
-  filterExpression as dosFilterExpression,
+  dosFilterExpression,
+  hoaFilterExpression,
   isDosUrnEvent,
-} from "./dungeons/shadowlands/dos";
-import {
-  filterExpression as hoaFilterExpression,
   isHoaGargoyleEvent,
-} from "./dungeons/shadowlands/hoa";
-import {
-  filterExpression as nwFilterExpression,
   isNwHammerEvent,
   isNwKyrianOrbDamageEvent,
   isNwKyrianOrbHealEvent,
   isNwOrbEvent,
   isNwSpearEvent,
-} from "./dungeons/shadowlands/nw";
-import {
-  filterExpression as pfFilterExpression,
   isPfSlimeBuffEvent,
   isPfSlimeDeathEvent,
-} from "./dungeons/shadowlands/pf";
-import {
-  filterExpression as sdFilterExpression,
   isSdLanternBuffEvent,
   isSdLanternOpeningEvent,
-} from "./dungeons/shadowlands/sd";
-import {
-  filterExpression as soaFilterExpression,
   isSoaSpearEvent,
-} from "./dungeons/shadowlands/soa";
-import {
-  filterExpression as topFilterExpression,
   isTopBannerAuraEvent,
-} from "./dungeons/shadowlands/top";
-import {
-  chainFilterExpression,
-  recursiveGetEvents,
-  reduceEventsByPlayer,
-} from "./utils";
+  nwFilterExpression,
+  nwOrbReducer,
+  nwSpearReducer,
+  pfFilterExpression,
+  sdFilterExpression,
+  soaFilterExpression,
+  soaSpearReducer,
+  topFilterExpression,
+} from "./dungeons/shadowlands";
+import { recursiveGetEvents, reduceEventsByPlayer } from "./utils";
 
 export * from "./other";
 export * from "./types";
@@ -168,7 +135,7 @@ type AffixWithEvents = Exclude<
   | "Skittish"
 >;
 
-const affixExpressionMap: Record<AffixWithEvents, string> = {
+const affixExpressionMap: Record<AffixWithEvents, string[]> = {
   [Affixes.Sanguine]: sanguineFilterExpression,
   [Affixes.Explosive]: explosiveFilterExpression,
   [Affixes.Grievous]: grievousFilterExpression,
@@ -192,11 +159,12 @@ const generateFilterExpression = ({
 
   const affixExpressions = affixes
     .filter((affix): affix is AffixWithEvents => affix in affixExpressionMap)
-    .map((affix) => affixExpressionMap[affix]);
+    .flatMap((affix) => affixExpressionMap[affix]);
 
-  return chainFilterExpression(
-    [...baseExpressions, ...dungeonExpressions, ...affixExpressions].flat()
-  );
+  return [...baseExpressions, ...dungeonExpressions, ...affixExpressions]
+    .flat()
+    .map((part) => `(${part})`)
+    .join(" or ");
 };
 
 const filterDungeonEvents = (allEvents: AnyEvent[], dungeonID: DungeonIDs) => {
@@ -207,8 +175,14 @@ const filterDungeonEvents = (allEvents: AnyEvent[], dungeonID: DungeonIDs) => {
       return allEvents.filter(isHoaGargoyleEvent);
     case DungeonIDs.THE_NECROTIC_WAKE:
       return [
-        ...allEvents.filter(isNwSpearEvent),
-        ...allEvents.filter(isNwOrbEvent),
+        ...allEvents
+          .filter(isNwSpearEvent)
+          .reduce<DamageEvent[][]>(nwSpearReducer, [])
+          .flatMap((chunk) => reduceEventsByPlayer(chunk, "sourceID")),
+        ...allEvents
+          .filter(isNwOrbEvent)
+          .reduce<DamageEvent[][]>(nwOrbReducer, [])
+          .flatMap((chunk) => reduceEventsByPlayer(chunk, "sourceID")),
         ...allEvents.filter(isNwHammerEvent),
         ...allEvents.filter(isNwKyrianOrbDamageEvent),
         ...allEvents.filter(isNwKyrianOrbHealEvent),
@@ -226,7 +200,14 @@ const filterDungeonEvents = (allEvents: AnyEvent[], dungeonID: DungeonIDs) => {
     case DungeonIDs.THEATRE_OF_PAIN:
       return allEvents.filter(isTopBannerAuraEvent);
     case DungeonIDs.SPIRES_OF_ASCENSION:
-      return allEvents.filter(isSoaSpearEvent);
+      return (
+        allEvents
+          .filter(isSoaSpearEvent)
+          .reduce<ApplyDebuffEvent[][]>(soaSpearReducer, [])
+          // pick only the first event of each chunk,
+          // indicating when the spear was used
+          .flatMap((chunk) => chunk[0])
+      );
     default:
       return [];
   }
@@ -404,14 +385,6 @@ const filterAffixEvents = (
     ...necroticStacks,
     ...necroticDamage,
   ];
-};
-
-const filterProfessionEvents = (allEvents: AnyEvent[]) => {
-  const leatherworkingDrums = allEvents.filter(isLeatherworkingDrumsEvent);
-  const invisibility = allEvents.filter(isInvisibilityEvent);
-  const engineeringBattleRez = allEvents.filter(isEngineeringBattleRezEvent);
-
-  return [...leatherworkingDrums, ...invisibility, ...engineeringBattleRez];
 };
 
 const filterRemarkableSpellEvents = (allEvents: AnyEvent[]) => {

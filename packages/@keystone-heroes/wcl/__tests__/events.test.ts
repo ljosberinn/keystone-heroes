@@ -5,7 +5,6 @@ import type {
 } from "@keystone-heroes/wcl/src/queries/events";
 
 import { EXPLOSIVE } from "../src/queries/events/affixes/explosive";
-import { PRIDE } from "../src/queries/events/affixes/prideful";
 import { SPITEFUL } from "../src/queries/events/affixes/spiteful";
 import {
   PF_GREEN_BUFF,
@@ -71,65 +70,6 @@ const actorPlayerMap: Params[2] = new Map([
 
 describe("Death Events", () => {
   describe("Player kills NPC", () => {
-    test("Player kills Manifestation of Pride", () => {
-      const pull: Params[0] = {
-        ...defaultPull,
-        enemyNPCs: [
-          {
-            id: 31,
-            gameID: PRIDE.unit,
-            maximumInstanceID: 5,
-            minimumInstanceID: 1,
-          },
-        ],
-      };
-
-      const events: Params[1] = [
-        {
-          timestamp: 1_976_727,
-          type: "death",
-          sourceID: -1,
-          targetID: 31,
-          targetInstance: 1,
-          abilityGameID: 0,
-        },
-        {
-          timestamp: 2_323_231,
-          type: "death",
-          sourceID: -1,
-          targetID: 31,
-          targetInstance: 2,
-          abilityGameID: 0,
-        },
-        {
-          timestamp: 2_608_462,
-          type: "death",
-          sourceID: -1,
-          targetID: 31,
-          targetInstance: 3,
-          abilityGameID: 0,
-        },
-        {
-          timestamp: 3_041_341,
-          type: "death",
-          sourceID: -1,
-          targetID: 31,
-          targetInstance: 4,
-          abilityGameID: 0,
-        },
-        {
-          timestamp: 3_413_149,
-          type: "death",
-          sourceID: -1,
-          targetID: 31,
-          targetInstance: 5,
-          abilityGameID: 0,
-        },
-      ];
-
-      expect(processEvents(pull, events, actorPlayerMap)).toMatchSnapshot();
-    });
-
     test("Player kills Plaguefall Slimes", () => {
       const pull: Params[0] = {
         ...defaultPull,
@@ -159,57 +99,6 @@ describe("Death Events", () => {
         ...event,
         type: "death",
       }));
-
-      expect(processEvents(pull, events, actorPlayerMap)).toMatchSnapshot();
-    });
-  });
-
-  describe("NPC kills Player", () => {
-    test("Manifestation of Pride", () => {
-      const pull: Params[0] = {
-        ...defaultPull,
-        enemyNPCs: [
-          {
-            id: 31,
-            gameID: PRIDE.unit,
-            maximumInstanceID: 1,
-            minimumInstanceID: 1,
-          },
-        ],
-      };
-
-      const events: Params[1] = [
-        {
-          timestamp: 2_538_004,
-          type: "death",
-          sourceID: -1,
-          targetID: actorOneID,
-          abilityGameID: 0,
-          killerID: 31,
-          killerInstance: 4,
-          killingAbilityGameID: 324_323,
-        },
-        {
-          timestamp: 2_922_258,
-          type: "death",
-          sourceID: -1,
-          targetID: actorOneID,
-          abilityGameID: 0,
-          killerID: 31,
-          killerInstance: 15,
-          killingAbilityGameID: 1,
-        },
-        {
-          timestamp: 3_037_098,
-          type: "death",
-          sourceID: -1,
-          targetID: actorOneID,
-          abilityGameID: 0,
-          killerID: 31,
-          killerInstance: 4,
-          killingAbilityGameID: 342_332,
-        },
-      ];
 
       expect(processEvents(pull, events, actorPlayerMap)).toMatchSnapshot();
     });

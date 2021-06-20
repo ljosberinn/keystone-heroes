@@ -1,5 +1,4 @@
-import type { AnyEvent, DamageEvent, DeathEvent } from "..";
-import { createIsSpecificEvent } from "../utils";
+import type { AnyEvent, DamageEvent, DeathEvent } from "../types";
 
 export const EXPLOSIVE = {
   unit: 120_651,
@@ -27,51 +26,16 @@ export const EXPLOSIVE = {
 const abilityExpression = `target.type = "player" and rawDamage > 0 and ability.id = ${EXPLOSIVE.ability}`;
 const killExpression = `target.name = ${EXPLOSIVE.unit} AND type = "damage" AND overkill > 0`;
 
-export const filterExpression = `(${abilityExpression}) OR (${killExpression})`;
+export const filterExpression = [abilityExpression, killExpression];
 
-export const isExplosiveDamageEvent = createIsSpecificEvent<DamageEvent>({
-  type: "damage",
-  abilityGameID: EXPLOSIVE.ability,
-});
+// TODO: separate from other environmental damage
+export const isExplosiveDamageEvent = (
+  event: AnyEvent
+): event is DamageEvent => {
+  return event.type === "damage" && event.sourceID === -1;
+};
 
 // TODO: separate from e.g. PF Slimes and Player Deaths
 export const isExplosiveDeathEvent = (event: AnyEvent): event is DeathEvent => {
-  return event.type === "death" && !("killerID" in event);
+  return event.type === "death" && event.sourceID !== -1; // !("killerID" in event);
 };
-
-// export const getExplosiveKillEvents = createEventFetcher<DamageEvent>({
-//   filterExpression: killExpression,
-// });
-
-// export const getExplosiveDamageTakenEvents = createEventFetcher<DamageEvent>({
-//   dataType: EventDataType.DamageTaken,
-//   hostilityType: HostilityType.Friendlies,
-//   abilityID: EXPLOSIVE.ability,
-// });
-
-// type ExplosiveEvents = {
-//   damageTakenByExplosivesEvents: ReturnType<typeof reduceEventsByPlayer>;
-//   explosivesOverkillEvents: DamageEvent[];
-// };
-
-// export const getExplosiveEvents = async (
-//   params: GetEventBaseParams
-// ): Promise<ExplosiveEvents> => {
-//   const allEvents = await getEvents<DamageEvent>({
-//     ...params,
-//     filterExpression,
-//   });
-
-//   const damageTakenByExplosivesEvents = reduceEventsByPlayer(
-//     allEvents.filter((event) => event.sourceID === -1),
-//     "targetID"
-//   );
-//   const explosivesOverkillEvents = allEvents.filter(
-//     (event) => event.sourceID !== -1
-//   );
-
-//   return {
-//     damageTakenByExplosivesEvents,
-//     explosivesOverkillEvents,
-//   };
-// };

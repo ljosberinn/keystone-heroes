@@ -20,7 +20,9 @@ export const STORMING = 343_520;
  * }
  * ```
  */
-export const filterExpression = `type = "damage" and target.type = "player" and ability.id = ${STORMING}`;
+export const filterExpression = [
+  `type = "damage" and target.type = "player" and ability.id = ${STORMING}`,
+];
 
 export const isStormingEvent = createIsSpecificEvent<DamageEvent>({
   type: "damage",

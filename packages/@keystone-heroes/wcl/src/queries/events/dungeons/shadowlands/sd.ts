@@ -24,19 +24,3 @@ export const isSdLanternBuffEvent = createIsSpecificEvent<ApplyBuffEvent>({
   type: "applybuff",
   abilityGameID: SD_LANTERN_BUFF,
 });
-
-// export const getSanguineDepthsLanternUsages = createEventFetcher<BeginCastEvent>(
-//   {
-//     dataType: EventDataType.Casts,
-//     hostilityType: HostilityType.Friendlies,
-//     abilityID: SD_LANTERN_OPENING,
-//   }
-// );
-
-// export const getSanguineDepthsBuffEvents = createEventFetcher<
-//   ApplyBuffEvent | ApplyBuffStackEvent | RemoveBuffEvent
-// >({
-//   dataType: EventDataType.Buffs,
-//   hostilityType: HostilityType.Friendlies,
-//   abilityID: SD_LANTERN_BUFF,
-// });

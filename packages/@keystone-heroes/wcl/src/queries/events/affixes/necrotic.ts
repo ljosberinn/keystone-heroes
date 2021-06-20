@@ -1,4 +1,4 @@
-import type { ApplyDebuffStackEvent, DamageEvent } from "..";
+import type { ApplyDebuffStackEvent, DamageEvent } from "../types";
 import { createIsSpecificEvent } from "../utils";
 
 export const NECROTIC = 209_858;
@@ -28,7 +28,9 @@ const expressions = {
   damage: 'type = "damage" and rawDamage > 0',
 };
 
-export const filterExpression = `(${expressions.base}) AND ((${expressions.stack}) OR (${expressions.damage}))`;
+export const filterExpression = [
+  `(${expressions.base}) AND ((${expressions.stack}) OR (${expressions.damage}))`,
+];
 
 export const isNecroticDamageEvent = createIsSpecificEvent<DamageEvent>({
   type: "damage",

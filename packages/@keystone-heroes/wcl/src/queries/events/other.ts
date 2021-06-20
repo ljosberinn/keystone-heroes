@@ -1,31 +1,5 @@
-// export const getRemarkableSpellCastEvents = async (
-//   params: GetEventBaseParams,
-//   playerActorIDs: string[]
-// ): Promise<CastEvent[]> => {
-//   const abilityIDFilterExpression = `ability.id IN (${remarkableSpellIDs})`;
-//   // const sourceNamesFilterExpression = `source.name IN (${playerActorIDs.join(
-//   //   ", "
-//   // )})`;
-
-import type { ApplyBuffEvent, CastEvent } from "./types";
+import type { AnyEvent, ApplyBuffEvent, CastEvent } from "./types";
 import { createIsSpecificEvent } from "./utils";
-
-//   // const filterExpression = [
-//   //   abilityIDFilterExpression,
-//   //   sourceNamesFilterExpression,
-//   // ].join(" AND ");
-
-//   const allEvents = await getEvents<CastEvent | BeginCastEvent>({
-//     ...params,
-//     dataType: EventDataType.Casts,
-//     hostilityType: HostilityType.Friendlies,
-//     filterExpression: abilityIDFilterExpression,
-//   });
-
-//   return allEvents.filter((event): event is CastEvent => {
-//     return event.type === "cast";
-//   });
-// };
 
 export const INVISIBILITY = {
   DIMENSIONAL_SHIFTER: 321_422,
@@ -42,14 +16,12 @@ export const LEATHERWORKING_DRUMS = {
   SHADOWLANDS: 309_658,
 } as const;
 
-export const isLeatherworkingDrumsEvent = createIsSpecificEvent<ApplyBuffEvent>(
-  {
-    abilityGameID: LEATHERWORKING_DRUMS.SHADOWLANDS,
-    type: "applybuff",
-  }
-);
+const isLeatherworkingDrumsEvent = createIsSpecificEvent<ApplyBuffEvent>({
+  abilityGameID: LEATHERWORKING_DRUMS.SHADOWLANDS,
+  type: "applybuff",
+});
 
-export const isInvisibilityEvent = createIsSpecificEvent<ApplyBuffEvent>({
+const isInvisibilityEvent = createIsSpecificEvent<ApplyBuffEvent>({
   type: "applybuff",
   abilityGameID: [
     INVISIBILITY.DIMENSIONAL_SHIFTER,
@@ -57,7 +29,7 @@ export const isInvisibilityEvent = createIsSpecificEvent<ApplyBuffEvent>({
   ],
 });
 
-export const isEngineeringBattleRezEvent = createIsSpecificEvent<CastEvent>({
+const isEngineeringBattleRezEvent = createIsSpecificEvent<CastEvent>({
   type: "cast",
   abilityGameID: ENGINEERING_BATTLE_REZ.SHADOWLANDS,
 });
@@ -70,30 +42,12 @@ export const engineeringBattleRezExpression = `type = "cast" and ability.id = ${
  */
 export const leatherworkingDrumsExpression = `type = "cast" and ability.id = ${LEATHERWORKING_DRUMS.SHADOWLANDS}`;
 
-// export const getInvisibilityUsage = async (
-//   params: GetEventBaseParams
-// ): Promise<ApplyBuffEvent[]> => {
-//   const allEvents = await getEvents<ApplyBuffEvent | RemoveBuffEvent>({
-//     ...params,
-//     dataType: EventDataType.Buffs,
-//     hostilityType: HostilityType.Friendlies,
-//     filterExpression: `ability.id IN (${INVISIBILITY.DIMENSIONAL_SHIFTER}, ${INVISIBILITY.POTION_OF_THE_HIDDEN_SPIRIT})`,
-//   });
+export const filterProfessionEvents = (
+  allEvents: AnyEvent[]
+): (CastEvent | ApplyBuffEvent)[] => {
+  const leatherworkingDrums = allEvents.filter(isLeatherworkingDrumsEvent);
+  const invisibility = allEvents.filter(isInvisibilityEvent);
+  const engineeringBattleRez = allEvents.filter(isEngineeringBattleRezEvent);
 
-//   return allEvents.filter(
-//     (event): event is ApplyBuffEvent => event.type === "applybuff"
-//   );
-// };
-
-// export const getEngineeringBattleRezCastEvents = async (
-//   params: GetEventBaseParams
-// ): Promise<CastEvent[]> => {
-//   const allEvents = await getEvents<BeginCastEvent | CastEvent>({
-//     ...params,
-//     dataType: EventDataType.Casts,
-//     hostilityType: HostilityType.Friendlies,
-//     abilityID: ENGINEERING_BATTLE_REZ.SHADOWLANDS,
-//   });
-
-//   return allEvents.filter((event): event is CastEvent => event.type === "cast");
-// };
+  return [...leatherworkingDrums, ...invisibility, ...engineeringBattleRez];
+};

@@ -1,77 +1,18 @@
-import { graphql } from "msw";
-import { setupServer } from "msw/node";
+import type { ApplyDebuffStackEvent } from "@keystone-heroes/wcl/queries";
 
-import {
-  getNecroticDamageTakenEvents,
-  getHighestNecroticStackAmount,
-} from "../src/queries/events/affixes/necrotic";
+import { getHighestNecroticStack } from "../src/queries/events/affixes/necrotic";
 import necroticApplyDebuffEvents from "./fixtures/necroticApplyDebuffEvents.json";
-import necroticDamageTakenEvents from "./fixtures/necroticDamageTakenEvents.json";
 
 describe("necrotic", () => {
-  const server = setupServer();
+  test("getHighestNecroticStack", () => {
+    const events = necroticApplyDebuffEvents
+      .filter((event) => event.type === "applydebuffstack")
+      .map<ApplyDebuffStackEvent>((event) => ({
+        ...event,
+        type: "applydebuffstack",
+        stack: event.stack ?? 0,
+      }));
 
-  beforeAll(() => {
-    server.listen();
-  });
-
-  afterEach(() => {
-    server.resetHandlers();
-  });
-
-  afterAll(() => {
-    server.close();
-  });
-
-  test("getNecroticDamageTakenEvents", async () => {
-    server.use(
-      graphql.query("EventData", (_req, res, ctx) => {
-        return res(
-          ctx.data({
-            reportData: {
-              report: {
-                events: {
-                  data: necroticDamageTakenEvents,
-                },
-              },
-            },
-          })
-        );
-      })
-    );
-
-    const result = await getNecroticDamageTakenEvents({
-      reportID: "",
-      startTime: 0,
-      endTime: 1,
-    });
-
-    expect(result).toMatchSnapshot();
-  });
-
-  test("getHighestNecroticStackAmount", async () => {
-    server.use(
-      graphql.query("EventData", (_req, res, ctx) => {
-        return res(
-          ctx.data({
-            reportData: {
-              report: {
-                events: {
-                  data: necroticApplyDebuffEvents,
-                },
-              },
-            },
-          })
-        );
-      })
-    );
-
-    const result = await getHighestNecroticStackAmount({
-      reportID: "",
-      startTime: 0,
-      endTime: 1,
-    });
-
-    expect(result).toMatchSnapshot();
+    expect(getHighestNecroticStack(events)).toMatchSnapshot();
   });
 });

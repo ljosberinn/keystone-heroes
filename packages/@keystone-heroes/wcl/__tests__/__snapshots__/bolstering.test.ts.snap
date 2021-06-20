@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`bolstering getBolsteringEvents 1`] = `
+exports[`bolstering getHighestBolsteringStack 1`] = `
 Array [
   Object {
     "abilityGameID": 209859,

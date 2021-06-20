@@ -1,4 +1,4 @@
-import type { DamageEvent } from "..";
+import type { DamageEvent } from "../types";
 import { createIsSpecificEvent } from "../utils";
 
 export const BURSTING = 243_237;
@@ -21,7 +21,9 @@ export const BURSTING = 243_237;
  * }
  * ```
  */
-export const filterExpression = `type = "damage" and target.type = "player" and ability.id = ${BURSTING} and rawDamage > 0`;
+export const filterExpression = [
+  `type = "damage" and target.type = "player" and ability.id = ${BURSTING} and rawDamage > 0`,
+];
 
 export const isBurstingEvent = createIsSpecificEvent<DamageEvent>({
   type: "damage",

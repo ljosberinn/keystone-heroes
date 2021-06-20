@@ -4,8 +4,7 @@ import { setupServer } from "msw/node";
 import type { DamageEvent, HealEvent } from "../src/queries/events/types";
 import {
   createChunkByThresholdReducer,
-  createEventFetcher,
-  getEvents,
+  recursiveGetEvents,
   reduceEventsByPlayer,
 } from "../src/queries/events/utils";
 import { EventDataType, HostilityType } from "../src/types";
@@ -13,7 +12,7 @@ import NPCDamagesPlayerEvents from "./fixtures/NPCDamagesPlayerEvents.json";
 import kyrianOrbHealEvents from "./fixtures/kyrianOrbHealEvents.json";
 import playerDamagesNPCEvents from "./fixtures/playerDamagesNPCEvents.json";
 
-describe("getEvents", () => {
+describe("recursiveGetEvents", () => {
   const server = setupServer();
 
   beforeAll(() => {
@@ -70,7 +69,7 @@ describe("getEvents", () => {
       })
     );
 
-    const response = await getEvents({
+    const response = await recursiveGetEvents({
       dataType: EventDataType.DamageDone,
       hostilityType: HostilityType.Enemies,
       reportID: "",
@@ -118,7 +117,7 @@ describe("getEvents", () => {
       })
     );
 
-    const response = await getEvents({
+    const response = await recursiveGetEvents({
       dataType: EventDataType.DamageDone,
       hostilityType: HostilityType.Enemies,
       reportID: "",
@@ -138,7 +137,7 @@ describe("getEvents", () => {
       })
     );
 
-    const response = await getEvents({
+    const response = await recursiveGetEvents({
       dataType: EventDataType.DamageDone,
       hostilityType: HostilityType.Enemies,
       reportID: "",
@@ -156,7 +155,7 @@ describe("getEvents", () => {
       })
     );
 
-    const response = await getEvents({
+    const response = await recursiveGetEvents({
       dataType: EventDataType.DamageDone,
       hostilityType: HostilityType.Enemies,
       reportID: "",
@@ -165,50 +164,6 @@ describe("getEvents", () => {
     });
 
     expect(response).toStrictEqual([]);
-  });
-});
-
-describe("createEventFetcher", () => {
-  const server = setupServer();
-
-  beforeAll(() => {
-    server.listen();
-  });
-
-  afterEach(() => {
-    server.resetHandlers();
-  });
-
-  afterAll(() => {
-    server.close();
-  });
-
-  test("forwards params to returned function", async () => {
-    const initialParams: Parameters<typeof createEventFetcher>[0] = {
-      dataType: EventDataType.DamageDone,
-      hostilityType: HostilityType.Enemies,
-    };
-
-    const distinguishedParams: Parameters<
-      ReturnType<typeof createEventFetcher>
-    >[0] = {
-      reportID: "",
-      startTime: 0,
-      endTime: 1,
-    };
-
-    server.use(
-      graphql.query("EventData", (req, res, ctx) => {
-        expect(req.variables).toMatchObject({
-          ...initialParams,
-          ...distinguishedParams,
-        });
-
-        return res(ctx.data({}));
-      })
-    );
-
-    await createEventFetcher(initialParams)(distinguishedParams);
   });
 });
 

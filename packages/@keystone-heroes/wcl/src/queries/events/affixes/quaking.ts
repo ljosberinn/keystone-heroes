@@ -27,7 +27,9 @@ const expressions = {
   damage: '"damage"',
 };
 
-export const filterExpression = `${expressions.base} AND type IN (${expressions.interrupt}, ${expressions.damage})`;
+export const filterExpression = [
+  `${expressions.base} AND type IN (${expressions.interrupt}, ${expressions.damage})`,
+];
 
 export const isQuakingInterruptEvent = createIsSpecificEvent<InterruptEvent>({
   type: "interrupt",

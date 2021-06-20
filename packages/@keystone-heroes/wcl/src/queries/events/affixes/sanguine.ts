@@ -25,10 +25,12 @@ export const SANGUINE_ICHOR_DAMAGE = 226_512;
 const expressions = {
   base: 'ability.name = "Sanguine Ichor"',
   damage: 'target.type = "player" and type = "damage"',
-  heal: 'target.type = "NPC" and type = "heal"',
+  heal: 'target.type = "npc" and type = "heal"',
 };
 
-export const filterExpression = `${expressions.base} AND ((${expressions.damage}) OR (${expressions.heal}))`;
+export const filterExpression = [
+  `${expressions.base} and ((${expressions.damage}) OR (${expressions.heal}))`,
+];
 
 export const isSanguineDamageEvent = createIsSpecificEvent<DamageEvent>({
   type: "damage",

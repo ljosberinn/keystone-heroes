@@ -1,47 +1,15 @@
-import { graphql } from "msw";
-import { setupServer } from "msw/node";
+import type { ApplyBuffEvent } from "@keystone-heroes/wcl/queries";
 
-import { getBolsteringEvents } from "../src/queries/events/affixes/bolstering";
+import { getHighestBolsteringStack } from "../src/queries/events/affixes/bolstering";
 import bolsteringApplyBuffEvents from "./fixtures/bolsteringApplyBuffEvents.json";
 
 describe("bolstering", () => {
-  const server = setupServer();
+  test("getHighestBolsteringStack", () => {
+    const events = bolsteringApplyBuffEvents.map<ApplyBuffEvent>((event) => ({
+      ...event,
+      type: "applybuff",
+    }));
 
-  beforeAll(() => {
-    server.listen();
-  });
-
-  afterEach(() => {
-    server.resetHandlers();
-  });
-
-  afterAll(() => {
-    server.close();
-  });
-
-  test("getBolsteringEvents", async () => {
-    server.use(
-      graphql.query("EventData", (_req, res, ctx) => {
-        return res(
-          ctx.data({
-            reportData: {
-              report: {
-                events: {
-                  data: bolsteringApplyBuffEvents,
-                },
-              },
-            },
-          })
-        );
-      })
-    );
-
-    const result = await getBolsteringEvents({
-      reportID: "",
-      startTime: 0,
-      endTime: 1,
-    });
-
-    expect(result).toMatchSnapshot();
+    expect(getHighestBolsteringStack(events)).toMatchSnapshot();
   });
 });

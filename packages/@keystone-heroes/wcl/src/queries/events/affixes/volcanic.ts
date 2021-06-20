@@ -20,7 +20,9 @@ export const VOLCANIC = 209_862;
  * }
  * ```
  */
-export const filterExpression = `type = "damage" and target.type = "player" and ability.id = ${VOLCANIC}`;
+export const filterExpression = [
+  `type = "damage" and target.type = "player" and ability.id = ${VOLCANIC}`,
+];
 
 export const isVolcanicEvent = (event: AnyEvent): event is DamageEvent =>
   event.type === "damage" &&

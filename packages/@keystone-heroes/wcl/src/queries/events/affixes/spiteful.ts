@@ -1,4 +1,4 @@
-import type { DamageEvent } from "..";
+import type { DamageEvent } from "../types";
 import { createIsSpecificEvent } from "../utils";
 
 export const SPITEFUL = 174_773;
@@ -21,7 +21,9 @@ export const SPITEFUL = 174_773;
  * }
  * ```
  */
-export const filterExpression = `source.id = ${SPITEFUL} and type = "damage" AND target.type = "player"`;
+export const filterExpression = [
+  `source.id = ${SPITEFUL} and type = "damage" AND target.type = "player"`,
+];
 
 export const isSpitefulDamageEvent = createIsSpecificEvent<DamageEvent>({
   type: "damage",

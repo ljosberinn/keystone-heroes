@@ -1,4 +1,4 @@
-import type { ApplyBuffEvent } from "..";
+import type { ApplyBuffEvent } from "../types";
 import { createIsSpecificEvent } from "../utils";
 
 export const BOLSTERING = 209_859;
@@ -22,7 +22,9 @@ export const BOLSTERING = 209_859;
  * }
  * ```
  */
-export const filterExpression = `type = "applybuff" and ability.id = ${BOLSTERING} and target.type = "NPC"`;
+export const filterExpression = [
+  `type = "applybuff" and ability.id = ${BOLSTERING} and target.type = "npc"`,
+];
 
 export const isBolsteringEvent = createIsSpecificEvent<ApplyBuffEvent>({
   type: "applybuff",
