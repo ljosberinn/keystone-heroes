@@ -229,8 +229,6 @@ const createManyPlayer = async (
         return null;
       }
 
-      // TODO: batch create legendaries upfront
-
       return {
         actorID: dataset.actorID,
         dps: dataset.dps,

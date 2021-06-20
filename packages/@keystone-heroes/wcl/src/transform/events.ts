@@ -235,6 +235,8 @@ const damageProcessor: Processor<DamageEvent> = (
         damage: event.amount + (event.absorbed ?? 0),
         targetPlayerID,
         sourceNPCID,
+        // only relevant on plagueborer
+        abilityID: event.abilityGameID,
       };
     }
   }
@@ -304,14 +306,14 @@ const healProcessor: Processor<HealEvent> = (
   }
 
   if (
-    event.abilityGameID === NW.KYRIAN_ORB.heal &&
+    event.abilityGameID === NW.KYRIAN_ORB_HEAL &&
     sourcePlayerID &&
     targetPlayerID
   ) {
     return {
       timestamp: event.timestamp,
       eventType: EventType.HealingDone,
-      abilityID: NW.KYRIAN_ORB.heal,
+      abilityID: NW.KYRIAN_ORB_HEAL,
       healingDone: event.amount,
       sourcePlayerID,
       targetPlayerID,

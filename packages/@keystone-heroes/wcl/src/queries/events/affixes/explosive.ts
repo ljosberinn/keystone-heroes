@@ -1,4 +1,5 @@
-import type { AnyEvent, DamageEvent, DeathEvent } from "../types";
+import type { AnyEvent, DamageEvent } from "../types";
+import { createIsSpecificEvent } from "../utils";
 
 export const EXPLOSIVE = {
   unit: 120_651,
@@ -23,19 +24,56 @@ export const EXPLOSIVE = {
  * }
  * ```
  */
-const abilityExpression = `target.type = "player" and rawDamage > 0 and ability.id = ${EXPLOSIVE.ability}`;
-const killExpression = `target.name = ${EXPLOSIVE.unit} AND type = "damage" AND overkill > 0`;
+export const filterExpression = [
+  `target.type = "player" and rawDamage > 0 and ability.id = ${EXPLOSIVE.ability}`,
+  `target.id = ${EXPLOSIVE.unit} AND type = "damage" AND overkill > 0`,
+];
 
-export const filterExpression = [abilityExpression, killExpression];
+export const isExplosiveDamageEvent = createIsSpecificEvent<DamageEvent>({
+  type: "damage",
+  abilityGameID: EXPLOSIVE.ability,
+});
 
-// TODO: separate from other environmental damage
-export const isExplosiveDamageEvent = (
-  event: AnyEvent
-): event is DamageEvent => {
-  return event.type === "damage" && event.sourceID === -1;
-};
+export const createIsExplosiveDeathEvent =
+  (targetID: number) =>
+  (event: AnyEvent): event is DamageEvent => {
+    return (
+      event.type === "damage" &&
+      "targetInstance" in event &&
+      event.sourceID !== -1 &&
+      event.targetID === targetID
+    );
+  };
 
-// TODO: separate from e.g. PF Slimes and Player Deaths
-export const isExplosiveDeathEvent = (event: AnyEvent): event is DeathEvent => {
-  return event.type === "death" && event.sourceID !== -1; // !("killerID" in event);
+export const findExplosiveTargetID = (allEvents: AnyEvent[]): number | null => {
+  const dataset = allEvents.reduce<{
+    targetID: null | number;
+    targetInstance: null | number;
+  }>(
+    (acc, event) => {
+      if (
+        // skip damageEvents
+        event.type !== "damage" ||
+        // ignore event if target is single instance
+        !("targetInstance" in event) ||
+        // skip empty instances, just TS here
+        event.targetInstance === undefined ||
+        // check whether the stored instance is lower than this events
+        (acc.targetInstance && event.targetInstance < acc.targetInstance)
+      ) {
+        return acc;
+      }
+
+      return {
+        targetID: event.targetID,
+        targetInstance: event.targetInstance,
+      };
+    },
+    {
+      targetID: null,
+      targetInstance: null,
+    }
+  );
+
+  return dataset.targetID;
 };

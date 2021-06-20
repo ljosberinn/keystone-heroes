@@ -371,15 +371,18 @@ const handler: RequestHandler<Request, Response> = async (req, res) => {
       ],
     };
 
-    const playerActorIDs = new Set(
-      maybeStoredFight.PlayerFight.map(
-        (playerFight) => playerFight.player.actorID
-      )
+    const playerMetaInformation = maybeStoredFight.PlayerFight.map(
+      (playerFight) => {
+        return {
+          actorID: playerFight.player.actorID,
+          class: playerFight.player.character.class.name,
+        };
+      }
     );
 
     const { allEvents, playerDeathEvents } = await getEvents(
       params,
-      playerActorIDs
+      playerMetaInformation
     );
     const hasNoWipes = playerDeathEvents.length < 5;
 

@@ -15,10 +15,6 @@ export type GetEventBaseParams<
 > &
   T;
 
-export type GetSourceIDParams = Pick<GetEventBaseParams, "reportID"> & {
-  fightID: number;
-};
-
 export const recursiveGetEvents = async <T extends AnyEvent>(
   params: GetEventBaseParams<{
     abilityID?: number;
@@ -82,7 +78,13 @@ export const reduceEventsByPlayer = <
             case "damage":
               return {
                 ...dataset,
-                amount: dataset.amount + event.amount + (event.absorbed ?? 0),
+                amount:
+                  dataset.amount +
+                  event.amount +
+                  // absorbed damage still contributes to overall dps
+                  (event.absorbed ?? 0) -
+                  // overkill damage does not
+                  (event.overkill ?? 0),
               };
             default:
               return dataset;

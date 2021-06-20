@@ -105,6 +105,7 @@ export type DamageEvent = BaseEvent<{
   type: "damage";
   sourceID: number;
   targetID: number;
+  targetInstance?: number;
   abilityGameID: number;
   hitType: number;
   amount: number;

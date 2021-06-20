@@ -1,84 +1,119 @@
 import { DungeonIDs, remarkableSpellIDs } from "@keystone-heroes/db/data";
-import { Affixes } from "@keystone-heroes/db/types";
+import { PlayableClass, Affixes } from "@keystone-heroes/db/types";
 
 import { filterProfessionEvents } from "../events/other";
 import type {
   AnyEvent,
   ApplyDebuffEvent,
+  CastEvent,
   DamageEvent,
   DeathEvent,
 } from "../events/types";
 import {
-  sanguineFilterExpression,
-  explosiveFilterExpression,
-  grievousFilterExpression,
-  necroticFilterExpression,
-  volcanicFilterExpression,
-  burstingFilterExpression,
-  spitefulFilterExpression,
-  quakingFilterExpression,
-  stormingFilterExpression,
-  bolsteringFilterExpression,
-  tormentedFilterExpression,
-  isStygianKingsBarbsEvent,
-  isTheFifthSkullDamageEvent,
-  isBottleOfSanguineIchorDamageEvent,
-  isBottleOfSanguineIchorHealEvent,
-  isVolcanicPlumeDamageEvent,
-  isStoneWardEvent,
-  isInfernoDamageEvent,
-  isScorchingBlastDamageEvent,
-  isSoulforgeFlamesDamageEvent,
-  isColdSnapDamageEvent,
-  isFrostLanceDamageEvent,
-  isBitingColdDamageEvent,
-  isSeismicWaveDamageEvent,
-  isCrushDamageEvent,
-  isSeverDamageEvent,
-  isRazeDamageEvent,
-  isStormingEvent,
-  isSpitefulDamageEvent,
-  isSanguineDamageEvent,
-  reduceHealingDoneBySanguine,
-  isSanguineHealEvent,
-  isVolcanicEvent,
-  isQuakingDamageEvent,
-  isQuakingInterruptEvent,
+  filterExpression as bolsteringFilterExpression,
   getHighestBolsteringStack,
   isBolsteringEvent,
-  isBurstingEvent,
-  isExplosiveDamageEvent,
-  isExplosiveDeathEvent,
-  isGrievousDamageEvent,
-  getHighestNecroticStack,
-  isNecroticStackEvent,
-  isNecroticDamageEvent,
-} from "./affixes";
+} from "./affixes/bolstering";
 import {
-  dosFilterExpression,
-  hoaFilterExpression,
+  filterExpression as burstingFilterExpression,
+  isBurstingEvent,
+} from "./affixes/bursting";
+import {
+  createIsExplosiveDeathEvent,
+  filterExpression as explosiveFilterExpression,
+  findExplosiveTargetID,
+  isExplosiveDamageEvent,
+} from "./affixes/explosive";
+import {
+  filterExpression as grievousFilterExpression,
+  isGrievousDamageEvent,
+} from "./affixes/grievous";
+import {
+  filterExpression as necroticFilterExpression,
+  getHighestNecroticStack,
+  isNecroticDamageEvent,
+  isNecroticStackEvent,
+} from "./affixes/necrotic";
+import {
+  filterExpression as quakingFilterExpression,
+  isQuakingDamageEvent,
+  isQuakingInterruptEvent,
+} from "./affixes/quaking";
+import {
+  filterExpression as sanguineFilterExpression,
+  isSanguineDamageEvent,
+  isSanguineHealEvent,
+  reduceHealingDoneBySanguine,
+} from "./affixes/sanguine";
+import {
+  filterExpression as spitefulFilterExpression,
+  isSpitefulDamageEvent,
+} from "./affixes/spiteful";
+import {
+  filterExpression as stormingFilterExpression,
+  isStormingEvent,
+} from "./affixes/storming";
+import {
+  filterExpression as tormentedFilterExpression,
+  isBitingColdDamageEvent,
+  isBottleOfSanguineIchorDamageEvent,
+  isBottleOfSanguineIchorHealEvent,
+  isColdSnapDamageEvent,
+  isCrushDamageEvent,
+  isFrostLanceDamageEvent,
+  isInfernoDamageEvent,
+  isRazeDamageEvent,
+  isScorchingBlastDamageEvent,
+  isSeismicWaveDamageEvent,
+  isSeverDamageEvent,
+  isSoulforgeFlamesDamageEvent,
+  isStoneWardEvent,
+  isStygianKingsBarbsEvent,
+  isTheFifthSkullDamageEvent,
+  isVolcanicPlumeDamageEvent,
+} from "./affixes/tormented";
+import {
+  filterExpression as volcanicFilterExpression,
+  isVolcanicEvent,
+} from "./affixes/volcanic";
+import {
+  filterExpression as dosFilterExpression,
   isDosUrnEvent,
+} from "./dungeons/shadowlands/dos";
+import {
+  filterExpression as hoaFilterExpression,
   isHoaGargoyleEvent,
+} from "./dungeons/shadowlands/hoa";
+import {
+  filterExpression as nwFilterExpression,
   isNwHammerEvent,
   isNwKyrianOrbDamageEvent,
   isNwKyrianOrbHealEvent,
   isNwOrbEvent,
   isNwSpearEvent,
-  isPfSlimeBuffEvent,
-  isPfSlimeDeathEvent,
-  isSdLanternBuffEvent,
-  isSdLanternOpeningEvent,
-  isSoaSpearEvent,
-  isTopBannerAuraEvent,
-  nwFilterExpression,
   nwOrbReducer,
   nwSpearReducer,
-  pfFilterExpression,
-  sdFilterExpression,
-  soaFilterExpression,
+} from "./dungeons/shadowlands/nw";
+import {
+  filterExpression as pfFilterExpression,
+  isPfPlagueBombDamageEvent,
+  isPfSlimeBuffEvent,
+  isPfSlimeDeathEvent,
+} from "./dungeons/shadowlands/pf";
+import {
+  filterExpression as sdFilterExpression,
+  isSdLanternBuffEvent,
+  isSdLanternOpeningEvent,
+} from "./dungeons/shadowlands/sd";
+import {
+  filterExpression as soaFilterExpression,
+  isSoaSpearEvent,
   soaSpearReducer,
-  topFilterExpression,
-} from "./dungeons/shadowlands";
+} from "./dungeons/shadowlands/soa";
+import {
+  filterExpression as topFilterExpression,
+  isTopBannerAuraEvent,
+} from "./dungeons/shadowlands/top";
 import { recursiveGetEvents, reduceEventsByPlayer } from "./utils";
 
 export * from "./other";
@@ -99,9 +134,8 @@ const isDungeonWithEvent = (id: DungeonIDs): id is DungeonWithEvents =>
   id in dungeonExpressionMap;
 
 // TODO: feign false doesnt work?
-// TODO: killerID missing
 const deathFilterExpression =
-  'target.type = "player" and type = "death" and source.type = "npc" and feign = false';
+  'target.type = "player" and type = "death" and feign = false';
 const remarkableSpellFilterExpression = `source.type = "player" and type = "cast" and ability.id IN (${[
   ...remarkableSpellIDs,
 ].join(", ")})`;
@@ -167,7 +201,11 @@ const generateFilterExpression = ({
     .join(" or ");
 };
 
-const filterDungeonEvents = (allEvents: AnyEvent[], dungeonID: DungeonIDs) => {
+const filterDungeonEvents = (
+  allEvents: AnyEvent[],
+  dungeonID: DungeonIDs,
+  playerMetaInformation: Parameters<typeof getEvents>[1]
+) => {
   switch (dungeonID) {
     case DungeonIDs.DE_OTHER_SIDE:
       return allEvents.filter(isDosUrnEvent);
@@ -187,11 +225,48 @@ const filterDungeonEvents = (allEvents: AnyEvent[], dungeonID: DungeonIDs) => {
         ...allEvents.filter(isNwKyrianOrbDamageEvent),
         ...allEvents.filter(isNwKyrianOrbHealEvent),
       ];
-    case DungeonIDs.PLAGUEFALL:
+    case DungeonIDs.PLAGUEFALL: {
+      const actorIDSet = new Set(
+        playerMetaInformation.map((player) => player.actorID)
+      );
+
+      const plagueBombDamageEvents = allEvents.filter(
+        isPfPlagueBombDamageEvent
+      );
+
+      const plagueBombDamageTakenEvents = reduceEventsByPlayer(
+        plagueBombDamageEvents.filter((event) =>
+          actorIDSet.has(event.targetID)
+        ),
+        "targetID"
+      );
+      const plagueBombDamageDoneEvents = plagueBombDamageEvents.filter(
+        (event) => !actorIDSet.has(event.targetID)
+      );
+
+      const aggregatedPlagueBombDamageEvent =
+        plagueBombDamageDoneEvents.length > 0
+          ? plagueBombDamageDoneEvents.reduce((acc, event) => {
+              if (acc === event) {
+                return acc;
+              }
+
+              return {
+                ...acc,
+                amount: acc.amount + event.amount - (event.overkill ?? 0),
+              };
+            }, plagueBombDamageDoneEvents[0])
+          : null;
+
       return [
-        ...allEvents.filter(isPfSlimeDeathEvent),
+        ...allEvents.filter((event) => isPfSlimeDeathEvent(event, actorIDSet)),
         ...allEvents.filter(isPfSlimeBuffEvent),
+        ...plagueBombDamageTakenEvents,
+        ...(aggregatedPlagueBombDamageEvent
+          ? [aggregatedPlagueBombDamageEvent]
+          : []),
       ];
+    }
     case DungeonIDs.SANGUINE_DEPTHS:
       return [
         ...allEvents.filter(isSdLanternBuffEvent),
@@ -322,6 +397,16 @@ const filterAffixEvents = (
   const hasNecrotic = affixSet.has(Affixes.Necrotic);
   const hasExplosive = affixSet.has(Affixes.Explosive);
 
+  const explosiveTargetID = hasExplosive
+    ? findExplosiveTargetID(allEvents)
+    : null;
+
+  console.log({ explosiveTargetID });
+
+  if (hasExplosive && !explosiveTargetID) {
+    console.error("could not determine targetID for explosives");
+  }
+
   const storming = affixSet.has(Affixes.Storming)
     ? reduceEventsByPlayer(allEvents.filter(isStormingEvent), "targetID")
     : [];
@@ -337,7 +422,6 @@ const filterAffixEvents = (
   const volcanic = affixSet.has(Affixes.Volcanic)
     ? reduceEventsByPlayer(allEvents.filter(isVolcanicEvent), "targetID")
     : [];
-
   const quakingDamage = hasQuaking
     ? reduceEventsByPlayer(allEvents.filter(isQuakingDamageEvent), "targetID")
     : [];
@@ -353,10 +437,10 @@ const filterAffixEvents = (
   const explosiveDamage = hasExplosive
     ? reduceEventsByPlayer(allEvents.filter(isExplosiveDamageEvent), "targetID")
     : [];
-  const explosiveKills = hasExplosive
-    ? allEvents.filter(isExplosiveDeathEvent)
-    : [];
-
+  const explosiveKills =
+    hasExplosive && explosiveTargetID
+      ? allEvents.filter(createIsExplosiveDeathEvent(explosiveTargetID))
+      : [];
   const grievous = affixSet.has(Affixes.Grievous)
     ? reduceEventsByPlayer(allEvents.filter(isGrievousDamageEvent), "targetID")
     : [];
@@ -387,31 +471,79 @@ const filterAffixEvents = (
   ];
 };
 
-const filterRemarkableSpellEvents = (allEvents: AnyEvent[]) => {
+const filterRemarkableSpellEvents = (allEvents: AnyEvent[]): CastEvent[] => {
   return allEvents.filter(
-    (event) =>
+    (event): event is CastEvent =>
       event.type === "cast" && remarkableSpellIDs.has(event.abilityGameID)
   );
 };
 
 const filterPlayerDeathEvents = (
   allEvents: AnyEvent[],
-  actorIDSet: Set<number>
-) => {
-  return allEvents.filter(
-    (event): event is DeathEvent =>
-      event.type === "death" && actorIDSet.has(event.targetID)
+  playerMetaInformation: Parameters<typeof getEvents>[1],
+  remarkableSpellEvents: CastEvent[]
+): DeathEvent[] => {
+  const actorIDSet = new Set(
+    playerMetaInformation.map((dataset) => dataset.actorID)
   );
+
+  const hunter = playerMetaInformation.find(
+    (player) => player.class === PlayableClass.Hunter
+  );
+
+  const deathEvents = allEvents.filter((event): event is DeathEvent => {
+    return (
+      event.type === "death" &&
+      actorIDSet.has(event.targetID) &&
+      event.sourceID === -1
+    );
+  });
+
+  if (!hunter) {
+    return deathEvents;
+  }
+
+  const hunterDeaths = deathEvents.filter(
+    (event) => event.targetID === hunter.actorID
+  );
+
+  if (hunterDeaths.length === 0) {
+    return deathEvents;
+  }
+
+  return deathEvents.filter((event) => {
+    const isHunterDeath = hunterDeaths.includes(event);
+
+    if (!isHunterDeath) {
+      return true;
+    }
+
+    const nextHunterCD = remarkableSpellEvents.find((e) => {
+      return e.sourceID === event.targetID && e.timestamp > event.timestamp;
+    });
+
+    if (!nextHunterCD) {
+      return true;
+    }
+
+    // assume a hunter feigned if he used a cd within the next 2 seconds
+    // could alternatively be solved by querying
+    // hostilityType: Friendlies, dataType: Deaths
+    // once separately...
+    return nextHunterCD.timestamp - event.timestamp >= 2000;
+  });
 };
 
 export const getEvents = async (
   params: EventParams,
-  actorIDSet: Set<number>
+  playerMetaInformation: { actorID: number; class: PlayableClass }[]
 ): Promise<{ allEvents: AnyEvent[]; playerDeathEvents: DeathEvent[] }> => {
   const filterExpression = generateFilterExpression({
     dungeonID: params.dungeonID,
     affixes: params.affixes,
   });
+
+  console.log(filterExpression);
 
   console.time(`getEvents.recursiveGetEvents-${params.reportID}`);
   const allEvents = await recursiveGetEvents({
@@ -423,7 +555,11 @@ export const getEvents = async (
   console.timeEnd(`getEvents.recursiveGetEvents-${params.reportID}`);
 
   console.time(`filterDungeonEvents-${params.reportID}`);
-  const dungeonEvents = filterDungeonEvents(allEvents, params.dungeonID);
+  const dungeonEvents = filterDungeonEvents(
+    allEvents,
+    params.dungeonID,
+    playerMetaInformation
+  );
   console.timeEnd(`filterDungeonEvents-${params.reportID}`);
   console.time(`filterAffixEvents-${params.reportID}`);
   const affixEvents = filterAffixEvents(allEvents, params.affixes);
@@ -437,7 +573,11 @@ export const getEvents = async (
   console.timeEnd(`remarkableSpellEvents-${params.reportID}`);
 
   console.time(`filterPlayerDeathEvents-${params.reportID}`);
-  const playerDeathEvents = filterPlayerDeathEvents(allEvents, actorIDSet);
+  const playerDeathEvents = filterPlayerDeathEvents(
+    allEvents,
+    playerMetaInformation,
+    remarkableSpellEvents
+  );
   console.timeEnd(`filterPlayerDeathEvents-${params.reportID}`);
 
   return {
