@@ -421,6 +421,10 @@ export type GameData = {
   enchants?: Maybe<GameEnchantPagination>;
   /** Obtain all the factions that guilds and players can belong to. */
   factions?: Maybe<Maybe<GameFaction>[]>;
+  /** Obtain a single item for the game. */
+  item?: Maybe<GameItem>;
+  /** Items for the game. */
+  items?: Maybe<GameItemPagination>;
   /** Obtain a single map for the game. */
   map?: Maybe<GameMap>;
   /** Maps for the game. */
@@ -482,6 +486,17 @@ export type GameDataEnchantArgs = {
 
 /** The game object contains collections of data such as NPCs, classes, abilities, items, maps, etc. Game data only changes when major game patches are released, so you should cache results for as long as possible and only update when new content is released for the game. */
 export type GameDataEnchantsArgs = {
+  limit?: Maybe<Scalars["Int"]>;
+  page?: Maybe<Scalars["Int"]>;
+};
+
+/** The game object contains collections of data such as NPCs, classes, abilities, items, maps, etc. Game data only changes when major game patches are released, so you should cache results for as long as possible and only update when new content is released for the game. */
+export type GameDataItemArgs = {
+  id?: Maybe<Scalars["Int"]>;
+};
+
+/** The game object contains collections of data such as NPCs, classes, abilities, items, maps, etc. Game data only changes when major game patches are released, so you should cache results for as long as possible and only update when new content is released for the game. */
+export type GameDataItemsArgs = {
   limit?: Maybe<Scalars["Int"]>;
   page?: Maybe<Scalars["Int"]>;
 };
@@ -566,6 +581,26 @@ export type GameItem = {
   icon?: Maybe<Scalars["String"]>;
   /** The localized name of the item. Will be null if no localization information exists for the item. */
   name?: Maybe<Scalars["String"]>;
+};
+
+export type GameItemPagination = {
+  __typename?: "GameItemPagination";
+  /** List of items on the current page */
+  data?: Maybe<Maybe<GameItem>[]>;
+  /** Number of total items selected by the query */
+  total: Scalars["Int"];
+  /** Number of items returned per page */
+  per_page: Scalars["Int"];
+  /** Current page of the cursor */
+  current_page: Scalars["Int"];
+  /** Number of the first item returned */
+  from?: Maybe<Scalars["Int"]>;
+  /** Number of the last item returned */
+  to?: Maybe<Scalars["Int"]>;
+  /** The last page (number of pages) */
+  last_page: Scalars["Int"];
+  /** Determines if cursor has more pages after the current page */
+  has_more_pages: Scalars["Boolean"];
 };
 
 /** A single item set for the game. */
