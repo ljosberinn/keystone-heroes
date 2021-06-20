@@ -1,6 +1,7 @@
+import { Affixes } from "@keystone-heroes/db/types";
 import type { ApplyDebuffStackEvent } from "@keystone-heroes/wcl/queries";
 
-import { getHighestNecroticStack } from "../src/queries/events/affixes/necrotic";
+import { getNecroticEvents } from "../src/queries/events/affixes/necrotic";
 import necroticApplyDebuffEvents from "./fixtures/necroticApplyDebuffEvents.json";
 
 describe("necrotic", () => {
@@ -13,6 +14,8 @@ describe("necrotic", () => {
         stack: event.stack ?? 0,
       }));
 
-    expect(getHighestNecroticStack(events)).toMatchSnapshot();
+    expect(
+      getNecroticEvents(events, new Set([Affixes.Necrotic]))
+    ).toMatchSnapshot();
   });
 });

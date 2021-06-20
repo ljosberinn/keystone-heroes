@@ -1,6 +1,7 @@
+import { Affixes } from "@keystone-heroes/db/types";
 import type { ApplyBuffEvent } from "@keystone-heroes/wcl/queries";
 
-import { getHighestBolsteringStack } from "../src/queries/events/affixes/bolstering";
+import { getBolsteringEvents } from "../src/queries/events/affixes/bolstering";
 import bolsteringApplyBuffEvents from "./fixtures/bolsteringApplyBuffEvents.json";
 
 describe("bolstering", () => {
@@ -10,6 +11,8 @@ describe("bolstering", () => {
       type: "applybuff",
     }));
 
-    expect(getHighestBolsteringStack(events)).toMatchSnapshot();
+    expect(
+      getBolsteringEvents(events, new Set([Affixes.Bolstering]))
+    ).toMatchSnapshot();
   });
 });

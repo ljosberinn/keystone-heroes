@@ -1,7 +1,12 @@
 import { remarkableSpellIDs } from "@keystone-heroes/db/data";
 import { PlayableClass } from "@keystone-heroes/db/types";
 
-import type { AnyEvent, ApplyBuffEvent, CastEvent, DeathEvent } from "./types";
+import type {
+  AllTrackedEventTypes,
+  ApplyBuffEvent,
+  CastEvent,
+  DeathEvent,
+} from "./types";
 import { createIsSpecificEvent } from "./utils";
 
 export const INVISIBILITY = {
@@ -60,7 +65,7 @@ export const remarkableSpellFilterExpression = `source.type = "player" and type 
 ].join(", ")})`;
 
 export const filterProfessionEvents = (
-  allEvents: AnyEvent[]
+  allEvents: AllTrackedEventTypes
 ): (CastEvent | ApplyBuffEvent)[] => {
   const leatherworkingDrums = allEvents.filter(isLeatherworkingDrumsEvent);
   const invisibility = allEvents.filter(isInvisibilityEvent);
@@ -70,7 +75,7 @@ export const filterProfessionEvents = (
 };
 
 export const filterPlayerDeathEvents = (
-  allEvents: AnyEvent[],
+  allEvents: AllTrackedEventTypes,
   playerMetaInformation: { actorID: number; class: PlayableClass }[],
   remarkableSpellEvents: CastEvent[]
 ): DeathEvent[] => {
@@ -126,7 +131,7 @@ export const filterPlayerDeathEvents = (
 };
 
 export const filterRemarkableSpellEvents = (
-  allEvents: AnyEvent[]
+  allEvents: AllTrackedEventTypes
 ): CastEvent[] => {
   return allEvents.filter(
     (event): event is CastEvent =>

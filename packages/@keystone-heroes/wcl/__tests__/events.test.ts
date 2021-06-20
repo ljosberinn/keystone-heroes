@@ -2,15 +2,10 @@ import type {
   ApplyBuffEvent,
   ApplyBuffStackEvent,
   RemoveBuffEvent,
-} from "@keystone-heroes/wcl/src/queries/events";
-
+} from "../src/queries/events";
 import { EXPLOSIVE } from "../src/queries/events/affixes/explosive";
 import { SPITEFUL } from "../src/queries/events/affixes/spiteful";
-import {
-  PF_GREEN_BUFF,
-  PF_RED_BUFF,
-  PF_PURPLE_BUFF,
-} from "../src/queries/events/dungeons/shadowlands/pf";
+import { PF } from "../src/queries/events/dungeons/pf";
 import { processEvents } from "../src/transform/events";
 import NPCDamagesPlayerEvents from "./fixtures/NPCDamagesPlayerEvents.json";
 import bolsteringApplyBuffEvents from "./fixtures/bolsteringApplyBuffEvents.json";
@@ -71,28 +66,29 @@ const actorPlayerMap: Params[2] = new Map([
 describe("Death Events", () => {
   describe("Player kills NPC", () => {
     test("Player kills Plaguefall Slimes", () => {
+      const enemyNPCs = [
+        {
+          id: 28,
+          gameID: PF.GREEN_BUFF.unit,
+          minimumInstanceID: 1,
+          maximumInstanceID: 3,
+        },
+        {
+          id: 30,
+          gameID: PF.RED_BUFF.unit,
+          minimumInstanceID: 1,
+          maximumInstanceID: 3,
+        },
+        {
+          id: 31,
+          gameID: PF.PURPLE_BUFF.unit,
+          minimumInstanceID: 1,
+          maximumInstanceID: 3,
+        },
+      ];
       const pull: Params[0] = {
         ...defaultPull,
-        enemyNPCs: [
-          {
-            id: 28,
-            gameID: PF_GREEN_BUFF.unit,
-            minimumInstanceID: 1,
-            maximumInstanceID: 3,
-          },
-          {
-            id: 30,
-            gameID: PF_RED_BUFF.unit,
-            minimumInstanceID: 1,
-            maximumInstanceID: 3,
-          },
-          {
-            id: 31,
-            gameID: PF_PURPLE_BUFF.unit,
-            minimumInstanceID: 1,
-            maximumInstanceID: 3,
-          },
-        ],
+        enemyNPCs,
       };
 
       const events: Params[1] = plaguefallSlimeDeathEvents.map((event) => ({
@@ -100,21 +96,25 @@ describe("Death Events", () => {
         type: "death",
       }));
 
-      expect(processEvents(pull, events, actorPlayerMap)).toMatchSnapshot();
+      expect(
+        processEvents(pull, events, actorPlayerMap, enemyNPCs)
+      ).toMatchSnapshot();
     });
   });
 
   test("Player dying", () => {
+    const enemyNPCs = [
+      ...new Set(deathEvents.map((event) => event.killerID)),
+    ].map((id, index) => ({
+      id,
+      gameID: index + 1,
+      maximumInstanceID: 1,
+      minimumInstanceID: 1,
+    }));
+
     const pull: Params[0] = {
       ...defaultPull,
-      enemyNPCs: [...new Set(deathEvents.map((event) => event.killerID))].map(
-        (id, index) => ({
-          id,
-          gameID: index + 1,
-          maximumInstanceID: 1,
-          minimumInstanceID: 1,
-        })
-      ),
+      enemyNPCs,
     };
 
     const events: Params[1] = deathEvents.map((event) => ({
@@ -126,22 +126,26 @@ describe("Death Events", () => {
       deathEvents.map((event) => [event.targetID, event.targetID])
     );
 
-    expect(processEvents(pull, events, actorPlayerMap)).toMatchSnapshot();
+    expect(
+      processEvents(pull, events, actorPlayerMap, enemyNPCs)
+    ).toMatchSnapshot();
   });
 });
 
 describe("Heal Events", () => {
   test("Sanguine", () => {
+    const enemyNPCs = [
+      ...new Set(sanguineHealEvents.map((event) => event.targetID)),
+    ].map((id, index) => ({
+      id,
+      gameID: index,
+      maximumInstanceID: 1,
+      minimumInstanceID: 1,
+    }));
+
     const pull: Params[0] = {
       ...defaultPull,
-      enemyNPCs: [
-        ...new Set(sanguineHealEvents.map((event) => event.targetID)),
-      ].map((id, index) => ({
-        id,
-        gameID: index,
-        maximumInstanceID: 1,
-        minimumInstanceID: 1,
-      })),
+      enemyNPCs,
     };
 
     const events: Params[1] = sanguineHealEvents.map((event) => ({
@@ -149,7 +153,9 @@ describe("Heal Events", () => {
       type: "heal",
     }));
 
-    expect(processEvents(pull, events, actorPlayerMap)).toMatchSnapshot();
+    expect(
+      processEvents(pull, events, actorPlayerMap, enemyNPCs)
+    ).toMatchSnapshot();
   });
 
   test("Kyrian Orb", () => {
@@ -163,7 +169,7 @@ describe("Heal Events", () => {
     );
 
     expect(
-      processEvents(defaultPull, events, actorPlayerMap)
+      processEvents(defaultPull, events, actorPlayerMap, defaultPull.enemyNPCs)
     ).toMatchSnapshot();
   });
 
@@ -180,9 +186,9 @@ describe("Heal Events", () => {
       },
     ];
 
-    expect(processEvents(defaultPull, events, actorPlayerMap)).toStrictEqual(
-      []
-    );
+    expect(
+      processEvents(defaultPull, events, actorPlayerMap, defaultPull.enemyNPCs)
+    ).toStrictEqual([]);
   });
 });
 
@@ -194,7 +200,9 @@ describe("Damage Events", () => {
       amount: 0,
     }));
 
-    expect(processEvents(defaultPull, events, new Map())).toStrictEqual([]);
+    expect(
+      processEvents(defaultPull, events, new Map(), defaultPull.enemyNPCs)
+    ).toStrictEqual([]);
   });
 
   describe("DamageDone", () => {
@@ -204,20 +212,24 @@ describe("Damage Events", () => {
         type: "damage",
       }));
 
-      expect(processEvents(defaultPull, events, new Map())).toStrictEqual([]);
+      expect(
+        processEvents(defaultPull, events, new Map(), defaultPull.enemyNPCs)
+      ).toStrictEqual([]);
     });
 
     test("normal mobs", () => {
+      const enemyNPCs = [
+        ...new Set(playerDamagesNPCEvents.map((event) => event.targetID)),
+      ].map((id, index) => ({
+        id,
+        gameID: index,
+        maximumInstanceID: 1,
+        minimumInstanceID: 1,
+      }));
+
       const pull: Params[0] = {
         ...defaultPull,
-        enemyNPCs: [
-          ...new Set(playerDamagesNPCEvents.map((event) => event.targetID)),
-        ].map((id, index) => ({
-          id,
-          gameID: index,
-          maximumInstanceID: 1,
-          minimumInstanceID: 1,
-        })),
+        enemyNPCs,
       };
 
       const events: Params[1] = playerDamagesNPCEvents.map((event) => ({
@@ -229,20 +241,24 @@ describe("Damage Events", () => {
         playerDamagesNPCEvents.map((event) => [event.sourceID, event.sourceID])
       );
 
-      expect(processEvents(pull, events, actorPlayerMap)).toMatchSnapshot();
+      expect(
+        processEvents(pull, events, actorPlayerMap, enemyNPCs)
+      ).toMatchSnapshot();
     });
 
     test("Explosive", () => {
+      const enemyNPCs = [
+        {
+          id: 1000,
+          gameID: EXPLOSIVE.unit,
+          minimumInstanceID: 1,
+          maximumInstanceID: 100,
+        },
+      ];
+
       const pull: Params[0] = {
         ...defaultPull,
-        enemyNPCs: [
-          {
-            id: 1000,
-            gameID: EXPLOSIVE.unit,
-            minimumInstanceID: 1,
-            maximumInstanceID: 100,
-          },
-        ],
+        enemyNPCs,
       };
 
       const events: Params[1] = playerDamagesNPCEvents.map((event) => ({
@@ -255,22 +271,26 @@ describe("Damage Events", () => {
         playerDamagesNPCEvents.map((event) => [event.sourceID, event.sourceID])
       );
 
-      expect(processEvents(pull, events, actorPlayerMap)).toMatchSnapshot();
+      expect(
+        processEvents(pull, events, actorPlayerMap, enemyNPCs)
+      ).toMatchSnapshot();
     });
   });
 
   describe("DamageTaken", () => {
     test("works", () => {
+      const enemyNPCs = [
+        ...new Set(NPCDamagesPlayerEvents.map((event) => event.sourceID)),
+      ].map((id, index) => ({
+        id,
+        gameID: index + 1,
+        maximumInstanceID: 1,
+        minimumInstanceID: 1,
+      }));
+
       const pull: Params[0] = {
         ...defaultPull,
-        enemyNPCs: [
-          ...new Set(NPCDamagesPlayerEvents.map((event) => event.sourceID)),
-        ].map((id, index) => ({
-          id,
-          gameID: index + 1,
-          maximumInstanceID: 1,
-          minimumInstanceID: 1,
-        })),
+        enemyNPCs,
       };
 
       const events: Params[1] = NPCDamagesPlayerEvents.map((event) => ({
@@ -282,21 +302,25 @@ describe("Damage Events", () => {
         NPCDamagesPlayerEvents.map((event) => [event.targetID, event.targetID])
       );
 
-      expect(processEvents(pull, events, actorPlayerMap)).toMatchSnapshot();
+      expect(
+        processEvents(pull, events, actorPlayerMap, enemyNPCs)
+      ).toMatchSnapshot();
     });
 
     describe("DamageTaken from affixes", () => {
       test("spiteful", () => {
+        const enemyNPCs = [
+          {
+            id: 1000,
+            gameID: SPITEFUL.unit,
+            minimumInstanceID: 1,
+            maximumInstanceID: 100,
+          },
+        ];
+
         const pull: Params[0] = {
           ...defaultPull,
-          enemyNPCs: [
-            {
-              id: 1000,
-              gameID: SPITEFUL,
-              minimumInstanceID: 1,
-              maximumInstanceID: 100,
-            },
-          ],
+          enemyNPCs,
         };
 
         const events: Params[1] = spitefulDamageTaken.map((event) => ({
@@ -309,7 +333,9 @@ describe("Damage Events", () => {
           spitefulDamageTaken.map((event) => [event.targetID, event.targetID])
         );
 
-        expect(processEvents(pull, events, actorPlayerMap)).toMatchSnapshot();
+        expect(
+          processEvents(pull, events, actorPlayerMap, enemyNPCs)
+        ).toMatchSnapshot();
       });
 
       test("volcanic", () => {
@@ -326,7 +352,12 @@ describe("Damage Events", () => {
         );
 
         expect(
-          processEvents(defaultPull, events, actorPlayerMap)
+          processEvents(
+            defaultPull,
+            events,
+            actorPlayerMap,
+            defaultPull.enemyNPCs
+          )
         ).toMatchSnapshot();
       });
 
@@ -344,7 +375,12 @@ describe("Damage Events", () => {
         );
 
         expect(
-          processEvents(defaultPull, events, actorPlayerMap)
+          processEvents(
+            defaultPull,
+            events,
+            actorPlayerMap,
+            defaultPull.enemyNPCs
+          )
         ).toMatchSnapshot();
       });
 
@@ -362,7 +398,12 @@ describe("Damage Events", () => {
         );
 
         expect(
-          processEvents(defaultPull, events, actorPlayerMap)
+          processEvents(
+            defaultPull,
+            events,
+            actorPlayerMap,
+            defaultPull.enemyNPCs
+          )
         ).toMatchSnapshot();
       });
 
@@ -380,7 +421,12 @@ describe("Damage Events", () => {
         );
 
         expect(
-          processEvents(defaultPull, events, actorPlayerMap)
+          processEvents(
+            defaultPull,
+            events,
+            actorPlayerMap,
+            defaultPull.enemyNPCs
+          )
         ).toMatchSnapshot();
       });
 
@@ -398,7 +444,12 @@ describe("Damage Events", () => {
         );
 
         expect(
-          processEvents(defaultPull, events, actorPlayerMap)
+          processEvents(
+            defaultPull,
+            events,
+            actorPlayerMap,
+            defaultPull.enemyNPCs
+          )
         ).toMatchSnapshot();
       });
 
@@ -416,7 +467,12 @@ describe("Damage Events", () => {
         );
 
         expect(
-          processEvents(defaultPull, events, actorPlayerMap)
+          processEvents(
+            defaultPull,
+            events,
+            actorPlayerMap,
+            defaultPull.enemyNPCs
+          )
         ).toMatchSnapshot();
       });
 
@@ -434,7 +490,12 @@ describe("Damage Events", () => {
         );
 
         expect(
-          processEvents(defaultPull, events, actorPlayerMap)
+          processEvents(
+            defaultPull,
+            events,
+            actorPlayerMap,
+            defaultPull.enemyNPCs
+          )
         ).toMatchSnapshot();
       });
     });
@@ -453,7 +514,7 @@ describe("Interrupt Events", () => {
     );
 
     expect(
-      processEvents(defaultPull, events, actorPlayerMap)
+      processEvents(defaultPull, events, actorPlayerMap, defaultPull.enemyNPCs)
     ).toMatchSnapshot();
   });
 });
@@ -470,7 +531,7 @@ describe("ApplyBuff Events", () => {
     );
 
     expect(
-      processEvents(defaultPull, events, actorPlayerMap)
+      processEvents(defaultPull, events, actorPlayerMap, defaultPull.enemyNPCs)
     ).toMatchSnapshot();
   });
 
@@ -485,23 +546,25 @@ describe("ApplyBuff Events", () => {
     );
 
     expect(
-      processEvents(defaultPull, events, actorPlayerMap)
+      processEvents(defaultPull, events, actorPlayerMap, defaultPull.enemyNPCs)
     ).toMatchSnapshot();
   });
 
   test("Bolstering", () => {
+    const enemyNPCs = [
+      ...new Set(bolsteringApplyBuffEvents.map((event) => event.targetID)),
+    ].map((id) => ({
+      id,
+      gameID: id,
+      minimumInstanceID: 1,
+      maximumInstanceID: 1,
+    }));
+
     // NOTE: `bolsteringApplyBuffEvents` uses the result of the transformation
     // within `getBolsteringEvents`
     const pull: Params[0] = {
       ...defaultPull,
-      enemyNPCs: [
-        ...new Set(bolsteringApplyBuffEvents.map((event) => event.targetID)),
-      ].map((id) => ({
-        id,
-        gameID: id,
-        minimumInstanceID: 1,
-        maximumInstanceID: 1,
-      })),
+      enemyNPCs,
     };
 
     const events: Params[1] = bolsteringApplyBuffEvents.map((event) => ({
@@ -509,7 +572,7 @@ describe("ApplyBuff Events", () => {
       type: "applybuff",
     }));
 
-    expect(processEvents(pull, events, new Map())).toMatchSnapshot();
+    expect(processEvents(pull, events, new Map(), enemyNPCs)).toMatchSnapshot();
   });
 
   test("Potion of the Hidden Spirit", () => {
@@ -526,7 +589,7 @@ describe("ApplyBuff Events", () => {
     );
 
     expect(
-      processEvents(defaultPull, events, actorPlayerMap)
+      processEvents(defaultPull, events, actorPlayerMap, defaultPull.enemyNPCs)
     ).toMatchSnapshot();
   });
 
@@ -542,7 +605,7 @@ describe("ApplyBuff Events", () => {
     );
 
     expect(
-      processEvents(defaultPull, events, actorPlayerMap)
+      processEvents(defaultPull, events, actorPlayerMap, defaultPull.enemyNPCs)
     ).toMatchSnapshot();
   });
 });
@@ -559,7 +622,7 @@ describe("ApplyDebuff Events", () => {
     );
 
     expect(
-      processEvents(defaultPull, events, actorPlayerMap)
+      processEvents(defaultPull, events, actorPlayerMap, defaultPull.enemyNPCs)
     ).toMatchSnapshot();
   });
 
@@ -574,7 +637,7 @@ describe("ApplyDebuff Events", () => {
     );
 
     expect(
-      processEvents(defaultPull, events, actorPlayerMap)
+      processEvents(defaultPull, events, actorPlayerMap, defaultPull.enemyNPCs)
     ).toMatchSnapshot();
   });
 });
@@ -591,7 +654,7 @@ describe("BeginCast Events", () => {
     );
 
     expect(
-      processEvents(defaultPull, events, actorPlayerMap)
+      processEvents(defaultPull, events, actorPlayerMap, defaultPull.enemyNPCs)
     ).toMatchSnapshot();
   });
 });
@@ -609,7 +672,7 @@ describe("RemoveBuff Events", () => {
     );
 
     expect(
-      processEvents(defaultPull, events, actorPlayerMap)
+      processEvents(defaultPull, events, actorPlayerMap, defaultPull.enemyNPCs)
     ).toMatchSnapshot();
   });
 });
@@ -629,7 +692,7 @@ describe("CastEvents", () => {
     );
 
     expect(
-      processEvents(defaultPull, events, actorPlayerMap)
+      processEvents(defaultPull, events, actorPlayerMap, defaultPull.enemyNPCs)
     ).toMatchSnapshot();
   });
 });

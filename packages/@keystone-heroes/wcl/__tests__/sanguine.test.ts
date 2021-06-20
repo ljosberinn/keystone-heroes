@@ -1,6 +1,7 @@
+import { Affixes } from "@keystone-heroes/db/types";
 import type { HealEvent } from "@keystone-heroes/wcl/queries";
 
-import { reduceHealingDoneBySanguine } from "../src/queries/events/affixes/sanguine";
+import { getSanguineEvents } from "../src/queries/events/affixes/sanguine";
 import sanguineHealEvents from "./fixtures/sanguineHealEvents.json";
 
 describe("sanguine", () => {
@@ -10,6 +11,8 @@ describe("sanguine", () => {
       type: "heal",
     }));
 
-    expect(reduceHealingDoneBySanguine(events)).toMatchSnapshot();
+    expect(
+      getSanguineEvents(events, new Set([Affixes.Sanguine]))
+    ).toMatchSnapshot();
   });
 });

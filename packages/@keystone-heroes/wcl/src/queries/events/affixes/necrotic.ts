@@ -79,7 +79,5 @@ export const getNecroticEvents = (
     "targetID"
   );
 
-  console.log({ damage });
-
   return [...stacks, ...damage];
 };
