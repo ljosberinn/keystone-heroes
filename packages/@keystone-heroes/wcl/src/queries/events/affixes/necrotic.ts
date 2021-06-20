@@ -1,5 +1,11 @@
-import type { ApplyDebuffStackEvent, DamageEvent } from "../types";
-import { createIsSpecificEvent } from "../utils";
+import { Affixes } from "@keystone-heroes/db/types";
+
+import type {
+  AllTrackedEventTypes,
+  ApplyDebuffStackEvent,
+  DamageEvent,
+} from "../types";
+import { createIsSpecificEvent, reduceEventsByPlayer } from "../utils";
 
 export const NECROTIC = 209_858;
 
@@ -32,18 +38,17 @@ export const filterExpression = [
   `(${expressions.base}) AND ((${expressions.stack}) OR (${expressions.damage}))`,
 ];
 
-export const isNecroticDamageEvent = createIsSpecificEvent<DamageEvent>({
+const isNecroticDamageEvent = createIsSpecificEvent<DamageEvent>({
   type: "damage",
   abilityGameID: NECROTIC,
 });
 
-export const isNecroticStackEvent =
-  createIsSpecificEvent<ApplyDebuffStackEvent>({
-    type: "applydebuffstack",
-    abilityGameID: NECROTIC,
-  });
+const isNecroticStackEvent = createIsSpecificEvent<ApplyDebuffStackEvent>({
+  type: "applydebuffstack",
+  abilityGameID: NECROTIC,
+});
 
-export const getHighestNecroticStack = (
+const getHighestNecroticStack = (
   allEvents: ApplyDebuffStackEvent[]
 ): ApplyDebuffStackEvent[] => {
   const highestStack = allEvents.reduce(
@@ -56,4 +61,25 @@ export const getHighestNecroticStack = (
   const first = allEvents.find((event) => event.stack === highestStack);
 
   return first ? [first] : [];
+};
+
+export const getNecroticEvents = (
+  allEvents: AllTrackedEventTypes,
+  affixSet: Set<Affixes>
+): (DamageEvent | ApplyDebuffStackEvent)[] => {
+  if (!affixSet.has(Affixes.Necrotic)) {
+    return [];
+  }
+
+  const stacks = getHighestNecroticStack(
+    allEvents.filter(isNecroticStackEvent)
+  );
+  const damage = reduceEventsByPlayer(
+    allEvents.filter(isNecroticDamageEvent),
+    "targetID"
+  );
+
+  console.log({ damage });
+
+  return [...stacks, ...damage];
 };

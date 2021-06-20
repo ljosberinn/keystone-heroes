@@ -445,19 +445,32 @@ const handler: RequestHandler<Request, Response> = async (req, res) => {
       ])
     );
 
-    const persistablePullEvents = persistedPulls.flatMap((pull) => {
-      const thisPullsEvents = allEvents.filter(
-        (event) =>
-          event.timestamp >= pull.startTime && event.timestamp <= pull.endTime
-      );
+    const everyPullsNPCs = persistedPulls.flatMap((pull) => {
+      return pull.enemyNPCs;
+    });
 
-      const processedEvents = processEvents(
+    const persistablePullEvents = persistedPulls.flatMap((pull, index) => {
+      const lastPull = persistedPulls[index - 1];
+
+      const thisPullsEvents = allEvents.filter((event) => {
+        const isDuringThisPull =
+          event.timestamp >= pull.startTime && event.timestamp <= pull.endTime;
+        // some CDs may be used outside of a pull in preparation to set it up
+        // e.g. Sigil of Silence/Chains/Imprison right before pulling
+        const wasAfterLastPull = lastPull
+          ? event.timestamp > lastPull.endTime &&
+            event.timestamp < pull.startTime
+          : false;
+
+        return isDuringThisPull || wasAfterLastPull;
+      });
+
+      return processEvents(
         pull,
         thisPullsEvents,
-        actorPlayerMap
-      );
-
-      return processedEvents.map<Prisma.EventCreateManyInput>((event) => {
+        actorPlayerMap,
+        everyPullsNPCs
+      ).map<Prisma.EventCreateManyInput>((event) => {
         return {
           ...event,
           pullID: pull.id,

@@ -1,5 +1,7 @@
-import type { DamageEvent, HealEvent } from "../types";
-import { createIsSpecificEvent } from "../utils";
+import { Affixes } from "@keystone-heroes/db/types";
+
+import type { AllTrackedEventTypes, DamageEvent, HealEvent } from "../types";
+import { createIsSpecificEvent, reduceEventsByPlayer } from "../utils";
 
 export const SANGUINE_ICHOR_HEALING = 226_510;
 export const SANGUINE_ICHOR_DAMAGE = 226_512;
@@ -32,19 +34,17 @@ export const filterExpression = [
   `${expressions.base} and ((${expressions.damage}) OR (${expressions.heal}))`,
 ];
 
-export const isSanguineDamageEvent = createIsSpecificEvent<DamageEvent>({
+const isSanguineDamageEvent = createIsSpecificEvent<DamageEvent>({
   type: "damage",
   abilityGameID: SANGUINE_ICHOR_DAMAGE,
 });
 
-export const isSanguineHealEvent = createIsSpecificEvent<HealEvent>({
+const isSanguineHealEvent = createIsSpecificEvent<HealEvent>({
   type: "heal",
   abilityGameID: SANGUINE_ICHOR_HEALING,
 });
 
-export const reduceHealingDoneBySanguine = (
-  events: HealEvent[]
-): HealEvent[] => {
+const reduceHealingDoneBySanguine = (events: HealEvent[]): HealEvent[] => {
   return [
     events.reduce<HealEvent>((acc, event) => {
       return {
@@ -54,4 +54,23 @@ export const reduceHealingDoneBySanguine = (
       };
     }, events[0]),
   ];
+};
+
+export const getSanguineEvents = (
+  allEvents: AllTrackedEventTypes,
+  affixSet: Set<Affixes>
+): (DamageEvent | HealEvent)[] => {
+  if (!affixSet.has(Affixes.Sanguine)) {
+    return [];
+  }
+
+  const healing = reduceHealingDoneBySanguine(
+    allEvents.filter(isSanguineHealEvent)
+  );
+  const damage = reduceEventsByPlayer(
+    allEvents.filter(isSanguineDamageEvent),
+    "targetID"
+  );
+
+  return [...healing, ...damage];
 };

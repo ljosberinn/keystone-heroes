@@ -1,4 +1,7 @@
-import type { AnyEvent, DamageEvent } from "../types";
+import { Affixes } from "@keystone-heroes/db/types";
+
+import type { AllTrackedEventTypes, DamageEvent } from "../types";
+import { reduceEventsByPlayer } from "../utils";
 
 export const VOLCANIC = 209_862;
 
@@ -24,7 +27,20 @@ export const filterExpression = [
   `type = "damage" and target.type = "player" and ability.id = ${VOLCANIC}`,
 ];
 
-export const isVolcanicEvent = (event: AnyEvent): event is DamageEvent =>
+const isVolcanicEvent = (
+  event: AllTrackedEventTypes[number]
+): event is DamageEvent =>
   event.type === "damage" &&
   "abilityGameID" in event &&
   event.abilityGameID === VOLCANIC;
+
+export const getVolcanicEvents = (
+  allEvents: AllTrackedEventTypes,
+  affixSet: Set<Affixes>
+): DamageEvent[] => {
+  if (!affixSet.has(Affixes.Volcanic)) {
+    return [];
+  }
+
+  return reduceEventsByPlayer(allEvents.filter(isVolcanicEvent), "targetID");
+};

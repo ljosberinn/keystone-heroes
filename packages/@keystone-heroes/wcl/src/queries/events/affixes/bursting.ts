@@ -1,5 +1,7 @@
-import type { DamageEvent } from "../types";
-import { createIsSpecificEvent } from "../utils";
+import { Affixes } from "@keystone-heroes/db/types";
+
+import type { AllTrackedEventTypes, DamageEvent } from "../types";
+import { createIsSpecificEvent, reduceEventsByPlayer } from "../utils";
 
 export const BURSTING = 243_237;
 
@@ -25,7 +27,18 @@ export const filterExpression = [
   `type = "damage" and target.type = "player" and ability.id = ${BURSTING} and rawDamage > 0`,
 ];
 
-export const isBurstingEvent = createIsSpecificEvent<DamageEvent>({
+const isBurstingEvent = createIsSpecificEvent<DamageEvent>({
   type: "damage",
   abilityGameID: BURSTING,
 });
+
+export const getBurstingEvents = (
+  allEvents: AllTrackedEventTypes,
+  affixSet: Set<Affixes>
+): DamageEvent[] => {
+  if (!affixSet.has(Affixes.Bursting)) {
+    return [];
+  }
+
+  return reduceEventsByPlayer(allEvents.filter(isBurstingEvent), "targetID");
+};

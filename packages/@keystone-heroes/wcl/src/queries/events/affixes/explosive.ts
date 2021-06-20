@@ -1,5 +1,7 @@
-import type { AnyEvent, DamageEvent } from "../types";
-import { createIsSpecificEvent } from "../utils";
+import { Affixes } from "@keystone-heroes/db/types";
+
+import type { AllTrackedEventTypes, DamageEvent } from "../types";
+import { createIsSpecificEvent, reduceEventsByPlayer } from "../utils";
 
 export const EXPLOSIVE = {
   unit: 120_651,
@@ -29,14 +31,14 @@ export const filterExpression = [
   `target.id = ${EXPLOSIVE.unit} AND type = "damage" AND overkill > 0`,
 ];
 
-export const isExplosiveDamageEvent = createIsSpecificEvent<DamageEvent>({
+const isExplosiveDamageEvent = createIsSpecificEvent<DamageEvent>({
   type: "damage",
   abilityGameID: EXPLOSIVE.ability,
 });
 
-export const createIsExplosiveDeathEvent =
+const createIsExplosiveDeathEvent =
   (targetID: number) =>
-  (event: AnyEvent): event is DamageEvent => {
+  (event: AllTrackedEventTypes[number]): event is DamageEvent => {
     return (
       event.type === "damage" &&
       "targetInstance" in event &&
@@ -45,14 +47,16 @@ export const createIsExplosiveDeathEvent =
     );
   };
 
-export const findExplosiveTargetID = (allEvents: AnyEvent[]): number | null => {
+const findExplosiveTargetID = (
+  allEvents: AllTrackedEventTypes
+): number | null => {
   const dataset = allEvents.reduce<{
     targetID: null | number;
     targetInstance: null | number;
   }>(
     (acc, event) => {
       if (
-        // skip damageEvents
+        // skip non-DamageEvents
         event.type !== "damage" ||
         // ignore event if target is single instance
         !("targetInstance" in event) ||
@@ -76,4 +80,30 @@ export const findExplosiveTargetID = (allEvents: AnyEvent[]): number | null => {
   );
 
   return dataset.targetID;
+};
+
+export const getExplosiveEvents = (
+  allEvents: AllTrackedEventTypes,
+  affixSet: Set<Affixes>
+): DamageEvent[] => {
+  if (!affixSet.has(Affixes.Explosive)) {
+    return [];
+  }
+
+  const explosiveTargetID = findExplosiveTargetID(allEvents);
+
+  if (!explosiveTargetID) {
+    console.error("could not determine targetID for explosives");
+    return [];
+  }
+
+  const explosiveKills = allEvents.filter(
+    createIsExplosiveDeathEvent(explosiveTargetID)
+  );
+  const explosiveDamage = reduceEventsByPlayer(
+    allEvents.filter(isExplosiveDamageEvent),
+    "targetID"
+  );
+
+  return [...explosiveDamage, ...explosiveKills];
 };

@@ -1,7 +1,12 @@
-import type { DamageEvent } from "../types";
-import { createIsSpecificEvent } from "../utils";
+import { Affixes } from "@keystone-heroes/db/types";
 
-export const SPITEFUL = 174_773;
+import type { AllTrackedEventTypes, DamageEvent } from "../types";
+import { createIsSpecificEvent, reduceEventsByPlayer } from "../utils";
+
+export const SPITEFUL = {
+  unit: 174_773,
+  ability: 350_163,
+};
 
 /**
  * @see https://www.warcraftlogs.com/reports/LafTw4CxyAjkVHv6#fight=8&type=summary&view=events&pins=2%24Off%24%23244F4B%24expression%24source.name%20%3D%20%22Spiteful%20Shade%22%20and%20type%20%3D%20%22damage%22%20AND%20target.type%20%3D%20%22player%22
@@ -22,10 +27,24 @@ export const SPITEFUL = 174_773;
  * ```
  */
 export const filterExpression = [
-  `source.id = ${SPITEFUL} and type = "damage" AND target.type = "player"`,
+  `source.id = ${SPITEFUL.unit} and type = "damage" and target.type = "player"`,
 ];
 
-export const isSpitefulDamageEvent = createIsSpecificEvent<DamageEvent>({
+const isSpitefulDamageEvent = createIsSpecificEvent<DamageEvent>({
   type: "damage",
-  abilityGameID: SPITEFUL,
+  abilityGameID: SPITEFUL.ability,
 });
+
+export const getSpitefulEvents = (
+  allEvents: AllTrackedEventTypes,
+  affixSet: Set<Affixes>
+): DamageEvent[] => {
+  if (!affixSet.has(Affixes.Spiteful)) {
+    return [];
+  }
+
+  return reduceEventsByPlayer(
+    allEvents.filter(isSpitefulDamageEvent),
+    "targetID"
+  );
+};

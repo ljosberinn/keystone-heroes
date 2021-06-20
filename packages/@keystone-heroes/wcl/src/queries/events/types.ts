@@ -73,6 +73,7 @@ export type ApplyDebuffEvent = BaseEvent<{
 export type ApplyDebuffStackEvent = BaseEvent<{
   type: "applydebuffstack";
   stack: number;
+  abilityGameID: number;
 }>;
 
 export type ApplyBuffEvent = BaseEvent<{
@@ -260,3 +261,18 @@ export type AnyEvent =
   | ApplyDebuffEvent
   | CombatantInfoEvent
   | EncounterStartEvent;
+
+export type AllTrackedEventTypes = (
+  | CastEvent
+  | DeathEvent
+  | AbsorbEvent
+  | DamageEvent
+  | HealEvent
+  | InterruptEvent
+  | BeginCastEvent
+  | ApplyBuffEvent
+  | ApplyDebuffEvent
+  | ApplyDebuffStackEvent
+  | RemoveBuffEvent
+  | ApplyBuffStackEvent
+)[];

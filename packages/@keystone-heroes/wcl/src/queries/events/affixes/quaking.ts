@@ -1,5 +1,11 @@
-import type { DamageEvent, InterruptEvent } from "../types";
-import { createIsSpecificEvent } from "../utils";
+import { Affixes } from "@keystone-heroes/db/types";
+
+import type {
+  AllTrackedEventTypes,
+  DamageEvent,
+  InterruptEvent,
+} from "../types";
+import { createIsSpecificEvent, reduceEventsByPlayer } from "../utils";
 
 export const QUAKING = 240_448;
 
@@ -21,22 +27,35 @@ export const QUAKING = 240_448;
  * }
  * ```
  */
-const expressions = {
-  base: `target.type = "player" and ability.id = ${QUAKING}`,
-  interrupt: '"interrupt"',
-  damage: '"damage"',
-};
 
 export const filterExpression = [
-  `${expressions.base} AND type IN (${expressions.interrupt}, ${expressions.damage})`,
+  `target.type = "player" and ability.id = ${QUAKING} AND type IN ("interrupt", "damage")`,
 ];
 
-export const isQuakingInterruptEvent = createIsSpecificEvent<InterruptEvent>({
+const isQuakingInterruptEvent = createIsSpecificEvent<InterruptEvent>({
   type: "interrupt",
   abilityGameID: QUAKING,
 });
 
-export const isQuakingDamageEvent = createIsSpecificEvent<DamageEvent>({
+const isQuakingDamageEvent = createIsSpecificEvent<DamageEvent>({
   type: "damage",
   abilityGameID: QUAKING,
 });
+
+export const getQuakingEvents = (
+  allEvents: AllTrackedEventTypes,
+  affixSet: Set<Affixes>
+): (DamageEvent | InterruptEvent)[] => {
+  if (!affixSet.has(Affixes.Quaking)) {
+    return [];
+  }
+
+  const interrupts = allEvents.filter(isQuakingInterruptEvent);
+
+  const damage = reduceEventsByPlayer(
+    allEvents.filter(isQuakingDamageEvent),
+    "targetID"
+  );
+
+  return [...interrupts, ...damage];
+};

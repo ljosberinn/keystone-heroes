@@ -1,5 +1,12 @@
-import type { AbsorbEvent, DamageEvent, HealEvent } from "../types";
-import { createIsSpecificEvent } from "../utils";
+import { Affixes } from "@keystone-heroes/db/types";
+
+import type {
+  AbsorbEvent,
+  AllTrackedEventTypes,
+  DamageEvent,
+  HealEvent,
+} from "../types";
+import { createIsSpecificEvent, reduceEventsByPlayer } from "../utils";
 
 const BOTTLE_OF_SANGUINE_ICHOR = 357_901;
 
@@ -37,84 +44,178 @@ export const filterExpression = [
   ].join(", ")})`,
 ];
 
-export const isStygianKingsBarbsEvent = createIsSpecificEvent<DamageEvent>({
+const isStygianKingsBarbsEvent = createIsSpecificEvent<DamageEvent>({
   type: "damage",
   abilityGameID: TORMENTED.STYGIAN_KINGS_BARBS,
 });
 
-export const isStoneWardEvent = createIsSpecificEvent<AbsorbEvent>({
+const isStoneWardEvent = createIsSpecificEvent<AbsorbEvent>({
   type: "absorbed",
   abilityGameID: TORMENTED.STONE_WARD,
 });
 
-export const isBottleOfSanguineIchorHealEvent =
-  createIsSpecificEvent<HealEvent>({
-    type: "heal",
-    abilityGameID: TORMENTED.BOTTLE_OF_SANGUINE_ICHOR,
-  });
+const isBottleOfSanguineIchorHealEvent = createIsSpecificEvent<HealEvent>({
+  type: "heal",
+  abilityGameID: TORMENTED.BOTTLE_OF_SANGUINE_ICHOR,
+});
 
-export const isBottleOfSanguineIchorDamageEvent =
-  createIsSpecificEvent<DamageEvent>({
-    type: "damage",
-    abilityGameID: TORMENTED.BOTTLE_OF_SANGUINE_ICHOR,
-  });
+const isBottleOfSanguineIchorDamageEvent = createIsSpecificEvent<DamageEvent>({
+  type: "damage",
+  abilityGameID: TORMENTED.BOTTLE_OF_SANGUINE_ICHOR,
+});
 
-export const isInfernoDamageEvent = createIsSpecificEvent<DamageEvent>({
+const isInfernoDamageEvent = createIsSpecificEvent<DamageEvent>({
   type: "damage",
   abilityGameID: TORMENTED.INFERNO,
 });
 
-export const isScorchingBlastDamageEvent = createIsSpecificEvent<DamageEvent>({
+const isScorchingBlastDamageEvent = createIsSpecificEvent<DamageEvent>({
   type: "damage",
   abilityGameID: TORMENTED.SCORCHING_BLAST,
 });
 
-export const isSoulforgeFlamesDamageEvent = createIsSpecificEvent<DamageEvent>({
+const isSoulforgeFlamesDamageEvent = createIsSpecificEvent<DamageEvent>({
   type: "damage",
   abilityGameID: TORMENTED.SOULFORGE_FLAMES,
 });
 
-export const isColdSnapDamageEvent = createIsSpecificEvent<DamageEvent>({
+const isColdSnapDamageEvent = createIsSpecificEvent<DamageEvent>({
   type: "damage",
   abilityGameID: TORMENTED.COLD_SNAP,
 });
 
-export const isFrostLanceDamageEvent = createIsSpecificEvent<DamageEvent>({
+const isFrostLanceDamageEvent = createIsSpecificEvent<DamageEvent>({
   type: "damage",
   abilityGameID: TORMENTED.FROST_LANCE,
 });
 
-export const isBitingColdDamageEvent = createIsSpecificEvent<DamageEvent>({
+const isBitingColdDamageEvent = createIsSpecificEvent<DamageEvent>({
   type: "damage",
   abilityGameID: TORMENTED.BITING_COLD,
 });
 
-export const isSeismicWaveDamageEvent = createIsSpecificEvent<DamageEvent>({
+const isSeismicWaveDamageEvent = createIsSpecificEvent<DamageEvent>({
   type: "damage",
   abilityGameID: TORMENTED.SEISMIC_WAVE,
 });
 
-export const isCrushDamageEvent = createIsSpecificEvent<DamageEvent>({
+const isCrushDamageEvent = createIsSpecificEvent<DamageEvent>({
   type: "damage",
   abilityGameID: TORMENTED.CRUSH,
 });
 
-export const isSeverDamageEvent = createIsSpecificEvent<DamageEvent>({
+const isSeverDamageEvent = createIsSpecificEvent<DamageEvent>({
   type: "damage",
   abilityGameID: TORMENTED.SEVER,
 });
 
-export const isRazeDamageEvent = createIsSpecificEvent<DamageEvent>({
+const isRazeDamageEvent = createIsSpecificEvent<DamageEvent>({
   type: "damage",
   abilityGameID: TORMENTED.RAZE,
 });
 
-export const isVolcanicPlumeDamageEvent = createIsSpecificEvent<DamageEvent>({
+const isVolcanicPlumeDamageEvent = createIsSpecificEvent<DamageEvent>({
   type: "damage",
   abilityGameID: TORMENTED.VOLCANIC_PLUME,
 });
 
-export const isTheFifthSkullDamageEvent = createIsSpecificEvent<DamageEvent>({
+const isTheFifthSkullDamageEvent = createIsSpecificEvent<DamageEvent>({
   type: "damage",
   abilityGameID: TORMENTED.THE_FIFTH_SKULL,
 });
+
+export const getTormentedEvents = (
+  allEvents: AllTrackedEventTypes,
+  affixSet: Set<Affixes>
+): (DamageEvent | HealEvent | AbsorbEvent)[] => {
+  if (!affixSet.has(Affixes.Tormented)) {
+    return [];
+  }
+
+  // powers
+  const stygianKingsBarbs = reduceEventsByPlayer(
+    allEvents.filter(isStygianKingsBarbsEvent),
+    "sourceID"
+  );
+  const theFifthSkulL = reduceEventsByPlayer(
+    allEvents.filter(isTheFifthSkullDamageEvent),
+    "sourceID"
+  );
+  const bottleOfSanguineIchorDamage = reduceEventsByPlayer(
+    allEvents.filter(isBottleOfSanguineIchorDamageEvent),
+    "sourceID"
+  );
+  const bottleOfSanguineIchorHeal = reduceEventsByPlayer(
+    allEvents.filter(isBottleOfSanguineIchorHealEvent),
+    "sourceID"
+  );
+  const volcanicPlume = reduceEventsByPlayer(
+    allEvents.filter(isVolcanicPlumeDamageEvent),
+    "sourceID"
+  );
+  const stoneWard = reduceEventsByPlayer(
+    allEvents.filter(isStoneWardEvent),
+    "sourceID"
+  );
+
+  // lieutenant abilities
+  const infernoDamageEvent = reduceEventsByPlayer(
+    allEvents.filter(isInfernoDamageEvent),
+    "targetID"
+  );
+  const scorchingBlast = reduceEventsByPlayer(
+    allEvents.filter(isScorchingBlastDamageEvent),
+    "targetID"
+  );
+  const soulforgeFlame = reduceEventsByPlayer(
+    allEvents.filter(isSoulforgeFlamesDamageEvent),
+    "targetID"
+  );
+  const coldSnap = reduceEventsByPlayer(
+    allEvents.filter(isColdSnapDamageEvent),
+    "targetID"
+  );
+  const frostLance = reduceEventsByPlayer(
+    allEvents.filter(isFrostLanceDamageEvent),
+    "targetID"
+  );
+  const bitingCold = reduceEventsByPlayer(
+    allEvents.filter(isBitingColdDamageEvent),
+    "targetID"
+  );
+  const seismicWave = reduceEventsByPlayer(
+    allEvents.filter(isSeismicWaveDamageEvent),
+    "targetID"
+  );
+  const crush = reduceEventsByPlayer(
+    allEvents.filter(isCrushDamageEvent),
+    "targetID"
+  );
+  const sever = reduceEventsByPlayer(
+    allEvents.filter(isSeverDamageEvent),
+    "targetID"
+  );
+  const raze = reduceEventsByPlayer(
+    allEvents.filter(isRazeDamageEvent),
+    "targetID"
+  );
+
+  return [
+    ...stygianKingsBarbs,
+    ...bottleOfSanguineIchorDamage,
+    ...bottleOfSanguineIchorHeal,
+    ...infernoDamageEvent,
+    ...volcanicPlume,
+    ...scorchingBlast,
+    ...soulforgeFlame,
+    ...coldSnap,
+    ...frostLance,
+    ...bitingCold,
+    ...crush,
+    ...sever,
+    ...raze,
+    ...theFifthSkulL,
+    ...stoneWard,
+    ...seismicWave,
+  ];
+};

@@ -1,4 +1,6 @@
-import type { ApplyBuffEvent } from "../types";
+import { Affixes } from "@keystone-heroes/db/types";
+
+import type { AllTrackedEventTypes, ApplyBuffEvent } from "../types";
 import { createIsSpecificEvent } from "../utils";
 
 export const BOLSTERING = 209_859;
@@ -26,7 +28,7 @@ export const filterExpression = [
   `type = "applybuff" and ability.id = ${BOLSTERING} and target.type = "npc"`,
 ];
 
-export const isBolsteringEvent = createIsSpecificEvent<ApplyBuffEvent>({
+const isBolsteringEvent = createIsSpecificEvent<ApplyBuffEvent>({
   type: "applybuff",
   abilityGameID: BOLSTERING,
 });
@@ -37,7 +39,7 @@ type StackDataset = {
   stacks: number;
 };
 
-export const getHighestBolsteringStack = (
+const getHighestBolsteringStack = (
   allEvents: ApplyBuffEvent[]
 ): ApplyBuffEvent[] => {
   const stacksPerNPC = allEvents.reduce<StackDataset[]>(
@@ -115,4 +117,15 @@ export const getHighestBolsteringStack = (
     },
     []
   );
+};
+
+export const getBolsteringEvents = (
+  allEvents: AllTrackedEventTypes,
+  affixSet: Set<Affixes>
+): ApplyBuffEvent[] => {
+  if (!affixSet.has(Affixes.Bolstering)) {
+    return [];
+  }
+
+  return getHighestBolsteringStack(allEvents.filter(isBolsteringEvent));
 };

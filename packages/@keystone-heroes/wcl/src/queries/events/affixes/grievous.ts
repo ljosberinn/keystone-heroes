@@ -1,5 +1,7 @@
-import type { DamageEvent } from "../types";
-import { createIsSpecificEvent } from "../utils";
+import { Affixes } from "@keystone-heroes/db/types";
+
+import type { AllTrackedEventTypes, DamageEvent } from "../types";
+import { createIsSpecificEvent, reduceEventsByPlayer } from "../utils";
 
 export const GRIEVOUS_WOUND = 240_559;
 
@@ -10,7 +12,21 @@ export const filterExpression = [
   `type = "damage" and target.type = "player" and ability.id = ${GRIEVOUS_WOUND} and rawDamage > 0`,
 ];
 
-export const isGrievousDamageEvent = createIsSpecificEvent<DamageEvent>({
+const isGrievousDamageEvent = createIsSpecificEvent<DamageEvent>({
   type: "damage",
   abilityGameID: GRIEVOUS_WOUND,
 });
+
+export const getGrievousEvents = (
+  allEvents: AllTrackedEventTypes,
+  affixSet: Set<Affixes>
+): DamageEvent[] => {
+  if (!affixSet.has(Affixes.Grievous)) {
+    return [];
+  }
+
+  return reduceEventsByPlayer(
+    allEvents.filter(isGrievousDamageEvent),
+    "targetID"
+  );
+};
