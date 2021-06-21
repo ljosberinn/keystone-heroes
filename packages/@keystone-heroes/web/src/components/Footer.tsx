@@ -10,9 +10,9 @@ type FooterNavLinkProps = {
 
 function FooterNavLink({ href, children }: FooterNavLinkProps) {
   return (
-    <li className="py-1 md:text-sm text-base leading-relaxed">
+    <li className="py-1 text-base leading-relaxed md:text-sm">
       <Link href={href}>
-        <a className="hover:text-yellow-600 transition-colors ease-in-out duration-150">
+        <a className="transition-colors duration-150 ease-in-out hover:text-yellow-600">
           {children}
         </a>
       </Link>
@@ -22,19 +22,19 @@ function FooterNavLink({ href, children }: FooterNavLinkProps) {
 
 export function Footer(): JSX.Element {
   return (
-    <footer className="max-w-screen-xl w-full mx-auto">
-      <nav className="w-full md:space-y-0 space-y-6 flex md:flex-row flex-col items-start justify-between gap-6 md:pt-14 pt-16 lg:pb-40 pb-16">
-        <div className="space-y-5 h-full flex flex-col md:items-start items-center lg:w-72 w-full">
+    <footer className="w-full max-w-screen-xl mx-auto">
+      <nav className="flex flex-col items-start justify-between w-full gap-6 pt-16 pb-16 space-y-6 md:space-y-0 md:flex-row md:pt-14 lg:pb-40">
+        <div className="flex flex-col items-center w-full h-full space-y-5 md:items-start lg:w-72">
           <Link href="/">
-            <a className="flex md:flex-row flex-col lg:items-start md:items-center items-center md:text-left text-center md:space-x-2 md:space-y-0 space-y-2 undefined">
-              <div className="mt-1 text-lg font-semibold leading-tighter tracking-tight">
+            <a className="flex flex-col items-center space-y-2 text-center md:flex-row lg:items-start md:items-center md:text-left md:space-x-2 md:space-y-0 undefined">
+              <div className="mt-1 text-lg font-semibold tracking-tight leading-tighter">
                 Lorem ipsum dolor sit amet.
               </div>
             </a>
           </Link>
         </div>
 
-        <div className="grid md:grid-cols-2 grid-cols-1 lg:pr-6 md:gap-10 md:text-left text-center md:items-start items-center md:w-auto w-full">
+        <div className="grid items-center w-full grid-cols-1 text-center md:grid-cols-2 lg:pr-6 md:gap-10 md:text-left md:items-start md:w-auto">
           <ul>
             <FooterNavLink href="/foo">Foo</FooterNavLink>
             <FooterNavLink href="/bar">Bar</FooterNavLink>
@@ -46,7 +46,7 @@ export function Footer(): JSX.Element {
           </ul>
         </div>
       </nav>
-      <small className="space-x-6 py-6 text-xs w-full flex items-center md:justify-end justify-center text-gray-500 dark:text-gray-300">
+      <small className="flex items-center justify-center w-full py-6 space-x-6 text-xs text-gray-500 md:justify-end dark:text-gray-300">
         {COMMIT_SHA && (
           <ExternalLink
             href={`https://github.com/ljosberinn/wcl-to-mdt/tree/${COMMIT_SHA}`}

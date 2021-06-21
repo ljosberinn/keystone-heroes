@@ -35,11 +35,11 @@ export function ColorModeToggle(): JSX.Element | null {
   return (
     <button
       type="button"
-      className="rounded p-3 h-10 w-10"
+      className="w-10 h-10 p-3 rounded"
       onClick={handleThemeChange}
     >
       {isMounted && (
-        <svg className="h-4 w-4 text-gray-800 dark:text-gray-200">
+        <svg className="w-4 h-4 text-gray-800 dark:text-gray-200">
           <use href={`#${icon.id}`} />
         </svg>
       )}
