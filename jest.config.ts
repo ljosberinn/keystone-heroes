@@ -19,7 +19,10 @@ const config: Config.InitialOptions = {
   moduleNameMapper: pathsToModuleNameMapper(tsConfig.compilerOptions.paths, {
     prefix: "<rootDir>/",
   }),
-  collectCoverageFrom: ["src/**/*.{js,jsx,ts,tsx}"],
+  collectCoverageFrom: [
+    "src/**/*.{js,jsx,ts,tsx}",
+    "!src/**/*.stories.{js,jsx,ts,tsx}",
+  ],
   globals: {
     "ts-jest": {
       diagnostics: {
