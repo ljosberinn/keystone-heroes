@@ -1,0 +1,126 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`removebuff tracks SD Lantern Buff events 1`] = `
+Array [
+  Object {
+    "abilityID": 340433,
+    "eventType": "RemoveBuff",
+    "targetPlayerID": 1,
+    "timestamp": 11682327,
+  },
+  Object {
+    "abilityID": 340433,
+    "eventType": "RemoveBuff",
+    "targetPlayerID": 1,
+    "timestamp": 11682327,
+  },
+  Object {
+    "abilityID": 340433,
+    "eventType": "RemoveBuff",
+    "targetPlayerID": 1,
+    "timestamp": 11682327,
+  },
+  Object {
+    "abilityID": 340433,
+    "eventType": "RemoveBuff",
+    "targetPlayerID": 1,
+    "timestamp": 11682327,
+  },
+  Object {
+    "abilityID": 340433,
+    "eventType": "RemoveBuff",
+    "targetPlayerID": 1,
+    "timestamp": 11682327,
+  },
+  Object {
+    "abilityID": 340433,
+    "eventType": "RemoveBuff",
+    "targetPlayerID": 1,
+    "timestamp": 12353696,
+  },
+  Object {
+    "abilityID": 340433,
+    "eventType": "RemoveBuff",
+    "targetPlayerID": 1,
+    "timestamp": 12366263,
+  },
+  Object {
+    "abilityID": 340433,
+    "eventType": "RemoveBuff",
+    "targetPlayerID": 1,
+    "timestamp": 12366263,
+  },
+  Object {
+    "abilityID": 340433,
+    "eventType": "RemoveBuff",
+    "targetPlayerID": 1,
+    "timestamp": 12366263,
+  },
+  Object {
+    "abilityID": 340433,
+    "eventType": "RemoveBuff",
+    "targetPlayerID": 1,
+    "timestamp": 12366263,
+  },
+  Object {
+    "abilityID": 340433,
+    "eventType": "RemoveBuff",
+    "targetPlayerID": 1,
+    "timestamp": 12730092,
+  },
+  Object {
+    "abilityID": 340433,
+    "eventType": "RemoveBuff",
+    "targetPlayerID": 1,
+    "timestamp": 12730092,
+  },
+  Object {
+    "abilityID": 340433,
+    "eventType": "RemoveBuff",
+    "targetPlayerID": 1,
+    "timestamp": 12730092,
+  },
+  Object {
+    "abilityID": 340433,
+    "eventType": "RemoveBuff",
+    "targetPlayerID": 1,
+    "timestamp": 12730092,
+  },
+  Object {
+    "abilityID": 340433,
+    "eventType": "RemoveBuff",
+    "targetPlayerID": 1,
+    "timestamp": 12730092,
+  },
+  Object {
+    "abilityID": 340433,
+    "eventType": "RemoveBuff",
+    "targetPlayerID": 1,
+    "timestamp": 13607136,
+  },
+  Object {
+    "abilityID": 340433,
+    "eventType": "RemoveBuff",
+    "targetPlayerID": 1,
+    "timestamp": 13607136,
+  },
+  Object {
+    "abilityID": 340433,
+    "eventType": "RemoveBuff",
+    "targetPlayerID": 1,
+    "timestamp": 13607136,
+  },
+  Object {
+    "abilityID": 340433,
+    "eventType": "RemoveBuff",
+    "targetPlayerID": 1,
+    "timestamp": 13607136,
+  },
+  Object {
+    "abilityID": 340433,
+    "eventType": "RemoveBuff",
+    "targetPlayerID": 1,
+    "timestamp": 13607136,
+  },
+]
+`;

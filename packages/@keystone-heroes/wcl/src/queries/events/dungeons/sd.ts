@@ -59,7 +59,7 @@ const isSdLanternApplyBuffStackEvent =
   });
 
 export const getSDEvents = (
-  allEvents: AllTrackedEventTypes
+  allEvents: AllTrackedEventTypes[]
 ): (
   | BeginCastEvent
   | ApplyBuffEvent

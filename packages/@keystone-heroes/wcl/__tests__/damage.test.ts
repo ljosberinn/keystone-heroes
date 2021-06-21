@@ -1,0 +1,159 @@
+import type { Prisma } from "@keystone-heroes/db/types";
+
+import { BURSTING } from "../src/queries/events/affixes/bursting";
+import { EXPLOSIVE } from "../src/queries/events/affixes/explosive";
+import { GRIEVOUS_WOUND } from "../src/queries/events/affixes/grievous";
+import { NECROTIC } from "../src/queries/events/affixes/necrotic";
+import { QUAKING } from "../src/queries/events/affixes/quaking";
+import { SANGUINE_ICHOR_DAMAGE } from "../src/queries/events/affixes/sanguine";
+import { SPITEFUL } from "../src/queries/events/affixes/spiteful";
+import { STORMING } from "../src/queries/events/affixes/storming";
+import { VOLCANIC } from "../src/queries/events/affixes/volcanic";
+import { NW } from "../src/queries/events/dungeons/nw";
+import { PF } from "../src/queries/events/dungeons/pf";
+import type { DamageEvent } from "../src/queries/events/types";
+import { damageProcessor } from "../src/transform/events/damage";
+import allEvents from "./fixtures/allEvents.json";
+
+describe("damage", () => {
+  const params = {
+    targetPlayerID: 1,
+    sourcePlayerID: null,
+    sourceNPCID: null,
+    targetNPCID: null,
+  };
+
+  const damageEvents = allEvents.filter(
+    (event): event is DamageEvent => event.type === "damage"
+  );
+
+  const environmentalDamageAffixAbilities = new Set([
+    BURSTING,
+    VOLCANIC,
+    STORMING,
+    EXPLOSIVE.ability,
+    GRIEVOUS_WOUND,
+    SANGUINE_ICHOR_DAMAGE,
+    QUAKING,
+    NECROTIC,
+  ]);
+
+  describe("player taking damage", () => {
+    test("tracks environmental damage affix events", () => {
+      const result = damageEvents
+        .filter((event) =>
+          environmentalDamageAffixAbilities.has(event.abilityGameID)
+        )
+        .map((event) => damageProcessor(event, params));
+
+      expect(result).toMatchSnapshot();
+    });
+
+    test("tracks damage taken by npc", () => {
+      const result = damageEvents
+        .filter(
+          (event) => !environmentalDamageAffixAbilities.has(event.abilityGameID)
+        )
+        .map((event) => damageProcessor(event, { ...params, sourceNPCID: 1 }));
+
+      expect(result).toMatchSnapshot();
+    });
+
+    test("fixes broken Spiteful autoattacks", () => {
+      const result = damageEvents
+        .filter((event) => event.abilityGameID === SPITEFUL.ability)
+        .map((event) => damageProcessor(event, params));
+
+      expect(result).toMatchSnapshot();
+    });
+  });
+
+  describe("player damaging npc", () => {
+    test("ignores targetNPCID on NW Kyrian Orb Damage", () => {
+      const result = damageEvents
+        .filter((event) => event.abilityGameID === NW.KYRIAN_ORB_DAMAGE)
+        .map((event) =>
+          damageProcessor(event, {
+            ...params,
+            targetPlayerID: null,
+            sourcePlayerID: 1,
+            targetNPCID: 1,
+          })
+        );
+
+      expect(result.every((dataset) => dataset?.targetNPCID === null)).toBe(
+        true
+      );
+
+      expect(result).toMatchSnapshot();
+    });
+
+    test("ignores damage amount on Explosive unit", () => {
+      const result = damageEvents.map((event) =>
+        damageProcessor(event, {
+          ...params,
+          targetPlayerID: null,
+          sourcePlayerID: 1,
+          targetNPCID: EXPLOSIVE.unit,
+        })
+      );
+
+      expect(
+        result
+          .filter(
+            (dataset): dataset is Prisma.EventCreateManyPullInput =>
+              dataset !== null
+          )
+          .every((dataset) => dataset.damage === null)
+      ).toBe(true);
+
+      expect(result).toMatchSnapshot();
+    });
+  });
+
+  test("tracks damage done by plagueborers", () => {
+    const result = damageEvents
+      .filter((event) => event.abilityGameID === PF.PLAGUE_BOMB)
+      .map((event) =>
+        damageProcessor(event, {
+          ...params,
+          sourceNPCID: PF.RIGGED_PLAGUEBORER,
+          targetPlayerID: null,
+        })
+      );
+
+    expect(result).toMatchSnapshot();
+  });
+
+  test("skips events doing 0 damage", () => {
+    const result = damageEvents.map((event) =>
+      damageProcessor(
+        { ...event, amount: 0 },
+        {
+          ...params,
+          sourceNPCID: PF.RIGGED_PLAGUEBORER,
+          targetPlayerID: null,
+        }
+      )
+    );
+
+    expect(result.every((dataset) => dataset === null)).toBe(true);
+
+    expect(result).toMatchSnapshot();
+  });
+
+  test("skips events without any meta information", () => {
+    const result = damageEvents.map((event) =>
+      damageProcessor(event, {
+        targetNPCID: null,
+        sourceNPCID: null,
+        sourcePlayerID: null,
+        targetPlayerID: null,
+      })
+    );
+
+    expect(result.every((dataset) => dataset === null)).toBe(true);
+
+    expect(result).toMatchSnapshot();
+  });
+});

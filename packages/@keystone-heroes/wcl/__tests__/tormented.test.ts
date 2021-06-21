@@ -1,6 +1,6 @@
 import { Affixes } from "@keystone-heroes/db/types";
-import { getTormentedEvents } from "@keystone-heroes/wcl/queries/events/affixes/tormented";
 
+import { getTormentedEvents } from "../src/queries/events/affixes/tormented";
 import allEvents from "./fixtures/allEvents.json";
 import earlyPTRTormented from "./fixtures/earlyPTRTormented.json";
 

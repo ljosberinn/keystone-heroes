@@ -1,6 +1,6 @@
 import { Affixes } from "@keystone-heroes/db/types";
-import { getExplosiveEvents } from "@keystone-heroes/wcl/queries/events/affixes/explosive";
 
+import { getExplosiveEvents } from "../src/queries/events/affixes/explosive";
 import allEvents from "./fixtures/allEvents.json";
 
 describe("getExplosiveEvents", () => {

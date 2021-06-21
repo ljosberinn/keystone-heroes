@@ -142,7 +142,7 @@ const isTheFifthSkullDamageEvent = createIsSpecificEvent<DamageEvent>({
 });
 
 export const getTormentedEvents = (
-  allEvents: AllTrackedEventTypes,
+  allEvents: AllTrackedEventTypes[],
   affixSet: Set<Affixes>
 ): (DamageEvent | HealEvent | AbsorbEvent)[] => {
   if (!affixSet.has(Affixes.Tormented)) {

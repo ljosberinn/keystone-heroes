@@ -50,7 +50,7 @@ export const PF = {
  *         startTime
  *         endTime
  *       }
- *       events(: 3958680, endTime: 6113126, filterExpression: "(type = \"death\" and target.type = \"npc\" and target.id in (164705,164707, 163891)) or (type = \"applybuff\" and target.type = \"player\" and ability.id in (340225, 340271, 340210)) or (type = \"damage\" and ability.id = 328501)") {
+ *       events(startTime: 3958680, endTime: 6113126, filterExpression: "(type = \"death\" and target.type = \"npc\" and target.id in (164705,164707, 163891)) or (type = \"applybuff\" and target.type = \"player\" and ability.id in (340225, 340271, 340210)) or (type = \"damage\" and ability.id = 328501)") {
  *         data
  *       }
  *     }
@@ -90,7 +90,7 @@ const isPfPlagueBombDamageEvent = createIsSpecificEvent<DamageEvent>({
 const pfSlimeBuffReducer = createChunkByThresholdReducer(30 * 1000);
 
 export const getPFEvents = (
-  allEvents: AllTrackedEventTypes,
+  allEvents: AllTrackedEventTypes[],
   playerMetaInformation: { actorID: number; class: PlayableClass }[]
 ): (DeathEvent | DamageEvent | ApplyBuffEvent)[] => {
   const actorIDSet = new Set(

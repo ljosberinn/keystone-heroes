@@ -64,7 +64,7 @@ const getHighestNecroticStack = (
 };
 
 export const getNecroticEvents = (
-  allEvents: AllTrackedEventTypes,
+  allEvents: AllTrackedEventTypes[],
   affixSet: Set<Affixes>
 ): (DamageEvent | ApplyDebuffStackEvent)[] => {
   if (!affixSet.has(Affixes.Necrotic)) {

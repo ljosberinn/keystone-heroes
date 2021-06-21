@@ -27,15 +27,13 @@ export const filterExpression = [
   `type = "damage" and target.type = "player" and ability.id = ${VOLCANIC}`,
 ];
 
-const isVolcanicEvent = (
-  event: AllTrackedEventTypes[number]
-): event is DamageEvent =>
+const isVolcanicEvent = (event: AllTrackedEventTypes): event is DamageEvent =>
   event.type === "damage" &&
   "abilityGameID" in event &&
   event.abilityGameID === VOLCANIC;
 
 export const getVolcanicEvents = (
-  allEvents: AllTrackedEventTypes,
+  allEvents: AllTrackedEventTypes[],
   affixSet: Set<Affixes>
 ): DamageEvent[] => {
   if (!affixSet.has(Affixes.Volcanic)) {

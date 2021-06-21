@@ -1,6 +1,6 @@
 import { Affixes } from "@keystone-heroes/db/types";
-import { getBurstingEvents } from "@keystone-heroes/wcl/queries/events/affixes/bursting";
 
+import { getBurstingEvents } from "../src/queries/events/affixes/bursting";
 import allEvents from "./fixtures/allEvents.json";
 
 describe("getBurstingEvents", () => {

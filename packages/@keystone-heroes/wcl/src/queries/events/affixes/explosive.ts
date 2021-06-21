@@ -38,7 +38,7 @@ const isExplosiveDamageEvent = createIsSpecificEvent<DamageEvent>({
 
 const createIsExplosiveDeathEvent =
   (targetID: number) =>
-  (event: AllTrackedEventTypes[number]): event is DamageEvent => {
+  (event: AllTrackedEventTypes): event is DamageEvent => {
     return (
       event.type === "damage" &&
       "targetInstance" in event &&
@@ -48,7 +48,7 @@ const createIsExplosiveDeathEvent =
   };
 
 const findExplosiveTargetID = (
-  allEvents: AllTrackedEventTypes
+  allEvents: AllTrackedEventTypes[]
 ): number | null => {
   const dataset = allEvents.reduce<{
     targetID: null | number;
@@ -83,7 +83,7 @@ const findExplosiveTargetID = (
 };
 
 export const getExplosiveEvents = (
-  allEvents: AllTrackedEventTypes,
+  allEvents: AllTrackedEventTypes[],
   affixSet: Set<Affixes>
 ): DamageEvent[] => {
   if (!affixSet.has(Affixes.Explosive)) {

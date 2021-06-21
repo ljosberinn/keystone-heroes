@@ -32,7 +32,7 @@ const isTopBannerAuraEvent = createIsSpecificEvent<ApplyBuffEvent>({
 });
 
 export const getTOPEvents = (
-  allEvents: AllTrackedEventTypes
+  allEvents: AllTrackedEventTypes[]
 ): ApplyBuffEvent[] => {
   return allEvents.filter(isTopBannerAuraEvent);
 };

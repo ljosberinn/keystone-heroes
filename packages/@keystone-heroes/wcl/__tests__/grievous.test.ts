@@ -1,6 +1,6 @@
 import { Affixes } from "@keystone-heroes/db/types";
-import { getGrievousEvents } from "@keystone-heroes/wcl/queries/events/affixes/grievous";
 
+import { getGrievousEvents } from "../src/queries/events/affixes/grievous";
 import allEvents from "./fixtures/allEvents.json";
 
 describe("getGrievousEvents", () => {

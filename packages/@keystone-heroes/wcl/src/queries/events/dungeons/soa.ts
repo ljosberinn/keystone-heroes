@@ -36,7 +36,7 @@ const isSoaSpearEvent = createIsSpecificEvent<ApplyDebuffEvent>({
 const soaSpearReducer = createChunkByThresholdReducer(10 * 1000);
 
 export const getSOAEvents = (
-  allEvents: AllTrackedEventTypes
+  allEvents: AllTrackedEventTypes[]
 ): ApplyDebuffEvent[] => {
   return (
     allEvents

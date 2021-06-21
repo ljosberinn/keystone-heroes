@@ -40,7 +40,7 @@ export const getDungeonExpression = (id: DungeonIDs): string[] =>
   isDungeonWithEvent(id) ? dungeonExpressionMap[id] : [];
 
 export const filterDungeonEvents = (
-  allEvents: AllTrackedEventTypes,
+  allEvents: AllTrackedEventTypes[],
   dungeonID: DungeonIDs,
   playerMetaInformation: { actorID: number; class: PlayableClass }[]
 ):

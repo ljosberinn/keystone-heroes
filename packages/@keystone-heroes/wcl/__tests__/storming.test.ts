@@ -1,6 +1,6 @@
 import { Affixes } from "@keystone-heroes/db/types";
-import { getStormingEvents } from "@keystone-heroes/wcl/queries/events/affixes/storming";
 
+import { getStormingEvents } from "../src/queries/events/affixes/storming";
 import allEvents from "./fixtures/allEvents.json";
 
 describe("getStormingEvents", () => {

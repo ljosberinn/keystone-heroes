@@ -1,6 +1,6 @@
 import { Affixes } from "@keystone-heroes/db/types";
-import { getVolcanicEvents } from "@keystone-heroes/wcl/queries/events/affixes/volcanic";
 
+import { getVolcanicEvents } from "../src/queries/events/affixes/volcanic";
 import allEvents from "./fixtures/allEvents.json";
 
 describe("getVolcanicEvents", () => {

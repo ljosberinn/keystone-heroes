@@ -1,5 +1,4 @@
-import { getTOPEvents } from "@keystone-heroes/wcl/queries/events/dungeons/top";
-
+import { getTOPEvents } from "../src/queries/events/dungeons/top";
 import allEvents from "./fixtures/allEvents.json";
 
 describe("getTOPEvents", () => {

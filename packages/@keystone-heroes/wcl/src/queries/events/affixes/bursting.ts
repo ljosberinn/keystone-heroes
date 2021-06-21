@@ -33,7 +33,7 @@ const isBurstingEvent = createIsSpecificEvent<DamageEvent>({
 });
 
 export const getBurstingEvents = (
-  allEvents: AllTrackedEventTypes,
+  allEvents: AllTrackedEventTypes[],
   affixSet: Set<Affixes>
 ): DamageEvent[] => {
   if (!affixSet.has(Affixes.Bursting)) {

@@ -1,6 +1,6 @@
 import { Affixes } from "@keystone-heroes/db/types";
-import { getNecroticEvents } from "@keystone-heroes/wcl/queries/events/affixes/necrotic";
 
+import { getNecroticEvents } from "../src/queries/events/affixes/necrotic";
 import allEvents from "./fixtures/allEvents.json";
 
 describe("getNecroticEvents", () => {

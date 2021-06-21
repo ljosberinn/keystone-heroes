@@ -1,6 +1,6 @@
 import { PlayableClass } from "@keystone-heroes/db/types";
-import { getPFEvents } from "@keystone-heroes/wcl/queries/events/dungeons/pf";
 
+import { getPFEvents } from "../src/queries/events/dungeons/pf";
 import allEvents from "./fixtures/allEvents.json";
 
 describe("getPFEvents", () => {

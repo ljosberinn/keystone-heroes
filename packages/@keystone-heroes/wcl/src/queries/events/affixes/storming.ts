@@ -32,7 +32,7 @@ const isStormingEvent = createIsSpecificEvent<DamageEvent>({
 });
 
 export const getStormingEvents = (
-  allEvents: AllTrackedEventTypes,
+  allEvents: AllTrackedEventTypes[],
   affixSet: Set<Affixes>
 ): DamageEvent[] => {
   if (!affixSet.has(Affixes.Storming)) {

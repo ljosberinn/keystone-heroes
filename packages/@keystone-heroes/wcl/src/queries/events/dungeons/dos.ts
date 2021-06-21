@@ -32,7 +32,7 @@ const isDosUrnEvent = createIsSpecificEvent<ApplyDebuffEvent>({
 });
 
 export const getDOSEvents = (
-  allEvents: AllTrackedEventTypes
+  allEvents: AllTrackedEventTypes[]
 ): ApplyDebuffEvent[] => {
   return allEvents.filter(isDosUrnEvent);
 };

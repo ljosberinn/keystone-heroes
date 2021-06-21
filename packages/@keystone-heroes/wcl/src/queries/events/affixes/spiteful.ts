@@ -36,7 +36,7 @@ const isSpitefulDamageEvent = createIsSpecificEvent<DamageEvent>({
 });
 
 export const getSpitefulEvents = (
-  allEvents: AllTrackedEventTypes,
+  allEvents: AllTrackedEventTypes[],
   affixSet: Set<Affixes>
 ): DamageEvent[] => {
   if (!affixSet.has(Affixes.Spiteful)) {

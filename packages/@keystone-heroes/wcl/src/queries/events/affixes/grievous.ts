@@ -34,7 +34,7 @@ const isGrievousDamageEvent = createIsSpecificEvent<DamageEvent>({
 });
 
 export const getGrievousEvents = (
-  allEvents: AllTrackedEventTypes,
+  allEvents: AllTrackedEventTypes[],
   affixSet: Set<Affixes>
 ): DamageEvent[] => {
   if (!affixSet.has(Affixes.Grievous)) {

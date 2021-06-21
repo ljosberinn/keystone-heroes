@@ -1,5 +1,109 @@
 [
   {
+    "timestamp": 4006933,
+    "type": "applybuff",
+    "sourceID": 65,
+    "targetID": 65,
+    "abilityGameID": 340210,
+    "pin": "0"
+  },
+  {
+    "timestamp": 4018740,
+    "type": "applybuff",
+    "sourceID": 63,
+    "targetID": 63,
+    "abilityGameID": 340210,
+    "pin": "0"
+  },
+  {
+    "timestamp": 4076733,
+    "type": "applybuff",
+    "sourceID": 63,
+    "targetID": 63,
+    "abilityGameID": 340210,
+    "pin": "0"
+  },
+  {
+    "timestamp": 4078931,
+    "type": "applybuff",
+    "sourceID": 65,
+    "targetID": 65,
+    "abilityGameID": 340210,
+    "pin": "0"
+  },
+  {
+    "timestamp": 4563925,
+    "type": "applybuff",
+    "sourceID": 65,
+    "targetID": 65,
+    "abilityGameID": 340210,
+    "pin": "0"
+  },
+  {
+    "timestamp": 4563925,
+    "type": "applybuff",
+    "sourceID": 65,
+    "targetID": 65,
+    "abilityGameID": 340225,
+    "pin": "0"
+  },
+  {
+    "timestamp": 4622916,
+    "type": "applybuff",
+    "sourceID": 65,
+    "targetID": 65,
+    "abilityGameID": 340271,
+    "pin": "0"
+  },
+  {
+    "timestamp": 4978916,
+    "type": "applybuff",
+    "sourceID": 65,
+    "targetID": 65,
+    "abilityGameID": 340271,
+    "pin": "0"
+  },
+  {
+    "timestamp": 4979920,
+    "type": "applybuff",
+    "sourceID": 65,
+    "targetID": 65,
+    "abilityGameID": 340225,
+    "pin": "0"
+  },
+  {
+    "timestamp": 4986724,
+    "type": "applybuff",
+    "sourceID": 63,
+    "targetID": 63,
+    "abilityGameID": 340225,
+    "pin": "0"
+  },
+  {
+    "timestamp": 4986724,
+    "type": "applybuff",
+    "sourceID": 63,
+    "targetID": 63,
+    "abilityGameID": 340271,
+    "pin": "0"
+  },
+  {
+    "timestamp": 5260722,
+    "type": "applybuff",
+    "sourceID": 63,
+    "targetID": 63,
+    "abilityGameID": 340210,
+    "pin": "0"
+  },
+  {
+    "timestamp": 5262928,
+    "type": "applybuff",
+    "sourceID": 65,
+    "targetID": 65,
+    "abilityGameID": 340210,
+    "pin": "0"
+  },
+  {
     "timestamp": 3186763,
     "type": "death",
     "sourceID": -1,

@@ -120,7 +120,7 @@ const getHighestBolsteringStack = (
 };
 
 export const getBolsteringEvents = (
-  allEvents: AllTrackedEventTypes,
+  allEvents: AllTrackedEventTypes[],
   affixSet: Set<Affixes>
 ): ApplyBuffEvent[] => {
   if (!affixSet.has(Affixes.Bolstering)) {

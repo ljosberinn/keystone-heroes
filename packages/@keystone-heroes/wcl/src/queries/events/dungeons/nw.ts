@@ -77,7 +77,7 @@ const nwSpearReducer = createChunkByThresholdReducer(16 * 1000);
 const nwOrbReducer = createChunkByThresholdReducer(8 * 1000);
 
 export const getNWEvents = (
-  allEvents: AllTrackedEventTypes
+  allEvents: AllTrackedEventTypes[]
 ): (DamageEvent | HealEvent)[] => {
   return [
     ...allEvents

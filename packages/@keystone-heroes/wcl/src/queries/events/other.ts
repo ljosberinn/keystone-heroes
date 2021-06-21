@@ -65,7 +65,7 @@ export const remarkableSpellFilterExpression = `source.type = "player" and type 
 ].join(", ")})`;
 
 export const filterProfessionEvents = (
-  allEvents: AllTrackedEventTypes
+  allEvents: AllTrackedEventTypes[]
 ): (CastEvent | ApplyBuffEvent)[] => {
   return [
     ...allEvents.filter(isLeatherworkingDrumsEvent),
@@ -75,7 +75,7 @@ export const filterProfessionEvents = (
 };
 
 export const filterPlayerDeathEvents = (
-  allEvents: AllTrackedEventTypes,
+  allEvents: AllTrackedEventTypes[],
   playerMetaInformation: { actorID: number; class: PlayableClass }[],
   remarkableSpellEvents: CastEvent[]
 ): DeathEvent[] => {
@@ -131,7 +131,7 @@ export const filterPlayerDeathEvents = (
 };
 
 export const filterRemarkableSpellEvents = (
-  allEvents: AllTrackedEventTypes
+  allEvents: AllTrackedEventTypes[]
 ): CastEvent[] => {
   return allEvents.filter(
     (event): event is CastEvent =>

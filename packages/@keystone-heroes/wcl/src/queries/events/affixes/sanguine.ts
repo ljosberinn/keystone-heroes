@@ -57,7 +57,7 @@ const reduceHealingDoneBySanguine = (events: HealEvent[]): HealEvent[] => {
 };
 
 export const getSanguineEvents = (
-  allEvents: AllTrackedEventTypes,
+  allEvents: AllTrackedEventTypes[],
   affixSet: Set<Affixes>
 ): (DamageEvent | HealEvent)[] => {
   if (!affixSet.has(Affixes.Sanguine)) {

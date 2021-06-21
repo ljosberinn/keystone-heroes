@@ -1,6 +1,6 @@
 import { Affixes } from "@keystone-heroes/db/types";
-import { getQuakingEvents } from "@keystone-heroes/wcl/queries/events/affixes/quaking";
 
+import { getQuakingEvents } from "../src/queries/events/affixes/quaking";
 import allEvents from "./fixtures/allEvents.json";
 
 describe("getQuakingEvents", () => {

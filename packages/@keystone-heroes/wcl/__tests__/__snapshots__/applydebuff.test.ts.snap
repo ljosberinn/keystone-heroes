@@ -1,0 +1,96 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`applydebuff tracks DOS Urn 1`] = `
+Array [
+  Object {
+    "abilityID": 228626,
+    "eventType": "ApplyDebuff",
+    "timestamp": 647832,
+  },
+  Object {
+    "abilityID": 228626,
+    "eventType": "ApplyDebuff",
+    "timestamp": 1286270,
+  },
+  Object {
+    "abilityID": 228626,
+    "eventType": "ApplyDebuff",
+    "timestamp": 1286270,
+  },
+  Object {
+    "abilityID": 228626,
+    "eventType": "ApplyDebuff",
+    "timestamp": 1286270,
+  },
+  Object {
+    "abilityID": 228626,
+    "eventType": "ApplyDebuff",
+    "timestamp": 1286270,
+  },
+  Object {
+    "abilityID": 228626,
+    "eventType": "ApplyDebuff",
+    "timestamp": 1286270,
+  },
+  Object {
+    "abilityID": 228626,
+    "eventType": "ApplyDebuff",
+    "timestamp": 1286270,
+  },
+]
+`;
+
+exports[`applydebuff tracks SOA Spear 1`] = `
+Array [
+  Object {
+    "abilityID": 339917,
+    "eventType": "ApplyDebuff",
+    "timestamp": 11913707,
+  },
+  Object {
+    "abilityID": 339917,
+    "eventType": "ApplyDebuff",
+    "timestamp": 11913707,
+  },
+  Object {
+    "abilityID": 339917,
+    "eventType": "ApplyDebuff",
+    "timestamp": 11913707,
+  },
+  Object {
+    "abilityID": 339917,
+    "eventType": "ApplyDebuff",
+    "timestamp": 11913707,
+  },
+  Object {
+    "abilityID": 339917,
+    "eventType": "ApplyDebuff",
+    "timestamp": 11913707,
+  },
+  Object {
+    "abilityID": 339917,
+    "eventType": "ApplyDebuff",
+    "timestamp": 11913707,
+  },
+  Object {
+    "abilityID": 339917,
+    "eventType": "ApplyDebuff",
+    "timestamp": 11913707,
+  },
+  Object {
+    "abilityID": 339917,
+    "eventType": "ApplyDebuff",
+    "timestamp": 11913707,
+  },
+  Object {
+    "abilityID": 339917,
+    "eventType": "ApplyDebuff",
+    "timestamp": 11913879,
+  },
+  Object {
+    "abilityID": 339917,
+    "eventType": "ApplyDebuff",
+    "timestamp": 12840160,
+  },
+]
+`;

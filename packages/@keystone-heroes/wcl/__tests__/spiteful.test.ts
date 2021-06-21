@@ -1,6 +1,6 @@
 import { Affixes } from "@keystone-heroes/db/types";
-import { getSpitefulEvents } from "@keystone-heroes/wcl/queries/events/affixes/spiteful";
 
+import { getSpitefulEvents } from "../src/queries/events/affixes/spiteful";
 import allEvents from "./fixtures/allEvents.json";
 
 describe("getSpitefulEvents", () => {

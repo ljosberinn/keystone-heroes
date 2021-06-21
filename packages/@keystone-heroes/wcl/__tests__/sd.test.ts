@@ -1,5 +1,4 @@
-import { getSDEvents } from "@keystone-heroes/wcl/queries/events/dungeons/sd";
-
+import { getSDEvents } from "../src/queries/events/dungeons/sd";
 import allEvents from "./fixtures/allEvents.json";
 
 describe("getSDEvents", () => {

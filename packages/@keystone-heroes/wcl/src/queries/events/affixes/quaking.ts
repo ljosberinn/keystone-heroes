@@ -43,7 +43,7 @@ const isQuakingDamageEvent = createIsSpecificEvent<DamageEvent>({
 });
 
 export const getQuakingEvents = (
-  allEvents: AllTrackedEventTypes,
+  allEvents: AllTrackedEventTypes[],
   affixSet: Set<Affixes>
 ): (DamageEvent | InterruptEvent)[] => {
   if (!affixSet.has(Affixes.Quaking)) {

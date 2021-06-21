@@ -31,6 +31,8 @@ const isHoaGargoyleEvent = createIsSpecificEvent<CastEvent>({
   abilityGameID: HOA_GARGOYLE,
 });
 
-export const getHOAEvents = (allEvents: AllTrackedEventTypes): CastEvent[] => {
+export const getHOAEvents = (
+  allEvents: AllTrackedEventTypes[]
+): CastEvent[] => {
   return allEvents.filter(isHoaGargoyleEvent);
 };

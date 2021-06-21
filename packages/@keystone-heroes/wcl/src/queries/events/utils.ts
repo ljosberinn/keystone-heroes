@@ -1,10 +1,5 @@
-import type {
-  EventDataType,
-  HostilityType,
-  Sdk,
-} from "@keystone-heroes/wcl/types";
-
 import { getCachedSdk } from "../../client";
+import type { EventDataType, HostilityType, Sdk } from "../../types";
 import type { AnyEvent, DamageEvent, HealEvent, AbsorbEvent } from "./types";
 
 export type GetEventBaseParams<

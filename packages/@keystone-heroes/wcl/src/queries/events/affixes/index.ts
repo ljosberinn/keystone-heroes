@@ -90,7 +90,7 @@ export const getAffixExpression = (affixes: Affixes[]): string[] => {
 };
 
 export const filterAffixEvents = (
-  allEvents: AllTrackedEventTypes,
+  allEvents: AllTrackedEventTypes[],
   affixes: EventParams["affixes"]
 ): (
   | AbsorbEvent
@@ -103,12 +103,9 @@ export const filterAffixEvents = (
   const affixSet = new Set(affixes);
 
   // seasonal
-  console.time("filterTormentedEvents");
   const tormentedEvents = getTormentedEvents(allEvents, affixSet);
-  console.timeEnd("filterTormentedEvents");
 
   // common affixes
-  console.time("filter common affixes");
   const storming = getStormingEvents(allEvents, affixSet);
   const spiteful = getSpitefulEvents(allEvents, affixSet);
   const sanguine = getSanguineEvents(allEvents, affixSet);
@@ -119,7 +116,6 @@ export const filterAffixEvents = (
   const explosive = getExplosiveEvents(allEvents, affixSet);
   const grievous = getGrievousEvents(allEvents, affixSet);
   const necrotic = getNecroticEvents(allEvents, affixSet);
-  console.timeEnd("filter common affixes");
 
   return [
     ...tormentedEvents,

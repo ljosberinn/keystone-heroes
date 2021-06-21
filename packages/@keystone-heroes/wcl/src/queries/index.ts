@@ -9,8 +9,6 @@ import type {
 } from "../types";
 import type { Table } from "./table";
 
-export * from "./events";
-
 export type {
   Conduit,
   DamageDone,
