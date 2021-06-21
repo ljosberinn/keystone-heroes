@@ -7,7 +7,7 @@ import type {
   TableQuery,
   TableQueryVariables,
 } from "../types";
-import type { Table } from "./table";
+import type { Table } from "./types";
 
 export type {
   Conduit,
@@ -21,8 +21,8 @@ export type {
   CovenantTrait,
   Table,
   Talent,
-} from "./table";
-export { ItemQuality } from "./table";
+} from "./types";
+export { ItemQuality } from "./types";
 
 export const getInitialReportData = async (
   params: InitialReportDataQueryVariables
