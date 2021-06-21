@@ -37,7 +37,7 @@ export const PF = {
   GREEN_BUFF,
   RED_BUFF,
   PURPLE_BUFF,
-};
+} as const;
 
 /**
  * @see https://www.warcraftlogs.com/reports/qGV26X4kLbRFBJDt#fight=5&type=summary&view=events&pins=2%24Off%24%23244F4B%24expression%24(type%20%3D%20%22death%22%20and%20target.type%20%3D%20%22npc%22%20and%20target.id%20in%20(164705,164707,%20163891))%20or%20(type%20%3D%20%22applybuff%22%20and%20target.type%20%3D%20%22player%22%20and%20ability.id%20in%20(340225,%20340271,%20340210))%20or%20(type%20%3D%20%22damage%22%20and%20ability.id%20%3D%20328501)

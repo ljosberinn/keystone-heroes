@@ -10,6 +10,18 @@ import type { Processor } from "../utils";
 
 type CustomApplyBuffEvent = ApplyBuffEvent & { stacks?: number };
 
+const invisibilityIDs = new Set<number>([
+  INVISIBILITY.POTION_OF_THE_HIDDEN_SPIRIT,
+  INVISIBILITY.DIMENSIONAL_SHIFTER,
+]);
+
+const dungeonBuffIDs = new Set<number>([
+  TOP_BANNER_AURA,
+  PF.GREEN_BUFF.aura,
+  PF.RED_BUFF.aura,
+  PF.PURPLE_BUFF.aura,
+]);
+
 /**
  * track invis potion, bolstering, ToP, SD and PF buffs
  */
@@ -20,8 +32,7 @@ export const applyBuffProcessor: Processor<CustomApplyBuffEvent> = (
   if (sourcePlayerID && targetPlayerID) {
     if (
       sourcePlayerID === targetPlayerID &&
-      (event.abilityGameID === INVISIBILITY.POTION_OF_THE_HIDDEN_SPIRIT ||
-        event.abilityGameID === INVISIBILITY.DIMENSIONAL_SHIFTER)
+      invisibilityIDs.has(event.abilityGameID)
     ) {
       return {
         timestamp: event.timestamp,
@@ -31,12 +42,7 @@ export const applyBuffProcessor: Processor<CustomApplyBuffEvent> = (
       };
     }
 
-    if (
-      event.abilityGameID === TOP_BANNER_AURA ||
-      event.abilityGameID === PF.GREEN_BUFF.aura ||
-      event.abilityGameID === PF.RED_BUFF.aura ||
-      event.abilityGameID === PF.PURPLE_BUFF.aura
-    ) {
+    if (dungeonBuffIDs.has(event.abilityGameID)) {
       return {
         timestamp: event.timestamp,
         eventType: EventType.ApplyBuff,

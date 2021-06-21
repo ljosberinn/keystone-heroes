@@ -87,5 +87,30 @@ Array [
     "eventType": "ApplyDebuff",
     "timestamp": 12840160,
   },
+  Object {
+    "abilityID": 323881,
+    "eventType": "ApplyDebuff",
+    "timestamp": 35495540,
+  },
+  Object {
+    "abilityID": 323881,
+    "eventType": "ApplyDebuff",
+    "timestamp": 35495540,
+  },
+  Object {
+    "abilityID": 323881,
+    "eventType": "ApplyDebuff",
+    "timestamp": 35495540,
+  },
+  Object {
+    "abilityID": 323881,
+    "eventType": "ApplyDebuff",
+    "timestamp": 35495540,
+  },
+  Object {
+    "abilityID": 323881,
+    "eventType": "ApplyDebuff",
+    "timestamp": 35495540,
+  },
 ]
 `;

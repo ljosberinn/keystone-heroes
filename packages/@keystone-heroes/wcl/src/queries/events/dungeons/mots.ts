@@ -1,7 +1,7 @@
 import type { ApplyDebuffEvent, AllTrackedEventTypes } from "../types";
 import { createChunkByThresholdReducer, createIsSpecificEvent } from "../utils";
 
-export const ENVELOPMENT_OF_MISTS = 323_881;
+export const ENVELOPMENT_OF_MISTS = 323_881 as const;
 
 /**
  * @see https://www.warcraftlogs.com/reports/aT8ZhP1HRfJANKCj#fight=18&type=summary&view=events&pins=2%24Off%24%23909049%24expression%24type%20%3D%20%22applydebuff%22%20and%20target.type%20%3D%20%22player%22%20and%20ability.id%20%3D%20323881

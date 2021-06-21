@@ -1,4 +1,5 @@
 import { DOS_URN } from "@keystone-heroes/wcl/queries/events/dungeons/dos";
+import { ENVELOPMENT_OF_MISTS } from "@keystone-heroes/wcl/queries/events/dungeons/mots";
 
 import { SOA_SPEAR } from "../src/queries/events/dungeons/soa";
 import type { ApplyDebuffEvent } from "../src/queries/events/types";
@@ -28,6 +29,14 @@ describe("applydebuff", () => {
   test("tracks DOS Urn", () => {
     const result = applyDebuffEvents
       .filter((event) => event.abilityGameID === DOS_URN)
+      .map((event) => applyDebuffProcessor(event, params));
+
+    expect(result).toMatchSnapshot();
+  });
+
+  test("tracks MOTS maze failures", () => {
+    const result = applyDebuffEvents
+      .filter((event) => event.abilityGameID === ENVELOPMENT_OF_MISTS)
       .map((event) => applyDebuffProcessor(event, params));
 
     expect(result).toMatchSnapshot();

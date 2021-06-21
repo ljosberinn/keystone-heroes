@@ -40,6 +40,36 @@ Array [
 ]
 `;
 
+exports[`applydebuff tracks MOTS maze failures 1`] = `
+Array [
+  Object {
+    "abilityID": 323881,
+    "eventType": "ApplyDebuff",
+    "timestamp": 35495540,
+  },
+  Object {
+    "abilityID": 323881,
+    "eventType": "ApplyDebuff",
+    "timestamp": 35495540,
+  },
+  Object {
+    "abilityID": 323881,
+    "eventType": "ApplyDebuff",
+    "timestamp": 35495540,
+  },
+  Object {
+    "abilityID": 323881,
+    "eventType": "ApplyDebuff",
+    "timestamp": 35495540,
+  },
+  Object {
+    "abilityID": 323881,
+    "eventType": "ApplyDebuff",
+    "timestamp": 35495540,
+  },
+]
+`;
+
 exports[`applydebuff tracks SOA Spear 1`] = `
 Array [
   Object {
