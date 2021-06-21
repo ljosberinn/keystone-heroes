@@ -1,4 +1,4 @@
-import { remarkableSpellIDs } from "@keystone-heroes/db/data";
+import { remarkableSpellIDs } from "@keystone-heroes/db/data/spellIds";
 import { PlayableClass } from "@keystone-heroes/db/types";
 
 import type {

@@ -1,4 +1,4 @@
-import type { DungeonIDs } from "@keystone-heroes/db/data";
+import type { DungeonIDs } from "@keystone-heroes/db/data/dungeons";
 import type { PlayableClass, Affixes } from "@keystone-heroes/db/types";
 
 import {
@@ -8,19 +8,7 @@ import {
   filterRemarkableSpellEvents,
   remarkableSpellFilterExpression,
 } from "../events/other";
-import type {
-  AbsorbEvent,
-  AllTrackedEventTypes,
-  ApplyBuffEvent,
-  ApplyDebuffEvent,
-  ApplyDebuffStackEvent,
-  BeginCastEvent,
-  CastEvent,
-  DamageEvent,
-  DeathEvent,
-  HealEvent,
-  InterruptEvent,
-} from "../events/types";
+import type { AllTrackedEventTypes, DeathEvent } from "../events/types";
 import { filterAffixEvents, getAffixExpression } from "./affixes";
 import { getDungeonExpression, filterDungeonEvents } from "./dungeons";
 import { recursiveGetEvents } from "./utils";
@@ -61,18 +49,7 @@ export const getEvents = async (
     affixes: params.affixes,
   });
 
-  const allEvents = await recursiveGetEvents<
-    | CastEvent
-    | DeathEvent
-    | AbsorbEvent
-    | DamageEvent
-    | InterruptEvent
-    | HealEvent
-    | BeginCastEvent
-    | ApplyBuffEvent
-    | ApplyDebuffEvent
-    | ApplyDebuffStackEvent
-  >({
+  const allEvents = await recursiveGetEvents<AllTrackedEventTypes>({
     startTime: params.startTime,
     endTime: params.endTime,
     reportID: params.reportID,

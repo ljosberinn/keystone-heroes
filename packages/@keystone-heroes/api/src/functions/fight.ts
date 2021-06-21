@@ -1,4 +1,4 @@
-import { dungeons } from "@keystone-heroes/db/data";
+import { dungeons } from "@keystone-heroes/db/data/dungeons";
 import { prisma } from "@keystone-heroes/db/prisma";
 import type { Prisma } from "@keystone-heroes/db/types";
 import { getFightPulls } from "@keystone-heroes/wcl/queries";

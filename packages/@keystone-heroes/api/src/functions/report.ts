@@ -1,11 +1,9 @@
-import {
-  classMapByName,
-  dungeonMap,
-  getAffixByID,
-  seasons,
-  specs,
-  weeks,
-} from "@keystone-heroes/db/data";
+import { getAffixByID } from "@keystone-heroes/db/data/affixes";
+import { classMapByName } from "@keystone-heroes/db/data/classes";
+import { dungeonMap } from "@keystone-heroes/db/data/dungeons";
+import { seasons } from "@keystone-heroes/db/data/seasons";
+import { specs } from "@keystone-heroes/db/data/specs";
+import { weeks } from "@keystone-heroes/db/data/weeks";
 import { prisma } from "@keystone-heroes/db/prisma";
 import type {
   PlayableClass,
@@ -903,41 +901,43 @@ const handler: RequestHandler<Request, ReportResponse> = async (req, res) => {
     startTime,
     title,
     region,
-    fights: fightsWithMeta.map((fight) => {
-      const { gameZone, player, startTime, endTime, ...rest } = fight;
+    fights: fightsWithMeta
+      .map((fight) => {
+        const { gameZone, player, startTime, endTime, ...rest } = fight;
 
-      const dungeon = gameZone ? dungeonMap[gameZone.id] : null;
+        const dungeon = gameZone ? dungeonMap[gameZone.id] : null;
 
-      return {
-        ...rest,
-        dps: player.reduce((acc, player) => acc + player.dps, 0),
-        hps: player.reduce((acc, player) => acc + player.hps, 0),
-        totalDeaths: player.reduce((acc, player) => acc + player.deaths, 0),
-        dungeon:
-          dungeon && gameZone
-            ? {
-                name: dungeon.name,
-                time: dungeon.timer[0],
-                id: gameZone.id,
-              }
-            : null,
-        player: player.map((player) => {
-          return {
-            class: player.class,
-            spec: player.spec,
-            soulbindID: player.soulbindID,
-            covenantID: player.covenantID,
-            legendary: player.legendary
+        return {
+          ...rest,
+          dps: player.reduce((acc, player) => acc + player.dps, 0),
+          hps: player.reduce((acc, player) => acc + player.hps, 0),
+          totalDeaths: player.reduce((acc, player) => acc + player.deaths, 0),
+          dungeon:
+            dungeon && gameZone
               ? {
-                  id: player.legendary.id,
-                  effectIcon: player.legendary.effectIcon,
-                  effectName: player.legendary.effectName,
+                  name: dungeon.name,
+                  time: dungeon.timer[0],
+                  id: gameZone.id,
                 }
               : null,
-          };
-        }),
-      };
-    }),
+          player: player.map((player) => {
+            return {
+              class: player.class,
+              spec: player.spec,
+              soulbindID: player.soulbindID,
+              covenantID: player.covenantID,
+              legendary: player.legendary
+                ? {
+                    id: player.legendary.id,
+                    effectIcon: player.legendary.effectIcon,
+                    effectName: player.legendary.effectName,
+                  }
+                : null,
+            };
+          }),
+        };
+      })
+      .sort((a, b) => a.id - b.id),
     affixes: fights[0].keystoneAffixes.map((affix) => {
       const { id, seasonal, ...data } = getAffixByID(affix);
       return data;

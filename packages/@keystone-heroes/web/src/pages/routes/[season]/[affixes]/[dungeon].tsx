@@ -1,12 +1,11 @@
 import {
-  expansions,
   affixes as allAffixes,
-  dungeonMap,
-  dungeons,
-  seasons,
   getAffixByID,
-  weeks as allWeeks,
-} from "@keystone-heroes/db/data";
+} from "@keystone-heroes/db/data/affixes";
+import { dungeons, dungeonMap } from "@keystone-heroes/db/data/dungeons";
+import { expansions } from "@keystone-heroes/db/data/expansions";
+import { seasons } from "@keystone-heroes/db/data/seasons";
+import { weeks as allWeeks } from "@keystone-heroes/db/data/weeks";
 import type { Affix, Dungeon as DungeonType, Season } from "@prisma/client";
 import type { GetStaticPaths, GetStaticProps } from "next";
 

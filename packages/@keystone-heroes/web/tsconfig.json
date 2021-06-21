@@ -20,11 +20,12 @@
     "baseUrl": ".",
     "paths": {
       "@keystone-heroes/db/*": ["../db/src/*"],
-      "@keystone-heroes/api": ["../api/src/index.ts"],
-      "@keystone-heroes/env": ["../env/src/index.ts"],
+      "@keystone-heroes/api/*": ["../api/src/*"],
+      "@keystone-heroes/env/*": ["../env/src/*"],
       "@keystone-heroes/wcl/*": ["../wcl/src/*"]
     },
     "types": ["react/next", "react-dom/next", "@testing-library/jest-dom"]
   },
-  "include": ["**/*.ts", "**/*.tsx"]
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules"]
 }

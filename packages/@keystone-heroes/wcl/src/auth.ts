@@ -1,6 +1,5 @@
 import { prisma } from "@keystone-heroes/db/prisma";
 import type { WCLAuth } from "@keystone-heroes/db/types";
-import { IS_TEST } from "@keystone-heroes/env";
 
 export type WCLOAuthResponse = {
   access_token: string;
@@ -27,7 +26,7 @@ export const setWCLAuthentication = async ({
 };
 
 export const getWCLAuthentication = (): Promise<WCLAuth | null> => {
-  if (IS_TEST) {
+  if (process.env.NODE_ENV === "test") {
     return Promise.resolve({
       id: 1,
       token: "mock-token",

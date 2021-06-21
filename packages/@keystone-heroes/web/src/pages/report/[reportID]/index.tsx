@@ -1,4 +1,4 @@
-import type { ReportResponse } from "@keystone-heroes/api";
+import type { ReportResponse } from "@keystone-heroes/api/functions/report";
 import { isValidReportId } from "@keystone-heroes/wcl/utils";
 import type { GetStaticPaths, GetStaticProps } from "next";
 import Head from "next/head";
@@ -91,7 +91,7 @@ type FightCardProps = {
 function FightCard({ fight, reportID }: FightCardProps) {
   if (!fight) {
     return (
-      <div className="bg-pink-200 h-12 rounded-md flex items-center justify-center text-red-900 text-2xl font-extrabold">
+      <div className="flex items-center justify-center h-12 text-2xl font-extrabold text-red-900 bg-pink-200 rounded-md">
         fallback
       </div>
     );
@@ -99,7 +99,7 @@ function FightCard({ fight, reportID }: FightCardProps) {
 
   return (
     <LinkBox
-      className="bg-pink-200 h-12 rounded-md flex items-center justify-center text-red-900 text-2xl font-extrabold h-64 relative"
+      className="relative flex items-center justify-center h-12 h-64 text-2xl font-extrabold text-red-900 bg-pink-200 rounded-md"
       // style={{
       //   backgroundImage: fight.dungeon
       //     ? `url(/static/dungeons/${fight.dungeon.id}.jpg)`

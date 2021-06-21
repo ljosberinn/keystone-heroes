@@ -49,48 +49,48 @@ export const reduceEventsByPlayer = <
       (dataset) => dataset[key] === event[key]
     );
 
-    if (existingIndex > -1) {
-      return arr.map((dataset, index) => {
-        if (index === existingIndex) {
-          switch (event.type) {
-            case "absorbed":
-              return {
-                ...dataset,
-                amount: dataset.amount + event.amount,
-              };
-            case "heal":
-              // type guard for overheal; when reducing HealEvents,
-              // dataset must also be of type heal, TS doesn't know this however
-              if (dataset.type === "heal") {
-                return {
-                  ...dataset,
-                  amount: dataset.amount + event.amount + (event.absorbed ?? 0),
-                  overheal: (dataset?.overheal ?? 0) + (event?.overheal ?? 0),
-                };
-              }
-
-              return dataset;
-            case "damage":
-              return {
-                ...dataset,
-                amount:
-                  dataset.amount +
-                  event.amount +
-                  // absorbed damage still contributes to overall dps
-                  (event.absorbed ?? 0) -
-                  // overkill damage does not
-                  (event.overkill ?? 0),
-              };
-            default:
-              return dataset;
-          }
-        }
-
-        return dataset;
-      });
+    if (existingIndex === -1) {
+      return [...arr, event];
     }
 
-    return [...arr, event];
+    return arr.map((dataset, index) => {
+      if (index !== existingIndex) {
+        return dataset;
+      }
+
+      switch (event.type) {
+        case "absorbed":
+          return {
+            ...dataset,
+            amount: dataset.amount + event.amount,
+          };
+        case "heal":
+          // type guard for overheal; when reducing HealEvents,
+          // dataset must also be of type heal, TS doesn't know this however
+          if (dataset.type === "heal") {
+            return {
+              ...dataset,
+              amount: dataset.amount + event.amount + (event.absorbed ?? 0),
+              overheal: (dataset?.overheal ?? 0) + (event?.overheal ?? 0),
+            };
+          }
+
+          return dataset;
+        case "damage":
+          return {
+            ...dataset,
+            amount:
+              dataset.amount +
+              event.amount +
+              // absorbed damage still contributes to overall dps
+              (event.absorbed ?? 0) -
+              // overkill damage does not
+              (event.overkill ?? 0),
+          };
+        default:
+          return dataset;
+      }
+    });
   }, []);
 };
 

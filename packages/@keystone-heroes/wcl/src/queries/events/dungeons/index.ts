@@ -1,4 +1,4 @@
-import { DungeonIDs } from "@keystone-heroes/db/data";
+import { DungeonIDs } from "@keystone-heroes/db/data/dungeons";
 import type { PlayableClass } from "@keystone-heroes/db/types";
 
 import type {

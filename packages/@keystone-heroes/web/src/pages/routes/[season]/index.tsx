@@ -1,8 +1,6 @@
-import {
-  seasons,
-  getAffixByID,
-  weeks as allWeeks,
-} from "@keystone-heroes/db/data";
+import { getAffixByID } from "@keystone-heroes/db/data/affixes";
+import { seasons } from "@keystone-heroes/db/data/seasons";
+import { weeks as allWeeks } from "@keystone-heroes/db/data/weeks";
 import type { Season as SeasonType } from "@prisma/client";
 import type { GetStaticPaths, GetStaticProps } from "next";
 import Head from "next/head";

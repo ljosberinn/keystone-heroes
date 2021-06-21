@@ -1,4 +1,3 @@
-import { IS_PROD } from "@keystone-heroes/env";
 import { PrismaClient } from "@prisma/client";
 
 // add prisma to the NodeJS global type
@@ -11,6 +10,6 @@ declare const global: CustomNodeJsGlobal;
 
 export const prisma = global.prisma || new PrismaClient();
 
-if (!IS_PROD) {
+if (process.env.NODE_ENV !== "production") {
   global.prisma = prisma;
 }

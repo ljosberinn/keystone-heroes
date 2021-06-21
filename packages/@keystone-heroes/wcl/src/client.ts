@@ -15,12 +15,14 @@ type Cache = {
   sdk: Sdk | null;
   client: GraphQLClient | null;
   expiresAt: number | null;
+  pending: boolean;
 };
 
 const cache: Cache = {
   sdk: null,
   client: null,
   expiresAt: null,
+  pending: false,
 };
 
 export const getCachedSdk = async (): Promise<Sdk> => {
@@ -35,24 +37,39 @@ export const getCachedSdk = async (): Promise<Sdk> => {
 };
 
 export const getGqlClient = async (): Promise<GraphQLClient> => {
+  if (cache.pending) {
+    await new Promise((resolve) => {
+      setTimeout(resolve, 50);
+    });
+
+    return getGqlClient();
+  }
+
   if (
     cache.client &&
     cache.expiresAt &&
-    cache?.expiresAt > Date.now() + 60 * 1000
+    cache.expiresAt > Date.now() + 60 * 1000
   ) {
     return cache.client;
   }
 
-  const cached = await getWCLAuthentication();
+  cache.pending = true;
+  const persisted = await getWCLAuthentication();
 
-  if (cached?.token && cached?.expiresAt && !cache.client && !cache.expiresAt) {
+  if (
+    persisted?.token &&
+    persisted?.expiresAt &&
+    !cache.client &&
+    !cache.expiresAt
+  ) {
     cache.client = new GraphQLClient(WCL_GQL_ENDPOINT, {
       headers: {
-        authorization: `Bearer ${cached.token}`,
+        authorization: `Bearer ${persisted.token}`,
       },
     });
 
-    cache.expiresAt = cached.expiresAt * 1000;
+    cache.expiresAt = persisted.expiresAt * 1000;
+    cache.pending = false;
 
     return cache.client;
   }

@@ -10,6 +10,7 @@ import {
   reduceEventsByPlayer,
 } from "../src/queries/events/utils";
 import { EventDataType, HostilityType } from "../src/types";
+import { isValidReportId, maybeOngoingReport } from "../src/utils";
 import allEvents from "./fixtures/allEvents.json";
 
 describe("recursiveGetEvents", () => {
@@ -267,5 +268,31 @@ describe("createChunkByThresholdReducer", () => {
     expect(
       result[3].every((event) => event.timestamp === timestampMap.fourthChunk)
     ).toBe(true);
+  });
+});
+
+describe("isValidReportId", () => {
+  test("pass", () => {
+    expect(isValidReportId("aT8ZhP1HRfJANKCj")).toBe(true);
+  });
+
+  test("fail", () => {
+    expect(isValidReportId("aT8ZhP1HRfJANKC")).toBe(false);
+  });
+});
+
+describe("maybeOngoingReport", () => {
+  const now = Date.now();
+
+  test("pass", () => {
+    const twoHours = now - 2 * 60 * 60 * 1000;
+
+    expect(maybeOngoingReport(twoHours)).toBe(true);
+  });
+
+  test("fail", () => {
+    const twoDaysAgo = now - 2 * 24 * 60 * 60 * 1000;
+
+    expect(maybeOngoingReport(twoDaysAgo)).toBe(false);
   });
 });
