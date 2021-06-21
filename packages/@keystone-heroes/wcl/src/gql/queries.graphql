@@ -1,13 +1,51 @@
+query InitialReportData($reportID: String!) {
+  reportData {
+    report(code: $reportID) {
+      title
+      startTime
+      endTime
+
+      region {
+        slug
+      }
+
+      fights(translate: true, killType: Kills) {
+        id
+        startTime
+        endTime
+
+        keystoneLevel
+        keystoneAffixes
+        keystoneBonus
+        keystoneTime
+
+        averageItemLevel
+        friendlyPlayers
+
+        gameZone {
+          id
+        }
+
+        maps {
+          id
+        }
+      }
+    }
+  }
+}
+
 query EventData(
   $reportID: String!
   $startTime: Float!
   $endTime: Float!
-  $hostilityType: HostilityType!
+  $hostilityType: HostilityType
   $sourceID: Int
   $dataType: EventDataType
   $abilityID: Float
   $targetID: Int
   $targetInstance: Int
+  $limit: Int
+  $filterExpression: String
 ) {
   reportData {
     report(code: $reportID) {
@@ -20,6 +58,8 @@ query EventData(
         abilityID: $abilityID
         targetID: $targetID
         targetInstanceID: $targetInstance
+        limit: $limit
+        filterExpression: $filterExpression
       ) {
         data
         nextPageTimestamp
@@ -68,53 +108,28 @@ query Table(
   }
 }
 
-query InitialReportData($reportID: String!) {
-  reportData {
-    report(code: $reportID) {
-      title
-      startTime
-      endTime
-      region {
-        slug
-      }
-      fights(translate: true, killType: Kills) {
-        id
-        keystoneBonus
-        keystoneLevel
-      }
-    }
-  }
-}
-
-query ExtendedReportData($reportID: String!, $fightIDs: [Int]!) {
+query FightPulls($reportID: String!, $fightIDs: [Int]!) {
   reportData {
     report(code: $reportID) {
       fights(translate: true, killType: Kills, fightIDs: $fightIDs) {
-        id
-        gameZone {
-          id
-        }
-        averageItemLevel
-        keystoneAffixes
-        keystoneLevel
-        keystoneBonus
-        keystoneTime
-        startTime
-        endTime
         dungeonPulls {
-          x
-          y
           startTime
           endTime
+
+          x
+          y
+
           maps {
             id
           }
+
           boundingBox {
             minX
             maxX
             minY
             maxY
           }
+
           enemyNPCs {
             id
             gameID

@@ -4,10 +4,9 @@ import {
   dungeonMap,
   dungeons,
   seasons,
-  getAffixById,
+  getAffixByID,
   weeks as allWeeks,
 } from "@keystone-heroes/db/data";
-
 import type { Affix, Dungeon as DungeonType, Season } from "@prisma/client";
 import type { GetStaticPaths, GetStaticProps } from "next";
 
@@ -49,16 +48,16 @@ export const getStaticPaths: GetStaticPaths<StaticParams> = async () => {
 
     return weeks.flatMap((week) => {
       const affixSlug = [
-        getAffixById(week.affix1ID),
-        getAffixById(week.affix2ID),
-        getAffixById(week.affix3ID),
-        getAffixById(season.affixID),
+        getAffixByID(week.affix1ID),
+        getAffixByID(week.affix2ID),
+        getAffixByID(week.affix3ID),
+        getAffixByID(season.affixID),
       ]
         .map((affix) => affix.name.toLowerCase())
         .join("-");
 
       return expansions.flatMap((expansion) => {
-        return expansion.dungeonIds.map((id) => {
+        return expansion.dungeonIDs.map((id) => {
           const dungeon = dungeonMap[id];
 
           if (!dungeon) {

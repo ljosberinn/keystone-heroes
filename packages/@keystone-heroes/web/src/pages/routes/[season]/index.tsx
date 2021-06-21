@@ -1,13 +1,12 @@
 import {
   seasons,
-  getAffixById,
+  getAffixByID,
   weeks as allWeeks,
 } from "@keystone-heroes/db/data";
-import Head from "next/head";
-import Link from "next/link";
-
 import type { Season as SeasonType } from "@prisma/client";
 import type { GetStaticPaths, GetStaticProps } from "next";
+import Head from "next/head";
+import Link from "next/link";
 
 type SeasonProps = {
   season: Omit<SeasonType, "startTime" | "endTime" | "affixID" | "expansionID">;
@@ -71,10 +70,10 @@ export const getStaticProps: GetStaticProps<SeasonProps, StaticPaths> = async ({
     .filter((week) => week.seasonID === season.id)
     .map((week) => {
       const affixSlug = [
-        getAffixById(week.affix1ID),
-        getAffixById(week.affix2ID),
-        getAffixById(week.affix3ID),
-        getAffixById(season.affixID),
+        getAffixByID(week.affix1ID),
+        getAffixByID(week.affix2ID),
+        getAffixByID(week.affix3ID),
+        getAffixByID(season.affixID),
       ]
         .map((affix) => affix.name.toLowerCase())
         .join("-");

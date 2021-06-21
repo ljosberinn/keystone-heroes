@@ -1,2 +1,1 @@
-throw new Error("use the appropriate subfolders");
-export {};
+export * from "./functions";

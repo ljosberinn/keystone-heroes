@@ -1,0 +1,63 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`getHOAEvents works 1`] = `
+Array [
+  Object {
+    "abilityGameID": 342171,
+    "pin": "0",
+    "sourceID": 72,
+    "sourceMarker": 2,
+    "targetID": -1,
+    "timestamp": 6129520,
+    "type": "cast",
+  },
+  Object {
+    "abilityGameID": 342171,
+    "pin": "0",
+    "sourceID": 72,
+    "targetID": -1,
+    "timestamp": 6378022,
+    "type": "cast",
+  },
+  Object {
+    "abilityGameID": 342171,
+    "pin": "0",
+    "sourceID": 72,
+    "targetID": -1,
+    "timestamp": 6648495,
+    "type": "cast",
+  },
+  Object {
+    "abilityGameID": 342171,
+    "pin": "0",
+    "sourceID": 72,
+    "targetID": -1,
+    "timestamp": 6811575,
+    "type": "cast",
+  },
+  Object {
+    "abilityGameID": 342171,
+    "pin": "0",
+    "sourceID": 72,
+    "targetID": -1,
+    "timestamp": 7043420,
+    "type": "cast",
+  },
+  Object {
+    "abilityGameID": 342171,
+    "pin": "0",
+    "sourceID": 72,
+    "targetID": -1,
+    "timestamp": 7335807,
+    "type": "cast",
+  },
+  Object {
+    "abilityGameID": 342171,
+    "pin": "0",
+    "sourceID": 72,
+    "targetID": -1,
+    "timestamp": 7337618,
+    "type": "cast",
+  },
+]
+`;

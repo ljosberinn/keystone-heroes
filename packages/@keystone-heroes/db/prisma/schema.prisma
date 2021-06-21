@@ -100,8 +100,7 @@ model Week {
   affix3 Affix  @relation("affix3", fields: [affix3ID], references: [id])
   season Season @relation(fields: [seasonID], references: [id])
 
-  Fight Fight[]
-
+  Report Report[]
   @@unique([seasonID, seasonWeekID])
 }
 
@@ -116,6 +115,9 @@ model Report {
 
   region Region @relation(fields: [regionID], references: [id])
 
+  weekID Int
+  week   Week @relation(fields: [weekID], references: [id])
+
   Fight  Fight[]
   Player Player[]
 }
@@ -125,7 +127,6 @@ model Fight {
 
   fightID          Int
   reportID         Int
-  dungeonID        Int
   keystoneTime     Int
   keystoneLevel    Int
   chests           Int
@@ -134,28 +135,31 @@ model Fight {
   dtps             Int
   totalDeaths      Int
   averageItemLevel Int
-  player1ID        Int
-  player2ID        Int
-  player3ID        Int
-  player4ID        Int
-  player5ID        Int
-  weekID           Int
+  startTime        Int
+  endTime          Int
 
-  dungeon Dungeon @relation(fields: [dungeonID], references: [id])
-  player1 Player  @relation("player1", fields: [player1ID], references: [id])
-  player2 Player  @relation("player2", fields: [player2ID], references: [id])
-  player3 Player  @relation("player3", fields: [player3ID], references: [id])
-  player4 Player  @relation("player4", fields: [player4ID], references: [id])
-  player5 Player  @relation("player5", fields: [player5ID], references: [id])
-  report  Report  @relation(fields: [reportID], references: [id])
-  week    Week    @relation(fields: [weekID], references: [id])
+  dungeonID Int?
+
+  Report  Report   @relation(fields: [reportID], references: [id])
+  dungeon Dungeon? @relation(fields: [dungeonID], references: [id])
 
   PlayerConduit       PlayerConduit[]
-  PlayerCovenantTrait PlayerCovenantTrait[]
   PlayerTalent        PlayerTalent[]
+  PlayerCovenantTrait PlayerCovenantTrait[]
   Pull                Pull[]
+  PlayerFight         PlayerFight[]
 
   @@unique([fightID, reportID])
+}
+
+model PlayerFight {
+  id Int @id @default(autoincrement())
+
+  fightID Int
+  fight   Fight @relation(fields: [fightID], references: [id])
+
+  playerID Int
+  player   Player @relation(fields: [playerID], references: [id])
 }
 
 model Character {
@@ -197,15 +201,10 @@ model Player {
   sourcePlayer Event[] @relation("sourcePlayer")
   targetPlayer Event[] @relation("targetPlayer")
 
-  player1 Fight[] @relation("player1")
-  player2 Fight[] @relation("player2")
-  player3 Fight[] @relation("player3")
-  player4 Fight[] @relation("player4")
-  player5 Fight[] @relation("player5")
-
   PlayerConduit       PlayerConduit[]
   PlayerCovenantTrait PlayerCovenantTrait[]
   PlayerTalent        PlayerTalent[]
+  PlayerFight         PlayerFight[]
 }
 
 model Covenant {
@@ -350,6 +349,7 @@ model Pull {
   maxX      Int
   minY      Int
   maxY      Int
+  isWipe    Boolean
 
   fight Fight @relation(fields: [fightID], references: [id])
 
@@ -391,32 +391,6 @@ model NPC {
   PullNPC PullNPC[]
 }
 
-// model Event {
-//   id             Int  @id @default(autoincrement())
-//   timestamp      Int
-//   abilityID      Int
-//   pullID         Int
-//   sourcePlayerID Int
-//   targetNPCID    Int?
-//   targetPlayerID Int?
-
-//   pull         Pull    @relation(fields: [pullID], references: [id])
-//   sourcePlayer Player  @relation("sourcePlayer", fields: [sourcePlayerID], references: [id])
-//   targetNPC    NPC?    @relation(fields: [targetNPCID], references: [id])
-//   targetPlayer Player? @relation("targetPlayer", fields: [targetPlayerID], references: [id])
-// }
-
-// Bursting, Explosion, Grievous, Necrotic, Quaking, Sanguine, Spiteful, Storming, Volcanic
-// abilities
-// NW Items
-// SOA Spear
-// pride damage taken, death events
-
-// SD applybuff
-// dos applydebuff
-// theatre applybuff
-// hoa cast
-// pf applybuff, death events
 model Event {
   id Int @id @default(autoincrement())
 
@@ -482,40 +456,6 @@ enum EventType {
   RemoveBuff
   Interrupt
 }
-
-// model MetaEvent {
-//   id Int @id @default(autoincrement())
-
-//   sumSanguineHealingDone Int?
-//   sumSanguineDamageTaken Int?
-
-//   sumExplosiveDamageTaken Int?
-
-//   sumGrievousDamageTaken Int?
-
-//   sumNecroticDamageTaken  Int?
-//   sumNecroticHighestStack Int?
-
-//   sumStormingDamageTaken Int?
-
-//   sumVolcanicDamageTaken Int?
-
-//   highestBolsteringCount Int?
-
-//   sumPridefulInstancesKilled Int?
-
-//   pfRedSlimeKills    Int?
-//   pfRedSlimeConsumed Int?
-
-//   pfGreenSlimeKills    Int?
-//   pfGreenSlimeConsumed Int?
-
-//   pfPurpleSlimeKills    Int?
-//   pfPurpleSlimeConsumed Int?
-
-//   fightID Int
-//   fight   Fight @relation(fields: [fightID], references: [id])
-// }
 
 enum Role {
   dps
@@ -594,6 +534,7 @@ enum Affixes {
   Inspiring
   Spiteful
   Storming
+  Tormented
 }
 
 enum Covenants {

@@ -25,5 +25,6 @@
     "./packages/@keystone-heroes/wcl",
     "./packages/@keystone-heroes/env",
     "./packages/@keystone-heroes/web"
-  ]
+  ],
+  "typescript.tsdk": "node_modules\\typescript\\lib"
 }

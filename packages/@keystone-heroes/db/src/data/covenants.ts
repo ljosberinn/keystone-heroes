@@ -1,5 +1,4 @@
 import { Covenants } from "@prisma/client";
-
 import type { Covenant } from "@prisma/client";
 
 export const covenantMap: Record<Covenant["id"], Omit<Covenant, "id">> = {

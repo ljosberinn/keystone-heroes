@@ -1,10 +1,9 @@
 import { writeFileSync } from "fs";
 import { getIntrospectionQuery, printSchema, buildClientSchema } from "graphql";
+import type { IntrospectionQuery } from "graphql";
 import { resolve } from "path";
 
 import { getGqlClient } from "../client";
-
-import type { IntrospectionQuery } from "graphql";
 
 async function loadSchema() {
   const client = await getGqlClient();

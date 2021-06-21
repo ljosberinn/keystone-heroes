@@ -1,7 +1,6 @@
-import gql from "graphql-tag";
-
 import type { GraphQLClient } from "graphql-request";
 import type * as Dom from "graphql-request/dist/types.dom";
+import gql from "graphql-tag";
 
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = {
@@ -31,7 +30,7 @@ export type Bracket = {
   /** A float representing the value to increment when moving from bracket 1 to bracket N, etc. */
   bucket: Scalars["Float"];
   /** The localized name of the bracket type. */
-  type: Scalars["String"];
+  type?: Maybe<Scalars["String"]>;
 };
 
 /** A player character. Characters can earn individual rankings and appear in reports. */
@@ -422,6 +421,10 @@ export type GameData = {
   enchants?: Maybe<GameEnchantPagination>;
   /** Obtain all the factions that guilds and players can belong to. */
   factions?: Maybe<Maybe<GameFaction>[]>;
+  /** Obtain a single item for the game. */
+  item?: Maybe<GameItem>;
+  /** Items for the game. */
+  items?: Maybe<GameItemPagination>;
   /** Obtain a single map for the game. */
   map?: Maybe<GameMap>;
   /** Maps for the game. */
@@ -483,6 +486,17 @@ export type GameDataEnchantArgs = {
 
 /** The game object contains collections of data such as NPCs, classes, abilities, items, maps, etc. Game data only changes when major game patches are released, so you should cache results for as long as possible and only update when new content is released for the game. */
 export type GameDataEnchantsArgs = {
+  limit?: Maybe<Scalars["Int"]>;
+  page?: Maybe<Scalars["Int"]>;
+};
+
+/** The game object contains collections of data such as NPCs, classes, abilities, items, maps, etc. Game data only changes when major game patches are released, so you should cache results for as long as possible and only update when new content is released for the game. */
+export type GameDataItemArgs = {
+  id?: Maybe<Scalars["Int"]>;
+};
+
+/** The game object contains collections of data such as NPCs, classes, abilities, items, maps, etc. Game data only changes when major game patches are released, so you should cache results for as long as possible and only update when new content is released for the game. */
+export type GameDataItemsArgs = {
   limit?: Maybe<Scalars["Int"]>;
   page?: Maybe<Scalars["Int"]>;
 };
@@ -567,6 +581,26 @@ export type GameItem = {
   icon?: Maybe<Scalars["String"]>;
   /** The localized name of the item. Will be null if no localization information exists for the item. */
   name?: Maybe<Scalars["String"]>;
+};
+
+export type GameItemPagination = {
+  __typename?: "GameItemPagination";
+  /** List of items on the current page */
+  data?: Maybe<Maybe<GameItem>[]>;
+  /** Number of total items selected by the query */
+  total: Scalars["Int"];
+  /** Number of items returned per page */
+  per_page: Scalars["Int"];
+  /** Current page of the cursor */
+  current_page: Scalars["Int"];
+  /** Number of the first item returned */
+  from?: Maybe<Scalars["Int"]>;
+  /** Number of the last item returned */
+  to?: Maybe<Scalars["Int"]>;
+  /** The last page (number of pages) */
+  last_page: Scalars["Int"];
+  /** Determines if cursor has more pages after the current page */
+  has_more_pages: Scalars["Boolean"];
 };
 
 /** A single item set for the game. */
@@ -1597,16 +1631,62 @@ export type Zone = {
   partitions?: Maybe<Maybe<Partition>[]>;
 };
 
+export type InitialReportDataQueryVariables = Exact<{
+  reportID: Scalars["String"];
+}>;
+
+export type InitialReportDataQuery = { __typename?: "Query" } & {
+  reportData?: Maybe<
+    { __typename?: "ReportData" } & {
+      report?: Maybe<
+        { __typename?: "Report" } & Pick<
+          Report,
+          "title" | "startTime" | "endTime"
+        > & {
+            region?: Maybe<{ __typename?: "Region" } & Pick<Region, "slug">>;
+            fights?: Maybe<
+              Maybe<
+                { __typename?: "ReportFight" } & Pick<
+                  ReportFight,
+                  | "id"
+                  | "startTime"
+                  | "endTime"
+                  | "keystoneLevel"
+                  | "keystoneAffixes"
+                  | "keystoneBonus"
+                  | "keystoneTime"
+                  | "averageItemLevel"
+                  | "friendlyPlayers"
+                > & {
+                    gameZone?: Maybe<
+                      { __typename?: "GameZone" } & Pick<GameZone, "id">
+                    >;
+                    maps?: Maybe<
+                      Maybe<
+                        { __typename?: "ReportMap" } & Pick<ReportMap, "id">
+                      >[]
+                    >;
+                  }
+              >[]
+            >;
+          }
+      >;
+    }
+  >;
+};
+
 export type EventDataQueryVariables = Exact<{
   reportID: Scalars["String"];
   startTime: Scalars["Float"];
   endTime: Scalars["Float"];
-  hostilityType: HostilityType;
+  hostilityType?: Maybe<HostilityType>;
   sourceID?: Maybe<Scalars["Int"]>;
   dataType?: Maybe<EventDataType>;
   abilityID?: Maybe<Scalars["Float"]>;
   targetID?: Maybe<Scalars["Int"]>;
   targetInstance?: Maybe<Scalars["Int"]>;
+  limit?: Maybe<Scalars["Int"]>;
+  filterExpression?: Maybe<Scalars["String"]>;
 }>;
 
 export type EventDataQuery = { __typename?: "Query" } & {
@@ -1698,96 +1778,53 @@ export type TableQuery = { __typename?: "Query" } & {
   >;
 };
 
-export type InitialReportDataQueryVariables = Exact<{
-  reportID: Scalars["String"];
-}>;
-
-export type InitialReportDataQuery = { __typename?: "Query" } & {
-  reportData?: Maybe<
-    { __typename?: "ReportData" } & {
-      report?: Maybe<
-        { __typename?: "Report" } & Pick<
-          Report,
-          "title" | "startTime" | "endTime"
-        > & {
-            region?: Maybe<{ __typename?: "Region" } & Pick<Region, "slug">>;
-            fights?: Maybe<
-              Maybe<
-                { __typename?: "ReportFight" } & Pick<
-                  ReportFight,
-                  "id" | "keystoneBonus" | "keystoneLevel"
-                >
-              >[]
-            >;
-          }
-      >;
-    }
-  >;
-};
-
-export type ExtendedReportDataQueryVariables = Exact<{
+export type FightPullsQueryVariables = Exact<{
   reportID: Scalars["String"];
   fightIDs: Maybe<Scalars["Int"]>[] | Maybe<Scalars["Int"]>;
 }>;
 
-export type ExtendedReportDataQuery = { __typename?: "Query" } & {
+export type FightPullsQuery = { __typename?: "Query" } & {
   reportData?: Maybe<
     { __typename?: "ReportData" } & {
       report?: Maybe<
         { __typename?: "Report" } & {
           fights?: Maybe<
             Maybe<
-              { __typename?: "ReportFight" } & Pick<
-                ReportFight,
-                | "id"
-                | "averageItemLevel"
-                | "keystoneAffixes"
-                | "keystoneLevel"
-                | "keystoneBonus"
-                | "keystoneTime"
-                | "startTime"
-                | "endTime"
-              > & {
-                  gameZone?: Maybe<
-                    { __typename?: "GameZone" } & Pick<GameZone, "id">
-                  >;
-                  dungeonPulls?: Maybe<
-                    Maybe<
-                      { __typename?: "ReportDungeonPull" } & Pick<
-                        ReportDungeonPull,
-                        "x" | "y" | "startTime" | "endTime"
-                      > & {
-                          maps?: Maybe<
-                            Maybe<
-                              { __typename?: "ReportMap" } & Pick<
-                                ReportMap,
-                                "id"
-                              >
-                            >[]
-                          >;
-                          boundingBox?: Maybe<
-                            { __typename?: "ReportMapBoundingBox" } & Pick<
-                              ReportMapBoundingBox,
-                              "minX" | "maxX" | "minY" | "maxY"
+              { __typename?: "ReportFight" } & {
+                dungeonPulls?: Maybe<
+                  Maybe<
+                    { __typename?: "ReportDungeonPull" } & Pick<
+                      ReportDungeonPull,
+                      "startTime" | "endTime" | "x" | "y"
+                    > & {
+                        maps?: Maybe<
+                          Maybe<
+                            { __typename?: "ReportMap" } & Pick<ReportMap, "id">
+                          >[]
+                        >;
+                        boundingBox?: Maybe<
+                          { __typename?: "ReportMapBoundingBox" } & Pick<
+                            ReportMapBoundingBox,
+                            "minX" | "maxX" | "minY" | "maxY"
+                          >
+                        >;
+                        enemyNPCs?: Maybe<
+                          Maybe<
+                            {
+                              __typename?: "ReportDungeonPullNPC";
+                            } & Pick<
+                              ReportDungeonPullNpc,
+                              | "id"
+                              | "gameID"
+                              | "minimumInstanceID"
+                              | "maximumInstanceID"
                             >
-                          >;
-                          enemyNPCs?: Maybe<
-                            Maybe<
-                              {
-                                __typename?: "ReportDungeonPullNPC";
-                              } & Pick<
-                                ReportDungeonPullNpc,
-                                | "id"
-                                | "gameID"
-                                | "minimumInstanceID"
-                                | "maximumInstanceID"
-                              >
-                            >[]
-                          >;
-                        }
-                    >[]
-                  >;
-                }
+                          >[]
+                        >;
+                      }
+                  >[]
+                >;
+              }
             >[]
           >;
         }
@@ -1796,17 +1833,50 @@ export type ExtendedReportDataQuery = { __typename?: "Query" } & {
   >;
 };
 
+export const InitialReportDataDocument = gql`
+  query InitialReportData($reportID: String!) {
+    reportData {
+      report(code: $reportID) {
+        title
+        startTime
+        endTime
+        region {
+          slug
+        }
+        fights(translate: true, killType: Kills) {
+          id
+          startTime
+          endTime
+          keystoneLevel
+          keystoneAffixes
+          keystoneBonus
+          keystoneTime
+          averageItemLevel
+          friendlyPlayers
+          gameZone {
+            id
+          }
+          maps {
+            id
+          }
+        }
+      }
+    }
+  }
+`;
 export const EventDataDocument = gql`
   query EventData(
     $reportID: String!
     $startTime: Float!
     $endTime: Float!
-    $hostilityType: HostilityType!
+    $hostilityType: HostilityType
     $sourceID: Int
     $dataType: EventDataType
     $abilityID: Float
     $targetID: Int
     $targetInstance: Int
+    $limit: Int
+    $filterExpression: String
   ) {
     reportData {
       report(code: $reportID) {
@@ -1819,6 +1889,8 @@ export const EventDataDocument = gql`
           abilityID: $abilityID
           targetID: $targetID
           targetInstanceID: $targetInstance
+          limit: $limit
+          filterExpression: $filterExpression
         ) {
           data
           nextPageTimestamp
@@ -1870,46 +1942,16 @@ export const TableDocument = gql`
     }
   }
 `;
-export const InitialReportDataDocument = gql`
-  query InitialReportData($reportID: String!) {
-    reportData {
-      report(code: $reportID) {
-        title
-        startTime
-        endTime
-        region {
-          slug
-        }
-        fights(translate: true, killType: Kills) {
-          id
-          keystoneBonus
-          keystoneLevel
-        }
-      }
-    }
-  }
-`;
-export const ExtendedReportDataDocument = gql`
-  query ExtendedReportData($reportID: String!, $fightIDs: [Int]!) {
+export const FightPullsDocument = gql`
+  query FightPulls($reportID: String!, $fightIDs: [Int]!) {
     reportData {
       report(code: $reportID) {
         fights(translate: true, killType: Kills, fightIDs: $fightIDs) {
-          id
-          gameZone {
-            id
-          }
-          averageItemLevel
-          keystoneAffixes
-          keystoneLevel
-          keystoneBonus
-          keystoneTime
-          startTime
-          endTime
           dungeonPulls {
-            x
-            y
             startTime
             endTime
+            x
+            y
             maps {
               id
             }
@@ -1944,6 +1986,20 @@ export function getSdk(
   withWrapper: SdkFunctionWrapper = defaultWrapper
 ) {
   return {
+    InitialReportData(
+      variables: InitialReportDataQueryVariables,
+      requestHeaders?: Dom.RequestInit["headers"]
+    ): Promise<InitialReportDataQuery> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<InitialReportDataQuery>(
+            InitialReportDataDocument,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders }
+          ),
+        "InitialReportData"
+      );
+    },
     EventData(
       variables: EventDataQueryVariables,
       requestHeaders?: Dom.RequestInit["headers"]
@@ -1996,32 +2052,17 @@ export function getSdk(
         "Table"
       );
     },
-    InitialReportData(
-      variables: InitialReportDataQueryVariables,
+    FightPulls(
+      variables: FightPullsQueryVariables,
       requestHeaders?: Dom.RequestInit["headers"]
-    ): Promise<InitialReportDataQuery> {
+    ): Promise<FightPullsQuery> {
       return withWrapper(
         (wrappedRequestHeaders) =>
-          client.request<InitialReportDataQuery>(
-            InitialReportDataDocument,
-            variables,
-            { ...requestHeaders, ...wrappedRequestHeaders }
-          ),
-        "InitialReportData"
-      );
-    },
-    ExtendedReportData(
-      variables: ExtendedReportDataQueryVariables,
-      requestHeaders?: Dom.RequestInit["headers"]
-    ): Promise<ExtendedReportDataQuery> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<ExtendedReportDataQuery>(
-            ExtendedReportDataDocument,
-            variables,
-            { ...requestHeaders, ...wrappedRequestHeaders }
-          ),
-        "ExtendedReportData"
+          client.request<FightPullsQuery>(FightPullsDocument, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        "FightPulls"
       );
     },
   };

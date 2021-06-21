@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`getSOAEvents works 1`] = `
+Array [
+  Object {
+    "abilityGameID": 339917,
+    "pin": "0",
+    "sourceID": -1,
+    "targetID": 84,
+    "targetInstance": 8,
+    "timestamp": 11913707,
+    "type": "applydebuff",
+  },
+  Object {
+    "abilityGameID": 339917,
+    "pin": "0",
+    "sourceID": -1,
+    "targetID": 73,
+    "timestamp": 12840160,
+    "type": "applydebuff",
+  },
+]
+`;

@@ -701,7 +701,7 @@ type Bracket {
   """
   The localized name of the bracket type.
   """
-  type: String!
+  type: String
 }
 
 """
@@ -2687,6 +2687,31 @@ type GameData {
   factions: [GameFaction]
 
   """
+  Obtain a single item for the game.
+  """
+  item(
+    """
+    Required. Specify a specific item to retrieve by its id.
+    """
+    id: Int
+  ): GameItem
+
+  """
+  Items for the game.
+  """
+  items(
+    """
+    Optional. The number of items to retrieve per page. If omitted, defaults to 100. The maximum allowed value is 100, and minimum allowed value is 1.
+    """
+    limit: Int = 100
+
+    """
+    Optional. The page of paginated data to retrieve. If omitted, defaults to the first page.
+    """
+    page: Int = 1
+  ): GameItemPagination
+
+  """
   Obtain a single map for the game.
   """
   map(
@@ -2981,6 +3006,68 @@ type GameEnchantPagination {
   List of items on the current page
   """
   data: [GameEnchant]
+
+  """
+  Number of total items selected by the query
+  """
+  total: Int!
+
+  """
+  Number of items returned per page
+  """
+  per_page: Int!
+
+  """
+  Current page of the cursor
+  """
+  current_page: Int!
+
+  """
+  Number of the first item returned
+  """
+  from: Int
+
+  """
+  Number of the last item returned
+  """
+  to: Int
+
+  """
+  The last page (number of pages)
+  """
+  last_page: Int!
+
+  """
+  Determines if cursor has more pages after the current page
+  """
+  has_more_pages: Boolean!
+}
+
+"""
+A single item for the game.
+"""
+type GameItem {
+  """
+  The ID of the item.
+  """
+  id: Int!
+
+  """
+  The icon for the item.
+  """
+  icon: String
+
+  """
+  The localized name of the item. Will be null if no localization information exists for the item.
+  """
+  name: String
+}
+
+type GameItemPagination {
+  """
+  List of items on the current page
+  """
+  data: [GameItem]
 
   """
   Number of total items selected by the query
@@ -3442,26 +3529,6 @@ type WorldData {
     """
     expansion_id: Int
   ): [Zone]
-}
-
-"""
-A single item for the game.
-"""
-type GameItem {
-  """
-  The ID of the item.
-  """
-  id: Int!
-
-  """
-  The icon for the item.
-  """
-  icon: String
-
-  """
-  The localized name of the item. Will be null if no localization information exists for the item.
-  """
-  name: String
 }
 
 """

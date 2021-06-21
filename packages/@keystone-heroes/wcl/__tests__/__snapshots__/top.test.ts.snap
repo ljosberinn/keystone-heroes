@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`getTOPEvents works 1`] = `
+Array [
+  Object {
+    "abilityGameID": 340378,
+    "pin": "0",
+    "sourceID": 105,
+    "targetID": 105,
+    "timestamp": 5032705,
+    "type": "applybuff",
+  },
+  Object {
+    "abilityGameID": 340378,
+    "pin": "0",
+    "sourceID": 105,
+    "targetID": 105,
+    "timestamp": 5549610,
+    "type": "applybuff",
+  },
+  Object {
+    "abilityGameID": 340378,
+    "pin": "0",
+    "sourceID": 105,
+    "targetID": 105,
+    "timestamp": 6031023,
+    "type": "applybuff",
+  },
+]
+`;

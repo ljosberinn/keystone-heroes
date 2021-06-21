@@ -1,0 +1,47 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`getSpitefulEvents works 1`] = `
+Array [
+  Object {
+    "abilityGameID": 350163,
+    "amount": 26576,
+    "hitType": 1,
+    "mitigated": 11455,
+    "pin": "0",
+    "sourceID": 109,
+    "sourceInstance": 17,
+    "targetID": 5,
+    "timestamp": 6528944,
+    "type": "damage",
+    "unmitigatedAmount": 38031,
+  },
+  Object {
+    "abilityGameID": 350163,
+    "amount": 25450,
+    "hitType": 1,
+    "mitigated": 19354,
+    "pin": "0",
+    "sourceID": 111,
+    "sourceInstance": 43,
+    "targetID": 1,
+    "targetMarker": 2,
+    "timestamp": 7056518,
+    "type": "damage",
+    "unmitigatedAmount": 44804,
+  },
+  Object {
+    "abilityGameID": 350163,
+    "absorbed": 3108,
+    "amount": 40334,
+    "hitType": 1,
+    "mitigated": 6981,
+    "pin": "0",
+    "sourceID": 109,
+    "sourceInstance": 63,
+    "targetID": 3,
+    "timestamp": 7665322,
+    "type": "damage",
+    "unmitigatedAmount": 50423,
+  },
+]
+`;

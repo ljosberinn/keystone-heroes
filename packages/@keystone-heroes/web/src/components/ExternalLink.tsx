@@ -1,9 +1,8 @@
-import type { ReactNode } from "react";
+import type { ReactNode, HTMLAttributes } from "react";
 
-export type ExternalLinkProps = {
+export type ExternalLinkProps = Pick<HTMLAttributes<"a">, "className"> & {
   href: string;
   children: ReactNode;
-  className?: string;
 };
 
 export function ExternalLink({

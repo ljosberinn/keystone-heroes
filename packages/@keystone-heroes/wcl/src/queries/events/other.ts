@@ -1,0 +1,140 @@
+import { remarkableSpellIDs } from "@keystone-heroes/db/data";
+import { PlayableClass } from "@keystone-heroes/db/types";
+
+import type {
+  AllTrackedEventTypes,
+  ApplyBuffEvent,
+  CastEvent,
+  DeathEvent,
+} from "./types";
+import { createIsSpecificEvent } from "./utils";
+
+export const INVISIBILITY = {
+  DIMENSIONAL_SHIFTER: 321_422,
+  POTION_OF_THE_HIDDEN_SPIRIT: 307_195,
+} as const;
+
+export const ENGINEERING_BATTLE_REZ = {
+  // Disposable Spectrophasic Reanimator
+  SHADOWLANDS: 345_130,
+} as const;
+
+export const LEATHERWORKING_DRUMS = {
+  // Drums of Deathly Ferocity
+  SHADOWLANDS: 309_658,
+} as const;
+
+const isLeatherworkingDrumsEvent = createIsSpecificEvent<ApplyBuffEvent>({
+  abilityGameID: LEATHERWORKING_DRUMS.SHADOWLANDS,
+  type: "applybuff",
+});
+
+const isInvisibilityEvent = createIsSpecificEvent<ApplyBuffEvent>({
+  type: "applybuff",
+  abilityGameID: [
+    INVISIBILITY.DIMENSIONAL_SHIFTER,
+    INVISIBILITY.POTION_OF_THE_HIDDEN_SPIRIT,
+  ],
+});
+
+const isEngineeringBattleRezEvent = createIsSpecificEvent<CastEvent>({
+  type: "cast",
+  abilityGameID: ENGINEERING_BATTLE_REZ.SHADOWLANDS,
+});
+
+/**
+ * @see https://www.warcraftlogs.com/reports/LafTw4CxyAjkVHv6#fight=8&type=auras&pins=2%24Off%24%23244F4B%24expression%24type%20%3D%20%22applybuff%22%20and%20ability.id%20in%20(321422,%20307195)&view=events
+ */
+export const invisibilityFilterExpression = `type = "applybuff" and ability.id in (${INVISIBILITY.DIMENSIONAL_SHIFTER}, ${INVISIBILITY.POTION_OF_THE_HIDDEN_SPIRIT})`;
+
+/**
+ * @see https://www.warcraftlogs.com/reports/fxq2w3aAW49dHhjb#fight=3&pins=2%24Off%24%23244F4B%24expression%24type%20%3D%20%22cast%22%20and%20ability.id%20%3D%20345130&view=events
+ */
+export const engineeringBattleRezExpression = `type = "cast" and ability.id = ${ENGINEERING_BATTLE_REZ.SHADOWLANDS}`;
+
+/**
+ * @see https://www.warcraftlogs.com/reports/Rt7FqrJkhdmvV4j3#fight=3&type=casts&view=events&pins=2%24Off%24%23244F4B%24expression%24ability.id%20%3D%20309658
+ */
+export const leatherworkingDrumsExpression = `type = "cast" and ability.id = ${LEATHERWORKING_DRUMS.SHADOWLANDS}`;
+
+// TODO: feign false doesnt work?
+export const deathFilterExpression =
+  'target.type = "player" and type = "death"'; //  and feign = false
+export const remarkableSpellFilterExpression = `source.type = "player" and type = "cast" and ability.id IN (${[
+  ...remarkableSpellIDs,
+].join(", ")})`;
+
+export const filterProfessionEvents = (
+  allEvents: AllTrackedEventTypes
+): (CastEvent | ApplyBuffEvent)[] => {
+  return [
+    ...allEvents.filter(isLeatherworkingDrumsEvent),
+    ...allEvents.filter(isInvisibilityEvent),
+    ...allEvents.filter(isEngineeringBattleRezEvent),
+  ];
+};
+
+export const filterPlayerDeathEvents = (
+  allEvents: AllTrackedEventTypes,
+  playerMetaInformation: { actorID: number; class: PlayableClass }[],
+  remarkableSpellEvents: CastEvent[]
+): DeathEvent[] => {
+  const actorIDSet = new Set(
+    playerMetaInformation.map((dataset) => dataset.actorID)
+  );
+
+  const hunter = playerMetaInformation.find(
+    (player) => player.class === PlayableClass.Hunter
+  );
+
+  const deathEvents = allEvents.filter((event): event is DeathEvent => {
+    return (
+      event.type === "death" &&
+      actorIDSet.has(event.targetID) &&
+      event.sourceID === -1
+    );
+  });
+
+  if (!hunter) {
+    return deathEvents;
+  }
+
+  const hunterDeaths = deathEvents.filter(
+    (event) => event.targetID === hunter.actorID
+  );
+
+  if (hunterDeaths.length === 0) {
+    return deathEvents;
+  }
+
+  return deathEvents.filter((event) => {
+    const isHunterDeath = hunterDeaths.includes(event);
+
+    if (!isHunterDeath) {
+      return true;
+    }
+
+    const nextHunterCD = remarkableSpellEvents.find((e) => {
+      return e.sourceID === event.targetID && e.timestamp > event.timestamp;
+    });
+
+    if (!nextHunterCD) {
+      return true;
+    }
+
+    // assume a hunter feigned if he used a cd within the next 2 seconds
+    // could alternatively be solved by querying
+    // hostilityType: Friendlies, dataType: Deaths
+    // once separately...
+    return nextHunterCD.timestamp - event.timestamp >= 2000;
+  });
+};
+
+export const filterRemarkableSpellEvents = (
+  allEvents: AllTrackedEventTypes
+): CastEvent[] => {
+  return allEvents.filter(
+    (event): event is CastEvent =>
+      event.type === "cast" && remarkableSpellIDs.has(event.abilityGameID)
+  );
+};
