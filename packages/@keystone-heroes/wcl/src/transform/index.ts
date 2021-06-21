@@ -42,7 +42,6 @@ const getProcessorParams = (
   return params;
 };
 
-// it's silly but without this comment, the test will crash...
 export const processEvents = (
   pull: PersistedDungeonPull,
   events: AllTrackedEventTypes[],
