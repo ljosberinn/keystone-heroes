@@ -15,18 +15,17 @@ import type {
 } from "../../events/types";
 import { filterExpression as dosFilterExpression, getDOSEvents } from "./dos";
 import { filterExpression as hoaFilterExpression, getHOAEvents } from "./hoa";
+import {
+  filterExpression as motsFilterExpression,
+  getMOTSEvents,
+} from "./mots";
 import { filterExpression as nwFilterExpression, getNWEvents } from "./nw";
 import { filterExpression as pfFilterExpression, getPFEvents } from "./pf";
 import { filterExpression as sdFilterExpression, getSDEvents } from "./sd";
 import { filterExpression as soaFilterExpression, getSOAEvents } from "./soa";
 import { filterExpression as topFilterExpression, getTOPEvents } from "./top";
 
-type DungeonWithEvents = Exclude<DungeonIDs, DungeonIDs.MISTS_OF_TIRNA_SCITHE>;
-
-const isDungeonWithEvent = (id: DungeonIDs): id is DungeonWithEvents =>
-  id in dungeonExpressionMap;
-
-const dungeonExpressionMap: Record<DungeonWithEvents, string[]> = {
+const dungeonExpressionMap: Record<DungeonIDs, string[]> = {
   [DungeonIDs.DE_OTHER_SIDE]: dosFilterExpression,
   [DungeonIDs.HALLS_OF_ATONEMENT]: hoaFilterExpression,
   [DungeonIDs.PLAGUEFALL]: pfFilterExpression,
@@ -34,10 +33,11 @@ const dungeonExpressionMap: Record<DungeonWithEvents, string[]> = {
   [DungeonIDs.SPIRES_OF_ASCENSION]: soaFilterExpression,
   [DungeonIDs.THEATRE_OF_PAIN]: topFilterExpression,
   [DungeonIDs.THE_NECROTIC_WAKE]: nwFilterExpression,
+  [DungeonIDs.MISTS_OF_TIRNA_SCITHE]: motsFilterExpression,
 };
 
 export const getDungeonExpression = (id: DungeonIDs): string[] =>
-  isDungeonWithEvent(id) ? dungeonExpressionMap[id] : [];
+  dungeonExpressionMap[id];
 
 export const filterDungeonEvents = (
   allEvents: AllTrackedEventTypes[],
@@ -64,6 +64,8 @@ export const filterDungeonEvents = (
       return getTOPEvents(allEvents);
     case DungeonIDs.THE_NECROTIC_WAKE:
       return getNWEvents(allEvents);
+    case DungeonIDs.MISTS_OF_TIRNA_SCITHE:
+      return getMOTSEvents(allEvents);
     default:
       return [];
   }

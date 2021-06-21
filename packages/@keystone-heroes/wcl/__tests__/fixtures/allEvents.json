@@ -1,297 +1,5 @@
 [
   {
-    "timestamp": 4006933,
-    "type": "applybuff",
-    "sourceID": 65,
-    "targetID": 65,
-    "abilityGameID": 340210,
-    "pin": "0"
-  },
-  {
-    "timestamp": 4018740,
-    "type": "applybuff",
-    "sourceID": 63,
-    "targetID": 63,
-    "abilityGameID": 340210,
-    "pin": "0"
-  },
-  {
-    "timestamp": 4076733,
-    "type": "applybuff",
-    "sourceID": 63,
-    "targetID": 63,
-    "abilityGameID": 340210,
-    "pin": "0"
-  },
-  {
-    "timestamp": 4078931,
-    "type": "applybuff",
-    "sourceID": 65,
-    "targetID": 65,
-    "abilityGameID": 340210,
-    "pin": "0"
-  },
-  {
-    "timestamp": 4563925,
-    "type": "applybuff",
-    "sourceID": 65,
-    "targetID": 65,
-    "abilityGameID": 340210,
-    "pin": "0"
-  },
-  {
-    "timestamp": 4563925,
-    "type": "applybuff",
-    "sourceID": 65,
-    "targetID": 65,
-    "abilityGameID": 340225,
-    "pin": "0"
-  },
-  {
-    "timestamp": 4622916,
-    "type": "applybuff",
-    "sourceID": 65,
-    "targetID": 65,
-    "abilityGameID": 340271,
-    "pin": "0"
-  },
-  {
-    "timestamp": 4978916,
-    "type": "applybuff",
-    "sourceID": 65,
-    "targetID": 65,
-    "abilityGameID": 340271,
-    "pin": "0"
-  },
-  {
-    "timestamp": 4979920,
-    "type": "applybuff",
-    "sourceID": 65,
-    "targetID": 65,
-    "abilityGameID": 340225,
-    "pin": "0"
-  },
-  {
-    "timestamp": 4986724,
-    "type": "applybuff",
-    "sourceID": 63,
-    "targetID": 63,
-    "abilityGameID": 340225,
-    "pin": "0"
-  },
-  {
-    "timestamp": 4986724,
-    "type": "applybuff",
-    "sourceID": 63,
-    "targetID": 63,
-    "abilityGameID": 340271,
-    "pin": "0"
-  },
-  {
-    "timestamp": 5260722,
-    "type": "applybuff",
-    "sourceID": 63,
-    "targetID": 63,
-    "abilityGameID": 340210,
-    "pin": "0"
-  },
-  {
-    "timestamp": 5262928,
-    "type": "applybuff",
-    "sourceID": 65,
-    "targetID": 65,
-    "abilityGameID": 340210,
-    "pin": "0"
-  },
-  {
-    "timestamp": 3186763,
-    "type": "death",
-    "sourceID": -1,
-    "targetID": 1,
-    "abilityGameID": 0,
-    "pin": "0"
-  },
-  {
-    "timestamp": 3331087,
-    "type": "death",
-    "sourceID": -1,
-    "targetID": 2,
-    "abilityGameID": 0,
-    "pin": "0"
-  },
-  {
-    "timestamp": 3424154,
-    "type": "death",
-    "sourceID": -1,
-    "targetID": 2,
-    "abilityGameID": 0,
-    "pin": "0"
-  },
-  {
-    "timestamp": 3436647,
-    "type": "death",
-    "sourceID": -1,
-    "targetID": 1,
-    "abilityGameID": 0,
-    "pin": "0"
-  },
-  {
-    "timestamp": 3489087,
-    "type": "death",
-    "sourceID": -1,
-    "targetID": 5,
-    "abilityGameID": 0,
-    "pin": "0"
-  },
-  {
-    "timestamp": 3506311,
-    "type": "death",
-    "sourceID": -1,
-    "targetID": 3,
-    "abilityGameID": 0,
-    "pin": "0",
-    "targetMarker": 7
-  },
-  {
-    "timestamp": 3512625,
-    "type": "death",
-    "sourceID": -1,
-    "targetID": 60,
-    "abilityGameID": 0,
-    "pin": "0"
-  },
-  {
-    "timestamp": 3514282,
-    "type": "death",
-    "sourceID": -1,
-    "targetID": 1,
-    "abilityGameID": 0,
-    "pin": "0"
-  },
-  {
-    "timestamp": 3517463,
-    "type": "death",
-    "sourceID": -1,
-    "targetID": 2,
-    "abilityGameID": 0,
-    "pin": "0"
-  },
-  {
-    "timestamp": 3534137,
-    "type": "death",
-    "sourceID": -1,
-    "targetID": 5,
-    "abilityGameID": 0,
-    "pin": "0"
-  },
-  {
-    "timestamp": 3559079,
-    "type": "death",
-    "sourceID": -1,
-    "targetID": 3,
-    "abilityGameID": 0,
-    "pin": "0",
-    "targetMarker": 7
-  },
-  {
-    "timestamp": 3560518,
-    "type": "death",
-    "sourceID": -1,
-    "targetID": 2,
-    "abilityGameID": 0,
-    "pin": "0"
-  },
-  {
-    "timestamp": 3563937,
-    "type": "death",
-    "sourceID": -1,
-    "targetID": 5,
-    "abilityGameID": 0,
-    "pin": "0"
-  },
-  {
-    "timestamp": 3566890,
-    "type": "death",
-    "sourceID": -1,
-    "targetID": 1,
-    "abilityGameID": 0,
-    "pin": "0"
-  },
-  {
-    "timestamp": 3568140,
-    "type": "death",
-    "sourceID": -1,
-    "targetID": 60,
-    "abilityGameID": 0,
-    "pin": "0"
-  },
-  {
-    "timestamp": 3573319,
-    "type": "death",
-    "sourceID": -1,
-    "targetID": 3,
-    "abilityGameID": 0,
-    "pin": "0",
-    "targetMarker": 7
-  },
-  {
-    "timestamp": 3576106,
-    "type": "death",
-    "sourceID": -1,
-    "targetID": 2,
-    "abilityGameID": 0,
-    "pin": "0"
-  },
-  {
-    "timestamp": 3793055,
-    "type": "death",
-    "sourceID": -1,
-    "targetID": 5,
-    "abilityGameID": 0,
-    "pin": "0"
-  },
-  {
-    "timestamp": 3889770,
-    "type": "death",
-    "sourceID": -1,
-    "targetID": 1,
-    "abilityGameID": 0,
-    "pin": "0"
-  },
-  {
-    "timestamp": 3910966,
-    "type": "death",
-    "sourceID": -1,
-    "targetID": 3,
-    "abilityGameID": 0,
-    "pin": "0",
-    "targetMarker": 7
-  },
-  {
-    "timestamp": 4036935,
-    "type": "death",
-    "sourceID": -1,
-    "targetID": 1,
-    "abilityGameID": 0,
-    "pin": "0"
-  },
-  {
-    "timestamp": 4273729,
-    "type": "death",
-    "sourceID": -1,
-    "targetID": 1,
-    "abilityGameID": 0,
-    "pin": "0"
-  },
-  {
-    "timestamp": 4634252,
-    "type": "death",
-    "sourceID": -1,
-    "targetID": 5,
-    "abilityGameID": 0,
-    "pin": "0"
-  },
-  {
     "timestamp": 12983,
     "type": "damage",
     "sourceID": 11,
@@ -12864,11 +12572,303 @@
     "abilityGameID": 345130
   },
   {
+    "timestamp": 3186763,
+    "type": "death",
+    "sourceID": -1,
+    "targetID": 1,
+    "abilityGameID": 0,
+    "pin": "0"
+  },
+  {
+    "timestamp": 3331087,
+    "type": "death",
+    "sourceID": -1,
+    "targetID": 2,
+    "abilityGameID": 0,
+    "pin": "0"
+  },
+  {
+    "timestamp": 3424154,
+    "type": "death",
+    "sourceID": -1,
+    "targetID": 2,
+    "abilityGameID": 0,
+    "pin": "0"
+  },
+  {
+    "timestamp": 3436647,
+    "type": "death",
+    "sourceID": -1,
+    "targetID": 1,
+    "abilityGameID": 0,
+    "pin": "0"
+  },
+  {
+    "timestamp": 3489087,
+    "type": "death",
+    "sourceID": -1,
+    "targetID": 5,
+    "abilityGameID": 0,
+    "pin": "0"
+  },
+  {
+    "timestamp": 3506311,
+    "type": "death",
+    "sourceID": -1,
+    "targetID": 3,
+    "abilityGameID": 0,
+    "pin": "0",
+    "targetMarker": 7
+  },
+  {
+    "timestamp": 3512625,
+    "type": "death",
+    "sourceID": -1,
+    "targetID": 60,
+    "abilityGameID": 0,
+    "pin": "0"
+  },
+  {
+    "timestamp": 3514282,
+    "type": "death",
+    "sourceID": -1,
+    "targetID": 1,
+    "abilityGameID": 0,
+    "pin": "0"
+  },
+  {
+    "timestamp": 3517463,
+    "type": "death",
+    "sourceID": -1,
+    "targetID": 2,
+    "abilityGameID": 0,
+    "pin": "0"
+  },
+  {
+    "timestamp": 3534137,
+    "type": "death",
+    "sourceID": -1,
+    "targetID": 5,
+    "abilityGameID": 0,
+    "pin": "0"
+  },
+  {
+    "timestamp": 3559079,
+    "type": "death",
+    "sourceID": -1,
+    "targetID": 3,
+    "abilityGameID": 0,
+    "pin": "0",
+    "targetMarker": 7
+  },
+  {
+    "timestamp": 3560518,
+    "type": "death",
+    "sourceID": -1,
+    "targetID": 2,
+    "abilityGameID": 0,
+    "pin": "0"
+  },
+  {
+    "timestamp": 3563937,
+    "type": "death",
+    "sourceID": -1,
+    "targetID": 5,
+    "abilityGameID": 0,
+    "pin": "0"
+  },
+  {
+    "timestamp": 3566890,
+    "type": "death",
+    "sourceID": -1,
+    "targetID": 1,
+    "abilityGameID": 0,
+    "pin": "0"
+  },
+  {
+    "timestamp": 3568140,
+    "type": "death",
+    "sourceID": -1,
+    "targetID": 60,
+    "abilityGameID": 0,
+    "pin": "0"
+  },
+  {
+    "timestamp": 3573319,
+    "type": "death",
+    "sourceID": -1,
+    "targetID": 3,
+    "abilityGameID": 0,
+    "pin": "0",
+    "targetMarker": 7
+  },
+  {
+    "timestamp": 3576106,
+    "type": "death",
+    "sourceID": -1,
+    "targetID": 2,
+    "abilityGameID": 0,
+    "pin": "0"
+  },
+  {
+    "timestamp": 3793055,
+    "type": "death",
+    "sourceID": -1,
+    "targetID": 5,
+    "abilityGameID": 0,
+    "pin": "0"
+  },
+  {
+    "timestamp": 3889770,
+    "type": "death",
+    "sourceID": -1,
+    "targetID": 1,
+    "abilityGameID": 0,
+    "pin": "0"
+  },
+  {
+    "timestamp": 3910966,
+    "type": "death",
+    "sourceID": -1,
+    "targetID": 3,
+    "abilityGameID": 0,
+    "pin": "0",
+    "targetMarker": 7
+  },
+  {
+    "timestamp": 4006933,
+    "type": "applybuff",
+    "sourceID": 65,
+    "targetID": 65,
+    "abilityGameID": 340210,
+    "pin": "0"
+  },
+  {
+    "timestamp": 4018740,
+    "type": "applybuff",
+    "sourceID": 63,
+    "targetID": 63,
+    "abilityGameID": 340210,
+    "pin": "0"
+  },
+  {
+    "timestamp": 4036935,
+    "type": "death",
+    "sourceID": -1,
+    "targetID": 1,
+    "abilityGameID": 0,
+    "pin": "0"
+  },
+  {
+    "timestamp": 4076733,
+    "type": "applybuff",
+    "sourceID": 63,
+    "targetID": 63,
+    "abilityGameID": 340210,
+    "pin": "0"
+  },
+  {
+    "timestamp": 4078931,
+    "type": "applybuff",
+    "sourceID": 65,
+    "targetID": 65,
+    "abilityGameID": 340210,
+    "pin": "0"
+  },
+  {
+    "timestamp": 4273729,
+    "type": "death",
+    "sourceID": -1,
+    "targetID": 1,
+    "abilityGameID": 0,
+    "pin": "0"
+  },
+  {
+    "timestamp": 4563925,
+    "type": "applybuff",
+    "sourceID": 65,
+    "targetID": 65,
+    "abilityGameID": 340210,
+    "pin": "0"
+  },
+  {
+    "timestamp": 4563925,
+    "type": "applybuff",
+    "sourceID": 65,
+    "targetID": 65,
+    "abilityGameID": 340225,
+    "pin": "0"
+  },
+  {
+    "timestamp": 4622916,
+    "type": "applybuff",
+    "sourceID": 65,
+    "targetID": 65,
+    "abilityGameID": 340271,
+    "pin": "0"
+  },
+  {
+    "timestamp": 4634252,
+    "type": "death",
+    "sourceID": -1,
+    "targetID": 5,
+    "abilityGameID": 0,
+    "pin": "0"
+  },
+  {
+    "timestamp": 4978916,
+    "type": "applybuff",
+    "sourceID": 65,
+    "targetID": 65,
+    "abilityGameID": 340271,
+    "pin": "0"
+  },
+  {
+    "timestamp": 4979920,
+    "type": "applybuff",
+    "sourceID": 65,
+    "targetID": 65,
+    "abilityGameID": 340225,
+    "pin": "0"
+  },
+  {
+    "timestamp": 4986724,
+    "type": "applybuff",
+    "sourceID": 63,
+    "targetID": 63,
+    "abilityGameID": 340225,
+    "pin": "0"
+  },
+  {
+    "timestamp": 4986724,
+    "type": "applybuff",
+    "sourceID": 63,
+    "targetID": 63,
+    "abilityGameID": 340271,
+    "pin": "0"
+  },
+  {
     "timestamp": 5032705,
     "type": "applybuff",
     "sourceID": 105,
     "targetID": 105,
     "abilityGameID": 340378,
+    "pin": "0"
+  },
+  {
+    "timestamp": 5260722,
+    "type": "applybuff",
+    "sourceID": 63,
+    "targetID": 63,
+    "abilityGameID": 340210,
+    "pin": "0"
+  },
+  {
+    "timestamp": 5262928,
+    "type": "applybuff",
+    "sourceID": 65,
+    "targetID": 65,
+    "abilityGameID": 340210,
     "pin": "0"
   },
   {
@@ -38483,6 +38483,50 @@
     "mitigated": 716,
     "unmitigatedAmount": 2230,
     "tick": true,
+    "sourceMarker": 7,
+    "targetMarker": 7
+  },
+  {
+    "timestamp": 35495540,
+    "type": "applydebuff",
+    "sourceID": -1,
+    "targetID": 237,
+    "abilityGameID": 323881,
+    "pin": "0"
+  },
+  {
+    "timestamp": 35495540,
+    "type": "applydebuff",
+    "sourceID": -1,
+    "targetID": 240,
+    "abilityGameID": 323881,
+    "pin": "0"
+  },
+  {
+    "timestamp": 35495540,
+    "type": "applydebuff",
+    "sourceID": -1,
+    "targetID": 238,
+    "abilityGameID": 323881,
+    "pin": "0"
+  },
+  {
+    "timestamp": 35495540,
+    "type": "applydebuff",
+    "sourceID": -1,
+    "targetID": 66,
+    "abilityGameID": 323881,
+    "pin": "0",
+    "sourceMarker": 2,
+    "targetMarker": 2
+  },
+  {
+    "timestamp": 35495540,
+    "type": "applydebuff",
+    "sourceID": -1,
+    "targetID": 1,
+    "abilityGameID": 323881,
+    "pin": "0",
     "sourceMarker": 7,
     "targetMarker": 7
   }
