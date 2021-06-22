@@ -32,7 +32,11 @@ import nc from "next-connect";
 import type { Awaited, DeepRequired } from "ts-essentials";
 
 import { createValidReportIDMiddleware } from "../middleware";
-import { SERVICE_UNAVAILABLE, BAD_REQUEST } from "../utils/statusCodes";
+import {
+  SERVICE_UNAVAILABLE,
+  BAD_REQUEST,
+  UNPROCESSABLE_ENTITY,
+} from "../utils/statusCodes";
 import type { RequestHandler } from "../utils/types";
 
 type Request = {
@@ -70,6 +74,7 @@ export const reportHandlerError = {
     "This report is either broken or the request to Warcraftlogs failed. Please try again at a later time.",
   SECONDARY_REQUEST_FAILED:
     "Warcraftlogs could not be reached or the API request limit has been reached. Please try again at a later time.",
+  EMPTY_LOG: "This report does not contain any fights.",
 } as const;
 
 type DeepNullablePath<T, P> = P extends []
@@ -136,6 +141,17 @@ const fightIsTimedKeystone = (fight: Fight) => fight.keystoneBonus > 0;
 
 const fightHasFivePlayers = (fight: Fight) =>
   fight.friendlyPlayers.length === 5;
+
+const createFightIsNotKnownFilter = (persistedFightIDs: number[]) => {
+  if (persistedFightIDs.length === 0) {
+    return () => true;
+  }
+
+  const set = new Set(persistedFightIDs);
+
+  // skip any fight that is already stored
+  return (fight: Fight) => !set.has(fight.id);
+};
 
 const persistServer = async (
   allServer: string[],
@@ -353,10 +369,178 @@ const sortByRole = (a: Role, b: Role) => {
   return 0;
 };
 
-const handler: RequestHandler<Request, ReportResponse> = async (req, res) => {
-  const { reportID } = req.query;
+type RawReport = {
+  startTime: Date;
+  endTime: Date;
+  title: string;
+  region: {
+    slug: string;
+  };
+  Fight: {
+    fightID: number;
+    averageItemLevel: number;
+    chests: number;
+    keystoneTime: number;
+    keystoneLevel: number;
+    dps: number;
+    hps: number;
+    dtps: number;
+    totalDeaths: number;
+    dungeon: Pick<Dungeon, "name" | "time" | "id"> | null;
+    PlayerFight: {
+      player: {
+        covenant: {
+          id: number;
+        } | null;
+        soulbind: {
+          id: number;
+        } | null;
+        spec: {
+          name: SpecName;
+          role: Role;
+        };
+        character: {
+          class: {
+            name: PlayableClass;
+          };
+        };
+        legendary: Pick<
+          LegendaryItem,
+          "id" | "effectIcon" | "effectName"
+        > | null;
+      };
+    }[];
+  }[];
+  week: {
+    season: {
+      affix: Omit<Affix, "id" | "seasonal">;
+    };
+    affix1: Omit<Affix, "id" | "seasonal">;
+    affix2: Omit<Affix, "id" | "seasonal">;
+    affix3: Omit<Affix, "id" | "seasonal">;
+  };
+} | null;
 
-  const existingReport = await prisma.report.findFirst({
+const getFightIDsOfExistingReport = (existingReport: RawReport) => {
+  if (!existingReport) {
+    return [];
+  }
+
+  return existingReport.Fight.map((fight) => fight.fightID);
+};
+
+const createResponseFromDB = (
+  existingReport: NonNullable<RawReport>
+): ReportResponse => {
+  return {
+    affixes: [
+      existingReport.week.affix1,
+      existingReport.week.affix2,
+      existingReport.week.affix3,
+      existingReport.week.season.affix,
+    ],
+    endTime: existingReport.endTime.getTime(),
+    region: existingReport.region.slug,
+    startTime: existingReport.startTime.getTime(),
+    title: existingReport.title,
+    fights: existingReport.Fight.map((fight) => {
+      return {
+        id: fight.fightID,
+        player: [...fight.PlayerFight]
+          .sort((a, b) => sortByRole(a.player.spec.role, b.player.spec.role))
+          .map(({ player }) => {
+            return {
+              legendary: player.legendary ? player.legendary : null,
+              class: player.character.class.name,
+              spec: player.spec.name,
+              covenantID: player.covenant ? player.covenant.id : null,
+              soulbindID: player.soulbind ? player.soulbind.id : null,
+            };
+          }),
+        averageItemLevel: Number.parseFloat(
+          (fight.averageItemLevel / 100).toFixed(2)
+        ),
+        dtps: fight.dtps,
+        hps: fight.hps,
+        dps: fight.dps,
+        keystoneLevel: fight.keystoneLevel,
+        keystoneTime: fight.keystoneTime,
+        totalDeaths: fight.totalDeaths,
+        keystoneBonus: fight.chests,
+        dungeon: fight.dungeon,
+      };
+    }),
+  };
+};
+
+type RawData = {
+  startTime: number;
+  endTime: number;
+  title: string;
+  region: string;
+  fightsWithMeta: FightWithMeta[];
+  affixes: number[];
+};
+
+const createResponseFromRawData = ({
+  startTime,
+  endTime,
+  title,
+  region,
+  fightsWithMeta,
+  affixes,
+}: RawData): ReportResponse => {
+  return {
+    endTime,
+    startTime,
+    title,
+    region,
+    fights: fightsWithMeta
+      .map((fight) => {
+        const { gameZone, player, startTime, endTime, ...rest } = fight;
+
+        const dungeon = gameZone ? dungeonMap[gameZone.id] : null;
+
+        return {
+          ...rest,
+          dps: player.reduce((acc, player) => acc + player.dps, 0),
+          hps: player.reduce((acc, player) => acc + player.hps, 0),
+          totalDeaths: player.reduce((acc, player) => acc + player.deaths, 0),
+          dungeon:
+            dungeon && gameZone
+              ? {
+                  name: dungeon.name,
+                  time: dungeon.timer[0],
+                  id: gameZone.id,
+                }
+              : null,
+          player: player.map((player) => {
+            return {
+              class: player.class,
+              spec: player.spec,
+              soulbindID: player.soulbindID,
+              covenantID: player.covenantID,
+              legendary: player.legendary
+                ? {
+                    id: player.legendary.id,
+                    effectIcon: player.legendary.effectIcon,
+                    effectName: player.legendary.effectName,
+                  }
+                : null,
+            };
+          }),
+        };
+      })
+      .sort((a, b) => a.id - b.id),
+    affixes: affixes.map((affix) => {
+      const { id, seasonal, ...data } = getAffixByID(affix);
+      return data;
+    }),
+  };
+};
+
+const createReportFindFirst = (reportID: string) => {
+  return {
     where: {
       report: reportID,
     },
@@ -370,6 +554,7 @@ const handler: RequestHandler<Request, ReportResponse> = async (req, res) => {
         },
       },
       Fight: {
+        orderBy: { fightID: "asc" },
         select: {
           fightID: true,
           averageItemLevel: true,
@@ -458,50 +643,18 @@ const handler: RequestHandler<Request, ReportResponse> = async (req, res) => {
         },
       },
     },
-  });
+  } as const;
+};
+
+const handler: RequestHandler<Request, ReportResponse> = async (req, res) => {
+  const { reportID } = req.query;
+
+  const existingReport: RawReport = await prisma.report.findFirst(
+    createReportFindFirst(reportID)
+  );
 
   if (existingReport && !maybeOngoingReport(existingReport.endTime.getTime())) {
-    const response: ReportResponse = {
-      affixes: [
-        existingReport.week.affix1,
-        existingReport.week.affix2,
-        existingReport.week.affix3,
-        existingReport.week.season.affix,
-      ],
-      endTime: existingReport.endTime.getTime(),
-      region: existingReport.region.slug,
-      startTime: existingReport.startTime.getTime(),
-      title: existingReport.title,
-      fights: existingReport.Fight.map((fight) => {
-        return {
-          id: fight.fightID,
-          player: [...fight.PlayerFight]
-            .sort((a, b) => sortByRole(a.player.spec.role, b.player.spec.role))
-            .map(({ player }) => {
-              return {
-                legendary: player.legendary ? player.legendary : null,
-                class: player.character.class.name,
-                spec: player.spec.name,
-                covenantID: player.covenant ? player.covenant.id : null,
-                soulbindID: player.soulbind ? player.soulbind.id : null,
-              };
-            }),
-          averageItemLevel: Number.parseFloat(
-            (fight.averageItemLevel / 100).toFixed(2)
-          ),
-          dtps: fight.dtps,
-          hps: fight.hps,
-          dps: fight.dps,
-          keystoneLevel: fight.keystoneLevel,
-          keystoneTime: fight.keystoneTime,
-          totalDeaths: fight.totalDeaths,
-          keystoneBonus: fight.chests,
-          dungeon: fight.dungeon,
-        };
-      }),
-    };
-
-    res.json(response);
+    res.json(createResponseFromDB(existingReport));
     return;
   }
 
@@ -513,15 +666,22 @@ const handler: RequestHandler<Request, ReportResponse> = async (req, res) => {
     !report.reportData?.report ||
     // broken report
     !report.reportData.report.region?.slug ||
-    !report.reportData.report.fights ||
-    // empty report
-    report.reportData.report.fights.length === 0 ||
-    report.reportData.report.startTime === report.reportData.report.endTime
+    !report.reportData.report.fights
   ) {
     res.status(SERVICE_UNAVAILABLE).json({
       error: reportHandlerError.BROKEN_LOG_OR_WCL_UNAVAILABLE,
     });
     return;
+  }
+
+  // empty report
+  if (
+    report.reportData.report.fights.length === 0 ||
+    report.reportData.report.startTime === report.reportData.report.endTime
+  ) {
+    res.status(UNPROCESSABLE_ENTITY).json({
+      error: reportHandlerError.EMPTY_LOG,
+    });
   }
 
   const {
@@ -530,6 +690,8 @@ const handler: RequestHandler<Request, ReportResponse> = async (req, res) => {
     title,
     region: { slug: region },
   } = report.reportData.report;
+  const persistedFightIDs = getFightIDsOfExistingReport(existingReport);
+  const fightIsNotKnown = createFightIsNotKnownFilter(persistedFightIDs);
 
   const fights = report.reportData.report.fights
     .filter(
@@ -537,7 +699,8 @@ const handler: RequestHandler<Request, ReportResponse> = async (req, res) => {
         fightIsFight(fight) &&
         fightIsTimedKeystone(fight) &&
         fightHasFivePlayers(fight) &&
-        fightFulfillsKeystoneLevelRequirement(fight)
+        fightFulfillsKeystoneLevelRequirement(fight) &&
+        fightIsNotKnown(fight)
     )
     .map((fight) => {
       return {
@@ -547,7 +710,14 @@ const handler: RequestHandler<Request, ReportResponse> = async (req, res) => {
       };
     });
 
+  // no valid (new) fights found
   if (fights.length === 0) {
+    // maybeOngoingFight === true
+    if (existingReport && persistedFightIDs.length > 0) {
+      res.json(createResponseFromDB(existingReport));
+      return;
+    }
+
     res.status(BAD_REQUEST).json({
       error: reportHandlerError.NO_TIMED_KEYS,
     });
@@ -884,55 +1054,16 @@ const handler: RequestHandler<Request, ReportResponse> = async (req, res) => {
     )
   );
 
-  const response: ReportResponse = {
-    endTime,
-    startTime,
-    title,
-    region,
-    fights: fightsWithMeta
-      .map((fight) => {
-        const { gameZone, player, startTime, endTime, ...rest } = fight;
-
-        const dungeon = gameZone ? dungeonMap[gameZone.id] : null;
-
-        return {
-          ...rest,
-          dps: player.reduce((acc, player) => acc + player.dps, 0),
-          hps: player.reduce((acc, player) => acc + player.hps, 0),
-          totalDeaths: player.reduce((acc, player) => acc + player.deaths, 0),
-          dungeon:
-            dungeon && gameZone
-              ? {
-                  name: dungeon.name,
-                  time: dungeon.timer[0],
-                  id: gameZone.id,
-                }
-              : null,
-          player: player.map((player) => {
-            return {
-              class: player.class,
-              spec: player.spec,
-              soulbindID: player.soulbindID,
-              covenantID: player.covenantID,
-              legendary: player.legendary
-                ? {
-                    id: player.legendary.id,
-                    effectIcon: player.legendary.effectIcon,
-                    effectName: player.legendary.effectName,
-                  }
-                : null,
-            };
-          }),
-        };
-      })
-      .sort((a, b) => a.id - b.id),
-    affixes: fights[0].keystoneAffixes.map((affix) => {
-      const { id, seasonal, ...data } = getAffixByID(affix);
-      return data;
-    }),
-  };
-
-  res.json(response);
+  res.json(
+    createResponseFromRawData({
+      endTime,
+      startTime,
+      title,
+      region,
+      fightsWithMeta,
+      affixes: fights[0].keystoneAffixes,
+    })
+  );
 };
 
 const findWeekbyTimestamp = (
