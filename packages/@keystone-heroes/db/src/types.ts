@@ -39,4 +39,5 @@ export type {
   WCLAuth,
   Week,
   Zone,
+  PrismaClient,
 } from "@prisma/client";

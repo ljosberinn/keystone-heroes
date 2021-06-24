@@ -1,4 +1,4 @@
-import { isValidReportId } from "@keystone-heroes/wcl/src/utils";
+import { isValidReportId } from "@keystone-heroes/wcl/utils";
 
 import { BAD_REQUEST } from "../utils/statusCodes";
 import type { Middleware } from "../utils/types";

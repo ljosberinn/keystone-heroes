@@ -1,0 +1,46 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`/api/report unknown report - warcraftlogs failure 1`] = `
+"query InitialReportData($reportID: String!) {
+  reportData {
+    report(code: $reportID) {
+      title
+      startTime
+      endTime
+      region {
+        slug
+      }
+      fights(translate: true, killType: Kills) {
+        id
+        startTime
+        endTime
+        keystoneLevel
+        keystoneAffixes
+        keystoneBonus
+        keystoneTime
+        averageItemLevel
+        friendlyPlayers
+        gameZone {
+          id
+        }
+        maps {
+          id
+        }
+      }
+    }
+  }
+}
+"
+`;
+
+exports[`/api/report unknown report - warcraftlogs failure 2`] = `
+Object {
+  "reportID": "6WBVqjaxg2HKGm4k",
+}
+`;
+
+exports[`/api/report unknown report - warcraftlogs failure 3`] = `
+Object {
+  "error": "This report is either broken or the request to Warcraftlogs failed. Please try again at a later time.",
+}
+`;

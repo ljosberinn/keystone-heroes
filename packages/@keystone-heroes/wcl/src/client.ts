@@ -5,6 +5,7 @@ import {
   WCL_OAUTH_ENDPOINT,
 } from "@keystone-heroes/env";
 import { GraphQLClient } from "graphql-request";
+import fetch from "node-fetch";
 
 import type { WCLOAuthResponse } from "./auth";
 import { getWCLAuthentication, setWCLAuthentication } from "./auth";
@@ -66,6 +67,7 @@ export const getGqlClient = async (): Promise<GraphQLClient> => {
       headers: {
         authorization: `Bearer ${persisted.token}`,
       },
+      fetch: global.fetch,
     });
 
     cache.expiresAt = persisted.expiresAt * 1000;
@@ -100,6 +102,7 @@ export const getGqlClient = async (): Promise<GraphQLClient> => {
           headers: {
             authorization: `Bearer ${json.access_token}`,
           },
+          fetch: global.fetch,
         });
 
       cache.expiresAt = cache.expiresAt ?? Date.now() + json.expires_in;

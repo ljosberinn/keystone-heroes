@@ -5,14 +5,15 @@ import { seasons } from "@keystone-heroes/db/data/seasons";
 import { specs } from "@keystone-heroes/db/data/specs";
 import { weeks } from "@keystone-heroes/db/data/weeks";
 import { prisma } from "@keystone-heroes/db/prisma";
+import { Role } from "@keystone-heroes/db/types";
 import type {
   PlayableClass,
   SpecName,
   Prisma,
   Affix,
   Dungeon,
+  Week,
 } from "@keystone-heroes/db/types";
-import { Role } from "@keystone-heroes/db/types";
 import { MIN_KEYSTONE_LEVEL } from "@keystone-heroes/env";
 import type {
   Conduit,
@@ -27,7 +28,6 @@ import {
 } from "@keystone-heroes/wcl/queries";
 import type { Report, Region, GameZone } from "@keystone-heroes/wcl/types";
 import { maybeOngoingReport } from "@keystone-heroes/wcl/utils";
-import type { Week } from "@prisma/client";
 import nc from "next-connect";
 import type { Awaited, DeepRequired } from "ts-essentials";
 
@@ -648,7 +648,6 @@ const createReportFindFirst = (reportID: string) => {
 
 const handler: RequestHandler<Request, ReportResponse> = async (req, res) => {
   const { reportID } = req.query;
-
   const existingReport: RawReport = await prisma.report.findFirst(
     createReportFindFirst(reportID)
   );
