@@ -1679,12 +1679,6 @@ export type EventDataQueryVariables = Exact<{
   reportID: Scalars["String"];
   startTime: Scalars["Float"];
   endTime: Scalars["Float"];
-  hostilityType?: Maybe<HostilityType>;
-  sourceID?: Maybe<Scalars["Int"]>;
-  dataType?: Maybe<EventDataType>;
-  abilityID?: Maybe<Scalars["Float"]>;
-  targetID?: Maybe<Scalars["Int"]>;
-  targetInstance?: Maybe<Scalars["Int"]>;
   limit?: Maybe<Scalars["Int"]>;
   filterExpression?: Maybe<Scalars["String"]>;
 }>;
@@ -1869,12 +1863,6 @@ export const EventDataDocument = gql`
     $reportID: String!
     $startTime: Float!
     $endTime: Float!
-    $hostilityType: HostilityType
-    $sourceID: Int
-    $dataType: EventDataType
-    $abilityID: Float
-    $targetID: Int
-    $targetInstance: Int
     $limit: Int
     $filterExpression: String
   ) {
@@ -1883,12 +1871,6 @@ export const EventDataDocument = gql`
         events(
           startTime: $startTime
           endTime: $endTime
-          hostilityType: $hostilityType
-          sourceID: $sourceID
-          dataType: $dataType
-          abilityID: $abilityID
-          targetID: $targetID
-          targetInstanceID: $targetInstance
           limit: $limit
           filterExpression: $filterExpression
         ) {
