@@ -5,7 +5,7 @@ import type {
   Middleware as NextConnectMiddleware,
 } from "next-connect";
 
-type NextApiRequestWithoutIncomingMessage = {
+export type NextApiRequestWithoutIncomingMessage = {
   [Key in keyof NextApiRequest as Key extends keyof IncomingMessage
     ? never
     : Key]: NextApiRequest[Key];

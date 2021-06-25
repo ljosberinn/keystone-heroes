@@ -19,6 +19,7 @@
     "eslint-config-galex": "2.16.5",
     "jest": "27.0.5",
     "jest-mock-extended": "1.0.16",
+    "msw": "0.30.0",
     "next": "11.0.0",
     "node-fetch": "2.6.1",
     "test-listen": "1.1.0",

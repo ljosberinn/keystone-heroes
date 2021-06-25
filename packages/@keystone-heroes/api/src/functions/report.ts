@@ -27,11 +27,12 @@ import {
   getTableData,
 } from "@keystone-heroes/wcl/queries";
 import type { Report, Region, GameZone } from "@keystone-heroes/wcl/types";
-import { maybeOngoingReport } from "@keystone-heroes/wcl/utils";
-import nc from "next-connect";
+import {
+  isValidReportId,
+  maybeOngoingReport,
+} from "@keystone-heroes/wcl/utils";
 import type { Awaited, DeepRequired } from "ts-essentials";
 
-import { createValidReportIDMiddleware } from "../middleware";
 import {
   SERVICE_UNAVAILABLE,
   BAD_REQUEST,
@@ -41,7 +42,7 @@ import type { RequestHandler } from "../utils/types";
 
 type Request = {
   query: {
-    reportID: string;
+    reportID?: string | string[];
   };
 };
 
@@ -646,7 +647,19 @@ const createReportFindFirst = (reportID: string) => {
   } as const;
 };
 
-const handler: RequestHandler<Request, ReportResponse> = async (req, res) => {
+export const reportHandler: RequestHandler<Request, ReportResponse> = async (
+  req,
+  res
+) => {
+  if (
+    !req.query.reportID ||
+    Array.isArray(req.query.reportID) ||
+    !isValidReportId(req.query.reportID)
+  ) {
+    res.status(BAD_REQUEST).end();
+    return;
+  }
+
   const { reportID } = req.query;
   const existingReport: RawReport = await prisma.report.findFirst(
     createReportFindFirst(reportID)
@@ -1108,7 +1121,3 @@ const findWeekbyTimestamp = (
 
   return thisSeasonsWeeks[excessWeeks];
 };
-
-export const reportHandler = nc()
-  .get(createValidReportIDMiddleware("reportID"))
-  .use(handler);
