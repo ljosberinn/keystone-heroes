@@ -89,7 +89,7 @@ type MaybeFight = DeepNullablePath<
   ["reportData", "report", "fights", number]
 >;
 
-type Fight = Omit<DeepRequired<MaybeFight>, "gameZone"> & {
+type Fight = Omit<DeepRequired<MaybeFight>, "gameZone" | "__typename"> & {
   gameZone: null | Pick<GameZone, "id">;
 };
 
@@ -121,7 +121,7 @@ type FightWithMeta = Omit<
   dtps: number;
 };
 
-const fightIsFight = (fight: MaybeFight): fight is Fight => {
+export const fightIsFight = (fight: MaybeFight): fight is Fight => {
   return (
     typeof fight?.averageItemLevel === "number" &&
     typeof fight.keystoneBonus === "number" &&
@@ -135,15 +135,18 @@ const fightIsFight = (fight: MaybeFight): fight is Fight => {
   );
 };
 
-const fightFulfillsKeystoneLevelRequirement = (fight: Fight) =>
+export const fightFulfillsKeystoneLevelRequirement = (fight: Fight): boolean =>
   fight.keystoneLevel >= MIN_KEYSTONE_LEVEL;
 
-const fightIsTimedKeystone = (fight: Fight) => fight.keystoneBonus > 0;
+export const fightIsTimedKeystone = (fight: Fight): boolean =>
+  fight.keystoneBonus > 0;
 
-const fightHasFivePlayers = (fight: Fight) =>
+export const fightHasFivePlayers = (fight: Fight): boolean =>
   fight.friendlyPlayers.length === 5;
 
-const createFightIsNotKnownFilter = (persistedFightIDs: number[]) => {
+export const createFightIsUnknownFilter = (
+  persistedFightIDs: number[]
+): ((fight: Fight) => boolean) => {
   if (persistedFightIDs.length === 0) {
     return () => true;
   }
@@ -694,6 +697,7 @@ export const reportHandler: RequestHandler<Request, ReportResponse> = async (
     res.status(UNPROCESSABLE_ENTITY).json({
       error: reportHandlerError.EMPTY_LOG,
     });
+    return 1;
   }
 
   const {
@@ -703,7 +707,7 @@ export const reportHandler: RequestHandler<Request, ReportResponse> = async (
     region: { slug: region },
   } = report.reportData.report;
   const persistedFightIDs = getFightIDsOfExistingReport(existingReport);
-  const fightIsNotKnown = createFightIsNotKnownFilter(persistedFightIDs);
+  const fightIsUnknown = createFightIsUnknownFilter(persistedFightIDs);
 
   const fights = report.reportData.report.fights
     .filter(
@@ -712,7 +716,7 @@ export const reportHandler: RequestHandler<Request, ReportResponse> = async (
         fightIsTimedKeystone(fight) &&
         fightHasFivePlayers(fight) &&
         fightFulfillsKeystoneLevelRequirement(fight) &&
-        fightIsNotKnown(fight)
+        fightIsUnknown(fight)
     )
     .map((fight) => {
       return {

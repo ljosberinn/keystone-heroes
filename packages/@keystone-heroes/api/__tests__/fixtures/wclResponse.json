@@ -1,0 +1,67 @@
+{
+  "reportData": {
+    "report": {
+      "title": "adsf",
+      "startTime": 1619116993317,
+      "endTime": 1619126487765,
+      "region": { "slug": "EU" },
+      "fights": [
+        {
+          "id": 4,
+          "startTime": 1989745,
+          "endTime": 3307345,
+          "keystoneLevel": 15,
+          "keystoneAffixes": [9, 7, 4, 121],
+          "keystoneBonus": 2,
+          "keystoneTime": 1318941,
+          "averageItemLevel": 220.8000030517578,
+          "friendlyPlayers": [4, 45, 46, 48, 6],
+          "gameZone": { "id": 2287 },
+          "maps": [
+            { "id": 1663 },
+            { "id": 1664 },
+            { "id": 1663 },
+            { "id": 1664 },
+            { "id": 1665 }
+          ]
+        },
+        {
+          "id": 5,
+          "startTime": 4276492,
+          "endTime": 6308740,
+          "keystoneLevel": 16,
+          "keystoneAffixes": [9, 7, 4, 121],
+          "keystoneBonus": 1,
+          "keystoneTime": 2078413,
+          "averageItemLevel": 221.1999969482422,
+          "friendlyPlayers": [97, 4, 99, 6, 98],
+          "gameZone": { "id": 2293 },
+          "maps": [
+            { "id": 1683 },
+            { "id": 1684 },
+            { "id": 1686 },
+            { "id": 1687 },
+            { "id": 1686 },
+            { "id": 1684 },
+            { "id": 1685 },
+            { "id": 1684 },
+            { "id": 1683 }
+          ]
+        },
+        {
+          "id": 10,
+          "startTime": 7604877,
+          "endTime": 9480877,
+          "keystoneLevel": 17,
+          "keystoneAffixes": [9, 7, 4, 121],
+          "keystoneBonus": 1,
+          "keystoneTime": 1912531,
+          "averageItemLevel": 220.39999389648438,
+          "friendlyPlayers": [4, 150, 148, 149, 6],
+          "gameZone": { "id": 2286 },
+          "maps": [{ "id": 1666 }, { "id": 1667 }, { "id": 1668 }]
+        }
+      ]
+    }
+  }
+}

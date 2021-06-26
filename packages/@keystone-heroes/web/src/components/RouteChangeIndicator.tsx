@@ -53,7 +53,7 @@ export function RouteChangeIndicator(): JSX.Element {
         }`}
       >
         <div className="fixed top-0 left-0 w-full duration-200 ease-linear bg-yellow-600 bar">
-          <div className="absolute right-0 block h-full transform scale-0 -translate-y-1 opacity-100 spinner rotate-3 trnslate-x-0 ring ring-yellow-600 ring-offset-yellow-600" />
+          <div className="absolute right-0 block h-full transform scale-0 translate-x-0 -translate-y-1 opacity-100 spinner rotate-3 ring ring-yellow-600 ring-offset-yellow-600" />
         </div>
       </div>
     </>

@@ -32,8 +32,11 @@ export async function testLambda<
       headers: {},
     });
 
-    const resolveWithRes = (json: Response) => {
-      resolve({ json, res });
+    const resolveWithRes = (json?: Response) => {
+      resolve({
+        json: typeof json === "string" ? JSON.parse(json) : json,
+        res,
+      });
     };
 
     const res: NextApiResponse = mockDeep<NextApiResponse>({

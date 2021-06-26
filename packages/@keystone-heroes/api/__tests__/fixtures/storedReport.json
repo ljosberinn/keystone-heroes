@@ -1,0 +1,266 @@
+{
+  "startTime": "2021-04-22T18:43:13.317Z",
+  "endTime": "2021-04-22T21:21:27.765Z",
+  "title": "adsf",
+  "region": { "slug": "EU" },
+  "Fight": [
+    {
+      "fightID": 4,
+      "averageItemLevel": 22080,
+      "chests": 2,
+      "keystoneTime": 1318941,
+      "keystoneLevel": 15,
+      "dps": 22567,
+      "hps": 4225,
+      "dtps": 4381,
+      "totalDeaths": 2,
+      "dungeon": {
+        "name": "Halls of Atonement",
+        "time": 1860000,
+        "id": 2287
+      },
+      "PlayerFight": [
+        {
+          "player": {
+            "spec": { "name": "Vengeance", "role": "tank" },
+            "covenant": { "id": 1 },
+            "character": { "class": { "name": "DemonHunter" } },
+            "legendary": {
+              "id": 337547,
+              "effectIcon": "inv__felbarrage.jpg",
+              "effectName": "Fiery Soul"
+            },
+            "soulbind": { "id": 7 }
+          }
+        },
+        {
+          "player": {
+            "spec": { "name": "BeastMastery", "role": "dps" },
+            "covenant": { "id": 3 },
+            "character": { "class": { "name": "Hunter" } },
+            "legendary": {
+              "id": 336844,
+              "effectIcon": "inv_misc_monsterfang_02.jpg",
+              "effectName": "Rylakstalker's Piercing Fangs"
+            },
+            "soulbind": { "id": 6 }
+          }
+        },
+        {
+          "player": {
+            "spec": { "name": "Fire", "role": "dps" },
+            "covenant": { "id": 3 },
+            "character": { "class": { "name": "Mage" } },
+            "legendary": {
+              "id": 327365,
+              "effectIcon": "spell_fire_masterofelements.jpg",
+              "effectName": "Disciplinary Command"
+            },
+            "soulbind": { "id": 6 }
+          }
+        },
+        {
+          "player": {
+            "spec": { "name": "Windwalker", "role": "dps" },
+            "covenant": { "id": 1 },
+            "character": { "class": { "name": "Monk" } },
+            "legendary": {
+              "id": 337298,
+              "effectIcon": "inv_inscription_80_warscroll_battleshout.jpg",
+              "effectName": "Invoker's Delight"
+            },
+            "soulbind": { "id": 7 }
+          }
+        },
+        {
+          "player": {
+            "spec": { "name": "Holy", "role": "healer" },
+            "covenant": { "id": 2 },
+            "character": { "class": { "name": "Paladin" } },
+            "legendary": {
+              "id": 337825,
+              "effectIcon": "spell_holy_greaterblessingoflight.jpg",
+              "effectName": "Shock Barrier"
+            },
+            "soulbind": { "id": 8 }
+          }
+        }
+      ]
+    },
+    {
+      "fightID": 5,
+      "averageItemLevel": 22120,
+      "chests": 1,
+      "keystoneTime": 2078413,
+      "keystoneLevel": 16,
+      "dps": 15003,
+      "hps": 4551,
+      "dtps": 5033,
+      "totalDeaths": 11,
+      "dungeon": { "name": "Theatre of Pain", "time": 2220000, "id": 2293 },
+      "PlayerFight": [
+        {
+          "player": {
+            "spec": { "name": "Shadow", "role": "dps" },
+            "covenant": { "id": 2 },
+            "character": { "class": { "name": "Priest" } },
+            "legendary": {
+              "id": 342415,
+              "effectIcon": "spell_fire_twilightcano.jpg",
+              "effectName": "Talbadar's Stratagem"
+            },
+            "soulbind": { "id": 8 }
+          }
+        },
+        {
+          "player": {
+            "spec": { "name": "Vengeance", "role": "tank" },
+            "covenant": { "id": 1 },
+            "character": { "class": { "name": "DemonHunter" } },
+            "legendary": {
+              "id": 337547,
+              "effectIcon": "inv__felbarrage.jpg",
+              "effectName": "Fiery Soul"
+            },
+            "soulbind": { "id": 7 }
+          }
+        },
+        {
+          "player": {
+            "spec": { "name": "Marksmanship", "role": "dps" },
+            "covenant": { "id": 3 },
+            "character": { "class": { "name": "Hunter" } },
+            "legendary": {
+              "id": 336870,
+              "effectIcon": "inv_spear_07.jpg",
+              "effectName": "Serpentstalker's Trickery"
+            },
+            "soulbind": { "id": 1 }
+          }
+        },
+        {
+          "player": {
+            "spec": { "name": "Holy", "role": "healer" },
+            "covenant": { "id": 2 },
+            "character": { "class": { "name": "Paladin" } },
+            "legendary": {
+              "id": 337825,
+              "effectIcon": "spell_holy_greaterblessingoflight.jpg",
+              "effectName": "Shock Barrier"
+            },
+            "soulbind": { "id": 8 }
+          }
+        },
+        {
+          "player": {
+            "spec": { "name": "Outlaw", "role": "dps" },
+            "covenant": { "id": 4 },
+            "character": { "class": { "name": "Rogue" } },
+            "legendary": {
+              "id": 340087,
+              "effectIcon": "ability_rogue_slicedice.jpg",
+              "effectName": "Celerity"
+            },
+            "soulbind": { "id": 10 }
+          }
+        }
+      ]
+    },
+    {
+      "fightID": 10,
+      "averageItemLevel": 22040,
+      "chests": 1,
+      "keystoneTime": 1912531,
+      "keystoneLevel": 17,
+      "dps": 18363,
+      "hps": 5227,
+      "dtps": 5384,
+      "totalDeaths": 9,
+      "dungeon": { "name": "The Necrotic Wake", "time": 2160000, "id": 2286 },
+      "PlayerFight": [
+        {
+          "player": {
+            "spec": { "name": "Vengeance", "role": "tank" },
+            "covenant": { "id": 1 },
+            "character": { "class": { "name": "DemonHunter" } },
+            "legendary": {
+              "id": 337547,
+              "effectIcon": "inv__felbarrage.jpg",
+              "effectName": "Fiery Soul"
+            },
+            "soulbind": { "id": 7 }
+          }
+        },
+        {
+          "player": {
+            "spec": { "name": "Retribution", "role": "dps" },
+            "covenant": { "id": 1 },
+            "character": { "class": { "name": "Paladin" } },
+            "legendary": {
+              "id": 337257,
+              "effectIcon": "ability_paladin_divinestorm.jpg",
+              "effectName": "Tempest of the Lightbringer"
+            },
+            "soulbind": { "id": 7 }
+          }
+        },
+        {
+          "player": {
+            "spec": { "name": "Arcane", "role": "dps" },
+            "covenant": { "id": 3 },
+            "character": { "class": { "name": "Mage" } },
+            "legendary": {
+              "id": 332892,
+              "effectIcon": "ability_mage_arcanebarrage.jpg",
+              "effectName": "Arcane Bombardment"
+            },
+            "soulbind": { "id": 6 }
+          }
+        },
+        {
+          "player": {
+            "spec": { "name": "Balance", "role": "dps" },
+            "covenant": { "id": 3 },
+            "character": { "class": { "name": "Druid" } },
+            "legendary": {
+              "id": 339942,
+              "effectIcon": "ability_druid_balanceofpower.jpg",
+              "effectName": "Balance of All Things"
+            },
+            "soulbind": { "id": 1 }
+          }
+        },
+        {
+          "player": {
+            "spec": { "name": "Holy", "role": "healer" },
+            "covenant": { "id": 2 },
+            "character": { "class": { "name": "Paladin" } },
+            "legendary": {
+              "id": 337825,
+              "effectIcon": "spell_holy_greaterblessingoflight.jpg",
+              "effectName": "Shock Barrier"
+            },
+            "soulbind": { "id": 8 }
+          }
+        }
+      ]
+    }
+  ],
+  "week": {
+    "season": {
+      "affix": { "name": "Prideful", "icon": "spell_animarevendreth_buff.jpg" }
+    },
+    "affix1": {
+      "name": "Tyrannical",
+      "icon": "achievement_boss_archaedas.jpg"
+    },
+    "affix2": {
+      "name": "Bursting",
+      "icon": "ability_ironmaidens_whirlofblood.jpg"
+    },
+    "affix3": {
+      "name": "Explosive",
+      "icon": "spell_fire_felflamering_red.jpg"
+    }
+  }
+}
