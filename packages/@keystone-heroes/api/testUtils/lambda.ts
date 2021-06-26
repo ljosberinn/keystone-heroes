@@ -7,12 +7,9 @@ import type {
   RequestHandler,
 } from "../src/utils/types";
 
-type LambdaTestParameters<
-  Request extends Partial<NextApiRequestWithoutIncomingMessage>,
-  Response
-> = {
-  handler: RequestHandler<Request, Response>;
+type LambdaTestParameters = {
   query?: Record<string, string>;
+  method?: "get" | "post" | "patch" | "delete";
 };
 
 type LambdaResponse<Response> = {
@@ -23,14 +20,14 @@ type LambdaResponse<Response> = {
 export async function testLambda<
   Request extends Partial<NextApiRequestWithoutIncomingMessage>,
   Response
->({
-  handler,
-  query = {},
-}: LambdaTestParameters<Request, Response>): Promise<LambdaResponse<Response>> {
+>(
+  handler: RequestHandler<Request, Response>,
+  { query = {}, method = "get" }: LambdaTestParameters
+): Promise<LambdaResponse<Response>> {
   return new Promise((resolve, reject) => {
     const req = mockDeep<NextApiRequest>({
       url: "/",
-      method: "get",
+      method,
       body: {},
       headers: {},
     });

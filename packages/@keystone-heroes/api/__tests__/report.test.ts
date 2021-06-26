@@ -24,36 +24,108 @@ describe("/api/report", () => {
   });
 
   test("is protected with isValidReportID-middleware", async () => {
-    const { res } = await testLambda({
-      handler: reportHandler,
-      query: {
-        reportID: "123",
-      },
+    const { res } = await testLambda(reportHandler, {
+      query: { reportID: "123" },
     });
 
     expect(res.statusCode).toBe(BAD_REQUEST);
   });
 
-  test("warcraftlogs failure - empty response", async () => {
-    server.use(
-      graphql.query<InitialReportDataQuery, InitialReportDataQueryVariables>(
-        "InitialReportData",
-        (_req, res, ctx) => {
-          return res(ctx.data({}));
-        }
-      )
-    );
+  describe("warcraftlogs failure", () => {
+    test("entirely empty response", async () => {
+      server.use(
+        graphql.query<InitialReportDataQuery, InitialReportDataQueryVariables>(
+          "InitialReportData",
+          (_req, res, ctx) => {
+            return res(ctx.data({}));
+          }
+        )
+      );
 
-    prisma.report.findFirst.mockResolvedValue(null);
+      prisma.report.findFirst.mockResolvedValue(null);
 
-    const { res, json } = await testLambda({
-      handler: reportHandler,
-      query: {
-        reportID: validReportID,
-      },
+      const { res, json } = await testLambda(reportHandler, {
+        query: { reportID: validReportID },
+      });
+
+      expect(res.statusCode).toBe(SERVICE_UNAVAILABLE);
+      expect(json).toMatchSnapshot();
     });
 
-    expect(res.statusCode).toBe(SERVICE_UNAVAILABLE);
-    expect(json).toMatchSnapshot();
+    test("empty fights", async () => {
+      server.use(
+        graphql.query<InitialReportDataQuery, InitialReportDataQueryVariables>(
+          "InitialReportData",
+          (_req, res, ctx) => {
+            return res(
+              ctx.data({
+                reportData: {
+                  report: {
+                    fights: [],
+                    startTime: 0,
+                    endTime: 10,
+                    title: "dummy",
+                  },
+                },
+              })
+            );
+          }
+        )
+      );
+
+      prisma.report.findFirst.mockResolvedValue(null);
+
+      const { res, json } = await testLambda(reportHandler, {
+        query: { reportID: validReportID },
+      });
+
+      expect(res.statusCode).toBe(SERVICE_UNAVAILABLE);
+      expect(json).toMatchSnapshot();
+    });
+
+    test("report endTime identical to startTime", async () => {
+      server.use(
+        graphql.query<InitialReportDataQuery, InitialReportDataQueryVariables>(
+          "InitialReportData",
+          (_req, res, ctx) => {
+            return res(
+              ctx.data({
+                reportData: {
+                  report: {
+                    fights: [
+                      {
+                        id: 1,
+                        startTime: 1,
+                        endTime: 10,
+                      },
+                    ],
+                    startTime: 0,
+                    endTime: 0,
+                    title: "dummy",
+                  },
+                },
+              })
+            );
+          }
+        )
+      );
+
+      prisma.report.findFirst.mockResolvedValue(null);
+
+      const { res, json } = await testLambda(reportHandler, {
+        query: { reportID: validReportID },
+      });
+
+      expect(res.statusCode).toBe(SERVICE_UNAVAILABLE);
+      expect(json).toMatchSnapshot();
+    });
   });
+
+  describe("existing report", () => {
+    test.todo("finished report");
+
+    test.todo("ongoing report");
+  });
+
+  test.todo("new report");
 });

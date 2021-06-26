@@ -57,6 +57,7 @@ const config = {
     ];
   },
 };
+
 module.exports = withTM(config);
 
 // https://securityheaders.com

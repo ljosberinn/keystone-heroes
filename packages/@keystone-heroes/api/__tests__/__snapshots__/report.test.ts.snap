@@ -1,3 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`/api/report warcraftlogs failure - empty response 1`] = `"{\\"error\\":\\"This report is either broken or the request to Warcraftlogs failed. Please try again at a later time.\\"}"`;
+exports[`/api/report warcraftlogs failure empty fights 1`] = `"{\\"error\\":\\"This report is either broken or the request to Warcraftlogs failed. Please try again at a later time.\\"}"`;
+
+exports[`/api/report warcraftlogs failure entirely empty response 1`] = `"{\\"error\\":\\"This report is either broken or the request to Warcraftlogs failed. Please try again at a later time.\\"}"`;
+
+exports[`/api/report warcraftlogs failure report endTime identical to startTime 1`] = `"{\\"error\\":\\"This report is either broken or the request to Warcraftlogs failed. Please try again at a later time.\\"}"`;

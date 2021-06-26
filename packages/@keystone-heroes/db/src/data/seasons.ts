@@ -147,7 +147,7 @@ export const seasons: Season[] = [
     slug: "sl-1",
     name: "SL Season 1",
     expansionID: ExpansionEnum.SHADOWLANDS,
-    startTime: new Date(1_607_500_800 * 1000),
+    startTime: new Date(1_606_172_400 * 1000),
     endTime: null,
     affixID: getAffixByName("Prideful"),
     id: SeasonID.SL_SEASON_1,
