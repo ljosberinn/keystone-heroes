@@ -3,40 +3,60 @@ import { isValidReportId } from "@keystone-heroes/wcl/utils";
 import type { GetStaticPaths, GetStaticProps } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
-import { LinkBox, LinkOverlay } from "src/components/LinkBox";
+
+import { LinkBox, LinkOverlay } from "../../../components/LinkBox";
+import { useAbortableFetch } from "../../../hooks/useAbortableFetch";
 
 type ReportProps = {
   cache?: {
     report: ReportResponse | null;
+    reportID: string | null;
+  };
+};
+
+const useReportURL = (cache: ReportProps["cache"]) => {
+  const { query, isFallback } = useRouter();
+
+  if (isFallback) {
+    return {
+      url: null,
+      reportID: null,
+    };
+  }
+
+  if (cache?.report) {
+    return {
+      url: null,
+      reportID: cache.reportID,
+    };
+  }
+
+  const { reportID } = query;
+
+  if (!isValidReportId(reportID)) {
+    return {
+      url: null,
+      reportID: null,
+    };
+  }
+
+  const params = new URLSearchParams({
+    reportID,
+  }).toString();
+
+  return {
+    url: `/api/report?${params}`,
+    reportID,
   };
 };
 
 export default function Report({ cache }: ReportProps): JSX.Element | null {
-  const { query, isFallback } = useRouter();
-  const [report, setReport] = useState<ReportResponse | null>(
-    cache?.report ?? null
-  );
+  const { url, reportID } = useReportURL(cache);
 
-  const validReportID = cache
-    ? true
-    : !!query.reportID && isValidReportId(query.reportID);
-
-  useEffect(() => {
-    if (
-      isFallback ||
-      !query.reportID ||
-      !validReportID ||
-      Array.isArray(query.reportID)
-    ) {
-      return;
-    }
-
-    fetch(`/api/report?reportID=${query.reportID}`)
-      .then((response) => response.json())
-      .then(setReport)
-      .catch(console.error);
-  }, [isFallback, query, validReportID]);
+  const [report] = useAbortableFetch<ReportResponse>({
+    initialState: cache?.report ?? null,
+    url,
+  });
 
   if (report && "error" in report) {
     return <h1>{report.error}</h1>;
@@ -61,19 +81,10 @@ export default function Report({ cache }: ReportProps): JSX.Element | null {
         ))}
       </div>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 2xl:grid-cols-3 2xl:gap-8">
-        {fights.map((fight, index) => {
-          return (
-            <FightCard
-              reportID={
-                Array.isArray(query.reportID) || !query.reportID
-                  ? ""
-                  : query.reportID
-              }
-              fight={fight}
-              key={index}
-            />
-          );
-        })}
+        {reportID &&
+          fights.map((fight, index) => {
+            return <FightCard reportID={reportID} fight={fight} key={index} />;
+          })}
       </div>
     </>
   );
@@ -153,21 +164,24 @@ function FightCard({ fight, reportID }: FightCardProps) {
   );
 }
 
-export const getStaticPaths: GetStaticPaths<{
+type StaticPathParams = {
   reportID: string;
-}> = async () => {
+};
+
+export const getStaticPaths: GetStaticPaths<StaticPathParams> = () => {
   return {
     fallback: true,
     paths: [],
   };
 };
 
-export const getStaticProps: GetStaticProps<ReportProps, { reportID: string }> =
-  async () => {
+export const getStaticProps: GetStaticProps<ReportProps, StaticPathParams> =
+  () => {
     return {
       props: {
         cache: {
           report: null,
+          reportID: null,
         },
       },
     };

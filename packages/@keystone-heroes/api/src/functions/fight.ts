@@ -1,6 +1,31 @@
-import { dungeons } from "@keystone-heroes/db/data/dungeons";
+import type { DungeonIDs } from "@keystone-heroes/db/data/dungeons";
+import { dungeonMap, dungeons } from "@keystone-heroes/db/data/dungeons";
 import { prisma } from "@keystone-heroes/db/prisma";
-import type { Prisma } from "@keystone-heroes/db/types";
+import type {
+  Dungeon,
+  Prisma,
+  Zone,
+  Fight,
+  Player,
+  Spec,
+  Legendary,
+  PlayerConduit,
+  Conduit,
+  CovenantTrait,
+  Talent,
+  Covenant,
+  Soulbind,
+  Character,
+  Class,
+  Region,
+  Server,
+  Pull,
+  Event,
+  NPC,
+  Ability,
+  Report,
+  Affix,
+} from "@keystone-heroes/db/types";
 import { getFightPulls } from "@keystone-heroes/wcl/queries";
 import type { EventParams } from "@keystone-heroes/wcl/queries/events";
 import { getEvents } from "@keystone-heroes/wcl/queries/events";
@@ -28,11 +53,22 @@ type Request = {
   };
 };
 
-export type Response =
+export type FightResponse =
   | {
       error: typeof fightHandlerError[keyof typeof fightHandlerError];
     }
-  | (ReturnType<typeof calculateCombatTime> & {});
+  | {
+      keystoneLevel: number;
+      keystoneTime: number;
+      chests: number;
+      meta: ReturnType<typeof calculateCombatTime>;
+      dungeon: {
+        id: DungeonIDs;
+        name: string;
+        time: number;
+        zones: Pick<Zone, "id" | "name">[];
+      };
+    };
 
 export const fightHandlerError = {
   UNKNOWN_REPORT: "Unknown report.",
@@ -42,11 +78,101 @@ export const fightHandlerError = {
     "This fight appears to be broken and could not successfully be linked to a specific dungeon.",
 } as const;
 
-const handler: RequestHandler<Request, Response> = async (req, res) => {
-  const { reportID } = req.query;
-  const fightID = Number.parseInt(req.query.fightID);
+type RawFight =
+  | (Pick<
+      Fight,
+      | "id"
+      | "fightID"
+      | "startTime"
+      | "endTime"
+      | "chests"
+      | "keystoneLevel"
+      | "keystoneTime"
+      | "dps"
+      | "dtps"
+      | "hps"
+      | "totalDeaths"
+      | "averageItemLevel"
+    > & {
+      dungeon:
+        | (Pick<Dungeon, "name" | "id" | "time"> & {
+            Zone: Pick<Zone, "id" | "name">[];
+          })
+        | null;
+      PlayerFight: {
+        player: Pick<
+          Player,
+          "id" | "actorID" | "deaths" | "dps" | "hps" | "itemLevel"
+        > & {
+          spec: Pick<Spec, "name" | "role">;
+          legendary: Pick<
+            Legendary,
+            "effectIcon" | "effectName" | "id" | "itemID"
+          > | null;
+          PlayerConduit: (Pick<PlayerConduit, "itemLevel"> & {
+            conduit: Pick<Conduit, "icon" | "name">;
+          })[];
+          PlayerCovenantTrait: {
+            covenantTrait: Pick<CovenantTrait, "icon" | "name">;
+          }[];
+          PlayerTalent: {
+            talent: Pick<Talent, "icon" | "name">;
+          }[];
+          covenant: Pick<Covenant, "name" | "icon"> | null;
+          soulbind: Pick<Soulbind, "name" | "icon"> | null;
+          character: Pick<Character, "name"> & {
+            class: Pick<Class, "name">;
+            server: Pick<Server, "id" | "name"> & {
+              region: Pick<Region, "id" | "slug">;
+            };
+          };
+        };
+      }[];
+      Pull: (Pick<
+        Pull,
+        | "startTime"
+        | "endTime"
+        | "x"
+        | "y"
+        | "minX"
+        | "maxY"
+        | "minY"
+        | "maxX"
+        | "isWipe"
+      > & {
+        Event: (Pick<
+          Event,
+          | "eventType"
+          | "timestamp"
+          | "sourcePlayerID"
+          | "targetPlayerID"
+          | "sourceNPCInstance"
+          | "targetNPCInstance"
+          | "damage"
+          | "healingDone"
+          | "stacks"
+        > & {
+          sourceNPC: NPC | null;
+          targetNPC: NPC | null;
+          ability: Ability | null;
+          interruptedAbility: Ability | null;
+        })[];
+      })[];
+      Report: Pick<Report, "id"> & {
+        week: {
+          season: {
+            affix: Pick<Affix, "name" | "icon">;
+          };
+          affix1: Pick<Affix, "name" | "icon">;
+          affix2: Pick<Affix, "name" | "icon">;
+          affix3: Pick<Affix, "name" | "icon">;
+        };
+      };
+    })
+  | null;
 
-  const maybeStoredFight = await prisma.fight.findFirst({
+const createFightFindFirst = (reportID: string, fightID: number) => {
+  return {
     where: {
       Report: {
         report: reportID,
@@ -58,6 +184,14 @@ const handler: RequestHandler<Request, Response> = async (req, res) => {
       startTime: true,
       endTime: true,
       fightID: true,
+      dps: true,
+      dtps: true,
+      hps: true,
+      totalDeaths: true,
+      averageItemLevel: true,
+      chests: true,
+      keystoneLevel: true,
+      keystoneTime: true,
       dungeon: {
         select: {
           name: true,
@@ -74,14 +208,16 @@ const handler: RequestHandler<Request, Response> = async (req, res) => {
           },
         },
       },
-      chests: true,
-      keystoneLevel: true,
-      keystoneTime: true,
       PlayerFight: {
         select: {
           player: {
             select: {
               id: true,
+              actorID: true,
+              deaths: true,
+              dps: true,
+              hps: true,
+              itemLevel: true,
               spec: {
                 select: {
                   name: true,
@@ -127,11 +263,6 @@ const handler: RequestHandler<Request, Response> = async (req, res) => {
                   },
                 },
               },
-              actorID: true,
-              deaths: true,
-              dps: true,
-              hps: true,
-              itemLevel: true,
               covenant: {
                 select: {
                   name: true,
@@ -170,11 +301,6 @@ const handler: RequestHandler<Request, Response> = async (req, res) => {
           },
         },
       },
-      dps: true,
-      dtps: true,
-      hps: true,
-      totalDeaths: true,
-      averageItemLevel: true,
       Pull: {
         orderBy: {
           startTime: "asc",
@@ -269,7 +395,16 @@ const handler: RequestHandler<Request, Response> = async (req, res) => {
         },
       },
     },
-  });
+  } as const;
+};
+
+const handler: RequestHandler<Request, FightResponse> = async (req, res) => {
+  const { reportID } = req.query;
+  const fightID = Number.parseInt(req.query.fightID);
+
+  const maybeStoredFight: RawFight = await prisma.fight.findFirst(
+    createFightFindFirst(reportID, fightID)
+  );
 
   if (!maybeStoredFight) {
     res.status(NOT_FOUND).json({ error: fightHandlerError.UNKNOWN_REPORT });
@@ -494,24 +629,49 @@ const handler: RequestHandler<Request, Response> = async (req, res) => {
       }),
     ]);
 
-    const { inCombatTime, outOfCombatTime } = calculateCombatTime(
-      maybeStoredFight.keystoneTime,
-      dungeonPulls
-    );
+    const dungeon = dungeonMap[dungeonID];
 
-    res.json({
-      inCombatTime,
-      outOfCombatTime,
-    });
+    const response: FightResponse = {
+      chests: maybeStoredFight.chests,
+      keystoneTime: maybeStoredFight.keystoneTime,
+      keystoneLevel: maybeStoredFight.keystoneLevel,
+      meta: calculateCombatTime(
+        maybeStoredFight.keystoneTime,
+        maybeStoredFight.Pull
+      ),
+      dungeon: {
+        id: dungeonID,
+        name: dungeon.name,
+        time: dungeon.timer[0],
+        zones: dungeon.zones.map(({ id, name }) => ({ id, name })),
+      },
+    };
+
+    res.json(response);
     return;
   }
 
-  const { inCombatTime, outOfCombatTime } = calculateCombatTime(
-    maybeStoredFight.keystoneTime,
-    maybeStoredFight.Pull
-  );
+  if (!maybeStoredFight.dungeon) {
+    throw new Error("fight somehow still has no zone");
+  }
 
-  res.json({ inCombatTime, outOfCombatTime });
+  const response: FightResponse = {
+    chests: maybeStoredFight.chests,
+    keystoneTime: maybeStoredFight.keystoneTime,
+    keystoneLevel: maybeStoredFight.keystoneLevel,
+    meta: calculateCombatTime(
+      maybeStoredFight.keystoneTime,
+      maybeStoredFight.Pull
+    ),
+    dungeon: {
+      id: maybeStoredFight.dungeon.id,
+      name: maybeStoredFight.dungeon.name,
+      time: maybeStoredFight.dungeon.time,
+      zones: maybeStoredFight.dungeon.Zone,
+    },
+  };
+
+  res.json(response);
 };
 
 const ensureCorrectDungeonID = (
@@ -525,7 +685,7 @@ const ensureCorrectDungeonID = (
     time: number;
   } | null,
   pulls: Omit<PersistedDungeonPull, "id" | "isWipe">[]
-) => {
+): DungeonIDs | null => {
   const allNPCIDs = new Set(
     pulls.flatMap((pull) => pull.enemyNPCs.map((npc) => npc.gameID))
   );

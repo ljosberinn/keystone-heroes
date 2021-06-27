@@ -1,4 +1,6 @@
 import type { GetStaticPaths, GetStaticProps } from "next";
+import Link from "next/link";
+import { createPageContext } from "src/context/PageData";
 
 type CharacterProps = {
   character: string;
@@ -6,17 +8,21 @@ type CharacterProps = {
   server: string;
 };
 
-export default function Character({
-  character,
-  region,
-  server,
-}: CharacterProps): JSX.Element {
+const [, withPageContext] =
+  createPageContext<CharacterProps>("CharacterContext");
+
+function Character({ character, region, server }: CharacterProps): JSX.Element {
   return (
     <h1>
       {region}/{server}/{character}
+      <Link href="/character/eu/blackmoore/refn">
+        <a>asdf</a>
+      </Link>
     </h1>
   );
 }
+
+export default withPageContext(Character);
 
 type StaticPaths = {
   region: string;
@@ -31,6 +37,13 @@ export const getStaticPaths: GetStaticPaths<StaticPaths> = async () => {
       {
         params: {
           character: "xepheris",
+          region: "eu",
+          server: "blackmoore",
+        },
+      },
+      {
+        params: {
+          character: "refn",
           region: "eu",
           server: "blackmoore",
         },

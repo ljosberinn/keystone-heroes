@@ -1,11 +1,11 @@
 import { useTheme } from "next-themes";
 import { useEffect } from "react";
 
-import { useIsMounted } from "../hooks/useIsMounted";
+import { useIsHydrated } from "../hooks/useIsHydrated";
 import { icons } from "../icons";
 
 export function ColorModeToggle(): JSX.Element | null {
-  const isMounted = useIsMounted();
+  const isMounted = useIsHydrated();
   const { theme, setTheme } = useTheme();
 
   const isDark = theme === "dark";
