@@ -1,5 +1,9 @@
 import type { DungeonIDs } from "@keystone-heroes/db/data/dungeons";
-import { dungeonMap, dungeons } from "@keystone-heroes/db/data/dungeons";
+import {
+  dungeonMap,
+  dungeons,
+  EXCLUDED_NPCS,
+} from "@keystone-heroes/db/data/dungeons";
 import { prisma } from "@keystone-heroes/db/prisma";
 import type {
   Dungeon,
@@ -30,6 +34,7 @@ import type {
 import { getFightPulls } from "@keystone-heroes/wcl/queries";
 import type { EventParams } from "@keystone-heroes/wcl/queries/events";
 import { getEvents } from "@keystone-heroes/wcl/queries/events";
+import type { DeathEvent } from "@keystone-heroes/wcl/queries/events/types";
 import { processEvents } from "@keystone-heroes/wcl/transform";
 import type { PersistedDungeonPull } from "@keystone-heroes/wcl/transform/utils";
 import type { ReportMap } from "@keystone-heroes/wcl/types";
@@ -41,6 +46,7 @@ import {
 } from "../middleware";
 import {
   BAD_REQUEST,
+  INTERNAL_SERVER_ERROR,
   NOT_FOUND,
   UNPROCESSABLE_ENTITY,
 } from "../utils/statusCodes";
@@ -58,10 +64,18 @@ export type FightResponse =
   | {
       error: typeof fightHandlerError[keyof typeof fightHandlerError];
     }
-  | {
-      keystoneLevel: number;
-      keystoneTime: number;
-      chests: number;
+  | (Pick<
+      Fight,
+      | "keystoneLevel"
+      | "keystoneTime"
+      | "chests"
+      | "dps"
+      | "dtps"
+      | "hps"
+      | "totalDeaths"
+      | "averageItemLevel"
+      | "percent"
+    > & {
       meta: ReturnType<typeof calculateCombatTime>;
       dungeon: {
         id: DungeonIDs;
@@ -108,7 +122,7 @@ export type FightResponse =
         percent: number;
         npcs: (Pick<PullNPC, "count"> & Pick<NPC, "id" | "name">)[];
       })[];
-    };
+    });
 
 export const fightHandlerError = {
   UNKNOWN_REPORT: "Unknown report.",
@@ -116,7 +130,19 @@ export const fightHandlerError = {
     reportHandlerError.BROKEN_LOG_OR_WCL_UNAVAILABLE,
   MISSING_DUNGEON:
     "This fight appears to be broken and could not successfully be linked to a specific dungeon.",
+  BROKEN_FIGHT: "This fight could not be matched to any dungeon.",
+  FATAL_ERROR: "Something went wrong.",
 } as const;
+
+const fightHasDungeon = (fight: RawFight): fight is RawFightWithDungeon => {
+  return fight?.dungeon !== null;
+};
+
+type RawFightWithDungeon = Omit<NonNullable<RawFight>, "dungeon"> & {
+  dungeon: Pick<Dungeon, "id" | "name" | "time"> & {
+    Zone: Pick<Zone, "id" | "name">[];
+  };
+};
 
 type RawFight =
   | (Pick<
@@ -133,6 +159,7 @@ type RawFight =
       | "hps"
       | "totalDeaths"
       | "averageItemLevel"
+      | "percent"
     > & {
       dungeon:
         | (Pick<Dungeon, "name" | "id" | "time"> & {
@@ -180,6 +207,7 @@ type RawFight =
         | "minY"
         | "maxX"
         | "isWipe"
+        | "percent"
       > & {
         PullZone: { zone: Pick<Zone, "id"> }[];
         PullNPC: (Pick<PullNPC, "count"> & { npc: Pick<NPC, "id" | "name"> })[];
@@ -235,6 +263,7 @@ const createFightFindFirst = (reportID: string, fightID: number) => {
       chests: true,
       keystoneLevel: true,
       keystoneTime: true,
+      percent: true,
       dungeon: {
         select: {
           name: true,
@@ -358,6 +387,7 @@ const createFightFindFirst = (reportID: string, fightID: number) => {
           minY: true,
           maxY: true,
           isWipe: true,
+          percent: true,
           Event: {
             select: {
               eventType: true,
@@ -441,12 +471,108 @@ const createFightFindFirst = (reportID: string, fightID: number) => {
   } as const;
 };
 
+const createResponseFromStoredFight = (
+  dataset: RawFightWithDungeon
+): FightResponse => {
+  const dungeon = dungeonMap[dataset.dungeon.id];
+
+  const pulls = dataset.Pull.map((pull) => {
+    const npcs = pull.PullNPC.map((pullNPC) => {
+      return {
+        count: pullNPC.count,
+        id: pullNPC.npc.id,
+        name: pullNPC.npc.name,
+      };
+    });
+
+    return {
+      startTime: pull.startTime,
+      endTime: pull.endTime,
+      x: pull.x,
+      y: pull.y,
+      minX: pull.minX,
+      minY: pull.minY,
+      maxX: pull.maxX,
+      maxY: pull.maxY,
+      isWipe: pull.isWipe,
+      events: pull.Event.map((event) =>
+        Object.fromEntries(
+          Object.entries(event).filter(([, value]) => value !== null)
+        )
+      ),
+      percent: pull.percent,
+      npcs,
+      zones: pull.PullZone.map((pullZone) => pullZone.zone.id),
+    };
+  });
+
+  return {
+    chests: dataset.chests,
+    keystoneTime: dataset.keystoneTime,
+    keystoneLevel: dataset.keystoneLevel,
+    meta: calculateCombatTime(dataset.keystoneTime, dataset.Pull),
+    percent: dataset.percent,
+    dps: dataset.dps,
+    hps: dataset.hps,
+    dtps: dataset.dtps,
+    averageItemLevel: dataset.averageItemLevel,
+    totalDeaths: dataset.totalDeaths,
+    dungeon: {
+      id: dataset.dungeon.id,
+      name: dungeon.name,
+      time: dungeon.timer[0],
+      zones: [...dungeon.zones]
+        .sort((a, b) => a.order - b.order)
+        .map(({ id, name }) => ({ id, name })),
+    },
+    affixes: [
+      dataset.Report.week.affix1,
+      dataset.Report.week.affix2,
+      dataset.Report.week.affix3,
+      dataset.Report.week.season.affix,
+    ],
+    player: dataset.PlayerFight.map((playerFight) => {
+      return {
+        id: playerFight.player.id,
+        actorID: playerFight.player.actorID,
+        deaths: playerFight.player.deaths,
+        dps: playerFight.player.dps,
+        hps: playerFight.player.hps,
+        itemLevel: playerFight.player.itemLevel,
+        spec: playerFight.player.spec,
+        legendary: playerFight.player.legendary,
+        conduits: playerFight.player.PlayerConduit.map((playerConduit) => {
+          return {
+            itemLevel: playerConduit.itemLevel,
+            ...playerConduit.conduit,
+          };
+        }),
+        covenantTraits: playerFight.player.PlayerCovenantTrait.map(
+          (playerCovenantTrait) => playerCovenantTrait.covenantTrait
+        ),
+        talents: playerFight.player.PlayerTalent.map(
+          (playerTalent) => playerTalent.talent
+        ),
+        name: playerFight.player.character.name,
+        class: playerFight.player.character.class.name,
+        server: playerFight.player.character.server.name,
+        region: playerFight.player.character.server.region.slug,
+        covenant: playerFight.player.covenant,
+        soulbind: playerFight.player.covenant,
+      };
+    }),
+    pulls,
+  };
+};
+
 const handler: RequestHandler<Request, FightResponse> = async (req, res) => {
   const { reportID } = req.query;
   const fightID = Number.parseInt(req.query.fightID);
 
+  const fightFindFirstSelector = createFightFindFirst(reportID, fightID);
+
   const maybeStoredFight: RawFight = await prisma.fight.findFirst(
-    createFightFindFirst(reportID, fightID)
+    fightFindFirstSelector
   );
 
   if (!maybeStoredFight) {
@@ -454,7 +580,7 @@ const handler: RequestHandler<Request, FightResponse> = async (req, res) => {
     return;
   }
 
-  if (maybeStoredFight.Pull.length === 0) {
+  if (maybeStoredFight.Pull.length === 0 || maybeStoredFight.percent === 0) {
     const maybeFightPulls = await getFightPulls({
       reportID,
       fightIDs: [maybeStoredFight.fightID],
@@ -469,7 +595,7 @@ const handler: RequestHandler<Request, FightResponse> = async (req, res) => {
 
     const dungeonPulls =
       maybeFightPulls.reportData.report.fights[0].dungeonPulls.reduce<
-        Omit<PersistedDungeonPull, "id" | "isWipe">[]
+        Omit<PersistedDungeonPull, "id" | "isWipe" | "percent">[]
       >((acc, pull) => {
         if (!pull || !pull.maps || !pull.enemyNPCs || !pull.boundingBox) {
           return acc;
@@ -522,19 +648,7 @@ const handler: RequestHandler<Request, FightResponse> = async (req, res) => {
       return;
     }
 
-    if (dungeonID !== maybeStoredFight.dungeon?.id) {
-      await prisma.fight.update({
-        data: {
-          dungeonID,
-        },
-        where: {
-          fightID_reportID: {
-            reportID: maybeStoredFight.Report.id,
-            fightID: maybeStoredFight.fightID,
-          },
-        },
-      });
-    }
+    const dungeon = dungeonMap[dungeonID];
 
     const params: EventParams = {
       reportID,
@@ -565,38 +679,66 @@ const handler: RequestHandler<Request, FightResponse> = async (req, res) => {
     );
     const hasNoWipes = playerDeathEvents.length < 5;
 
-    const pullsWithWipes = dungeonPulls.map<Omit<PersistedDungeonPull, "id">>(
-      (pull) => {
-        if (hasNoWipes) {
-          return { ...pull, isWipe: false };
-        }
+    // map of { [startTime]: { [targetID]: count } } including every pull
+    const pullNPCDeathCountMap = dungeonPulls.reduce<
+      Record<number, Record<number, number>>
+    >((acc, { startTime, endTime }) => {
+      acc[startTime] = enemyDeathEvents
+        .filter(
+          ({ timestamp }) => timestamp >= startTime && timestamp <= endTime
+        )
+        .reduce<Record<number, number>>((acc, { targetID }) => {
+          acc[targetID] = (acc[targetID] ?? 0) + 1;
 
-        const deathsDuringThisPull = playerDeathEvents.filter(
-          (event) =>
-            event.timestamp >= pull.startTime && event.timestamp <= pull.endTime
+          return acc;
+        }, {});
+
+      return acc;
+    }, {});
+
+    const pullsWithWipesAndPercent = dungeonPulls
+      // ensure this pull isn't effectively empty, e.g. only 1 Spiteful Shade
+      .filter((pull) => {
+        const npcs = pull.enemyNPCs.filter(
+          (npc) => !EXCLUDED_NPCS.has(npc.gameID)
         );
 
-        if (deathsDuringThisPull.length === 0) {
-          return { ...pull, isWipe: false };
-        }
+        return npcs.length > 0;
+      })
+      .map<Omit<PersistedDungeonPull, "id">>((pull) => {
+        const isWipe = hasNoWipes ? false : isPullWipe(playerDeathEvents, pull);
 
-        const fiveDifferentPlayersHaveDied =
-          [...new Set(deathsDuringThisPull.map((event) => event.targetID))]
-            .length === 5;
+        const npcDeathCountMap = pullNPCDeathCountMap[pull.startTime];
+
+        const totalCount = pull.enemyNPCs.reduce((acc, npc) => {
+          const deathCount = npcDeathCountMap[npc.id];
+          const npcCount = dungeon.unitCountMap[npc.gameID];
+
+          if (deathCount === undefined || npcCount === undefined) {
+            return acc;
+          }
+
+          return acc + npcCount * deathCount;
+        }, 0);
+
+        const percent = (totalCount / dungeon.count) * 100;
 
         return {
           ...pull,
-          isWipe: fiveDifferentPlayersHaveDied,
+          isWipe,
+          percent,
         };
-      }
+      });
+
+    const totalPercent = pullsWithWipesAndPercent.reduce(
+      (acc, pull) => acc + pull.percent,
+      0
     );
 
     const persistedPulls = await persistPulls(
-      pullsWithWipes,
+      pullsWithWipesAndPercent,
       maybeStoredFight.id
     );
-
-    const dungeon = dungeonMap[dungeonID];
 
     const persistableMaps =
       persistedPulls.flatMap<Prisma.PullZoneCreateManyInput>((pull) => {
@@ -610,24 +752,22 @@ const handler: RequestHandler<Request, FightResponse> = async (req, res) => {
 
     const persistableNPCs =
       persistedPulls.flatMap<Prisma.PullNPCCreateManyInput>((pull) => {
-        // TODO: adjust for undying units such as Tirnenn Villager who starts healing
-        // this should be a fake death event based on begincast of their heal
-        const thisPullsEnemyDeathEvents = enemyDeathEvents.filter(
-          (event) =>
-            event.timestamp >= pull.startTime && event.timestamp <= pull.endTime
-        );
+        const npcDeathCountMap = pullNPCDeathCountMap[pull.startTime];
 
-        return pull.enemyNPCs.map((npc) => {
-          const deathEventsOfThisNPC = thisPullsEnemyDeathEvents.filter(
-            (event) => event.targetID === npc.id
-          );
+        return pull.enemyNPCs
+          .filter((npc) => !EXCLUDED_NPCS.has(npc.gameID))
+          .map((npc) => {
+            // default to 1 for npcs that appear in the pull and thus are enemy
+            // units but didn't die, e.g. for some reason Dealer in DoS,
+            // slime minigame in DoS as well as invisible units
+            const deathCountOfThisNPC = npcDeathCountMap[npc.id] ?? 1;
 
-          return {
-            npcID: npc.gameID,
-            count: deathEventsOfThisNPC.length,
-            pullID: pull.id,
-          };
-        });
+            return {
+              npcID: npc.gameID,
+              count: deathCountOfThisNPC,
+              pullID: pull.id,
+            };
+          });
       });
 
     const actorPlayerMap = new Map(
@@ -644,14 +784,15 @@ const handler: RequestHandler<Request, FightResponse> = async (req, res) => {
     const persistablePullEvents = persistedPulls.flatMap((pull, index) => {
       const lastPull = persistedPulls[index - 1];
 
-      const thisPullsEvents = allEvents.filter((event) => {
+      const thisPullsEvents = allEvents.filter(({ timestamp }) => {
         const isDuringThisPull =
-          event.timestamp >= pull.startTime && event.timestamp <= pull.endTime;
+          timestamp >= pull.startTime && timestamp <= pull.endTime;
         // some CDs may be used outside of a pull in preparation to set it up
-        // e.g. Sigil of Silence/Chains/Imprison right before pulling
+        // e.g. Sigil of Silence/Chains/Imprison right before pulling.
+        // Because of that, any event past the last pull and before this will be
+        // attached to the next pull.
         const wasAfterLastPull = lastPull
-          ? event.timestamp > lastPull.endTime &&
-            event.timestamp < pull.startTime
+          ? timestamp > lastPull.endTime && timestamp < pull.startTime
           : false;
 
         return isDuringThisPull || wasAfterLastPull;
@@ -671,6 +812,21 @@ const handler: RequestHandler<Request, FightResponse> = async (req, res) => {
     });
 
     await prisma.$transaction([
+      prisma.fight.update({
+        data: {
+          percent: totalPercent,
+          // since we need to update `totalPercent` anyways, we might aswell
+          // always update the dungeonID too, even though it may already have
+          // been present
+          dungeonID,
+        },
+        where: {
+          fightID_reportID: {
+            reportID: maybeStoredFight.Report.id,
+            fightID: maybeStoredFight.fightID,
+          },
+        },
+      }),
       prisma.pullZone.createMany({
         skipDuplicates: true,
         data: persistableMaps,
@@ -685,168 +841,29 @@ const handler: RequestHandler<Request, FightResponse> = async (req, res) => {
       }),
     ]);
 
-    const response: FightResponse = {
-      chests: maybeStoredFight.chests,
-      keystoneTime: maybeStoredFight.keystoneTime,
-      keystoneLevel: maybeStoredFight.keystoneLevel,
-      meta: calculateCombatTime(maybeStoredFight.keystoneTime, persistedPulls),
-      dungeon: {
-        id: dungeonID,
-        name: dungeon.name,
-        time: dungeon.timer[0],
-        zones: [...dungeon.zones]
-          .sort((a, b) => a.order - b.order)
-          .map(({ id, name }) => ({ id, name })),
-      },
-      affixes: [
-        maybeStoredFight.Report.week.affix1,
-        maybeStoredFight.Report.week.affix2,
-        maybeStoredFight.Report.week.affix3,
-        maybeStoredFight.Report.week.season.affix,
-      ],
-      player: maybeStoredFight.PlayerFight.map((playerFight) => {
-        return {
-          id: playerFight.player.id,
-          actorID: playerFight.player.actorID,
-          deaths: playerFight.player.deaths,
-          dps: playerFight.player.dps,
-          hps: playerFight.player.hps,
-          itemLevel: playerFight.player.itemLevel,
-          spec: playerFight.player.spec,
-          legendary: playerFight.player.legendary,
-          conduits: playerFight.player.PlayerConduit.map((playerConduit) => {
-            return {
-              itemLevel: playerConduit.itemLevel,
-              ...playerConduit.conduit,
-            };
-          }),
-          covenantTraits: playerFight.player.PlayerCovenantTrait.map(
-            (playerCovenantTrait) => playerCovenantTrait.covenantTrait
-          ),
-          talents: playerFight.player.PlayerTalent.map(
-            (playerTalent) => playerTalent.talent
-          ),
-          name: playerFight.player.character.name,
-          class: playerFight.player.character.class.name,
-          server: playerFight.player.character.server.name,
-          region: playerFight.player.character.server.region.slug,
-          covenant: playerFight.player.covenant,
-          soulbind: playerFight.player.covenant,
-        };
-      }),
-      pulls: [],
-    };
+    const rawFight: RawFight = await prisma.fight.findFirst(
+      fightFindFirstSelector
+    );
 
-    res.json(response);
+    if (!fightHasDungeon(rawFight)) {
+      res.status(INTERNAL_SERVER_ERROR).json({
+        error: fightHandlerError.FATAL_ERROR,
+      });
+      return;
+    }
+
+    res.json(createResponseFromStoredFight(rawFight));
     return;
   }
 
-  if (!maybeStoredFight.dungeon) {
-    throw new Error("fight somehow still has no zone");
+  if (!fightHasDungeon(maybeStoredFight)) {
+    res.status(UNPROCESSABLE_ENTITY).json({
+      error: fightHandlerError.BROKEN_FIGHT,
+    });
+    return;
   }
 
-  const dungeon = dungeonMap[maybeStoredFight.dungeon.id];
-
-  const pulls = maybeStoredFight.Pull.map((pull) => {
-    const npcs = pull.PullNPC.map((pullNPC) => {
-      return {
-        count: pullNPC.count,
-        id: pullNPC.npc.id,
-        name: pullNPC.npc.name,
-      };
-    });
-
-    const totalCount = npcs.reduce((acc, npc) => {
-      // TODO: can be removed with season 2; 173729 is pride
-      if (dungeon.ignorableNPCIDs.has(npc.id) || npc.id === 173_729) {
-        return acc;
-      }
-
-      const npcCount = dungeon.unitCountMap[npc.id];
-
-      // some units give 0 count
-      if (npcCount !== undefined) {
-        return acc + npcCount * npc.count;
-      }
-
-      return acc;
-    }, 0);
-
-    const percent = (totalCount / dungeon.count) * 100;
-
-    return {
-      startTime: pull.startTime,
-      endTime: pull.endTime,
-      x: pull.x,
-      y: pull.y,
-      minX: pull.minX,
-      minY: pull.minY,
-      maxX: pull.maxX,
-      maxY: pull.maxY,
-      isWipe: pull.isWipe,
-      events: [],
-      percent,
-      npcs,
-      zones: pull.PullZone.map((pullZone) => pullZone.zone.id),
-    };
-  });
-
-  const response: FightResponse = {
-    chests: maybeStoredFight.chests,
-    keystoneTime: maybeStoredFight.keystoneTime,
-    keystoneLevel: maybeStoredFight.keystoneLevel,
-    meta: calculateCombatTime(
-      maybeStoredFight.keystoneTime,
-      maybeStoredFight.Pull
-    ),
-    affixes: [
-      maybeStoredFight.Report.week.affix1,
-      maybeStoredFight.Report.week.affix2,
-      maybeStoredFight.Report.week.affix3,
-      maybeStoredFight.Report.week.season.affix,
-    ],
-    dungeon: {
-      id: maybeStoredFight.dungeon.id,
-      name: maybeStoredFight.dungeon.name,
-      time: maybeStoredFight.dungeon.time,
-      zones: maybeStoredFight.dungeon.Zone,
-    },
-    // eslint-disable-next-line sonarjs/no-identical-functions
-    player: maybeStoredFight.PlayerFight.map((playerFight) => {
-      return {
-        id: playerFight.player.id,
-        actorID: playerFight.player.actorID,
-        deaths: playerFight.player.deaths,
-        dps: playerFight.player.dps,
-        hps: playerFight.player.hps,
-        itemLevel: playerFight.player.itemLevel,
-        spec: playerFight.player.spec,
-        legendary: playerFight.player.legendary,
-        // eslint-disable-next-line sonarjs/no-identical-functions
-        conduits: playerFight.player.PlayerConduit.map((playerConduit) => {
-          return {
-            itemLevel: playerConduit.itemLevel,
-            ...playerConduit.conduit,
-          };
-        }),
-        covenantTraits: playerFight.player.PlayerCovenantTrait.map(
-          (playerCovenantTrait) => playerCovenantTrait.covenantTrait
-        ),
-        talents: playerFight.player.PlayerTalent.map(
-          (playerTalent) => playerTalent.talent
-        ),
-        name: playerFight.player.character.name,
-        class: playerFight.player.character.class.name,
-        server: playerFight.player.character.server.name,
-        region: playerFight.player.character.server.region.slug,
-        covenant: playerFight.player.covenant,
-        soulbind: playerFight.player.covenant,
-      };
-    }),
-    pulls,
-  };
-
-  res.json(response);
+  res.json(createResponseFromStoredFight(maybeStoredFight));
 };
 
 const ensureCorrectDungeonID = (
@@ -859,7 +876,7 @@ const ensureCorrectDungeonID = (
     name: string;
     time: number;
   } | null,
-  pulls: Omit<PersistedDungeonPull, "id" | "isWipe">[]
+  pulls: Omit<PersistedDungeonPull, "id" | "isWipe" | "percent">[]
 ): DungeonIDs | null => {
   const allNPCIDs = new Set(
     pulls.flatMap((pull) => pull.enemyNPCs.map((npc) => npc.gameID))
@@ -901,6 +918,7 @@ const persistPulls = async (
       maxY: pull.boundingBox.maxY,
       fightID,
       isWipe: pull.isWipe,
+      percent: pull.percent,
     };
   });
 
@@ -954,6 +972,21 @@ const calculateCombatTime = <
     inCombatTime: keystoneTime - outOfCombatTime,
     outOfCombatTime,
   };
+};
+
+const isPullWipe = <T extends { startTime: number; endTime: number }>(
+  playerDeathEvents: DeathEvent[],
+  { startTime, endTime }: T
+) => {
+  return (
+    new Set(
+      playerDeathEvents
+        .filter(
+          ({ timestamp }) => timestamp >= startTime && timestamp <= endTime
+        )
+        .map((event) => event.targetID)
+    ).size === 5
+  );
 };
 
 export const fightHandler = nc()
