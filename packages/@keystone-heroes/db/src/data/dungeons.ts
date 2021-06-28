@@ -87,12 +87,6 @@ type DungeonMeta = Omit<Dungeon, "id" | "time"> & {
    */
   zones: Omit<Zone, "dungeonID">[];
   /**
-   * a list of IDs the site does not need to track due to various reasons, e.g.
-   * - invisible dummy unit
-   * - boss add
-   */
-  ignorableNPCIDs: Set<number>;
-  /**
    * a map mapping unit id to given count
    */
   unitCountMap: Record<number, number>;
@@ -101,6 +95,25 @@ type DungeonMeta = Omit<Dungeon, "id" | "time"> & {
    */
   count: number;
 };
+
+/**
+ * a list of IDs the site does not need to track due to various reasons, e.g.
+ * - invisible dummy unit
+ * - boss add
+ */
+export const EXCLUDED_NPCS = new Set([
+  174_773, // Spiteful Shade
+  // MOTS
+  168_988, // Overgrowth, stun cast from Tirnenn Villager
+  165_251, // Illusionary Vuplinvia Mistcaller
+  165_108, // Ullusionary Clone via Mistcaller
+  165_560, // Gormling Larva via Tred'ova
+  // DOS
+  171_685, // Primeval Grasp; some hidden unit present _exclusively_ in the first fight
+  168_326, // Shattered Visage; totem during Mueh'zala fight
+  165_905, // Son of Hakkar
+  167_966, // Experimental Sludge, DOS Mechagon minigame
+]);
 
 export const SANGUINE_DEPTHS: DungeonMeta = {
   name: "Sanguine Depths",
@@ -117,7 +130,6 @@ export const SANGUINE_DEPTHS: DungeonMeta = {
     { id: 1675, name: "Depths of Despair", order: 1 },
     { id: 1676, name: "Amphitheater of Sorrow", order: 2 },
   ],
-  ignorableNPCIDs: new Set(),
   unitCountMap: {},
   count: 364,
 };
@@ -140,7 +152,6 @@ export const SPIRES_OF_ASCENSION: DungeonMeta = {
     { id: 1694, name: "Font of Fealty", order: 3 },
     { id: 1695, name: "Seat of the Archon", order: 4 },
   ],
-  ignorableNPCIDs: new Set(),
   unitCountMap: {},
   count: 285,
 };
@@ -161,7 +172,6 @@ export const THE_NECROTIC_WAKE: DungeonMeta = {
     { id: 1667, name: "Stitchwerks", order: 2 },
     { id: 1668, name: "Zolramus", order: 3 },
   ],
-  ignorableNPCIDs: new Set(),
   unitCountMap: {},
   count: 283,
 };
@@ -182,7 +192,6 @@ export const HALLS_OF_ATONEMENT: DungeonMeta = {
     { id: 1664, name: "The Nave of Pain", order: 2 },
     { id: 1665, name: "The Sanctuary of Souls", order: 3 },
   ],
-  ignorableNPCIDs: new Set(),
   unitCountMap: {
     165_515: 4, // Depraved Darkblade
     // eslint-disable-next-line inclusive-language/use-inclusive-words
@@ -217,7 +226,6 @@ export const PLAGUEFALL: DungeonMeta = {
     { id: 1674, name: "Plaguefall", order: 1 },
     { id: 1697, name: "The Festering Sanctum", order: 2 },
   ],
-  ignorableNPCIDs: new Set(),
   unitCountMap: {},
   count: 600,
 };
@@ -234,14 +242,14 @@ export const MISTS_OF_TIRNA_SCITHE: DungeonMeta = {
   ],
   expansionID: ExpansionEnum.SHADOWLANDS,
   zones: [{ id: 1669, name: "Mists of Tirna Scithe", order: 1 }],
-  ignorableNPCIDs: new Set(),
   unitCountMap: {
     165_111: 2, // Drust Spiteclaw
     164_929: 7, // Tirnenn Villager
     164_920: 4, // Drust Soulcleaver
     164_926: 6, // Drust Boughbreaker
     164_921: 4, // Drust Harvester
-    163_058: 4, // Mistveil Defender
+    171_772: 4, // Mistveil Defender - pack of 2 directly after 1st boss
+    163_058: 4, // Mistveil Defender - regular ID
     166_301: 4, // Mistveil Stalker
     166_304: 4, // Mistveil Stinger
     166_276: 4, // Mistveil Guardian
@@ -276,16 +284,6 @@ export const DE_OTHER_SIDE: DungeonMeta = {
     { id: 1679, name: "Zul'Gurub", order: 2 },
     { id: 1680, name: "De Other Side", order: 1 },
   ],
-  ignorableNPCIDs: new Set([
-    171_685, // Primeval Grasp; some hidden unit present _exclusively_ in the first fight
-    168_326, // Shattered Visage; totem during Mueh'zala fight
-    165_905, // Son of Hakkar,
-    Boss.HAKKAR_THE_SOULFLAYER,
-    Boss.MILLHOUSE_MANASTORM,
-    Boss.MILLIFICIENT_MANASTORM,
-    Boss.DEALER_XY_EXA,
-    Boss.MUEH_ZALA,
-  ]),
   unitCountMap: {
     167_966: 0, // Experimental Sludge
     168_949: 4, // Risen Bonesoldier,
@@ -338,7 +336,6 @@ export const THEATER_OF_PAIN: DungeonMeta = {
     { id: 1686, name: "Upper Barrow of Carnage", order: 4 },
     { id: 1687, name: "Lower Barrow of Carnage", order: 5 },
   ],
-  ignorableNPCIDs: new Set(),
   unitCountMap: {},
   count: 271,
 };
@@ -354,12 +351,9 @@ export const dungeonMap: Record<Dungeon["id"], DungeonMeta> = {
   [DungeonIDs.THEATER_OF_PAIN]: THEATER_OF_PAIN,
 };
 
-export const dungeons: (Omit<Dungeon, "time"> & {
-  timer: [number, number, number];
-  bossIDs: Boss[];
-  expansionID: ExpansionEnum;
-  zones: Omit<Zone, "dungeonID">[];
-})[] = Object.entries(dungeonMap).map(([id, dataset]) => ({
+export const dungeons: (Omit<Dungeon, "time"> & DungeonMeta)[] = Object.entries(
+  dungeonMap
+).map(([id, dataset]) => ({
   id: Number.parseInt(id),
   ...dataset,
 }));

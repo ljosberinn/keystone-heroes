@@ -19,7 +19,7 @@ export type Processor<
 
 export type PersistedDungeonPull = Pick<
   Pull,
-  "id" | "x" | "y" | "startTime" | "endTime" | "isWipe"
+  "id" | "x" | "y" | "startTime" | "endTime" | "isWipe" | "percent"
 > & {
   maps: PullZone["zoneID"][];
   boundingBox: ReportMapBoundingBox;

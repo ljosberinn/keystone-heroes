@@ -20,14 +20,16 @@ const prisma = new PrismaClient();
 
 function seedDungeons() {
   return Promise.all(
-    dungeons.map(({ timer, bossIDs, expansionID, zones, ...dungeon }) =>
+    dungeons.map(({ timer, id, name, slug }) =>
       prisma.dungeon.upsert({
         create: {
-          ...dungeon,
+          id,
+          name,
+          slug,
           time: timer[0],
         },
         where: {
-          id: dungeon.id,
+          id,
         },
         update: {},
       })

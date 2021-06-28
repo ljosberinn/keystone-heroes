@@ -1020,7 +1020,7 @@ export const reportHandler: RequestHandler<Request, ReportResponse> = async (
       return {
         startTime: fight.startTime,
         endTime: fight.endTime,
-        averageItemLevel: fight.averageItemLevel * 100,
+        averageItemLevel: fight.averageItemLevel,
         chests: fight.keystoneBonus,
         fightID: fight.id,
         keystoneLevel: fight.keystoneLevel,
@@ -1032,6 +1032,7 @@ export const reportHandler: RequestHandler<Request, ReportResponse> = async (
           (acc, player) => acc + player.deaths,
           0
         ),
+        percent: 0,
         Report: {
           connect: {
             id: createdReport.id,

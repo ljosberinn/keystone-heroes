@@ -134,9 +134,10 @@ model Fight {
   hps              Int
   dtps             Int
   totalDeaths      Int
-  averageItemLevel Int
+  averageItemLevel Float
   startTime        Int
   endTime          Int
+  percent          Float
 
   dungeonID Int?
 
@@ -350,6 +351,7 @@ model Pull {
   minY      Int
   maxY      Int
   isWipe    Boolean
+  percent   Float
 
   fight Fight @relation(fields: [fightID], references: [id])
 
