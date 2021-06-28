@@ -1,5 +1,4 @@
 import { remarkableSpellIDs } from "@keystone-heroes/db/data/spellIds";
-import { PlayableClass } from "@keystone-heroes/db/types";
 
 import type {
   AllTrackedEventTypes,
@@ -57,9 +56,10 @@ export const engineeringBattleRezExpression = `type = "cast" and ability.id = ${
  */
 export const leatherworkingDrumsExpression = `type = "cast" and ability.id = ${LEATHERWORKING_DRUMS.SHADOWLANDS}`;
 
+export const deathFilterExpression = 'type ="death"';
 // TODO: feign false doesnt work?
-export const deathFilterExpression =
-  'target.type = "player" and type = "death"'; //  and feign = false
+// export const friendliesDeathFilterExpression =
+//   'target.type = "player" and type = "death"'; //  and feign = false
 export const remarkableSpellFilterExpression = `source.type = "player" and type = "cast" and ability.id IN (${[
   ...remarkableSpellIDs,
 ].join(", ")})`;
@@ -74,20 +74,33 @@ export const filterProfessionEvents = (
   ];
 };
 
+export const filterEnemyDeathEvents = (
+  allEvents: AllTrackedEventTypes[],
+  actorIDSet: Set<number>
+): DeathEvent[] => {
+  return allEvents.filter((event): event is DeathEvent => {
+    return (
+      event.type === "death" &&
+      !actorIDSet.has(event.targetID) &&
+      event.sourceID === -1
+    );
+  });
+};
+
 export const filterPlayerDeathEvents = (
   allEvents: AllTrackedEventTypes[],
-  playerMetaInformation: { actorID: number; class: PlayableClass }[],
-  remarkableSpellEvents: CastEvent[]
+  actorIDSet: Set<number>
+  // remarkableSpellEvents: CastEvent[]
 ): DeathEvent[] => {
-  const actorIDSet = new Set(
-    playerMetaInformation.map((dataset) => dataset.actorID)
-  );
+  // const actorIDSet = new Set(
+  // playerMetaInformation.map((dataset) => dataset.actorID)
+  // );
 
-  const hunter = playerMetaInformation.find(
-    (player) => player.class === PlayableClass.Hunter
-  );
+  // const hunter = playerMetaInformation.find(
+  //   (player) => player.class === PlayableClass.Hunter
+  // );
 
-  const deathEvents = allEvents.filter((event): event is DeathEvent => {
+  return allEvents.filter((event): event is DeathEvent => {
     return (
       event.type === "death" &&
       actorIDSet.has(event.targetID) &&
@@ -95,39 +108,39 @@ export const filterPlayerDeathEvents = (
     );
   });
 
-  if (!hunter) {
-    return deathEvents;
-  }
+  // if (!hunter) {
+  //   return deathEvents;
+  // }
 
-  const hunterDeaths = deathEvents.filter(
-    (event) => event.targetID === hunter.actorID
-  );
+  // const hunterDeaths = deathEvents.filter(
+  //   (event) => event.targetID === hunter.actorID
+  // );
 
-  if (hunterDeaths.length === 0) {
-    return deathEvents;
-  }
+  // if (hunterDeaths.length === 0) {
+  //   return deathEvents;
+  // }
 
-  return deathEvents.filter((event) => {
-    const isHunterDeath = hunterDeaths.includes(event);
+  // return deathEvents.filter((event) => {
+  //   const isHunterDeath = hunterDeaths.includes(event);
 
-    if (!isHunterDeath) {
-      return true;
-    }
+  //   if (!isHunterDeath) {
+  //     return true;
+  //   }
 
-    const nextHunterCD = remarkableSpellEvents.find((e) => {
-      return e.sourceID === event.targetID && e.timestamp > event.timestamp;
-    });
+  //   const nextHunterCD = remarkableSpellEvents.find((e) => {
+  //     return e.sourceID === event.targetID && e.timestamp > event.timestamp;
+  //   });
 
-    if (!nextHunterCD) {
-      return true;
-    }
+  //   if (!nextHunterCD) {
+  //     return true;
+  //   }
 
-    // assume a hunter feigned if he used a cd within the next 2 seconds
-    // could alternatively be solved by querying
-    // hostilityType: Friendlies, dataType: Deaths
-    // once separately...
-    return nextHunterCD.timestamp - event.timestamp >= 2000;
-  });
+  //   // assume a hunter feigned if he used a cd within the next 2 seconds
+  //   // could alternatively be solved by querying
+  //   // hostilityType: Friendlies, dataType: Deaths
+  //   // once separately...
+  //   return nextHunterCD.timestamp - event.timestamp >= 2000;
+  // });
 };
 
 export const filterRemarkableSpellEvents = (

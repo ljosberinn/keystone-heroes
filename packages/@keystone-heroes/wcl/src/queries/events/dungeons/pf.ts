@@ -1,5 +1,3 @@
-import type { PlayableClass } from "@keystone-heroes/db/types";
-
 import type {
   AllTrackedEventTypes,
   AnyEvent,
@@ -91,12 +89,8 @@ const pfSlimeBuffReducer = createChunkByThresholdReducer(30 * 1000);
 
 export const getPFEvents = (
   allEvents: AllTrackedEventTypes[],
-  playerMetaInformation: { actorID: number; class: PlayableClass }[]
+  actorIDSet: Set<number>
 ): (DeathEvent | DamageEvent | ApplyBuffEvent)[] => {
-  const actorIDSet = new Set(
-    playerMetaInformation.map((player) => player.actorID)
-  );
-
   const plagueBombDamageEvents = allEvents.filter(isPfPlagueBombDamageEvent);
 
   const plagueBombDamageTakenEvents = reduceEventsByPlayer(

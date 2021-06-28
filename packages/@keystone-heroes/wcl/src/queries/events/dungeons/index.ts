@@ -1,5 +1,4 @@
 import { DungeonIDs } from "@keystone-heroes/db/data/dungeons";
-import type { PlayableClass } from "@keystone-heroes/db/types";
 
 import type {
   AllTrackedEventTypes,
@@ -31,7 +30,7 @@ const dungeonExpressionMap: Record<DungeonIDs, string[]> = {
   [DungeonIDs.PLAGUEFALL]: pfFilterExpression,
   [DungeonIDs.SANGUINE_DEPTHS]: sdFilterExpression,
   [DungeonIDs.SPIRES_OF_ASCENSION]: soaFilterExpression,
-  [DungeonIDs.THEATRE_OF_PAIN]: topFilterExpression,
+  [DungeonIDs.THEATER_OF_PAIN]: topFilterExpression,
   [DungeonIDs.THE_NECROTIC_WAKE]: nwFilterExpression,
   [DungeonIDs.MISTS_OF_TIRNA_SCITHE]: motsFilterExpression,
 };
@@ -42,7 +41,7 @@ export const getDungeonExpression = (id: DungeonIDs): string[] =>
 export const filterDungeonEvents = (
   allEvents: AllTrackedEventTypes[],
   dungeonID: DungeonIDs,
-  playerMetaInformation: { actorID: number; class: PlayableClass }[]
+  actorIDSet: Set<number>
 ):
   | ApplyDebuffEvent[]
   | CastEvent[]
@@ -55,12 +54,12 @@ export const filterDungeonEvents = (
     case DungeonIDs.HALLS_OF_ATONEMENT:
       return getHOAEvents(allEvents);
     case DungeonIDs.PLAGUEFALL:
-      return getPFEvents(allEvents, playerMetaInformation);
+      return getPFEvents(allEvents, actorIDSet);
     case DungeonIDs.SANGUINE_DEPTHS:
       return getSDEvents(allEvents);
     case DungeonIDs.SPIRES_OF_ASCENSION:
       return getSOAEvents(allEvents);
-    case DungeonIDs.THEATRE_OF_PAIN:
+    case DungeonIDs.THEATER_OF_PAIN:
       return getTOPEvents(allEvents);
     case DungeonIDs.THE_NECROTIC_WAKE:
       return getNWEvents(allEvents);

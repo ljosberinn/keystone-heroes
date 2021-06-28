@@ -1,5 +1,3 @@
-import { PlayableClass } from "@keystone-heroes/db/types";
-
 import {
   filterProfessionEvents,
   filterPlayerDeathEvents,
@@ -13,15 +11,10 @@ describe("other", () => {
 
   test("filterPlayerDeathEvents", () => {
     // PTR log https://www.warcraftlogs.com/reports/J3WKacdjpntmLT7C#fight=3&type=damage-done
-    const metaInfo: Parameters<typeof filterPlayerDeathEvents>[1] = [
-      { actorID: 1, class: PlayableClass.Rogue },
-      { actorID: 2, class: PlayableClass.Rogue },
-      { actorID: 3, class: PlayableClass.Mage },
-      { actorID: 5, class: PlayableClass.DemonHunter },
-      { actorID: 60, class: PlayableClass.Shaman },
-    ];
+    const actorPlayerSet: Parameters<typeof filterPlayerDeathEvents>[1] =
+      new Set([1, 2, 3, 5, 60]);
 
-    const result = filterPlayerDeathEvents(allEvents, metaInfo, []);
+    const result = filterPlayerDeathEvents(allEvents, actorPlayerSet);
 
     expect(result).toHaveLength(23);
     expect(result).toMatchSnapshot();

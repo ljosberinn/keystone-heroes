@@ -3,6 +3,7 @@ import type { PlayableClass, Affixes } from "@keystone-heroes/db/types";
 
 import {
   deathFilterExpression,
+  filterEnemyDeathEvents,
   filterPlayerDeathEvents,
   filterProfessionEvents,
   filterRemarkableSpellEvents,
@@ -43,6 +44,7 @@ export const getEvents = async (
 ): Promise<{
   allEvents: AllTrackedEventTypes[];
   playerDeathEvents: DeathEvent[];
+  enemyDeathEvents: DeathEvent[];
 }> => {
   const filterExpression = generateFilterExpression({
     dungeonID: params.dungeonID,
@@ -56,19 +58,24 @@ export const getEvents = async (
     filterExpression,
   });
 
+  const actorIDSet = new Set(
+    playerMetaInformation.map((dataset) => dataset.actorID)
+  );
+
   const dungeonEvents = filterDungeonEvents(
     allEvents,
     params.dungeonID,
-    playerMetaInformation
+    actorIDSet
   );
   const affixEvents = filterAffixEvents(allEvents, params.affixes);
   const professionEvents = filterProfessionEvents(allEvents);
   const remarkableSpellEvents = filterRemarkableSpellEvents(allEvents);
   const playerDeathEvents = filterPlayerDeathEvents(
     allEvents,
-    playerMetaInformation,
-    remarkableSpellEvents
+    actorIDSet
+    // remarkableSpellEvents
   );
+  const enemyDeathEvents = filterEnemyDeathEvents(allEvents, actorIDSet);
 
   return {
     allEvents: [
@@ -79,5 +86,6 @@ export const getEvents = async (
       ...playerDeathEvents,
     ].sort((a, b) => a.timestamp - b.timestamp),
     playerDeathEvents,
+    enemyDeathEvents,
   };
 };
