@@ -113,6 +113,19 @@ export const EXCLUDED_NPCS = new Set([
   168_326, // Shattered Visage; totem during Mueh'zala fight
   165_905, // Son of Hakkar
   167_966, // Experimental Sludge, DOS Mechagon minigame
+  // NW
+  164_702, // Carrion Worm via Blightbone
+  168_246, // Reanimated Crossbowman via Amarth
+  164_427, // Reanimated Warrior via Amarth
+  164_578, // Stitchflesh's Creation
+  164_815, // Zolramus Siphoner via Nalthor the Rimebinder
+  // HOA
+  164_363, // Undying Stonefiend via Echelon
+  165_913, // Ghastly Parishioner via Aleez
+  167_898, // Manifestation of Envy; spawns in last room
+  // SD
+  166_589, // Animated Weapon
+  168_882, // Fleeting Manifestation via Executor Tarvold (dies on pull)
 ]);
 
 export const SANGUINE_DEPTHS: DungeonMeta = {
@@ -130,7 +143,36 @@ export const SANGUINE_DEPTHS: DungeonMeta = {
     { id: 1675, name: "Depths of Despair", order: 1 },
     { id: 1676, name: "Amphitheater of Sorrow", order: 2 },
   ],
-  unitCountMap: {},
+  unitCountMap: {
+    // eslint-disable-next-line inclusive-language/use-inclusive-words
+    171_448: 0, // Dreadful Huntmaster
+    162_046: 0, // Famished Tick
+    166_396: 0, // Noble Skirmisher
+    166_589: 0, // Animated Weapon
+    162_038: 0, // Regal Mistdancer
+    169_753: 0, // Famished Tick
+    165_076: 0, // Gluttonous Tick
+    162_041: 0, // Grubby Dirtcruncher
+    162_047: 0, // Insatiable Brute
+    173_729: 0, // Manifestation of Pride
+    162_039: 0, // Wicked Oppressor
+    167_956: 0, // Dark Acolyte
+    162_056: 0, // Rockbound Sprite
+    162_040: 0, // Grand Overseer
+    162_057: 0, // Chamber Sentinel
+    162_049: 0, // Vestige of Doubt
+    171_799: 0, // Depths Warden
+    168_058: 0, // Infused Quill-feather
+    171_384: 0, // Research Scribe
+    172_265: 0, // Remnant of Fury
+    171_805: 0, // Research Scribe
+    162_051: 0, // Frenzied Ghoul
+    162_103: 0, // Executor Tarvold
+    165_556: 0, // Fleeting Manifestation
+    167_955: 0, // Sanguine Cadet
+    168_457: 0, // Stonewall Gargon
+    171_455: 0, // Stonewall Gargon
+  },
   count: 364,
 };
 
@@ -172,7 +214,35 @@ export const THE_NECROTIC_WAKE: DungeonMeta = {
     { id: 1667, name: "Stitchwerks", order: 2 },
     { id: 1668, name: "Zolramus", order: 3 },
   ],
-  unitCountMap: {},
+  unitCountMap: {
+    162_729: 4, // Patchwerk Soldier
+    165_138: 1, // Blightbag
+    166_302: 4, // Corpse Harvester
+    163_121: 5, // Stitched Vanguar
+    165_137: 6, // Zolramus Gatekeeper
+    165_872: 4, // Flesh Crafter
+    163_128: 4, // Zolramus Sorcerer
+    163_619: 4, // Zolramus Bonecarver
+    163_618: 8, // Zolramus Necromancer
+    163_126: 0, // Brittlebone Mage
+    163_122: 0, // Brittlebone Warrior
+    165_919: 6, // Skeletal Marauder
+    165_222: 4, // Zolramus Bonemender
+    165_824: 15, // Nar'zudah
+    165_197: 12, // Skeletal Monstrosity
+    166_079: 0, // Brittlebone Crossbowman
+    171_500: 1, // Shuffling Corpse
+    173_016: 4, // Corpse Collector
+    172_981: 5, // Kyrian Stitchwerk
+    166_264: 0, // Spare Parts
+    165_911: 4, // Loyal Creation
+    167_731: 4, // Separation Assistant
+    173_044: 4, // Stitching Assistant
+    163_621: 6, // Goregrind
+    163_622: 0, // Goregrind Bits
+    163_623: 0, // Rotspew Leftovers
+    163_620: 6, // Rotspew
+  },
   count: 283,
 };
 
@@ -193,7 +263,8 @@ export const HALLS_OF_ATONEMENT: DungeonMeta = {
     { id: 1665, name: "The Sanctuary of Souls", order: 3 },
   ],
   unitCountMap: {
-    165_515: 4, // Depraved Darkblade
+    165_515: 4, // Depraved Darkblade - male
+    167_615: 4, // Depraved Darkblade - female
     // eslint-disable-next-line inclusive-language/use-inclusive-words
     164_562: 4, // Depraved Houndmaster
     164_563: 4, // Vicious Gargon

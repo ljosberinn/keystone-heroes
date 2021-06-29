@@ -9,7 +9,11 @@ import {
   filterRemarkableSpellEvents,
   remarkableSpellFilterExpression,
 } from "../events/other";
-import type { AllTrackedEventTypes, DeathEvent } from "../events/types";
+import type {
+  AllTrackedEventTypes,
+  BeginCastEvent,
+  DeathEvent,
+} from "../events/types";
 import { filterAffixEvents, getAffixExpression } from "./affixes";
 import { getDungeonExpression, filterDungeonEvents } from "./dungeons";
 import { recursiveGetEvents } from "./utils";
@@ -44,7 +48,7 @@ export const getEvents = async (
 ): Promise<{
   allEvents: AllTrackedEventTypes[];
   playerDeathEvents: DeathEvent[];
-  enemyDeathEvents: DeathEvent[];
+  enemyDeathEvents: (DeathEvent | BeginCastEvent)[];
 }> => {
   const filterExpression = generateFilterExpression({
     dungeonID: params.dungeonID,

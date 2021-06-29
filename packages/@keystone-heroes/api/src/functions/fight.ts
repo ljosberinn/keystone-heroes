@@ -49,6 +49,7 @@ import {
   INTERNAL_SERVER_ERROR,
   NOT_FOUND,
   UNPROCESSABLE_ENTITY,
+  OK,
 } from "../utils/statusCodes";
 import type { RequestHandler } from "../utils/types";
 import { reportHandlerError } from "./report";
@@ -64,19 +65,23 @@ export type FightResponse =
   | {
       error: typeof fightHandlerError[keyof typeof fightHandlerError];
     }
-  | (Pick<
-      Fight,
-      | "keystoneLevel"
-      | "keystoneTime"
-      | "chests"
-      | "dps"
-      | "dtps"
-      | "hps"
-      | "totalDeaths"
-      | "averageItemLevel"
-      | "percent"
-    > & {
-      meta: ReturnType<typeof calculateCombatTime>;
+  | {
+      meta: Pick<
+        Fight,
+        | "dps"
+        | "dtps"
+        | "hps"
+        | "totalDeaths"
+        | "averageItemLevel"
+        | "percent"
+        | "chests"
+      > & {
+        chests: Fight["chests"];
+        time: Fight["keystoneTime"];
+        level: Fight["keystoneLevel"];
+        inCombatTime: number;
+        outOfCombatTime: number;
+      };
       dungeon: {
         id: DungeonIDs;
         name: string;
@@ -122,7 +127,7 @@ export type FightResponse =
         percent: number;
         npcs: (Pick<PullNPC, "count"> & Pick<NPC, "id" | "name">)[];
       })[];
-    });
+    };
 
 export const fightHandlerError = {
   UNKNOWN_REPORT: "Unknown report.",
@@ -502,21 +507,23 @@ const createResponseFromStoredFight = (
       ),
       percent: pull.percent,
       npcs,
-      zones: pull.PullZone.map((pullZone) => pullZone.zone.id),
+      zones: [...new Set(pull.PullZone.map((pullZone) => pullZone.zone.id))],
     };
   });
 
   return {
-    chests: dataset.chests,
-    keystoneTime: dataset.keystoneTime,
-    keystoneLevel: dataset.keystoneLevel,
-    meta: calculateCombatTime(dataset.keystoneTime, dataset.Pull),
-    percent: dataset.percent,
-    dps: dataset.dps,
-    hps: dataset.hps,
-    dtps: dataset.dtps,
-    averageItemLevel: dataset.averageItemLevel,
-    totalDeaths: dataset.totalDeaths,
+    meta: {
+      ...calculateCombatTime(dataset.keystoneTime, dataset.Pull),
+      level: dataset.keystoneLevel,
+      time: dataset.keystoneTime,
+      chests: dataset.chests,
+      dps: dataset.dps,
+      hps: dataset.hps,
+      dtps: dataset.dtps,
+      averageItemLevel: dataset.averageItemLevel,
+      totalDeaths: dataset.totalDeaths,
+      percent: dataset.percent,
+    },
     dungeon: {
       id: dataset.dungeon.id,
       name: dungeon.name,
@@ -565,6 +572,301 @@ const createResponseFromStoredFight = (
   };
 };
 
+const getResponseOrRetrieveAndCreateFight = async (
+  maybeStoredFight: NonNullable<RawFight>,
+  selector: ReturnType<typeof createFightFindFirst>
+): Promise<{ status: number; json: FightResponse }> => {
+  if (
+    maybeStoredFight.Pull.length > 0 &&
+    maybeStoredFight.percent > 0 &&
+    fightHasDungeon(maybeStoredFight)
+  ) {
+    return {
+      status: OK,
+      json: createResponseFromStoredFight(maybeStoredFight),
+    };
+  }
+
+  const maybeFightPulls = await getFightPulls({
+    reportID: selector.where.Report.report,
+    fightIDs: [maybeStoredFight.fightID],
+  });
+
+  if (!maybeFightPulls.reportData?.report?.fights?.[0]?.dungeonPulls) {
+    return {
+      status: BAD_REQUEST,
+      json: {
+        error: fightHandlerError.BROKEN_LOG_OR_WCL_UNAVAILABLE,
+      },
+    };
+  }
+
+  const dungeonPulls =
+    maybeFightPulls.reportData.report.fights[0].dungeonPulls.reduce<
+      Omit<PersistedDungeonPull, "id" | "isWipe" | "percent">[]
+    >((acc, pull) => {
+      if (!pull || !pull.maps || !pull.enemyNPCs || !pull.boundingBox) {
+        return acc;
+      }
+
+      const maps = pull.maps
+        .filter((map): map is ReportMap => map !== null)
+        .map((map) => map.id);
+
+      if (maps.length === 0) {
+        return acc;
+      }
+
+      const enemyNPCs = pull.enemyNPCs.filter(
+        (
+          enemyNPC
+        ): enemyNPC is Omit<PersistedDungeonPull, "id">["enemyNPCs"][number] =>
+          enemyNPC !== null
+      );
+
+      if (enemyNPCs.length === 0) {
+        return acc;
+      }
+
+      return [
+        ...acc,
+        {
+          x: pull.x,
+          y: pull.y,
+          startTime: pull.startTime,
+          endTime: pull.endTime,
+          maps,
+          boundingBox: pull.boundingBox,
+          enemyNPCs,
+        },
+      ];
+    }, []);
+
+  const dungeonID = ensureCorrectDungeonID(
+    maybeStoredFight.dungeon,
+    dungeonPulls
+  );
+
+  if (!dungeonID) {
+    return {
+      status: UNPROCESSABLE_ENTITY,
+      json: {
+        error: fightHandlerError.MISSING_DUNGEON,
+      },
+    };
+  }
+
+  const params: EventParams = {
+    reportID: selector.where.Report.report,
+    startTime: maybeStoredFight.startTime,
+    endTime: maybeStoredFight.endTime,
+    fightID: maybeStoredFight.fightID,
+    dungeonID,
+    affixes: [
+      maybeStoredFight.Report.week.affix1.name,
+      maybeStoredFight.Report.week.affix2.name,
+      maybeStoredFight.Report.week.affix3.name,
+      maybeStoredFight.Report.week.season.affix.name,
+    ],
+  };
+
+  const playerMetaInformation = maybeStoredFight.PlayerFight.map(
+    (playerFight) => {
+      return {
+        actorID: playerFight.player.actorID,
+        class: playerFight.player.character.class.name,
+      };
+    }
+  );
+
+  const { allEvents, playerDeathEvents, enemyDeathEvents } = await getEvents(
+    params,
+    playerMetaInformation
+  );
+  const hasNoWipes = playerDeathEvents.length < 5;
+
+  // map of { [startTime]: { [targetID]: count } } including every pull
+  const pullNPCDeathCountMap = dungeonPulls.reduce<
+    Record<number, Record<number, number>>
+  >((acc, { startTime, endTime }) => {
+    acc[startTime] = enemyDeathEvents
+      .filter(({ timestamp }) => timestamp >= startTime && timestamp <= endTime)
+      .reduce<Record<number, number>>((acc, { type, targetID, sourceID }) => {
+        // differentiate between `BeginCastEvent` and `DeathEvent`
+        const key = type === "death" ? targetID : sourceID;
+        acc[key] = (acc[key] ?? 0) + 1;
+
+        return acc;
+      }, {});
+
+    return acc;
+  }, {});
+
+  const dungeon = dungeonMap[dungeonID];
+
+  const pullsWithWipesAndPercent = dungeonPulls
+    // ensure this pull isn't effectively empty, e.g. only 1 Spiteful Shade
+    .filter((pull) => {
+      const npcs = pull.enemyNPCs.filter(
+        (npc) => !EXCLUDED_NPCS.has(npc.gameID)
+      );
+
+      return npcs.length > 0;
+    })
+    .map<Omit<PersistedDungeonPull, "id">>((pull) => {
+      const isWipe = hasNoWipes ? false : isPullWipe(playerDeathEvents, pull);
+
+      const npcDeathCountMap = pullNPCDeathCountMap[pull.startTime];
+
+      const totalCount = pull.enemyNPCs.reduce((acc, npc) => {
+        const deathCount = npcDeathCountMap[npc.id];
+        const npcCount = dungeon.unitCountMap[npc.gameID];
+
+        if (deathCount === undefined || npcCount === undefined) {
+          return acc;
+        }
+
+        return acc + npcCount * deathCount;
+      }, 0);
+
+      const percent = (totalCount / dungeon.count) * 100;
+
+      return {
+        ...pull,
+        isWipe,
+        percent,
+      };
+    });
+
+  const persistedPulls = await persistPulls(
+    pullsWithWipesAndPercent,
+    maybeStoredFight.id
+  );
+
+  const persistableMaps =
+    persistedPulls.flatMap<Prisma.PullZoneCreateManyInput>((pull) => {
+      return pull.maps.map((map) => {
+        return {
+          pullID: pull.id,
+          zoneID: map,
+        };
+      });
+    });
+
+  const persistableNPCs = persistedPulls.flatMap<Prisma.PullNPCCreateManyInput>(
+    (pull) => {
+      const npcDeathCountMap = pullNPCDeathCountMap[pull.startTime];
+
+      return pull.enemyNPCs
+        .filter((npc) => !EXCLUDED_NPCS.has(npc.gameID))
+        .map((npc) => {
+          // default to 1 for npcs that appear in the pull and thus are enemy
+          // units but didn't die, e.g. for some reason Dealer in DoS,
+          // slime minigame in DoS as well as invisible units
+          const deathCountOfThisNPC = npcDeathCountMap[npc.id] ?? 1;
+
+          return {
+            npcID: npc.gameID,
+            count: deathCountOfThisNPC,
+            pullID: pull.id,
+          };
+        });
+    }
+  );
+
+  const actorPlayerMap = new Map(
+    maybeStoredFight.PlayerFight.map((playerFight) => [
+      playerFight.player.actorID,
+      playerFight.player.id,
+    ])
+  );
+
+  const everyPullsNPCs = persistedPulls.flatMap((pull) => {
+    return pull.enemyNPCs;
+  });
+
+  const persistablePullEvents = persistedPulls.flatMap((pull, index) => {
+    const lastPull = persistedPulls[index - 1];
+
+    const thisPullsEvents = allEvents.filter(({ timestamp }) => {
+      const isDuringThisPull =
+        timestamp >= pull.startTime && timestamp <= pull.endTime;
+      // some CDs may be used outside of a pull in preparation to set it up
+      // e.g. Sigil of Silence/Chains/Imprison right before pulling.
+      // Because of that, any event past the last pull and before this will be
+      // attached to the next pull.
+      const wasAfterLastPull = lastPull
+        ? timestamp > lastPull.endTime && timestamp < pull.startTime
+        : false;
+
+      return isDuringThisPull || wasAfterLastPull;
+    });
+
+    return processEvents(
+      pull,
+      thisPullsEvents,
+      actorPlayerMap,
+      everyPullsNPCs
+    ).map<Prisma.EventCreateManyInput>((event) => {
+      return {
+        ...event,
+        pullID: pull.id,
+      };
+    });
+  });
+
+  const totalPercent = pullsWithWipesAndPercent.reduce(
+    (acc, pull) => acc + pull.percent,
+    0
+  );
+
+  await prisma.$transaction([
+    prisma.fight.update({
+      data: {
+        percent: totalPercent,
+        // since we need to update `totalPercent` anyways, we might aswell
+        // always update the dungeonID too, even though it may already have
+        // been present
+        dungeonID,
+      },
+      where: {
+        fightID_reportID: {
+          reportID: maybeStoredFight.Report.id,
+          fightID: maybeStoredFight.fightID,
+        },
+      },
+    }),
+    prisma.pullZone.createMany({
+      skipDuplicates: true,
+      data: persistableMaps,
+    }),
+    prisma.pullNPC.createMany({
+      skipDuplicates: true,
+      data: persistableNPCs,
+    }),
+    prisma.event.createMany({
+      skipDuplicates: true,
+      data: persistablePullEvents,
+    }),
+  ]);
+
+  const rawFight: RawFight = await prisma.fight.findFirst(selector);
+
+  if (!fightHasDungeon(rawFight)) {
+    return {
+      status: INTERNAL_SERVER_ERROR,
+      json: {
+        error: fightHandlerError.FATAL_ERROR,
+      },
+    };
+  }
+
+  return {
+    status: OK,
+    json: createResponseFromStoredFight(rawFight),
+  };
+};
+
 const handler: RequestHandler<Request, FightResponse> = async (req, res) => {
   const { reportID } = req.query;
   const fightID = Number.parseInt(req.query.fightID);
@@ -580,290 +882,12 @@ const handler: RequestHandler<Request, FightResponse> = async (req, res) => {
     return;
   }
 
-  if (maybeStoredFight.Pull.length === 0 || maybeStoredFight.percent === 0) {
-    const maybeFightPulls = await getFightPulls({
-      reportID,
-      fightIDs: [maybeStoredFight.fightID],
-    });
+  const { status, json } = await getResponseOrRetrieveAndCreateFight(
+    maybeStoredFight,
+    fightFindFirstSelector
+  );
 
-    if (!maybeFightPulls.reportData?.report?.fights?.[0]?.dungeonPulls) {
-      res.status(BAD_REQUEST).end({
-        error: fightHandlerError.BROKEN_LOG_OR_WCL_UNAVAILABLE,
-      });
-      return;
-    }
-
-    const dungeonPulls =
-      maybeFightPulls.reportData.report.fights[0].dungeonPulls.reduce<
-        Omit<PersistedDungeonPull, "id" | "isWipe" | "percent">[]
-      >((acc, pull) => {
-        if (!pull || !pull.maps || !pull.enemyNPCs || !pull.boundingBox) {
-          return acc;
-        }
-
-        const maps = pull.maps
-          .filter((map): map is ReportMap => map !== null)
-          .map((map) => map.id);
-
-        if (maps.length === 0) {
-          return acc;
-        }
-
-        const enemyNPCs = pull.enemyNPCs.filter(
-          (
-            enemyNPC
-          ): enemyNPC is Omit<
-            PersistedDungeonPull,
-            "id"
-          >["enemyNPCs"][number] => enemyNPC !== null
-        );
-
-        if (enemyNPCs.length === 0) {
-          return acc;
-        }
-
-        return [
-          ...acc,
-          {
-            x: pull.x,
-            y: pull.y,
-            startTime: pull.startTime,
-            endTime: pull.endTime,
-            maps,
-            boundingBox: pull.boundingBox,
-            enemyNPCs,
-          },
-        ];
-      }, []);
-
-    const dungeonID = ensureCorrectDungeonID(
-      maybeStoredFight.dungeon,
-      dungeonPulls
-    );
-
-    if (!dungeonID) {
-      res.status(UNPROCESSABLE_ENTITY).end({
-        error: fightHandlerError.MISSING_DUNGEON,
-      });
-      return;
-    }
-
-    const dungeon = dungeonMap[dungeonID];
-
-    const params: EventParams = {
-      reportID,
-      startTime: maybeStoredFight.startTime,
-      endTime: maybeStoredFight.endTime,
-      fightID: maybeStoredFight.fightID,
-      dungeonID,
-      affixes: [
-        maybeStoredFight.Report.week.affix1.name,
-        maybeStoredFight.Report.week.affix2.name,
-        maybeStoredFight.Report.week.affix3.name,
-        maybeStoredFight.Report.week.season.affix.name,
-      ],
-    };
-
-    const playerMetaInformation = maybeStoredFight.PlayerFight.map(
-      (playerFight) => {
-        return {
-          actorID: playerFight.player.actorID,
-          class: playerFight.player.character.class.name,
-        };
-      }
-    );
-
-    const { allEvents, playerDeathEvents, enemyDeathEvents } = await getEvents(
-      params,
-      playerMetaInformation
-    );
-    const hasNoWipes = playerDeathEvents.length < 5;
-
-    // map of { [startTime]: { [targetID]: count } } including every pull
-    const pullNPCDeathCountMap = dungeonPulls.reduce<
-      Record<number, Record<number, number>>
-    >((acc, { startTime, endTime }) => {
-      acc[startTime] = enemyDeathEvents
-        .filter(
-          ({ timestamp }) => timestamp >= startTime && timestamp <= endTime
-        )
-        .reduce<Record<number, number>>((acc, { targetID }) => {
-          acc[targetID] = (acc[targetID] ?? 0) + 1;
-
-          return acc;
-        }, {});
-
-      return acc;
-    }, {});
-
-    const pullsWithWipesAndPercent = dungeonPulls
-      // ensure this pull isn't effectively empty, e.g. only 1 Spiteful Shade
-      .filter((pull) => {
-        const npcs = pull.enemyNPCs.filter(
-          (npc) => !EXCLUDED_NPCS.has(npc.gameID)
-        );
-
-        return npcs.length > 0;
-      })
-      .map<Omit<PersistedDungeonPull, "id">>((pull) => {
-        const isWipe = hasNoWipes ? false : isPullWipe(playerDeathEvents, pull);
-
-        const npcDeathCountMap = pullNPCDeathCountMap[pull.startTime];
-
-        const totalCount = pull.enemyNPCs.reduce((acc, npc) => {
-          const deathCount = npcDeathCountMap[npc.id];
-          const npcCount = dungeon.unitCountMap[npc.gameID];
-
-          if (deathCount === undefined || npcCount === undefined) {
-            return acc;
-          }
-
-          return acc + npcCount * deathCount;
-        }, 0);
-
-        const percent = (totalCount / dungeon.count) * 100;
-
-        return {
-          ...pull,
-          isWipe,
-          percent,
-        };
-      });
-
-    const totalPercent = pullsWithWipesAndPercent.reduce(
-      (acc, pull) => acc + pull.percent,
-      0
-    );
-
-    const persistedPulls = await persistPulls(
-      pullsWithWipesAndPercent,
-      maybeStoredFight.id
-    );
-
-    const persistableMaps =
-      persistedPulls.flatMap<Prisma.PullZoneCreateManyInput>((pull) => {
-        return pull.maps.map((map) => {
-          return {
-            pullID: pull.id,
-            zoneID: map,
-          };
-        });
-      });
-
-    const persistableNPCs =
-      persistedPulls.flatMap<Prisma.PullNPCCreateManyInput>((pull) => {
-        const npcDeathCountMap = pullNPCDeathCountMap[pull.startTime];
-
-        return pull.enemyNPCs
-          .filter((npc) => !EXCLUDED_NPCS.has(npc.gameID))
-          .map((npc) => {
-            // default to 1 for npcs that appear in the pull and thus are enemy
-            // units but didn't die, e.g. for some reason Dealer in DoS,
-            // slime minigame in DoS as well as invisible units
-            const deathCountOfThisNPC = npcDeathCountMap[npc.id] ?? 1;
-
-            return {
-              npcID: npc.gameID,
-              count: deathCountOfThisNPC,
-              pullID: pull.id,
-            };
-          });
-      });
-
-    const actorPlayerMap = new Map(
-      maybeStoredFight.PlayerFight.map((playerFight) => [
-        playerFight.player.actorID,
-        playerFight.player.id,
-      ])
-    );
-
-    const everyPullsNPCs = persistedPulls.flatMap((pull) => {
-      return pull.enemyNPCs;
-    });
-
-    const persistablePullEvents = persistedPulls.flatMap((pull, index) => {
-      const lastPull = persistedPulls[index - 1];
-
-      const thisPullsEvents = allEvents.filter(({ timestamp }) => {
-        const isDuringThisPull =
-          timestamp >= pull.startTime && timestamp <= pull.endTime;
-        // some CDs may be used outside of a pull in preparation to set it up
-        // e.g. Sigil of Silence/Chains/Imprison right before pulling.
-        // Because of that, any event past the last pull and before this will be
-        // attached to the next pull.
-        const wasAfterLastPull = lastPull
-          ? timestamp > lastPull.endTime && timestamp < pull.startTime
-          : false;
-
-        return isDuringThisPull || wasAfterLastPull;
-      });
-
-      return processEvents(
-        pull,
-        thisPullsEvents,
-        actorPlayerMap,
-        everyPullsNPCs
-      ).map<Prisma.EventCreateManyInput>((event) => {
-        return {
-          ...event,
-          pullID: pull.id,
-        };
-      });
-    });
-
-    await prisma.$transaction([
-      prisma.fight.update({
-        data: {
-          percent: totalPercent,
-          // since we need to update `totalPercent` anyways, we might aswell
-          // always update the dungeonID too, even though it may already have
-          // been present
-          dungeonID,
-        },
-        where: {
-          fightID_reportID: {
-            reportID: maybeStoredFight.Report.id,
-            fightID: maybeStoredFight.fightID,
-          },
-        },
-      }),
-      prisma.pullZone.createMany({
-        skipDuplicates: true,
-        data: persistableMaps,
-      }),
-      prisma.pullNPC.createMany({
-        skipDuplicates: true,
-        data: persistableNPCs,
-      }),
-      prisma.event.createMany({
-        skipDuplicates: true,
-        data: persistablePullEvents,
-      }),
-    ]);
-
-    const rawFight: RawFight = await prisma.fight.findFirst(
-      fightFindFirstSelector
-    );
-
-    if (!fightHasDungeon(rawFight)) {
-      res.status(INTERNAL_SERVER_ERROR).json({
-        error: fightHandlerError.FATAL_ERROR,
-      });
-      return;
-    }
-
-    res.json(createResponseFromStoredFight(rawFight));
-    return;
-  }
-
-  if (!fightHasDungeon(maybeStoredFight)) {
-    res.status(UNPROCESSABLE_ENTITY).json({
-      error: fightHandlerError.BROKEN_FIGHT,
-    });
-    return;
-  }
-
-  res.json(createResponseFromStoredFight(maybeStoredFight));
+  res.status(status).json(json);
 };
 
 const ensureCorrectDungeonID = (

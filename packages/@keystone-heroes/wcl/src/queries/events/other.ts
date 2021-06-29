@@ -3,6 +3,7 @@ import { remarkableSpellIDs } from "@keystone-heroes/db/data/spellIds";
 import type {
   AllTrackedEventTypes,
   ApplyBuffEvent,
+  BeginCastEvent,
   CastEvent,
   DeathEvent,
 } from "./types";
@@ -56,7 +57,13 @@ export const engineeringBattleRezExpression = `type = "cast" and ability.id = ${
  */
 export const leatherworkingDrumsExpression = `type = "cast" and ability.id = ${LEATHERWORKING_DRUMS.SHADOWLANDS}`;
 
-export const deathFilterExpression = 'type ="death"';
+const RENEWING_MIST = 300_155;
+/**
+ * @description filters for
+ * - _any_ death event
+ * - the `Renewing Mist` cast Tirnenn Villagers do upon their "death"
+ */
+export const deathFilterExpression = `type ="death" or (ability.id = ${RENEWING_MIST} and type = "begincast")`;
 // TODO: feign false doesnt work?
 // export const friendliesDeathFilterExpression =
 //   'target.type = "player" and type = "death"'; //  and feign = false
@@ -77,13 +84,17 @@ export const filterProfessionEvents = (
 export const filterEnemyDeathEvents = (
   allEvents: AllTrackedEventTypes[],
   actorIDSet: Set<number>
-): DeathEvent[] => {
-  return allEvents.filter((event): event is DeathEvent => {
-    return (
-      event.type === "death" &&
-      !actorIDSet.has(event.targetID) &&
-      event.sourceID === -1
-    );
+): (DeathEvent | BeginCastEvent)[] => {
+  return allEvents.filter((event): event is DeathEvent | BeginCastEvent => {
+    if (event.type === "death") {
+      return !actorIDSet.has(event.targetID) && event.sourceID === -1;
+    }
+
+    if (event.type === "begincast") {
+      return event.abilityGameID === RENEWING_MIST;
+    }
+
+    return false;
   });
 };
 
