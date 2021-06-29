@@ -13,7 +13,7 @@ export const createDungeonTimer = (
 enum Boss {
   // SoA
   KIN_TARA = 162_059,
-  VENZULES = 163_077,
+  AZULES = 163_077,
   VENTUNAX = 162_058,
   ORYPHRION = 162_060,
   DEVOS = 162_061,
@@ -126,6 +126,9 @@ export const EXCLUDED_NPCS = new Set([
   // SD
   166_589, // Animated Weapon
   168_882, // Fleeting Manifestation via Executor Tarvold (dies on pull)
+  165_556, // Fleeting Manifestation via Executor Tarvold (spawned during fight)
+  169_753, // Famished Tick - additionally spawned
+  168_457, // Stonewall Gargon - gauntlet spawn
 ]);
 
 export const SANGUINE_DEPTHS: DungeonMeta = {
@@ -145,33 +148,31 @@ export const SANGUINE_DEPTHS: DungeonMeta = {
   ],
   unitCountMap: {
     // eslint-disable-next-line inclusive-language/use-inclusive-words
-    171_448: 0, // Dreadful Huntmaster
-    162_046: 0, // Famished Tick
-    166_396: 0, // Noble Skirmisher
-    166_589: 0, // Animated Weapon
-    162_038: 0, // Regal Mistdancer
-    169_753: 0, // Famished Tick
-    165_076: 0, // Gluttonous Tick
-    162_041: 0, // Grubby Dirtcruncher
-    162_047: 0, // Insatiable Brute
-    173_729: 0, // Manifestation of Pride
-    162_039: 0, // Wicked Oppressor
-    167_956: 0, // Dark Acolyte
-    162_056: 0, // Rockbound Sprite
-    162_040: 0, // Grand Overseer
-    162_057: 0, // Chamber Sentinel
-    162_049: 0, // Vestige of Doubt
-    171_799: 0, // Depths Warden
-    168_058: 0, // Infused Quill-feather
-    171_384: 0, // Research Scribe
-    172_265: 0, // Remnant of Fury
-    171_805: 0, // Research Scribe
-    162_051: 0, // Frenzied Ghoul
-    162_103: 0, // Executor Tarvold
-    165_556: 0, // Fleeting Manifestation
-    167_955: 0, // Sanguine Cadet
-    168_457: 0, // Stonewall Gargon
-    171_455: 0, // Stonewall Gargon
+    171_448: 4, // Dreadful Huntmaster
+    // TODO: these respawn with the same ID aswell, so pull & thus total %
+    // has minor deviations based on additionally spawned ticks
+    162_046: 1, // Famished Tick
+    166_396: 4, // Noble Skirmisher
+    162_038: 7, // Regal Mistdancer
+    165_076: 4, // Gluttonous Tick
+    162_041: 2, // Grubby Dirtcruncher
+    162_047: 7, // Insatiable Brute
+    162_039: 4, // Wicked Oppressor
+    167_956: 1, // Dark Acolyte
+    162_056: 1, // Rockbound Sprite
+    162_040: 7, // Grand Overseer
+    167_955: 1, // Sanguine Cadet
+    162_057: 7, // Chamber Sentinel
+    162_049: 4, // Vestige of Doubt
+    171_799: 7, // Depths Warden
+    168_058: 1, // Infused Quill-feather
+    171_384: 4, // Research Scribe
+    171_805: 4, // Research Scribe
+    162_051: 2, // Frenzied Ghoul
+    171_455: 1, // Stonewall Gargon
+    168_591: 4, // Ravenous Dreadbat
+    172_265: 4, // Remnant of Fury,
+    171_376: 10, // Head Custodian Javlin
   },
   count: 364,
 };
@@ -182,7 +183,7 @@ export const SPIRES_OF_ASCENSION: DungeonMeta = {
   slug: "SoA",
   bossIDs: [
     Boss.KIN_TARA,
-    Boss.VENZULES,
+    Boss.AZULES,
     Boss.VENTUNAX,
     Boss.ORYPHRION,
     Boss.DEVOS,
@@ -194,7 +195,26 @@ export const SPIRES_OF_ASCENSION: DungeonMeta = {
     { id: 1694, name: "Font of Fealty", order: 3 },
     { id: 1695, name: "Seat of the Archon", order: 4 },
   ],
-  unitCountMap: {},
+  unitCountMap: {
+    163_458: 4, // Forsworn Castigator
+    163_459: 4, // Forsworn Mender
+    163_457: 4, // Forsworn Vanguard
+    168_318: 8, // Forsworn Goliath
+    163_501: 4, // Forsworn Skirmisher
+    163_503: 2, // Etherdiver
+    163_524: 5, // Kyrian Dark-Praetor
+    163_506: 4, // Forsworn Stealthclaw
+    168_418: 4, // Forsworn Inquisitor
+    163_520: 6, // Forsworn Squad-Leader
+    168_420: 4, // Forsworn Champion
+    168_681: 6, // Forsworn Helion
+    166_411: 1, // Forsworn Usurper
+    166_718: 4, // Forsworn Warden
+    166_717: 4, // Forsworn Justicar
+    168_844: 12, // Lakesis
+    168_845: 12, // Astronos
+    168_843: 12, // Klotos
+  },
   count: 285,
 };
 
