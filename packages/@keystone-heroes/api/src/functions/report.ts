@@ -1,9 +1,7 @@
 import { getAffixByID } from "@keystone-heroes/db/data/affixes";
 import { classMapByName } from "@keystone-heroes/db/data/classes";
 import { dungeonMap } from "@keystone-heroes/db/data/dungeons";
-import { seasons } from "@keystone-heroes/db/data/seasons";
 import { specs } from "@keystone-heroes/db/data/specs";
-import { weeks } from "@keystone-heroes/db/data/weeks";
 import { prisma } from "@keystone-heroes/db/prisma";
 import { Role } from "@keystone-heroes/db/types";
 import type {
@@ -12,7 +10,6 @@ import type {
   Prisma,
   Affix,
   Dungeon,
-  Week,
 } from "@keystone-heroes/db/types";
 import { MIN_KEYSTONE_LEVEL } from "@keystone-heroes/env";
 import type {

@@ -216,6 +216,8 @@ describe("/api/report", () => {
     test("ongoing report - new fights", async () => {
       // @ts-expect-error since `select` is used, partials are fine
       prisma.report.findFirst.mockResolvedValue(ongoingReport);
+      // @ts-expect-error since `select` is used, partials are fine
+      prisma.week.findFirst.mockResolvedValue({ id: 10 });
 
       server.use(
         createInitialReportDataHandler({

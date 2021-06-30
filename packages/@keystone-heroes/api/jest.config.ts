@@ -8,10 +8,10 @@ const config: Config.InitialOptions = {
   setupFilesAfterEnv: ["<rootDir>/jest/setupTests.ts"],
   coverageThreshold: {
     global: {
-      statements: 62,
-      branches: 51,
-      functions: 56,
-      lines: 62,
+      statements: 59,
+      branches: 47,
+      functions: 53,
+      lines: 59,
     },
   },
 };
