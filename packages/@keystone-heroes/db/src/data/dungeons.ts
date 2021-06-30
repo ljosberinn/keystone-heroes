@@ -129,6 +129,19 @@ export const EXCLUDED_NPCS = new Set([
   165_556, // Fleeting Manifestation via Executor Tarvold (spawned during fight)
   169_753, // Famished Tick - additionally spawned
   168_457, // Stonewall Gargon - gauntlet spawn
+  // TOP
+  170_234, // Oppressive Banner via Xav the Unfallen
+  165_260, // Oozing Leftovers via Gorechop
+  // PF
+  168_394, // Slimy Morsel, adds spawned by Plaguebelcher
+  164_550, // Slithering Ooze, spawns from dead Blighted Spinebreaker
+  165_010, // Congealed Slime via Doctor Ickus
+  170_927, // Erupting Ooze via Doctor Ickus
+  169_498, // Plague Bomb via Doctor Ickus
+  168_837, // Stealthlings
+  170_474, // Brood Assassin via Domina Venomblade
+  165_430, // Malignant Spawn via Margrave Stradama
+  171_188, // Plaguebound Devoted via Margrave Stradama
 ]);
 
 export const SANGUINE_DEPTHS: DungeonMeta = {
@@ -317,7 +330,44 @@ export const PLAGUEFALL: DungeonMeta = {
     { id: 1674, name: "Plaguefall", order: 1 },
     { id: 1697, name: "The Festering Sanctum", order: 2 },
   ],
-  unitCountMap: {},
+  unitCountMap: {
+    169_696: 8, // Mire Soldier
+    // TODO: some of these log a death event during combat due to RP on the side
+    // which leads to invalid %
+    168_969: 1, // Gushing Slime
+    168_155: 0, // Plaguebound
+    168_153: 12, // Plagueroc
+    163_882: 14, // Decaying Flesh Giant
+    168_572: 8, // Fungi Stormer
+    168_580: 8, // Plagueborer
+    163_915: 10, // Hatchling Nest
+    171_474: 0, // Finger Food
+    163_894: 12, // Blighted Spinebreaker
+    164_707: 6, // Congealed Slime
+    163_862: 8, // Defender of Many Eyes
+    173_840: 4, // Plaguebound Devoted - first two units in The Festering Sanctum
+    163_857: 4, // Plaguebound Devoted
+    169_159: 0, // Unstable Canister
+    168_627: 8, // Plaguebinder
+    168_022: 10, // Slime Tentacle
+    167_493: 8, // Venomous Sniper
+    169_861: 25, // Ickor Bileflesh
+    168_578: 8, // Fungalmancer
+    168_361: 8, // Fen Hornet
+    168_574: 8, // Pestilent Harvester
+    168_396: 12, // Plaguebelcher
+    168_393: 12, // Plaguebelcher
+    163_892: 6, // Rotting Slimeclaw
+    164_705: 6, // Pestilence Slime
+    168_886: 25, // Virulax Blightweaver
+    168_747: 0, // Venomfang
+    168_907: 10, // Slime Tentacle
+    164_737: 12, // Brood Ambusher
+    168_968: 0, // Plaguebound Fallen
+    168_878: 8, // Rigged Plagueborer
+    168_891: 0, // Rigged Plagueborer - respawn
+    163_891: 6, // Rotmarrow Slime
+  },
   count: 600,
 };
 
@@ -401,7 +451,7 @@ export const DE_OTHER_SIDE: DungeonMeta = {
     171_341: 1, // Bladebeak Hatchling
     171_181: 4, // Territorial Bladebeak
     171_343: 5, // Bladebeak Matriarch
-    192_240: 12, // Mythresh, Sky's Talons
+    171_184: 12, // Mythresh, Sky's Talons
   },
   count: 384,
 };
@@ -427,7 +477,31 @@ export const THEATER_OF_PAIN: DungeonMeta = {
     { id: 1686, name: "Upper Barrow of Carnage", order: 4 },
     { id: 1687, name: "Lower Barrow of Carnage", order: 5 },
   ],
-  unitCountMap: {},
+  unitCountMap: {
+    174_197: 4, // Battlefield Ritualist
+    170_838: 4, // Unyielding Contender
+    170_850: 7, // Raging Bloodhorn
+    164_510: 4, // Shambling Arbalest
+    167_994: 4, // Ossified Conscript
+    167_538: 20, // Dokigg the Brutalizer
+    167_536: 20, // Harugia the Bloodthirsty
+    164_506: 5, // Ancient Captain
+    167_533: 20, // Advent Nevermore
+    169_875: 2, // Shackled Soul
+    167_998: 8, // Portal Guardian
+    170_882: 4, // Bone Magus
+    160_495: 4, // Maniacal Soulbinder
+    162_763: 8, // Soulforged Bonereaver
+    169_893: 6, // Nefarious Darkspeaker
+    174_210: 4, // Blighted Sludge-Spewer
+    163_089: 1, // Disgusting Refuse
+    170_690: 4, // Diseased Horror
+    169_927: 5, // Putrid Butcher
+    162_744: 20, // Nekthara the Mangler
+    167_532: 20, // Heavin the Breaker
+    167_534: 20, // Rek the Hardened
+    163_086: 8, // Rancid Gasbag
+  },
   count: 271,
 };
 
@@ -441,6 +515,8 @@ export const dungeonMap: Record<Dungeon["id"], DungeonMeta> = {
   [DungeonIDs.DE_OTHER_SIDE]: DE_OTHER_SIDE,
   [DungeonIDs.THEATER_OF_PAIN]: THEATER_OF_PAIN,
 };
+
+export const allBossIDs = new Set(Object.values(Boss));
 
 export const dungeons: (Omit<Dungeon, "time"> & DungeonMeta)[] = Object.entries(
   dungeonMap

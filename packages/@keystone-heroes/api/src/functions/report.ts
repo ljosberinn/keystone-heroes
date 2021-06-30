@@ -867,7 +867,7 @@ export const reportHandler: RequestHandler<Request, ReportResponse> = async (
     update: {},
   });
 
-  const week = findWeekbyTimestamp(startTime, endTime);
+  const weekID = await findWeekByAffixes(fights[0].keystoneAffixes);
 
   const reportCreateInput: Prisma.ReportCreateInput = {
     startTime: new Date(startTime),
@@ -886,7 +886,7 @@ export const reportHandler: RequestHandler<Request, ReportResponse> = async (
     },
     week: {
       connect: {
-        id: week.id,
+        id: weekID,
       },
     },
   };
@@ -909,11 +909,6 @@ export const reportHandler: RequestHandler<Request, ReportResponse> = async (
       })
   );
 
-  await prisma.conduit.createMany({
-    skipDuplicates: true,
-    data: conduitCreateMany,
-  });
-
   const talentCreateMany: Prisma.TalentCreateManyInput[] = allPlayer.flatMap(
     (player) =>
       player.talents.map((talent) => {
@@ -926,11 +921,6 @@ export const reportHandler: RequestHandler<Request, ReportResponse> = async (
         };
       })
   );
-
-  await prisma.talent.createMany({
-    skipDuplicates: true,
-    data: talentCreateMany,
-  });
 
   const covenantTraitCreateMany: Prisma.CovenantTraitCreateManyInput[] =
     allPlayer
@@ -953,11 +943,6 @@ export const reportHandler: RequestHandler<Request, ReportResponse> = async (
         })
       );
 
-  await prisma.covenantTrait.createMany({
-    skipDuplicates: true,
-    data: covenantTraitCreateMany,
-  });
-
   const legendariesCreateMany: Prisma.LegendaryCreateManyInput[] = allPlayer
     .filter(
       (
@@ -974,6 +959,21 @@ export const reportHandler: RequestHandler<Request, ReportResponse> = async (
         effectName: dataset.legendary.effectName,
       };
     });
+
+  await prisma.conduit.createMany({
+    skipDuplicates: true,
+    data: conduitCreateMany,
+  });
+
+  await prisma.talent.createMany({
+    skipDuplicates: true,
+    data: talentCreateMany,
+  });
+
+  await prisma.covenantTrait.createMany({
+    skipDuplicates: true,
+    data: covenantTraitCreateMany,
+  });
 
   await prisma.legendary.createMany({
     skipDuplicates: true,
@@ -1083,46 +1083,35 @@ export const reportHandler: RequestHandler<Request, ReportResponse> = async (
   );
 };
 
-const findWeekbyTimestamp = (
-  startTime: number,
-  endTime: number
-  // TODO: adjust season start time based on region
-  // region: string
-): Week => {
-  const season = seasons.find((season) => {
-    const startedAfterThisSeason = startTime > season.startTime.getTime();
-    const endedWithinThisSeason = season.endTime
-      ? endTime < season.endTime.getTime()
-      : true;
+const findWeekByAffixes = async (
+  keystoneAffixes: number[]
+): Promise<number> => {
+  const [affix1ID, affix2ID, affix3ID, seasonalAffixID] = keystoneAffixes;
 
-    return startedAfterThisSeason && endedWithinThisSeason;
+  const dataset = await prisma.week.findFirst({
+    where: {
+      affix1: {
+        id: affix1ID,
+      },
+      affix2: {
+        id: affix2ID,
+      },
+      affix3: {
+        id: affix3ID,
+      },
+      season: {
+        affixID: seasonalAffixID,
+      },
+    },
+    select: {
+      id: true,
+    },
   });
 
-  if (!season) {
-    throw new Error("season not implemented");
+  if (!dataset) {
+    // TODO: create season, get season ID, insert week and return week id
+    throw new Error("not happening");
   }
 
-  const thisSeasonsWeeks = weeks.filter((week) => week.seasonID === season.id);
-
-  const amountOfWeeksThisSeason = thisSeasonsWeeks.length;
-  const seasonStartTime = season.startTime.getTime();
-  const timePassedSinceSeasonStart = startTime - seasonStartTime;
-
-  const weeksPassedSinceSeasonStart = Math.floor(
-    timePassedSinceSeasonStart / 1000 / 60 / 60 / 24 / 7
-  );
-
-  // report is within the first rotation of affixes of this season
-  if (amountOfWeeksThisSeason > weeksPassedSinceSeasonStart) {
-    return thisSeasonsWeeks[weeksPassedSinceSeasonStart];
-  }
-
-  const cycles = Math.floor(
-    weeksPassedSinceSeasonStart / amountOfWeeksThisSeason
-  );
-
-  const excessWeeks =
-    weeksPassedSinceSeasonStart - amountOfWeeksThisSeason * cycles;
-
-  return thisSeasonsWeeks[excessWeeks];
+  return dataset.id;
 };
