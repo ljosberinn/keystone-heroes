@@ -1,7 +1,6 @@
 import type { FightResponse } from "@keystone-heroes/api/functions/fight";
 import { isValidReportId } from "@keystone-heroes/wcl/utils";
 import type { GetStaticPaths, GetStaticProps } from "next";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import type { KeyboardEvent } from "react";
 import { useEffect, useRef, useState } from "react";
@@ -92,9 +91,6 @@ export default function FightID({ cache }: FightIDProps): JSX.Element | null {
 
   return (
     <div>
-      <Link href={`/report/${reportID}/${fightID === "14" ? 6 : 14}`}>
-        <a>to fight {fightID === "14" ? 6 : 14}</a>
-      </Link>
       <Map zones={fight.dungeon.zones} />
     </div>
   );
