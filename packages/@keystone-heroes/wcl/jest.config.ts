@@ -8,14 +8,15 @@ const config: Config.InitialOptions = {
   setupFilesAfterEnv: ["<rootDir>/jest/setupTests.js"],
   coverageThreshold: {
     global: {
-      statements: 94,
+      statements: 95,
       branches: 87,
       functions: 87,
-      lines: 94,
+      lines: 95,
     },
   },
   coveragePathIgnorePatterns: [
     "<rootDir>/src/queries/introspection.ts",
+    "<rootDir>/src/queries/wcl-static-data.ts",
     "<rootDir>/src/queries/index.ts",
     "<rootDir>/src/queries/types.ts",
   ],

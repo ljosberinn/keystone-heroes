@@ -1130,12 +1130,13 @@ export const reportHandler: RequestHandler<Request, ReportResponse> = async (
   );
 };
 
-const findWeekByAffixes = async (
-  keystoneAffixes: number[]
-): Promise<number> => {
-  const [affix1ID, affix2ID, affix3ID, seasonalAffixID] = keystoneAffixes;
-
-  const dataset = await prisma.week.findFirst({
+const findWeekByAffixes = async ([
+  affix1ID,
+  affix2ID,
+  affix3ID,
+  seasonalAffixID,
+]: number[]): Promise<number> => {
+  const existingWeek = await prisma.week.findFirst({
     where: {
       affix1: {
         id: affix1ID,
@@ -1155,8 +1156,8 @@ const findWeekByAffixes = async (
     },
   });
 
-  if (!dataset) {
-    const currentSeason = await prisma.season.findFirst({
+  if (!existingWeek) {
+    const latestSeason = await prisma.season.findFirst({
       where: {
         id: {
           gt: 1,
@@ -1171,7 +1172,7 @@ const findWeekByAffixes = async (
       },
     });
 
-    if (!currentSeason) {
+    if (!latestSeason) {
       throw new Error("no season found");
     }
 
@@ -1180,6 +1181,7 @@ const findWeekByAffixes = async (
         seasonWeekID: {
           gte: 0,
         },
+        seasonID: latestSeason.id,
       },
       orderBy: {
         seasonWeekID: "desc",
@@ -1187,33 +1189,20 @@ const findWeekByAffixes = async (
       take: 1,
       select: {
         seasonWeekID: true,
+        id: true,
       },
     });
 
     const nextSeasonWeekID = (lastSeasonWeek?.seasonWeekID ?? -1) + 1;
+    const nextID = (lastSeasonWeek?.id ?? 0) + 1;
 
     const newWeek = await prisma.week.create({
       data: {
-        affix1: {
-          connect: {
-            id: affix1ID,
-          },
-        },
-        affix2: {
-          connect: {
-            id: affix2ID,
-          },
-        },
-        affix3: {
-          connect: {
-            id: affix3ID,
-          },
-        },
-        season: {
-          connect: {
-            id: currentSeason.id,
-          },
-        },
+        id: nextID,
+        affix1ID,
+        affix2ID,
+        affix3ID,
+        seasonID: latestSeason.id,
         seasonWeekID: nextSeasonWeekID,
       },
       select: {
@@ -1224,5 +1213,5 @@ const findWeekByAffixes = async (
     return newWeek.id;
   }
 
-  return dataset.id;
+  return existingWeek.id;
 };
