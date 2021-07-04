@@ -15,24 +15,24 @@
     "@keystone-heroes/env": "1.0.0",
     "graphql": "15.5.1",
     "graphql-request": "3.4.0",
-    "graphql-tag": "2.12.4",
+    "graphql-tag": "2.12.5",
     "node-fetch": "2.6.1",
     "tsconfig-paths": "3.9.0"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "1.21.5",
+    "@graphql-codegen/cli": "1.21.6",
     "@graphql-codegen/introspection": "1.18.2",
-    "@graphql-codegen/typescript": "1.22.3",
-    "@graphql-codegen/typescript-graphql-request": "3.2.3",
-    "@graphql-codegen/typescript-operations": "1.18.2",
-    "eslint": "7.29.0",
-    "eslint-config-galex": "2.16.5",
-    "jest": "27.0.5",
-    "msw": "0.29.0",
+    "@graphql-codegen/typescript": "1.22.4",
+    "@graphql-codegen/typescript-graphql-request": "3.2.4",
+    "@graphql-codegen/typescript-operations": "1.18.3",
+    "eslint": "7.30.0",
+    "eslint-config-galex": "2.16.6",
+    "jest": "27.0.6",
+    "msw": "0.30.1",
     "ts-essentials": "7.0.2",
     "ts-jest": "27.0.3",
     "ts-node": "10.0.0",
-    "typescript": "4.3.4"
+    "typescript": "4.3.5"
   },
   "graphql": {
     "schema": "./schema.json"

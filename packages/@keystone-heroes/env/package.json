@@ -11,10 +11,10 @@
   },
   "devDependencies": {
     "dotenv": "10.0.0",
-    "eslint": "7.29.0",
-    "eslint-config-galex": "2.16.5",
-    "jest": "27.0.5",
+    "eslint": "7.30.0",
+    "eslint-config-galex": "2.16.6",
+    "jest": "27.0.6",
     "ts-jest": "27.0.3",
-    "typescript": "4.3.4"
+    "typescript": "4.3.5"
   }
 }

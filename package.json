@@ -26,9 +26,9 @@
     "packages/**/package.json": "sort-package-json"
   },
   "devDependencies": {
-    "husky": "6.0.0",
+    "husky": "7.0.0",
     "lint-staged": "11.0.0",
-    "prettier": "2.3.1",
+    "prettier": "2.3.2",
     "rimraf": "3.0.2",
     "sort-package-json": "1.50.0",
     "yarn-deduplicate": "3.1.0"
