@@ -699,127 +699,22 @@ const getResponseOrRetrieveAndCreateFight = async (
     params,
     playerMetaInformation
   );
-  const hasNoWipes = playerDeathEvents.length < 5;
 
-  // map of { [startTime]: enemyDeathEvents }
-  const pullNPCDeathEventMap = dungeonPulls.reduce<
-    Record<number, (DeathEvent | BeginCastEvent)[]>
-  >((acc, { startTime, endTime }) => {
-    acc[startTime] = enemyDeathEvents.filter(
-      ({ timestamp }) => timestamp >= startTime && timestamp <= endTime
-    );
+  const pullNPCDeathEventMap = createPullNPCDeathEventMap(
+    dungeonPulls,
+    enemyDeathEvents
+  );
+  const pullNPCDeathCountMap = createPullNPCDeathCountMap(pullNPCDeathEventMap);
 
-    return acc;
-  }, {});
-
-  // map of { [startTime]: { [targetID]: count } } including every pull
-  const pullNPCDeathCountMap = Object.entries(pullNPCDeathEventMap).reduce<
-    Record<number, Record<number, number>>
-  >((acc, [startTimeStr, events]) => {
-    const startTime = Number.parseInt(startTimeStr);
-
-    acc[startTime] = events.reduce<Record<number, number>>(
-      (acc, { type, targetID, sourceID }) => {
-        // differentiate between `BeginCastEvent` and `DeathEvent`
-        const key = type === "death" ? targetID : sourceID;
-        acc[key] = (acc[key] ?? 0) + 1;
-
-        return acc;
-      },
-      {}
-    );
-
-    return acc;
-  }, {});
-
-  const dungeon = dungeonMap[dungeonID];
-
-  const pullsWithWipesAndPercent = dungeonPulls
-    // ensure this pull isn't effectively empty, e.g. only 1 Spiteful Shade
-    .filter((pull) => {
-      const npcs = pull.enemyNPCs.filter(
-        (npc) => !EXCLUDED_NPCS.has(npc.gameID)
-      );
-
-      return npcs.length > 0;
-    })
-    .map<Omit<PersistedDungeonPull, "id">>((pull) => {
-      // WIPE DETECTION
-      const isWipe = hasNoWipes ? false : isPullWipe(playerDeathEvents, pull);
-
-      // NPC FILTERING
-      const killedNPCTargetIDsOfThisPull = new Set(
-        pullNPCDeathEventMap[pull.startTime].map((event) => event.targetID)
-      );
-
-      const enemyNPCs = pull.enemyNPCs.filter((npc) => {
-        // ignore generally excluded NPCs to reduce noise
-        const isGenerallyExcludedNPC = EXCLUDED_NPCS.has(npc.gameID);
-
-        if (isGenerallyExcludedNPC) {
-          return false;
-        }
-
-        // TODO: check whether the next pull kills this unit. if so, merge the pulls
-        // ^this occurs e.g. in report/BjF97Nm1faLkCnwT/17 for Ickor Bileflesh
-
-        // skip adding units that somehow appear in multiple pulls, e.g.
-        // Ickor Bileflesh in PF
-        const wasKilledDuringThisPull = killedNPCTargetIDsOfThisPull.has(
-          npc.id
-        );
-
-        // some bosses, e.g. Globgrog don't have send death events, but phaseend
-        // some bosses die shortly after a pull ended e.g. Margrave Stradama
-        const isBoss = allBossIDs.has(npc.gameID);
-
-        return wasKilledDuringThisPull || isBoss;
-      });
-
-      // PERCENT CALCULATION
-      const npcDeathCountMap = pullNPCDeathCountMap[pull.startTime];
-
-      const totalCount = enemyNPCs.reduce((acc, npc) => {
-        const deathCount = npcDeathCountMap[npc.id];
-        const npcCount = dungeon.unitCountMap[npc.gameID];
-
-        if (deathCount === undefined || npcCount === undefined) {
-          return acc;
-        }
-
-        return acc + npcCount * deathCount;
-      }, 0);
-
-      const percent = (totalCount / dungeon.count) * 100;
-
-      return {
-        ...pull,
-        isWipe,
-        percent,
-        enemyNPCs,
-      };
-    })
-    .filter((pull) => {
-      // do not skip pulls that gave percent
-      // or didn't and were wiped
-      if (pull.percent > 0 || pull.isWipe) {
-        return true;
-      }
-
-      const isBossFight = pull.enemyNPCs.some((npc) =>
-        allBossIDs.has(npc.gameID)
-      );
-
-      // do not skip boss fights
-      if (isBossFight) {
-        return true;
-      }
-
-      // do not skip pride fights; can be removed with season 2 SL
-      return (
-        pull.enemyNPCs.length === 1 && pull.enemyNPCs[0].gameID === 173_729
-      );
-    });
+  const pullsWithWipesAndPercent = calculatePullsWithWipesAndPercent(
+    dungeonPulls,
+    {
+      dungeonID,
+      playerDeathEvents,
+      deathCountMap: pullNPCDeathCountMap,
+      deathEventMap: pullNPCDeathEventMap,
+    }
+  );
 
   const persistedPulls = await persistPulls(
     pullsWithWipesAndPercent,
@@ -862,9 +757,7 @@ const getResponseOrRetrieveAndCreateFight = async (
     ])
   );
 
-  const everyPullsNPCs = persistedPulls.flatMap((pull) => {
-    return pull.enemyNPCs;
-  });
+  const everyPullsNPCs = persistedPulls.flatMap((pull) => pull.enemyNPCs);
 
   const persistablePullEvents = persistedPulls.flatMap((pull, index) => {
     const lastPull = persistedPulls[index - 1];
@@ -1093,6 +986,180 @@ const isPullWipe = <T extends { startTime: number; endTime: number }>(
         .map((event) => event.targetID)
     ).size === 5
   );
+};
+
+const createTotalCountReducer = (
+  npcDeathCountMap: Record<number, number>,
+  { unitCountMap }: typeof dungeonMap[number]
+) => {
+  return (acc: number, npc: { id: number; gameID: number }) => {
+    const deathCount = npcDeathCountMap[npc.id];
+    const npcCount = unitCountMap[npc.gameID];
+
+    if (deathCount === undefined || npcCount === undefined) {
+      return acc;
+    }
+
+    return acc + npcCount * deathCount;
+  };
+};
+
+type PullWipePercentMeta = {
+  dungeonID: DungeonIDs;
+  playerDeathEvents: DeathEvent[];
+  deathEventMap: Record<number, (DeathEvent | BeginCastEvent)[]>;
+  deathCountMap: Record<number, Record<number, number>>;
+};
+
+const calculatePullsWithWipesAndPercent = (
+  pulls: Omit<PersistedDungeonPull, "id" | "percent" | "isWipe">[],
+  {
+    dungeonID,
+    playerDeathEvents,
+    deathEventMap,
+    deathCountMap,
+  }: PullWipePercentMeta
+): Omit<PersistedDungeonPull, "id">[] => {
+  const dungeon = dungeonMap[dungeonID];
+  const hasNoWipes = playerDeathEvents.length < 5;
+
+  let skipNextPull = false;
+
+  return pulls.reduce<Omit<PersistedDungeonPull, "id">[]>(
+    (acc, pull, index) => {
+      if (skipNextPull) {
+        skipNextPull = false;
+        return acc;
+      }
+
+      const killedNPCTargetIDsOfThisPull = new Set(
+        deathEventMap[pull.startTime].map((event) => event.targetID)
+      );
+
+      // ensure this pull isn't effectively empty, e.g. only 1 Spiteful Shade
+      const enemyNPCs = pull.enemyNPCs.filter((npc) => {
+        // ignore generally excluded NPCs to reduce noise
+        if (EXCLUDED_NPCS.has(npc.gameID)) {
+          return false;
+        }
+
+        // skip adding units that somehow appear in multiple pulls, e.g.
+        // Ickor Bileflesh in PF
+        const wasKilledDuringThisPull = killedNPCTargetIDsOfThisPull.has(
+          npc.id
+        );
+
+        // check whether the next pull kills this unit. if so, merge the pulls
+        // this occurs e.g. in report /BjF97Nm1faLkCnwT/17 for Ickor Bileflesh
+        if (!wasKilledDuringThisPull) {
+          const nextPull = pulls[index + 1];
+
+          if (
+            nextPull?.enemyNPCs.length === 1 &&
+            nextPull.enemyNPCs[0].gameID === npc.gameID
+          ) {
+            skipNextPull = true;
+            return true;
+          }
+        }
+
+        // some bosses, e.g. Globgrog don't have death events, but phaseend
+        // some bosses die shortly after a pull ended e.g. Margrave Stradama
+        const isBoss = allBossIDs.has(npc.gameID);
+
+        return wasKilledDuringThisPull || isBoss;
+      });
+
+      if (enemyNPCs.length === 0) {
+        return acc;
+      }
+
+      const totalCount = enemyNPCs.reduce(
+        createTotalCountReducer(
+          {
+            ...deathCountMap[pull.startTime],
+            // merge deaths from next pull into this one
+            ...(skipNextPull
+              ? deathCountMap[pulls[index + 1].startTime]
+              : null),
+          },
+          dungeon
+        ),
+        0
+      );
+
+      const percent = (totalCount / dungeon.count) * 100;
+
+      const isWipe = hasNoWipes ? false : isPullWipe(playerDeathEvents, pull);
+
+      // skip pulls that
+      if (
+        // gave no percent
+        percent === 0 &&
+        // - is not a wipe
+        !isWipe &&
+        // - is not a boss fight
+        !enemyNPCs.some((npc) => allBossIDs.has(npc.gameID)) &&
+        // - is not a Manifestation of Pride fight
+        enemyNPCs.length === 1 &&
+        enemyNPCs[0].gameID !== 173_729
+      ) {
+        return acc;
+      }
+
+      return [
+        ...acc,
+        {
+          ...pull,
+          isWipe,
+          percent,
+          enemyNPCs,
+        },
+      ];
+    },
+    []
+  );
+};
+
+// map of { [startTime]: enemyDeathEvents }
+const createPullNPCDeathEventMap = (
+  pulls: Omit<PersistedDungeonPull, "id" | "percent" | "isWipe">[],
+  enemyDeathEvents: (BeginCastEvent | DeathEvent)[]
+) => {
+  return pulls.reduce<Record<number, (DeathEvent | BeginCastEvent)[]>>(
+    (acc, { startTime, endTime }) => {
+      acc[startTime] = enemyDeathEvents.filter(
+        ({ timestamp }) => timestamp >= startTime && timestamp <= endTime
+      );
+
+      return acc;
+    },
+    {}
+  );
+};
+
+// map of { [startTime]: { [targetID]: count } } including every pull
+const createPullNPCDeathCountMap = (
+  deathEventMap: ReturnType<typeof createPullNPCDeathEventMap>
+) => {
+  return Object.entries(deathEventMap).reduce<
+    Record<number, Record<number, number>>
+  >((acc, [startTimeStr, events]) => {
+    const startTime = Number.parseInt(startTimeStr);
+
+    acc[startTime] = events.reduce<Record<number, number>>(
+      (acc, { type, targetID, sourceID }) => {
+        // differentiate between `BeginCastEvent` and `DeathEvent`
+        const key = type === "death" ? targetID : sourceID;
+        acc[key] = (acc[key] ?? 0) + 1;
+
+        return acc;
+      },
+      {}
+    );
+
+    return acc;
+  }, {});
 };
 
 export const fightHandler = nc()

@@ -509,7 +509,7 @@ const createResponseFromDB = (
         totalDeaths: fight.totalDeaths,
         keystoneBonus: fight.chests,
         dungeon: fight.dungeon,
-        rating: fight.rating,
+        rating: fight.rating ?? 0,
       };
     }),
   };
@@ -1071,7 +1071,7 @@ export const reportHandler: RequestHandler<Request, ReportResponse> = async (
         fightID: fight.id,
         keystoneLevel: fight.keystoneLevel,
         keystoneTime: fight.keystoneTime,
-        rating: fight.rating,
+        rating: fight.rating ?? 0,
         dps: fight.player.reduce((acc, player) => acc + player.dps, 0),
         hps: fight.player.reduce((acc, player) => acc + player.hps, 0),
         dtps: fight.dtps,
