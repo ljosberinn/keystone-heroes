@@ -1,3 +1,4 @@
+import { DungeonIDs, dungeonMap } from "@keystone-heroes/db/data/dungeons";
 import type {
   InitialReportDataQuery,
   InitialReportDataQueryVariables,
@@ -28,7 +29,7 @@ import storedReportFixture from "./fixtures/storedReport.json";
 import tableFixture from "./fixtures/table.json";
 import wclResponseFixture from "./fixtures/wclResponse.json";
 
-const validReportID = "6WBVqjaxg2HKGm4k";
+const validReportID = "THJWBAXcn2j9Nvkt";
 
 const createInitialReportDataHandler = (data: InitialReportDataQuery) => {
   return graphql.query<InitialReportDataQuery, InitialReportDataQueryVariables>(
@@ -183,9 +184,7 @@ describe("/api/report", () => {
               fights: [
                 ...wclResponseFixture.reportData.report.fights,
                 {
-                  ...wclResponseFixture.reportData.report.fights[
-                    wclResponseFixture.reportData.report.fights.length - 1
-                  ],
+                  ...wclResponseFixture.reportData.report.fights[0],
                   id: 99,
                 },
               ],
@@ -227,9 +226,7 @@ describe("/api/report", () => {
               fights: [
                 ...wclResponseFixture.reportData.report.fights,
                 {
-                  ...wclResponseFixture.reportData.report.fights[
-                    wclResponseFixture.reportData.report.fights.length - 1
-                  ],
+                  ...wclResponseFixture.reportData.report.fights[0],
                   id: 99,
                 },
               ],
@@ -250,19 +247,18 @@ describe("/api/report", () => {
       );
 
       const serverFindManyResponse = [
-        { id: 1, name: "Blackmoore" },
-        { id: 2, name: "Nemesis" },
-        { id: 3, name: "TarrenMill" },
-        { id: 4, name: "TwistingNether" },
-        { id: 5, name: "Ysondre" },
+        { id: 1, name: "Hyjal" },
+        { id: 2, name: "Blackmoore" },
+        { id: 3, name: "Ysondre" },
+        { id: 4, name: "Kazzak" },
       ];
 
       const characterFindManyResponse = [
-        { id: 1, name: "Xepheris", serverID: 1 },
-        { id: 2, name: "Lisayne", serverID: 2 },
-        { id: 3, name: "Kittix", serverID: 3 },
-        { id: 4, name: "Ayazky", serverID: 4 },
-        { id: 5, name: "Afkdin", serverID: 5 },
+        { id: 1, name: "Wânheda", serverID: 1 },
+        { id: 2, name: "Xepheris", serverID: 2 },
+        { id: 3, name: "Steffen", serverID: 3 },
+        { id: 4, name: "Afkdin", serverID: 3 },
+        { id: 5, name: "Lorioa", serverID: 4 },
       ];
 
       const playerFindManyResponse = [
@@ -320,6 +316,7 @@ describe("/api/report", () => {
       keystoneLevel: 15,
       keystoneTime: 1,
       maps: [],
+      rating: 137,
     };
 
     test("fightHasFivePlayers", () => {
@@ -355,13 +352,37 @@ describe("/api/report", () => {
     });
 
     test("fightIsTimedKeystone", () => {
+      // out of time, out of threshold
+      expect(
+        fightIsTimedKeystone({
+          ...fight,
+          gameZone: {
+            id: DungeonIDs.DE_OTHER_SIDE,
+          },
+          keystoneTime: dungeonMap[DungeonIDs.DE_OTHER_SIDE].timer[0] + 2000,
+        })
+      ).toBe(false);
+
+      // out of time, within threshold
+      expect(
+        fightIsTimedKeystone({
+          ...fight,
+          gameZone: {
+            id: DungeonIDs.DE_OTHER_SIDE,
+          },
+          keystoneTime: dungeonMap[DungeonIDs.DE_OTHER_SIDE].timer[0] + 500,
+        })
+      ).toBe(true);
+
+      // ignores keystoneBonus
       expect(
         fightIsTimedKeystone({
           ...fight,
           keystoneBonus: 0,
         })
-      ).toBe(false);
+      ).toBe(true);
 
+      // ignores missing gameZone
       expect(fightIsTimedKeystone(fight)).toBe(true);
     });
 

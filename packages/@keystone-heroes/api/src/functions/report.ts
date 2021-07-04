@@ -10,6 +10,7 @@ import type {
   Prisma,
   Affix,
   Dungeon,
+  Fight as PrismaFight,
 } from "@keystone-heroes/db/types";
 import { MIN_KEYSTONE_LEVEL } from "@keystone-heroes/env";
 import type {
@@ -86,9 +87,18 @@ type MaybeFight = DeepNullablePath<
   ["reportData", "report", "fights", number]
 >;
 
-type Fight = Omit<DeepRequired<MaybeFight>, "gameZone" | "__typename"> & {
+type FightWithNullableRating = Omit<
+  DeepRequired<MaybeFight>,
+  "rating" | "__typename" | "gameZone"
+> & {
+  // must be separately validated to indicate different error
+  rating: number | null;
+  // separately validated in /api/fight
   gameZone: null | Pick<GameZone, "id">;
 };
+
+type Fight = Omit<DeepRequired<MaybeFight>, "gameZone" | "__typename"> &
+  Pick<FightWithNullableRating, "gameZone">;
 
 type Player = {
   class: PlayableClass;
@@ -118,7 +128,9 @@ type FightWithMeta = Omit<
   dtps: number;
 };
 
-export const fightIsFight = (fight: MaybeFight): fight is Fight => {
+export const fightIsFight = (
+  fight: MaybeFight
+): fight is FightWithNullableRating => {
   return (
     typeof fight?.averageItemLevel === "number" &&
     typeof fight.keystoneBonus === "number" &&
@@ -128,15 +140,41 @@ export const fightIsFight = (fight: MaybeFight): fight is Fight => {
     Array.isArray(fight.keystoneAffixes) &&
     Array.isArray(fight.maps) &&
     // broken gameZone is alright, will be fixed in /api/fight
-    (fight?.gameZone === null || typeof fight.gameZone?.id === "number")
+    (fight.gameZone === null || typeof fight.gameZone?.id === "number")
   );
 };
 
 export const fightFulfillsKeystoneLevelRequirement = (fight: Fight): boolean =>
   fight.keystoneLevel >= MIN_KEYSTONE_LEVEL;
 
-export const fightIsTimedKeystone = (fight: Fight): boolean =>
-  fight.keystoneBonus > 0;
+/**
+ * Raider.io has a built-in threshold to allow keys that supposedly were
+ * NOT in time to still count as the official Battle.net API reports values that
+ * indicate the key was not timed, while the game DID treat it as timed.
+ *
+ * These two keys resulted in an upgraded key, yet the Battle.net API says they
+ * weren't timed.
+ * @see https://raider.io/mythic-plus-runs/season-sl-1-post/35005362-14-mists-of-tirna-scithe
+ * @see https://raider.io/mythic-plus-runs/season-sl-1/33815946-22-theater-of-pain
+ *
+ * @see https://discord.com/channels/311861458847662081/311861458847662081/860180000178438183
+ *
+ * Beginning SL Season 2 WCL uses the rating increase to detect timing a key
+ * @see https://discord.com/channels/180033360939319296/681904912090529801/860180670298980412
+ */
+export const fightIsTimedKeystone = (
+  fight: FightWithNullableRating
+): fight is Fight => {
+  if (!fight.gameZone) {
+    // defer checking whether its a timed key to later
+    return true;
+  }
+
+  const [timer] = dungeonMap[fight.gameZone.id].timer;
+
+  // 1 second threshold included
+  return timer >= fight.keystoneTime - 1000;
+};
 
 export const fightHasFivePlayers = (fight: Fight): boolean =>
   fight.friendlyPlayers.length === 5;
@@ -228,12 +266,12 @@ const createManyPlayer = async (
     characterMap: Record<string, number>;
   }
 ): Promise<CreateManyPlayerReturn> => {
-  const playerCreateManyInput = data
-    .map<Prisma.PlayerCreateManyInput | null>((dataset) => {
+  const playerCreateManyInput = data.reduce<Prisma.PlayerCreateManyInput[]>(
+    (acc, dataset) => {
       const serverID = meta.serverMap[dataset.server];
 
       if (!serverID) {
-        return null;
+        return acc;
       }
 
       const characterID =
@@ -241,26 +279,28 @@ const createManyPlayer = async (
 
       // sanity check - shouldnt happen
       if (!characterID) {
-        return null;
+        return acc;
       }
 
-      return {
-        actorID: dataset.actorID,
-        dps: dataset.dps,
-        hps: dataset.hps,
-        deaths: dataset.deaths,
-        itemLevel: dataset.itemLevel,
-        characterID,
-        reportID: meta.reportID,
-        specID: dataset.specID,
-        covenantID: dataset.covenantID ? dataset.covenantID : undefined,
-        soulbindID: dataset.soulbindID ? dataset.soulbindID : undefined,
-        legendaryID: dataset.legendary ? dataset.legendary.effectID : undefined,
-      };
-    })
-    .filter(
-      (dataset): dataset is Prisma.PlayerCreateManyInput => dataset !== null
-    );
+      return [
+        ...acc,
+        {
+          actorID: dataset.actorID,
+          dps: dataset.dps,
+          hps: dataset.hps,
+          deaths: dataset.deaths,
+          itemLevel: dataset.itemLevel,
+          characterID,
+          reportID: meta.reportID,
+          specID: dataset.specID,
+          covenantID: dataset.covenantID ? dataset.covenantID : null,
+          soulbindID: dataset.soulbindID ? dataset.soulbindID : null,
+          legendaryID: dataset.legendary ? dataset.legendary.effectID : null,
+        },
+      ];
+    },
+    []
+  );
 
   await prisma.player.createMany({
     skipDuplicates: true,
@@ -274,12 +314,12 @@ const createManyPlayer = async (
     select: { id: true, characterID: true },
   });
 
-  const dataWithPlayerID = data
-    .map<(Player & { playerID: number }) | null>((dataset) => {
+  const dataWithPlayerID = data.reduce<(Player & { playerID: number })[]>(
+    (acc, dataset) => {
       const serverID = meta.serverMap[dataset.server];
 
       if (!serverID) {
-        return null;
+        return acc;
       }
 
       const characterID =
@@ -287,7 +327,7 @@ const createManyPlayer = async (
 
       // sanity check - shouldnt happen
       if (!characterID) {
-        return null;
+        return acc;
       }
 
       const match = createdPlayers.find(
@@ -295,14 +335,13 @@ const createManyPlayer = async (
       );
 
       if (!match) {
-        return null;
+        return acc;
       }
 
-      return { ...dataset, playerID: match.id };
-    })
-    .filter(
-      (dataset): dataset is Player & { playerID: number } => dataset !== null
-    );
+      return [...acc, { ...dataset, playerID: match.id }];
+    },
+    []
+  );
 
   const playerIDs = createdPlayers.map((dataset) => {
     return {
@@ -377,16 +416,19 @@ type RawReport = {
   region: {
     slug: string;
   };
-  Fight: {
-    fightID: number;
-    averageItemLevel: number;
-    chests: number;
-    keystoneTime: number;
-    keystoneLevel: number;
-    dps: number;
-    hps: number;
-    dtps: number;
-    totalDeaths: number;
+  Fight: (Pick<
+    PrismaFight,
+    | "fightID"
+    | "averageItemLevel"
+    | "chests"
+    | "keystoneLevel"
+    | "keystoneTime"
+    | "dps"
+    | "hps"
+    | "dtps"
+    | "totalDeaths"
+    | "rating"
+  > & {
     dungeon: Pick<Dungeon, "name" | "time" | "id"> | null;
     PlayerFight: {
       player: {
@@ -411,7 +453,7 @@ type RawReport = {
         > | null;
       };
     }[];
-  }[];
+  })[];
   week: {
     season: {
       affix: Omit<Affix, "id" | "seasonal">;
@@ -458,9 +500,7 @@ const createResponseFromDB = (
               soulbindID: player.soulbind ? player.soulbind.id : null,
             };
           }),
-        averageItemLevel: Number.parseFloat(
-          (fight.averageItemLevel / 100).toFixed(2)
-        ),
+        averageItemLevel: fight.averageItemLevel,
         dtps: fight.dtps,
         hps: fight.hps,
         dps: fight.dps,
@@ -469,6 +509,7 @@ const createResponseFromDB = (
         totalDeaths: fight.totalDeaths,
         keystoneBonus: fight.chests,
         dungeon: fight.dungeon,
+        rating: fight.rating,
       };
     }),
   };
@@ -566,6 +607,7 @@ const createReportFindFirst = (reportID: string) => {
           hps: true,
           dtps: true,
           totalDeaths: true,
+          rating: true,
           dungeon: {
             select: {
               name: true,
@@ -694,7 +736,7 @@ export const reportHandler: RequestHandler<Request, ReportResponse> = async (
     res.status(UNPROCESSABLE_ENTITY).json({
       error: reportHandlerError.EMPTY_LOG,
     });
-    return 1;
+    return;
   }
 
   const {
@@ -706,22 +748,17 @@ export const reportHandler: RequestHandler<Request, ReportResponse> = async (
   const persistedFightIDs = getFightIDsOfExistingReport(existingReport);
   const fightIsUnknown = createFightIsUnknownFilter(persistedFightIDs);
 
-  const fights = report.reportData.report.fights
-    .filter(
-      (fight): fight is Fight =>
+  const fights = report.reportData.report.fights.filter(
+    (fight): fight is Fight => {
+      return (
         fightIsFight(fight) &&
         fightIsTimedKeystone(fight) &&
         fightHasFivePlayers(fight) &&
         fightFulfillsKeystoneLevelRequirement(fight) &&
         fightIsUnknown(fight)
-    )
-    .map((fight) => {
-      return {
-        ...fight,
-        averageItemLevel: Number.parseFloat(fight.averageItemLevel.toFixed(2)),
-        maps: [...new Set(fight.maps.map((map) => map.id))],
-      };
-    });
+      );
+    }
+  );
 
   // no valid (new) fights found
   if (fights.length === 0) {
@@ -750,7 +787,13 @@ export const reportHandler: RequestHandler<Request, ReportResponse> = async (
         return null;
       }
 
-      const { friendlyPlayers, keystoneAffixes, maps, ...rest } = fight;
+      const {
+        friendlyPlayers,
+        keystoneAffixes,
+        maps,
+        averageItemLevel,
+        ...rest
+      } = fight;
       const { damageDone, healingDone, deathEvents, damageTaken } =
         table.reportData.report.table.data;
       const playerDetails = Object.values(
@@ -758,18 +801,17 @@ export const reportHandler: RequestHandler<Request, ReportResponse> = async (
       ).flat();
       const keystoneTimeInSeconds = fight.keystoneTime / 1000;
 
-      const maybePlayer = friendlyPlayers.map<Player | null>((id) => {
+      const player = friendlyPlayers.reduce<Player[]>((acc, id) => {
         const characterOrEventMatchesID = <T extends { id: number }>(
           dataset: T
         ) => dataset.id === id;
 
         const damageDoneMatch = damageDone.find(characterOrEventMatchesID);
         const healingDoneMatch = healingDone.find(characterOrEventMatchesID);
-        const deaths = deathEvents.filter(characterOrEventMatchesID);
         const detailsMatch = playerDetails.find(characterOrEventMatchesID);
 
         if (!damageDoneMatch || !healingDoneMatch || !detailsMatch) {
-          return null;
+          return acc;
         }
 
         const classID = classMapByName[detailsMatch.type];
@@ -779,9 +821,10 @@ export const reportHandler: RequestHandler<Request, ReportResponse> = async (
         );
 
         if (!spec) {
-          return null;
+          return acc;
         }
 
+        const deaths = deathEvents.filter(characterOrEventMatchesID);
         const dps = Math.round(damageDoneMatch.total / keystoneTimeInSeconds);
         const hps = Math.round(healingDoneMatch.total / keystoneTimeInSeconds);
 
@@ -798,30 +841,29 @@ export const reportHandler: RequestHandler<Request, ReportResponse> = async (
             )
           : null;
 
-        return {
-          name: detailsMatch.name,
-          server: detailsMatch.server,
-          class: detailsMatch.type,
-          spec: detailsMatch.specs[0],
-          classID,
-          specID: spec.id,
-          dps,
-          hps,
-          deaths: deaths.length,
-          itemLevel: detailsMatch.maxItemLevel,
-          actorID: id,
-          talents: detailsMatch.combatantInfo.talents,
-          conduits: detailsMatch.combatantInfo.heartOfAzeroth,
-          legendary,
-          soulbindID,
-          covenantID,
-          covenantTraits,
-        };
-      });
-
-      const player = maybePlayer.filter(
-        (player): player is Player => player !== null
-      );
+        return [
+          ...acc,
+          {
+            name: detailsMatch.name,
+            server: detailsMatch.server,
+            class: detailsMatch.type,
+            spec: detailsMatch.specs[0],
+            classID,
+            specID: spec.id,
+            dps,
+            hps,
+            deaths: deaths.length,
+            itemLevel: detailsMatch.maxItemLevel,
+            actorID: id,
+            talents: detailsMatch.combatantInfo.talents,
+            conduits: detailsMatch.combatantInfo.heartOfAzeroth,
+            legendary,
+            soulbindID,
+            covenantID,
+            covenantTraits,
+          },
+        ];
+      }, []);
 
       if (player.length !== 5) {
         return null;
@@ -832,10 +874,17 @@ export const reportHandler: RequestHandler<Request, ReportResponse> = async (
           keystoneTimeInSeconds
       );
 
+      const normalizedAverageItemLevel = Number.parseFloat(
+        averageItemLevel.toFixed(2)
+      );
+      const uniqueMaps = [...new Set(maps.map((map) => map.id))];
+
       return {
         ...rest,
         player,
         dtps,
+        averageItemLevel: normalizedAverageItemLevel,
+        maps: uniqueMaps,
       };
     })
   );
@@ -850,19 +899,6 @@ export const reportHandler: RequestHandler<Request, ReportResponse> = async (
     });
     return;
   }
-
-  const regionDataset = await prisma.region.upsert({
-    select: {
-      id: true,
-    },
-    create: {
-      slug: region,
-    },
-    where: {
-      slug: region,
-    },
-    update: {},
-  });
 
   const weekID = await findWeekByAffixes(fights[0].keystoneAffixes);
 
@@ -977,6 +1013,19 @@ export const reportHandler: RequestHandler<Request, ReportResponse> = async (
     data: legendariesCreateMany,
   });
 
+  const regionDataset = await prisma.region.upsert({
+    select: {
+      id: true,
+    },
+    create: {
+      slug: region,
+    },
+    where: {
+      slug: region,
+    },
+    update: {},
+  });
+
   const serverMap = await persistServer(
     [...new Set(allPlayer.map((player) => player.server))],
     regionDataset.id
@@ -1021,10 +1070,11 @@ export const reportHandler: RequestHandler<Request, ReportResponse> = async (
         chests: fight.keystoneBonus,
         fightID: fight.id,
         keystoneLevel: fight.keystoneLevel,
+        keystoneTime: fight.keystoneTime,
+        rating: fight.rating,
         dps: fight.player.reduce((acc, player) => acc + player.dps, 0),
         hps: fight.player.reduce((acc, player) => acc + player.hps, 0),
         dtps: fight.dtps,
-        keystoneTime: fight.keystoneTime,
         totalDeaths: fight.player.reduce(
           (acc, player) => acc + player.deaths,
           0
@@ -1106,8 +1156,72 @@ const findWeekByAffixes = async (
   });
 
   if (!dataset) {
-    // TODO: create season, get season ID, insert week and return week id
-    throw new Error("not happening");
+    const currentSeason = await prisma.season.findFirst({
+      where: {
+        id: {
+          gt: 1,
+        },
+      },
+      orderBy: {
+        id: "desc",
+      },
+      take: 1,
+      select: {
+        id: true,
+      },
+    });
+
+    if (!currentSeason) {
+      throw new Error("no season found");
+    }
+
+    const lastSeasonWeek = await prisma.week.findFirst({
+      where: {
+        seasonWeekID: {
+          gte: 0,
+        },
+      },
+      orderBy: {
+        seasonWeekID: "desc",
+      },
+      take: 1,
+      select: {
+        seasonWeekID: true,
+      },
+    });
+
+    const nextSeasonWeekID = (lastSeasonWeek?.seasonWeekID ?? -1) + 1;
+
+    const newWeek = await prisma.week.create({
+      data: {
+        affix1: {
+          connect: {
+            id: affix1ID,
+          },
+        },
+        affix2: {
+          connect: {
+            id: affix2ID,
+          },
+        },
+        affix3: {
+          connect: {
+            id: affix3ID,
+          },
+        },
+        season: {
+          connect: {
+            id: currentSeason.id,
+          },
+        },
+        seasonWeekID: nextSeasonWeekID,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    return newWeek.id;
   }
 
   return dataset.id;

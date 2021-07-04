@@ -25,6 +25,6 @@ export type PersistedDungeonPull = Pick<
   boundingBox: ReportMapBoundingBox;
   enemyNPCs: Pick<
     Required<DeepNonNullable<ReportDungeonPullNpc>>,
-    "gameID" | "minimumInstanceID" | "maximumInstanceID" | "id"
+    "gameID" | "id"
   >[];
 };

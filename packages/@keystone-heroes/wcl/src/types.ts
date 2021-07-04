@@ -1300,6 +1300,8 @@ export type ReportFight = {
   maps?: Maybe<Maybe<ReportMap>[]>;
   /** The name of the fight. */
   name: Scalars["String"];
+  /** The official Blizzard rating for a completed Mythic+ dungeon or Torghast run. */
+  rating?: Maybe<Scalars["Int"]>;
   /** The group size for the raid, dungeon, or arena. Null for trash. */
   size?: Maybe<Scalars["Int"]>;
   /** The start time of the fight. This is a timestamp with millisecond precision that is relative to the start of the report, i.e., the start of the report is considered time 0. */
@@ -1655,6 +1657,7 @@ export type InitialReportDataQuery = { __typename?: "Query" } & {
                   | "keystoneAffixes"
                   | "keystoneBonus"
                   | "keystoneTime"
+                  | "rating"
                   | "averageItemLevel"
                   | "friendlyPlayers"
                 > & {
@@ -1806,13 +1809,7 @@ export type FightPullsQuery = { __typename?: "Query" } & {
                           Maybe<
                             {
                               __typename?: "ReportDungeonPullNPC";
-                            } & Pick<
-                              ReportDungeonPullNpc,
-                              | "id"
-                              | "gameID"
-                              | "minimumInstanceID"
-                              | "maximumInstanceID"
-                            >
+                            } & Pick<ReportDungeonPullNpc, "id" | "gameID">
                           >[]
                         >;
                       }
@@ -1837,7 +1834,7 @@ export const InitialReportDataDocument = gql`
         region {
           slug
         }
-        fights(translate: true, killType: Kills) {
+        fights(translate: true) {
           id
           startTime
           endTime
@@ -1845,6 +1842,7 @@ export const InitialReportDataDocument = gql`
           keystoneAffixes
           keystoneBonus
           keystoneTime
+          rating
           averageItemLevel
           friendlyPlayers
           gameZone {
@@ -1928,7 +1926,7 @@ export const FightPullsDocument = gql`
   query FightPulls($reportID: String!, $fightIDs: [Int]!) {
     reportData {
       report(code: $reportID) {
-        fights(translate: true, killType: Kills, fightIDs: $fightIDs) {
+        fights(translate: true, fightIDs: $fightIDs) {
           dungeonPulls {
             startTime
             endTime
@@ -1946,8 +1944,6 @@ export const FightPullsDocument = gql`
             enemyNPCs {
               id
               gameID
-              minimumInstanceID
-              maximumInstanceID
             }
           }
         }

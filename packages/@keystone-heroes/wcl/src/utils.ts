@@ -1,7 +1,7 @@
 export const isValidReportId = (id?: string | string[]): id is string =>
   !Array.isArray(id) && id?.length === 16 && !id.includes(".");
 
-export const ONGOING_REPORT_THRESHOLD = 24 * 60 * 60 * 1000;
+export const ONGOING_REPORT_THRESHOLD = 18 * 60 * 60 * 1000;
 
 /**
  * assume a report may still be ongoing if its less than one day old

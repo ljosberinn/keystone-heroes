@@ -1,65 +1,328 @@
 {
   "reportData": {
     "report": {
-      "title": "adsf",
-      "startTime": 1619116993317,
-      "endTime": 1619126487765,
-      "region": { "slug": "EU" },
+      "title": "Mythic+ Dungeons",
+      "startTime": 1625318363957,
+      "endTime": 1625344842249,
+      "region": {
+        "slug": "EU"
+      },
       "fights": [
         {
-          "id": 4,
-          "startTime": 1989745,
-          "endTime": 3307345,
-          "keystoneLevel": 15,
-          "keystoneAffixes": [9, 7, 4, 121],
-          "keystoneBonus": 2,
-          "keystoneTime": 1318941,
-          "averageItemLevel": 220.8000030517578,
-          "friendlyPlayers": [4, 45, 46, 48, 6],
-          "gameZone": { "id": 2287 },
+          "id": 1,
+          "startTime": 50329,
+          "endTime": 1910367,
+          "keystoneLevel": 17,
+          "keystoneAffixes": [10, 11, 124, 121],
+          "keystoneBonus": 1,
+          "keystoneTime": 1896314,
+          "rating": 137,
+          "averageItemLevel": 223.39999389648438,
+          "friendlyPlayers": [10, 1, 11, 6, 2],
+          "gameZone": null,
           "maps": [
-            { "id": 1663 },
-            { "id": 1664 },
-            { "id": 1663 },
-            { "id": 1664 },
-            { "id": 1665 }
+            {
+              "id": 1674
+            },
+            {
+              "id": 1697
+            }
           ]
+        },
+        {
+          "id": 2,
+          "startTime": 2822734,
+          "endTime": 4956099,
+          "keystoneLevel": 20,
+          "keystoneAffixes": [10, 11, 124, 121],
+          "keystoneBonus": 1,
+          "keystoneTime": 2189941,
+          "rating": 150,
+          "averageItemLevel": 223.1999969482422,
+          "friendlyPlayers": [1, 85, 86, 83, 84],
+          "gameZone": {
+            "id": 2289
+          },
+          "maps": [
+            {
+              "id": 1674
+            },
+            {
+              "id": 1697
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "startTime": 5722276,
+          "endTime": 7408119,
+          "keystoneLevel": 21,
+          "keystoneAffixes": [10, 11, 124, 121],
+          "keystoneBonus": 1,
+          "keystoneTime": 1702019,
+          "rating": 156,
+          "averageItemLevel": 223.8000030517578,
+          "friendlyPlayers": [112, 1, 113, 114, 84],
+          "gameZone": {
+            "id": 2290
+          },
+          "maps": [
+            {
+              "id": 1669
+            }
+          ]
+        },
+        {
+          "id": 4,
+          "startTime": 8128586,
+          "endTime": 8142894,
+          "keystoneLevel": null,
+          "keystoneAffixes": null,
+          "keystoneBonus": null,
+          "keystoneTime": null,
+          "rating": null,
+          "averageItemLevel": null,
+          "friendlyPlayers": null,
+          "gameZone": {
+            "id": 2293
+          },
+          "maps": null
         },
         {
           "id": 5,
-          "startTime": 4276492,
-          "endTime": 6308740,
-          "keystoneLevel": 16,
-          "keystoneAffixes": [9, 7, 4, 121],
+          "startTime": 8154329,
+          "endTime": 8156168,
+          "keystoneLevel": null,
+          "keystoneAffixes": null,
+          "keystoneBonus": null,
+          "keystoneTime": null,
+          "rating": null,
+          "averageItemLevel": null,
+          "friendlyPlayers": null,
+          "gameZone": {
+            "id": 2293
+          },
+          "maps": null
+        },
+        {
+          "id": 6,
+          "startTime": 8203824,
+          "endTime": 8207217,
+          "keystoneLevel": null,
+          "keystoneAffixes": null,
+          "keystoneBonus": null,
+          "keystoneTime": null,
+          "rating": null,
+          "averageItemLevel": null,
+          "friendlyPlayers": null,
+          "gameZone": {
+            "id": 2293
+          },
+          "maps": null
+        },
+        {
+          "id": 7,
+          "startTime": 8257851,
+          "endTime": 8258208,
+          "keystoneLevel": null,
+          "keystoneAffixes": null,
+          "keystoneBonus": null,
+          "keystoneTime": null,
+          "rating": null,
+          "averageItemLevel": null,
+          "friendlyPlayers": null,
+          "gameZone": {
+            "id": 2293
+          },
+          "maps": null
+        },
+        {
+          "id": 8,
+          "startTime": 8271380,
+          "endTime": 10361293,
+          "keystoneLevel": 21,
+          "keystoneAffixes": [10, 11, 124, 121],
           "keystoneBonus": 1,
-          "keystoneTime": 2078413,
-          "averageItemLevel": 221.1999969482422,
-          "friendlyPlayers": [97, 4, 99, 6, 98],
-          "gameZone": { "id": 2293 },
+          "keystoneTime": 2101258,
+          "rating": 156,
+          "averageItemLevel": 224,
+          "friendlyPlayers": [1, 173, 6, 113, 167],
+          "gameZone": {
+            "id": 2293
+          },
           "maps": [
-            { "id": 1683 },
-            { "id": 1684 },
-            { "id": 1686 },
-            { "id": 1687 },
-            { "id": 1686 },
-            { "id": 1684 },
-            { "id": 1685 },
-            { "id": 1684 },
-            { "id": 1683 }
+            {
+              "id": 1683
+            },
+            {
+              "id": 1684
+            },
+            {
+              "id": 1685
+            },
+            {
+              "id": 1684
+            },
+            {
+              "id": 1686
+            },
+            {
+              "id": 1684
+            },
+            {
+              "id": 1685
+            },
+            {
+              "id": 1684
+            },
+            {
+              "id": 1686
+            },
+            {
+              "id": 1687
+            },
+            {
+              "id": 1686
+            },
+            {
+              "id": 1684
+            },
+            {
+              "id": 1683
+            }
           ]
         },
         {
+          "id": 9,
+          "startTime": 10361368,
+          "endTime": 10369245,
+          "keystoneLevel": null,
+          "keystoneAffixes": null,
+          "keystoneBonus": null,
+          "keystoneTime": null,
+          "rating": null,
+          "averageItemLevel": null,
+          "friendlyPlayers": null,
+          "gameZone": {
+            "id": 2293
+          },
+          "maps": null
+        },
+        {
           "id": 10,
-          "startTime": 7604877,
-          "endTime": 9480877,
-          "keystoneLevel": 17,
-          "keystoneAffixes": [9, 7, 4, 121],
+          "startTime": 17890007,
+          "endTime": 19400839,
+          "keystoneLevel": 19,
+          "keystoneAffixes": [10, 11, 124, 121],
           "keystoneBonus": 1,
-          "keystoneTime": 1912531,
-          "averageItemLevel": 220.39999389648438,
-          "friendlyPlayers": [4, 150, 148, 149, 6],
-          "gameZone": { "id": 2286 },
-          "maps": [{ "id": 1666 }, { "id": 1667 }, { "id": 1668 }]
+          "keystoneTime": 1511926,
+          "rating": 147,
+          "averageItemLevel": 223.60000610351562,
+          "friendlyPlayers": [219, 1, 6, 217, 218],
+          "gameZone": {
+            "id": 2293
+          },
+          "maps": [
+            {
+              "id": 1663
+            },
+            {
+              "id": 1664
+            },
+            {
+              "id": 1663
+            },
+            {
+              "id": 1664
+            },
+            {
+              "id": 1665
+            }
+          ]
+        },
+        {
+          "id": 11,
+          "startTime": 20163668,
+          "endTime": 21815165,
+          "keystoneLevel": 21,
+          "keystoneAffixes": [10, 11, 124, 121],
+          "keystoneBonus": 2,
+          "keystoneTime": 1653316,
+          "rating": 158,
+          "averageItemLevel": 223.8000030517578,
+          "friendlyPlayers": [219, 1, 6, 254, 218],
+          "gameZone": {
+            "id": 2286
+          },
+          "maps": [
+            {
+              "id": 1666
+            },
+            {
+              "id": 1667
+            },
+            {
+              "id": 1668
+            }
+          ]
+        },
+        {
+          "id": 12,
+          "startTime": 22291597,
+          "endTime": 24455197,
+          "keystoneLevel": 23,
+          "keystoneAffixes": [10, 11, 124, 121],
+          "keystoneBonus": 0,
+          "keystoneTime": 2185405,
+          "rating": 158,
+          "averageItemLevel": 223.8000030517578,
+          "friendlyPlayers": [219, 1, 254, 6, 218],
+          "gameZone": {
+            "id": 2287
+          },
+          "maps": [
+            {
+              "id": 1663
+            },
+            {
+              "id": 1664
+            },
+            {
+              "id": 1663
+            },
+            {
+              "id": 1664
+            },
+            {
+              "id": 1663
+            },
+            {
+              "id": 1664
+            },
+            {
+              "id": 1665
+            }
+          ]
+        },
+        {
+          "id": 13,
+          "startTime": 24728541,
+          "endTime": 26466511,
+          "keystoneLevel": 22,
+          "keystoneAffixes": [10, 11, 124, 121],
+          "keystoneBonus": null,
+          "keystoneTime": null,
+          "rating": null,
+          "averageItemLevel": 223.8000030517578,
+          "friendlyPlayers": [219, 1, 6, 254, 218],
+          "gameZone": {
+            "id": 2290
+          },
+          "maps": [
+            {
+              "id": 1669
+            }
+          ]
         }
       ]
     }

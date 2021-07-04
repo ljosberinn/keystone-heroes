@@ -138,6 +138,7 @@ model Fight {
   startTime        Int
   endTime          Int
   percent          Float
+  rating           Int
 
   dungeonID Int?
 

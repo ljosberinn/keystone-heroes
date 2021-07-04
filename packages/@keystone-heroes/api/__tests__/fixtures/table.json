@@ -3,44 +3,44 @@
     "report": {
       "table": {
         "data": {
-          "totalTime": 1876000,
-          "itemLevel": 220.39999389648438,
+          "totalTime": 1860038,
+          "itemLevel": 223.39999389648438,
           "logVersion": 16,
           "gameVersion": 1,
           "composition": [
             {
-              "name": "Lisayne",
-              "id": 150,
-              "guid": 146591017,
-              "type": "Paladin",
+              "name": "Wânheda",
+              "id": 10,
+              "guid": 183036938,
+              "type": "DeathKnight",
               "specs": [
                 {
-                  "spec": "Retribution",
+                  "spec": "Frost",
                   "role": "dps"
                 }
               ]
             },
             {
-              "name": "Ayazky",
-              "id": 149,
-              "guid": 142240188,
-              "type": "Druid",
+              "name": "Lorioa",
+              "id": 2,
+              "guid": 183231780,
+              "type": "Mage",
               "specs": [
                 {
-                  "spec": "Balance",
+                  "spec": "Frost",
                   "role": "dps"
                 }
               ]
             },
             {
-              "name": "Xepheris",
-              "id": 4,
-              "guid": 124494158,
-              "type": "DemonHunter",
+              "name": "Steffen",
+              "id": 11,
+              "guid": 160665002,
+              "type": "Warrior",
               "specs": [
                 {
-                  "spec": "Vengeance",
-                  "role": "tank"
+                  "spec": "Fury",
+                  "role": "dps"
                 }
               ]
             },
@@ -57,42 +57,42 @@
               ]
             },
             {
-              "name": "Kittix",
-              "id": 148,
-              "guid": 166461213,
-              "type": "Mage",
+              "name": "Xepheris",
+              "id": 1,
+              "guid": 124494158,
+              "type": "DemonHunter",
               "specs": [
                 {
-                  "spec": "Arcane",
-                  "role": "dps"
+                  "spec": "Vengeance",
+                  "role": "tank"
                 }
               ]
             }
           ],
           "damageDone": [
             {
-              "name": "Lisayne",
-              "id": 150,
-              "guid": 146591017,
-              "type": "Paladin",
-              "icon": "Paladin-Retribution",
-              "total": 8434266
+              "name": "Wânheda",
+              "id": 10,
+              "guid": 183036938,
+              "type": "DeathKnight",
+              "icon": "DeathKnight-Frost",
+              "total": 7848003
             },
             {
-              "name": "Ayazky",
-              "id": 149,
-              "guid": 142240188,
-              "type": "Druid",
-              "icon": "Druid-Balance",
-              "total": 7685134
+              "name": "Lorioa",
+              "id": 2,
+              "guid": 183231780,
+              "type": "Mage",
+              "icon": "Mage-Frost",
+              "total": 7653029
             },
             {
-              "name": "Xepheris",
-              "id": 4,
-              "guid": 124494158,
-              "type": "DemonHunter",
-              "icon": "DemonHunter-Vengeance",
-              "total": 6502590
+              "name": "Steffen",
+              "id": 11,
+              "guid": 160665002,
+              "type": "Warrior",
+              "icon": "Warrior-Fury",
+              "total": 8254497
             },
             {
               "name": "Afkdin",
@@ -100,41 +100,33 @@
               "guid": 160693241,
               "type": "Paladin",
               "icon": "Paladin-Holy",
-              "total": 4327015
+              "total": 3078896
             },
             {
-              "name": "Kittix",
-              "id": 148,
-              "guid": 166461213,
-              "type": "Mage",
-              "icon": "Mage-Arcane",
-              "total": 8172873
+              "name": "Xepheris",
+              "id": 1,
+              "guid": 124494158,
+              "type": "DemonHunter",
+              "icon": "DemonHunter-Vengeance",
+              "total": 5262752
             }
           ],
           "healingDone": [
             {
-              "name": "Lisayne",
-              "id": 150,
-              "guid": 146591017,
-              "type": "Paladin",
-              "icon": "Paladin-Retribution",
-              "total": 414314
+              "name": "Wânheda",
+              "id": 10,
+              "guid": 183036938,
+              "type": "DeathKnight",
+              "icon": "DeathKnight-Frost",
+              "total": 606880
             },
             {
-              "name": "Ayazky",
-              "id": 149,
-              "guid": 142240188,
-              "type": "Druid",
-              "icon": "Druid-Balance",
-              "total": 826051
-            },
-            {
-              "name": "Xepheris",
-              "id": 4,
-              "guid": 124494158,
-              "type": "DemonHunter",
-              "icon": "DemonHunter-Vengeance",
-              "total": 3509641
+              "name": "Lorioa",
+              "id": 2,
+              "guid": 183231780,
+              "type": "Mage",
+              "icon": "Mage-Frost",
+              "total": 414964
             },
             {
               "name": "Afkdin",
@@ -142,459 +134,446 @@
               "guid": 160693241,
               "type": "Paladin",
               "icon": "Paladin-Holy",
-              "total": 4744492
+              "total": 5222542
             },
             {
-              "name": "Kittix",
-              "id": 148,
-              "guid": 166461213,
-              "type": "Mage",
-              "icon": "Mage-Arcane",
-              "total": 501052
+              "name": "Steffen",
+              "id": 11,
+              "guid": 160665002,
+              "type": "Warrior",
+              "icon": "Warrior-Fury",
+              "total": 606820
+            },
+            {
+              "name": "Xepheris",
+              "id": 1,
+              "guid": 124494158,
+              "type": "DemonHunter",
+              "icon": "DemonHunter-Vengeance",
+              "total": 3390732
             }
           ],
           "damageTaken": [
             {
-              "name": "Drain Fluids",
-              "guid": 334749,
-              "type": 40,
-              "abilityIcon": "inv_artifact_bloodoftheassassinated.jpg",
-              "total": 20041
+              "name": "Infectious Rain",
+              "guid": 331399,
+              "type": 8,
+              "abilityIcon": "ability_creature_disease_03.jpg",
+              "total": 316932
             },
             {
-              "name": "Blood Gorge",
-              "guid": 320614,
+              "name": "Blightbeak",
+              "guid": 327882,
               "type": 1,
-              "abilityIcon": "ability_racial_cannibalize.jpg",
-              "total": 30681
+              "abilityIcon": "artifactability_survivalhunter_eaglesbite.jpg",
+              "total": 41388
             },
             {
-              "name": "Melee",
-              "guid": 320580,
-              "type": 1,
-              "abilityIcon": "ability_rogue_kidneyshot.jpg",
-              "total": 392201
+              "name": "Slime Injection",
+              "guid": 329110,
+              "type": 8,
+              "abilityIcon": "inv_maldraxxusslime_green.jpg",
+              "total": 39352
             },
             {
-              "name": "Belligerent Boast",
-              "guid": 342494,
+              "name": "Corrosive Gunk",
+              "guid": 319070,
+              "type": 8,
+              "abilityIcon": "ability_creature_disease_03.jpg",
+              "total": 330628
+            },
+            {
+              "name": "Withering Filth",
+              "guid": 322410,
+              "type": 8,
+              "abilityIcon": "spell_deathknight_iceboundfortitude.jpg",
+              "total": 153963
+            },
+            {
+              "name": "Burst",
+              "guid": 243237,
               "type": 32,
-              "abilityIcon": "spell_animarevendreth_nova.jpg",
-              "total": 72037
+              "abilityIcon": "ability_ironmaidens_whirlofblood.jpg",
+              "total": 2209679
+            },
+            {
+              "name": "Venomfangs",
+              "guid": 328342,
+              "type": 8,
+              "abilityIcon": "ability_rogue_creepingvenom.jpg",
+              "total": 31349
+            },
+            {
+              "name": "Cytotoxic Slash",
+              "guid": 325552,
+              "type": 1,
+              "abilityIcon": "spell_deathvortex.jpg",
+              "total": 11243
+            },
+            {
+              "name": "Falling",
+              "guid": 3,
+              "type": 1,
+              "abilityIcon": "inv_axe_02.jpg",
+              "total": 3735
+            },
+            {
+              "name": "Bursting Ooze",
+              "guid": 334579,
+              "type": 1,
+              "abilityIcon": "inv_boots_01.jpg",
+              "total": 166030
+            },
+            {
+              "name": "Power Overwhelming",
+              "guid": 329831,
+              "type": 64,
+              "abilityIcon": "spell_mage_focusingcrystal.jpg",
+              "total": 3242
+            },
+            {
+              "name": "Gripping Infection",
+              "guid": 328180,
+              "type": 8,
+              "abilityIcon": "inv_-misc_herb_marrowroot.jpg",
+              "total": 74977
+            },
+            {
+              "name": "Wasting Blight",
+              "guid": 320542,
+              "type": 8,
+              "abilityIcon": "inv_misc_bone_humanskull_01.jpg",
+              "total": 32196
             },
             {
               "name": "Melee",
               "guid": 1,
               "type": 1,
               "abilityIcon": "inv_axe_02.jpg",
-              "total": 2941896
+              "total": 4051085
             },
             {
-              "name": "Heaving Retch",
-              "guid": 320596,
+              "name": "Viral Globs",
+              "guid": 321975,
               "type": 8,
-              "abilityIcon": "spell_shadow_plaguecloud.jpg",
-              "total": 56223
+              "abilityIcon": "ability_deathwing_bloodcorruption_earth.jpg",
+              "total": 196008
             },
             {
-              "name": "Spew Disease",
-              "guid": 333479,
-              "type": 40,
-              "abilityIcon": "spell_shadow_plaguecloud.jpg",
-              "total": 109450
+              "name": "Shadow Ambush",
+              "guid": 331818,
+              "type": 32,
+              "abilityIcon": "ability_demonhunter_vengefulretreat.jpg",
+              "total": 63222
             },
             {
-              "name": "Mutlilate",
-              "guid": 338456,
-              "type": 1,
-              "abilityIcon": "spell_deathknight_butcher2.jpg",
-              "total": 115011
+              "name": "Debilitating Plague",
+              "guid": 324652,
+              "type": 8,
+              "abilityIcon": "ability_creature_disease_03.jpg",
+              "total": 104705
             },
             {
-              "name": "Comet Storm",
-              "guid": 320784,
-              "type": 16,
-              "abilityIcon": "spell_mage_cometstorm.jpg",
-              "total": 100771
+              "name": "Corroded Claws",
+              "guid": 320512,
+              "type": 8,
+              "abilityIcon": "spell_shadow_fingerofdeath.jpg",
+              "total": 176210
             },
             {
-              "name": "Disease Cloud",
-              "guid": 333485,
-              "type": 40,
-              "abilityIcon": "spell_shadow_plaguecloud.jpg",
-              "total": 452342
+              "name": "Pestilence Bolt",
+              "guid": 328094,
+              "type": 8,
+              "abilityIcon": "spell_shadow_fingerofdeath.jpg",
+              "total": 235856
             },
             {
-              "name": "Stitchneedle",
-              "guid": 320200,
-              "type": 1,
-              "abilityIcon": "ability_skeer_bloodletting.jpg",
-              "total": 50569
+              "name": "Oozing Outbreak",
+              "guid": 333808,
+              "type": 8,
+              "abilityIcon": "spell_animamaldraxxus_wave.jpg",
+              "total": 86566
             },
             {
               "name": "Blessing of Sacrifice",
               "guid": 6940,
               "type": 2,
               "abilityIcon": "spell_holy_sealofsacrifice.jpg",
-              "total": 452
+              "total": 22863
             },
             {
-              "name": "Tortured Echoes",
-              "guid": 333634,
-              "type": 32,
-              "abilityIcon": "spell_shadow_blackplague.jpg",
-              "total": 467447
-            },
-            {
-              "name": "Throw Flesh",
-              "guid": 338653,
-              "type": 1,
-              "abilityIcon": "inv_skinning_80_bloodsoakedbone.jpg",
-              "total": 57914
-            },
-            {
-              "name": "Boneflay",
-              "guid": 321807,
-              "type": 1,
-              "abilityIcon": "inv_knife_1h_artifactskulloferedar_d_05.jpg",
-              "total": 32425
-            },
-            {
-              "name": "Necrotic Wound",
-              "guid": 209858,
-              "type": 1,
-              "abilityIcon": "ability_rogue_venomouswounds.jpg",
-              "total": 179579
-            },
-            {
-              "name": "Icy Shard",
-              "guid": 320771,
-              "type": 1,
-              "abilityIcon": "spell_frost_iceshard.jpg",
-              "total": 971942
-            },
-            {
-              "name": "Necrotic Bolt",
-              "guid": 320462,
-              "type": 32,
-              "abilityIcon": "spell_necro_voodooblast.jpg",
-              "total": 219115
+              "name": "Assassinate",
+              "guid": 333406,
+              "type": 8,
+              "abilityIcon": "inv_knife_1h_maldraxxus_d_01.jpg",
+              "total": 30836
             },
             {
               "name": "Shoot",
-              "guid": 328687,
+              "guid": 328365,
+              "type": 8,
+              "abilityIcon": "ability_marksmanship.jpg",
+              "total": 268970
+            },
+            {
+              "name": "Ambush",
+              "guid": 338077,
               "type": 1,
-              "abilityIcon": "inv_ammo_bullet_04.jpg",
-              "total": 3505
+              "abilityIcon": "inv_vicioushordespider.jpg",
+              "total": 149216
             },
             {
-              "name": "Frostbolt Volley",
-              "guid": 322493,
-              "type": 16,
-              "abilityIcon": "spell_frost_frostbolt02.jpg",
-              "total": 186549
+              "name": "Festering Belch",
+              "guid": 318949,
+              "type": 8,
+              "abilityIcon": "inv_misc_slime_01.jpg",
+              "total": 33825
             },
             {
-              "name": "Sever Flesh",
-              "guid": 334488,
-              "type": 1,
-              "abilityIcon": "inv_knife_1h_maldraxxusquest_b_02_blue.jpg",
-              "total": 29936
-            },
-            {
-              "name": "Festering Rot",
-              "guid": 334322,
-              "type": 40,
-              "abilityIcon": "inv_shoulder_leather_maldraxxus_d_01.jpg",
-              "total": 10337
-            },
-            {
-              "name": "Throw Cleaver",
-              "guid": 323489,
-              "type": 1,
-              "abilityIcon": "spell_deathknight_butcher2.jpg",
-              "total": 124629
-            },
-            {
-              "name": "Dark Shroud",
-              "guid": 335142,
+              "name": "Melee",
+              "guid": -32,
               "type": 32,
-              "abilityIcon": "spell_necro_undyingrelentlessness.jpg",
-              "total": 161596
+              "abilityIcon": "inv_axe_02.jpg",
+              "total": 63491
             },
             {
-              "name": "Animate Dead",
-              "guid": 324027,
+              "name": "Wretched Phlegm",
+              "guid": 334926,
+              "type": 8,
+              "abilityIcon": "ability_creature_poison_02.jpg",
+              "total": 128464
+            },
+            {
+              "name": "Violent Detonation",
+              "guid": 328986,
+              "type": 8,
+              "abilityIcon": "ability_vehicle_plaguebarrel.jpg",
+              "total": 15685
+            },
+            {
+              "name": "Crushing Embrace",
+              "guid": 328432,
+              "type": 1,
+              "abilityIcon": "achievement_boss_yoggsaron_01.jpg",
+              "total": 3903
+            },
+            {
+              "name": "Storming",
+              "guid": 343520,
+              "type": 8,
+              "abilityIcon": "ability_skyreach_four_wind.jpg",
+              "total": 234078
+            },
+            {
+              "name": "Jagged Spines",
+              "guid": 320519,
+              "type": 8,
+              "abilityIcon": "ability_deathknight_brittlebones.jpg",
+              "total": 61513
+            },
+            {
+              "name": "Fount of Pestilence",
+              "guid": 330135,
+              "type": 8,
+              "abilityIcon": "ability_warlock_baneofhavoc.jpg",
+              "total": 29861
+            },
+            {
+              "name": "Belligerent Boast",
+              "guid": 342494,
               "type": 32,
-              "abilityIcon": "spell_shadow_nightofthedead.jpg",
-              "total": 10256
+              "abilityIcon": "spell_animarevendreth_nova.jpg",
+              "total": 14352
             },
             {
-              "name": "Gruesome Cleave",
-              "guid": 324323,
+              "name": "Rapid Infection",
+              "guid": 340355,
+              "type": 8,
+              "abilityIcon": "spell_shadow_abominationexplosion.jpg",
+              "total": 5064
+            },
+            {
+              "name": "Venomblades",
+              "guid": 325550,
+              "type": 8,
+              "abilityIcon": "ability_rogue_creepingvenom.jpg",
+              "total": 37727
+            },
+            {
+              "name": "Ambush",
+              "guid": 338081,
               "type": 1,
-              "abilityIcon": "inv_glaive_1h_maldraxxusquest_b_01.jpg",
-              "total": 100466
-            },
-            {
-              "name": "Enfeeble",
-              "guid": 322274,
-              "type": 32,
-              "abilityIcon": "warlock_curse_weakness.jpg",
-              "total": 9207
-            },
-            {
-              "name": "Bone Claw",
-              "guid": 320696,
-              "type": 1,
-              "abilityIcon": "inv_misc_bone_07.jpg",
-              "total": 70212
-            },
-            {
-              "name": "Separate Flesh",
-              "guid": 338636,
-              "type": 1,
-              "abilityIcon": "inv_knife_1h_maldraxxusquest_b_02_blue.jpg",
-              "total": 33927
-            },
-            {
-              "name": "Shoot",
-              "guid": 333629,
-              "type": 1,
-              "abilityIcon": "inv_crossbow_2h_maldraxxusquest_b_01.jpg",
-              "total": 18815
-            },
-            {
-              "name": "Death Burst",
-              "guid": 345625,
-              "type": 32,
-              "abilityIcon": "spell_necro_necroticcore.jpg",
-              "total": 52663
+              "abilityIcon": "inv_vicioushordespider.jpg",
+              "total": 83020
             },
             {
               "name": "Bursting With Pride",
               "guid": 342332,
               "type": 32,
               "abilityIcon": "spell_animarevendreth_buff.jpg",
-              "total": 1630416
+              "total": 1143394
             },
             {
-              "name": "Razorshard Ice",
-              "guid": 328212,
-              "type": 16,
-              "abilityIcon": "spell_hunter_icetrap.jpg",
-              "total": 115349
-            },
-            {
-              "name": "Frozen Binds",
-              "guid": 320788,
-              "type": 16,
-              "abilityIcon": "spell_frost_chainsofice.jpg",
-              "total": 69044
-            },
-            {
-              "name": "Tenderize",
-              "guid": 338357,
+              "name": "Plaguestomp",
+              "guid": 324527,
               "type": 1,
-              "abilityIcon": "ability_warrior_shieldbreak.jpg",
-              "total": 43837
+              "abilityIcon": "6bf_retched_blackrock.jpg",
+              "total": 44729
             },
             {
-              "name": "Disgusting Guts",
-              "guid": 321821,
-              "type": 40,
-              "abilityIcon": "inv_fishing_innards_guts.jpg",
-              "total": 162667
+              "name": "Obliterating Ooze",
+              "guid": 320576,
+              "type": 8,
+              "abilityIcon": "ability_warlock_burningembersgreen.jpg",
+              "total": 41450
             },
             {
-              "name": "Shadow Well",
-              "guid": 320574,
-              "type": 32,
-              "abilityIcon": "spell_necro_necroticsmash.jpg",
-              "total": 12699
+              "name": "Concentrated Plague",
+              "guid": 330069,
+              "type": 8,
+              "abilityIcon": "ability_creature_poison_06.jpg",
+              "total": 275487
             },
             {
-              "name": "Crunch",
-              "guid": 320655,
-              "type": 1,
-              "abilityIcon": "ability_warrior_shieldbreak.jpg",
-              "total": 83481
+              "name": "Touch of Slime",
+              "guid": 322239,
+              "type": 8,
+              "abilityIcon": "achievement_boss_yoggsaron_01.jpg",
+              "total": 21362
             },
             {
-              "name": "Necrotic Bolt",
-              "guid": 320170,
-              "type": 32,
-              "abilityIcon": "spell_necro_voodooblast.jpg",
-              "total": 66410
-            },
-            {
-              "name": "Gut Slice",
-              "guid": 333477,
-              "type": 1,
-              "abilityIcon": "ability_gouge.jpg",
-              "total": 199609
-            },
-            {
-              "name": "Mutlilate",
-              "guid": 320376,
-              "type": 1,
-              "abilityIcon": "spell_deathknight_butcher2.jpg",
-              "total": 25465
-            },
-            {
-              "name": "Throw Flesh",
-              "guid": 334747,
-              "type": 1,
-              "abilityIcon": "inv_skinning_80_bloodsoakedbone.jpg",
-              "total": 203453
-            },
-            {
-              "name": "Grim Fate",
-              "guid": 327397,
-              "type": 32,
-              "abilityIcon": "spell_necro_dischargenecroticcore.jpg",
-              "total": 176447
-            },
-            {
-              "name": "Icebound Aegis",
-              "guid": 321755,
-              "type": 16,
-              "abilityIcon": "ability_mage_shattershield.jpg",
-              "total": 397502
-            },
-            {
-              "name": "Frostbolt",
-              "guid": 320336,
-              "type": 16,
-              "abilityIcon": "spell_frost_frostbolt02.jpg",
-              "total": 27573
+              "name": "Gushing Slime",
+              "guid": 328660,
+              "type": 8,
+              "abilityIcon": "achievement_boss_festergutrotface.jpg",
+              "total": 153987
             }
           ],
           "deathEvents": [
             {
-              "name": "Lisayne",
-              "id": 150,
-              "guid": 146591017,
+              "name": "Steffen",
+              "id": 11,
+              "guid": 160665002,
+              "type": "Warrior",
+              "icon": "Warrior-Fury",
+              "deathTime": 83019,
+              "ability": {
+                "name": "Burst",
+                "guid": 243237,
+                "type": 32,
+                "abilityIcon": "ability_ironmaidens_whirlofblood.jpg"
+              }
+            },
+            {
+              "name": "Lorioa",
+              "id": 2,
+              "guid": 183231780,
+              "type": "Mage",
+              "icon": "Mage-Frost",
+              "deathTime": 84024,
+              "ability": {
+                "name": "Burst",
+                "guid": 243237,
+                "type": 32,
+                "abilityIcon": "ability_ironmaidens_whirlofblood.jpg"
+              }
+            },
+            {
+              "name": "Afkdin",
+              "id": 6,
+              "guid": 160693241,
               "type": "Paladin",
-              "icon": "Paladin-Retribution",
-              "deathTime": 582769,
+              "icon": "Paladin-Holy",
+              "deathTime": 680237,
               "ability": {
-                "name": "Grim Fate",
-                "guid": 327397,
-                "type": 32,
-                "abilityIcon": "spell_necro_dischargenecroticcore.jpg"
+                "name": "Jagged Spines",
+                "guid": 320519,
+                "type": 8,
+                "abilityIcon": "ability_deathknight_brittlebones.jpg"
               }
             },
             {
-              "name": "Kittix",
-              "id": 148,
-              "guid": 166461213,
-              "type": "Mage",
-              "icon": "Mage-Arcane",
-              "deathTime": 620840,
-              "ability": {
-                "name": "Dark Shroud",
-                "guid": 335142,
-                "type": 32,
-                "abilityIcon": "spell_necro_undyingrelentlessness.jpg"
-              }
-            },
-            {
-              "name": "Ayazky",
-              "id": 149,
-              "guid": 142240188,
-              "type": "Druid",
-              "icon": "Druid-Balance",
-              "deathTime": 634976,
-              "ability": {
-                "name": "Grim Fate",
-                "guid": 327397,
-                "type": 32,
-                "abilityIcon": "spell_necro_dischargenecroticcore.jpg"
-              }
-            },
-            {
-              "name": "Kittix",
-              "id": 148,
-              "guid": 166461213,
-              "type": "Mage",
-              "icon": "Mage-Arcane",
-              "deathTime": 962718,
-              "ability": {
-                "name": "Tortured Echoes",
-                "guid": 333634,
-                "type": 32,
-                "abilityIcon": "spell_shadow_blackplague.jpg"
-              }
-            },
-            {
-              "name": "Kittix",
-              "id": 148,
-              "guid": 166461213,
-              "type": "Mage",
-              "icon": "Mage-Arcane",
-              "deathTime": 1203426,
-              "ability": {
-                "name": "Bursting With Pride",
-                "guid": 342332,
-                "type": 32,
-                "abilityIcon": "spell_animarevendreth_buff.jpg"
-              }
-            },
-            {
-              "name": "Ayazky",
-              "id": 149,
-              "guid": 142240188,
-              "type": "Druid",
-              "icon": "Druid-Balance",
-              "deathTime": 1526376,
-              "ability": {
-                "name": "Bursting With Pride",
-                "guid": 342332,
-                "type": 32,
-                "abilityIcon": "spell_animarevendreth_buff.jpg"
-              }
-            },
-            {
-              "name": "Kittix",
-              "id": 148,
-              "guid": 166461213,
-              "type": "Mage",
-              "icon": "Mage-Arcane",
-              "deathTime": 1527920,
-              "ability": {
-                "name": "Disease Cloud",
-                "guid": 333485,
-                "type": 40,
-                "abilityIcon": "spell_shadow_plaguecloud.jpg"
-              }
-            },
-            {
-              "name": "Lisayne",
-              "id": 150,
-              "guid": 146591017,
+              "name": "Afkdin",
+              "id": 6,
+              "guid": 160693241,
               "type": "Paladin",
-              "icon": "Paladin-Retribution",
-              "deathTime": 1530396,
+              "icon": "Paladin-Holy",
+              "deathTime": 812429,
               "ability": {
-                "name": "Bursting With Pride",
-                "guid": 342332,
-                "type": 32,
-                "abilityIcon": "spell_animarevendreth_buff.jpg"
+                "name": "Viral Globs",
+                "guid": 321975,
+                "type": 8,
+                "abilityIcon": "ability_deathwing_bloodcorruption_earth.jpg"
               }
             },
             {
-              "name": "Lisayne",
-              "id": 150,
-              "guid": 146591017,
-              "type": "Paladin",
-              "icon": "Paladin-Retribution",
-              "deathTime": 1834629,
+              "name": "Xepheris",
+              "id": 1,
+              "guid": 124494158,
+              "type": "DemonHunter",
+              "icon": "DemonHunter-Vengeance",
+              "deathTime": 1181510,
               "ability": {
-                "name": "Razorshard Ice",
-                "guid": 328212,
-                "type": 16,
-                "abilityIcon": "spell_hunter_icetrap.jpg"
+                "name": "Melee",
+                "guid": 1,
+                "type": 1,
+                "abilityIcon": "inv_axe_02.jpg"
+              }
+            },
+            {
+              "name": "Steffen",
+              "id": 11,
+              "guid": 160665002,
+              "type": "Warrior",
+              "icon": "Warrior-Fury",
+              "deathTime": 1198758,
+              "ability": {
+                "name": "Melee",
+                "guid": 1,
+                "type": 1,
+                "abilityIcon": "inv_axe_02.jpg"
+              }
+            },
+            {
+              "name": "Wânheda",
+              "id": 10,
+              "guid": 183036938,
+              "type": "DeathKnight",
+              "icon": "DeathKnight-Frost",
+              "deathTime": 1203865,
+              "ability": {
+                "name": "Melee",
+                "guid": 1,
+                "type": 1,
+                "abilityIcon": "inv_axe_02.jpg"
+              }
+            },
+            {
+              "name": "Afkdin",
+              "id": 6,
+              "guid": 160693241,
+              "type": "Paladin",
+              "icon": "Paladin-Holy",
+              "deathTime": 1229244,
+              "ability": {
+                "name": "Melee",
+                "guid": 1,
+                "type": 1,
+                "abilityIcon": "inv_axe_02.jpg"
+              }
+            },
+            {
+              "name": "Lorioa",
+              "id": 2,
+              "guid": 183231780,
+              "type": "Mage",
+              "icon": "Mage-Frost",
+              "deathTime": 1229364,
+              "ability": {
+                "name": "Melee",
+                "guid": 1,
+                "type": 1,
+                "abilityIcon": "inv_axe_02.jpg"
               }
             }
           ],
@@ -602,14 +581,14 @@
             "tanks": [
               {
                 "name": "Xepheris",
-                "id": 4,
+                "id": 1,
                 "guid": 124494158,
                 "type": "DemonHunter",
                 "server": "Blackmoore",
                 "icon": "DemonHunter-Vengeance",
                 "specs": ["Vengeance"],
-                "minItemLevel": 222,
-                "maxItemLevel": 222,
+                "minItemLevel": 223,
+                "maxItemLevel": 223,
                 "combatantInfo": {
                   "stats": {
                     "Speed": {
@@ -625,44 +604,44 @@
                       "max": 0
                     },
                     "Stamina": {
-                      "min": 3410,
-                      "max": 3410
+                      "min": 3424,
+                      "max": 3424
                     },
                     "Haste": {
-                      "min": 641,
-                      "max": 641
+                      "min": 606,
+                      "max": 606
                     },
                     "Leech": {
-                      "min": 109,
-                      "max": 109
+                      "min": 67,
+                      "max": 67
                     },
                     "Armor": {
-                      "min": 3534,
-                      "max": 3534
+                      "min": 3546,
+                      "max": 3546
                     },
                     "Agility": {
-                      "min": 1284,
-                      "max": 1284
+                      "min": 1292,
+                      "max": 1292
                     },
                     "Crit": {
-                      "min": 83,
-                      "max": 83
+                      "min": 120,
+                      "max": 120
                     },
                     "Item Level": {
-                      "min": 222,
-                      "max": 222
+                      "min": 223,
+                      "max": 223
                     },
                     "Parry": {
-                      "min": 83,
-                      "max": 83
+                      "min": 120,
+                      "max": 120
                     },
                     "Avoidance": {
                       "min": 0,
                       "max": 0
                     },
                     "Versatility": {
-                      "min": 1177,
-                      "max": 1177
+                      "min": 1178,
+                      "max": 1178
                     }
                   },
                   "talents": [
@@ -834,15 +813,15 @@
                       "bonusIDs": [7354, 7359, 6652, 1540, 6646]
                     },
                     {
-                      "id": 178361,
+                      "id": 178731,
                       "slot": 7,
-                      "quality": 4,
-                      "icon": "inv_boot_leather_revendrethraid_d_01.jpg",
-                      "name": "Sinful Gladiator's Leather Treads",
-                      "itemLevel": 220,
+                      "quality": 3,
+                      "icon": "inv_boot_leather_oribosdungeon_c_01.jpg",
+                      "name": "Viscera-Stitched Footpads",
+                      "itemLevel": 226,
                       "permanentEnchant": 6211,
                       "permanentEnchantName": "+15 Agility",
-                      "bonusIDs": [6625, 1492, 6646]
+                      "bonusIDs": [7375, 7359, 6652, 1540, 6646]
                     },
                     {
                       "id": 172321,
@@ -913,22 +892,22 @@
                       ]
                     },
                     {
-                      "id": 178769,
-                      "slot": 12,
-                      "quality": 3,
-                      "icon": "inv_alchemy_elixir_03.jpg",
-                      "name": "Infinitely Divisible Ooze",
-                      "itemLevel": 210,
-                      "bonusIDs": [7214, 41, 1501, 5868, 6646]
-                    },
-                    {
                       "id": 179331,
-                      "slot": 13,
+                      "slot": 12,
                       "quality": 3,
                       "icon": "inv_misc_scales_stonyorange.jpg",
                       "name": "Blood-Spattered Scale",
-                      "itemLevel": 220,
-                      "bonusIDs": [7359, 6652, 7373, 1534, 6646]
+                      "itemLevel": 226,
+                      "bonusIDs": [7375, 7359, 6652, 1540, 6646]
+                    },
+                    {
+                      "id": 184018,
+                      "slot": 13,
+                      "quality": 4,
+                      "icon": "inv_flaming_splinter.jpg",
+                      "name": "Splintered Heart of Al'ar",
+                      "itemLevel": 213,
+                      "bonusIDs": [7188, 6652, 1485, 6646]
                     },
                     {
                       "id": 178755,
@@ -948,8 +927,8 @@
                       "icon": "inv_axe_1h_oribosdungeon_c_01.jpg",
                       "name": "Stone General's Edge",
                       "itemLevel": 226,
-                      "permanentEnchant": 6223,
-                      "permanentEnchantName": "Lightless Force",
+                      "permanentEnchant": 6229,
+                      "permanentEnchantName": "Celestial Guidance",
                       "temporaryEnchant": 6188,
                       "temporaryEnchantName": "Shadowcore Oil",
                       "bonusIDs": [7403, 7359, 6652, 1540, 6646]
@@ -961,8 +940,8 @@
                       "icon": "inv_axe_1h_oribosdungeon_c_01.jpg",
                       "name": "Stone General's Edge",
                       "itemLevel": 226,
-                      "permanentEnchant": 6227,
-                      "permanentEnchantName": "Ascended Vigor",
+                      "permanentEnchant": 6228,
+                      "permanentEnchantName": "Sinful Revelation",
                       "temporaryEnchant": 6188,
                       "temporaryEnchantName": "Shadowcore Oil",
                       "bonusIDs": [7214, 6652, 1501, 5884, 6646]
@@ -1014,52 +993,52 @@
             ],
             "dps": [
               {
-                "name": "Lisayne",
-                "id": 150,
-                "guid": 146591017,
-                "type": "Paladin",
-                "server": "Nemesis",
-                "icon": "Paladin-Retribution",
-                "specs": ["Retribution"],
-                "minItemLevel": 220,
-                "maxItemLevel": 220,
+                "name": "Wânheda",
+                "id": 10,
+                "guid": 183036938,
+                "type": "DeathKnight",
+                "server": "Hyjal",
+                "icon": "DeathKnight-Frost",
+                "specs": ["Frost"],
+                "minItemLevel": 225,
+                "maxItemLevel": 225,
                 "combatantInfo": {
                   "stats": {
                     "Speed": {
-                      "min": 0,
-                      "max": 0
+                      "min": 44,
+                      "max": 44
                     },
                     "Mastery": {
-                      "min": 586,
-                      "max": 586
+                      "min": 940,
+                      "max": 940
                     },
                     "Crit": {
-                      "min": 464,
-                      "max": 464
+                      "min": 576,
+                      "max": 576
                     },
                     "Item Level": {
-                      "min": 220,
-                      "max": 220
+                      "min": 225,
+                      "max": 225
                     },
                     "Strength": {
-                      "min": 1345,
-                      "max": 1345
+                      "min": 1444,
+                      "max": 1444
                     },
                     "Stamina": {
-                      "min": 1930,
-                      "max": 1930
+                      "min": 2309,
+                      "max": 2309
                     },
                     "Avoidance": {
                       "min": 0,
                       "max": 0
                     },
                     "Haste": {
-                      "min": 519,
-                      "max": 519
+                      "min": 295,
+                      "max": 295
                     },
                     "Versatility": {
-                      "min": 469,
-                      "max": 469
+                      "min": 170,
+                      "max": 170
                     },
                     "Leech": {
                       "min": 0,
@@ -1068,46 +1047,46 @@
                   },
                   "talents": [
                     {
-                      "name": "Execution Sentence",
-                      "guid": 343527,
-                      "type": 2,
-                      "abilityIcon": "spell_paladin_executionsentence.jpg"
-                    },
-                    {
-                      "name": "Empyrean Power",
-                      "guid": 326732,
+                      "name": "Cold Heart",
+                      "guid": 281208,
                       "type": 1,
-                      "abilityIcon": "ability_paladin_sheathoflight.jpg"
+                      "abilityIcon": "spell_frost_frozencore.jpg"
                     },
                     {
-                      "name": "Fist of Justice",
-                      "guid": 234299,
+                      "name": "Runic Attenuation",
+                      "guid": 207104,
                       "type": 1,
-                      "abilityIcon": "spell_holy_fistofjustice.jpg"
+                      "abilityIcon": "boss_odunrunes_blue.jpg"
                     },
                     {
-                      "name": "Unbreakable Spirit",
-                      "guid": 114154,
+                      "name": "Blinding Sleet",
+                      "guid": 207167,
+                      "type": 16,
+                      "abilityIcon": "spell_frost_chillingblast.jpg"
+                    },
+                    {
+                      "name": "Avalanche",
+                      "guid": 207142,
                       "type": 1,
-                      "abilityIcon": "spell_holy_holyguidance.jpg"
+                      "abilityIcon": "spell_frost_icestorm.jpg"
                     },
                     {
-                      "name": "Seraphim",
-                      "guid": 152262,
-                      "type": 2,
-                      "abilityIcon": "ability_paladin_seraphim.jpg"
-                    },
-                    {
-                      "name": "Healing Hands",
-                      "guid": 326734,
+                      "name": "Wraith Walk",
+                      "guid": 212552,
                       "type": 1,
-                      "abilityIcon": "ability_paladin_infusionoflight.jpg"
+                      "abilityIcon": "inv_helm_plate_raiddeathknight_p_01.jpg"
                     },
                     {
-                      "name": "Final Reckoning",
-                      "guid": 343721,
-                      "type": 2,
-                      "abilityIcon": "spell_holy_blessedresillience.jpg"
+                      "name": "Gathering Storm",
+                      "guid": 194912,
+                      "type": 1,
+                      "abilityIcon": "spell_frost_ice-shards.jpg"
+                    },
+                    {
+                      "name": "Breath of Sindragosa",
+                      "guid": 152279,
+                      "type": 16,
+                      "abilityIcon": "spell_deathknight_breathofsindragosa.jpg"
                     }
                   ],
                   "artifact": [
@@ -1119,52 +1098,43 @@
                       "total": 1
                     },
                     {
-                      "name": "Focusing Mantra",
-                      "guid": 328261,
+                      "name": "Emeni's Magnificent Skin",
+                      "guid": 323921,
                       "type": 1,
-                      "abilityIcon": "spell_arcane_focusedpower.jpg",
+                      "abilityIcon": "inv_helm_crown_c_01_black.jpg",
                       "total": 1
                     },
                     {
-                      "name": "Cleansed Vestments",
-                      "guid": 328263,
+                      "name": "Lead by Example",
+                      "guid": 342156,
                       "type": 1,
-                      "abilityIcon": "inv_misc_bag_14.jpg",
+                      "abilityIcon": "trade_archaeology_vrykul_runestick.jpg",
                       "total": 1
                     },
                     {
-                      "name": "Let Go of the Past",
-                      "guid": 328257,
+                      "name": "Gristled Toes",
+                      "guid": 323918,
                       "type": 1,
-                      "abilityIcon": "ability_hunter_readiness.jpg",
+                      "abilityIcon": "spell_nzinsanity_leadenfoot.jpg",
                       "total": 1
                     },
                     {
-                      "name": "Combat Meditation",
-                      "guid": 328266,
+                      "name": "Hearth Kidneystone",
+                      "guid": 324441,
                       "type": 1,
-                      "abilityIcon": "spell_animabastion_buff.jpg",
+                      "abilityIcon": "item_alchemiststonec.jpg",
                       "total": 1
                     }
                   ],
                   "gear": [
                     {
-                      "id": 178812,
+                      "id": 178694,
                       "slot": 0,
                       "quality": 3,
-                      "icon": "inv_plate_oribosdungeon_c_01_helm.jpg",
-                      "name": "Wing Commander's Helmet",
-                      "itemLevel": 220,
-                      "bonusIDs": [7359, 6652, 7194, 7352, 1534, 6646]
-                    },
-                    {
-                      "id": 183039,
-                      "slot": 1,
-                      "quality": 4,
-                      "icon": "inv_neck_ardenweald_01_silver.jpg",
-                      "name": "Noble's Birthstone Pendant",
-                      "itemLevel": 213,
-                      "bonusIDs": [7188, 6652, 6935, 1485, 6646],
+                      "icon": "inv_helm_drustmask_d_01.jpg",
+                      "name": "Wrathbark Greathelm",
+                      "itemLevel": 226,
+                      "bonusIDs": [7214, 6652, 1501, 5884, 6646, 6935],
                       "gems": [
                         {
                           "id": 173130,
@@ -1174,13 +1144,25 @@
                       ]
                     },
                     {
-                      "id": 178802,
-                      "slot": 2,
+                      "id": 178707,
+                      "slot": 1,
                       "quality": 3,
-                      "icon": "inv_plate_oribosdungeon_c_01_shoulder.jpg",
-                      "name": "Unyielding Combatant's Pauldrons",
+                      "icon": "inv_neck_ardenweald_01_silver.jpg",
+                      "name": "Trailspinner Pendant",
                       "itemLevel": 226,
-                      "bonusIDs": [7375, 7359, 6652, 1540, 6646]
+                      "bonusIDs": [7389, 7359, 6652, 7194, 1540, 6646]
+                    },
+                    {
+                      "id": 171417,
+                      "slot": 2,
+                      "quality": 5,
+                      "icon": "inv_shoulder_plate_mawraidmythic_d_01.jpg",
+                      "name": "Shadowghast Pauldrons",
+                      "itemLevel": 235,
+                      "bonusIDs": [6944, 6648, 6647, 6758, 1532],
+                      "effectID": 334583,
+                      "effectIcon": "spell_shadow_focusedpower.jpg",
+                      "effectName": "Koltira's Favor"
                     },
                     {
                       "id": 0,
@@ -1190,83 +1172,77 @@
                       "itemLevel": 0
                     },
                     {
-                      "id": 178793,
+                      "id": 179346,
                       "slot": 4,
                       "quality": 3,
                       "icon": "inv_plate_oribosdungeon_c_01_chest.jpg",
-                      "name": "Abdominal Securing Chestguard",
-                      "itemLevel": 220,
+                      "name": "Breastplate of Fatal Contrivances",
+                      "itemLevel": 226,
                       "permanentEnchant": 6230,
                       "permanentEnchantName": "All Stats +30",
-                      "bonusIDs": [7359, 6652, 7352, 1534, 6646]
+                      "bonusIDs": [7354, 7359, 6652, 1540, 6646]
                     },
                     {
-                      "id": 179326,
+                      "id": 178734,
                       "slot": 5,
                       "quality": 3,
                       "icon": "inv_plate_oribosdungeon_c_01_buckle.jpg",
-                      "name": "Girdle of the Soulflayer",
+                      "name": "Fused Bone Greatbelt",
                       "itemLevel": 226,
-                      "bonusIDs": [7375, 7359, 6652, 6935, 1540, 6646],
-                      "gems": [
-                        {
-                          "id": 173130,
-                          "itemLevel": 120,
-                          "icon": "inv_jewelcrafting_90_rarecut_purple.jpg"
-                        }
-                      ]
+                      "bonusIDs": [7213, 6652, 7194, 1501, 5884, 6646]
                     },
                     {
-                      "id": 171416,
+                      "id": 182992,
                       "slot": 6,
-                      "quality": 5,
-                      "icon": "inv_pant_plate_mawraid_d_01.jpg",
-                      "name": "Shadowghast Greaves",
-                      "itemLevel": 235,
-                      "bonusIDs": [7067, 6649, 6647, 6758, 1532],
-                      "effectID": 337257,
-                      "effectIcon": "ability_paladin_divinestorm.jpg",
-                      "effectName": "Tempest of the Lightbringer"
+                      "quality": 4,
+                      "icon": "inv_plate_revendrethraid_d_01_pants.jpg",
+                      "name": "Endlessly Gluttonous Greaves",
+                      "itemLevel": 226,
+                      "bonusIDs": [7187, 6652, 1498, 6646]
                     },
                     {
-                      "id": 179338,
+                      "id": 180101,
                       "slot": 7,
                       "quality": 3,
                       "icon": "inv_plate_oribosdungeon_c_01_boots.jpg",
-                      "name": "Dynamo Doomstompers",
-                      "itemLevel": 210,
-                      "bonusIDs": [7370, 7359, 6652, 1524, 6646]
+                      "name": "Warboots of Ruthless Conviction",
+                      "itemLevel": 226,
+                      "permanentEnchant": 6207,
+                      "permanentEnchantName": "Soul Treads",
+                      "bonusIDs": [7375, 7359, 6652, 1540, 6646]
                     },
                     {
-                      "id": 183018,
+                      "id": 179354,
                       "slot": 8,
-                      "quality": 4,
-                      "icon": "inv_plate_revendrethraid_d_01_bracer.jpg",
-                      "name": "Hellhound Cuffs",
-                      "itemLevel": 213,
-                      "bonusIDs": [7188, 6652, 7194, 1485, 6646]
+                      "quality": 3,
+                      "icon": "inv_plate_oribosdungeon_c_01_bracer.jpg",
+                      "name": "Reality-Shatter Vambraces",
+                      "itemLevel": 226,
+                      "permanentEnchant": 6222,
+                      "permanentEnchantName": "Shaded Hearthing",
+                      "bonusIDs": [7213, 6652, 7193, 1501, 5884, 6646]
                     },
                     {
-                      "id": 178775,
+                      "id": 178706,
                       "slot": 9,
                       "quality": 3,
                       "icon": "inv_plate_oribosdungeon_c_01_glove.jpg",
-                      "name": "Fleshfused Crushers",
-                      "itemLevel": 226,
+                      "name": "Fogweaver Gauntlets",
+                      "itemLevel": 220,
                       "permanentEnchant": 6210,
                       "permanentEnchantName": "+15 Strength",
-                      "bonusIDs": [7214, 6652, 1501, 5884, 6646]
+                      "bonusIDs": [7359, 6652, 7373, 1534, 6646]
                     },
                     {
-                      "id": 178870,
+                      "id": 178869,
                       "slot": 10,
                       "quality": 3,
-                      "icon": "inv_ring_maldraxxus_02_green.jpg",
-                      "name": "Ritual Bone Band",
+                      "icon": "inv_jewelry_ring_45.jpg",
+                      "name": "Fleshfused Circle",
                       "itemLevel": 226,
-                      "permanentEnchant": 6170,
-                      "permanentEnchantName": "+16 Versatility",
-                      "bonusIDs": [7389, 7359, 6652, 6935, 1540, 6646],
+                      "permanentEnchant": 6168,
+                      "permanentEnchantName": "+16 Mastery",
+                      "bonusIDs": [7213, 6652, 1501, 5884, 6646, 6935],
                       "gems": [
                         {
                           "id": 173130,
@@ -1276,24 +1252,24 @@
                       ]
                     },
                     {
-                      "id": 178824,
+                      "id": 179355,
                       "slot": 11,
                       "quality": 3,
-                      "icon": "inv_ring_revendrethraid_01_gold.jpg",
-                      "name": "Signet of the False Accuser",
+                      "icon": "inv_ring_ardenweald_02_green.jpg",
+                      "name": "Death God's Signet",
                       "itemLevel": 220,
-                      "permanentEnchant": 6166,
-                      "permanentEnchantName": "+16 Haste",
-                      "bonusIDs": [7359, 6652, 7194, 7387, 1534, 6646]
+                      "permanentEnchant": 6168,
+                      "permanentEnchantName": "+16 Mastery",
+                      "bonusIDs": [7359, 6652, 7193, 7387, 1534, 6646]
                     },
                     {
-                      "id": 175921,
+                      "id": 179342,
                       "slot": 12,
-                      "quality": 4,
-                      "icon": "spell_holy_championsbond.jpg",
-                      "name": "Sinful Gladiator's Badge of Ferocity",
-                      "itemLevel": 200,
-                      "bonusIDs": [6628, 1472, 6646]
+                      "quality": 3,
+                      "icon": "spell_mage_focusingcrystal.jpg",
+                      "name": "Overwhelming Power Crystal",
+                      "itemLevel": 220,
+                      "bonusIDs": [7210, 42, 1501, 5878, 6646]
                     },
                     {
                       "id": 184027,
@@ -1305,33 +1281,39 @@
                       "bonusIDs": [7188, 6652, 1485, 6646]
                     },
                     {
-                      "id": 180123,
+                      "id": 178851,
                       "slot": 14,
                       "quality": 3,
-                      "icon": "inv_cape_mail_oribosdungeon_c_01.jpg",
-                      "name": "Drape of Twisted Loyalties",
+                      "icon": "inv_plate_oribosdungeon_c_01_cape.jpg",
+                      "name": "Cloak of Enveloping Manifestations",
                       "itemLevel": 226,
+                      "permanentEnchant": 6208,
+                      "permanentEnchantName": "+30 Stamina",
                       "bonusIDs": [7389, 7359, 6652, 1540, 6646]
                     },
                     {
-                      "id": 179330,
+                      "id": 178863,
                       "slot": 15,
                       "quality": 3,
-                      "icon": "inv_sword_2h_oribosdungeon_c_01.jpg",
-                      "name": "Zin'khas, Blade of the Fallen God",
+                      "icon": "inv_axe_1h_oribosdungeon_c_01.jpg",
+                      "name": "Gorestained Cleaver",
                       "itemLevel": 226,
-                      "permanentEnchant": 6228,
-                      "permanentEnchantName": "Sinful Revelation",
+                      "permanentEnchant": 3370,
+                      "permanentEnchantName": "Rune of Razorice",
                       "temporaryEnchant": 6200,
                       "temporaryEnchantName": "Sharpened (+12 Attack Power)",
-                      "bonusIDs": [7213, 6652, 1501, 5884, 6646]
+                      "bonusIDs": [7403, 7359, 6652, 1540, 6646]
                     },
                     {
-                      "id": 0,
+                      "id": 184255,
                       "slot": 16,
-                      "quality": 1,
-                      "icon": "inv_axe_02.jpg",
-                      "itemLevel": 0
+                      "quality": 4,
+                      "icon": "inv_axe_1h_maldraxxus_d_01.jpg",
+                      "name": "Gristlegore Hacker",
+                      "itemLevel": 226,
+                      "permanentEnchant": 3368,
+                      "permanentEnchantName": "Rune of the Fallen Crusader",
+                      "bonusIDs": [7187, 6652, 1524, 6646]
                     },
                     {
                       "id": 0,
@@ -1343,398 +1325,50 @@
                   ],
                   "heartOfAzeroth": [
                     {
-                      "name": "Light's Barding",
-                      "guid": 339268,
+                      "name": "Hardened Bones",
+                      "guid": 337972,
                       "type": 1,
-                      "abilityIcon": "inv_lightforgedmatrixability_lightsjudgment.jpg",
+                      "abilityIcon": "spell_deathknight_subversion.jpg",
+                      "total": 226
+                    },
+                    {
+                      "name": "Everfrost",
+                      "guid": 337988,
+                      "type": 1,
+                      "abilityIcon": "ability_mage_deepfreeze.jpg",
+                      "total": 226
+                    },
+                    {
+                      "name": "Accelerated Cold",
+                      "guid": 337822,
+                      "type": 1,
+                      "abilityIcon": "ability_deathknight_frozencenter.jpg",
                       "total": 200
                     },
                     {
-                      "name": "Shielding Words",
-                      "guid": 338787,
+                      "name": "Spirit Drain",
+                      "guid": 337705,
                       "type": 1,
-                      "abilityIcon": "ability_vehicle_sonicshockwave.jpg",
+                      "abilityIcon": "spell_deathknight_mindfreeze.jpg",
                       "total": 213
-                    },
-                    {
-                      "name": "Templar's Vindication",
-                      "guid": 339531,
-                      "type": 1,
-                      "abilityIcon": "ability_priest_evangelism.jpg",
-                      "total": 200
-                    },
-                    {
-                      "name": "Ringing Clarity",
-                      "guid": 340218,
-                      "type": 1,
-                      "abilityIcon": "spell_animabastion_orb.jpg",
-                      "total": 200
                     }
                   ],
-                  "specIDs": [70],
+                  "specIDs": [251],
                   "factionID": 0,
-                  "covenantID": 1,
-                  "soulbindID": 7
+                  "covenantID": 4,
+                  "soulbindID": 5
                 }
               },
               {
-                "name": "Ayazky",
-                "id": 149,
-                "guid": 142240188,
-                "type": "Druid",
-                "server": "TwistingNether",
-                "icon": "Druid-Balance",
-                "specs": ["Balance"],
-                "minItemLevel": 219,
-                "maxItemLevel": 219,
-                "combatantInfo": {
-                  "stats": {
-                    "Speed": {
-                      "min": 32,
-                      "max": 32
-                    },
-                    "Intellect": {
-                      "min": 1567,
-                      "max": 1567
-                    },
-                    "Mastery": {
-                      "min": 714,
-                      "max": 714
-                    },
-                    "Crit": {
-                      "min": 61,
-                      "max": 61
-                    },
-                    "Item Level": {
-                      "min": 219,
-                      "max": 219
-                    },
-                    "Stamina": {
-                      "min": 1868,
-                      "max": 1868
-                    },
-                    "Avoidance": {
-                      "min": 0,
-                      "max": 0
-                    },
-                    "Haste": {
-                      "min": 510,
-                      "max": 510
-                    },
-                    "Versatility": {
-                      "min": 706,
-                      "max": 706
-                    },
-                    "Leech": {
-                      "min": 0,
-                      "max": 0
-                    }
-                  },
-                  "talents": [
-                    {
-                      "name": "Force of Nature",
-                      "guid": 205636,
-                      "type": 8,
-                      "abilityIcon": "ability_druid_forceofnature.jpg"
-                    },
-                    {
-                      "name": "Wild Charge",
-                      "guid": 102401,
-                      "type": 1,
-                      "abilityIcon": "spell_druid_wildcharge.jpg"
-                    },
-                    {
-                      "name": "Restoration Affinity",
-                      "guid": 197492,
-                      "type": 1,
-                      "abilityIcon": "ability_druid_improvedtreeform.jpg"
-                    },
-                    {
-                      "name": "Mighty Bash",
-                      "guid": 5211,
-                      "type": 1,
-                      "abilityIcon": "ability_druid_bash.jpg"
-                    },
-                    {
-                      "name": "Soul of the Forest",
-                      "guid": 114107,
-                      "type": 1,
-                      "abilityIcon": "ability_druid_manatree.jpg"
-                    },
-                    {
-                      "name": "Stellar Drift",
-                      "guid": 202354,
-                      "type": 1,
-                      "abilityIcon": "ability_druid_starfall.jpg"
-                    },
-                    {
-                      "name": "Solstice",
-                      "guid": 343647,
-                      "type": 1,
-                      "abilityIcon": "artifactability_balancedruid_moonandstars.jpg"
-                    }
-                  ],
-                  "artifact": [
-                    {
-                      "name": "Unknown Ability",
-                      "guid": 0,
-                      "type": 0,
-                      "abilityIcon": "inv_axe_02.jpg",
-                      "total": 1
-                    },
-                    {
-                      "name": "Grove Invigoration",
-                      "guid": 322721,
-                      "type": 1,
-                      "abilityIcon": "ability_druid_manatree.jpg",
-                      "total": 1
-                    },
-                    {
-                      "name": "Niya's Tools: Burrs",
-                      "guid": 320659,
-                      "type": 1,
-                      "abilityIcon": "ability_rogue_trip.jpg",
-                      "total": 1
-                    },
-                    {
-                      "name": "Nature's Splendor",
-                      "guid": 320668,
-                      "type": 1,
-                      "abilityIcon": "inv_misc_bag_27.jpg",
-                      "total": 1
-                    },
-                    {
-                      "name": "Run Without Tiring",
-                      "guid": 342270,
-                      "type": 1,
-                      "abilityIcon": "ability_racial_runningwild.jpg",
-                      "total": 1
-                    }
-                  ],
-                  "gear": [
-                    {
-                      "id": 178691,
-                      "slot": 0,
-                      "quality": 3,
-                      "icon": "inv_helm_leather_oribosdungeon_c_01.jpg",
-                      "name": "Hood of the Hidden Path",
-                      "itemLevel": 226,
-                      "bonusIDs": [7354, 7359, 6652, 7193, 1540, 6646]
-                    },
-                    {
-                      "id": 183040,
-                      "slot": 1,
-                      "quality": 4,
-                      "icon": "inv_7_0raid_necklace_03c.jpg",
-                      "name": "Charm of Eternal Winter",
-                      "itemLevel": 213,
-                      "bonusIDs": [7188, 6652, 7194, 1485, 6646]
-                    },
-                    {
-                      "id": 179344,
-                      "slot": 2,
-                      "quality": 3,
-                      "icon": "inv_shoulder_leather_oribosdungeon_c_01.jpg",
-                      "name": "Far Traveler's Shoulderpads",
-                      "itemLevel": 223,
-                      "bonusIDs": [7212, 6652, 1501, 5881, 6646]
-                    },
-                    {
-                      "id": 0,
-                      "slot": 3,
-                      "quality": 1,
-                      "icon": "inv_axe_02.jpg",
-                      "itemLevel": 0
-                    },
-                    {
-                      "id": 175892,
-                      "slot": 4,
-                      "quality": 4,
-                      "icon": "inv_chest_leather_revendrethraid_d_01.jpg",
-                      "name": "Sinful Gladiator's Leather Vest",
-                      "itemLevel": 213,
-                      "bonusIDs": [6632, 1485, 6646]
-                    },
-                    {
-                      "id": 180111,
-                      "slot": 5,
-                      "quality": 3,
-                      "icon": "inv_belt_leather_oribosdungeon_c_01.jpg",
-                      "name": "Shadowhirl Waistwrap",
-                      "itemLevel": 210,
-                      "bonusIDs": [7370, 7359, 6652, 7194, 1524, 6646]
-                    },
-                    {
-                      "id": 180108,
-                      "slot": 6,
-                      "quality": 3,
-                      "icon": "inv_pant_leather_oribosdungeon_c_01.jpg",
-                      "name": "Abyssal Disharmony Breeches",
-                      "itemLevel": 220,
-                      "bonusIDs": [7359, 6652, 7352, 1534, 6646]
-                    },
-                    {
-                      "id": 172315,
-                      "slot": 7,
-                      "quality": 5,
-                      "icon": "inv_boot_leather_mawraid_d_01.jpg",
-                      "name": "Umbrahide Treads",
-                      "itemLevel": 235,
-                      "bonusIDs": [7107, 6758, 6648, 6649, 1532],
-                      "effectID": 339942,
-                      "effectIcon": "ability_druid_balanceofpower.jpg",
-                      "effectName": "Balance of All Things"
-                    },
-                    {
-                      "id": 183019,
-                      "slot": 8,
-                      "quality": 4,
-                      "icon": "inv_bracer_leather_revendrethraid_d_01.jpg",
-                      "name": "Precisely Calibrated Chronometer",
-                      "itemLevel": 213,
-                      "permanentEnchant": 6220,
-                      "permanentEnchantName": "+15 Intellect",
-                      "bonusIDs": [7188, 42, 7194, 1485, 6646]
-                    },
-                    {
-                      "id": 175897,
-                      "slot": 9,
-                      "quality": 4,
-                      "icon": "inv_glove_leather_revendrethraid_d_01.jpg",
-                      "name": "Sinful Gladiator's Leather Gloves",
-                      "itemLevel": 213,
-                      "bonusIDs": [6626, 1485, 6646]
-                    },
-                    {
-                      "id": 178824,
-                      "slot": 10,
-                      "quality": 3,
-                      "icon": "inv_ring_revendrethraid_01_gold.jpg",
-                      "name": "Signet of the False Accuser",
-                      "itemLevel": 226,
-                      "permanentEnchant": 6170,
-                      "permanentEnchantName": "+16 Versatility",
-                      "bonusIDs": [7389, 7359, 6652, 6935, 1540, 6646],
-                      "gems": [
-                        {
-                          "id": 173129,
-                          "itemLevel": 120,
-                          "icon": "inv_jewelcrafting_90_rarecut_blue.jpg"
-                        }
-                      ]
-                    },
-                    {
-                      "id": 183038,
-                      "slot": 11,
-                      "quality": 4,
-                      "icon": "inv_ring_oribos_01_silver.jpg",
-                      "name": "Hyperlight Band",
-                      "itemLevel": 213,
-                      "permanentEnchant": 6168,
-                      "permanentEnchantName": "+16 Mastery",
-                      "bonusIDs": [7188, 6652, 7193, 1485, 6646]
-                    },
-                    {
-                      "id": 180117,
-                      "slot": 12,
-                      "quality": 3,
-                      "icon": "spell_animabastion_orb.jpg",
-                      "name": "Empyreal Ordnance",
-                      "itemLevel": 226,
-                      "bonusIDs": [7214, 6652, 1501, 5884, 6646]
-                    },
-                    {
-                      "id": 178386,
-                      "slot": 13,
-                      "quality": 4,
-                      "icon": "inv_misc_token_argentdawn3.jpg",
-                      "name": "Sinful Gladiator's Insignia of Alacrity",
-                      "itemLevel": 213,
-                      "bonusIDs": [6626, 1485, 6646]
-                    },
-                    {
-                      "id": 183032,
-                      "slot": 14,
-                      "quality": 4,
-                      "icon": "inv_plate_revendrethraid_d_01_cape.jpg",
-                      "name": "Crest of the Legionnaire General",
-                      "itemLevel": 220,
-                      "bonusIDs": [7188, 6652, 1485, 6646]
-                    },
-                    {
-                      "id": 178714,
-                      "slot": 15,
-                      "quality": 3,
-                      "icon": "inv_staff_2h_oribosdungeon_c_01.jpg",
-                      "name": "Lakali's Spire of Knowledge",
-                      "itemLevel": 220,
-                      "permanentEnchant": 6229,
-                      "permanentEnchantName": "Celestial Guidance",
-                      "temporaryEnchant": 6188,
-                      "temporaryEnchantName": "Shadowcore Oil",
-                      "bonusIDs": [7210, 6652, 1501, 5878, 6646]
-                    },
-                    {
-                      "id": 0,
-                      "slot": 16,
-                      "quality": 1,
-                      "icon": "inv_axe_02.jpg",
-                      "itemLevel": 0
-                    },
-                    {
-                      "id": 0,
-                      "slot": 17,
-                      "quality": 1,
-                      "icon": "inv_axe_02.jpg",
-                      "itemLevel": 0
-                    }
-                  ],
-                  "heartOfAzeroth": [
-                    {
-                      "name": "Conflux of Elements",
-                      "guid": 341446,
-                      "type": 1,
-                      "abilityIcon": "ability_ardenweald_druid.jpg",
-                      "total": 213
-                    },
-                    {
-                      "name": "Tough as Bark",
-                      "guid": 340529,
-                      "type": 1,
-                      "abilityIcon": "spell_nature_stoneclawtotem.jpg",
-                      "total": 213
-                    },
-                    {
-                      "name": "Born Anew",
-                      "guid": 341280,
-                      "type": 1,
-                      "abilityIcon": "spell_nature_reincarnation.jpg",
-                      "total": 200
-                    },
-                    {
-                      "name": "Innate Resolve",
-                      "guid": 340543,
-                      "type": 1,
-                      "abilityIcon": "spell_nature_healingway.jpg",
-                      "total": 213
-                    }
-                  ],
-                  "specIDs": [102],
-                  "factionID": 0,
-                  "covenantID": 3,
-                  "soulbindID": 1
-                }
-              },
-              {
-                "name": "Kittix",
-                "id": 148,
-                "guid": 166461213,
+                "name": "Lorioa",
+                "id": 2,
+                "guid": 183231780,
                 "type": "Mage",
-                "server": "TarrenMill",
-                "icon": "Mage-Arcane",
-                "specs": ["Arcane"],
-                "minItemLevel": 224,
-                "maxItemLevel": 224,
+                "server": "Kazzak",
+                "icon": "Mage-Frost",
+                "specs": ["Frost"],
+                "minItemLevel": 220,
+                "maxItemLevel": 220,
                 "combatantInfo": {
                   "stats": {
                     "Speed": {
@@ -1742,54 +1376,54 @@
                       "max": 0
                     },
                     "Intellect": {
-                      "min": 1787,
-                      "max": 1787
+                      "min": 1696,
+                      "max": 1696
                     },
                     "Mastery": {
-                      "min": 613,
-                      "max": 613
+                      "min": 204,
+                      "max": 204
                     },
                     "Crit": {
-                      "min": 605,
-                      "max": 605
+                      "min": 587,
+                      "max": 587
                     },
                     "Item Level": {
-                      "min": 224,
-                      "max": 224
+                      "min": 220,
+                      "max": 220
                     },
                     "Stamina": {
-                      "min": 1985,
-                      "max": 1985
+                      "min": 1928,
+                      "max": 1928
                     },
                     "Avoidance": {
-                      "min": 30,
-                      "max": 30
+                      "min": 64,
+                      "max": 64
                     },
                     "Haste": {
-                      "min": 373,
-                      "max": 373
+                      "min": 572,
+                      "max": 572
                     },
                     "Versatility": {
-                      "min": 243,
-                      "max": 243
+                      "min": 558,
+                      "max": 558
                     },
                     "Leech": {
-                      "min": 61,
-                      "max": 61
+                      "min": 0,
+                      "max": 0
                     }
                   },
                   "talents": [
                     {
-                      "name": "Amplification",
-                      "guid": 236628,
+                      "name": "Lonely Winter",
+                      "guid": 205024,
                       "type": 1,
-                      "abilityIcon": "spell_arcane_invocation.jpg"
+                      "abilityIcon": "achievement_dungeon_frozenthrone.jpg"
                     },
                     {
-                      "name": "Slipstream",
-                      "guid": 236457,
-                      "type": 1,
-                      "abilityIcon": "spell_holy_mindsooth.jpg"
+                      "name": "Shimmer",
+                      "guid": 212653,
+                      "type": 64,
+                      "abilityIcon": "spell_arcane_massdispel.jpg"
                     },
                     {
                       "name": "Rune of Power",
@@ -1798,387 +1432,28 @@
                       "abilityIcon": "spell_mage_runeofpower.jpg"
                     },
                     {
-                      "name": "Resonance",
-                      "guid": 205028,
+                      "name": "Chain Reaction",
+                      "guid": 278309,
                       "type": 1,
-                      "abilityIcon": "spell_arcane_arcane01.jpg"
+                      "abilityIcon": "spell_frost_frostblast.jpg"
                     },
                     {
-                      "name": "Chrono Shift",
-                      "guid": 235711,
+                      "name": "Ring of Frost",
+                      "guid": 113724,
+                      "type": 16,
+                      "abilityIcon": "spell_frost_ring-of-frost.jpg"
+                    },
+                    {
+                      "name": "Splitting Ice",
+                      "guid": 56377,
                       "type": 1,
-                      "abilityIcon": "ability_monk_deadlyreach.jpg"
+                      "abilityIcon": "spell_frost_ice-shards.jpg"
                     },
                     {
-                      "name": "Arcane Orb",
-                      "guid": 153626,
-                      "type": 64,
-                      "abilityIcon": "spell_mage_arcaneorb.jpg"
-                    },
-                    {
-                      "name": "Overpowered",
-                      "guid": 155147,
+                      "name": "Thermal Void",
+                      "guid": 155149,
                       "type": 1,
-                      "abilityIcon": "spell_mage_overpowered.jpg"
-                    }
-                  ],
-                  "artifact": [
-                    {
-                      "name": "Unknown Ability",
-                      "guid": 0,
-                      "type": 0,
-                      "abilityIcon": "inv_axe_02.jpg",
-                      "total": 1
-                    },
-                    {
-                      "name": "Vorkai Sharpening Techniques",
-                      "guid": 325072,
-                      "type": 1,
-                      "abilityIcon": "inv_polearm_2h_heirloomspear_c_01.jpg",
-                      "total": 1
-                    },
-                    {
-                      "name": "First Strike",
-                      "guid": 325069,
-                      "type": 1,
-                      "abilityIcon": "ability_rogue_surpriseattack.jpg",
-                      "total": 1
-                    },
-                    {
-                      "name": "Wild Hunt Tactics",
-                      "guid": 325066,
-                      "type": 1,
-                      "abilityIcon": "ability_blackhand_marked4death.jpg",
-                      "total": 1
-                    },
-                    {
-                      "name": "Horn of the Wild Hunt",
-                      "guid": 325067,
-                      "type": 1,
-                      "abilityIcon": "inv_misc_monsterhorn_05.jpg",
-                      "total": 1
-                    }
-                  ],
-                  "gear": [
-                    {
-                      "id": 178732,
-                      "slot": 0,
-                      "quality": 3,
-                      "icon": "inv_helm_cloth_oribosdungeon_c_01.jpg",
-                      "name": "Abominable Visage",
-                      "itemLevel": 226,
-                      "bonusIDs": [7354, 7359, 41, 7194, 1540, 6646]
-                    },
-                    {
-                      "id": 178707,
-                      "slot": 1,
-                      "quality": 3,
-                      "icon": "inv_neck_ardenweald_01_silver.jpg",
-                      "name": "Trailspinner Pendant",
-                      "itemLevel": 216,
-                      "bonusIDs": [7208, 6652, 6935, 1501, 5874, 6646],
-                      "gems": [
-                        {
-                          "id": 173127,
-                          "itemLevel": 120,
-                          "icon": "inv_jewelcrafting_90_rarecut_orange.jpg"
-                        }
-                      ]
-                    },
-                    {
-                      "id": 178696,
-                      "slot": 2,
-                      "quality": 3,
-                      "icon": "inv_shoulder_cloth_oribosdungeon_c_01.jpg",
-                      "name": "Ingra Maloch's Mantle",
-                      "itemLevel": 223,
-                      "bonusIDs": [7211, 6652, 1501, 5881, 6646]
-                    },
-                    {
-                      "id": 0,
-                      "slot": 3,
-                      "quality": 1,
-                      "icon": "inv_axe_02.jpg",
-                      "itemLevel": 0
-                    },
-                    {
-                      "id": 178792,
-                      "slot": 4,
-                      "quality": 3,
-                      "icon": "inv_robe_cloth_oribosdungeon_c_01.jpg",
-                      "name": "Soulsewn Vestments",
-                      "itemLevel": 226,
-                      "permanentEnchant": 6230,
-                      "permanentEnchantName": "All Stats +30",
-                      "bonusIDs": [7354, 7359, 6652, 1540, 6646]
-                    },
-                    {
-                      "id": 179343,
-                      "slot": 5,
-                      "quality": 3,
-                      "icon": "inv_belt_cloth_oribosdungeon_c_01.jpg",
-                      "name": "Sash of Exquisite Acquisitions",
-                      "itemLevel": 226,
-                      "bonusIDs": [7375, 7359, 6652, 7193, 1540, 6646]
-                    },
-                    {
-                      "id": 179351,
-                      "slot": 6,
-                      "quality": 3,
-                      "icon": "inv_pant_cloth_oribosdungeon_c_01.jpg",
-                      "name": "Mueh'zala's Hexthread Sarong",
-                      "itemLevel": 220,
-                      "bonusIDs": [7359, 6652, 7352, 1534, 6646]
-                    },
-                    {
-                      "id": 173243,
-                      "slot": 7,
-                      "quality": 5,
-                      "icon": "inv_cloth_mawraid_d_01_boot.jpg",
-                      "name": "Grim-Veiled Sandals",
-                      "itemLevel": 235,
-                      "permanentEnchant": 6207,
-                      "permanentEnchantName": "Soul Treads",
-                      "bonusIDs": [6927, 6647, 6648, 6758, 1532],
-                      "effectID": 332892,
-                      "effectIcon": "ability_mage_arcanebarrage.jpg",
-                      "effectName": "Arcane Bombardment"
-                    },
-                    {
-                      "id": 178782,
-                      "slot": 8,
-                      "quality": 3,
-                      "icon": "inv_bracer_cloth_oribosdungeon_c_01.jpg",
-                      "name": "Necropolis Lord's Shackles",
-                      "itemLevel": 220,
-                      "permanentEnchant": 6220,
-                      "permanentEnchantName": "+15 Intellect",
-                      "bonusIDs": [7209, 6652, 7193, 1501, 5878, 6646]
-                    },
-                    {
-                      "id": 178833,
-                      "slot": 9,
-                      "quality": 3,
-                      "icon": "inv_glove_cloth_oribosdungeon_c_01.jpg",
-                      "name": "Stonefiend Shaper's Mitts",
-                      "itemLevel": 226,
-                      "permanentEnchant": 6205,
-                      "permanentEnchantName": "Shadowlands Gathering",
-                      "bonusIDs": [7213, 6652, 1501, 5884, 6646]
-                    },
-                    {
-                      "id": 178872,
-                      "slot": 10,
-                      "quality": 3,
-                      "icon": "inv_ring_maldraxxus_01_violet.jpg",
-                      "name": "Ring of Perpetual Conflict",
-                      "itemLevel": 220,
-                      "permanentEnchant": 6168,
-                      "permanentEnchantName": "+16 Mastery",
-                      "bonusIDs": [7359, 6652, 7194, 7387, 1534, 6646]
-                    },
-                    {
-                      "id": 178736,
-                      "slot": 11,
-                      "quality": 3,
-                      "icon": "inv_argus_ring02.jpg",
-                      "name": "Stitchflesh's Misplaced Signet",
-                      "itemLevel": 226,
-                      "permanentEnchant": 6168,
-                      "permanentEnchantName": "+16 Mastery",
-                      "bonusIDs": [7389, 7359, 6652, 7194, 1540, 6646]
-                    },
-                    {
-                      "id": 178809,
-                      "slot": 12,
-                      "quality": 3,
-                      "icon": "inv_jewelcrafting_livingruby_01.jpg",
-                      "name": "Soulletting Ruby",
-                      "itemLevel": 226,
-                      "bonusIDs": [7375, 7359, 6652, 1540, 6646]
-                    },
-                    {
-                      "id": 179350,
-                      "slot": 13,
-                      "quality": 3,
-                      "icon": "inv_trinket_80_titan02a.jpg",
-                      "name": "Inscrutable Quantum Device",
-                      "itemLevel": 220,
-                      "bonusIDs": [7359, 6652, 7373, 1534, 6646]
-                    },
-                    {
-                      "id": 178755,
-                      "slot": 14,
-                      "quality": 3,
-                      "icon": "inv_cape_mail_oribosdungeon_c_01.jpg",
-                      "name": "Blighted Margrave's Cloak",
-                      "itemLevel": 226,
-                      "permanentEnchant": 6203,
-                      "permanentEnchantName": "+20 Stamina & +30 Avoidance",
-                      "bonusIDs": [7214, 6652, 1501, 5884, 6646]
-                    },
-                    {
-                      "id": 178829,
-                      "slot": 15,
-                      "quality": 3,
-                      "icon": "inv_staff_2h_oribosdungeon_c_01.jpg",
-                      "name": "Nathrian Ferula",
-                      "itemLevel": 226,
-                      "permanentEnchant": 6228,
-                      "permanentEnchantName": "Sinful Revelation",
-                      "temporaryEnchant": 6188,
-                      "temporaryEnchantName": "Shadowcore Oil",
-                      "bonusIDs": [7214, 6652, 1501, 5884, 6646]
-                    },
-                    {
-                      "id": 0,
-                      "slot": 16,
-                      "quality": 1,
-                      "icon": "inv_axe_02.jpg",
-                      "itemLevel": 0
-                    },
-                    {
-                      "id": 157759,
-                      "slot": 17,
-                      "quality": 3,
-                      "icon": "inv_tabard_a_98nightborne.jpg",
-                      "name": "Shal'dorei Tabard",
-                      "itemLevel": 1
-                    }
-                  ],
-                  "heartOfAzeroth": [
-                    {
-                      "name": "Diverted Energy",
-                      "guid": 337136,
-                      "type": 1,
-                      "abilityIcon": "inv_soulbarrier.jpg",
-                      "total": 200
-                    },
-                    {
-                      "name": "Cryo-Freeze",
-                      "guid": 337123,
-                      "type": 1,
-                      "abilityIcon": "spell_frost_icefloes.jpg",
-                      "total": 200
-                    },
-                    {
-                      "name": "Flow of Time",
-                      "guid": 336636,
-                      "type": 1,
-                      "abilityIcon": "spell_arcane_blink.jpg",
-                      "total": 200
-                    },
-                    {
-                      "name": "Magi's Brand",
-                      "guid": 337192,
-                      "type": 1,
-                      "abilityIcon": "spell_arcane_arcane01_nightborne.jpg",
-                      "total": 200
-                    }
-                  ],
-                  "specIDs": [62],
-                  "factionID": 0,
-                  "covenantID": 3,
-                  "soulbindID": 6
-                }
-              }
-            ],
-            "healers": [
-              {
-                "name": "Afkdin",
-                "id": 6,
-                "guid": 160693241,
-                "type": "Paladin",
-                "server": "Ysondre",
-                "icon": "Paladin-Holy",
-                "specs": ["Holy"],
-                "minItemLevel": 217,
-                "maxItemLevel": 217,
-                "combatantInfo": {
-                  "stats": {
-                    "Speed": {
-                      "min": 0,
-                      "max": 0
-                    },
-                    "Intellect": {
-                      "min": 1738,
-                      "max": 1738
-                    },
-                    "Mastery": {
-                      "min": 438,
-                      "max": 438
-                    },
-                    "Crit": {
-                      "min": 216,
-                      "max": 216
-                    },
-                    "Item Level": {
-                      "min": 217,
-                      "max": 217
-                    },
-                    "Stamina": {
-                      "min": 1888,
-                      "max": 1888
-                    },
-                    "Avoidance": {
-                      "min": 43,
-                      "max": 43
-                    },
-                    "Haste": {
-                      "min": 586,
-                      "max": 586
-                    },
-                    "Versatility": {
-                      "min": 519,
-                      "max": 519
-                    },
-                    "Leech": {
-                      "min": 30,
-                      "max": 30
-                    }
-                  },
-                  "talents": [
-                    {
-                      "name": "Crusader's Might",
-                      "guid": 196926,
-                      "type": 1,
-                      "abilityIcon": "ability_paladin_swiftretribution.jpg"
-                    },
-                    {
-                      "name": "Judgment of Light",
-                      "guid": 183778,
-                      "type": 1,
-                      "abilityIcon": "spell_holy_divineprovidence.jpg"
-                    },
-                    {
-                      "name": "Blinding Light",
-                      "guid": 115750,
-                      "type": 2,
-                      "abilityIcon": "ability_paladin_blindinglight.jpg"
-                    },
-                    {
-                      "name": "Unbreakable Spirit",
-                      "guid": 114154,
-                      "type": 1,
-                      "abilityIcon": "spell_holy_holyguidance.jpg"
-                    },
-                    {
-                      "name": "Holy Avenger",
-                      "guid": 105809,
-                      "type": 1,
-                      "abilityIcon": "ability_paladin_holyavenger.jpg"
-                    },
-                    {
-                      "name": "Awakening",
-                      "guid": 248033,
-                      "type": 1,
-                      "abilityIcon": "inv_helm_plate_raidpaladin_n_01.jpg"
-                    },
-                    {
-                      "name": "Glimmer of Light",
-                      "guid": 325966,
-                      "type": 1,
-                      "abilityIcon": "ability_paladin_toweroflight.jpg"
+                      "abilityIcon": "spell_mage_thermalvoid.jpg"
                     }
                   ],
                   "artifact": [
@@ -2220,13 +1495,737 @@
                   ],
                   "gear": [
                     {
+                      "id": 178693,
+                      "slot": 0,
+                      "quality": 3,
+                      "icon": "inv_helm_cloth_oribosdungeon_c_01.jpg",
+                      "name": "Cocoonsilk Cowl",
+                      "itemLevel": 220,
+                      "bonusIDs": [7359, 6652, 7194, 7352, 1534, 6646]
+                    },
+                    {
+                      "id": 180115,
+                      "slot": 1,
+                      "quality": 3,
+                      "icon": "inv_7_0raid_necklace_03a.jpg",
+                      "name": "Azure-Venom Choker",
+                      "itemLevel": 220,
+                      "bonusIDs": [7359, 6652, 7194, 7387, 1534, 6646]
+                    },
+                    {
+                      "id": 183020,
+                      "slot": 2,
+                      "quality": 4,
+                      "icon": "inv_cloth_revendrethraid_d_01_shoulder.jpg",
+                      "name": "Shawl of the Penitent",
+                      "itemLevel": 220,
+                      "bonusIDs": [7188, 6652, 1485, 6646]
+                    },
+                    {
+                      "id": 0,
+                      "slot": 3,
+                      "quality": 1,
+                      "icon": "inv_axe_02.jpg",
+                      "itemLevel": 0
+                    },
+                    {
+                      "id": 178813,
+                      "slot": 4,
+                      "quality": 3,
+                      "icon": "inv_robe_cloth_oribosdungeon_c_01.jpg",
+                      "name": "Sinlight Shroud",
+                      "itemLevel": 223,
+                      "permanentEnchant": 6230,
+                      "permanentEnchantName": "All Stats +30",
+                      "bonusIDs": [7353, 7359, 6652, 1537, 6646]
+                    },
+                    {
+                      "id": 180109,
+                      "slot": 5,
+                      "quality": 3,
+                      "icon": "inv_belt_cloth_oribosdungeon_c_01.jpg",
+                      "name": "Kin-Tara's Baleful Cord",
+                      "itemLevel": 226,
+                      "bonusIDs": [7375, 7359, 6652, 7194, 1540, 6646]
+                    },
+                    {
+                      "id": 178761,
+                      "slot": 6,
+                      "quality": 3,
+                      "icon": "inv_pant_cloth_oribosdungeon_c_01.jpg",
+                      "name": "Leggings of the Erudite Scholar",
+                      "itemLevel": 220,
+                      "bonusIDs": [7359, 6652, 7352, 1534, 6646]
+                    },
+                    {
+                      "id": 179322,
+                      "slot": 7,
+                      "quality": 3,
+                      "icon": "inv_boot_cloth_oribosdungeon_c_01.jpg",
+                      "name": "Windscale Moccasins",
+                      "itemLevel": 220,
+                      "bonusIDs": [7359, 6652, 7373, 1534, 6646]
+                    },
+                    {
+                      "id": 183017,
+                      "slot": 8,
+                      "quality": 4,
+                      "icon": "inv_cloth_revendrethraid_d_01_bracer.jpg",
+                      "name": "Acolyte's Velvet Bindings",
+                      "itemLevel": 226,
+                      "permanentEnchant": 6220,
+                      "permanentEnchantName": "+15 Intellect",
+                      "bonusIDs": [7187, 6652, 7194, 1498, 6646]
+                    },
+                    {
+                      "id": 173244,
+                      "slot": 9,
+                      "quality": 5,
+                      "icon": "inv_cloth_mawraid_d_01_glove.jpg",
+                      "name": "Grim-Veiled Mittens",
+                      "itemLevel": 225,
+                      "bonusIDs": [6829, 6718, 6649, 6647, 1522],
+                      "effectID": 327364,
+                      "effectIcon": "spell_shadow_soulleech_2.jpg",
+                      "effectName": "Freezing Winds"
+                    },
+                    {
+                      "id": 178781,
+                      "slot": 10,
+                      "quality": 3,
+                      "icon": "inv_ring_revendreth_01_brown.jpg",
+                      "name": "Ritual Commander's Ring",
+                      "itemLevel": 220,
+                      "permanentEnchant": 6166,
+                      "permanentEnchantName": "+16 Haste",
+                      "bonusIDs": [7359, 6652, 7194, 7387, 1534, 6646]
+                    },
+                    {
+                      "id": 178869,
+                      "slot": 11,
+                      "quality": 3,
+                      "icon": "inv_jewelry_ring_45.jpg",
+                      "name": "Fleshfused Circle",
+                      "itemLevel": 226,
+                      "permanentEnchant": 6166,
+                      "permanentEnchantName": "+16 Haste",
+                      "bonusIDs": [7389, 7359, 6652, 6935, 1540, 6646],
+                      "gems": [
+                        {
+                          "id": 173127,
+                          "itemLevel": 120,
+                          "icon": "inv_jewelcrafting_90_rarecut_orange.jpg"
+                        }
+                      ]
+                    },
+                    {
+                      "id": 178809,
+                      "slot": 12,
+                      "quality": 3,
+                      "icon": "inv_jewelcrafting_livingruby_01.jpg",
+                      "name": "Soulletting Ruby",
+                      "itemLevel": 226,
+                      "bonusIDs": [7375, 7359, 6652, 1540, 6646]
+                    },
+                    {
+                      "id": 178826,
+                      "slot": 13,
+                      "quality": 3,
+                      "icon": "inv_jewelcrafting_nightseye_01.jpg",
+                      "name": "Sunblood Amethyst",
+                      "itemLevel": 207,
+                      "bonusIDs": [7369, 7359, 6652, 1521, 6646]
+                    },
+                    {
+                      "id": 184778,
+                      "slot": 14,
+                      "quality": 4,
+                      "icon": "inv_cloth_revendrethraid_d_01_cape.jpg",
+                      "name": "Decadent Nathrian Shawl",
+                      "itemLevel": 226,
+                      "permanentEnchant": 6203,
+                      "permanentEnchantName": "+20 Stamina & +30 Avoidance",
+                      "bonusIDs": [7187, 40, 1498, 6646]
+                    },
+                    {
+                      "id": 178829,
+                      "slot": 15,
+                      "quality": 3,
+                      "icon": "inv_staff_2h_oribosdungeon_c_01.jpg",
+                      "name": "Nathrian Ferula",
+                      "itemLevel": 213,
+                      "permanentEnchant": 6229,
+                      "permanentEnchantName": "Celestial Guidance",
+                      "bonusIDs": [7359, 6652, 7413, 1527, 6646]
+                    },
+                    {
+                      "id": 0,
+                      "slot": 16,
+                      "quality": 1,
+                      "icon": "inv_axe_02.jpg",
+                      "itemLevel": 0
+                    },
+                    {
+                      "id": 0,
+                      "slot": 17,
+                      "quality": 1,
+                      "icon": "inv_axe_02.jpg",
+                      "itemLevel": 0
+                    }
+                  ],
+                  "heartOfAzeroth": [
+                    {
+                      "name": "Unknown Ability",
+                      "guid": 0,
+                      "type": 0,
+                      "abilityIcon": "inv_axe_02.jpg",
+                      "total": 200
+                    },
+                    {
+                      "name": "Ice Bite",
+                      "guid": 336569,
+                      "type": 1,
+                      "abilityIcon": "spell_frost_frostblast.jpg",
+                      "total": 200
+                    },
+                    {
+                      "name": "Incantation of Swiftness",
+                      "guid": 337275,
+                      "type": 1,
+                      "abilityIcon": "rogue_burstofspeed.jpg",
+                      "total": 213
+                    },
+                    {
+                      "name": "Icy Propulsion",
+                      "guid": 336522,
+                      "type": 1,
+                      "abilityIcon": "spell_frost_coldhearted.jpg",
+                      "total": 200
+                    }
+                  ],
+                  "specIDs": [64],
+                  "factionID": 0,
+                  "covenantID": 2,
+                  "soulbindID": 8
+                }
+              },
+              {
+                "name": "Steffen",
+                "id": 11,
+                "guid": 160665002,
+                "type": "Warrior",
+                "server": "Ysondre",
+                "icon": "Warrior-Fury",
+                "specs": ["Fury"],
+                "minItemLevel": 225,
+                "maxItemLevel": 225,
+                "combatantInfo": {
+                  "stats": {
+                    "Speed": {
+                      "min": 0,
+                      "max": 0
+                    },
+                    "Mastery": {
+                      "min": 512,
+                      "max": 512
+                    },
+                    "Crit": {
+                      "min": 522,
+                      "max": 522
+                    },
+                    "Item Level": {
+                      "min": 225,
+                      "max": 225
+                    },
+                    "Strength": {
+                      "min": 1450,
+                      "max": 1450
+                    },
+                    "Stamina": {
+                      "min": 2242,
+                      "max": 2242
+                    },
+                    "Avoidance": {
+                      "min": 0,
+                      "max": 0
+                    },
+                    "Haste": {
+                      "min": 877,
+                      "max": 877
+                    },
+                    "Versatility": {
+                      "min": 190,
+                      "max": 190
+                    },
+                    "Leech": {
+                      "min": 30,
+                      "max": 30
+                    }
+                  },
+                  "talents": [
+                    {
+                      "name": "Sudden Death",
+                      "guid": 280721,
+                      "type": 1,
+                      "abilityIcon": "ability_warrior_improveddisciplines.jpg"
+                    },
+                    {
+                      "name": "Impending Victory",
+                      "guid": 202168,
+                      "type": 1,
+                      "abilityIcon": "spell_impending_victory.jpg"
+                    },
+                    {
+                      "name": "Massacre",
+                      "guid": 206315,
+                      "type": 1,
+                      "abilityIcon": "inv_sword_48.jpg"
+                    },
+                    {
+                      "name": "Warpaint",
+                      "guid": 208154,
+                      "type": 1,
+                      "abilityIcon": "ability_rogue_preparation.jpg"
+                    },
+                    {
+                      "name": "Cruelty",
+                      "guid": 335070,
+                      "type": 1,
+                      "abilityIcon": "spell_nature_focusedmind.jpg"
+                    },
+                    {
+                      "name": "Bladestorm",
+                      "guid": 46924,
+                      "type": 1,
+                      "abilityIcon": "ability_warrior_bladestorm.jpg"
+                    },
+                    {
+                      "name": "Anger Management",
+                      "guid": 152278,
+                      "type": 1,
+                      "abilityIcon": "warrior_talent_icon_angermanagement.jpg"
+                    }
+                  ],
+                  "artifact": [
+                    {
+                      "name": "Unknown Ability",
+                      "guid": 0,
+                      "type": 0,
+                      "abilityIcon": "inv_axe_02.jpg",
+                      "total": 1
+                    },
+                    {
+                      "name": "Thrill Seeker",
+                      "guid": 331586,
+                      "type": 1,
+                      "abilityIcon": "ability_rogue_bloodsplatter.jpg",
+                      "total": 1
+                    },
+                    {
+                      "name": "Familiar Predicaments",
+                      "guid": 331582,
+                      "type": 1,
+                      "abilityIcon": "sha_ability_rogue_bloodyeye_nightmare.jpg",
+                      "total": 1
+                    },
+                    {
+                      "name": "Agent of Chaos",
+                      "guid": 331576,
+                      "type": 1,
+                      "abilityIcon": "spell_shadow_deathsembrace.jpg",
+                      "total": 1
+                    },
+                    {
+                      "name": "Friends in Low Places",
+                      "guid": 331579,
+                      "type": 1,
+                      "abilityIcon": "ability_rogue_dirtydeeds.jpg",
+                      "total": 1
+                    }
+                  ],
+                  "gear": [
+                    {
+                      "id": 178812,
+                      "slot": 0,
+                      "quality": 3,
+                      "icon": "inv_plate_oribosdungeon_c_01_helm.jpg",
+                      "name": "Wing Commander's Helmet",
+                      "itemLevel": 226,
+                      "bonusIDs": [7354, 7359, 43, 7194, 1540, 6646]
+                    },
+                    {
+                      "id": 183040,
+                      "slot": 1,
+                      "quality": 4,
+                      "icon": "inv_7_0raid_necklace_03c.jpg",
+                      "name": "Charm of Eternal Winter",
+                      "itemLevel": 226,
+                      "bonusIDs": [7187, 6652, 7194, 1498, 6646]
+                    },
+                    {
+                      "id": 178802,
+                      "slot": 2,
+                      "quality": 3,
+                      "icon": "inv_plate_oribosdungeon_c_01_shoulder.jpg",
+                      "name": "Unyielding Combatant's Pauldrons",
+                      "itemLevel": 220,
+                      "bonusIDs": [7359, 6652, 7373, 1534, 6646]
+                    },
+                    {
+                      "id": 0,
+                      "slot": 3,
+                      "quality": 1,
+                      "icon": "inv_axe_02.jpg",
+                      "itemLevel": 0
+                    },
+                    {
+                      "id": 179346,
+                      "slot": 4,
+                      "quality": 3,
+                      "icon": "inv_plate_oribosdungeon_c_01_chest.jpg",
+                      "name": "Breastplate of Fatal Contrivances",
+                      "itemLevel": 226,
+                      "permanentEnchant": 6230,
+                      "permanentEnchantName": "All Stats +30",
+                      "bonusIDs": [7214, 6652, 1501, 5884, 6646]
+                    },
+                    {
+                      "id": 183015,
+                      "slot": 5,
+                      "quality": 4,
+                      "icon": "inv_plate_revendrethraid_d_01_belt.jpg",
+                      "name": "Binding of Warped Desires",
+                      "itemLevel": 226,
+                      "bonusIDs": [7187, 6652, 1498, 6646, 6935],
+                      "gems": [
+                        {
+                          "id": 173128,
+                          "itemLevel": 120,
+                          "icon": "inv_jewelcrafting_90_rarecut_yellow.jpg"
+                        }
+                      ]
+                    },
+                    {
+                      "id": 178800,
+                      "slot": 6,
+                      "quality": 3,
+                      "icon": "inv_plate_oribosdungeon_c_01_pants.jpg",
+                      "name": "Galvanized Oxxein Legguards",
+                      "itemLevel": 226,
+                      "bonusIDs": [7214, 6652, 1501, 5884, 6646]
+                    },
+                    {
+                      "id": 183027,
+                      "slot": 7,
+                      "quality": 4,
+                      "icon": "inv_plate_revendrethraid_d_01_boot.jpg",
+                      "name": "Errant Crusader's Greaves",
+                      "itemLevel": 226,
+                      "permanentEnchant": 6207,
+                      "permanentEnchantName": "Soul Treads",
+                      "bonusIDs": [7187, 6652, 1498, 6646]
+                    },
+                    {
+                      "id": 183018,
+                      "slot": 8,
+                      "quality": 4,
+                      "icon": "inv_plate_revendrethraid_d_01_bracer.jpg",
+                      "name": "Hellhound Cuffs",
+                      "itemLevel": 226,
+                      "permanentEnchant": 6222,
+                      "permanentEnchantName": "Shaded Hearthing",
+                      "bonusIDs": [7187, 6652, 7193, 1498, 6646]
+                    },
+                    {
+                      "id": 183013,
+                      "slot": 9,
+                      "quality": 4,
+                      "icon": "inv_plate_revendrethraid_d_01_glove.jpg",
+                      "name": "Fallen Templar's Gauntlets",
+                      "itemLevel": 226,
+                      "permanentEnchant": 6210,
+                      "permanentEnchantName": "+15 Strength",
+                      "bonusIDs": [7187, 6652, 1498, 6646]
+                    },
+                    {
+                      "id": 179355,
+                      "slot": 10,
+                      "quality": 3,
+                      "icon": "inv_ring_ardenweald_02_green.jpg",
+                      "name": "Death God's Signet",
+                      "itemLevel": 220,
+                      "permanentEnchant": 6166,
+                      "permanentEnchantName": "+16 Haste",
+                      "bonusIDs": [7359, 6652, 7193, 7387, 1534, 6646]
+                    },
+                    {
+                      "id": 178926,
+                      "slot": 11,
+                      "quality": 5,
+                      "icon": "inv_jewelcrafting_90_maxlvlring_red.jpg",
+                      "name": "Shadowghast Ring",
+                      "itemLevel": 235,
+                      "permanentEnchant": 6166,
+                      "permanentEnchantName": "+16 Haste",
+                      "bonusIDs": [6959, 6649, 6647, 6758, 1532, 6935],
+                      "gems": [
+                        {
+                          "id": 173128,
+                          "itemLevel": 120,
+                          "icon": "inv_jewelcrafting_90_rarecut_yellow.jpg"
+                        }
+                      ],
+                      "effectID": 335266,
+                      "effectIcon": "inv_60crafted_ring4b.jpg",
+                      "effectName": "Signet of Tormented Kings"
+                    },
+                    {
+                      "id": 184027,
+                      "slot": 12,
+                      "quality": 4,
+                      "icon": "inv_leather_raiddruid_o_01chest.jpg",
+                      "name": "Stone Legion Heraldry",
+                      "itemLevel": 220,
+                      "bonusIDs": [7188, 6652, 1485, 6646]
+                    },
+                    {
+                      "id": 178771,
+                      "slot": 13,
+                      "quality": 3,
+                      "icon": "inv_trinket_maldraxxus_02_green.jpg",
+                      "name": "Phial of Putrefaction",
+                      "itemLevel": 220,
+                      "bonusIDs": [7359, 6652, 7373, 1534, 6646]
+                    },
+                    {
+                      "id": 183033,
+                      "slot": 14,
+                      "quality": 4,
+                      "icon": "inv_cape_mail_revendrethraid_d_01.jpg",
+                      "name": "Mantle of Manifest Sins",
+                      "itemLevel": 226,
+                      "permanentEnchant": 6204,
+                      "permanentEnchantName": "+20 Stamina & +30 Leech",
+                      "bonusIDs": [7187, 6652, 1498, 6646]
+                    },
+                    {
+                      "id": 179544,
+                      "slot": 15,
+                      "quality": 4,
+                      "icon": "inv_mace_2h_ardenweald_d_01.jpg",
+                      "name": "Ashcarved Sledgehammer",
+                      "itemLevel": 226,
+                      "permanentEnchant": 6229,
+                      "permanentEnchantName": "Celestial Guidance",
+                      "bonusIDs": [7187, 6652, 1524, 6646]
+                    },
+                    {
+                      "id": 178866,
+                      "slot": 16,
+                      "quality": 3,
+                      "icon": "inv_axe_2h_oribosdungeon_c_01.jpg",
+                      "name": "Dessia's Decimating Decapitator",
+                      "itemLevel": 226,
+                      "permanentEnchant": 6228,
+                      "permanentEnchantName": "Sinful Revelation",
+                      "bonusIDs": [7214, 6652, 1501, 5884, 6646]
+                    },
+                    {
+                      "id": 0,
+                      "slot": 17,
+                      "quality": 1,
+                      "icon": "inv_axe_02.jpg",
+                      "itemLevel": 0
+                    }
+                  ],
+                  "heartOfAzeroth": [
+                    {
+                      "name": "Stalwart Guardian",
+                      "guid": 334993,
+                      "type": 1,
+                      "abilityIcon": "ability_warrior_shieldmastery.jpg",
+                      "total": 226
+                    },
+                    {
+                      "name": "Ashen Juggernaut",
+                      "guid": 335232,
+                      "type": 1,
+                      "abilityIcon": "warrior_talent_icon_skirmisher.jpg",
+                      "total": 226
+                    },
+                    {
+                      "name": "Inspiring Presence",
+                      "guid": 335034,
+                      "type": 1,
+                      "abilityIcon": "ability_toughness.jpg",
+                      "total": 226
+                    },
+                    {
+                      "name": "Depths of Insanity",
+                      "guid": 337162,
+                      "type": 1,
+                      "abilityIcon": "spell_shadow_summonimp.jpg",
+                      "total": 213
+                    }
+                  ],
+                  "specIDs": [72],
+                  "factionID": 0,
+                  "covenantID": 2,
+                  "soulbindID": 8
+                }
+              }
+            ],
+            "healers": [
+              {
+                "name": "Afkdin",
+                "id": 6,
+                "guid": 160693241,
+                "type": "Paladin",
+                "server": "Ysondre",
+                "icon": "Paladin-Holy",
+                "specs": ["Holy"],
+                "minItemLevel": 224,
+                "maxItemLevel": 224,
+                "combatantInfo": {
+                  "stats": {
+                    "Speed": {
+                      "min": 44,
+                      "max": 44
+                    },
+                    "Intellect": {
+                      "min": 1740,
+                      "max": 1740
+                    },
+                    "Mastery": {
+                      "min": 152,
+                      "max": 152
+                    },
+                    "Crit": {
+                      "min": 210,
+                      "max": 210
+                    },
+                    "Item Level": {
+                      "min": 224,
+                      "max": 224
+                    },
+                    "Stamina": {
+                      "min": 1985,
+                      "max": 1985
+                    },
+                    "Avoidance": {
+                      "min": 76,
+                      "max": 76
+                    },
+                    "Haste": {
+                      "min": 853,
+                      "max": 853
+                    },
+                    "Versatility": {
+                      "min": 677,
+                      "max": 677
+                    },
+                    "Leech": {
+                      "min": 37,
+                      "max": 37
+                    }
+                  },
+                  "talents": [
+                    {
+                      "name": "Crusader's Might",
+                      "guid": 196926,
+                      "type": 1,
+                      "abilityIcon": "ability_paladin_swiftretribution.jpg"
+                    },
+                    {
+                      "name": "Judgment of Light",
+                      "guid": 183778,
+                      "type": 1,
+                      "abilityIcon": "spell_holy_divineprovidence.jpg"
+                    },
+                    {
+                      "name": "Blinding Light",
+                      "guid": 115750,
+                      "type": 2,
+                      "abilityIcon": "ability_paladin_blindinglight.jpg"
+                    },
+                    {
+                      "name": "Unbreakable Spirit",
+                      "guid": 114154,
+                      "type": 1,
+                      "abilityIcon": "spell_holy_holyguidance.jpg"
+                    },
+                    {
+                      "name": "Holy Avenger",
+                      "guid": 105809,
+                      "type": 1,
+                      "abilityIcon": "ability_paladin_holyavenger.jpg"
+                    },
+                    {
+                      "name": "Awakening",
+                      "guid": 248033,
+                      "type": 1,
+                      "abilityIcon": "inv_helm_plate_raidpaladin_n_01.jpg"
+                    },
+                    {
+                      "name": "Beacon of Faith",
+                      "guid": 156910,
+                      "type": 2,
+                      "abilityIcon": "ability_paladin_beaconsoflight.jpg"
+                    }
+                  ],
+                  "artifact": [
+                    {
+                      "name": "Unknown Ability",
+                      "guid": 0,
+                      "type": 0,
+                      "abilityIcon": "inv_axe_02.jpg",
+                      "total": 1
+                    },
+                    {
+                      "name": "Leisurely Gait",
+                      "guid": 336147,
+                      "type": 1,
+                      "abilityIcon": "spell_lifegivingspeed.jpg",
+                      "total": 1
+                    },
+                    {
+                      "name": "Soothing Shade",
+                      "guid": 336239,
+                      "type": 1,
+                      "abilityIcon": "archaeology_5_0_umbrellaofchiji.jpg",
+                      "total": 1
+                    },
+                    {
+                      "name": "Wasteland Propriety",
+                      "guid": 319983,
+                      "type": 1,
+                      "abilityIcon": "inv_drink_23.jpg",
+                      "total": 1
+                    },
+                    {
+                      "name": "Exquisite Ingredients",
+                      "guid": 336184,
+                      "type": 1,
+                      "abilityIcon": "achievement_guildperk_bountifulbags.jpg",
+                      "total": 1
+                    }
+                  ],
+                  "gear": [
+                    {
                       "id": 178777,
                       "slot": 0,
                       "quality": 3,
                       "icon": "inv_plate_oribosdungeon_c_01_helm.jpg",
                       "name": "Darkfrost Helmet",
                       "itemLevel": 226,
-                      "bonusIDs": [7214, 6652, 7194, 1501, 5884, 6646]
+                      "bonusIDs": [7214, 6652, 1501, 5884, 6646, 6935],
+                      "gems": [
+                        {
+                          "id": 173129,
+                          "itemLevel": 120,
+                          "icon": "inv_jewelcrafting_90_rarecut_blue.jpg"
+                        }
+                      ]
                     },
                     {
                       "id": 178827,
@@ -2265,36 +2264,45 @@
                       "bonusIDs": [7359, 43, 7352, 1534, 6646]
                     },
                     {
-                      "id": 184138,
+                      "id": 179326,
                       "slot": 5,
-                      "quality": 4,
-                      "icon": "inv_plate_revendrethraid_d_01_belt.jpg",
-                      "name": "Stonebark Girdle",
-                      "itemLevel": 207,
-                      "onUseEnchant": 6192,
-                      "onUseEnchantName": "Dimensional Shifter",
-                      "bonusIDs": [6652, 7193, 1492, 6646]
+                      "quality": 3,
+                      "icon": "inv_plate_oribosdungeon_c_01_buckle.jpg",
+                      "name": "Girdle of the Soulflayer",
+                      "itemLevel": 220,
+                      "onUseEnchant": 4214,
+                      "onUseEnchantName": "Cardboard Assassin",
+                      "bonusIDs": [7359, 6652, 7373, 1534, 6646, 6935],
+                      "gems": [
+                        {
+                          "id": 173129,
+                          "itemLevel": 120,
+                          "icon": "inv_jewelcrafting_90_rarecut_blue.jpg"
+                        }
+                      ]
                     },
                     {
-                      "id": 171416,
+                      "id": 178818,
                       "slot": 6,
-                      "quality": 5,
-                      "icon": "inv_pant_plate_mawraid_d_01.jpg",
-                      "name": "Shadowghast Greaves",
-                      "itemLevel": 235,
-                      "bonusIDs": [7059, 6649, 6650, 6758, 1532],
-                      "effectID": 337825,
-                      "effectIcon": "spell_holy_greaterblessingoflight.jpg",
-                      "effectName": "Shock Barrier"
+                      "quality": 3,
+                      "icon": "inv_plate_oribosdungeon_c_01_pants.jpg",
+                      "name": "Halkias's Towering Pillars",
+                      "itemLevel": 226,
+                      "bonusIDs": [7354, 7359, 6652, 1540, 6646]
                     },
                     {
-                      "id": 183027,
+                      "id": 171413,
                       "slot": 7,
-                      "quality": 4,
-                      "icon": "inv_plate_revendrethraid_d_01_boot.jpg",
-                      "name": "Errant Crusader's Greaves",
-                      "itemLevel": 213,
-                      "bonusIDs": [7188, 6652, 1485, 6646]
+                      "quality": 5,
+                      "icon": "inv_boot_plate_mawraidmythic_d_01.jpg",
+                      "name": "Shadowghast Sabatons",
+                      "itemLevel": 235,
+                      "permanentEnchant": 6207,
+                      "permanentEnchantName": "Soul Treads",
+                      "bonusIDs": [7054, 6649, 6650, 6758, 1532],
+                      "effectID": 337594,
+                      "effectIcon": "ability_paladin_conviction.jpg",
+                      "effectName": "The Mad Paragon"
                     },
                     {
                       "id": 179354,
@@ -2308,33 +2316,6 @@
                       "bonusIDs": [7389, 7359, 6652, 6935, 1540, 6646],
                       "gems": [
                         {
-                          "id": 173128,
-                          "itemLevel": 120,
-                          "icon": "inv_jewelcrafting_90_rarecut_yellow.jpg"
-                        }
-                      ]
-                    },
-                    {
-                      "id": 178706,
-                      "slot": 9,
-                      "quality": 3,
-                      "icon": "inv_plate_oribosdungeon_c_01_glove.jpg",
-                      "name": "Fogweaver Gauntlets",
-                      "itemLevel": 210,
-                      "bonusIDs": [7370, 7359, 6652, 1524, 6646]
-                    },
-                    {
-                      "id": 178824,
-                      "slot": 10,
-                      "quality": 3,
-                      "icon": "inv_ring_revendrethraid_01_gold.jpg",
-                      "name": "Signet of the False Accuser",
-                      "itemLevel": 210,
-                      "permanentEnchant": 6170,
-                      "permanentEnchantName": "+16 Versatility",
-                      "bonusIDs": [7214, 6652, 6935, 1501, 5868, 6646],
-                      "gems": [
-                        {
                           "id": 173129,
                           "itemLevel": 120,
                           "icon": "inv_jewelcrafting_90_rarecut_blue.jpg"
@@ -2342,31 +2323,53 @@
                       ]
                     },
                     {
-                      "id": 178870,
-                      "slot": 11,
+                      "id": 178775,
+                      "slot": 9,
                       "quality": 3,
-                      "icon": "inv_ring_maldraxxus_02_green.jpg",
-                      "name": "Ritual Bone Band",
-                      "itemLevel": 210,
-                      "bonusIDs": [7384, 7359, 6652, 7193, 1524, 6646]
+                      "icon": "inv_plate_oribosdungeon_c_01_glove.jpg",
+                      "name": "Fleshfused Crushers",
+                      "itemLevel": 220,
+                      "bonusIDs": [7359, 42, 7373, 1534, 6646]
                     },
                     {
-                      "id": 179350,
-                      "slot": 12,
+                      "id": 178871,
+                      "slot": 10,
                       "quality": 3,
-                      "icon": "inv_trinket_80_titan02a.jpg",
-                      "name": "Inscrutable Quantum Device",
-                      "itemLevel": 216,
-                      "bonusIDs": [7359, 40, 7372, 1530, 6646]
+                      "icon": "inv_ring_maldraxxus_01_red.jpg",
+                      "name": "Bloodoath Signet",
+                      "itemLevel": 226,
+                      "permanentEnchant": 6170,
+                      "permanentEnchantName": "+16 Versatility",
+                      "bonusIDs": [7389, 7359, 41, 7193, 1540, 6646]
+                    },
+                    {
+                      "id": 178736,
+                      "slot": 11,
+                      "quality": 3,
+                      "icon": "inv_argus_ring02.jpg",
+                      "name": "Stitchflesh's Misplaced Signet",
+                      "itemLevel": 220,
+                      "permanentEnchant": 6170,
+                      "permanentEnchantName": "+16 Versatility",
+                      "bonusIDs": [7359, 6652, 7194, 7387, 1534, 6646]
                     },
                     {
                       "id": 178708,
-                      "slot": 13,
+                      "slot": 12,
                       "quality": 1,
                       "icon": "inv_axe_02.jpg",
                       "name": "Unbound Changeling",
-                      "itemLevel": 210,
-                      "bonusIDs": [7214, 6652, 6917, 1501, 5868, 6646]
+                      "itemLevel": 226,
+                      "bonusIDs": [7375, 7359, 6652, 6917, 1540, 6646]
+                    },
+                    {
+                      "id": 178809,
+                      "slot": 13,
+                      "quality": 3,
+                      "icon": "inv_jewelcrafting_livingruby_01.jpg",
+                      "name": "Soulletting Ruby",
+                      "itemLevel": 226,
+                      "bonusIDs": [7375, 7359, 40, 1540, 6646]
                     },
                     {
                       "id": 178755,
@@ -2374,10 +2377,10 @@
                       "quality": 3,
                       "icon": "inv_cape_mail_oribosdungeon_c_01.jpg",
                       "name": "Blighted Margrave's Cloak",
-                      "itemLevel": 207,
-                      "permanentEnchant": 6204,
-                      "permanentEnchantName": "+20 Stamina & +30 Leech",
-                      "bonusIDs": [7213, 6652, 1501, 5865, 6646]
+                      "itemLevel": 220,
+                      "permanentEnchant": 6203,
+                      "permanentEnchantName": "+20 Stamina & +30 Avoidance",
+                      "bonusIDs": [7359, 6652, 7387, 1534, 6646]
                     },
                     {
                       "id": 178856,
@@ -2385,12 +2388,12 @@
                       "quality": 3,
                       "icon": "inv_1h_oribosdungeon_c_01.jpg",
                       "name": "Kaal's Gloomblade",
-                      "itemLevel": 210,
+                      "itemLevel": 226,
                       "permanentEnchant": 6229,
                       "permanentEnchantName": "Celestial Guidance",
                       "temporaryEnchant": 6188,
                       "temporaryEnchantName": "Shadowcore Oil",
-                      "bonusIDs": [7204, 6652, 1501, 5868, 6646]
+                      "bonusIDs": [7445, 7359, 6652, 1540, 6646]
                     },
                     {
                       "id": 178867,
@@ -2411,17 +2414,24 @@
                   ],
                   "heartOfAzeroth": [
                     {
-                      "name": "Echoing Blessings",
-                      "guid": 339316,
-                      "type": 1,
-                      "abilityIcon": "achievement_dungeon_heroic_gloryoftheraider.jpg",
-                      "total": 184
-                    },
-                    {
                       "name": "Hallowed Discernment",
                       "guid": 340212,
                       "type": 1,
                       "abilityIcon": "spell_animarevendreth_groundstate.jpg",
+                      "total": 200
+                    },
+                    {
+                      "name": "Echoing Blessings",
+                      "guid": 339316,
+                      "type": 1,
+                      "abilityIcon": "achievement_dungeon_heroic_gloryoftheraider.jpg",
+                      "total": 200
+                    },
+                    {
+                      "name": "Light's Barding",
+                      "guid": 339268,
+                      "type": 1,
+                      "abilityIcon": "inv_lightforgedmatrixability_lightsjudgment.jpg",
                       "total": 200
                     },
                     {
@@ -2442,7 +2452,7 @@
                   "specIDs": [65],
                   "factionID": 0,
                   "covenantID": 2,
-                  "soulbindID": 8
+                  "soulbindID": 9
                 }
               }
             ]

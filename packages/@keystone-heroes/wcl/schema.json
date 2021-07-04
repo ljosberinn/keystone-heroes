@@ -7346,6 +7346,18 @@
             "deprecationReason": null
           },
           {
+            "name": "rating",
+            "description": "The official Blizzard rating for a completed Mythic+ dungeon or Torghast run.",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "size",
             "description": "The group size for the raid, dungeon, or arena. Null for trash.",
             "args": [],

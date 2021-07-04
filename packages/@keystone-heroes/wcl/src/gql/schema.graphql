@@ -2007,6 +2007,11 @@ type ReportFight {
   name: String!
 
   """
+  The official Blizzard rating for a completed Mythic+ dungeon or Torghast run.
+  """
+  rating: Int
+
+  """
   The group size for the raid, dungeon, or arena. Null for trash.
   """
   size: Int

@@ -79,6 +79,7 @@ export type FightResponse =
         | "averageItemLevel"
         | "percent"
         | "chests"
+        | "rating"
       > & {
         chests: Fight["chests"];
         time: Fight["keystoneTime"];
@@ -169,6 +170,7 @@ type RawFight =
       | "totalDeaths"
       | "averageItemLevel"
       | "percent"
+      | "rating"
     > & {
       dungeon:
         | (Pick<Dungeon, "name" | "id" | "time"> & {
@@ -273,6 +275,7 @@ const createFightFindFirst = (reportID: string, fightID: number) => {
       keystoneLevel: true,
       keystoneTime: true,
       percent: true,
+      rating: true,
       dungeon: {
         select: {
           name: true,
@@ -527,6 +530,7 @@ const createResponseFromStoredFight = (
       averageItemLevel: dataset.averageItemLevel,
       totalDeaths: dataset.totalDeaths,
       percent: dataset.percent,
+      rating: dataset.rating,
     },
     dungeon: {
       id: dataset.dungeon.id,
@@ -613,9 +617,17 @@ const getResponseOrRetrieveAndCreateFight = async (
         return acc;
       }
 
-      const maps = pull.maps
-        .filter((map): map is ReportMap => map !== null)
-        .map((map) => map.id);
+      const maps = [
+        ...new Set(
+          pull.maps.reduce<number[]>((acc, map) => {
+            if (!map) {
+              return acc;
+            }
+
+            return [...acc, map.id];
+          }, [])
+        ),
+      ];
 
       if (maps.length === 0) {
         return acc;
@@ -1031,24 +1043,25 @@ const persistPulls = async (
     },
   });
 
-  return dungeonPulls
-    .map<PersistedDungeonPull | null>((pull) => {
-      const match = storedPulls.find(
-        (storedPull) =>
-          storedPull.startTime === pull.startTime &&
-          storedPull.endTime === pull.endTime
-      );
+  return dungeonPulls.reduce<PersistedDungeonPull[]>((acc, pull) => {
+    const match = storedPulls.find(
+      (storedPull) =>
+        storedPull.startTime === pull.startTime &&
+        storedPull.endTime === pull.endTime
+    );
 
-      if (!match) {
-        return null;
-      }
+    if (!match) {
+      return acc;
+    }
 
-      return {
+    return [
+      ...acc,
+      {
         ...pull,
         id: match.id,
-      };
-    })
-    .filter((pull): pull is PersistedDungeonPull => pull !== null);
+      },
+    ];
+  }, []);
 };
 
 const calculateCombatTime = <
