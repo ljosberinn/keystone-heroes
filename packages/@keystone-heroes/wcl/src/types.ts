@@ -313,8 +313,6 @@ export type GameAbility = {
   __typename?: "GameAbility";
   /** The ID of the ability. */
   id: Scalars["Int"];
-  /** A description for the ability if it is available. */
-  description?: Maybe<Scalars["String"]>;
   /** The icon for the ability. */
   icon?: Maybe<Scalars["String"]>;
   /** The localized name of the ability. Will be null if no localization information exists for the ability. */
@@ -1617,8 +1615,8 @@ export type Zone = {
   __typename?: "Zone";
   /** The ID of the zone. */
   id: Scalars["Int"];
-  /** The bracket information for this zone. */
-  brackets: Bracket;
+  /** The bracket information for this zone. This field will be null if the zone does not support brackets. */
+  brackets?: Maybe<Bracket>;
   /** A list of all the difficulties supported for this zone. */
   difficulties?: Maybe<Maybe<Difficulty>[]>;
   /** The encounters found within this zone. */

@@ -1658,18 +1658,6 @@
             "deprecationReason": null
           },
           {
-            "name": "description",
-            "description": "A description for the ability if it is available.",
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "icon",
             "description": "The icon for the ability.",
             "args": [],
@@ -8803,16 +8791,12 @@
           },
           {
             "name": "brackets",
-            "description": "The bracket information for this zone.",
+            "description": "The bracket information for this zone. This field will be null if the zone does not support brackets.",
             "args": [],
             "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "Bracket",
-                "ofType": null
-              }
+              "kind": "OBJECT",
+              "name": "Bracket",
+              "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null

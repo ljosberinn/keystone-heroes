@@ -644,9 +644,9 @@ type Zone {
   id: Int!
 
   """
-  The bracket information for this zone.
+  The bracket information for this zone. This field will be null if the zone does not support brackets.
   """
-  brackets: Bracket!
+  brackets: Bracket
 
   """
   A list of all the difficulties supported for this zone.
@@ -2842,11 +2842,6 @@ type GameAbility {
   The ID of the ability.
   """
   id: Int!
-
-  """
-  A description for the ability if it is available.
-  """
-  description: String
 
   """
   The icon for the ability.
