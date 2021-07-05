@@ -2,9 +2,10 @@ import type { FightResponse } from "@keystone-heroes/api/functions/fight";
 import { isValidReportId } from "@keystone-heroes/wcl/utils";
 import type { GetStaticPaths, GetStaticProps } from "next";
 import { useRouter } from "next/router";
-import type { KeyboardEvent } from "react";
+import type { KeyboardEvent, MutableRefObject } from "react";
 import { useEffect, useRef, useState } from "react";
 import { useAbortableFetch } from "src/hooks/useAbortableFetch";
+import { useForceRerender } from "src/hooks/useForceRerender";
 
 type FightIDProps = {
   cache?: {
@@ -91,19 +92,27 @@ export default function FightID({ cache }: FightIDProps): JSX.Element | null {
 
   return (
     <div>
-      <Map zones={fight.dungeon.zones} />
+      <Map
+        zones={fight.dungeon.zones}
+        pulls={fight.pulls.map((pull, index) => ({ ...pull, id: index + 1 }))}
+      />
     </div>
   );
 }
 
 type Bar<T, K extends string> = T extends { [P in K]: unknown } ? T[K] : never;
 
-type MapProps = Pick<Bar<FightResponse, "dungeon">, "zones">;
+type MapProps = {
+  zones: Bar<FightResponse, "dungeon">["zones"];
+  pulls: (Bar<FightResponse, "pulls">[number] & { id: number })[];
+};
 
-function Map({ zones }: MapProps) {
+function Map({ zones, pulls }: MapProps) {
   const [zoneIndex, setZoneIndex] = useState(0);
   const shouldFocusRef = useRef(false);
   const buttonRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const imageRef = useRef<HTMLImageElement | null>(null);
+  const tabPanelRef = useRef<HTMLDivElement | null>(null);
 
   function handleZoneChange(id: number) {
     setZoneIndex(id);
@@ -172,27 +181,147 @@ function Map({ zones }: MapProps) {
       </div>
       <div>
         {zones.map((zone, index) => {
+          const hidden = zoneIndex !== index;
+
           return (
             <div
               role="tabpanel"
               id={`tabpanel-${zone.id}`}
               aria-labelledby={`tab-${zone.id}`}
-              hidden={zoneIndex !== index}
+              hidden={hidden}
               // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
               tabIndex={0}
               key={zone.id}
+              ref={hidden ? undefined : tabPanelRef}
             >
               <picture>
                 <img
                   src={`/static/maps/${zone.id}.png`}
                   loading="lazy"
                   alt={zone.name}
+                  ref={hidden ? undefined : imageRef}
                 />
               </picture>
+              <PullIndicators
+                pulls={pulls.filter((pull) => pull.zones.includes(zone.id))}
+                imageRef={imageRef}
+                tabPanelRef={tabPanelRef}
+                zone={zone}
+              />
             </div>
           );
         })}
       </div>
+    </>
+  );
+}
+
+const calcX = (
+  x: number,
+  zone: MapProps["zones"][number],
+  imageRef: MutableRefObject<HTMLImageElement | null>,
+  tabPanelRef: MutableRefObject<HTMLDivElement | null>
+) => {
+  if (!imageRef.current || !tabPanelRef.current) {
+    return 0;
+  }
+
+  // TODO: move this to backend
+  const percent = (x - zone.minX) / (zone.maxX - zone.minX);
+
+  return (
+    imageRef.current.clientWidth * percent + tabPanelRef.current.offsetLeft
+  );
+};
+
+const calcY = (
+  y: number,
+  zone: MapProps["zones"][number],
+  imageRef: MutableRefObject<HTMLImageElement | null>,
+  tabPanelRef: MutableRefObject<HTMLDivElement | null>
+) => {
+  if (!imageRef.current || !tabPanelRef.current) {
+    return 0;
+  }
+
+  const percent = (y - zone.maxY) / (zone.minY - zone.maxY);
+
+  return (
+    imageRef.current.clientHeight * percent + tabPanelRef.current.offsetTop
+  );
+};
+
+type PullIndicatorsProps = Pick<MapProps, "pulls"> & {
+  imageRef: MutableRefObject<HTMLImageElement | null>;
+  tabPanelRef: MutableRefObject<HTMLDivElement | null>;
+  zone: MapProps["zones"][number];
+};
+
+let attached = false;
+
+function PullIndicators({
+  pulls,
+  imageRef,
+  tabPanelRef,
+  zone,
+}: PullIndicatorsProps) {
+  const redraw = useForceRerender();
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    if (imageRef.current && tabPanelRef.current) {
+      const listener = () => {
+        if (attached) {
+          return;
+        }
+
+        attached = true;
+
+        timeoutRef.current = setTimeout(() => {
+          timeoutRef.current = null;
+          attached = false;
+          redraw();
+        }, 100);
+      };
+
+      window.addEventListener("resize", listener);
+
+      return () => {
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current);
+        }
+        window.removeEventListener("resize", listener);
+      };
+    }
+  }, [imageRef, tabPanelRef, redraw]);
+
+  return (
+    <>
+      {pulls.map((pull) => {
+        const x = calcX(pull.x, zone, imageRef, tabPanelRef);
+        const y = calcY(pull.y, zone, imageRef, tabPanelRef);
+
+        if (!x || !y) {
+          return null;
+        }
+
+        return (
+          <span
+            className="absolute w-4 h-4"
+            style={{
+              border: "1px solid red",
+              top: `${y}px`,
+              left: `${x}px`,
+            }}
+            key={pull.startTime}
+            data-events={pull.events.length}
+            data-npcs={pull.npcs.length}
+            data-percent={pull.percent}
+          >
+            {pull.id}
+          </span>
+        );
+      })}
     </>
   );
 }

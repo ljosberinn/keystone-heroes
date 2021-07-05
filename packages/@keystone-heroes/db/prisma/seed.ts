@@ -44,6 +44,10 @@ function seedZones() {
       dungeonID: dungeon.id,
       id: zone.id,
       order: zone.order,
+      minX: zone.minX,
+      minY: zone.minY,
+      maxX: zone.maxX,
+      maxY: zone.maxY,
     }))
   );
 

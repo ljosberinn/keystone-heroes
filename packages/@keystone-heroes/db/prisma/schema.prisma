@@ -41,12 +41,17 @@ model Dungeon {
 }
 
 model Zone {
-  id        Int    @id
-  name      String
-  order     Int
-  dungeonID Int
+  id    Int    @id
+  name  String
+  order Int
 
-  dungeon Dungeon @relation(fields: [dungeonID], references: [id])
+  dungeonID Int
+  dungeon   Dungeon @relation(fields: [dungeonID], references: [id])
+
+  minX Int
+  maxX Int
+  minY Int
+  maxY Int
 
   PullZone PullZone[]
 }

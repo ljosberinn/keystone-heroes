@@ -1,0 +1,30 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "Chrome",
+      "url": "http://localhost:3000",
+      "webRoot": "${workspaceFolder}"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Node",
+      "program": "${workspaceFolder}/node_modules/next/dist/bin/next",
+      "args": ["dev"],
+      "autoAttachChildProcesses": true,
+      "skipFiles": ["<node_internals>/**"],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}/packages/@keystone-heroes/web",
+      "stopOnEntry": true
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Next: Full",
+      "configurations": ["Node", "Chrome"]
+    }
+  ]
+}

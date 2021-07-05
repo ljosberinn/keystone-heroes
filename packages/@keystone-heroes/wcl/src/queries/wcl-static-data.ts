@@ -51,6 +51,7 @@ async function loadSpellNames() {
   const extracted = json.map((dataset) => ({
     id: dataset.id,
     name: dataset.name,
+    icon: dataset.icon,
   }));
 
   const targetPath = resolve("../db/raw/all-spells.json");

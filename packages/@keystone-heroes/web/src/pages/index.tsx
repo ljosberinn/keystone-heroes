@@ -36,7 +36,7 @@ export default function Home(): JSX.Element | null {
       <input
         placeholder="wcl link"
         onChange={(event) => {
-          setUrl(event.target.value);
+          setUrl(event.target.value.trim());
         }}
       />
     </form>

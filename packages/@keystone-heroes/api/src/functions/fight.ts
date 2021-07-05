@@ -90,7 +90,7 @@ export type FightResponse =
         id: DungeonIDs;
         name: string;
         time: number;
-        zones: Pick<Zone, "id" | "name">[];
+        zones: Pick<Zone, "id" | "name" | "maxX" | "maxY" | "minY" | "minX">[];
       };
       affixes: Pick<Affix, "name" | "icon">[];
       player: (Pick<
@@ -537,7 +537,7 @@ const createResponseFromStoredFight = (
       time: dungeon.timer[0],
       zones: [...dungeon.zones]
         .sort((a, b) => a.order - b.order)
-        .map(({ id, name }) => ({ id, name })),
+        .map(({ order, ...rest }) => rest),
     },
     affixes: [
       dataset.Report.week.affix1,

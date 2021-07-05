@@ -963,18 +963,20 @@ export const reportHandler: RequestHandler<Request, ReportResponse> = async (
         ): dataset is Omit<Player, "covenantTraits"> & {
           covenantTraits: CovenantTrait[];
           covenantID: number;
-        } => dataset.covenantTraits !== null && dataset.covenantID !== null
+        } => {
+          return dataset.covenantTraits !== null && dataset.covenantID !== null;
+        }
       )
-      .flatMap((dataset) =>
-        dataset.covenantTraits.map((trait) => {
+      .flatMap((dataset) => {
+        return dataset.covenantTraits.map((trait) => {
           return {
             id: trait.guid,
             name: trait.name,
             icon: trait.abilityIcon,
             covenantID: dataset.covenantID,
           };
-        })
-      );
+        });
+      });
 
   const legendariesCreateMany: Prisma.LegendaryCreateManyInput[] = allPlayer
     .filter(
