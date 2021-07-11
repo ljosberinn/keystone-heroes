@@ -21,10 +21,16 @@ async function loadNPCNames() {
     "https://assets.rpglogs.com/json/warcraft/npc-names.json"
   );
   const json: NPCName[] = await response.json();
-  const extracted = json.map((dataset) => ({
-    id: dataset.id,
-    name: dataset.name_enus,
-  }));
+  const extracted = [
+    ...json.map((dataset) => ({
+      id: dataset.id,
+      name: dataset.name_enus,
+    })),
+    { id: 179_891, name: "Soggodon the Breaker" },
+    { id: 179_446, name: "Incinerator Arkolath" },
+    { id: 179_892, name: "Oros Coldheart" },
+    { id: 179_890, name: "Executioner Varruth" },
+  ];
 
   const targetPath = resolve("../db/raw/all-npcs.json");
   writeFileSync(
@@ -33,6 +39,9 @@ async function loadNPCNames() {
       parser: "json",
     })
   );
+
+  // eslint-disable-next-line no-console
+  console.log("[@keystone-heroes/wcl] npc names loaded");
 }
 
 type SpellName = {
@@ -48,7 +57,10 @@ async function loadSpellNames() {
     "https://assets.rpglogs.com/json/warcraft/spell-names.json"
   );
   const json: SpellName[] = await response.json();
-  const extracted = json.map((dataset) => ({
+  const extracted = [
+    ...json,
+    { id: 350_163, name: "Melee", icon: "ability_meleedamage" },
+  ].map((dataset) => ({
     id: dataset.id,
     name: dataset.name,
     icon: dataset.icon,
@@ -61,24 +73,19 @@ async function loadSpellNames() {
       parser: "json",
     })
   );
+
+  // eslint-disable-next-line no-console
+  console.log("[@keystone-heroes/wcl] spell names loaded");
 }
-
-loadNPCNames()
-  .then(() => {
+// eslint-disable-next-line @typescript-eslint/no-floating-promises
+(async () => {
+  try {
+    await Promise.all([loadNPCNames(), loadSpellNames()]);
+  } catch (error) {
     // eslint-disable-next-line no-console
-    console.log("[@keystone-heroes/wcl] npc names loaded");
+    console.error(error);
+  } finally {
     // eslint-disable-next-line unicorn/no-process-exit
     process.exit(0);
-  })
-  // eslint-disable-next-line no-console
-  .catch(console.error);
-
-loadSpellNames()
-  .then(() => {
-    // eslint-disable-next-line no-console
-    console.log("[@keystone-heroes/wcl] spell names loaded");
-    // eslint-disable-next-line unicorn/no-process-exit
-    process.exit(0);
-  })
-  // eslint-disable-next-line no-console
-  .catch(console.error);
+  }
+})();
