@@ -19,12 +19,7 @@ describe("death", () => {
       y: 0,
       isWipe: false,
       maps: [],
-      boundingBox: {
-        minX: 0,
-        maxX: 0,
-        minY: 0,
-        maxY: 0,
-      },
+      percent: 0,
     },
   };
 

@@ -1,4 +1,5 @@
 import { EventType } from "@keystone-heroes/db/types";
+import { tormentedAbilityGameIDSet } from "@keystone-heroes/wcl/queries/events/affixes/tormented";
 
 import { BOLSTERING } from "../../queries/events/affixes/bolstering";
 import { PF } from "../../queries/events/dungeons/pf";
@@ -23,7 +24,7 @@ const dungeonBuffIDs = new Set<number>([
 ]);
 
 /**
- * track invis potion, bolstering, ToP, SD and PF buffs
+ * track invis potion, bolstering, ToP, SD, PF and Tormented buffs
  */
 export const applyBuffProcessor: Processor<CustomApplyBuffEvent> = (
   event,
@@ -65,6 +66,15 @@ export const applyBuffProcessor: Processor<CustomApplyBuffEvent> = (
   }
 
   if (event.abilityGameID === SD_LANTERN_BUFF && targetPlayerID) {
+    return {
+      timestamp: event.timestamp,
+      eventType: EventType.ApplyBuff,
+      targetPlayerID,
+      abilityID: event.abilityGameID,
+    };
+  }
+
+  if (tormentedAbilityGameIDSet.has(event.abilityGameID)) {
     return {
       timestamp: event.timestamp,
       eventType: EventType.ApplyBuff,

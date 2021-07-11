@@ -38529,5 +38529,191 @@
     "pin": "0",
     "sourceMarker": 7,
     "targetMarker": 7
+  },
+  {
+    "timestamp": 4094243,
+    "type": "applybuff",
+    "sourceID": -1,
+    "targetID": 6,
+    "abilityGameID": 357900,
+    "pin": "0",
+    "sourceMarker": 2,
+    "targetMarker": 2
+  },
+  {
+    "timestamp": 4095304,
+    "type": "applybuff",
+    "sourceID": 1,
+    "targetID": 1,
+    "abilityGameID": 357897,
+    "pin": "0",
+    "sourceMarker": 7,
+    "targetMarker": 7
+  },
+  {
+    "timestamp": 4096033,
+    "type": "applybuff",
+    "sourceID": 2,
+    "targetID": 2,
+    "abilityGameID": 357575,
+    "pin": "0"
+  },
+  {
+    "timestamp": 4096613,
+    "type": "applybuff",
+    "sourceID": 9,
+    "targetID": 9,
+    "abilityGameID": 357575,
+    "pin": "0"
+  },
+  {
+    "timestamp": 4098344,
+    "type": "applybuff",
+    "sourceID": 8,
+    "targetID": 8,
+    "abilityGameID": 357575,
+    "pin": "0"
+  },
+  {
+    "timestamp": 4498851,
+    "type": "applybuff",
+    "sourceID": 1,
+    "targetID": 1,
+    "abilityGameID": 357817,
+    "pin": "0",
+    "sourceMarker": 7,
+    "targetMarker": 7
+  },
+  {
+    "timestamp": 4500940,
+    "type": "applybuff",
+    "sourceID": -1,
+    "targetID": 9,
+    "abilityGameID": 357814,
+    "pin": "0"
+  },
+  {
+    "timestamp": 4504750,
+    "type": "applybuff",
+    "sourceID": -1,
+    "targetID": 8,
+    "abilityGameID": 357825,
+    "pin": "0"
+  },
+  {
+    "timestamp": 4506129,
+    "type": "applybuff",
+    "sourceID": 6,
+    "targetID": 6,
+    "abilityGameID": 357815,
+    "pin": "0",
+    "sourceMarker": 2,
+    "targetMarker": 2
+  },
+  {
+    "timestamp": 4510612,
+    "type": "applybuff",
+    "sourceID": -1,
+    "targetID": 2,
+    "abilityGameID": 357825,
+    "pin": "0"
+  },
+  {
+    "timestamp": 4741467,
+    "type": "applybuff",
+    "sourceID": 2,
+    "targetID": 2,
+    "abilityGameID": 357706,
+    "pin": "0"
+  },
+  {
+    "timestamp": 4741845,
+    "type": "applybuff",
+    "sourceID": 1,
+    "targetID": 1,
+    "abilityGameID": 357863,
+    "pin": "0",
+    "sourceMarker": 7,
+    "targetMarker": 7
+  },
+  {
+    "timestamp": 4742709,
+    "type": "applybuffstack",
+    "sourceID": 9,
+    "targetID": 9,
+    "abilityGameID": 357575,
+    "pin": "0",
+    "stack": 2
+  },
+  {
+    "timestamp": 4743923,
+    "type": "applybuffstack",
+    "sourceID": 8,
+    "targetID": 8,
+    "abilityGameID": 357575,
+    "pin": "0",
+    "stack": 2
+  },
+  {
+    "timestamp": 4749497,
+    "type": "applybuff",
+    "sourceID": 6,
+    "targetID": 6,
+    "abilityGameID": 357747,
+    "pin": "0",
+    "sourceMarker": 2,
+    "targetMarker": 2
+  },
+  {
+    "timestamp": 5090742,
+    "type": "applybuff",
+    "sourceID": 1,
+    "targetID": 1,
+    "abilityGameID": 357897,
+    "pin": "0",
+    "sourceMarker": 7,
+    "targetMarker": 7
+  },
+  {
+    "timestamp": 5461614,
+    "type": "applybuff",
+    "sourceID": 1,
+    "targetID": 1,
+    "abilityGameID": 356828,
+    "pin": "0"
+  },
+  {
+    "timestamp": 5463026,
+    "type": "applybuff",
+    "sourceID": 2,
+    "targetID": 2,
+    "abilityGameID": 357524,
+    "pin": "0"
+  },
+  {
+    "timestamp": 5463652,
+    "type": "applybuff",
+    "sourceID": 9,
+    "targetID": 9,
+    "abilityGameID": 357524,
+    "pin": "0"
+  },
+  {
+    "timestamp": 5465915,
+    "type": "applybuff",
+    "sourceID": 6,
+    "targetID": 6,
+    "abilityGameID": 357556,
+    "pin": "0",
+    "sourceMarker": 2,
+    "targetMarker": 2
+  },
+  {
+    "timestamp": 5466022,
+    "type": "applybuff",
+    "sourceID": 8,
+    "targetID": 8,
+    "abilityGameID": 356828,
+    "pin": "0"
   }
 ]

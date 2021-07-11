@@ -2,9 +2,9 @@ import { Affixes } from "@keystone-heroes/db/types";
 
 import type { EventParams } from "..";
 import type {
-  AbsorbEvent,
   AllTrackedEventTypes,
   ApplyBuffEvent,
+  ApplyBuffStackEvent,
   ApplyDebuffStackEvent,
   DamageEvent,
   HealEvent,
@@ -93,11 +93,11 @@ export const filterAffixEvents = (
   allEvents: AllTrackedEventTypes[],
   affixes: EventParams["affixes"]
 ): (
-  | AbsorbEvent
-  | InterruptEvent
-  | HealEvent
-  | DamageEvent
   | ApplyBuffEvent
+  | ApplyBuffStackEvent
+  | DamageEvent
+  | HealEvent
+  | InterruptEvent
   | ApplyDebuffStackEvent
 )[] => {
   const affixSet = new Set(affixes);

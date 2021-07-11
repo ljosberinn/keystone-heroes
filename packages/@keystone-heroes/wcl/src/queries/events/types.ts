@@ -218,14 +218,13 @@ export type AnyEvent =
 
 export type AllTrackedEventTypes =
   | CastEvent
-  | DeathEvent
-  | AbsorbEvent
-  | DamageEvent
-  | HealEvent
-  | InterruptEvent
-  | BeginCastEvent
-  | ApplyBuffEvent
-  | ApplyDebuffEvent
   | ApplyDebuffStackEvent
+  | ApplyDebuffEvent
+  | ApplyBuffEvent
   | RemoveBuffEvent
-  | ApplyBuffStackEvent;
+  | DamageEvent
+  | BeginCastEvent
+  | HealEvent
+  | ApplyBuffStackEvent
+  | InterruptEvent
+  | DeathEvent;
