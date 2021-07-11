@@ -3,6 +3,11 @@ import fetch from "node-fetch";
 import { resolve } from "path";
 import { format } from "prettier";
 
+import {
+  tormentedLieutenants,
+  tormentedSpells,
+} from "./events/affixes/tormented";
+
 type NPCName = {
   id: number;
   name_dede: string;
@@ -26,10 +31,7 @@ async function loadNPCNames() {
       id: dataset.id,
       name: dataset.name_enus,
     })),
-    { id: 179_891, name: "Soggodon the Breaker" },
-    { id: 179_446, name: "Incinerator Arkolath" },
-    { id: 179_892, name: "Oros Coldheart" },
-    { id: 179_890, name: "Executioner Varruth" },
+    ...tormentedLieutenants,
   ];
 
   const targetPath = resolve("../db/raw/all-npcs.json");
@@ -60,6 +62,7 @@ async function loadSpellNames() {
   const extracted = [
     ...json,
     { id: 350_163, name: "Melee", icon: "ability_meleedamage" },
+    ...tormentedSpells,
   ].map((dataset) => ({
     id: dataset.id,
     name: dataset.name,
