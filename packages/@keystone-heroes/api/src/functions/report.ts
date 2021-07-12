@@ -1,7 +1,7 @@
 import { getAffixByID } from "@keystone-heroes/db/data/affixes";
 import { classMapByName } from "@keystone-heroes/db/data/classes";
 import { dungeonMap } from "@keystone-heroes/db/data/dungeons";
-import { specs } from "@keystone-heroes/db/data/specs";
+import { specs as allSpecs } from "@keystone-heroes/db/data/specs";
 import { prisma } from "@keystone-heroes/db/prisma";
 import type {
   PlayableClass,
@@ -803,10 +803,12 @@ export const reportHandler: RequestHandler<Request, ReportResponse> = async (
           return acc;
         }
 
-        const classID = classMapByName[detailsMatch.type];
-        const spec = specs.find(
-          (spec) =>
-            spec.classID === classID && spec.name === detailsMatch.specs[0]
+        const { specs, combatantInfo, type, server, maxItemLevel } =
+          detailsMatch;
+
+        const classID = classMapByName[type];
+        const spec = allSpecs.find(
+          (spec) => spec.classID === classID && spec.name === specs[0]
         );
 
         if (!spec) {
@@ -818,14 +820,14 @@ export const reportHandler: RequestHandler<Request, ReportResponse> = async (
         const hps = Math.round(healingDoneMatch.total / keystoneTimeInSeconds);
 
         const legendary =
-          detailsMatch.combatantInfo.gear.find(
+          combatantInfo.gear.find(
             (item): item is LegendaryItem =>
               item.quality === ItemQuality.LEGENDARY
           ) ?? null;
-        const covenantID = detailsMatch.combatantInfo.covenantID ?? null;
-        const soulbindID = detailsMatch.combatantInfo.soulbindID ?? null;
+        const covenantID = combatantInfo.covenantID ?? null;
+        const soulbindID = combatantInfo.soulbindID ?? null;
         const covenantTraits = covenantID
-          ? detailsMatch.combatantInfo.artifact.filter(
+          ? (combatantInfo.artifact ?? combatantInfo.customPowerSet).filter(
               (talent) => talent.guid !== 0
             )
           : null;
@@ -834,18 +836,20 @@ export const reportHandler: RequestHandler<Request, ReportResponse> = async (
           ...acc,
           {
             name: detailsMatch.name,
-            server: detailsMatch.server,
-            class: detailsMatch.type,
-            spec: detailsMatch.specs[0],
+            server,
+            class: type,
+            spec: specs[0],
             classID,
             specID: spec.id,
             dps,
             hps,
             deaths: deaths.length,
-            itemLevel: detailsMatch.maxItemLevel,
+            itemLevel: maxItemLevel,
             actorID: id,
-            talents: detailsMatch.combatantInfo.talents,
-            conduits: detailsMatch.combatantInfo.heartOfAzeroth,
+            talents: combatantInfo.talents,
+            conduits:
+              combatantInfo.heartOfAzeroth ??
+              combatantInfo.secondaryCustomPowerSet,
             legendary,
             soulbindID,
             covenantID,

@@ -66,9 +66,18 @@ export type InDepthCharacterInformation = {
 type CombatantInfo = {
   stats: Stats;
   talents: Talent[];
-  artifact: Artifact[];
   gear: (Item | LegendaryItem)[];
-  heartOfAzeroth: HeartOfAzeroth[];
+  /**
+   * @deprecated https://canary.discord.com/channels/180033360939319296/681904912090529801/863865520486088704
+   */
+  artifact?: CustomPowerSet[];
+  /**
+   * @deprecated https://canary.discord.com/channels/180033360939319296/681904912090529801/863865520486088704
+   */
+  heartOfAzeroth?: SecondaryCustomPowerSet[];
+  customPowerSet: CustomPowerSet[];
+  secondaryCustomPowerSet: SecondaryCustomPowerSet[];
+  tertiaryCustomPowerSet: unknown[];
   specIDs: number[];
   factionID: number;
   covenantID?: number;
@@ -104,7 +113,7 @@ export type Talent = {
   abilityIcon: string;
 };
 
-type Artifact = {
+type CustomPowerSet = {
   name: string;
   guid: number;
   type: number;
@@ -153,7 +162,7 @@ type Gem = {
   icon: string;
 };
 
-type HeartOfAzeroth = {
+type SecondaryCustomPowerSet = {
   name: string;
   guid: number;
   type: number;
@@ -161,5 +170,5 @@ type HeartOfAzeroth = {
   total: number;
 };
 
-export type Conduit = HeartOfAzeroth;
-export type CovenantTrait = Artifact;
+export type Conduit = SecondaryCustomPowerSet;
+export type CovenantTrait = CustomPowerSet;
