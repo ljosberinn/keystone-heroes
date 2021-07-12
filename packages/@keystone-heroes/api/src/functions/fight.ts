@@ -1,9 +1,9 @@
-import { DungeonIDs } from "@keystone-heroes/db/data/dungeons";
 import {
   dungeonMap,
   dungeons,
   EXCLUDED_NPCS,
   allBossIDs,
+  DungeonIDs,
 } from "@keystone-heroes/db/data/dungeons";
 import { prisma } from "@keystone-heroes/db/prisma";
 import type {
@@ -31,7 +31,6 @@ import type {
   Report,
   Affix,
   PullNPC,
-  EventType,
 } from "@keystone-heroes/db/types";
 import { getFightPulls } from "@keystone-heroes/wcl/queries";
 import type { EventParams } from "@keystone-heroes/wcl/queries/events";
