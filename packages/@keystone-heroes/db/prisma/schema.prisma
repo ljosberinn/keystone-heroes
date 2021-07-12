@@ -350,12 +350,8 @@ model Pull {
   fightID   Int
   startTime Int
   endTime   Int
-  x         Int
-  y         Int
-  minX      Int
-  maxX      Int
-  minY      Int
-  maxY      Int
+  x         Float
+  y         Float
   isWipe    Boolean
   percent   Float
 

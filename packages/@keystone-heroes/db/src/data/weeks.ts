@@ -63,6 +63,18 @@ export const weeks: Week[] = [
       [Affixes.Tyrannical, Affixes.Raging, Affixes.Quaking, Affixes.Prideful],
     ],
   },
+  {
+    seasonID: SeasonID.SL_POST_SEASON_1,
+    weeks: [
+      [Affixes.Fortified, Affixes.Sanguine, Affixes.Quaking, Affixes.Prideful],
+    ],
+  },
+  {
+    seasonID: SeasonID.SL_SEASON_2,
+    weeks: [
+      [Affixes.Tyrannical, Affixes.Raging, Affixes.Volcanic, Affixes.Tormented],
+    ],
+  },
 ]
   .flatMap(({ seasonID, weeks }) =>
     weeks.map((week, index) => createWeek(seasonID, week, index))

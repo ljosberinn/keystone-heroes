@@ -16,6 +16,10 @@ export const tormentedLieutenants = [
   { id: 179_890, name: "Executioner Varruth" },
 ];
 
+export const tormentedLieutenantIDSet = new Set(
+  tormentedLieutenants.map((dataset) => dataset.id)
+);
+
 const SOGGODON_THE_BREAKER = {
   STONE_WARD: 357_524,
   DRIPPING_FANG: 356_828,
@@ -218,9 +222,9 @@ export const tormentedSpells = [
  * ```
  */
 export const filterExpression = [
-  `type = "applybuff" and ability.id in (${[Object.values(TORMENTED)].join(
-    ", "
-  )})`,
+  `type in ("applybuff", "applybuffstack") and ability.id in (${[
+    Object.values(TORMENTED),
+  ].join(", ")})`,
 ];
 
 export const tormentedAbilityGameIDSet = new Set(Object.values(TORMENTED));

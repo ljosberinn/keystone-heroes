@@ -2,7 +2,7 @@ import type { Prisma, Pull, PullZone } from "@keystone-heroes/db/types";
 import type { DeepNonNullable } from "ts-essentials";
 
 import type { AnyEvent } from "../queries/events/types";
-import type { ReportMapBoundingBox, ReportDungeonPullNpc } from "../types";
+import type { ReportDungeonPullNpc } from "../types";
 
 export type Processor<
   T extends AnyEvent,
@@ -22,7 +22,6 @@ export type PersistedDungeonPull = Pick<
   "id" | "x" | "y" | "startTime" | "endTime" | "isWipe" | "percent"
 > & {
   maps: PullZone["zoneID"][];
-  boundingBox: ReportMapBoundingBox;
   enemyNPCs: Pick<
     Required<DeepNonNullable<ReportDungeonPullNpc>>,
     "gameID" | "id"

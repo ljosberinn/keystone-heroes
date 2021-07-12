@@ -4763,6 +4763,30 @@
                 "defaultValue": "\"\"",
                 "isDeprecated": false,
                 "deprecationReason": null
+              },
+              {
+                "name": "zoneID",
+                "description": "Optional. If not specified, the latest zone will be used.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": "0",
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "difficulty",
+                "description": "Optional. If not specified, the highest difficulty will be used.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": "0",
+                "isDeprecated": false,
+                "deprecationReason": null
               }
             ],
             "type": {

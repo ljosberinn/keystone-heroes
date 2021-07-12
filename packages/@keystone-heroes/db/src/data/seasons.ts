@@ -18,8 +18,11 @@ export enum SeasonID {
   BFA_SEASON_4 = 12,
   BFA_POST_SEASON_4 = 13,
   SL_SEASON_1 = 14,
-  SL_SEASON_2 = 15,
+  SL_POST_SEASON_1 = 15,
+  SL_SEASON_2 = 16,
 }
+
+const ONE_WEEK_IN_MS = 7 * 24 * 60 * 60 * 1000;
 
 // via https://raider.io/api#/mythic_plus/getApiV1MythicplusStaticdata
 export const seasons: Season[] = [
@@ -143,22 +146,32 @@ export const seasons: Season[] = [
   //   id: SeasonId.BFA_POST_SEASON_4,
   // },
   // SL
+  // timestamps are from blizzard api
   {
     slug: "sl-1",
     name: "SL Season 1",
     expansionID: ExpansionEnum.SHADOWLANDS,
-    startTime: new Date(1_606_172_400 * 1000),
-    endTime: null,
+    startTime: new Date(1_606_172_400_000),
+    endTime: new Date(1_625_583_600_000 - ONE_WEEK_IN_MS),
     affixID: getAffixByName("Prideful"),
     id: SeasonID.SL_SEASON_1,
   },
-  // {
-  //   slug: "sl-2",
-  //   name: "SL Season 2",
-  //   expansionID: ExpansionEnum.SHADOWLANDS,
-  //   startTime: new Date(1_607_385_600 * 1000),
-  //   endTime: null,
-  //   affixID: getAffixByName("Tormented"),
-  //   id: SeasonID.SL_SEASON_2,
-  // },
+  {
+    slug: "sl-post-1",
+    name: "SL Post-Season 1",
+    expansionID: ExpansionEnum.SHADOWLANDS,
+    startTime: new Date(1_625_583_600_000 - ONE_WEEK_IN_MS),
+    endTime: new Date(1_625_583_600_000),
+    affixID: getAffixByName("Prideful"),
+    id: SeasonID.SL_POST_SEASON_1,
+  },
+  {
+    slug: "sl-2",
+    name: "SL Season 2",
+    expansionID: ExpansionEnum.SHADOWLANDS,
+    startTime: new Date(1_625_583_600_000),
+    endTime: null,
+    affixID: getAffixByName("Tormented"),
+    id: SeasonID.SL_SEASON_2,
+  },
 ];

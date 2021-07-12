@@ -3,7 +3,6 @@ import { classMapByName } from "@keystone-heroes/db/data/classes";
 import { dungeonMap } from "@keystone-heroes/db/data/dungeons";
 import { specs } from "@keystone-heroes/db/data/specs";
 import { prisma } from "@keystone-heroes/db/prisma";
-import { Role } from "@keystone-heroes/db/types";
 import type {
   PlayableClass,
   SpecName,
@@ -11,6 +10,7 @@ import type {
   Affix,
   Dungeon,
   Fight as PrismaFight,
+  Role,
 } from "@keystone-heroes/db/types";
 import { MIN_KEYSTONE_LEVEL } from "@keystone-heroes/env";
 import type {
@@ -31,6 +31,7 @@ import {
 } from "@keystone-heroes/wcl/utils";
 import type { Awaited, DeepRequired } from "ts-essentials";
 
+import { sortByRole } from "../utils";
 import {
   SERVICE_UNAVAILABLE,
   BAD_REQUEST,
@@ -173,7 +174,7 @@ export const fightIsTimedKeystone = (
   const [timer] = dungeonMap[fight.gameZone.id].timer;
 
   // 1 second threshold included
-  return timer >= fight.keystoneTime - 1000;
+  return timer >= fight.keystoneTime - 750;
 };
 
 export const fightHasFivePlayers = (fight: Fight): boolean =>
@@ -395,18 +396,6 @@ const createManyPlayer = async (
     playerConduitCreateMany,
     playerCovenantTraitCreateMany,
   };
-};
-
-const sortByRole = (a: Role, b: Role) => {
-  if (b === Role.tank || a === Role.dps) {
-    return 1;
-  }
-
-  if (b === Role.dps || a === Role.tank) {
-    return -1;
-  }
-
-  return 0;
 };
 
 type RawReport = {

@@ -1,4 +1,4 @@
-import type { DungeonIDs } from "@keystone-heroes/db/data/dungeons";
+import { DungeonIDs } from "@keystone-heroes/db/data/dungeons";
 import {
   dungeonMap,
   dungeons,
@@ -31,10 +31,15 @@ import type {
   Report,
   Affix,
   PullNPC,
+  EventType,
 } from "@keystone-heroes/db/types";
 import { getFightPulls } from "@keystone-heroes/wcl/queries";
 import type { EventParams } from "@keystone-heroes/wcl/queries/events";
 import { getEvents } from "@keystone-heroes/wcl/queries/events";
+import {
+  tormentedAbilityGameIDSet,
+  tormentedLieutenantIDSet,
+} from "@keystone-heroes/wcl/queries/events/affixes/tormented";
 import type {
   DeathEvent,
   BeginCastEvent,
@@ -47,6 +52,7 @@ import {
   createValidReportIDMiddleware,
   validFightIDMiddleware,
 } from "../middleware";
+import { sortByRole } from "../utils";
 import {
   BAD_REQUEST,
   INTERNAL_SERVER_ERROR,
@@ -64,74 +70,84 @@ type Request = {
   };
 };
 
-export type FightResponse =
-  | {
-      error: typeof fightHandlerError[keyof typeof fightHandlerError];
-    }
-  | {
-      meta: Pick<
-        Fight,
-        | "dps"
-        | "dtps"
-        | "hps"
-        | "totalDeaths"
-        | "averageItemLevel"
-        | "percent"
-        | "chests"
-        | "rating"
-      > & {
-        chests: Fight["chests"];
-        time: Fight["keystoneTime"];
-        level: Fight["keystoneLevel"];
-        inCombatTime: number;
-        outOfCombatTime: number;
-      };
-      dungeon: {
-        id: DungeonIDs;
-        name: string;
-        time: number;
-        zones: Pick<Zone, "id" | "name" | "maxX" | "maxY" | "minY" | "minX">[];
-      };
-      affixes: Pick<Affix, "name" | "icon">[];
-      player: (Pick<
-        Player,
-        "id" | "actorID" | "deaths" | "dps" | "hps" | "itemLevel"
-      > & {
-        spec: Pick<Spec, "name" | "role">;
-        legendary: Pick<
-          Legendary,
-          "effectIcon" | "effectName" | "id" | "itemID"
-        > | null;
-        conduits: (Pick<Conduit, "icon" | "name"> & {
-          itemLevel: PlayerConduit["itemLevel"];
-        })[];
-        covenantTraits: Pick<CovenantTrait, "icon" | "name">[];
-        talents: Pick<Talent, "icon" | "name">[];
-        covenant: Pick<Covenant, "name" | "icon"> | null;
-        soulbind: Pick<Soulbind, "name" | "icon"> | null;
-        name: Character["name"];
-        class: Class["name"];
-        server: Server["name"];
-        region: Region["slug"];
-      })[];
-      pulls: (Pick<
-        Pull,
-        | "startTime"
-        | "endTime"
-        | "x"
-        | "y"
-        | "minX"
-        | "minY"
-        | "maxX"
-        | "maxY"
-        | "isWipe"
-      > & {
-        events: unknown[];
-        zones: Zone["id"][];
-        percent: number;
-        npcs: (Pick<PullNPC, "count"> & Pick<NPC, "id" | "name">)[];
-      })[];
-    };
+export type FightErrorResponse = {
+  error: typeof fightHandlerError[keyof typeof fightHandlerError];
+};
+
+export type FightSuccessResponse = {
+  meta: Pick<
+    Fight,
+    | "dps"
+    | "dtps"
+    | "hps"
+    | "totalDeaths"
+    | "averageItemLevel"
+    | "percent"
+    | "chests"
+    | "rating"
+  > & {
+    chests: Fight["chests"];
+    time: Fight["keystoneTime"];
+    level: Fight["keystoneLevel"];
+    inCombatTime: number;
+    outOfCombatTime: number;
+  };
+  dungeon: {
+    id: DungeonIDs;
+    name: string;
+    time: number;
+    zones: Pick<Zone, "id" | "name">[];
+    slug: string;
+  };
+  affixes: Pick<Affix, "name" | "icon">[];
+  player: (Pick<
+    Player,
+    "id" | "actorID" | "deaths" | "dps" | "hps" | "itemLevel"
+  > & {
+    spec: Pick<Spec, "name" | "role">;
+    legendary: Pick<
+      Legendary,
+      "effectIcon" | "effectName" | "id" | "itemID"
+    > | null;
+    conduits: (Pick<Conduit, "icon" | "name"> & {
+      itemLevel: PlayerConduit["itemLevel"];
+    })[];
+    covenantTraits: Pick<CovenantTrait, "icon" | "name">[];
+    talents: Pick<Talent, "icon" | "name">[];
+    covenant: Pick<Covenant, "name" | "icon"> | null;
+    soulbind: Pick<Soulbind, "name" | "icon"> | null;
+    name: Character["name"];
+    class: Class["name"];
+    server: Server["name"];
+    region: Region["slug"];
+    tormented: (Pick<
+      Event,
+      | "eventType"
+      | "timestamp"
+      | "sourcePlayerID"
+      | "targetPlayerID"
+      | "sourceNPCInstance"
+      | "targetNPCInstance"
+      | "damage"
+      | "healingDone"
+      | "stacks"
+    > & {
+      sourceNPC: NPC | null;
+      targetNPC: NPC | null;
+      ability: Ability | null;
+      interruptedAbility: Ability | null;
+    })[];
+  })[];
+  pulls: (Pick<Pull, "startTime" | "endTime" | "x" | "y" | "isWipe"> & {
+    events: unknown[];
+    zones: Zone["id"][];
+    percent: number;
+    npcs: (Pick<PullNPC, "count"> & Pick<NPC, "id" | "name">)[];
+    id: number;
+  })[];
+};
+
+export type FightResponse = FightErrorResponse | FightSuccessResponse;
 
 export const fightHandlerError = {
   UNKNOWN_REPORT: "Unknown report.",
@@ -208,16 +224,7 @@ type RawFight =
       }[];
       Pull: (Pick<
         Pull,
-        | "startTime"
-        | "endTime"
-        | "x"
-        | "y"
-        | "minX"
-        | "maxY"
-        | "minY"
-        | "maxX"
-        | "isWipe"
-        | "percent"
+        "startTime" | "endTime" | "x" | "y" | "isWipe" | "percent"
       > & {
         PullZone: { zone: Pick<Zone, "id"> }[];
         PullNPC: (Pick<PullNPC, "count"> & { npc: Pick<NPC, "id" | "name"> })[];
@@ -393,10 +400,6 @@ const createFightFindFirst = (reportID: string, fightID: number) => {
           endTime: true,
           x: true,
           y: true,
-          minX: true,
-          maxX: true,
-          minY: true,
-          maxY: true,
           isWipe: true,
           percent: true,
           Event: {
@@ -482,12 +485,41 @@ const createFightFindFirst = (reportID: string, fightID: number) => {
   } as const;
 };
 
+const omitNullValues = <T extends Record<string, unknown>>(dataset: T): T =>
+  Object.fromEntries(
+    Object.entries(dataset).filter(([, value]) => value !== null)
+  ) as T;
+
+const detectTormentedPowers = (
+  allEvents: RawFightWithDungeon["Pull"][number]["Event"],
+  playerID: number
+) => {
+  return allEvents.reduce<FightSuccessResponse["player"][number]["tormented"]>(
+    (acc, event) => {
+      if (
+        !event.ability ||
+        !tormentedAbilityGameIDSet.has(event.ability.id) ||
+        event.targetPlayerID !== playerID ||
+        (event.eventType !== "ApplyBuff" &&
+          event.eventType !== "ApplyBuffStack")
+      ) {
+        return acc;
+      }
+
+      return [...acc, omitNullValues(event)];
+    },
+    []
+  );
+};
+
 const createResponseFromStoredFight = (
   dataset: RawFightWithDungeon
 ): FightResponse => {
   const dungeon = dungeonMap[dataset.dungeon.id];
 
-  const pulls = dataset.Pull.map((pull) => {
+  const allEvents = dataset.Pull.flatMap((pull) => pull.Event);
+
+  const pulls = dataset.Pull.map((pull, index) => {
     const npcs = pull.PullNPC.map((pullNPC) => {
       return {
         count: pullNPC.count,
@@ -501,19 +533,12 @@ const createResponseFromStoredFight = (
       endTime: pull.endTime,
       x: pull.x,
       y: pull.y,
-      minX: pull.minX,
-      minY: pull.minY,
-      maxX: pull.maxX,
-      maxY: pull.maxY,
       isWipe: pull.isWipe,
-      events: pull.Event.map((event) =>
-        Object.fromEntries(
-          Object.entries(event).filter(([, value]) => value !== null)
-        )
-      ),
+      events: pull.Event.map(omitNullValues),
       percent: pull.percent,
       npcs,
       zones: [...new Set(pull.PullZone.map((pullZone) => pullZone.zone.id))],
+      id: index + 1,
     };
   });
 
@@ -535,9 +560,10 @@ const createResponseFromStoredFight = (
       id: dataset.dungeon.id,
       name: dungeon.name,
       time: dungeon.timer[0],
+      slug: dungeon.slug,
       zones: [...dungeon.zones]
         .sort((a, b) => a.order - b.order)
-        .map(({ order, ...rest }) => rest),
+        .map(({ id, name }) => ({ id, name })),
     },
     affixes: [
       dataset.Report.week.affix1,
@@ -545,36 +571,39 @@ const createResponseFromStoredFight = (
       dataset.Report.week.affix3,
       dataset.Report.week.season.affix,
     ],
-    player: dataset.PlayerFight.map((playerFight) => {
-      return {
-        id: playerFight.player.id,
-        actorID: playerFight.player.actorID,
-        deaths: playerFight.player.deaths,
-        dps: playerFight.player.dps,
-        hps: playerFight.player.hps,
-        itemLevel: playerFight.player.itemLevel,
-        spec: playerFight.player.spec,
-        legendary: playerFight.player.legendary,
-        conduits: playerFight.player.PlayerConduit.map((playerConduit) => {
-          return {
-            itemLevel: playerConduit.itemLevel,
-            ...playerConduit.conduit,
-          };
-        }),
-        covenantTraits: playerFight.player.PlayerCovenantTrait.map(
-          (playerCovenantTrait) => playerCovenantTrait.covenantTrait
-        ),
-        talents: playerFight.player.PlayerTalent.map(
-          (playerTalent) => playerTalent.talent
-        ),
-        name: playerFight.player.character.name,
-        class: playerFight.player.character.class.name,
-        server: playerFight.player.character.server.name,
-        region: playerFight.player.character.server.region.slug,
-        covenant: playerFight.player.covenant,
-        soulbind: playerFight.player.covenant,
-      };
-    }),
+    player: [...dataset.PlayerFight]
+      .sort((a, b) => sortByRole(a.player.spec.role, b.player.spec.role))
+      .map((playerFight) => {
+        return {
+          id: playerFight.player.id,
+          actorID: playerFight.player.actorID,
+          deaths: playerFight.player.deaths,
+          dps: playerFight.player.dps,
+          hps: playerFight.player.hps,
+          itemLevel: playerFight.player.itemLevel,
+          spec: playerFight.player.spec,
+          legendary: playerFight.player.legendary,
+          conduits: playerFight.player.PlayerConduit.map((playerConduit) => {
+            return {
+              itemLevel: playerConduit.itemLevel,
+              ...playerConduit.conduit,
+            };
+          }),
+          covenantTraits: playerFight.player.PlayerCovenantTrait.map(
+            (playerCovenantTrait) => playerCovenantTrait.covenantTrait
+          ),
+          talents: playerFight.player.PlayerTalent.map(
+            (playerTalent) => playerTalent.talent
+          ),
+          name: playerFight.player.character.name,
+          class: playerFight.player.character.class.name,
+          server: playerFight.player.character.server.name,
+          region: playerFight.player.character.server.region.slug,
+          covenant: playerFight.player.covenant,
+          soulbind: playerFight.player.covenant,
+          tormented: detectTormentedPowers(allEvents, playerFight.player.id),
+        };
+      }),
     pulls,
   };
 };
@@ -612,7 +641,7 @@ const getResponseOrRetrieveAndCreateFight = async (
     maybeFightPulls.reportData.report.fights[0].dungeonPulls.reduce<
       Omit<PersistedDungeonPull, "id" | "isWipe" | "percent">[]
     >((acc, pull) => {
-      if (!pull || !pull.maps || !pull.enemyNPCs || !pull.boundingBox) {
+      if (!pull || !pull.maps || !pull.enemyNPCs) {
         return acc;
       }
 
@@ -651,7 +680,6 @@ const getResponseOrRetrieveAndCreateFight = async (
           startTime: pull.startTime,
           endTime: pull.endTime,
           maps,
-          boundingBox: pull.boundingBox,
           enemyNPCs,
         },
       ];
@@ -905,15 +933,11 @@ const persistPulls = async (
 ): Promise<PersistedDungeonPull[]> => {
   const pulls = dungeonPulls.map<Prisma.PullCreateManyInput>((pull) => {
     return {
+      fightID,
       startTime: pull.startTime,
       endTime: pull.endTime,
       x: pull.x,
       y: pull.y,
-      minX: pull.boundingBox.minX,
-      maxX: pull.boundingBox.maxX,
-      minY: pull.boundingBox.minY,
-      maxY: pull.boundingBox.maxY,
-      fightID,
       isWipe: pull.isWipe,
       percent: pull.percent,
     };
@@ -1003,6 +1027,36 @@ const createTotalCountReducer = (
   };
 };
 
+const calculatePullCoordinates = (
+  { x, y }: Omit<PersistedDungeonPull, "id" | "percent" | "isWipe">,
+  { maxX, minX, minY, maxY }: Omit<Zone, "dungeonID">,
+  dungeonID: DungeonIDs,
+  npcs: { gameID: number }[]
+) => {
+  // pulling the 3rd Lieutenant through the gate on 1st boss results in out of
+  // bounds coordinates
+  if (
+    dungeonID === DungeonIDs.MISTS_OF_TIRNA_SCITHE &&
+    x === -2_147_483_648 &&
+    y === -2_147_483_648 &&
+    npcs.length === 1 &&
+    npcs[0].gameID === 179_890
+  ) {
+    return {
+      x: 0.702_702_702_702_702_7,
+      y: 0.248_366_013_071_895_43,
+    };
+  }
+
+  const percentX = (x - minX) / (maxX - minX);
+  const percentY = (y - maxY) / (minY - maxY);
+
+  return {
+    x: percentX,
+    y: percentY,
+  };
+};
+
 type PullWipePercentMeta = {
   dungeonID: DungeonIDs;
   playerDeathEvents: DeathEvent[];
@@ -1088,23 +1142,37 @@ const calculatePullsWithWipesAndPercent = (
       );
 
       const percent = (totalCount / dungeon.count) * 100;
-
       const isWipe = hasNoWipes ? false : isPullWipe(playerDeathEvents, pull);
 
       // skip pulls that
       if (
         // gave no percent
         percent === 0 &&
-        // - is not a wipe
+        // - are not a wipe
         !isWipe &&
-        // - is not a boss fight
+        // - are not a boss fight
         !enemyNPCs.some((npc) => allBossIDs.has(npc.gameID)) &&
-        // - is not a Manifestation of Pride fight
-        enemyNPCs.length === 1 &&
-        enemyNPCs[0].gameID !== 173_729
+        // - are not a Tormented lieutenant (high change of being a 0% pull)
+        !enemyNPCs.some((npc) => tormentedLieutenantIDSet.has(npc.gameID))
       ) {
         return acc;
       }
+
+      const zone = dungeon.zones.find((zone) => pull.maps[0] === zone.id);
+
+      if (!zone) {
+        return acc;
+      }
+
+      const { x, y } = calculatePullCoordinates(
+        pull,
+        zone,
+        dungeonID,
+        enemyNPCs
+      );
+
+      // const percentX = (pull.x - zone.minX) / (zone.maxX - zone.minX);
+      // const percentY = (pull.y - zone.maxY) / (zone.minY - zone.maxY);
 
       return [
         ...acc,
@@ -1113,6 +1181,8 @@ const calculatePullsWithWipesAndPercent = (
           isWipe,
           percent,
           enemyNPCs,
+          x,
+          y,
         },
       ];
     },

@@ -5,9 +5,13 @@ type CustomNodeJsGlobal = {
   prisma: PrismaClient;
 } & typeof globalThis;
 
-// Prevent multiple instances of Prisma Client in development
 declare const global: CustomNodeJsGlobal;
 
+if (typeof window !== "undefined") {
+  throw new TypeError("import error - do not bundle prisma to the client");
+}
+
+// Prevent multiple instances of Prisma Client in development
 export const prisma = global.prisma || new PrismaClient();
 
 if (process.env.NODE_ENV !== "production") {

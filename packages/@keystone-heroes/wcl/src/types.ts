@@ -914,6 +914,8 @@ export type ProgressRaceData = {
 export type ProgressRaceDataProgressRaceArgs = {
   serverRegion?: Maybe<Scalars["String"]>;
   serverSlug?: Maybe<Scalars["String"]>;
+  zoneID?: Maybe<Scalars["Int"]>;
+  difficulty?: Maybe<Scalars["Int"]>;
 };
 
 export type Query = {
@@ -1797,12 +1799,6 @@ export type FightPullsQuery = { __typename?: "Query" } & {
                             { __typename?: "ReportMap" } & Pick<ReportMap, "id">
                           >[]
                         >;
-                        boundingBox?: Maybe<
-                          { __typename?: "ReportMapBoundingBox" } & Pick<
-                            ReportMapBoundingBox,
-                            "minX" | "maxX" | "minY" | "maxY"
-                          >
-                        >;
                         enemyNPCs?: Maybe<
                           Maybe<
                             {
@@ -1932,12 +1928,6 @@ export const FightPullsDocument = gql`
             y
             maps {
               id
-            }
-            boundingBox {
-              minX
-              maxX
-              minY
-              maxY
             }
             enemyNPCs {
               id

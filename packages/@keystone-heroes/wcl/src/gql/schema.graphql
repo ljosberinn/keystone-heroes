@@ -3338,6 +3338,16 @@ type ProgressRaceData {
     Optional. The slug for a specific server. Whether or not to filter rankings to a specific server. If omitted, data for all servers will be used.
     """
     serverSlug: String = ""
+
+    """
+    Optional. If not specified, the latest zone will be used.
+    """
+    zoneID: Int = 0
+
+    """
+    Optional. If not specified, the highest difficulty will be used.
+    """
+    difficulty: Int = 0
   ): JSON
 }
 

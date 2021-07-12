@@ -111,13 +111,6 @@ query FightPulls($reportID: String!, $fightIDs: [Int]!) {
             id
           }
 
-          boundingBox {
-            minX
-            maxX
-            minY
-            maxY
-          }
-
           enemyNPCs {
             id
             gameID
