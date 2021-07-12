@@ -19,7 +19,7 @@
     "@prisma/client": "2.26.0",
     "dotenv": "10.0.0",
     "prisma": "2.26.0",
-    "ts-node": "10.0.0"
+    "ts-node": "10.1.0"
   },
   "devDependencies": {
     "eslint": "7.30.0",
