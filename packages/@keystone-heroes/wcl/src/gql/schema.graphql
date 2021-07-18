@@ -54,7 +54,7 @@ type CharacterData {
     name: String
 
     """
-    Optional. The name of a specific character. Must be used in conjunction with name and serverRegion to uniquely identify a character.
+    Optional. The slug of a specific server. Must be used in conjunction with name and serverRegion to uniquely identify a character.
     """
     serverSlug: String
 
@@ -3333,6 +3333,11 @@ type ProgressRaceData {
     Optional. The short name of a region to filter to. If paired with a server slug, will uniquely identify a server. If used by itself, rankings for that specific region will be fetched.
     """
     serverRegion: String = ""
+
+    """
+    Optional. The short name of a subregion to filter to. Must be paired with serverRegion. Rankings for that specific subregion will be fetched.
+    """
+    serverSubregion: String = ""
 
     """
     Optional. The slug for a specific server. Whether or not to filter rankings to a specific server. If omitted, data for all servers will be used.

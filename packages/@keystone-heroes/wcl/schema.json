@@ -687,7 +687,7 @@
               },
               {
                 "name": "serverSlug",
-                "description": "Optional. The name of a specific character. Must be used in conjunction with name and serverRegion to uniquely identify a character.",
+                "description": "Optional. The slug of a specific server. Must be used in conjunction with name and serverRegion to uniquely identify a character.",
                 "type": {
                   "kind": "SCALAR",
                   "name": "String",
@@ -4743,6 +4743,18 @@
               {
                 "name": "serverRegion",
                 "description": "Optional. The short name of a region to filter to. If paired with a server slug, will uniquely identify a server. If used by itself, rankings for that specific region will be fetched.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": "\"\"",
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "serverSubregion",
+                "description": "Optional. The short name of a subregion to filter to. Must be paired with serverRegion. Rankings for that specific subregion will be fetched.",
                 "type": {
                   "kind": "SCALAR",
                   "name": "String",

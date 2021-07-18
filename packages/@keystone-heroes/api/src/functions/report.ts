@@ -803,8 +803,14 @@ export const reportHandler: RequestHandler<Request, ReportResponse> = async (
           return acc;
         }
 
-        const { specs, combatantInfo, type, server, maxItemLevel } =
-          detailsMatch;
+        const {
+          specs,
+          combatantInfo,
+          type,
+          server = "Anonymous",
+          maxItemLevel,
+          name,
+        } = detailsMatch;
 
         const classID = classMapByName[type];
         const spec = allSpecs.find(
@@ -835,7 +841,7 @@ export const reportHandler: RequestHandler<Request, ReportResponse> = async (
         return [
           ...acc,
           {
-            name: detailsMatch.name,
+            name,
             server,
             class: type,
             spec: specs[0],
@@ -984,7 +990,7 @@ export const reportHandler: RequestHandler<Request, ReportResponse> = async (
         id: dataset.legendary.effectID,
         effectIcon: dataset.legendary.effectIcon,
         itemID: dataset.legendary.id,
-        effectName: dataset.legendary.effectName,
+        effectName: dataset.legendary.effectName ?? "Unknown Legendary",
       };
     });
 

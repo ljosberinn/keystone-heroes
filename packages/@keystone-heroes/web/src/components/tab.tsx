@@ -14,6 +14,7 @@ import {
   useCallback,
   useContext,
 } from "react";
+import { usePrevious } from "src/hooks/usePrevious";
 import { classnames } from "src/utils/classnames";
 
 type TabListContextType = {
@@ -39,13 +40,22 @@ function useTabListContext() {
 type TabListProviderProps = {
   children: ReactNode[];
   amountOfTabs: number;
+  initialTab?: number;
 };
 
 export function TabListProvider({
   children,
   amountOfTabs,
+  initialTab = 0,
 }: TabListProviderProps): JSX.Element {
-  const [index, setIndex] = useState(0);
+  const [index, setIndex] = useState(initialTab);
+  const previousInitialTab = usePrevious(initialTab);
+
+  useEffect(() => {
+    if (initialTab !== previousInitialTab) {
+      setIndex(initialTab);
+    }
+  }, [previousInitialTab, initialTab]);
 
   const shouldFocusRef = useRef(false);
   const buttonRefs = useRef<(HTMLButtonElement | null)[]>([]);

@@ -1,5 +1,10 @@
-export const isValidReportId = (id?: string | string[]): id is string =>
-  !Array.isArray(id) && id?.length === 16 && !id.includes(".");
+export const isValidReportId = (id?: string | string[]): id is string => {
+  if (!id || Array.isArray(id) || id.includes(".")) {
+    return false;
+  }
+
+  return (id.startsWith("a:") && id.length === 18) || id.length === 16;
+};
 
 export const ONGOING_REPORT_THRESHOLD = 18 * 60 * 60 * 1000;
 

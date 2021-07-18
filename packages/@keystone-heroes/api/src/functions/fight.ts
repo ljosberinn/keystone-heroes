@@ -138,7 +138,23 @@ export type FightSuccessResponse = {
     })[];
   })[];
   pulls: (Pick<Pull, "startTime" | "endTime" | "x" | "y" | "isWipe"> & {
-    events: unknown[];
+    events: (Pick<
+      Event,
+      | "eventType"
+      | "timestamp"
+      | "sourcePlayerID"
+      | "targetPlayerID"
+      | "sourceNPCInstance"
+      | "targetNPCInstance"
+      | "damage"
+      | "healingDone"
+      | "stacks"
+    > & {
+      sourceNPC: NPC | null;
+      targetNPC: NPC | null;
+      ability: Ability | null;
+      interruptedAbility: Ability | null;
+    })[];
     zones: Zone["id"][];
     percent: number;
     npcs: (Pick<PullNPC, "count"> & Pick<NPC, "id" | "name">)[];

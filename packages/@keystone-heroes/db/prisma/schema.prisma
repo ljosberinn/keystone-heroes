@@ -112,7 +112,7 @@ model Week {
 model Report {
   id Int @id @default(autoincrement())
 
-  report    String   @unique @db.Char(16)
+  report    String   @unique @db.Char(18)
   regionID  Int
   title     String
   startTime DateTime

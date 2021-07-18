@@ -55,7 +55,10 @@ export type InDepthCharacterInformation = {
   id: number;
   guid: number;
   type: PlayableClass;
-  server: string;
+  /**
+   * anonymous reports do not provide a server name
+   */
+  server?: string;
   icon: string;
   specs: SpecName[];
   minItemLevel: number;
@@ -153,7 +156,11 @@ export type LegendaryItem = Item & {
   quality: ItemQuality.LEGENDARY;
   effectID: number;
   effectIcon: string;
-  effectName: string;
+  /**
+   * in case the legendary is not yet in WCLs database (e.g. shortly after
+   * a new patch), the effectName is missing
+   */
+  effectName?: string;
 };
 
 type Gem = {

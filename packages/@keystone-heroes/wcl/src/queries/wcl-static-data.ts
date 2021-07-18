@@ -31,7 +31,10 @@ async function loadNPCNames() {
       id: dataset.id,
       name: dataset.name_enus,
     })),
-    ...tormentedLieutenants,
+    ...tormentedLieutenants.map((lieutenant) => ({
+      id: lieutenant.id,
+      name: lieutenant.name,
+    })),
   ];
 
   const targetPath = resolve("../db/raw/all-npcs.json");

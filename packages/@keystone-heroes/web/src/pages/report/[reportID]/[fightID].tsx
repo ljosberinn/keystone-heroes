@@ -3,6 +3,14 @@ import { isValidReportId } from "@keystone-heroes/wcl/utils";
 import type { GetStaticPaths, GetStaticProps } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import type { ReactNode } from "react";
+import {
+  createContext,
+  useMemo,
+  useState,
+  useCallback,
+  useContext,
+} from "react";
 import { Map } from "src/components/report/Map";
 import { Meta } from "src/components/report/Meta";
 import { useAbortableFetch } from "src/hooks/useAbortableFetch";
@@ -100,18 +108,20 @@ export default function FightID({ cache }: FightIDProps): JSX.Element | null {
         </title>
       </Head>
 
-      <div className="flex flex-col lg:flex-row">
-        <Meta {...fight} />
-        <Map zones={fight.dungeon.zones} pulls={fight.pulls} />
-      </div>
-      <div className="flex flex-col lg:flex-row">
-        <section>
-          <h1 className="text-2xl font-bold">Pulls</h1>
-        </section>
-        <section>
-          <h1 className="text-2xl font-bold">Notable Events</h1>
-        </section>
-      </div>
+      <FightIDContextProvider>
+        <div className="flex flex-col lg:flex-row">
+          <Meta {...fight} />
+          <Map zones={fight.dungeon.zones} pulls={fight.pulls} />
+        </div>
+        <div className="flex flex-col lg:flex-row">
+          <section>
+            <h1 className="text-2xl font-bold">Pulls</h1>
+          </section>
+          <section>
+            <h1 className="text-2xl font-bold">Notable Events</h1>
+          </section>
+        </div>
+      </FightIDContextProvider>
     </>
   );
 }
@@ -140,3 +150,44 @@ export const getStaticProps: GetStaticProps<FightIDProps, StaticPathParams> =
       },
     };
   };
+
+type FightIDContextDefinition = {
+  selectedPull: number;
+  handlePullSelectionChange: (id: number) => void;
+};
+
+const FightIDContext = createContext<null | FightIDContextDefinition>(null);
+
+export const useFightIDContext = (): FightIDContextDefinition => {
+  const ctx = useContext(FightIDContext);
+
+  if (!ctx) {
+    throw new Error("useFightIDContext called outside of its provider");
+  }
+
+  return ctx;
+};
+
+type FightIDContextProviderProps = {
+  children: ReactNode;
+};
+
+function FightIDContextProvider({ children }: FightIDContextProviderProps) {
+  const [selectedPull, setSelectedPull] = useState(1);
+
+  const handlePullSelectionChange = useCallback((id: number) => {
+    setSelectedPull(id);
+  }, []);
+
+  const value: FightIDContextDefinition = useMemo(
+    () => ({
+      selectedPull,
+      handlePullSelectionChange,
+    }),
+    [selectedPull, handlePullSelectionChange]
+  );
+
+  return (
+    <FightIDContext.Provider value={value}>{children}</FightIDContext.Provider>
+  );
+}

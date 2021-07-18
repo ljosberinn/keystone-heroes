@@ -6,14 +6,27 @@ import type {
   ApplyBuffStackEvent,
 } from "../types";
 
-/**
- * @TODO remove once WCL provides this itself
- */
 export const tormentedLieutenants = [
-  { id: 179_891, name: "Soggodon the Breaker" },
-  { id: 179_446, name: "Incinerator Arkolath" },
-  { id: 179_892, name: "Oros Coldheart" },
-  { id: 179_890, name: "Executioner Varruth" },
+  {
+    id: 179_891,
+    name: "Soggodon the Breaker",
+    icon: "inv_icon_wingbroken04a",
+  },
+  {
+    id: 179_446,
+    name: "Incinerator Arkolath",
+    icon: "ability_warlock_fireandbrimstone",
+  },
+  {
+    id: 179_892,
+    name: "Oros Coldheart",
+    icon: "spell_shadow_soulleech_2",
+  },
+  {
+    id: 179_890,
+    name: "Executioner Varruth",
+    icon: "spell_misc_emotionafraid",
+  },
 ];
 
 export const tormentedLieutenantIDSet = new Set(

@@ -1,10 +1,12 @@
 import type { FightSuccessResponse } from "@keystone-heroes/api/functions/fight";
-import { tormentedLieutenantIDSet } from "@keystone-heroes/wcl/queries/events/affixes/tormented";
+import { tormentedLieutenants } from "@keystone-heroes/wcl/queries/events/affixes/tormented";
 
 export const findTormentedLieutenantPull = (
   pull: FightSuccessResponse["pulls"][number]
-): FightSuccessResponse["pulls"][number]["npcs"][number] | null => {
-  const match = pull.npcs.find((npc) => tormentedLieutenantIDSet.has(npc.id));
+): typeof tormentedLieutenants[number] | null => {
+  const match = tormentedLieutenants.find((lieutenant) =>
+    pull.npcs.some((npc) => npc.id === lieutenant.id)
+  );
 
   return match ?? null;
 };

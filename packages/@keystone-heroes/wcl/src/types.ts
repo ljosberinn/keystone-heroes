@@ -913,6 +913,7 @@ export type ProgressRaceData = {
 /** A way to obtain data for the top guilds involved in an ongoing world first or realm first progress race. */
 export type ProgressRaceDataProgressRaceArgs = {
   serverRegion?: Maybe<Scalars["String"]>;
+  serverSubregion?: Maybe<Scalars["String"]>;
   serverSlug?: Maybe<Scalars["String"]>;
   zoneID?: Maybe<Scalars["Int"]>;
   difficulty?: Maybe<Scalars["Int"]>;

@@ -4,6 +4,8 @@ type AbilityIconProps = {
   className?: string;
 };
 
+export const WCL_ASSET_URL = `https://assets.rpglogs.com/img/warcraft/abilities/`;
+
 export function AbilityIcon({
   icon,
   alt,
@@ -11,9 +13,7 @@ export function AbilityIcon({
 }: AbilityIconProps): JSX.Element {
   return (
     <img
-      src={`https://assets.rpglogs.com/img/warcraft/abilities/${
-        icon ?? "inv_misc_questionmark"
-      }.jpg`}
+      src={`${WCL_ASSET_URL}${icon ?? "inv_misc_questionmark"}.jpg`}
       alt={alt}
       title={alt}
       className={className}

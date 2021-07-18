@@ -8,6 +8,8 @@ import {
   filterProfessionEvents,
   filterRemarkableSpellEvents,
   remarkableSpellFilterExpression,
+  engineeringBattleRezExpression,
+  invisibilityFilterExpression,
 } from "../events/other";
 import type {
   AllTrackedEventTypes,
@@ -34,6 +36,8 @@ const generateFilterExpression = ({
   return [
     deathFilterExpression,
     remarkableSpellFilterExpression,
+    engineeringBattleRezExpression,
+    invisibilityFilterExpression,
     ...getDungeonExpression(dungeonID),
     ...getAffixExpression(affixes),
   ]

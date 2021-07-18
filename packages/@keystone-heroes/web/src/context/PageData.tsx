@@ -2,7 +2,7 @@ import { createContext, useContext } from "react";
 
 type PageContextType<T extends Record<string, unknown>> = [
   () => T,
-  (Component: (props: T) => JSX.Element) => (props: T) => JSX.Element
+  (Component: (props: T) => JSX.Element | null) => (props: T) => JSX.Element
 ];
 
 export function createPageContext<T extends Record<string, unknown>>(
@@ -14,7 +14,7 @@ export function createPageContext<T extends Record<string, unknown>>(
     PageContext.displayName = contextDisplayName;
   }
 
-  function withPageContext(Component: (props: T) => JSX.Element) {
+  function withPageContext(Component: (props: T) => JSX.Element | null) {
     function PageContextProvider(props: T): JSX.Element {
       return (
         <PageContext.Provider value={props}>
