@@ -1,10 +1,10 @@
 import type { FightSuccessResponse } from "@keystone-heroes/api/functions/fight";
+import type { KeyboardEvent } from "react";
 import { Fragment, useState, useRef, useEffect, useCallback } from "react";
 import { useFightIDContext } from "src/pages/report/[reportID]/[fightID]";
 import { classnames } from "src/utils/classnames";
 
 import { WCL_ASSET_URL } from "../AbilityIcon";
-import { TabListProvider } from "../tab";
 import { findTormentedLieutenantPull } from "./utils";
 
 type MapProps = {
@@ -46,6 +46,55 @@ export function Map({ zones, pulls }: MapProps): JSX.Element {
 
   const zoneToSelect = pulls[selectedPull - 1].zones;
   const tab = zones.findIndex((zone) => zone.id === zoneToSelect[0]);
+  const [selectedTab, setSelectedTab] = useState(tab);
+
+  const shouldFocusRef = useRef(false);
+  const buttonRefs = useRef<(HTMLButtonElement | null)[]>([]);
+
+  useEffect(() => {
+    if (shouldFocusRef.current) {
+      shouldFocusRef.current = false;
+      buttonRefs.current[selectedTab]?.focus();
+    }
+  });
+
+  const onTabButtonClick = useCallback((nextIndex) => {
+    setSelectedTab(nextIndex);
+  }, []);
+
+  const onKeyDown = useCallback(
+    (event: KeyboardEvent<HTMLButtonElement>) => {
+      const { key } = event;
+
+      const lookupValue =
+        key === "ArrowRight" ? 1 : key === "ArrowLeft" ? -1 : null;
+
+      if (!lookupValue) {
+        return;
+      }
+
+      event.preventDefault();
+      shouldFocusRef.current = true;
+
+      setSelectedTab((currentIndex) => {
+        const nextIndex = currentIndex + lookupValue;
+
+        // going from first to last
+        if (nextIndex < 0) {
+          return zones.length - 1;
+        }
+
+        // going from nth to nth
+        if (zones.length - 1 >= nextIndex) {
+          return nextIndex;
+        }
+
+        // going from last to first
+        return 0;
+      });
+    },
+    [zones.length]
+  );
 
   return (
     <section className="w-full lg:w-4/6">
@@ -64,47 +113,72 @@ export function Map({ zones, pulls }: MapProps): JSX.Element {
           <path d="M 0 0 L 10 5 L 0 10 z" fill="white" />
         </marker>
       </svg>
-      <TabListProvider amountOfTabs={zones.length} initialTab={tab}>
-        <TabListProvider.TabList>
-          {zones.map((zone, index) => {
-            return (
-              <TabListProvider.TabButton
-                key={zone.id}
-                index={index}
-                id={zone.id}
+      <div role="tablist" aria-orientation="horizontal" className="flex">
+        {zones.map((zone, index) => {
+          const selected = index === selectedTab;
+
+          return (
+            <div className="p-4" key={zone.id}>
+              <button
+                type="button"
+                role="tab"
+                data-orientation="horizontal"
+                aria-controls={`tabpanel-${zone.id}`}
+                id={`tab-${zone.id}`}
+                onKeyDown={onKeyDown}
+                ref={(ref) => {
+                  buttonRefs.current[index] = ref;
+                }}
+                className={`focus:outline-none focus:ring disabled:cursor-not-allowed dark:disabled:text-coolgray-500 disabled:text-coolgray-700 ${
+                  selected ? "border-coolgray-500 font-bold" : ""
+                }`}
+                onClick={() => {
+                  onTabButtonClick(index);
+                }}
               >
                 {zone.name}
-              </TabListProvider.TabButton>
-            );
-          })}
-        </TabListProvider.TabList>
-        {zones.map((zone, index) => {
-          return (
-            <TabListProvider.TabPanel
-              id={zone.id}
-              index={index}
-              key={zone.id}
-              ref={tabPanelRef}
-            >
-              <picture>
-                {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
-                <img
-                  src={`/static/maps/${zone.id}.png`}
-                  alt={zone.name}
-                  ref={imageRef}
-                  className="object-cover w-full h-full"
-                  onLoad={handleResize}
-                />
-              </picture>
-              <PullIndicators
-                pulls={pulls.filter((pull) => pull.zones[0] === zone.id)}
-                imageSize={imageSize}
-                handleResize={handleResize}
-              />
-            </TabListProvider.TabPanel>
+              </button>
+            </div>
           );
         })}
-      </TabListProvider>
+      </div>
+      {zones.map((zone, index) => {
+        const hidden = index !== selectedTab;
+
+        return (
+          <div
+            role="tabpanel"
+            data-orientation="horizontal"
+            data-state="active"
+            id={`tabpanel-${zone.id}`}
+            aria-labelledby={`tab-${zone.id}`}
+            // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
+            tabIndex={0}
+            ref={hidden ? undefined : tabPanelRef}
+            key={zone.id}
+          >
+            {hidden ? null : (
+              <>
+                <picture>
+                  {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
+                  <img
+                    src={`/static/maps/${zone.id}.png`}
+                    alt={zone.name}
+                    ref={imageRef}
+                    className="object-cover w-full h-full"
+                    onLoad={handleResize}
+                  />
+                </picture>
+                <PullIndicators
+                  pulls={pulls.filter((pull) => pull.zones[0] === zone.id)}
+                  imageSize={imageSize}
+                  handleResize={handleResize}
+                />
+              </>
+            )}
+          </div>
+        );
+      })}
     </section>
   );
 }

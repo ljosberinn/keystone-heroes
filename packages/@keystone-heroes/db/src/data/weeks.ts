@@ -73,6 +73,18 @@ export const weeks: Week[] = [
     seasonID: SeasonID.SL_SEASON_2,
     weeks: [
       [Affixes.Tyrannical, Affixes.Raging, Affixes.Volcanic, Affixes.Tormented],
+      [
+        Affixes.Fortified,
+        Affixes.Inspiring,
+        Affixes.Grievous,
+        Affixes.Tormented,
+      ],
+      [
+        Affixes.Tyrannical,
+        Affixes.Spiteful,
+        Affixes.Necrotic,
+        Affixes.Tormented,
+      ],
     ],
   },
 ]
