@@ -1272,6 +1272,30 @@
                 "defaultValue": "\"Any\"",
                 "isDeprecated": false,
                 "deprecationReason": null
+              },
+              {
+                "name": "covenantID",
+                "description": "Optional. The covenant ID to filter to if viewing Shadowlands rankings.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": "0",
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "soulbindID",
+                "description": "Optional. The soulbind ID to filter to if viewing Shadowlands rankings.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": "0",
+                "isDeprecated": false,
+                "deprecationReason": null
               }
             ],
             "type": {
@@ -3159,7 +3183,7 @@
         "fields": [
           {
             "name": "id",
-            "description": "The ID of the mao.",
+            "description": "The ID of the map.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -4887,6 +4911,18 @@
             "type": {
               "kind": "OBJECT",
               "name": "ReportData",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "userData",
+            "description": "Obtain the user object that allows the retrieval of the authorized user's id and username.",
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "UserData",
               "ofType": null
             },
             "isDeprecated": false,
@@ -8513,6 +8549,101 @@
                 "name": "String",
                 "ofType": null
               }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "battleTag",
+            "description": "The battle tag of the user if they have linked it.",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "UserData",
+        "description": "The user data object contains basic information about users and lets you retrieve specific users (or the current user if using the user endpoint).",
+        "fields": [
+          {
+            "name": "user",
+            "description": "Obtain a specific user by id.",
+            "args": [
+              {
+                "name": "id",
+                "description": "Required. Specify a single user ID to retrieve.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
+            "type": {
+              "kind": "OBJECT",
+              "name": "User",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "currentUser",
+            "description": "Obtain the current user (only works with user endpoint).",
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "User",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "ViewModels",
+        "description": null,
+        "fields": [
+          {
+            "name": "game",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "JSON",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "headerTitle",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "JSON",
+              "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null

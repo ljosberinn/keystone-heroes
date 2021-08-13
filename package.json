@@ -15,8 +15,7 @@
     "lint": "yarn workspaces run lint",
     "lint:fix": "yarn workspaces run lint --fix && yarn workspaces run format",
     "types": "yarn --cwd packages/@keystone-heroes/web types",
-    "install:clean": "rimraf yarn.lock && rimraf packages/@keystone-heroes/**/node_modules && rimraf node_modules && yarn",
-    "prepare": "husky install",
+    "install:clean": "rimraf yarn.lock packages/@keystone-heroes/**/node_modules node_modules && yarn",
     "dev-db:start": "supabase start",
     "dev-db:stop": "supabase stop"
   },
@@ -27,7 +26,7 @@
   },
   "devDependencies": {
     "husky": "7.0.1",
-    "lint-staged": "11.0.1",
+    "lint-staged": "11.1.2",
     "prettier": "2.3.2",
     "rimraf": "3.0.2",
     "sort-package-json": "1.50.0",

@@ -30,6 +30,11 @@ type Query {
   reportData: ReportData
 
   """
+  Obtain the user object that allows the retrieval of the authorized user's id and username.
+  """
+  userData: UserData
+
+  """
   Obtain the world data object that holds collections of data such as all expansions, regions, subregions, servers, dungeon/raid zones, and encounters.
   """
   worldData: WorldData
@@ -801,6 +806,16 @@ type Encounter {
     Optional. The slug for a specific spec. Whether or not to filter rankings to a specific spec. If omitted, data for all specs will be used.
     """
     specName: String = "Any"
+
+    """
+    Optional. The covenant ID to filter to if viewing Shadowlands rankings.
+    """
+    covenantID: Int = 0
+
+    """
+    Optional. The soulbind ID to filter to if viewing Shadowlands rankings.
+    """
+    soulbindID: Int = 0
   ): JSON
 
   """
@@ -2310,6 +2325,11 @@ type User {
   The name of the user.
   """
   name: String!
+
+  """
+  The battle tag of the user if they have linked it.
+  """
+  battleTag: String
 }
 
 """
@@ -3110,7 +3130,7 @@ A single map for the game.
 """
 type GameMap {
   """
-  The ID of the mao.
+  The ID of the map.
   """
   id: Int!
 
@@ -3452,6 +3472,26 @@ type ReportData {
 }
 
 """
+The user data object contains basic information about users and lets you retrieve specific users (or the current user if using the user endpoint).
+"""
+type UserData {
+  """
+  Obtain a specific user by id.
+  """
+  user(
+    """
+    Required. Specify a single user ID to retrieve.
+    """
+    id: Int
+  ): User
+
+  """
+  Obtain the current user (only works with user endpoint).
+  """
+  currentUser: User
+}
+
+"""
 The world data object contains collections of data such as expansions, zones, encounters, regions, subregions, etc.
 """
 type WorldData {
@@ -3559,4 +3599,9 @@ type GameItemSet {
   The localized name of the item set. Will be null if no localization information exists for the item set.
   """
   name: String
+}
+
+type ViewModels {
+  game: JSON
+  headerTitle: JSON
 }

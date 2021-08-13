@@ -236,6 +236,8 @@ export type EncounterCharacterRankingsArgs = {
   serverSlug?: Maybe<Scalars["String"]>;
   size?: Maybe<Scalars["Int"]>;
   specName?: Maybe<Scalars["String"]>;
+  covenantID?: Maybe<Scalars["Int"]>;
+  soulbindID?: Maybe<Scalars["Int"]>;
 };
 
 /** A single encounter for the game. */
@@ -613,7 +615,7 @@ export type GameItemSet = {
 /** A single map for the game. */
 export type GameMap = {
   __typename?: "GameMap";
-  /** The ID of the mao. */
+  /** The ID of the map. */
   id: Scalars["Int"];
   /** The localized name of the map. Will be null if no localization information exists for the map. */
   name?: Maybe<Scalars["String"]>;
@@ -933,6 +935,8 @@ export type Query = {
   rateLimitData?: Maybe<RateLimitData>;
   /** Obtain the report data object that allows the retrieval of individual reports or filtered collections of reports by guild or by user. */
   reportData?: Maybe<ReportData>;
+  /** Obtain the user object that allows the retrieval of the authorized user's id and username. */
+  userData?: Maybe<UserData>;
   /** Obtain the world data object that holds collections of data such as all expansions, regions, subregions, servers, dungeon/raid zones, and encounters. */
   worldData?: Maybe<WorldData>;
 };
@@ -1539,6 +1543,28 @@ export type User = {
   id: Scalars["Int"];
   /** The name of the user. */
   name: Scalars["String"];
+  /** The battle tag of the user if they have linked it. */
+  battleTag?: Maybe<Scalars["String"]>;
+};
+
+/** The user data object contains basic information about users and lets you retrieve specific users (or the current user if using the user endpoint). */
+export type UserData = {
+  __typename?: "UserData";
+  /** Obtain a specific user by id. */
+  user?: Maybe<User>;
+  /** Obtain the current user (only works with user endpoint). */
+  currentUser?: Maybe<User>;
+};
+
+/** The user data object contains basic information about users and lets you retrieve specific users (or the current user if using the user endpoint). */
+export type UserDataUserArgs = {
+  id?: Maybe<Scalars["Int"]>;
+};
+
+export type ViewModels = {
+  __typename?: "ViewModels";
+  game?: Maybe<Scalars["JSON"]>;
+  headerTitle?: Maybe<Scalars["JSON"]>;
 };
 
 /** Whether the view is by source, target, or ability. */
@@ -1638,45 +1664,35 @@ export type InitialReportDataQueryVariables = Exact<{
   reportID: Scalars["String"];
 }>;
 
-export type InitialReportDataQuery = { __typename?: "Query" } & {
-  reportData?: Maybe<
-    { __typename?: "ReportData" } & {
-      report?: Maybe<
-        { __typename?: "Report" } & Pick<
-          Report,
-          "title" | "startTime" | "endTime"
-        > & {
-            region?: Maybe<{ __typename?: "Region" } & Pick<Region, "slug">>;
-            fights?: Maybe<
-              Maybe<
-                { __typename?: "ReportFight" } & Pick<
-                  ReportFight,
-                  | "id"
-                  | "startTime"
-                  | "endTime"
-                  | "keystoneLevel"
-                  | "keystoneAffixes"
-                  | "keystoneBonus"
-                  | "keystoneTime"
-                  | "rating"
-                  | "averageItemLevel"
-                  | "friendlyPlayers"
-                > & {
-                    gameZone?: Maybe<
-                      { __typename?: "GameZone" } & Pick<GameZone, "id">
-                    >;
-                    maps?: Maybe<
-                      Maybe<
-                        { __typename?: "ReportMap" } & Pick<ReportMap, "id">
-                      >[]
-                    >;
-                  }
-              >[]
-            >;
-          }
+export type InitialReportDataQuery = {
+  __typename?: "Query";
+  reportData?: Maybe<{
+    __typename?: "ReportData";
+    report?: Maybe<{
+      __typename?: "Report";
+      title: string;
+      startTime: number;
+      endTime: number;
+      region?: Maybe<{ __typename?: "Region"; slug: string }>;
+      fights?: Maybe<
+        Maybe<{
+          __typename?: "ReportFight";
+          id: number;
+          startTime: number;
+          endTime: number;
+          keystoneLevel?: Maybe<number>;
+          keystoneAffixes?: Maybe<Maybe<number>[]>;
+          keystoneBonus?: Maybe<number>;
+          keystoneTime?: Maybe<number>;
+          rating?: Maybe<number>;
+          averageItemLevel?: Maybe<number>;
+          friendlyPlayers?: Maybe<Maybe<number>[]>;
+          gameZone?: Maybe<{ __typename?: "GameZone"; id: number }>;
+          maps?: Maybe<Maybe<{ __typename?: "ReportMap"; id: number }>[]>;
+        }>[]
       >;
-    }
-  >;
+    }>;
+  }>;
 };
 
 export type EventDataQueryVariables = Exact<{
@@ -1687,48 +1703,44 @@ export type EventDataQueryVariables = Exact<{
   filterExpression?: Maybe<Scalars["String"]>;
 }>;
 
-export type EventDataQuery = { __typename?: "Query" } & {
-  reportData?: Maybe<
-    { __typename?: "ReportData" } & {
-      report?: Maybe<
-        { __typename?: "Report" } & {
-          events?: Maybe<
-            { __typename?: "ReportEventPaginator" } & Pick<
-              ReportEventPaginator,
-              "data" | "nextPageTimestamp"
-            >
-          >;
-        }
-      >;
-    }
-  >;
+export type EventDataQuery = {
+  __typename?: "Query";
+  reportData?: Maybe<{
+    __typename?: "ReportData";
+    report?: Maybe<{
+      __typename?: "Report";
+      events?: Maybe<{
+        __typename?: "ReportEventPaginator";
+        data?: Maybe<any>;
+        nextPageTimestamp?: Maybe<number>;
+      }>;
+    }>;
+  }>;
 };
 
 export type PetActorsQueryVariables = Exact<{
   reportID: Scalars["String"];
 }>;
 
-export type PetActorsQuery = { __typename?: "Query" } & {
-  reportData?: Maybe<
-    { __typename?: "ReportData" } & {
-      report?: Maybe<
-        { __typename?: "Report" } & {
-          masterData?: Maybe<
-            { __typename?: "ReportMasterData" } & {
-              actors?: Maybe<
-                Maybe<
-                  { __typename?: "ReportActor" } & Pick<
-                    ReportActor,
-                    "gameID" | "petOwner" | "id"
-                  >
-                >[]
-              >;
-            }
-          >;
-        }
-      >;
-    }
-  >;
+export type PetActorsQuery = {
+  __typename?: "Query";
+  reportData?: Maybe<{
+    __typename?: "ReportData";
+    report?: Maybe<{
+      __typename?: "Report";
+      masterData?: Maybe<{
+        __typename?: "ReportMasterData";
+        actors?: Maybe<
+          Maybe<{
+            __typename?: "ReportActor";
+            gameID?: Maybe<number>;
+            petOwner?: Maybe<number>;
+            id?: Maybe<number>;
+          }>[]
+        >;
+      }>;
+    }>;
+  }>;
 };
 
 export type EnemyNpcIdsQueryVariables = Exact<{
@@ -1736,29 +1748,26 @@ export type EnemyNpcIdsQueryVariables = Exact<{
   fightIDs: Maybe<Scalars["Int"]>[] | Maybe<Scalars["Int"]>;
 }>;
 
-export type EnemyNpcIdsQuery = { __typename?: "Query" } & {
-  reportData?: Maybe<
-    { __typename?: "ReportData" } & {
-      report?: Maybe<
-        { __typename?: "Report" } & {
-          fights?: Maybe<
-            Maybe<
-              { __typename?: "ReportFight" } & {
-                enemyNPCs?: Maybe<
-                  Maybe<
-                    { __typename?: "ReportFightNPC" } & Pick<
-                      ReportFightNpc,
-                      "id" | "gameID"
-                    >
-                  >[]
-                >;
-              }
-            >[]
+export type EnemyNpcIdsQuery = {
+  __typename?: "Query";
+  reportData?: Maybe<{
+    __typename?: "ReportData";
+    report?: Maybe<{
+      __typename?: "Report";
+      fights?: Maybe<
+        Maybe<{
+          __typename?: "ReportFight";
+          enemyNPCs?: Maybe<
+            Maybe<{
+              __typename?: "ReportFightNPC";
+              id?: Maybe<number>;
+              gameID?: Maybe<number>;
+            }>[]
           >;
-        }
+        }>[]
       >;
-    }
-  >;
+    }>;
+  }>;
 };
 
 export type TableQueryVariables = Exact<{
@@ -1768,12 +1777,12 @@ export type TableQueryVariables = Exact<{
   endTime: Scalars["Float"];
 }>;
 
-export type TableQuery = { __typename?: "Query" } & {
-  reportData?: Maybe<
-    { __typename?: "ReportData" } & {
-      report?: Maybe<{ __typename?: "Report" } & Pick<Report, "table">>;
-    }
-  >;
+export type TableQuery = {
+  __typename?: "Query";
+  reportData?: Maybe<{
+    __typename?: "ReportData";
+    report?: Maybe<{ __typename?: "Report"; table?: Maybe<any> }>;
+  }>;
 };
 
 export type FightPullsQueryVariables = Exact<{
@@ -1781,42 +1790,36 @@ export type FightPullsQueryVariables = Exact<{
   fightIDs: Maybe<Scalars["Int"]>[] | Maybe<Scalars["Int"]>;
 }>;
 
-export type FightPullsQuery = { __typename?: "Query" } & {
-  reportData?: Maybe<
-    { __typename?: "ReportData" } & {
-      report?: Maybe<
-        { __typename?: "Report" } & {
-          fights?: Maybe<
-            Maybe<
-              { __typename?: "ReportFight" } & {
-                dungeonPulls?: Maybe<
-                  Maybe<
-                    { __typename?: "ReportDungeonPull" } & Pick<
-                      ReportDungeonPull,
-                      "startTime" | "endTime" | "x" | "y"
-                    > & {
-                        maps?: Maybe<
-                          Maybe<
-                            { __typename?: "ReportMap" } & Pick<ReportMap, "id">
-                          >[]
-                        >;
-                        enemyNPCs?: Maybe<
-                          Maybe<
-                            {
-                              __typename?: "ReportDungeonPullNPC";
-                            } & Pick<ReportDungeonPullNpc, "id" | "gameID">
-                          >[]
-                        >;
-                      }
-                  >[]
-                >;
-              }
-            >[]
+export type FightPullsQuery = {
+  __typename?: "Query";
+  reportData?: Maybe<{
+    __typename?: "ReportData";
+    report?: Maybe<{
+      __typename?: "Report";
+      fights?: Maybe<
+        Maybe<{
+          __typename?: "ReportFight";
+          dungeonPulls?: Maybe<
+            Maybe<{
+              __typename?: "ReportDungeonPull";
+              startTime: number;
+              endTime: number;
+              x: number;
+              y: number;
+              maps?: Maybe<Maybe<{ __typename?: "ReportMap"; id: number }>[]>;
+              enemyNPCs?: Maybe<
+                Maybe<{
+                  __typename?: "ReportDungeonPullNPC";
+                  id?: Maybe<number>;
+                  gameID?: Maybe<number>;
+                }>[]
+              >;
+            }>[]
           >;
-        }
+        }>[]
       >;
-    }
-  >;
+    }>;
+  }>;
 };
 
 export const InitialReportDataDocument = gql`
