@@ -10,7 +10,7 @@ require("@keystone-heroes/env/src/loader");
 const date = new Date();
 
 /**
- * @type {import('next/dist/next-server/server/config').NextConfig}
+ * @type {import('next/dist/server/config-shared').NextConfig}
  **/
 const config = {
   typescript: {
@@ -32,7 +32,7 @@ const config = {
     // outside of Vercel
     NEXT_PUBLIC_COMMIT_SHA: process.env.VERCEL_GIT_COMMIT_SHA,
     NEXT_PUBLIC_BUILD_TIME: date.toISOString(),
-    NEXT_PUBLIC_BUILD_TIMESTAMP: Number(date),
+    NEXT_PUBLIC_BUILD_TIMESTAMP: Number(date).toString(),
   },
   experimental: {
     // conformance: true,

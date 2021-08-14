@@ -1,6 +1,5 @@
-const { config } = require("dotenv");
-
 if (!process.env.DATABASE_URL) {
+  const { config } = require("dotenv");
   // eslint-disable-next-line no-console
   console.log(`[@keystone-heroes/env] Initializing .env`);
 

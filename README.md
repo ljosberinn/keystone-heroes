@@ -8,6 +8,18 @@
 - docker-compose (see [here](https://docs.docker.com/compose/install/) on how to install on your machine)
 - supabase (see [here](https://supabase.io/docs/reference/cli/getting-started) on how to get started)
 
+### Setup
+
+- `npm install -g supabase`
+- `supabase init`
+- `yarn dev-db:start`
+- execute `seed` in `db`
+- execute `push` in `db`
+- execute `copy-env-to-db` in `env`
+- execute `wcl-static-data` in `wcl`
+- execute `introspection` in `wcl`
+- execute `generate` in `wcl`
+
 ### /api
 
 - contains any Next.js API routes logic

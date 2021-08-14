@@ -16,14 +16,13 @@ async function loadSchema() {
 
   const targetPath = resolve("src/gql/schema.graphql");
   writeFileSync(targetPath, schema);
+
+  // eslint-disable-next-line no-console
+  console.log("[@keystone-heroes/wcl] gql schema loaded");
+  // eslint-disable-next-line unicorn/no-process-exit
+  process.exit(0);
 }
 
 loadSchema()
-  .then(() => {
-    // eslint-disable-next-line no-console
-    console.log("[@keystone-heroes/wcl] gql schema loaded");
-    // eslint-disable-next-line unicorn/no-process-exit
-    process.exit(0);
-  })
   // eslint-disable-next-line no-console
   .catch(console.error);
