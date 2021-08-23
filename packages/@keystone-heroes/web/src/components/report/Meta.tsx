@@ -1,6 +1,5 @@
 import type { FightSuccessResponse } from "@keystone-heroes/api/functions/fight";
 import Link from "next/link";
-// import { useFightIDContext } from "src/pages/report/[reportID]/[fightID]";
 import { fightTimeToString } from "src/utils";
 
 import { TormentedPowers } from "./TormentedPowers";
@@ -13,7 +12,7 @@ type MetaProps = Pick<
 
 export function Meta({ dungeon, meta, player, pulls }: MetaProps): JSX.Element {
   return (
-    <div className="w-full lg:w-2/6">
+    <div className="w-full lg:pr-5 lg:w-2/6">
       <h1 className="text-4xl font-bold">
         {dungeon.name} +{meta.level}
       </h1>

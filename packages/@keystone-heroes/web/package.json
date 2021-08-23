@@ -25,7 +25,8 @@
     "react": "18.0.0-alpha-ed6c091fe-20210701",
     "react-dom": "18.0.0-alpha-ed6c091fe-20210701",
     "react-icons": "4.2.0",
-    "tailwindcss": "2.2.7"
+    "tailwindcss": "2.2.7",
+    "zustand": "3.5.9"
   },
   "devDependencies": {
     "@storybook/addon-actions": "6.2.9",

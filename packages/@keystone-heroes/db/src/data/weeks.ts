@@ -85,6 +85,10 @@ export const weeks: Week[] = [
         Affixes.Necrotic,
         Affixes.Tormented,
       ],
+      [Affixes.Fortified, Affixes.Bolstering, Affixes.Quaking],
+      [Affixes.Tyrannical, Affixes.Sanguine, Affixes.Storming],
+      [Affixes.Fortified, Affixes.Raging, Affixes.Explosive],
+      [Affixes.Tyrannical, Affixes.Bursting, Affixes.Volcanic],
     ],
   },
 ]

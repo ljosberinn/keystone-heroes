@@ -32,15 +32,13 @@ export default function App({
         />
       </Head>
       <RouteChangeIndicator />
-      <div className="px-5">
-        <ThemeProvider attribute="class" defaultTheme="dark">
-          <Header />
-          <main className="w-full flex flex-col flex-grow">
-            <Component {...pageProps} />
-          </main>
-          <Footer />
-        </ThemeProvider>
-      </div>
+      <ThemeProvider attribute="class" defaultTheme="dark">
+        <Header />
+        <main className="flex flex-col flex-grow w-full px-5 md:px-10">
+          <Component {...pageProps} />
+        </main>
+        <Footer />
+      </ThemeProvider>
     </>
   );
 }

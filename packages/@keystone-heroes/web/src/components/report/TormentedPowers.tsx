@@ -1,5 +1,5 @@
 import type { FightSuccessResponse } from "@keystone-heroes/api/functions/fight";
-import { useFightIDContext } from "src/pages/report/[reportID]/[fightID]";
+import { useReportStore } from "src/store";
 
 import { AbilityIcon } from "../AbilityIcon";
 
@@ -11,16 +11,13 @@ export function TormentedPowers({
   player,
   lieutenantOrder,
 }: TormentedPowersProps): JSX.Element {
-  const { handlePullSelectionChange, selectedPull } = useFightIDContext();
+  const setSelectedPull = useReportStore((state) => state.setSelectedPull);
 
   return (
     <>
       <h1 className="pt-4">Tormented Powers</h1>
       {Array.from({ length: 4 }, (_, index) => {
         const lieutenant = lieutenantOrder[index];
-        const selected = lieutenant
-          ? selectedPull === lieutenant.pullID
-          : false;
 
         return (
           <div className="flex justify-between pt-2" key={index}>
@@ -42,10 +39,9 @@ export function TormentedPowers({
               {lieutenant && (
                 <button
                   type="button"
-                  className={`pl-1 ${selected ? "cursor-forbidden" : ""}`}
-                  disabled={selected}
+                  className="pl-1"
                   onClick={() => {
-                    handlePullSelectionChange(lieutenant.pullID);
+                    setSelectedPull(lieutenant.pullID);
                   }}
                 >
                   {lieutenant.name}
