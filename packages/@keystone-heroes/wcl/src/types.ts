@@ -1565,6 +1565,20 @@ export type ViewModels = {
   __typename?: "ViewModels";
   game?: Maybe<Scalars["JSON"]>;
   headerTitle?: Maybe<Scalars["JSON"]>;
+  articleCategories?: Maybe<Scalars["JSON"]>;
+  articleSlugs?: Maybe<Scalars["JSON"]>;
+  article?: Maybe<Scalars["JSON"]>;
+};
+
+export type ViewModelsArticleSlugsArgs = {
+  articleCategorySlug?: Maybe<Scalars["String"]>;
+  siteName?: Maybe<Scalars["String"]>;
+};
+
+export type ViewModelsArticleArgs = {
+  articleSlug?: Maybe<Scalars["String"]>;
+  articleCategorySlug?: Maybe<Scalars["String"]>;
+  siteName?: Maybe<Scalars["String"]>;
 };
 
 /** Whether the view is by source, target, or ability. */

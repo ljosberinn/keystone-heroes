@@ -3604,4 +3604,11 @@ type GameItemSet {
 type ViewModels {
   game: JSON
   headerTitle: JSON
+  articleCategories: JSON
+  articleSlugs(articleCategorySlug: String, siteName: String): JSON
+  article(
+    articleSlug: String
+    articleCategorySlug: String
+    siteName: String
+  ): JSON
 }
