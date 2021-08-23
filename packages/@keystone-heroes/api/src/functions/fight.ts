@@ -1210,15 +1210,15 @@ const createPullNPCDeathEventMap = (
   pulls: Omit<PersistedDungeonPull, "id" | "percent" | "isWipe">[],
   enemyDeathEvents: (BeginCastEvent | DeathEvent)[]
 ) => {
-  return pulls.reduce<Record<number, (DeathEvent | BeginCastEvent)[]>>(
-    (acc, { startTime, endTime }) => {
-      acc[startTime] = enemyDeathEvents.filter(
-        ({ timestamp }) => timestamp >= startTime && timestamp <= endTime
-      );
-
-      return acc;
-    },
-    {}
+  return Object.fromEntries<(DeathEvent | BeginCastEvent)[]>(
+    pulls.map(({ startTime, endTime }) => {
+      return [
+        startTime,
+        enemyDeathEvents.filter(
+          ({ timestamp }) => timestamp >= startTime && timestamp <= endTime
+        ),
+      ];
+    })
   );
 };
 
@@ -1226,24 +1226,26 @@ const createPullNPCDeathEventMap = (
 const createPullNPCDeathCountMap = (
   deathEventMap: ReturnType<typeof createPullNPCDeathEventMap>
 ) => {
-  return Object.entries(deathEventMap).reduce<
-    Record<number, Record<number, number>>
-  >((acc, [startTimeStr, events]) => {
-    const startTime = Number.parseInt(startTimeStr);
+  return Object.fromEntries<Record<number, number>>(
+    Object.entries(deathEventMap).map(([startTimeStr, events]) => {
+      const startTime = Number.parseInt(startTimeStr);
 
-    acc[startTime] = events.reduce<Record<number, number>>(
-      (acc, { type, targetID, sourceID }) => {
-        // differentiate between `BeginCastEvent` and `DeathEvent`
-        const key = type === "death" ? targetID : sourceID;
-        acc[key] = (acc[key] ?? 0) + 1;
+      return [
+        startTime,
+        // eslint-disable-next-line unicorn/prefer-object-from-entries
+        events.reduce<Record<number, number>>(
+          (acc, { type, targetID, sourceID }) => {
+            // differentiate between `BeginCastEvent` and `DeathEvent`
+            const key = type === "death" ? targetID : sourceID;
+            acc[key] = (acc[key] ?? 0) + 1;
 
-        return acc;
-      },
-      {}
-    );
-
-    return acc;
-  }, {});
+            return acc;
+          },
+          {}
+        ),
+      ];
+    })
+  );
 };
 
 export const fightHandler = nc()
