@@ -64,14 +64,14 @@ export function Data({ fight }: DataProps): JSX.Element {
           <thead>
             <tr>
               <th>Pull</th>
-              <th className="text-right">Percent</th>
-              <th className="text-right">Duration</th>
+              <th className="text-right">Percent (Total)</th>
+              <th className="text-right">Duration (Total)</th>
               <th className="text-right">Enemies</th>
               <th className="text-right">Deaths</th>
             </tr>
           </thead>
           <tbody>
-            {fight.pulls.map((pull) => {
+            {fight.pulls.map((pull, index) => {
               const enemies = pull.npcs.reduce(
                 (acc, npc) => acc + npc.count,
                 0
@@ -81,12 +81,34 @@ export function Data({ fight }: DataProps): JSX.Element {
                 (event) => event.eventType === "Death"
               ).length;
 
+              const percentUpToThisPull = fight.pulls
+                .slice(0, index + 1)
+                .reduce((acc, pull) => acc + pull.percent, 0)
+                .toFixed(2);
+
               return (
                 <tr key={pull.id}>
                   <td>{pull.id}</td>
-                  <td className="text-right">{pull.percent.toFixed(2)}%</td>
                   <td className="text-right">
-                    {fightTimeToString(pull.endTime - pull.startTime, true)}
+                    {pull.percent > 0 ? (
+                      <span>{pull.percent.toFixed(2)}%</span>
+                    ) : (
+                      "-"
+                    )}{" "}
+                    <span className="italic text-gray-500 dark:text-gray-400">
+                      ({percentUpToThisPull}%)
+                    </span>
+                  </td>
+                  <td className="text-right">
+                    {fightTimeToString(pull.endTime - pull.startTime, true)}{" "}
+                    <span className="italic text-gray-500 dark:text-gray-400">
+                      (
+                      {fightTimeToString(
+                        pull.endTime - fight.pulls[0].startTime,
+                        true
+                      )}
+                      )
+                    </span>
                   </td>
                   <td className="text-right">{enemies}</td>
                   <td className="text-right">{deaths === 0 ? "" : deaths}</td>
