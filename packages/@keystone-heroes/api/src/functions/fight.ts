@@ -1055,7 +1055,7 @@ const calculatePullCoordinates = (
     x === -2_147_483_648 &&
     y === -2_147_483_648 &&
     npcs.length === 1 &&
-    npcs[0].gameID === 179_890
+    tormentedLieutenantIDSet.has(npcs[0].gameID)
   ) {
     return {
       x: 0.702_702_702_702_702_7,
