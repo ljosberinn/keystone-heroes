@@ -4,27 +4,37 @@ import Link from "next/link";
 import { fightTimeToString } from "src/utils";
 
 import { AbilityIcon, WCL_ASSET_URL } from "../AbilityIcon";
+import { ExternalLink } from "../ExternalLink";
 
 type MetaProps = Pick<
   FightSuccessResponse,
-  "dungeon" | "meta" | "player" | "pulls" | "affixes"
->;
+  "dungeon" | "meta" | "player" | "affixes"
+> & {
+  reportID: string;
+  fightID: string;
+};
 
 export function Meta({
   dungeon,
   meta,
   player,
   affixes,
+  reportID,
+  fightID,
 }: MetaProps): JSX.Element {
   return (
     <div className="w-full lg:w-2/6">
       <div className="justify-between md:flex lg:block">
         <h1 className="text-4xl font-bold">
-          <span className="lg:hidden 2xl:inline-block">{dungeon.name}</span>
-          <span className="hidden lg:inline-block 2xl:hidden">
-            {dungeon.slug}
-          </span>{" "}
-          +{meta.level}
+          <ExternalLink
+            href={`https://warcraftlogs.com/reports/${reportID}#fight=${fightID}`}
+          >
+            <span className="lg:hidden 2xl:inline-block">{dungeon.name}</span>
+            <span className="hidden lg:inline-block 2xl:hidden">
+              {dungeon.slug}
+            </span>{" "}
+            +{meta.level}
+          </ExternalLink>
         </h1>
         <div className="flex pt-2 space-x-1 md:pt-0 lg:pt-2">
           {affixes.map((affix) => (

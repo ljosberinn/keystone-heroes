@@ -32,7 +32,7 @@ const useFightURL = (cache: FightIDProps["cache"]) => {
     return {
       url: null,
       reportID: cache.reportID,
-      fightID: cache.fightID,
+      fightID: cache.fightID ? `${cache.fightID}` : null,
     };
   }
 
@@ -102,7 +102,7 @@ export default function FightID({ cache }: FightIDProps): JSX.Element | null {
       </Head>
 
       <div className="flex flex-col space-x-0 lg:space-x-4 lg:flex-row">
-        <Meta {...fight} />
+        <Meta reportID={reportID} fightID={fightID} {...fight} />
         <Map zones={fight.dungeon.zones} pulls={fight.pulls} />
       </div>
 

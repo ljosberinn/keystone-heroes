@@ -531,6 +531,7 @@ export const MISTS_OF_TIRNA_SCITHE: DungeonMeta = {
     167_117: 1, // Spinemaw Larva
     167_116: 4, // Spinemaw Reaver
     173_720: 16, // Mistveil Goregullet
+    173_714: 16, // Mistveil Nightblossom
     173_655: 16, // Mistveil Matriarch
   },
   count: 260,

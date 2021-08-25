@@ -1106,6 +1106,7 @@ const calculatePullsWithWipesAndPercent = (
         return acc;
       }
 
+      // TODO: ensure that in deathEventMap pets are not included
       const killedNPCTargetIDsOfThisPull = new Set(
         deathEventMap[pull.startTime].map((event) => event.targetID)
       );
@@ -1143,10 +1144,20 @@ const calculatePullsWithWipesAndPercent = (
         if (!wasKilledDuringThisPull) {
           const nextPull = pulls[index + 1];
 
-          if (
-            nextPull?.enemyNPCs.length === 1 &&
-            nextPull.enemyNPCs[0].gameID === npc.gameID
-          ) {
+          if (!nextPull) {
+            return true;
+          }
+
+          const killedNPCTargetIDsOfNextPull = new Set(
+            deathEventMap[nextPull.startTime].map((event) => event.targetID)
+          );
+          const getsKilledDuringNextPull = killedNPCTargetIDsOfNextPull.has(
+            npc.id
+          );
+
+          if (nextPull.enemyNPCs.length === 1 && getsKilledDuringNextPull) {
+            // merge fight duration
+            pull.endTime = nextPull.endTime;
             skipNextPull = true;
             return true;
           }
