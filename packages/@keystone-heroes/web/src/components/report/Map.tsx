@@ -140,8 +140,8 @@ export function Map({ zones, pulls }: MapProps): JSX.Element {
   );
 
   return (
-    <section className="w-full lg:pl-5 lg:w-4/6">
-      <h1 className="text-2xl font-bold">Route</h1>
+    <section className="w-full lg:w-4/6">
+      <h2 className="text-2xl font-bold">Route</h2>
       <svg height="0" width="0">
         <marker
           id="triangle"

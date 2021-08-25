@@ -101,7 +101,7 @@ export default function FightID({ cache }: FightIDProps): JSX.Element | null {
         </title>
       </Head>
 
-      <div className="flex flex-col lg:flex-row">
+      <div className="flex flex-col space-x-0 lg:space-x-4 lg:flex-row">
         <Meta {...fight} />
         <Map zones={fight.dungeon.zones} pulls={fight.pulls} />
       </div>
