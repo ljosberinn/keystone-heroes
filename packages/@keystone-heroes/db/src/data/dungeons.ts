@@ -145,6 +145,12 @@ export const EXCLUDED_NPCS = new Set([
   171_188, // Plaguebound Devoted via Margrave Stradama
 ]);
 
+export const SOA_FINAL_BOSS_ANGELS = new Set([
+  168_844, // Lakesis
+  168_845, // Astronos
+  168_843, // Klotos
+]);
+
 export const SANGUINE_DEPTHS: DungeonMeta = {
   name: "Sanguine Depths",
   timer: createDungeonTimer(41),

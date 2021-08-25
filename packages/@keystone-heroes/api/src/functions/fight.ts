@@ -4,6 +4,7 @@ import {
   EXCLUDED_NPCS,
   allBossIDs,
   DungeonIDs,
+  SOA_FINAL_BOSS_ANGELS,
 } from "@keystone-heroes/db/data/dungeons";
 import { prisma } from "@keystone-heroes/db/prisma";
 import type {
@@ -1093,6 +1094,11 @@ const calculatePullsWithWipesAndPercent = (
 
   let skipNextPull = false;
 
+  const soaAngelDeathMap =
+    dungeonID === DungeonIDs.SPIRES_OF_ASCENSION
+      ? Object.fromEntries([...SOA_FINAL_BOSS_ANGELS].map((id) => [id, false]))
+      : {};
+
   return pulls.reduce<Omit<PersistedDungeonPull, "id">[]>(
     (acc, pull, index) => {
       if (skipNextPull) {
@@ -1109,6 +1115,21 @@ const calculatePullsWithWipesAndPercent = (
         // ignore generally excluded NPCs to reduce noise
         if (EXCLUDED_NPCS.has(npc.gameID)) {
           return false;
+        }
+
+        // each angel before Devos sends two DeathEvents - one on actual death,
+        // one when their ability is transferred to the next, around 6 seconds later
+        // which may show up in logs while already fighting the next
+        // search here for `Lakesis` for example
+        // https://www.warcraftlogs.com/reports/BafFCwYDkrX2KTpv#fight=3&type=summary&pins=2%24Off%24%23244F4B%24expression%24type%20%3D%20%22death%22&view=events
+        if (SOA_FINAL_BOSS_ANGELS.has(npc.gameID)) {
+          const diedPrior = soaAngelDeathMap[npc.gameID];
+
+          if (diedPrior) {
+            return false;
+          }
+
+          soaAngelDeathMap[npc.gameID] = true;
         }
 
         // skip adding units that somehow appear in multiple pulls, e.g.
