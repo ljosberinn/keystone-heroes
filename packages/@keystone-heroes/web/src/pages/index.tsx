@@ -22,7 +22,7 @@ export default function Home(): JSX.Element | null {
     const { pathname, host } = new URL(url);
 
     if (host === "www.warcraftlogs.com") {
-      const maybeID = pathname.slice(9, -1);
+      const maybeID = pathname.slice(9);
 
       if (isValidReportId(maybeID)) {
         // eslint-disable-next-line @typescript-eslint/no-floating-promises
