@@ -156,7 +156,7 @@ export type FightSuccessResponse = {
       ability: Ability | null;
       interruptedAbility: Ability | null;
     })[];
-    zones: Zone["id"][];
+    zone: Zone["id"];
     percent: number;
     npcs: (Pick<PullNPC, "count"> & Pick<NPC, "id" | "name">)[];
     id: number;
@@ -553,7 +553,7 @@ const createResponseFromStoredFight = (
       events: pull.Event.map(omitNullValues),
       percent: pull.percent,
       npcs,
-      zones: [...new Set(pull.PullZone.map((pullZone) => pullZone.zone.id))],
+      zone: pull.PullZone[0].zone.id,
       id: index + 1,
     };
   });

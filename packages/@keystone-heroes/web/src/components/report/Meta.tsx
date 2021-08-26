@@ -23,7 +23,7 @@ export function Meta({
   fightID,
 }: MetaProps): JSX.Element {
   return (
-    <div className="w-full lg:w-2/6">
+    <div className="w-full lg:w-1/6">
       <div className="justify-between md:flex lg:block">
         <h1 className="text-4xl font-bold">
           <ExternalLink
@@ -71,29 +71,41 @@ export function Meta({
               className="flex justify-between sm:flex-col lg:flex-row"
               key={player.actorID}
             >
-              <Link
-                href={`/character/${player.region.toLowerCase()}/${player.server.toLowerCase()}/${player.name.toLowerCase()}`}
-                key={player.actorID}
-                prefetch={false}
-              >
-                <a
-                  className="flex items-center space-x-2"
-                  onClick={(event) => {
-                    event.preventDefault();
-                    // eslint-disable-next-line no-alert
-                    alert("not yet implemented");
-                  }}
+              <div className="flex space-x-2">
+                <Link
+                  href={`/character/${player.region.toLowerCase()}/${player.server.toLowerCase()}/${player.name.toLowerCase()}`}
+                  key={player.actorID}
+                  prefetch={false}
                 >
-                  <div className="w-8 h-8">
-                    <img
-                      src={`/static/specs/${player.class}-${player.spec.name}.jpg`}
-                      alt={`${player.spec.name} ${player.class}`}
-                      className="object-cover w-full h-full rounded-full"
-                    />
-                  </div>{" "}
-                  <span>{player.name}</span>{" "}
-                </a>
-              </Link>
+                  <a
+                    className="flex items-center space-x-2"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      // eslint-disable-next-line no-alert
+                      alert("not yet implemented");
+                    }}
+                  >
+                    <div className="w-8 h-8">
+                      <img
+                        src={`/static/specs/${player.class}-${player.spec.name}.jpg`}
+                        alt={`${player.spec.name} ${player.class}`}
+                        className="object-cover w-full h-full rounded-full"
+                      />
+                    </div>{" "}
+                    <span>{player.name}</span>{" "}
+                  </a>
+                </Link>
+                {/* <WarcraftLogsProfileLink
+                  name={player.name}
+                  server={player.server}
+                  region={player.region}
+                />
+                <RaiderIOLink
+                  name={player.name}
+                  server={player.server}
+                  region={player.region}
+                /> */}
+              </div>
               <div className="flex pt-2">
                 {player.tormented.map((powerPickupEvent) => {
                   return (
@@ -124,3 +136,40 @@ export function Meta({
     </div>
   );
 }
+
+// type LinkProps = Pick<
+//   MetaProps["player"][number],
+//   "name" | "server" | "region"
+// >;
+
+// function RaiderIOLink({ name, server, region }: LinkProps): JSX.Element {
+//   return (
+//     <ExternalLink
+//       href={`https://raider.io/characters/${region}/${server}/${name}`}
+//     >
+//       <img
+//         src="/static/icons/rio.svg"
+//         alt="Raider.io profile"
+//         className="w-4 h-4"
+//       />
+//     </ExternalLink>
+//   );
+// }
+
+// function WarcraftLogsProfileLink({
+//   name,
+//   server,
+//   region,
+// }: LinkProps): JSX.Element {
+//   return (
+//     <ExternalLink
+//       href={`https://www.warcraftlogs.com/character/${region}/${server}/${name}`}
+//     >
+//       <img
+//         src="/static/icons/wcl.png"
+//         alt="WarcraftLogs profile"
+//         className="w-4 h-4"
+//       />
+//     </ExternalLink>
+//   );
+// }

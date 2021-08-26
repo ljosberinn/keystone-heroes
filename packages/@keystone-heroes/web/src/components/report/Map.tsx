@@ -87,8 +87,8 @@ export function Map({ zones, pulls }: MapProps): JSX.Element {
   const tabPanelRef = useRef<HTMLDivElement | null>(null);
   const selectedPull = useReportStore((state) => state.selectedPull);
 
-  const zoneToSelect = pulls[selectedPull - 1].zones;
-  const tab = zones.findIndex((zone) => zone.id === zoneToSelect[0]);
+  const zoneToSelect = pulls[selectedPull - 1].zone;
+  const tab = zones.findIndex((zone) => zone.id === zoneToSelect);
   const [selectedTab, setSelectedTab] = useState(tab);
 
   const shouldFocusRef = useRef(false);
@@ -140,7 +140,7 @@ export function Map({ zones, pulls }: MapProps): JSX.Element {
   );
 
   return (
-    <section className="w-full lg:w-4/6">
+    <section className="w-full max-w-screen-xl lg:w-5/6">
       <h2 className="text-2xl font-bold">Route</h2>
       <svg height="0" width="0">
         <marker
@@ -213,8 +213,18 @@ export function Map({ zones, pulls }: MapProps): JSX.Element {
                   />
                 </picture>
                 <PullIndicators
-                  pulls={pulls.filter((pull) => pull.zones[0] === zone.id)}
+                  pulls={pulls}
                   imageSize={imageSize}
+                  zoneID={zone.id}
+                  onDoorClick={(zoneID: number) => {
+                    const nextZoneIndex = zones.findIndex(
+                      (zone) => zone.id === zoneID
+                    );
+
+                    if (nextZoneIndex > -1) {
+                      onTabButtonClick(nextZoneIndex);
+                    }
+                  }}
                 />
               </>
             )}
@@ -230,9 +240,18 @@ type PullIndicatorsProps = Pick<MapProps, "pulls"> & {
     HTMLImageElement,
     "clientHeight" | "clientWidth" | "offsetLeft" | "offsetTop"
   >;
+  zoneID: number;
+  onDoorClick: (zoneID: number) => void;
 };
 
-function PullIndicators({ pulls, imageSize }: PullIndicatorsProps) {
+function PullIndicators({
+  pulls,
+  imageSize,
+  zoneID,
+  onDoorClick,
+}: PullIndicatorsProps) {
+  const thisZonesPulls = pulls.filter((pull) => pull.zone === zoneID);
+
   return (
     <>
       <style jsx>
@@ -246,11 +265,47 @@ function PullIndicators({ pulls, imageSize }: PullIndicatorsProps) {
         `}
       </style>
       <svg className="absolute svg focus:outline-none">
-        {pulls.map((pull, index) => {
+        <DoorIndicators
+          id={zoneID}
+          xFactor={imageSize.clientWidth}
+          yFactor={imageSize.clientHeight}
+          onDoorClick={onDoorClick}
+        />
+        <MapChangePolyline
+          xFactor={imageSize.clientWidth}
+          yFactor={imageSize.clientHeight}
+          connections={pulls.reduce<MapChangePolylineProps["connections"]>(
+            (acc, pull, index) => {
+              const lastPull = pulls[index - 1];
+
+              if (!lastPull) {
+                return acc;
+              }
+
+              if (pull.zone !== zoneID && lastPull.zone === zoneID) {
+                return [
+                  ...acc,
+                  {
+                    lastX: lastPull.x,
+                    lastY: lastPull.y,
+                    lastZone: lastPull.zone,
+                    nextZone: pull.zone,
+                  },
+                ];
+              }
+
+              return acc;
+            },
+            []
+          )}
+        />
+        {thisZonesPulls.map((pull, index) => {
           const x = pull.x * imageSize.clientWidth;
           const y = pull.y * imageSize.clientHeight;
           const nextPull =
-            pulls[index + 1]?.id === pull.id + 1 ? pulls[index + 1] : null;
+            thisZonesPulls[index + 1]?.id === pull.id + 1
+              ? thisZonesPulls[index + 1]
+              : null;
 
           return (
             <Fragment key={pull.startTime}>
@@ -309,15 +364,15 @@ function ShroudOrInvisIndicator({
         href={img}
         width={24}
         height={24}
-        x={(twentyFivePercentX - 12).toFixed(2)}
-        y={(twentyFivePercentY - 12).toFixed(2)}
+        x={twentyFivePercentX - 12}
+        y={twentyFivePercentY - 12}
       />
       <image
         href={img}
         width={24}
         height={24}
-        x={(seventyFivePercentX - 12).toFixed(2)}
-        y={(seventyFivePercentY - 12).toFixed(2)}
+        x={seventyFivePercentX - 12}
+        y={seventyFivePercentY - 12}
       />
     </>
   );
@@ -342,42 +397,73 @@ function PullIndicatorIcon({ pull, x, y }: PullIndicatorIconProps) {
   const centerX = x - size / 2;
   const centerY = y - size / 2;
 
+  const gProps = {
+    className: "cursor-pointer",
+    onClick: () => {
+      setSelectedPull(pull.id);
+    },
+  };
+
   const sharedProps = {
     className: classnames(
-      "cursor-pointer fill-current text-black",
+      "fill-current text-black rounded-full",
       selected ? "opacity-100 outline-white" : "opacity-50"
     ),
     width: size,
     height: size,
-    onClick: () => {
-      setSelectedPull(pull.id);
-    },
-    x: centerX.toFixed(2),
-    y: centerY.toFixed(2),
+    x: centerX,
+    y: centerY,
   };
 
   if (hasBloodLust(pull)) {
-    return <image href={BLOODLUST_ICON} {...sharedProps} />;
+    return (
+      <g {...gProps}>
+        <image
+          aria-label="Bloodlust was used on this pull."
+          href={BLOODLUST_ICON}
+          {...sharedProps}
+        />
+        <text
+          textAnchor="middle"
+          x={x}
+          y={y + 21.02 / 4}
+          className="text-white fill-current"
+        >
+          {pull.id}
+        </text>
+      </g>
+    );
   }
 
   const tormentedLieutenant = findTormentedLieutenantPull(pull);
 
   if (tormentedLieutenant) {
     return (
-      <image
-        aria-label={tormentedLieutenant.name}
-        href={`${WCL_ASSET_URL}${tormentedLieutenant.icon}.jpg`}
-        {...sharedProps}
-      />
+      <g {...gProps}>
+        <image
+          aria-label={tormentedLieutenant.name}
+          href={`${WCL_ASSET_URL}${tormentedLieutenant.icon}.jpg`}
+          {...sharedProps}
+        />
+        <text
+          textAnchor="middle"
+          x={x}
+          y={y + 21.02 / 4}
+          className="text-white fill-current"
+        >
+          {pull.id}
+        </text>
+      </g>
     );
   }
 
   return (
-    <g>
-      <rect {...sharedProps} />
+    <g {...gProps}>
+      <circle cx={x} cy={y} r={15} className={sharedProps.className} />
       <text
-        x={sharedProps.x}
-        y={sharedProps.y}
+        textAnchor="middle"
+        x={x}
+        y={y + 21.02 / 4}
         className="text-white fill-current"
       >
         {pull.id}
@@ -428,9 +514,7 @@ function PullConnectionPolyline({
           "polyline stroke-current",
           invisibilityUsage ? "text-green-500" : "text-red-500"
         )}
-        points={`${x.toFixed(2)},${y.toFixed(2)} ${middleX.toFixed(
-          2
-        )},${middleY.toFixed(2)} ${nextX.toFixed(2)},${nextY.toFixed(2)}`}
+        points={`${x},${y} ${middleX},${middleY} ${nextX},${nextY}`}
       />
       {invisibilityUsage && (
         <ShroudOrInvisIndicator
@@ -441,6 +525,156 @@ function PullConnectionPolyline({
           type={invisibilityUsage}
         />
       )}
+    </>
+  );
+}
+
+type DoorIndicatorsProps = Pick<MapProps["zones"][number], "id"> &
+  Pick<PullIndicatorsProps, "onDoorClick"> & {
+    xFactor: number;
+    yFactor: number;
+  };
+
+type DoorType = "left" | "right" | "up" | "down";
+
+const zoneDoors: Record<
+  number,
+  { type: DoorType; x: number; y: number; to: number }[]
+> = {
+  1680: [
+    {
+      type: "left",
+      x: 0.252_100_840_336_134_45,
+      y: 0.566_204_287_515_762_9,
+      to: 1679,
+    },
+    {
+      type: "down",
+      x: 0.495_119_787_045_252_9,
+      y: 0.897_606_382_978_723_4,
+      to: 1678,
+    },
+    {
+      type: "right",
+      x: 0.739_436_619_718_309_9,
+      y: 0.566_204_287_515_762_9,
+      to: 1677,
+    },
+  ],
+  1679: [
+    {
+      type: "right",
+      x: 0.886_490_807_354_116_7,
+      y: 0.467_625_899_280_575_5,
+      to: 1680,
+    },
+  ],
+  1678: [
+    {
+      type: "up",
+      x: 0.480_069_324_090_121_3,
+      y: 0.117_035_110_533_159_94,
+      to: 1680,
+    },
+  ],
+  1677: [
+    {
+      type: "left",
+      x: 0.064_444_444_444_444_44,
+      y: 0.569_753_810_082_063_3,
+      to: 1680,
+    },
+  ],
+};
+
+function DoorIndicators({
+  id,
+  xFactor,
+  yFactor,
+  onDoorClick,
+}: DoorIndicatorsProps): JSX.Element | null {
+  const doors = zoneDoors[id];
+
+  if (!doors) {
+    return null;
+  }
+
+  return (
+    <g>
+      {doors.map((door) => (
+        <image
+          href={`/static/icons/door_${door.type}.png`}
+          key={door.x}
+          x={door.x * xFactor}
+          y={door.y * yFactor}
+          width="32"
+          height="22"
+          className="cursor-pointer"
+          onClick={() => {
+            onDoorClick(door.to);
+          }}
+        />
+      ))}
+    </g>
+  );
+}
+
+type MapChangePolylineProps = {
+  connections: {
+    lastX: number;
+    lastY: number;
+    lastZone: number;
+    nextZone: number;
+  }[];
+  xFactor: number;
+  yFactor: number;
+};
+
+function MapChangePolyline({
+  connections,
+  xFactor,
+  yFactor,
+}: MapChangePolylineProps): JSX.Element {
+  return (
+    <>
+      <style jsx>
+        {`
+          .polyline {
+            marker-mid: url(#triangle);
+          }
+        `}
+      </style>
+      {connections.map((connection) => {
+        const doors = zoneDoors[connection.lastZone];
+
+        if (!doors) {
+          return null;
+        }
+
+        const targetDoor = doors.find(
+          (door) => door.to === connection.nextZone
+        );
+
+        if (!targetDoor) {
+          return null;
+        }
+        const middleX =
+          connection.lastX + (targetDoor.x - connection.lastX) / 2;
+        const middleY =
+          connection.lastY + (targetDoor.y - connection.lastY) / 2;
+
+        return (
+          <polyline
+            key={connection.lastX + connection.lastY}
+            className={classnames("polyline stroke-current text-blue-500")}
+            points={`${connection.lastX * xFactor},${
+              connection.lastY * yFactor
+            } ${middleX * xFactor},${middleY * yFactor} ${
+              targetDoor.x * xFactor
+            },${targetDoor.y * yFactor}`}
+          />
+        );
+      })}
     </>
   );
 }
