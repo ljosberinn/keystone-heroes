@@ -3,10 +3,7 @@ import fetch from "node-fetch";
 import { resolve } from "path";
 import { format } from "prettier";
 
-import {
-  tormentedLieutenants,
-  tormentedSpells,
-} from "./events/affixes/tormented";
+import { tormentedSpells } from "./events/affixes/tormented";
 
 type NPCName = {
   id: number;
@@ -26,16 +23,10 @@ async function loadNPCNames() {
     "https://assets.rpglogs.com/json/warcraft/npc-names.json"
   );
   const json: NPCName[] = await response.json();
-  const extracted = [
-    ...json.map((dataset) => ({
-      id: dataset.id,
-      name: dataset.name_enus,
-    })),
-    ...tormentedLieutenants.map((lieutenant) => ({
-      id: lieutenant.id,
-      name: lieutenant.name,
-    })),
-  ];
+  const extracted = json.map((dataset) => ({
+    id: dataset.id,
+    name: dataset.name_enus,
+  }));
 
   const targetPath = resolve("../db/raw/all-npcs.json");
   writeFileSync(
