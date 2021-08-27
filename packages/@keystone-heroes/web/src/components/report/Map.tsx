@@ -156,34 +156,45 @@ export function Map({ zones, pulls }: MapProps): JSX.Element {
           <path d="M 0 0 L 10 5 L 0 10 z" fill="white" />
         </marker>
       </svg>
-      <div role="tablist" aria-orientation="horizontal" className="flex">
-        {zones.map((zone, index) => {
-          const selected = index === selectedTab;
+      <div className="flex justify-between">
+        <div role="tablist" aria-orientation="horizontal" className="flex">
+          {zones.map((zone, index) => {
+            const selected = index === selectedTab;
 
-          return (
-            <div className="p-4" key={zone.id}>
-              <button
-                type="button"
-                role="tab"
-                data-orientation="horizontal"
-                aria-controls={`tabpanel-${zone.id}`}
-                id={`tab-${zone.id}`}
-                onKeyDown={onKeyDown}
-                ref={(ref) => {
-                  buttonRefs.current[index] = ref;
-                }}
-                className={`focus:outline-none focus:ring disabled:cursor-not-allowed dark:disabled:text-coolgray-500 disabled:text-coolgray-700 ${
-                  selected ? "border-coolgray-500 font-bold" : ""
-                }`}
-                onClick={() => {
-                  onTabButtonClick(index);
-                }}
-              >
-                {zone.name}
-              </button>
-            </div>
-          );
-        })}
+            return (
+              <div className="p-4" key={zone.id}>
+                <button
+                  type="button"
+                  role="tab"
+                  data-orientation="horizontal"
+                  aria-controls={`tabpanel-${zone.id}`}
+                  id={`tab-${zone.id}`}
+                  onKeyDown={onKeyDown}
+                  ref={(ref) => {
+                    buttonRefs.current[index] = ref;
+                  }}
+                  className={`focus:outline-none focus:ring disabled:cursor-not-allowed dark:disabled:text-coolgray-500 disabled:text-coolgray-700 ${
+                    selected ? "border-coolgray-500 font-bold" : ""
+                  }`}
+                  onClick={() => {
+                    onTabButtonClick(index);
+                  }}
+                >
+                  {zone.name}
+                </button>
+              </div>
+            );
+          })}
+        </div>
+        <div className="p-4">
+          <button
+            type="button"
+            disabled
+            className="focus:outline-none focus:ring disabled:cursor-not-allowed dark:disabled:text-coolgray-500 disabled:text-coolgray-700"
+          >
+            Map Options
+          </button>
+        </div>
       </div>
       {zones.map((zone, index) => {
         const hidden = index !== selectedTab;
@@ -274,30 +285,8 @@ function PullIndicators({
         <MapChangePolyline
           xFactor={imageSize.clientWidth}
           yFactor={imageSize.clientHeight}
-          connections={pulls.reduce<MapChangePolylineProps["connections"]>(
-            (acc, pull, index) => {
-              const lastPull = pulls[index - 1];
-
-              if (!lastPull) {
-                return acc;
-              }
-
-              if (pull.zone !== zoneID && lastPull.zone === zoneID) {
-                return [
-                  ...acc,
-                  {
-                    lastX: lastPull.x,
-                    lastY: lastPull.y,
-                    lastZone: lastPull.zone,
-                    nextZone: pull.zone,
-                  },
-                ];
-              }
-
-              return acc;
-            },
-            []
-          )}
+          zoneID={zoneID}
+          pulls={pulls}
         />
         {thisZonesPulls.map((pull, index) => {
           const x = pull.x * imageSize.clientWidth;
@@ -541,6 +530,84 @@ const zoneDoors: Record<
   number,
   { type: DoorType; x: number; y: number; to: number }[]
 > = {
+  // Theater of Pain
+  1683: [
+    {
+      type: "down",
+      x: 0.490_686_098_654_708_5,
+      y: 0.403_768_506_056_527_6,
+      to: 1684,
+    },
+  ],
+  1684: [
+    {
+      type: "up",
+      x: 0.305_970_149_253_731_34,
+      y: 0.107_692_307_692_307_7,
+      to: 1685,
+    },
+    {
+      type: "left",
+      x: 0.186_567_164_179_104_5,
+      y: 0.268_531_468_531_468_53,
+      to: 1686,
+    },
+    {
+      type: "up",
+      x: 0.306_902_985_074_626_9,
+      y: 0.323_076_923_076_923_1,
+      to: 1683,
+    },
+  ],
+  1685: [
+    {
+      type: "down",
+      x: 0.697_980_684_811_237_9,
+      y: 0.869_565_217_391_304_3,
+      to: 1684,
+    },
+  ],
+  1686: [
+    {
+      type: "down",
+      x: 0.229_148_375_768_217_73,
+      y: 0.304_347_826_086_956_54,
+      to: 1687,
+    },
+    {
+      type: "down",
+      x: 0.160_667_251_975_417_04,
+      y: 0.557_312_252_964_426_9,
+      to: 1687,
+    },
+    {
+      type: "right",
+      x: 0.797_190_517_998_244,
+      y: 0.682_476_943_346_508_5,
+      to: 1684,
+    },
+  ],
+  1687: [
+    {
+      type: "up",
+      x: 0.232_660_228_270_412_63,
+      y: 0.223_978_919_631_093_54,
+      to: 1686,
+    },
+    {
+      type: "up",
+      x: 0.158_911_325_724_319_57,
+      y: 0.565_217_391_304_347_8,
+      to: 1686,
+    },
+    {
+      type: "up",
+      x: 0.631_255_487_269_534_7,
+      y: 0.824_769_433_465_085_7,
+      to: 1686,
+    },
+  ],
+  // De Other Side
   1680: [
     {
       type: "left",
@@ -620,21 +687,20 @@ function DoorIndicators({
 }
 
 type MapChangePolylineProps = {
-  connections: {
-    lastX: number;
-    lastY: number;
-    lastZone: number;
-    nextZone: number;
-  }[];
+  pulls: FightSuccessResponse["pulls"];
+  zoneID: number;
   xFactor: number;
   yFactor: number;
 };
 
 function MapChangePolyline({
-  connections,
+  pulls,
   xFactor,
   yFactor,
+  zoneID,
 }: MapChangePolylineProps): JSX.Element {
+  const doorXOffset = 0.013_640_238_704_177_323;
+  const doorYOffset = 0.014_066_496_163_682_864;
   return (
     <>
       <style jsx>
@@ -644,37 +710,105 @@ function MapChangePolyline({
           }
         `}
       </style>
-      {connections.map((connection) => {
-        const doors = zoneDoors[connection.lastZone];
 
-        if (!doors) {
-          return null;
-        }
+      {pulls
+        .reduce<
+          {
+            startX: number;
+            middleX: number;
+            endX: number;
+            startY: number;
+            middleY: number;
+            endY: number;
+            key: number;
+          }[]
+        >((acc, pull, index) => {
+          const lastPull = pulls[index - 1];
 
-        const targetDoor = doors.find(
-          (door) => door.to === connection.nextZone
-        );
+          if (!lastPull) {
+            return acc;
+          }
 
-        if (!targetDoor) {
-          return null;
-        }
-        const middleX =
-          connection.lastX + (targetDoor.x - connection.lastX) / 2;
-        const middleY =
-          connection.lastY + (targetDoor.y - connection.lastY) / 2;
+          const lastPullWasInOtherZone = lastPull.zone !== zoneID;
+          const thisPullIsInThisZone = pull.zone === zoneID;
 
-        return (
-          <polyline
-            key={connection.lastX + connection.lastY}
-            className={classnames("polyline stroke-current text-blue-500")}
-            points={`${connection.lastX * xFactor},${
-              connection.lastY * yFactor
-            } ${middleX * xFactor},${middleY * yFactor} ${
-              targetDoor.x * xFactor
-            },${targetDoor.y * yFactor}`}
-          />
-        );
-      })}
+          if (lastPullWasInOtherZone && thisPullIsInThisZone) {
+            const doors = zoneDoors[pull.zone];
+
+            if (!doors) {
+              return acc;
+            }
+
+            const originDoor = doors.find((door) => door.to === lastPull.zone);
+
+            if (!originDoor) {
+              return acc;
+            }
+
+            const middleX = pull.x + (originDoor.x + doorXOffset - pull.x) / 2;
+            const middleY = pull.y + (originDoor.y + doorYOffset - pull.y) / 2;
+
+            return [
+              ...acc,
+              {
+                startX: (originDoor.x + doorXOffset) * xFactor,
+                middleX: middleX * xFactor,
+                endX: pull.x * xFactor,
+
+                startY: (originDoor.y + doorYOffset) * yFactor,
+                middleY: middleY * yFactor,
+                endY: pull.y * yFactor,
+
+                key: index,
+              },
+            ];
+          }
+
+          if (!lastPullWasInOtherZone && !thisPullIsInThisZone) {
+            const doors = zoneDoors[lastPull.zone];
+
+            if (!doors) {
+              return acc;
+            }
+
+            const targetDoor = doors.find((door) => door.to === pull.zone);
+
+            if (!targetDoor) {
+              return acc;
+            }
+
+            const middleX =
+              lastPull.x + (targetDoor.x + doorXOffset - lastPull.x) / 2;
+            const middleY =
+              lastPull.y + (targetDoor.y + doorYOffset - lastPull.y) / 2;
+
+            return [
+              ...acc,
+              {
+                startX: lastPull.x * xFactor,
+                middleX: middleX * xFactor,
+                endX: (targetDoor.x + doorXOffset) * xFactor,
+
+                startY: lastPull.y * yFactor,
+                middleY: middleY * yFactor,
+                endY: (targetDoor.y + doorYOffset) * yFactor,
+
+                key: index,
+              },
+            ];
+          }
+
+          return acc;
+        }, [])
+        .map(({ startX, startY, middleX, middleY, endX, endY, key }) => {
+          return (
+            <polyline
+              key={key}
+              className="text-blue-900 stroke-current polyline"
+              points={`${startX},${startY} ${middleX},${middleY} ${endX},${endY}`}
+            />
+          );
+        })}
     </>
   );
 }
