@@ -1,4 +1,5 @@
 import type { FightSuccessResponse } from "@keystone-heroes/api/functions/fight";
+import dynamic from "next/dynamic";
 import type { KeyboardEvent } from "react";
 import { Fragment, useState, useRef, useEffect, useCallback } from "react";
 import { useReportStore } from "src/store";
@@ -82,10 +83,19 @@ function useImageDimensions() {
   };
 }
 
+const MapOptions = dynamic(
+  () => import(/* webpackChunkName: "MapOptions" */ "./MapOptions"),
+  {
+    ssr: false,
+  }
+);
+
 export function Map({ zones, pulls }: MapProps): JSX.Element {
   const { imageRef, imageSize, handleResize } = useImageDimensions();
   const tabPanelRef = useRef<HTMLDivElement | null>(null);
   const selectedPull = useReportStore((state) => state.selectedPull);
+  const toggleMapOptions = useReportStore((state) => state.toggleMapOptions);
+  const mapOptionsVisible = useReportStore((state) => state.mapOptions.visible);
 
   const zoneToSelect = pulls[selectedPull - 1].zone;
   const tab = zones.findIndex((zone) => zone.id === zoneToSelect);
@@ -189,11 +199,12 @@ export function Map({ zones, pulls }: MapProps): JSX.Element {
         <div className="p-4">
           <button
             type="button"
-            disabled
+            onClick={toggleMapOptions}
             className="focus:outline-none focus:ring disabled:cursor-not-allowed dark:disabled:text-coolgray-500 disabled:text-coolgray-700"
           >
             Map Options
           </button>
+          {mapOptionsVisible && <MapOptions onClose={toggleMapOptions} />}
         </div>
       </div>
       {zones.map((zone, index) => {
@@ -477,6 +488,14 @@ function PullConnectionPolyline({
   y,
   imageSize,
 }: PullConnectionPolylineProps) {
+  const renderPullConnectionLines = useReportStore(
+    (state) => state.mapOptions.renderPullConnectionLines
+  );
+
+  if (!renderPullConnectionLines) {
+    return null;
+  }
+
   const invisibilityUsage = nextPull ? detectInvisibilityUsage(nextPull) : null;
 
   const nextX = nextPull ? nextPull.x * (imageSize.clientWidth ?? 0) : null;
@@ -809,9 +828,7 @@ function DoorIndicators({
           key={door.x}
           x={door.x * xFactor}
           y={door.y * yFactor}
-          width="32"
-          height="22"
-          className="cursor-pointer"
+          className="w-8 h-6 cursor-pointer"
           onClick={() => {
             onDoorClick(door.to);
           }}
@@ -833,9 +850,19 @@ function MapChangePolyline({
   xFactor,
   yFactor,
   zoneID,
-}: MapChangePolylineProps): JSX.Element {
-  const doorXOffset = 0.013_640_238_704_177_323;
-  const doorYOffset = 0.014_066_496_163_682_864;
+}: MapChangePolylineProps): JSX.Element | null {
+  const renderMapChangeLines = useReportStore(
+    (state) => state.mapOptions.renderMapChangeLines
+  );
+
+  if (!renderMapChangeLines) {
+    return null;
+  }
+
+  // door width / 2 / svg width
+  const doorXOffset = 0.012_830_793_905_372_895;
+  const doorYOffset = 0.014_440_433_212_996_39;
+
   return (
     <>
       <style jsx>
