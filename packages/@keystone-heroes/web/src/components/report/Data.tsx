@@ -1,4 +1,5 @@
 import type { FightSuccessResponse } from "@keystone-heroes/api/functions/fight";
+import { Fragment } from "react";
 import { fightTimeToString } from "src/utils";
 
 export type DataProps = {
@@ -87,32 +88,51 @@ export function Data({ fight }: DataProps): JSX.Element {
                 .toFixed(2);
 
               return (
-                <tr key={pull.id}>
-                  <td>{pull.id}</td>
-                  <td className="text-right">
-                    {pull.percent > 0 ? (
-                      <span>{pull.percent.toFixed(2)}%</span>
-                    ) : (
-                      "-"
-                    )}{" "}
-                    <span className="italic text-gray-500 dark:text-gray-400">
-                      ({percentUpToThisPull}%)
-                    </span>
-                  </td>
-                  <td className="text-right">
-                    {fightTimeToString(pull.endTime - pull.startTime, true)}{" "}
-                    <span className="italic text-gray-500 dark:text-gray-400">
-                      (
-                      {fightTimeToString(
-                        pull.endTime - fight.pulls[0].startTime,
-                        true
-                      )}
-                      )
-                    </span>
-                  </td>
-                  <td className="text-right">{enemies}</td>
-                  <td className="text-right">{deaths === 0 ? "" : deaths}</td>
-                </tr>
+                <Fragment key={pull.id}>
+                  <tr>
+                    <td>{pull.id}</td>
+                    <td className="text-right">
+                      {pull.percent > 0 ? (
+                        <span>{pull.percent.toFixed(2)}%</span>
+                      ) : (
+                        "-"
+                      )}{" "}
+                      <span className="italic text-gray-500 dark:text-gray-400">
+                        ({percentUpToThisPull}%)
+                      </span>
+                    </td>
+                    <td className="text-right">
+                      {fightTimeToString(pull.endTime - pull.startTime, true)}{" "}
+                      <span className="italic text-gray-500 dark:text-gray-400">
+                        (
+                        {fightTimeToString(
+                          pull.endTime - fight.pulls[0].startTime,
+                          true
+                        )}
+                        )
+                      </span>
+                    </td>
+                    <td className="text-right">{enemies}</td>
+                    <td className="text-right">{deaths === 0 ? "" : deaths}</td>
+                  </tr>
+                  {/* <tr>
+                    <td className="flex space-x-2">
+                      {pull.npcs.map((npc) => (
+                        <div
+                          key={npc.id}
+                          className="flex w-8 h-8 lg:w-12 lg:h-12"
+                        >
+                          {npc.count}x{" "}
+                          <img
+                            src={`/static/npcs/${npc.id}.png`}
+                            alt={npc.name}
+                            className="object-cover w-full h-full rounded-full"
+                          />
+                        </div>
+                      ))}
+                    </td>
+                  </tr> */}
+                </Fragment>
               );
             })}
           </tbody>

@@ -58,6 +58,8 @@ enum Boss {
   MARGRAVE_STRADAMA = 164_267,
 }
 
+// export const isBoss = (id: number): id is Boss => id in Boss;
+
 export enum DungeonIDs {
   SANGUINE_DEPTHS = 2284,
   SPIRES_OF_ASCENSION = 2285,
