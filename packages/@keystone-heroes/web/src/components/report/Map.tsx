@@ -1,4 +1,5 @@
 import type { FightSuccessResponse } from "@keystone-heroes/api/functions/fight";
+// import { isBoss } from "@keystone-heroes/db/data/boss";
 import dynamic from "next/dynamic";
 import type { KeyboardEvent } from "react";
 import { Fragment, useState, useRef, useEffect, useCallback } from "react";
@@ -457,8 +458,26 @@ function PullIndicatorIcon({ pull, x, y }: PullIndicatorIconProps) {
     );
   }
 
+  // const boss = pull.npcs.find((npc) => {
+  //   return isBoss(npc.id);
+  // });
+
   return (
     <g {...gProps}>
+      {/* {boss ? (
+        <image
+          aria-label={boss.name}
+          href={`/static/npcs/${boss.id}.png`}
+          className={classnames(
+            selected ? "outline-white opacity-100" : "opacity-70"
+          )}
+          width={32}
+          height={32}
+          x={x - 32 / 2}
+          y={y - 32 / 2}
+        />
+      ) : (
+        <> */}
       <circle cx={x} cy={y} r={15} className={sharedProps.className} />
       <text
         textAnchor="middle"
@@ -468,6 +487,8 @@ function PullIndicatorIcon({ pull, x, y }: PullIndicatorIconProps) {
       >
         {pull.id}
       </text>
+      {/* </>
+      )} */}
     </g>
   );
 }

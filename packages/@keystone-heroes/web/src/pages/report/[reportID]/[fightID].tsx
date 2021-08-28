@@ -106,7 +106,7 @@ export default function FightID({ cache }: FightIDProps): JSX.Element | null {
         <Map zones={fight.dungeon.zones} pulls={fight.pulls} />
       </div>
 
-      <Data fight={fight} />
+      <Data fight={fight} reportID={reportID} fightID={fightID} />
     </>
   );
 }

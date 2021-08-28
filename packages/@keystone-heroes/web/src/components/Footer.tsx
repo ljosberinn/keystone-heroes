@@ -28,7 +28,7 @@ export function Footer(): JSX.Element {
           <Link href="/">
             <a className="flex flex-col items-center space-y-2 text-center md:flex-row lg:items-start md:items-center md:text-left md:space-x-2 md:space-y-0 undefined">
               <div className="mt-1 text-lg font-semibold tracking-tight leading-tighter">
-                Lorem ipsum dolor sit amet.
+                Keystone Heroes
               </div>
             </a>
           </Link>
