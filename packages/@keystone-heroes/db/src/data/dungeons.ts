@@ -131,6 +131,8 @@ export const EXCLUDED_NPCS = new Set([
   165_556, // Fleeting Manifestation via Executor Tarvold (spawned during fight)
   169_753, // Famished Tick - additionally spawned
   168_457, // Stonewall Gargon - gauntlet spawn
+  156_540, // Scrawny Rat - critter
+  168_703, // Spider - critter
   // TOP
   170_234, // Oppressive Banner via Xav the Unfallen
   165_260, // Oozing Leftovers via Gorechop
