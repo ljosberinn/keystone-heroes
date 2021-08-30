@@ -3,6 +3,7 @@ import type { FightSuccessResponse } from "@keystone-heroes/api/functions/fight"
 import dynamic from "next/dynamic";
 import type { KeyboardEvent } from "react";
 import { Fragment, useState, useRef, useEffect, useCallback } from "react";
+import { usePrevious } from "src/hooks/usePrevious";
 import { useReportStore } from "src/store";
 import { classnames } from "src/utils/classnames";
 import shallow from "zustand/shallow";
@@ -25,7 +26,7 @@ type MapProps = {
 };
 
 function useImageDimensions() {
-  const [imageSize, setImageSize] = useState<PullIndicatorsProps["imageSize"]>({
+  const [imageSize, setImageSize] = useState<SvgProps["imageSize"]>({
     clientHeight: 0,
     clientWidth: 0,
     offsetLeft: 0,
@@ -97,6 +98,7 @@ export function Map({ zones, pulls }: MapProps): JSX.Element {
   const selectedPull = useReportStore((state) => state.selectedPull);
   const toggleMapOptions = useReportStore((state) => state.toggleMapOptions);
   const mapOptionsVisible = useReportStore((state) => state.mapOptions.visible);
+  const previouslySelectedPull = usePrevious(selectedPull);
 
   const zoneToSelect = pulls[selectedPull - 1].zone;
   const tab = zones.findIndex((zone) => zone.id === zoneToSelect);
@@ -111,6 +113,30 @@ export function Map({ zones, pulls }: MapProps): JSX.Element {
       buttonRefs.current[selectedTab]?.focus();
     }
   });
+
+  // synchronize selected tab with pull selection in <Data />
+  useEffect(() => {
+    if (previouslySelectedPull === selectedPull) {
+      return;
+    }
+
+    const nextZone = pulls[selectedPull - 1].zone;
+    const nextTab = zones.findIndex((zone) => zone.id === nextZone);
+
+    if (nextTab === selectedTab) {
+      return;
+    }
+
+    setSelectedTab(nextTab);
+  }, [
+    selectedPull,
+    previouslySelectedPull,
+    pulls,
+    tab,
+    zones,
+    zoneToSelect,
+    selectedTab,
+  ]);
 
   const onTabButtonClick = useCallback((nextIndex) => {
     setSelectedTab(nextIndex);
@@ -151,7 +177,7 @@ export function Map({ zones, pulls }: MapProps): JSX.Element {
   );
 
   return (
-    <section className="w-full max-w-screen-xl lg:w-5/6">
+    <section className="w-full max-w-screen-xl lg:w-4/6">
       <h2 className="text-2xl font-bold">Route</h2>
       <svg height="0" width="0">
         <marker
@@ -197,16 +223,7 @@ export function Map({ zones, pulls }: MapProps): JSX.Element {
             );
           })}
         </div>
-        <div className="p-4">
-          <button
-            type="button"
-            onClick={toggleMapOptions}
-            className="focus:outline-none focus:ring disabled:cursor-not-allowed dark:disabled:text-coolgray-500 disabled:text-coolgray-700"
-          >
-            Map Options
-          </button>
-          {mapOptionsVisible && <MapOptions onClose={toggleMapOptions} />}
-        </div>
+        {mapOptionsVisible && <MapOptions onClose={toggleMapOptions} />}
       </div>
       {zones.map((zone, index) => {
         const hidden = index !== selectedTab;
@@ -224,7 +241,7 @@ export function Map({ zones, pulls }: MapProps): JSX.Element {
             key={zone.id}
           >
             {hidden ? null : (
-              <>
+              <div className="relative">
                 <picture>
                   {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
                   <img
@@ -235,7 +252,8 @@ export function Map({ zones, pulls }: MapProps): JSX.Element {
                     onLoad={handleResize}
                   />
                 </picture>
-                <PullIndicators
+
+                <Svg
                   pulls={pulls}
                   imageSize={imageSize}
                   zoneID={zone.id}
@@ -249,7 +267,19 @@ export function Map({ zones, pulls }: MapProps): JSX.Element {
                     }
                   }}
                 />
-              </>
+
+                <button
+                  type="button"
+                  onClick={toggleMapOptions}
+                  className="absolute flex p-2 rounded-full focus:outline-none top-2 right-2 bg-coolgray-800"
+                >
+                  <img
+                    src="/static/icons/trade_engineering.jpg"
+                    className="object-cover w-8 h-8 rounded-full"
+                    alt="Map Options"
+                  />
+                </button>
+              </div>
             )}
           </div>
         );
@@ -258,7 +288,7 @@ export function Map({ zones, pulls }: MapProps): JSX.Element {
   );
 }
 
-type PullIndicatorsProps = Pick<MapProps, "pulls"> & {
+type SvgProps = Pick<MapProps, "pulls"> & {
   imageSize: Pick<
     HTMLImageElement,
     "clientHeight" | "clientWidth" | "offsetLeft" | "offsetTop"
@@ -267,12 +297,7 @@ type PullIndicatorsProps = Pick<MapProps, "pulls"> & {
   onDoorClick: (zoneID: number) => void;
 };
 
-function PullIndicators({
-  pulls,
-  imageSize,
-  zoneID,
-  onDoorClick,
-}: PullIndicatorsProps) {
+function Svg({ pulls, imageSize, zoneID, onDoorClick }: SvgProps) {
   const thisZonesPulls = pulls.filter((pull) => pull.zone === zoneID);
 
   return (
@@ -559,7 +584,7 @@ function PullConnectionPolyline({
 }
 
 type DoorIndicatorsProps = Pick<MapProps["zones"][number], "id"> &
-  Pick<PullIndicatorsProps, "onDoorClick"> & {
+  Pick<SvgProps, "onDoorClick"> & {
     xFactor: number;
     yFactor: number;
   };

@@ -23,7 +23,7 @@ export function Meta({
   fightID,
 }: MetaProps): JSX.Element {
   return (
-    <div className="w-full lg:w-1/6">
+    <div className="w-full lg:w-2/6">
       <div className="justify-between md:flex lg:block">
         <h1 className="text-4xl font-bold">
           <ExternalLink
