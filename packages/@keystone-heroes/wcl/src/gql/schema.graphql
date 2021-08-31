@@ -3602,6 +3602,7 @@ type GameItemSet {
 }
 
 type ViewModels {
+  googleAnalytics: JSON
   game: JSON
   headerTitle: JSON
   articleCategories: JSON

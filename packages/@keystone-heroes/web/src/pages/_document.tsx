@@ -1,4 +1,4 @@
-import Document, { Html, Head, Main, NextScript } from "next/document";
+import { Html, Head, Main, NextScript } from "next/document";
 
 import { icons } from "../icons";
 
@@ -25,6 +25,3 @@ export default function CustomDocument(/* props: DocumentProps*/): JSX.Element {
     </Html>
   );
 }
-
-CustomDocument.renderDocument = Document.renderDocument;
-CustomDocument.getInitialProps = Document.getInitialProps;

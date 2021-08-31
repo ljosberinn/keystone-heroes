@@ -1563,6 +1563,7 @@ export type UserDataUserArgs = {
 
 export type ViewModels = {
   __typename?: "ViewModels";
+  googleAnalytics?: Maybe<Scalars["JSON"]>;
   game?: Maybe<Scalars["JSON"]>;
   headerTitle?: Maybe<Scalars["JSON"]>;
   articleCategories?: Maybe<Scalars["JSON"]>;

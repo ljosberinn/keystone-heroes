@@ -29,7 +29,7 @@ import {
   isValidReportId,
   maybeOngoingReport,
 } from "@keystone-heroes/wcl/utils";
-import type { Awaited, DeepRequired } from "ts-essentials";
+import type { Awaited, DeepRequired, DeepNonNullable } from "ts-essentials";
 
 import { sortByRole } from "../utils";
 import {
@@ -89,7 +89,7 @@ type MaybeFight = DeepNullablePath<
 >;
 
 type FightWithNullableRating = Omit<
-  DeepRequired<MaybeFight>,
+  DeepNonNullable<DeepRequired<MaybeFight>>,
   "rating" | "__typename" | "gameZone"
 > & {
   // must be separately validated to indicate different error
@@ -98,7 +98,10 @@ type FightWithNullableRating = Omit<
   gameZone: null | Pick<GameZone, "id">;
 };
 
-type Fight = Omit<DeepRequired<MaybeFight>, "gameZone" | "__typename"> &
+type Fight = Omit<
+  DeepNonNullable<DeepRequired<MaybeFight>>,
+  "gameZone" | "__typename"
+> &
   Pick<FightWithNullableRating, "gameZone">;
 
 type Player = {
