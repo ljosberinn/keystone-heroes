@@ -10,7 +10,7 @@ export const createDungeonTimer = (
   initialTime * 60 * 1000 * 0.6,
 ];
 
-enum Boss {
+export enum Boss {
   // SoA
   KIN_TARA = 162_059,
   AZULES = 163_077,
@@ -119,6 +119,7 @@ export const EXCLUDED_NPCS = new Set([
   164_702, // Carrion Worm via Blightbone
   168_246, // Reanimated Crossbowman via Amarth
   164_427, // Reanimated Warrior via Amarth
+  164_414, // Reanimated Mage via Amarth
   164_578, // Stitchflesh's Creation
   164_815, // Zolramus Siphoner via Nalthor the Rimebinder
   // HOA

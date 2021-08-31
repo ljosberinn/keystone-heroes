@@ -5,6 +5,7 @@ import {
   allBossIDs,
   DungeonIDs,
   SOA_FINAL_BOSS_ANGELS,
+  Boss,
 } from "@keystone-heroes/db/data/dungeons";
 import { prisma } from "@keystone-heroes/db/prisma";
 import type {
@@ -39,6 +40,7 @@ import { getEvents } from "@keystone-heroes/wcl/queries/events";
 import {
   tormentedAbilityGameIDSet,
   tormentedLieutenantIDSet,
+  tormentedLieutenants,
 } from "@keystone-heroes/wcl/queries/events/affixes/tormented";
 import type {
   DeathEvent,
@@ -1044,8 +1046,8 @@ const createTotalCountReducer = (
 };
 
 const calculatePullCoordinates = (
-  { x, y }: Omit<PersistedDungeonPull, "id" | "percent" | "isWipe">,
-  { maxX, minX, minY, maxY }: Omit<Zone, "dungeonID">,
+  { x, y, enemyNPCs }: Omit<PersistedDungeonPull, "id" | "percent" | "isWipe">,
+  { maxX, minX, minY, maxY, id }: Omit<Zone, "dungeonID">,
   dungeonID: DungeonIDs,
   npcs: { gameID: number }[]
 ) => {
@@ -1055,6 +1057,8 @@ const calculatePullCoordinates = (
     dungeonID === DungeonIDs.MISTS_OF_TIRNA_SCITHE &&
     x === -2_147_483_648 &&
     y === -2_147_483_648 &&
+    // length check of pull is valid here because if the lt would have been
+    // added late in a prior pull, x and y wouldn't be out of bounds
     npcs.length === 1 &&
     tormentedLieutenantIDSet.has(npcs[0].gameID)
   ) {
@@ -1062,6 +1066,118 @@ const calculatePullCoordinates = (
       x: 0.702_702_702_702_702_7,
       y: 0.248_366_013_071_895_43,
     };
+  }
+
+  if (dungeonID === DungeonIDs.THE_NECROTIC_WAKE) {
+    if (id === 1667) {
+      if (enemyNPCs.some((npc) => npc.gameID === Boss.SURGEON_STITCHFLESH)) {
+        return {
+          x: 0.509_844_559_585_492_2,
+          y: 0.434_782_608_695_652_16,
+        };
+      }
+
+      // gauntlet start
+      if (
+        enemyNPCs.some(
+          (npc) => npc.gameID === 167_731 || npc.gameID === 173_044
+        )
+      ) {
+        return {
+          x: 0.373_056_994_818_652_84,
+          y: 0.372_670_807_453_416_13,
+        };
+      }
+
+      // gauntlet left
+      if (enemyNPCs.some((npc) => npc.gameID === 163_621)) {
+        return {
+          x: 0.373_056_994_818_652_84,
+          y: 0.372_670_807_453_416_13,
+        };
+      }
+
+      // gauntlet right
+      if (enemyNPCs.some((npc) => npc.gameID === 163_620)) {
+        return {
+          x: 0.632_124_352_331_606_2,
+          y: 0.372_670_807_453_416_13,
+        };
+      }
+
+      const possibleLieutenants = new Set(
+        tormentedLieutenants
+          .filter(
+            (lt) => lt.name.includes("Soggodon") || lt.name.includes("Oros")
+          )
+          .map((lt) => lt.id)
+      );
+
+      if (enemyNPCs.some((npc) => possibleLieutenants.has(npc.gameID))) {
+        return {
+          x: 0.621_761_658_031_088_1,
+          y: 0.559_006_211_180_124_2,
+        };
+      }
+
+      const enemyNPCIDs = new Set(enemyNPCs.map((npc) => npc.gameID));
+
+      const strongPatrolIDs = [172_981, 173_016, 162_729, 166_264];
+
+      if (strongPatrolIDs.every((id) => enemyNPCIDs.has(id))) {
+        return {
+          x: 0.435_233_160_621_761_65,
+          y: 0.481_366_459_627_329_2,
+        };
+      }
+
+      const weakPatrolIDs = [166_266, 166_264];
+
+      if (weakPatrolIDs.every((id) => enemyNPCIDs.has(id))) {
+        return {
+          x: 0.373_056_994_818_652_84,
+          y: 0.566_770_186_335_403_8,
+        };
+      }
+
+      // back right, now uniquely identifyable via presence of Kyrian Stitchwerk
+      if (enemyNPCIDs.has(172_981)) {
+        return {
+          x: 0.632_124_352_331_606_2,
+          y: 0.434_782_608_695_652_16,
+        };
+      }
+
+      // front right, now uniquely identifyable via lack of presence of
+      // Patchwerk Soilders
+      if (!enemyNPCIDs.has(162_729)) {
+        return {
+          x: 0.621_761_658_031_088_1,
+          y: 0.714_285_714_285_714_3,
+        };
+      }
+
+      // back left, now uniquely identifyable via presence of Loyal Creation
+      if (enemyNPCIDs.has(165_911)) {
+        return {
+          x: 0.373_056_994_818_652_84,
+          y: 0.434_782_608_695_652_16,
+        };
+      }
+
+      // only front left remaining
+      return {
+        x: 0.388_601_036_269_430_04,
+        y: 0.714_285_714_285_714_3,
+      };
+    }
+
+    if (id === 1668) {
+      return {
+        x: 0.497_409_326_424_870_46,
+        y: 0.434_782_608_695_652_16,
+      };
+    }
   }
 
   const percentX = (x - minX) / (maxX - minX);
@@ -1217,9 +1333,6 @@ const calculatePullsWithWipesAndPercent = (
         dungeonID,
         enemyNPCs
       );
-
-      // const percentX = (pull.x - zone.minX) / (zone.maxX - zone.minX);
-      // const percentY = (pull.y - zone.maxY) / (zone.minY - zone.maxY);
 
       return [
         ...acc,
