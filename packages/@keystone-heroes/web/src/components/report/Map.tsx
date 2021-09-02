@@ -92,6 +92,15 @@ const MapOptions = dynamic(
   }
 );
 
+const imageTuples = [
+  [125, "3xl"],
+  [96, "2xl"],
+  [80, "xl"],
+  [64, "lg"],
+  [48, "md"],
+  [40, "sm"],
+] as const;
+
 export function Map({ zones, pulls }: MapProps): JSX.Element {
   const { imageRef, imageSize, handleResize } = useImageDimensions();
   const tabPanelRef = useRef<HTMLDivElement | null>(null);
@@ -243,9 +252,23 @@ export function Map({ zones, pulls }: MapProps): JSX.Element {
             {hidden ? null : (
               <div className="relative">
                 <picture>
+                  {imageTuples.map(([w, prefix]) => {
+                    const url = `/static/maps/${prefix}-${w * 16}/${
+                      zone.id
+                    }.png`;
+
+                    return (
+                      <source
+                        key={w}
+                        srcSet={url}
+                        media={`(min-width: ${w * 16}px)`}
+                      />
+                    );
+                  })}
+
                   {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
                   <img
-                    src={`/static/maps/${zone.id}.png`}
+                    src={`/static/maps/sm-640/${zone.id}.png`}
                     alt={zone.name}
                     ref={imageRef}
                     className="object-cover w-full h-full"
