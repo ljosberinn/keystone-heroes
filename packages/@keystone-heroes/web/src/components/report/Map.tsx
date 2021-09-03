@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import type { KeyboardEvent } from "react";
 import { Fragment, useState, useRef, useEffect, useCallback } from "react";
 import { usePrevious } from "src/hooks/usePrevious";
-import { useReportStore } from "src/store";
+import { useMapOptions, useReportStore } from "src/store";
 import { classnames } from "src/utils/classnames";
 import shallow from "zustand/shallow";
 
@@ -105,8 +105,7 @@ export function Map({ zones, pulls }: MapProps): JSX.Element {
   const { imageRef, imageSize, handleResize } = useImageDimensions();
   const tabPanelRef = useRef<HTMLDivElement | null>(null);
   const selectedPull = useReportStore((state) => state.selectedPull);
-  const toggleMapOptions = useReportStore((state) => state.toggleMapOptions);
-  const mapOptionsVisible = useReportStore((state) => state.mapOptions.visible);
+
   const previouslySelectedPull = usePrevious(selectedPull);
 
   const zoneToSelect = pulls[selectedPull - 1].zone;
@@ -232,7 +231,7 @@ export function Map({ zones, pulls }: MapProps): JSX.Element {
             );
           })}
         </div>
-        {mapOptionsVisible && <MapOptions onClose={toggleMapOptions} />}
+        <MapOptionsWrapper />
       </div>
       {zones.map((zone, index) => {
         const hidden = index !== selectedTab;
@@ -291,23 +290,41 @@ export function Map({ zones, pulls }: MapProps): JSX.Element {
                   }}
                 />
 
-                <button
-                  type="button"
-                  onClick={toggleMapOptions}
-                  className="absolute flex p-2 rounded-full focus:outline-none top-2 right-2 bg-coolgray-800"
-                >
-                  <img
-                    src="/static/icons/trade_engineering.jpg"
-                    className="object-cover w-8 h-8 rounded-full"
-                    alt="Map Options"
-                  />
-                </button>
+                <MapOptionsToggle />
               </div>
             )}
           </div>
         );
       })}
     </section>
+  );
+}
+
+function MapOptionsWrapper() {
+  const visible = useMapOptions((state) => state.visible);
+
+  if (!visible) {
+    return null;
+  }
+
+  return <MapOptions />;
+}
+
+function MapOptionsToggle() {
+  const toggleMapOptions = useMapOptions((state) => state.toggleMapOptions);
+
+  return (
+    <button
+      type="button"
+      onClick={toggleMapOptions}
+      className="absolute flex p-2 rounded-full focus:outline-none top-2 right-2 bg-coolgray-800"
+    >
+      <img
+        src="/static/icons/trade_engineering.jpg"
+        className="object-cover w-8 h-8 rounded-full"
+        alt="Map Options"
+      />
+    </button>
   );
 }
 
@@ -557,8 +574,8 @@ function PullConnectionPolyline({
   y,
   imageSize,
 }: PullConnectionPolylineProps) {
-  const renderPullConnectionLines = useReportStore(
-    (state) => state.mapOptions.renderPullConnectionLines
+  const renderPullConnectionLines = useMapOptions(
+    (state) => state.renderPullConnectionLines
   );
 
   if (!renderPullConnectionLines) {
@@ -920,8 +937,8 @@ function MapChangePolyline({
   yFactor,
   zoneID,
 }: MapChangePolylineProps): JSX.Element | null {
-  const renderMapChangeLines = useReportStore(
-    (state) => state.mapOptions.renderMapChangeLines
+  const renderMapChangeLines = useMapOptions(
+    (state) => state.renderMapChangeLines
   );
 
   if (!renderMapChangeLines) {

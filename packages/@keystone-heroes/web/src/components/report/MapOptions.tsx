@@ -1,24 +1,23 @@
-import { useReportStore } from "src/store";
-
-export type MapOptionProps = {
-  onClose: () => void;
-};
+import { useMapOptions } from "src/store";
 
 // eslint-disable-next-line import/no-default-export
-export default function MapOptions({ onClose }: MapOptionProps): JSX.Element {
-  const toggleMapChangeLines = useReportStore(
+export default function MapOptions(): JSX.Element {
+  const onClose = useMapOptions((state) => state.toggleMapOptions);
+
+  const toggleMapChangeLines = useMapOptions(
     (state) => state.toggleMapChangeLines
   );
-  const togglePullConnectionLines = useReportStore(
+  const togglePullConnectionLines = useMapOptions(
     (state) => state.togglePullConnectionLines
   );
 
-  const renderMapChangeLines = useReportStore(
-    (state) => state.mapOptions.renderMapChangeLines
+  const renderMapChangeLines = useMapOptions(
+    (state) => state.renderMapChangeLines
   );
-  const renderPullConnectionLines = useReportStore(
-    (state) => state.mapOptions.renderPullConnectionLines
+  const renderPullConnectionLines = useMapOptions(
+    (state) => state.renderPullConnectionLines
   );
+
   return (
     <div>
       <input
