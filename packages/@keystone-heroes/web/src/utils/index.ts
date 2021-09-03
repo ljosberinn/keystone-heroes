@@ -13,3 +13,28 @@ export const fightTimeToString = (time: number, omitMs = false): string => {
     .toString()
     .padStart(3, "0")}`;
 };
+
+type WCLUrlParams = {
+  reportID: string;
+  fightID: string;
+  type?: "deaths";
+  start?: number;
+  end?: number;
+};
+
+export const createWCLUrl = ({
+  reportID: report,
+  fightID: fight,
+  ...rest
+}: WCLUrlParams): string => {
+  const params = new URLSearchParams({
+    ...Object.fromEntries(
+      Object.entries(rest).map(([key, value]) => [key, `${value}`])
+    ),
+    translate: "true",
+  }).toString();
+
+  const url = `https://www.warcraftlogs.com/reports/${report}#fight=${fight}`;
+
+  return `${url}&${params}`;
+};

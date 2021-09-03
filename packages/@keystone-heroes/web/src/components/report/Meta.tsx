@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events, jsx-a11y/anchor-is-valid */
 import type { FightSuccessResponse } from "@keystone-heroes/api/functions/fight";
 import Link from "next/link";
-import { fightTimeToString } from "src/utils";
+import { createWCLUrl, fightTimeToString } from "src/utils";
 
 import { AbilityIcon, WCL_ASSET_URL } from "../AbilityIcon";
 import { ExternalLink } from "../ExternalLink";
@@ -26,9 +26,7 @@ export function Meta({
     <div className="w-full lg:w-2/6">
       <div className="justify-between md:flex lg:block">
         <h1 className="text-4xl font-bold">
-          <ExternalLink
-            href={`https://warcraftlogs.com/reports/${reportID}#fight=${fightID}`}
-          >
+          <ExternalLink href={createWCLUrl({ reportID, fightID })}>
             <span className="lg:hidden 2xl:inline-block">{dungeon.name}</span>
             <span className="hidden lg:inline-block 2xl:hidden">
               {dungeon.slug}
