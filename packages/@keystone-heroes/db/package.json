@@ -16,9 +16,9 @@
     "@keystone-heroes/api": "1.0.0",
     "@keystone-heroes/env": "1.0.0",
     "@keystone-heroes/wcl": "1.0.0",
-    "@prisma/client": "2.30.2",
+    "@prisma/client": "2.30.3",
     "dotenv": "10.0.0",
-    "prisma": "2.30.2",
+    "prisma": "2.30.3",
     "ts-node": "10.2.1"
   },
   "devDependencies": {
