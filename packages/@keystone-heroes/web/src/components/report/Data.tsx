@@ -1,14 +1,6 @@
-import type { FightSuccessResponse } from "@keystone-heroes/api/functions/fight";
-
 import { Pulls } from "./Pulls";
 
-export type DataProps = {
-  fight: FightSuccessResponse;
-  reportID: string;
-  fightID: string;
-};
-
-export function Data({ fight, reportID, fightID }: DataProps): JSX.Element {
+export function Data(): JSX.Element {
   return (
     <section className="pt-5 lg:pt-10">
       <div role="tablist" aria-orientation="horizontal" className="flex">
@@ -63,7 +55,7 @@ export function Data({ fight, reportID, fightID }: DataProps): JSX.Element {
         // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
         tabIndex={0}
       >
-        <Pulls fight={fight} fightID={fightID} reportID={reportID} />
+        <Pulls />
       </div>
 
       <div

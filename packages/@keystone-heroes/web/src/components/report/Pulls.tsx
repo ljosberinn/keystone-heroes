@@ -1,14 +1,14 @@
+import type { FightSuccessResponse } from "@keystone-heroes/api/functions/fight";
 import { useFight } from "src/pages/report/[reportID]/[fightID]";
 import { useReportStore } from "src/store";
 import { createWCLUrl, fightTimeToString } from "src/utils";
 import { classnames } from "src/utils/classnames";
 
 import { ExternalLink } from "../ExternalLink";
-import type { DataProps } from "./Data";
 
 const findRelevantEvents = (
-  thisPull: DataProps["fight"]["pulls"][number],
-  allPulls: DataProps["fight"]["pulls"],
+  thisPull: FightSuccessResponse["pulls"][number],
+  allPulls: FightSuccessResponse["pulls"],
   index: number
 ) => {
   const { events: lastPullEvents, endTime: lastPullEnd } = allPulls[
@@ -52,23 +52,21 @@ const findRelevantEvents = (
   };
 };
 
-export type PullsProps = DataProps;
-
 type PullHeaderProps = {
   percentUpToThisPull: string;
-  pull: DataProps["fight"]["pulls"][number];
+  pull: FightSuccessResponse["pulls"][number];
   firstPullStartTime: number;
   selected: boolean;
-} & Pick<DataProps, "fightID" | "reportID">;
+};
 
 function PullHeader({
   percentUpToThisPull,
   pull,
   firstPullStartTime,
-  reportID,
-  fightID,
   selected,
 }: PullHeaderProps) {
+  const { reportID, fightID } = useFight();
+
   const deaths = pull.events.filter(
     (event) => event.eventType === "Death"
   ).length;
@@ -171,7 +169,7 @@ function PullHeader({
 }
 
 export function Pulls(): JSX.Element {
-  const { reportID, fight, fightID } = useFight();
+  const { fight } = useFight();
   const pulls = fight ? fight.pulls : [];
   const player = fight ? fight.player : [];
   const selectedPull = useReportStore((state) => state.selectedPull);
@@ -192,8 +190,6 @@ export function Pulls(): JSX.Element {
               pull={pull}
               percentUpToThisPull={percentUpToThisPull}
               firstPullStartTime={pulls[0].startTime}
-              fightID={fightID}
-              reportID={reportID}
               selected={selected}
             />
             {selected && (
@@ -207,9 +203,9 @@ export function Pulls(): JSX.Element {
 }
 
 type PullBodyProps = {
-  pull: DataProps["fight"]["pulls"][number];
-  player: DataProps["fight"]["player"];
-  allPulls: DataProps["fight"]["pulls"];
+  pull: FightSuccessResponse["pulls"][number];
+  player: FightSuccessResponse["player"];
+  allPulls: FightSuccessResponse["pulls"];
 };
 
 function PullBody({ pull, allPulls, player }: PullBodyProps) {

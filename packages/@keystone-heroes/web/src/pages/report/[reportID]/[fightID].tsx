@@ -137,7 +137,7 @@ export default function FightID({ cache }: FightIDProps): JSX.Element | null {
         <Map />
       </div>
 
-      <Data fight={fight} reportID={reportID} fightID={fightID} />
+      <Data />
     </FightContext.Provider>
   );
 }

@@ -142,7 +142,7 @@ export function Map(): JSX.Element {
 
   const selectedPull = useReportStore((state) => state.selectedPull);
   const previouslySelectedPull = usePrevious(selectedPull);
-  const [isOffscreen, setIsOffscreen] = useState(false);
+  // const [isOffscreen, setIsOffscreen] = useState(false);
 
   const [selectedTab, setSelectedTab] = useState(() => {
     if (fight) {
@@ -249,7 +249,7 @@ export function Map(): JSX.Element {
   //   };
   // }, []);
 
-  console.log({ isOffscreen });
+  // console.log({ isOffscreen });
 
   return (
     <section className="w-full h-full max-w-screen-xl pt-4 lg:pt-0 lg:w-4/6">
@@ -316,7 +316,7 @@ export function Map(): JSX.Element {
                 ref={hidden ? undefined : tabPanelRef}
                 key={zone.id}
                 className={classnames(
-                  isOffscreen ? "absolute bottom-4 right-4 h-1/5" : "h-full"
+                  /* isOffscreen ? "absolute bottom-4 right-4 h-1/5" : */ "h-full"
                 )}
               >
                 {hidden ? null : (
