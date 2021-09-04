@@ -1,10 +1,19 @@
 import type { FightSuccessResponse } from "@keystone-heroes/api/functions/fight";
 // import { isBoss } from "@keystone-heroes/db/data/boss";
 import dynamic from "next/dynamic";
+import Image from "next/image";
 import type { KeyboardEvent } from "react";
-import { Fragment, useState, useRef, useEffect, useCallback } from "react";
+import {
+  useMemo,
+  Fragment,
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+} from "react";
 import { usePrevious } from "src/hooks/usePrevious";
-import { useMapOptions, useReportStore } from "src/store";
+import { useFight } from "src/pages/report/[reportID]/[fightID]";
+import { useMapOptions, useReportStore, useRestoreMapOptions } from "src/store";
 import { classnames } from "src/utils/classnames";
 import shallow from "zustand/shallow";
 
@@ -19,11 +28,6 @@ import {
   detectInvisibilityUsage,
   findTormentedLieutenantPull,
 } from "./utils";
-
-type MapProps = {
-  zones: FightSuccessResponse["dungeon"]["zones"];
-  pulls: FightSuccessResponse["pulls"];
-};
 
 function useImageDimensions() {
   const [imageSize, setImageSize] = useState<SvgProps["imageSize"]>({
@@ -101,16 +105,45 @@ const imageTuples = [
   [40, "sm"],
 ] as const;
 
-export function Map({ zones, pulls }: MapProps): JSX.Element {
+function Triangle() {
+  return (
+    <svg height="0" width="0">
+      <marker
+        id="triangle"
+        viewBox="0 0 10 10"
+        refX="1"
+        refY="5"
+        markerUnits="strokeWidth"
+        markerWidth="10"
+        markerHeight="10"
+        orient="auto"
+      >
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="white" />
+      </marker>
+    </svg>
+  );
+}
+
+export function Map(): JSX.Element {
+  const { loading, fight } = useFight();
   const { imageRef, imageSize, handleResize } = useImageDimensions();
   const tabPanelRef = useRef<HTMLDivElement | null>(null);
-  const selectedPull = useReportStore((state) => state.selectedPull);
 
+  const selectedPull = useReportStore((state) => state.selectedPull);
   const previouslySelectedPull = usePrevious(selectedPull);
 
-  const zoneToSelect = pulls[selectedPull - 1].zone;
-  const tab = zones.findIndex((zone) => zone.id === zoneToSelect);
-  const [selectedTab, setSelectedTab] = useState(tab);
+  const [selectedTab, setSelectedTab] = useState(() => {
+    if (fight) {
+      const zoneToSelect = fight.pulls[selectedPull - 1].zone;
+      const tab = fight.dungeon.zones.findIndex(
+        (zone) => zone.id === zoneToSelect
+      );
+
+      return tab > -1 ? tab : 0;
+    }
+
+    return 0;
+  });
 
   const shouldFocusRef = useRef(false);
   const buttonRefs = useRef<(HTMLButtonElement | null)[]>([]);
@@ -122,9 +155,16 @@ export function Map({ zones, pulls }: MapProps): JSX.Element {
     }
   });
 
+  const zones = useMemo(() => (fight ? fight.dungeon.zones : []), [fight]);
+  const pulls = useMemo(() => (fight ? fight.pulls : []), [fight]);
+
   // synchronize selected tab with pull selection in <Data />
   useEffect(() => {
-    if (previouslySelectedPull === selectedPull) {
+    if (
+      previouslySelectedPull === selectedPull ||
+      pulls.length === 1 ||
+      zones.length === 1
+    ) {
       return;
     }
 
@@ -136,19 +176,11 @@ export function Map({ zones, pulls }: MapProps): JSX.Element {
     }
 
     setSelectedTab(nextTab);
-  }, [
-    selectedPull,
-    previouslySelectedPull,
-    pulls,
-    tab,
-    zones,
-    zoneToSelect,
-    selectedTab,
-  ]);
+  }, [selectedPull, previouslySelectedPull, pulls, zones, selectedTab]);
 
-  const onTabButtonClick = useCallback((nextIndex) => {
+  const onTabButtonClick = (nextIndex: number) => {
     setSelectedTab(nextIndex);
-  }, []);
+  };
 
   const onKeyDown = useCallback(
     (event: KeyboardEvent<HTMLButtonElement>) => {
@@ -185,22 +217,9 @@ export function Map({ zones, pulls }: MapProps): JSX.Element {
   );
 
   return (
-    <section className="w-full max-w-screen-xl lg:w-4/6">
+    <section className="w-full h-full max-w-screen-xl lg:w-4/6">
       <h2 className="text-2xl font-bold">Route</h2>
-      <svg height="0" width="0">
-        <marker
-          id="triangle"
-          viewBox="0 0 10 10"
-          refX="1"
-          refY="5"
-          markerUnits="strokeWidth"
-          markerWidth="10"
-          markerHeight="10"
-          orient="auto"
-        >
-          <path d="M 0 0 L 10 5 L 0 10 z" fill="white" />
-        </marker>
-      </svg>
+      <Triangle />
       <div className="flex justify-between">
         <div role="tablist" aria-orientation="horizontal" className="flex">
           {zones.map((zone, index) => {
@@ -231,77 +250,90 @@ export function Map({ zones, pulls }: MapProps): JSX.Element {
             );
           })}
         </div>
-        <MapOptionsWrapper />
       </div>
-      {zones.map((zone, index) => {
-        const hidden = index !== selectedTab;
 
-        return (
-          <div
-            role="tabpanel"
-            data-orientation="horizontal"
-            data-state="active"
-            id={`tabpanel-${zone.id}`}
-            aria-labelledby={`tab-${zone.id}`}
-            // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
-            tabIndex={0}
-            ref={hidden ? undefined : tabPanelRef}
-            key={zone.id}
-          >
-            {hidden ? null : (
-              <div className="relative">
-                <picture>
-                  {imageTuples.map(([w, prefix]) => {
-                    const url = `/static/maps/${prefix}-${w * 16}/${
-                      zone.id
-                    }.png`;
+      {loading ? (
+        <img
+          src="/static/maps/ph.jpg"
+          width="100%"
+          height="100%"
+          alt="Map Placeholder"
+        />
+      ) : (
+        zones.map((zone, index) => {
+          const hidden = index !== selectedTab;
 
-                    return (
-                      <source
-                        key={w}
-                        srcSet={url}
-                        media={`(min-width: ${w * 16}px)`}
-                      />
-                    );
-                  })}
+          return (
+            <div
+              role="tabpanel"
+              data-orientation="horizontal"
+              data-state="active"
+              id={`tabpanel-${zone.id}`}
+              aria-labelledby={`tab-${zone.id}`}
+              // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
+              tabIndex={0}
+              ref={hidden ? undefined : tabPanelRef}
+              key={zone.id}
+              className="h-full"
+            >
+              {hidden ? null : (
+                <div className="relative h-full">
+                  <picture>
+                    {imageTuples.map(([w, prefix]) => {
+                      const url = `/static/maps/${prefix}-${w * 16}/${
+                        zone.id
+                      }.png`;
 
-                  {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
-                  <img
-                    src={`/static/maps/sm-640/${zone.id}.png`}
-                    alt={zone.name}
-                    ref={imageRef}
-                    className="object-cover w-full h-full"
-                    onLoad={handleResize}
+                      return (
+                        <source
+                          key={w}
+                          srcSet={url}
+                          media={`(min-width: ${w * 16}px)`}
+                        />
+                      );
+                    })}
+
+                    {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
+                    <img
+                      src={`/static/maps/sm-640/${zone.id}.png`}
+                      alt={zone.name}
+                      ref={imageRef}
+                      className="object-cover w-full h-full"
+                      onLoad={handleResize}
+                    />
+                  </picture>
+
+                  <Svg
+                    // pulls={pulls}
+                    imageSize={imageSize}
+                    zoneID={zone.id}
+                    onDoorClick={(zoneID: number) => {
+                      const nextZoneIndex = zones.findIndex(
+                        (zone) => zone.id === zoneID
+                      );
+
+                      if (nextZoneIndex > -1) {
+                        onTabButtonClick(nextZoneIndex);
+                      }
+                    }}
                   />
-                </picture>
 
-                <Svg
-                  pulls={pulls}
-                  imageSize={imageSize}
-                  zoneID={zone.id}
-                  onDoorClick={(zoneID: number) => {
-                    const nextZoneIndex = zones.findIndex(
-                      (zone) => zone.id === zoneID
-                    );
-
-                    if (nextZoneIndex > -1) {
-                      onTabButtonClick(nextZoneIndex);
-                    }
-                  }}
-                />
-
-                <MapOptionsToggle />
-              </div>
-            )}
-          </div>
-        );
-      })}
+                  <MapOptionsWrapper />
+                  <MapOptionsToggle />
+                </div>
+              )}
+            </div>
+          );
+        })
+      )}
     </section>
   );
 }
 
 function MapOptionsWrapper() {
   const visible = useMapOptions((state) => state.visible);
+
+  useRestoreMapOptions();
 
   if (!visible) {
     return null;
@@ -317,7 +349,7 @@ function MapOptionsToggle() {
     <button
       type="button"
       onClick={toggleMapOptions}
-      className="absolute flex p-2 rounded-full focus:outline-none top-2 right-2 bg-coolgray-800"
+      className="absolute flex p-2 bg-white rounded-full focus:outline-none top-2 right-2 dark:bg-coolgray-800"
     >
       <img
         src="/static/icons/trade_engineering.jpg"
@@ -328,7 +360,7 @@ function MapOptionsToggle() {
   );
 }
 
-type SvgProps = Pick<MapProps, "pulls"> & {
+type SvgProps = {
   imageSize: Pick<
     HTMLImageElement,
     "clientHeight" | "clientWidth" | "offsetLeft" | "offsetTop"
@@ -337,7 +369,8 @@ type SvgProps = Pick<MapProps, "pulls"> & {
   onDoorClick: (zoneID: number) => void;
 };
 
-function Svg({ pulls, imageSize, zoneID, onDoorClick }: SvgProps) {
+function Svg({ imageSize, zoneID, onDoorClick }: SvgProps) {
+  const pulls = useFight().fight?.pulls ?? [];
   const thisZonesPulls = pulls.filter((pull) => pull.zone === zoneID);
 
   return (
@@ -347,12 +380,10 @@ function Svg({ pulls, imageSize, zoneID, onDoorClick }: SvgProps) {
           .svg {
             left: ${imageSize.offsetLeft}px;
             top: ${imageSize.offsetTop}px;
-            width: ${imageSize.clientWidth}px;
-            height: ${imageSize.clientHeight}px;
           }
         `}
       </style>
-      <svg className="absolute svg focus:outline-none">
+      <svg className="absolute w-full h-full svg focus:outline-none">
         <DoorIndicators
           id={zoneID}
           xFactor={imageSize.clientWidth}
@@ -363,7 +394,6 @@ function Svg({ pulls, imageSize, zoneID, onDoorClick }: SvgProps) {
           xFactor={imageSize.clientWidth}
           yFactor={imageSize.clientHeight}
           zoneID={zoneID}
-          pulls={pulls}
         />
         {thisZonesPulls.map((pull, index) => {
           const x = pull.x * imageSize.clientWidth;
@@ -577,6 +607,13 @@ function PullConnectionPolyline({
   const renderPullConnectionLines = useMapOptions(
     (state) => state.renderPullConnectionLines
   );
+  const pullConnectionLineColor = useMapOptions(
+    (state) => state.pullConnectionLineColor
+  );
+
+  const invisPullConnectionLineColor = useMapOptions(
+    (state) => state.invisPullConnectionLineColor
+  );
 
   if (!renderPullConnectionLines) {
     return null;
@@ -595,20 +632,19 @@ function PullConnectionPolyline({
   }
 
   return (
-    <>
-      <style jsx>
-        {`
-          .polyline {
-            marker-mid: url(#triangle);
-          }
-        `}
-      </style>
+    <g>
       <polyline
+        markerMid="url(#triangle)"
         className={classnames(
-          "polyline stroke-current",
-          invisibilityUsage ? "text-green-500" : "text-red-500"
+          "polyline stroke-current"
+          // invisibilityUsage ? "text-green-500" : "text-red-500"
         )}
         points={`${x},${y} ${middleX},${middleY} ${nextX},${nextY}`}
+        style={{
+          color: invisibilityUsage
+            ? invisPullConnectionLineColor
+            : pullConnectionLineColor,
+        }}
       />
       {invisibilityUsage && (
         <ShroudOrInvisIndicator
@@ -619,15 +655,15 @@ function PullConnectionPolyline({
           type={invisibilityUsage}
         />
       )}
-    </>
+    </g>
   );
 }
 
-type DoorIndicatorsProps = Pick<MapProps["zones"][number], "id"> &
-  Pick<SvgProps, "onDoorClick"> & {
-    xFactor: number;
-    yFactor: number;
-  };
+type DoorIndicatorsProps = Pick<SvgProps, "onDoorClick"> & {
+  xFactor: number;
+  yFactor: number;
+  id: number;
+};
 
 type DoorType = "left" | "right" | "up" | "down";
 
@@ -925,18 +961,17 @@ function DoorIndicators({
 }
 
 type MapChangePolylineProps = {
-  pulls: FightSuccessResponse["pulls"];
   zoneID: number;
   xFactor: number;
   yFactor: number;
 };
 
 function MapChangePolyline({
-  pulls,
   xFactor,
   yFactor,
   zoneID,
 }: MapChangePolylineProps): JSX.Element | null {
+  const pulls = useFight().fight?.pulls ?? [];
   const renderMapChangeLines = useMapOptions(
     (state) => state.renderMapChangeLines
   );
@@ -951,14 +986,6 @@ function MapChangePolyline({
 
   return (
     <>
-      <style jsx>
-        {`
-          .polyline {
-            marker-mid: url(#triangle);
-          }
-        `}
-      </style>
-
       {pulls
         .reduce<
           {
@@ -1052,11 +1079,13 @@ function MapChangePolyline({
           return (
             <polyline
               key={key}
+              markerMid="url(#triangle)"
               className="text-blue-900 stroke-current polyline"
               points={`${startX},${startY} ${middleX},${middleY} ${endX},${endY}`}
             />
           );
         })}
+      )
     </>
   );
 }

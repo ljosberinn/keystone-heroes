@@ -1,8 +1,12 @@
-import type { FightResponse } from "@keystone-heroes/api/functions/fight";
+import type {
+  FightResponse,
+  FightSuccessResponse,
+} from "@keystone-heroes/api/functions/fight";
 import { isValidReportId } from "@keystone-heroes/wcl/utils";
 import type { GetStaticPaths, GetStaticProps } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import { createContext, useContext } from "react";
 import { Data } from "src/components/report/Data";
 import { Map } from "src/components/report/Map";
 import { Meta } from "src/components/report/Meta";
@@ -76,10 +80,29 @@ const useFightURL = (cache: FightIDProps["cache"]) => {
   };
 };
 
+type FightContextDefinition = {
+  reportID: string;
+  fightID: string;
+  loading: boolean;
+  fight: FightSuccessResponse | null;
+};
+
+const FightContext = createContext<FightContextDefinition | null>(null);
+
+export const useFight = (): FightContextDefinition => {
+  const ctx = useContext(FightContext);
+
+  if (!ctx) {
+    throw new Error("useFight must be used within FightContext.Provider");
+  }
+
+  return ctx;
+};
+
 export default function FightID({ cache }: FightIDProps): JSX.Element | null {
   const { url, fightID, reportID } = useFightURL(cache);
 
-  const [fight] = useAbortableFetch<FightResponse>({
+  const [fight, loading] = useAbortableFetch<FightResponse>({
     url,
     initialState: cache?.fight ?? null,
   });
@@ -92,8 +115,16 @@ export default function FightID({ cache }: FightIDProps): JSX.Element | null {
     return <h1>{fight.error}</h1>;
   }
 
+  // eslint-disable-next-line react/jsx-no-constructed-context-values
+  const value = {
+    fight,
+    loading,
+    reportID,
+    fightID,
+  };
+
   return (
-    <>
+    <FightContext.Provider value={value}>
       <Head>
         <title>
           KSH | {fight.dungeon.slug} +{fight.meta.level} in{" "}
@@ -102,12 +133,12 @@ export default function FightID({ cache }: FightIDProps): JSX.Element | null {
       </Head>
 
       <div className="flex flex-col space-x-0 lg:space-x-4 lg:flex-row">
-        <Meta reportID={reportID} fightID={fightID} {...fight} />
-        <Map zones={fight.dungeon.zones} pulls={fight.pulls} />
+        <Meta />
+        <Map />
       </div>
 
       <Data fight={fight} reportID={reportID} fightID={fightID} />
-    </>
+    </FightContext.Provider>
   );
 }
 
