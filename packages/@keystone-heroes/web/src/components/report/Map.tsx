@@ -1,7 +1,6 @@
 import type { FightSuccessResponse } from "@keystone-heroes/api/functions/fight";
 // import { isBoss } from "@keystone-heroes/db/data/boss";
 import dynamic from "next/dynamic";
-import Image from "next/image";
 import type { KeyboardEvent } from "react";
 import {
   useMemo,
@@ -13,7 +12,12 @@ import {
 } from "react";
 import { usePrevious } from "src/hooks/usePrevious";
 import { useFight } from "src/pages/report/[reportID]/[fightID]";
-import { useMapOptions, useReportStore, useRestoreMapOptions } from "src/store";
+import {
+  useLegend,
+  useMapOptions,
+  useReportStore,
+  useRestoreMapOptions,
+} from "src/store";
 import { classnames } from "src/utils/classnames";
 import shallow from "zustand/shallow";
 
@@ -96,6 +100,13 @@ const MapOptions = dynamic(
   }
 );
 
+const Legend = dynamic(
+  () => import(/* webpackChunkName: "Legend" */ "./Legend"),
+  {
+    ssr: false,
+  }
+);
+
 const imageTuples = [
   [125, "3xl"],
   [96, "2xl"],
@@ -131,6 +142,7 @@ export function Map(): JSX.Element {
 
   const selectedPull = useReportStore((state) => state.selectedPull);
   const previouslySelectedPull = usePrevious(selectedPull);
+  const [isOffscreen, setIsOffscreen] = useState(false);
 
   const [selectedTab, setSelectedTab] = useState(() => {
     if (fight) {
@@ -216,116 +228,153 @@ export function Map(): JSX.Element {
     [zones.length]
   );
 
-  return (
-    <section className="w-full h-full max-w-screen-xl lg:w-4/6">
-      <h2 className="text-2xl font-bold">Route</h2>
-      <Triangle />
-      <div className="flex justify-between">
-        <div role="tablist" aria-orientation="horizontal" className="flex">
-          {zones.map((zone, index) => {
-            const selected = index === selectedTab;
+  // useEffect(() => {
+  //   const listener = () => {
+  //     if (!tabPanelRef.current) {
+  //       return;
+  //     }
 
-            return (
-              <div className="p-4" key={zone.id}>
-                <button
-                  type="button"
-                  role="tab"
-                  data-orientation="horizontal"
-                  aria-controls={`tabpanel-${zone.id}`}
-                  id={`tab-${zone.id}`}
-                  onKeyDown={onKeyDown}
-                  ref={(ref) => {
-                    buttonRefs.current[index] = ref;
-                  }}
-                  className={`focus:outline-none focus:ring disabled:cursor-not-allowed dark:disabled:text-coolgray-500 disabled:text-coolgray-700 ${
-                    selected ? "border-coolgray-500 font-bold" : ""
-                  }`}
-                  onClick={() => {
-                    onTabButtonClick(index);
-                  }}
-                >
-                  {zone.name}
-                </button>
-              </div>
-            );
-          })}
+  //     const boundingClientRect = tabPanelRef.current.getBoundingClientRect();
+
+  //     const isScrolledOffscreen =
+  //       window.scrollY >
+  //       boundingClientRect.height + tabPanelRef.current.offsetTop;
+
+  //   };
+
+  //   window.addEventListener("scroll", listener);
+
+  //   return () => {
+  //     window.removeEventListener("scroll", listener);
+  //   };
+  // }, []);
+
+  console.log({ isOffscreen });
+
+  return (
+    <section className="w-full h-full max-w-screen-xl pt-4 lg:pt-0 lg:w-4/6">
+      <Triangle />
+      <div className="px-4 pt-4 bg-gray-200 rounded-t-lg dark:bg-coolgray-700">
+        <h2 className="text-2xl font-bold">Route</h2>
+        <div className="flex justify-between">
+          <div
+            role="tablist"
+            aria-orientation="horizontal"
+            className="flex space-x-4"
+          >
+            {zones.map((zone, index) => {
+              const selected = index === selectedTab;
+
+              return (
+                <div className="py-4" key={zone.id}>
+                  <button
+                    type="button"
+                    role="tab"
+                    data-orientation="horizontal"
+                    aria-controls={`tabpanel-${zone.id}`}
+                    id={`tab-${zone.id}`}
+                    onKeyDown={onKeyDown}
+                    ref={(ref) => {
+                      buttonRefs.current[index] = ref;
+                    }}
+                    className={`focus:outline-none focus:ring disabled:cursor-not-allowed dark:disabled:text-coolgray-500 disabled:text-coolgray-700 ${
+                      selected ? "border-coolgray-500 font-bold" : ""
+                    }`}
+                    onClick={() => {
+                      onTabButtonClick(index);
+                    }}
+                  >
+                    {zone.name}
+                  </button>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
+      <div className="p-2 bg-gray-100 rounded-b-lg dark:bg-coolgray-600">
+        {loading ? (
+          <img
+            src="/static/maps/ph.jpg"
+            width="100%"
+            height="100%"
+            alt="Map Placeholder"
+          />
+        ) : (
+          zones.map((zone, index) => {
+            const hidden = index !== selectedTab;
 
-      {loading ? (
-        <img
-          src="/static/maps/ph.jpg"
-          width="100%"
-          height="100%"
-          alt="Map Placeholder"
-        />
-      ) : (
-        zones.map((zone, index) => {
-          const hidden = index !== selectedTab;
+            return (
+              <div
+                role="tabpanel"
+                data-orientation="horizontal"
+                data-state="active"
+                id={`tabpanel-${zone.id}`}
+                aria-labelledby={`tab-${zone.id}`}
+                // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
+                tabIndex={0}
+                ref={hidden ? undefined : tabPanelRef}
+                key={zone.id}
+                className={classnames(
+                  isOffscreen ? "absolute bottom-4 right-4 h-1/5" : "h-full"
+                )}
+              >
+                {hidden ? null : (
+                  <div className="relative h-full mapPanel">
+                    <picture>
+                      {imageTuples.map(([w, prefix]) => {
+                        const url = `/static/maps/${prefix}-${w * 16}/${
+                          zone.id
+                        }.png`;
 
-          return (
-            <div
-              role="tabpanel"
-              data-orientation="horizontal"
-              data-state="active"
-              id={`tabpanel-${zone.id}`}
-              aria-labelledby={`tab-${zone.id}`}
-              // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
-              tabIndex={0}
-              ref={hidden ? undefined : tabPanelRef}
-              key={zone.id}
-              className="h-full"
-            >
-              {hidden ? null : (
-                <div className="relative h-full">
-                  <picture>
-                    {imageTuples.map(([w, prefix]) => {
-                      const url = `/static/maps/${prefix}-${w * 16}/${
-                        zone.id
-                      }.png`;
+                        return (
+                          <source
+                            key={w}
+                            srcSet={url}
+                            media={`(min-width: ${w * 16}px)`}
+                          />
+                        );
+                      })}
 
-                      return (
-                        <source
-                          key={w}
-                          srcSet={url}
-                          media={`(min-width: ${w * 16}px)`}
-                        />
-                      );
-                    })}
+                      {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
+                      <img
+                        src={`/static/maps/sm-640/${zone.id}.png`}
+                        alt={zone.name}
+                        ref={imageRef}
+                        className="object-cover w-full h-full rounded-md"
+                        onLoad={handleResize}
+                        width="1280px"
+                        height="853px"
+                      />
+                    </picture>
 
-                    {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
-                    <img
-                      src={`/static/maps/sm-640/${zone.id}.png`}
-                      alt={zone.name}
-                      ref={imageRef}
-                      className="object-cover w-full h-full"
-                      onLoad={handleResize}
+                    <Svg
+                      // pulls={pulls}
+                      imageSize={imageSize}
+                      zoneID={zone.id}
+                      onDoorClick={(zoneID: number) => {
+                        const nextZoneIndex = zones.findIndex(
+                          (zone) => zone.id === zoneID
+                        );
+
+                        if (nextZoneIndex > -1) {
+                          onTabButtonClick(nextZoneIndex);
+                        }
+                      }}
                     />
-                  </picture>
 
-                  <Svg
-                    // pulls={pulls}
-                    imageSize={imageSize}
-                    zoneID={zone.id}
-                    onDoorClick={(zoneID: number) => {
-                      const nextZoneIndex = zones.findIndex(
-                        (zone) => zone.id === zoneID
-                      );
+                    <MapOptionsWrapper />
+                    <LegendWrapper />
 
-                      if (nextZoneIndex > -1) {
-                        onTabButtonClick(nextZoneIndex);
-                      }
-                    }}
-                  />
-
-                  <MapOptionsWrapper />
-                  <MapOptionsToggle />
-                </div>
-              )}
-            </div>
-          );
-        })
-      )}
+                    <MapOptionsToggle />
+                    <LegendToggle />
+                  </div>
+                )}
+              </div>
+            );
+          })
+        )}
+      </div>
     </section>
   );
 }
@@ -342,6 +391,16 @@ function MapOptionsWrapper() {
   return <MapOptions />;
 }
 
+function LegendWrapper() {
+  const visible = useLegend((state) => state.visible);
+
+  if (!visible) {
+    return null;
+  }
+
+  return <Legend />;
+}
+
 function MapOptionsToggle() {
   const toggleMapOptions = useMapOptions((state) => state.toggleMapOptions);
 
@@ -349,12 +408,32 @@ function MapOptionsToggle() {
     <button
       type="button"
       onClick={toggleMapOptions}
-      className="absolute flex p-2 bg-white rounded-full focus:outline-none top-2 right-2 dark:bg-coolgray-800"
+      title="Map Options"
+      className="absolute flex p-1 bg-gray-100 rounded-full focus:outline-none top-2 right-2 dark:bg-coolgray-600"
     >
       <img
         src="/static/icons/trade_engineering.jpg"
         className="object-cover w-8 h-8 rounded-full"
         alt="Map Options"
+      />
+    </button>
+  );
+}
+
+function LegendToggle() {
+  const toggle = useLegend((state) => state.toggle);
+
+  return (
+    <button
+      onClick={toggle}
+      type="button"
+      title="Legend"
+      className="absolute flex p-1 bg-gray-100 rounded-full focus:outline-none top-14 right-2 dark:bg-coolgray-600"
+    >
+      <img
+        src="/static/icons/inv_misc_questionmark.jpg"
+        alt="Legend"
+        className="object-cover w-8 h-8 rounded-full"
       />
     </button>
   );

@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { green, red } from "tailwindcss/colors";
 import create from "zustand";
 
 import { ls } from "./utils/localStorage";
@@ -19,10 +20,8 @@ export const useReportStore = create<ReportStore>((set) => {
   };
 });
 
-// text-green-500
-const defaultPullConnectionLineColor = "#10b981";
-// text-red-500
-const defaultInvisPullConnectionLineColor = "#ef4444";
+const defaultPullConnectionLineColor = green["500"];
+const defaultInvisPullConnectionLineColor = red["500"];
 
 export type MapOptionsStore = {
   visible: boolean;
@@ -193,3 +192,17 @@ export const useRestoreMapOptions = (): void => {
 
   useEffect(restoreFromLocalStorage, [restoreFromLocalStorage]);
 };
+
+type Legend = {
+  visible: boolean;
+  toggle: () => void;
+};
+
+export const useLegend = create<Legend>((set) => {
+  return {
+    visible: false,
+    toggle: () => {
+      set((state) => ({ visible: !state.visible }));
+    },
+  };
+});

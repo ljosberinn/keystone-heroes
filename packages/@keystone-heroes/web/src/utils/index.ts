@@ -27,10 +27,9 @@ export const createWCLUrl = ({
   fightID: fight,
   ...rest
 }: WCLUrlParams): string => {
+  // @ts-expect-error fixing later
   const params = new URLSearchParams({
-    ...Object.fromEntries(
-      Object.entries(rest).map(([key, value]) => [key, `${value}`])
-    ),
+    ...rest,
     translate: "true",
   }).toString();
 

@@ -2,18 +2,28 @@ import { useMapOptions } from "src/store";
 
 // eslint-disable-next-line import/no-default-export
 export default function MapOptions(): JSX.Element {
-  // const onClose = useMapOptions((state) => state.toggleMapOptions);
-
   return (
-    <div className="absolute top-0 left-0 w-full h-full p-4 text-white bg-gray-500 dark:bg-coolgray-500 dark:bg-opacity-70 bg-opacity-70">
-      <h1>Map Options</h1>
+    <section
+      className="absolute top-0 left-0 w-full h-full p-4 text-white bg-gray-500 dark:bg-coolgray-500 dark:bg-opacity-70 bg-opacity-70"
+      aria-labelledby="map-options-heading"
+    >
+      <h1 id="map-options-heading" className="text-xl font-bold">
+        Map Options
+      </h1>
 
-      <MapChangeLines />
-      <PullConnectionLines />
-      <PointsOfInterest />
-      <PullConnectionLineColor />
-      <InvisPullConnectionLineColor />
-    </div>
+      <h2 className="pt-4 pb-2 text-lg font-bold">General</h2>
+      <div className="space-y-2">
+        <MapChangeLines />
+        <PullConnectionLines />
+        <PointsOfInterest />
+      </div>
+
+      <h2 className="pt-4 pb-2 text-lg font-bold">Colors</h2>
+      <div className="space-y-2">
+        <PullConnectionLineColor />
+        <InvisPullConnectionLineColor />
+      </div>
+    </section>
   );
 }
 
@@ -26,15 +36,18 @@ function MapChangeLines() {
   );
 
   return (
-    <div>
+    <div className="space-x-2">
       <input
+        className="cursor-pointer"
         type="checkbox"
         checked={renderMapChangeLines}
         onChange={toggleMapChangeLines}
         id="toggleMapChangeLines"
         aria-labelledby="toggleMapChangeLines"
       />
-      <label htmlFor="toggleMapChangeLines">toggle mapchange lines</label>
+      <label htmlFor="toggleMapChangeLines" className="cursor-pointer">
+        toggle mapchange lines
+      </label>
     </div>
   );
 }
@@ -49,8 +62,9 @@ function PullConnectionLines() {
   );
 
   return (
-    <div>
+    <div className="space-x-2">
       <input
+        className="cursor-pointer"
         type="checkbox"
         checked={renderPullConnectionLines}
         onChange={togglePullConnectionLines}
@@ -58,7 +72,7 @@ function PullConnectionLines() {
         aria-labelledby="togglePullConnectionLines"
       />
 
-      <label htmlFor="togglePullConnectionLines">
+      <label htmlFor="togglePullConnectionLines" className="cursor-pointer">
         toggle pull connection lines
       </label>
     </div>
@@ -70,15 +84,18 @@ function PointsOfInterest() {
   const renderPOIs = useMapOptions((state) => state.renderPOIs);
 
   return (
-    <div>
+    <div className="space-x-2">
       <input
+        className="cursor-pointer"
         type="checkbox"
         checked={renderPOIs}
         onChange={togglePOIs}
         id="togglePOIs"
         aria-labelledby="togglePOIs"
       />
-      <label htmlFor="togglePOIs">toggle points of interests</label>
+      <label htmlFor="togglePOIs" className="cursor-pointer">
+        toggle points of interests
+      </label>
     </div>
   );
 }
@@ -95,8 +112,9 @@ function PullConnectionLineColor() {
   );
 
   return (
-    <div>
+    <div className="space-x-2">
       <input
+        className="bg-transparent cursor-pointer"
         type="color"
         id="pullConnectionLineColor"
         aria-labelledby="pullConnectionLineColor"
@@ -105,11 +123,11 @@ function PullConnectionLineColor() {
         }}
         value={pullConnectionLineColor}
       />
-      <label htmlFor="pullConnectionLineColor">
-        change color of line between pulls
+      <label htmlFor="pullConnectionLineColor" className="cursor-pointer">
+        color of lines between pulls
       </label>
       <button type="button" onClick={resetPullConnectionLineColor}>
-        reset to default
+        reset
       </button>
     </div>
   );
@@ -127,8 +145,9 @@ function InvisPullConnectionLineColor() {
   );
 
   return (
-    <div>
+    <div className="space-x-2">
       <input
+        className="bg-transparent cursor-pointer"
         type="color"
         id="invisPullConnectionLineColor"
         aria-labelledby="invisPullConnectionLineColor"
@@ -137,11 +156,11 @@ function InvisPullConnectionLineColor() {
         }}
         value={invisPullConnectionLineColor}
       />
-      <label htmlFor="invisPullConnectionLineColor">
-        change color of line between pulls when invis was used
+      <label htmlFor="invisPullConnectionLineColor" className="cursor-pointer">
+        color of lines between pulls when invisibility was used
       </label>
       <button type="button" onClick={resetInvisPullConnectionLineColor}>
-        reset to default
+        reset
       </button>
     </div>
   );

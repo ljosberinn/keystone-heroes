@@ -93,7 +93,6 @@ export const getExplosiveEvents = (
   const explosiveTargetID = findExplosiveTargetID(allEvents);
 
   if (!explosiveTargetID) {
-    console.error("could not determine targetID for explosives");
     return [];
   }
 

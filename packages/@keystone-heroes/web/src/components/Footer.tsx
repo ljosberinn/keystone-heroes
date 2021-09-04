@@ -46,15 +46,15 @@ export function Footer(): JSX.Element {
           </ul>
         </div>
       </nav>
-      <small className="flex items-center justify-center w-full py-6 space-x-6 text-xs text-gray-500 md:justify-end dark:text-gray-300">
-        {COMMIT_SHA && (
+      {COMMIT_SHA && (
+        <small className="flex items-center justify-center w-full py-6 space-x-6 text-xs text-gray-500 md:justify-end dark:text-gray-300">
           <ExternalLink
             href={`https://github.com/ljosberinn/wcl-to-mdt/tree/${COMMIT_SHA}`}
           >
             Commit {COMMIT_SHA} built at {BUILD_TIME}
           </ExternalLink>
-        )}
-      </small>
+        </small>
+      )}
     </footer>
   );
 }
