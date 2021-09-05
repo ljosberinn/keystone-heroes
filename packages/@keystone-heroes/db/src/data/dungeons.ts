@@ -365,7 +365,7 @@ export const THE_NECROTIC_WAKE: DungeonMeta = {
 
 export const HALLS_OF_ATONEMENT: DungeonMeta = {
   name: "Halls of Atonement",
-  timer: createDungeonTimer(31),
+  timer: createDungeonTimer(32),
   slug: "HoA",
   bossIDs: [
     Boss.HALKIAS,
