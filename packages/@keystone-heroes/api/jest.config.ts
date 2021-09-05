@@ -10,7 +10,7 @@ const config: Config.InitialOptions = {
     global: {
       statements: 50,
       branches: 37,
-      functions: 46,
+      functions: 45,
       lines: 50,
     },
   },

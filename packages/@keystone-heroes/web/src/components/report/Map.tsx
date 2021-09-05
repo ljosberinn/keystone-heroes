@@ -18,6 +18,7 @@ import {
   useReportStore,
   useRestoreMapOptions,
 } from "src/store";
+import { fightTimeToString } from "src/utils";
 import { classnames } from "src/utils/classnames";
 import shallow from "zustand/shallow";
 
@@ -169,6 +170,7 @@ export function Map(): JSX.Element {
 
   const zones = useMemo(() => (fight ? fight.dungeon.zones : []), [fight]);
   const pulls = useMemo(() => (fight ? fight.pulls : []), [fight]);
+  const startTime = fight ? fight.meta.startTime : 0;
 
   // synchronize selected tab with pull selection in <Data />
   useEffect(() => {
@@ -251,11 +253,23 @@ export function Map(): JSX.Element {
 
   // console.log({ isOffscreen });
 
+  const pullsWithBoss = pulls.filter((pull) => pull.hasBoss);
+
   return (
     <section className="w-full h-full max-w-screen-xl pt-4 lg:pt-0 lg:w-4/6">
       <Triangle />
       <div className="px-4 pt-4 bg-white rounded-t-lg shadow-sm dark:bg-coolgray-700">
         <h2 className="text-2xl font-bold">Route</h2>
+
+        <p>
+          {pullsWithBoss.map((pull, index) => (
+            <span key={pull.startTime}>
+              Boss {index + 1}:{" "}
+              {fightTimeToString(pull.endTime - startTime, true)}
+              {index !== pullsWithBoss.length - 1 && " > "}
+            </span>
+          ))}
+        </p>
         <div className="flex justify-between">
           <div
             role="tablist"

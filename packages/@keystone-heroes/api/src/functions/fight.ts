@@ -93,6 +93,7 @@ export type FightSuccessResponse = {
     level: Fight["keystoneLevel"];
     inCombatTime: number;
     outOfCombatTime: number;
+    startTime: number;
   };
   dungeon: {
     id: DungeonIDs;
@@ -162,6 +163,7 @@ export type FightSuccessResponse = {
     percent: number;
     npcs: (Pick<PullNPC, "count"> & Pick<NPC, "id" | "name">)[];
     id: number;
+    hasBoss: boolean;
   })[];
 };
 
@@ -532,7 +534,7 @@ const detectTormentedPowers = (
 
 const createResponseFromStoredFight = (
   dataset: RawFightWithDungeon
-): FightResponse => {
+): FightSuccessResponse => {
   const dungeon = dungeonMap[dataset.dungeon.id];
 
   const allEvents = dataset.Pull.flatMap((pull) => pull.Event);
@@ -546,6 +548,8 @@ const createResponseFromStoredFight = (
       };
     });
 
+    const hasBoss = npcs.some((npc) => allBossIDs.has(npc.id));
+
     return {
       startTime: pull.startTime,
       endTime: pull.endTime,
@@ -557,6 +561,7 @@ const createResponseFromStoredFight = (
       npcs,
       zone: pull.PullZone[0].zone.id,
       id: index + 1,
+      hasBoss,
     };
   });
 
@@ -573,6 +578,7 @@ const createResponseFromStoredFight = (
       totalDeaths: dataset.totalDeaths,
       percent: dataset.percent,
       rating: dataset.rating,
+      startTime: dataset.startTime,
     },
     dungeon: {
       id: dataset.dungeon.id,
