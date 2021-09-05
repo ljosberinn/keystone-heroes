@@ -16,7 +16,7 @@ export function Meta(): JSX.Element {
 
   return (
     <div className="flex flex-col justify-between w-full lg:w-2/6">
-      <div className="bg-gray-200 rounded-t-lg dark:bg-coolgray-700">
+      <div className="bg-gray-200 rounded-lg dark:bg-coolgray-700">
         <div className="justify-between p-4 md:flex lg:block ">
           <h1 className="text-4xl font-bold">
             <ExternalLink href={createWCLUrl({ reportID, fightID })}>
@@ -68,7 +68,7 @@ export function Meta(): JSX.Element {
 
       {/* <-------> */}
 
-      <div className="p-4 bg-gray-100 rounded-b-lg dark:bg-coolgray-600">
+      <div className="p-4 bg-gray-100 rounded-lg dark:bg-coolgray-600">
         <h2 className="pb-4 text-xl font-bold">Group Composition</h2>
         <div className="flex flex-col justify-between sm:flex-row lg:flex-col lg:space-y-2">
           {fight.player.map((player) => {

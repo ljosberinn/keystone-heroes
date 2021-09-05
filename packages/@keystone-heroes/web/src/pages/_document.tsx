@@ -11,7 +11,7 @@ export default function CustomDocument(/* props: DocumentProps*/): JSX.Element {
         <meta content="Gerrit Alex" name="author" />
         <link rel="preconnect" href="https://assets.rpglogs.com/" />
       </Head>
-      <body className="dark:bg-coolgray-800 dark:text-coolgray-200">
+      <body className="bg-gray-300 dark:bg-coolgray-900 dark:text-coolgray-200">
         <Main />
         <NextScript />
         <svg className="hidden">

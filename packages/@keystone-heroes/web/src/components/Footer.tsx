@@ -22,7 +22,7 @@ function FooterNavLink({ href, children }: FooterNavLinkProps) {
 
 export function Footer(): JSX.Element {
   return (
-    <footer className="w-full max-w-screen-xl mx-auto">
+    <footer className="w-full max-w-screen-xl mx-auto print:hidden">
       <nav className="flex flex-col items-start justify-between w-full gap-6 pt-16 pb-16 space-y-6 md:space-y-0 md:flex-row md:pt-14 lg:pb-40">
         <div className="flex flex-col items-center w-full h-full space-y-5 md:items-start lg:w-72">
           <Link href="/">

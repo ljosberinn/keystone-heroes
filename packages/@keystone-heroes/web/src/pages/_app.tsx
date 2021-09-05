@@ -34,7 +34,7 @@ export default function App({
       <RouteChangeIndicator />
       <ThemeProvider attribute="class" defaultTheme="dark">
         <Header />
-        <main className="flex flex-col flex-grow w-full px-4 lg:px-8">
+        <main className="flex flex-col w-full px-4 mx-auto lg:px-8 max-w-screen-2xl ">
           <Component {...pageProps} />
         </main>
         <Footer />
