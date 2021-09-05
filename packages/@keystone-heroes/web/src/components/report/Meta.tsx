@@ -7,6 +7,20 @@ import { createWCLUrl, fightTimeToString } from "src/utils";
 import { AbilityIcon, WCL_ASSET_URL } from "../AbilityIcon";
 import { ExternalLink } from "../ExternalLink";
 
+const classTextMap: Record<string, string> = {
+  demonhunter: "text-demonhunter",
+  warlock: "text-warlock",
+  rogue: "text-rogue",
+  warrior: "text-warrior",
+  priest: "text-priest",
+  hunter: "text-hunter",
+  deathknight: "text-deathknight",
+  shaman: "text-shaman",
+  paladin: "text-paladin",
+  monk: "text-monk",
+  druid: "text-druid",
+};
+
 export function Meta(): JSX.Element {
   const { reportID, fightID, fight } = useFight();
 
@@ -72,9 +86,11 @@ export function Meta(): JSX.Element {
         <h2 className="pb-4 text-xl font-bold">Group Composition</h2>
         <div className="flex flex-col justify-between sm:flex-row lg:flex-col lg:space-y-2">
           {fight.player.map((player) => {
+            const classColor = classTextMap[player.class.toLowerCase()];
+
             return (
               <div
-                className={`flex justify-between sm:flex-col lg:flex-row bg-${player.class.toLowerCase()}`}
+                className="flex justify-between sm:flex-col lg:flex-row"
                 key={player.actorID}
               >
                 <div className="flex space-x-2">
@@ -98,7 +114,13 @@ export function Meta(): JSX.Element {
                           className="object-cover w-full h-full rounded-full"
                         />
                       </div>{" "}
-                      <span className={`text-${player.class.toLowerCase()}`}>
+                      <span
+                        className={`font-semibold ${
+                          player.class === "Priest"
+                            ? `text-black dark:${classColor}`
+                            : classColor
+                        }`}
+                      >
                         {player.name}
                       </span>
                     </a>
