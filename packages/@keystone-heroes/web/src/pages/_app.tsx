@@ -34,9 +34,11 @@ export default function App({
       <RouteChangeIndicator />
       <ThemeProvider attribute="class" defaultTheme="dark">
         <Header />
-        <main className="flex flex-col w-full px-4 mx-auto lg:px-8 max-w-screen-2xl ">
-          <Component {...pageProps} />
-        </main>
+        <div className="bg-gray-100 dark:bg-coolgray-800">
+          <main className="flex flex-col w-full p-6 mx-auto lg:p-6 2xl:px-0 max-w-screen-2xl">
+            <Component {...pageProps} />
+          </main>
+        </div>
         <Footer />
       </ThemeProvider>
     </>

@@ -75,7 +75,7 @@ function PullHeader({
   return (
     <div
       className={classnames(
-        "flex justify-between w-full p-2 shadow-lg dark:bg-coolgray-700 bg-gray-200",
+        "flex justify-between w-full p-2 shadow-lg dark:bg-coolgray-700 bg-white shadow-sm",
         selected ? "rounded-t-lg" : "rounded-lg"
       )}
     >
@@ -220,7 +220,7 @@ function PullBody({ pull, allPulls, player }: PullBodyProps) {
   );
 
   return (
-    <div className="p-2 bg-gray-100 rounded-b-lg dark:bg-coolgray-600">
+    <div className="p-2 rounded-b-lg shadow-sm bg-coolgray-100 dark:bg-coolgray-600">
       {during.length > 0 && (
         <>
           <h2 className="text-xl font-bold">During Pull</h2>

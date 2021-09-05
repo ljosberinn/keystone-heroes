@@ -34,9 +34,6 @@ module.exports = {
       colors: classColors,
     },
   },
-  variants: {
-    extend: {},
-  },
   plugins: [],
   darkMode: "class",
 };

@@ -16,7 +16,7 @@ export function Meta(): JSX.Element {
 
   return (
     <div className="flex flex-col justify-between w-full lg:w-2/6">
-      <div className="bg-gray-200 rounded-lg dark:bg-coolgray-700">
+      <div className="bg-white rounded-t-lg shadow-sm lg:rounded-lg dark:bg-coolgray-700">
         <div className="justify-between p-4 md:flex lg:block ">
           <h1 className="text-4xl font-bold">
             <ExternalLink href={createWCLUrl({ reportID, fightID })}>
@@ -48,7 +48,7 @@ export function Meta(): JSX.Element {
         <div className="flex p-4 pt-0 space-x-2 text-2xl">
           <span>{fightTimeToString(fight.meta.time)}</span>
           <span
-            className="italic text-green-500 dark:text-green-500"
+            className="italic text-green-600 dark:text-green-500"
             title={`${fight.meta.chests} chest${
               fight.meta.chests > 1 ? "s" : ""
             }`}
@@ -57,7 +57,7 @@ export function Meta(): JSX.Element {
           </span>
           {fight.meta.totalDeaths > 0 && (
             <span
-              className="italic text-red-500 dark:text-red-500"
+              className="italic text-red-600 dark:text-red-500"
               title={`${fight.meta.totalDeaths} deaths`}
             >
               -{fightTimeToString(fight.meta.totalDeaths * 5 * 1000, true)}
@@ -68,7 +68,7 @@ export function Meta(): JSX.Element {
 
       {/* <-------> */}
 
-      <div className="p-4 bg-gray-100 rounded-lg dark:bg-coolgray-600">
+      <div className="p-4 bg-white rounded-b-lg shadow-sm lg:rounded-lg dark:bg-coolgray-600">
         <h2 className="pb-4 text-xl font-bold">Group Composition</h2>
         <div className="flex flex-col justify-between sm:flex-row lg:flex-col lg:space-y-2">
           {fight.player.map((player) => {

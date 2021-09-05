@@ -254,7 +254,7 @@ export function Map(): JSX.Element {
   return (
     <section className="w-full h-full max-w-screen-xl pt-4 lg:pt-0 lg:w-4/6">
       <Triangle />
-      <div className="px-4 pt-4 bg-gray-200 rounded-t-lg dark:bg-coolgray-700">
+      <div className="px-4 pt-4 bg-white rounded-t-lg shadow-sm dark:bg-coolgray-700">
         <h2 className="text-2xl font-bold">Route</h2>
         <div className="flex justify-between">
           <div
@@ -277,12 +277,18 @@ export function Map(): JSX.Element {
                     ref={(ref) => {
                       buttonRefs.current[index] = ref;
                     }}
-                    className={`focus:outline-none focus:ring disabled:cursor-not-allowed dark:disabled:text-coolgray-500 disabled:text-coolgray-700 ${
-                      selected ? "border-coolgray-500 font-bold" : ""
+                    className={`focus:outline-none focus:ring rounded-md px-2 ${
+                      selected
+                        ? "dark:bg-coolgray-500 bg-coolgray-400"
+                        : "dark:bg-coolgray-600 bg-coolgray-200 hover:bg-coolgray-400"
                     }`}
-                    onClick={() => {
-                      onTabButtonClick(index);
-                    }}
+                    onClick={
+                      selected
+                        ? undefined
+                        : () => {
+                            onTabButtonClick(index);
+                          }
+                    }
                   >
                     {zone.name}
                   </button>
@@ -292,7 +298,7 @@ export function Map(): JSX.Element {
           </div>
         </div>
       </div>
-      <div className="p-2 bg-gray-100 rounded-b-lg dark:bg-coolgray-600">
+      <div className="p-2 rounded-b-lg shadow-sm bg-coolgray-100 dark:bg-coolgray-600">
         {loading ? (
           <img
             src="/static/maps/ph.jpg"
@@ -409,7 +415,7 @@ function MapOptionsToggle() {
       type="button"
       onClick={toggleMapOptions}
       title="Map Options"
-      className="absolute flex p-1 bg-gray-100 rounded-full focus:outline-none top-2 right-2 dark:bg-coolgray-600"
+      className="absolute flex p-1 bg-white rounded-full focus:outline-none focus:ring top-2 right-2 dark:bg-coolgray-600 dark:focus:bg-transparent"
     >
       <img
         src="/static/icons/trade_engineering.jpg"
@@ -428,7 +434,7 @@ function LegendToggle() {
       onClick={toggle}
       type="button"
       title="Legend"
-      className="absolute flex p-1 bg-gray-100 rounded-full focus:outline-none top-14 right-2 dark:bg-coolgray-600"
+      className="absolute flex p-1 bg-white rounded-full focus:outline-none focus:ring top-14 right-2 dark:bg-coolgray-600 dark:focus:bg-transparent"
     >
       <img
         src="/static/icons/inv_misc_questionmark.jpg"
