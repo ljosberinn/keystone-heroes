@@ -33,7 +33,8 @@ export function RouteChangeIndicator(): JSX.Element {
       events.off("routeChangeComplete", handleRouteChangeEnd);
       events.off("routeChangeError", handleRouteChangeEnd);
     };
-  }, [events]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>
