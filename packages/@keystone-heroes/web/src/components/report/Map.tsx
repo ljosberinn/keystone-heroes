@@ -2,7 +2,7 @@ import type { FightSuccessResponse } from "@keystone-heroes/api/functions/fight"
 // import { isBoss } from "@keystone-heroes/db/data/boss";
 import dynamic from "next/dynamic";
 import type { KeyboardEvent } from "react";
-import {
+import React, {
   useMemo,
   Fragment,
   useState,
@@ -170,7 +170,6 @@ export function Map(): JSX.Element {
 
   const zones = useMemo(() => (fight ? fight.dungeon.zones : []), [fight]);
   const pulls = useMemo(() => (fight ? fight.pulls : []), [fight]);
-  const startTime = fight ? fight.meta.startTime : 0;
 
   // synchronize selected tab with pull selection in <Data />
   useEffect(() => {
@@ -253,23 +252,12 @@ export function Map(): JSX.Element {
 
   // console.log({ isOffscreen });
 
-  const pullsWithBoss = pulls.filter((pull) => pull.hasBoss);
-
   return (
     <section className="w-full h-full max-w-screen-xl pt-4 lg:pt-0 lg:w-4/6">
       <Triangle />
       <div className="px-4 pt-4 bg-white rounded-t-lg shadow-sm dark:bg-coolgray-700">
         <h2 className="text-2xl font-bold">Route</h2>
 
-        <p>
-          {pullsWithBoss.map((pull, index) => (
-            <span key={pull.startTime}>
-              Boss {index + 1}:{" "}
-              {fightTimeToString(pull.endTime - startTime, true)}
-              {index !== pullsWithBoss.length - 1 && " > "}
-            </span>
-          ))}
-        </p>
         <div className="flex justify-between">
           <div
             role="tablist"
@@ -369,7 +357,6 @@ export function Map(): JSX.Element {
                     </picture>
 
                     <Svg
-                      // pulls={pulls}
                       imageSize={imageSize}
                       zoneID={zone.id}
                       onDoorClick={(zoneID: number) => {
@@ -396,6 +383,31 @@ export function Map(): JSX.Element {
         )}
       </div>
     </section>
+  );
+}
+
+type BossIndicatorKillProps = {
+  imageHeight: number;
+};
+
+function BossKillIndicator({ imageHeight }: BossIndicatorKillProps) {
+  const { fight } = useFight();
+  const pulls = fight ? fight.pulls : [];
+  const startTime = fight ? fight.meta.startTime : 0;
+
+  const pullsWithBoss = pulls.filter((pull) => pull.hasBoss);
+
+  return (
+    <g>
+      <text className="text-white fill-current" x={10} y={imageHeight - 10}>
+        {pullsWithBoss.map((pull, index) => (
+          <Fragment key={pull.startTime}>
+            Boss {index + 1} {fightTimeToString(pull.endTime - startTime, true)}
+            {index !== pullsWithBoss.length - 1 && " > "}
+          </Fragment>
+        ))}
+      </text>
+    </g>
   );
 }
 
@@ -483,6 +495,7 @@ function Svg({ imageSize, zoneID, onDoorClick }: SvgProps) {
         `}
       </style>
       <svg className="absolute w-full h-full svg focus:outline-none">
+        <BossKillIndicator imageHeight={imageSize.clientHeight} />
         <DoorIndicators
           id={zoneID}
           xFactor={imageSize.clientWidth}
