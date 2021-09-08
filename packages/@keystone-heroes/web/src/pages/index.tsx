@@ -1,7 +1,7 @@
-import { isValidReportId } from "@keystone-heroes/wcl/utils";
 import { useRouter } from "next/router";
 import type { FormEvent } from "react";
 import { useState } from "react";
+import { parseWCLUrl } from "src/utils";
 
 export default function Home(): JSX.Element | null {
   const { push } = useRouter();
@@ -11,23 +11,15 @@ export default function Home(): JSX.Element | null {
   function handleSubmit(event: FormEvent) {
     event.preventDefault();
 
-    const isReportID = isValidReportId(url);
+    const { reportID, fightID } = parseWCLUrl(url);
 
-    if (isReportID) {
+    if (reportID) {
+      const nextPath = `/report/${reportID}${
+        fightID ? `?fightID=${fightID}` : ""
+      }`;
+
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      push(`/report/${url}`);
-      return;
-    }
-
-    const { pathname, host } = new URL(url);
-
-    if (host === "www.warcraftlogs.com") {
-      const maybeID = pathname.slice(9);
-
-      if (isValidReportId(maybeID)) {
-        // eslint-disable-next-line @typescript-eslint/no-floating-promises
-        push(`/report/${maybeID}`);
-      }
+      push(nextPath);
     }
   }
 

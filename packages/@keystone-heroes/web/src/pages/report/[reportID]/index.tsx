@@ -3,6 +3,7 @@ import { isValidReportId } from "@keystone-heroes/wcl/utils";
 import type { GetStaticPaths, GetStaticProps } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 import { classnames } from "src/utils/classnames";
 
 import { LinkBox, LinkOverlay } from "../../../components/LinkBox";
@@ -12,6 +13,7 @@ type ReportProps = {
   cache?: {
     report: ReportResponse | null;
     reportID: string | null;
+    fightID: string | null;
   };
 };
 
@@ -22,6 +24,8 @@ const useReportURL = (cache: ReportProps["cache"]) => {
     return {
       url: null,
       reportID: null,
+      fightID:
+        query.fightID && !Array.isArray(query.fightID) ? query.fightID : null,
     };
   }
 
@@ -29,15 +33,17 @@ const useReportURL = (cache: ReportProps["cache"]) => {
     return {
       url: null,
       reportID: cache.reportID,
+      fightID: null,
     };
   }
 
-  const { reportID } = query;
+  const { reportID, fightID = null } = query;
 
-  if (!isValidReportId(reportID)) {
+  if (!isValidReportId(reportID) || Array.isArray(fightID)) {
     return {
       url: null,
       reportID: null,
+      fightID: null,
     };
   }
 
@@ -48,19 +54,50 @@ const useReportURL = (cache: ReportProps["cache"]) => {
   return {
     url: `/api/report?${params}`,
     reportID,
+    fightID,
   };
 };
 
-export default function Report({ cache }: ReportProps): JSX.Element | null {
-  const { url, reportID } = useReportURL(cache);
+function useSeamlessFightRedirect(
+  report: ReportResponse | null,
+  reportID: string | null,
+  fightID: string | null
+) {
+  const { push } = useRouter();
 
-  const [report] = useAbortableFetch<ReportResponse>({
+  useEffect(() => {
+    if (!report || "error" in report || !reportID || !fightID) {
+      return;
+    }
+
+    const safeFightID =
+      // if "last" is selected, ensure its a valid fight to select
+      fightID === "last" && report.fights.length > 0
+        ? report.fights[report.fights.length - 1].id
+        : // ensure this fightID actually exists
+        report.fights.some((fight) => `${fight.id}` === fightID)
+        ? fightID
+        : null;
+
+    if (safeFightID) {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      push(`/report/${reportID}/${safeFightID}`);
+    }
+  }, [report, fightID, push, reportID]);
+}
+
+export default function Report({ cache }: ReportProps): JSX.Element | null {
+  const { url, reportID, fightID } = useReportURL(cache);
+
+  const [report, loading] = useAbortableFetch<ReportResponse>({
     initialState: cache?.report ?? null,
     url,
   });
 
+  useSeamlessFightRedirect(report, reportID, fightID);
+
   if (report && "error" in report) {
-    return <h1>{report.error}</h1>;
+    return <h1>error: {report.error}</h1>;
   }
 
   const fights = report?.fights ?? Array.from({ length: 4 });
@@ -70,7 +107,7 @@ export default function Report({ cache }: ReportProps): JSX.Element | null {
       <Head>
         <title>Keystone Heroes - {report?.title ?? "unknown report"}</title>
       </Head>
-      <h1>{report?.title ?? "unknown report"}</h1>
+      <h1>{loading ? "loading" : report?.title ?? "unknown report"}</h1>
       <div>
         {report?.affixes?.map((affix) => (
           <img
@@ -192,6 +229,7 @@ export const getStaticProps: GetStaticProps<ReportProps, StaticPathParams> =
         cache: {
           report: null,
           reportID: null,
+          fightID: null,
         },
       },
     };

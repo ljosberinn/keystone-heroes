@@ -3,6 +3,9 @@ import { ThemeProvider } from "next-themes";
 import Head from "next/head";
 import "../styles/globals.css";
 import type { NextRouter } from "next/router";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
+import { parseWCLUrl } from "src/utils";
 
 import { Footer } from "../components/Footer";
 import { Header } from "../components/Header";
@@ -23,6 +26,8 @@ export default function App({
   Component,
   pageProps,
 }: AppRenderProps): JSX.Element {
+  useWCLURLPaste();
+
   return (
     <>
       <Head>
@@ -43,4 +48,33 @@ export default function App({
       </ThemeProvider>
     </>
   );
+}
+
+function useWCLURLPaste() {
+  const { push } = useRouter();
+
+  useEffect(() => {
+    const listener = (event: ClipboardEvent) => {
+      if (!event.clipboardData) {
+        return;
+      }
+
+      const paste = event.clipboardData.getData("text");
+      const { reportID, fightID } = parseWCLUrl(paste);
+
+      if (reportID) {
+        const nextPath = `/report/${reportID}${
+          fightID ? `?fightID=${fightID}` : ""
+        }`;
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
+        push(nextPath);
+      }
+    };
+
+    document.addEventListener("paste", listener);
+
+    return () => {
+      document.removeEventListener("paste", listener);
+    };
+  }, [push]);
 }

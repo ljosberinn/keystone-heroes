@@ -1,3 +1,5 @@
+import { isValidReportId } from "@keystone-heroes/wcl/utils";
+
 export const fightTimeToString = (time: number, omitMs = false): string => {
   const inSeconds = time / 1000;
   const minutes = Math.floor(inSeconds / 60);
@@ -36,4 +38,60 @@ export const createWCLUrl = ({
   const url = `https://www.warcraftlogs.com/reports/${report}#fight=${fight}`;
 
   return `${url}&${params}`;
+};
+
+export const parseWCLUrl = (
+  maybeURL: string
+): { reportID: null | string; fightID: null | string } => {
+  const isReportID = isValidReportId(maybeURL);
+
+  if (isReportID) {
+    return {
+      reportID: maybeURL,
+      fightID: null,
+    };
+  }
+  try {
+    const { pathname, host, hash } = new URL(maybeURL);
+
+    if (host === "www.warcraftlogs.com" && pathname.startsWith("/reports/")) {
+      const maybeReportID = pathname.replace("/reports/", "");
+
+      if (!isValidReportId(maybeReportID)) {
+        return {
+          reportID: null,
+          fightID: null,
+        };
+      }
+
+      if (hash) {
+        const maybeFightID = new URLSearchParams(hash.slice(1)).get("fight");
+
+        if (
+          maybeFightID &&
+          (maybeFightID === "last" || Number.parseInt(maybeFightID) > 0)
+        ) {
+          return {
+            reportID: maybeReportID,
+            fightID: maybeFightID,
+          };
+        }
+      }
+
+      return {
+        reportID: maybeReportID,
+        fightID: null,
+      };
+    }
+
+    return {
+      reportID: null,
+      fightID: null,
+    };
+  } catch {
+    return {
+      reportID: null,
+      fightID: null,
+    };
+  }
 };
