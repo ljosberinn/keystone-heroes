@@ -52,7 +52,7 @@ export type ReportResponse =
         FightWithMeta,
         "gameZone" | "player" | "startTime" | "endTime"
       > & {
-        dungeon: Pick<Dungeon, "name" | "time" | "id"> | null;
+        dungeon: Dungeon | null;
         player: (Pick<Player, "soulbindID" | "covenantID"> & {
           class: string;
           spec: string;
@@ -421,7 +421,7 @@ type RawReport = {
     | "totalDeaths"
     | "rating"
   > & {
-    dungeon: Pick<Dungeon, "name" | "time" | "id"> | null;
+    dungeon: Dungeon | null;
     PlayerFight: {
       player: {
         covenant: {
@@ -546,6 +546,7 @@ const createResponseFromRawData = ({
                   name: dungeon.name,
                   time: dungeon.timer[0],
                   id: gameZone.id,
+                  slug: dungeon.slug,
                 }
               : null,
           player: player.map((player) => {
@@ -605,6 +606,7 @@ const createReportFindFirst = (reportID: string) => {
               name: true,
               time: true,
               id: true,
+              slug: true,
             },
           },
           PlayerFight: {

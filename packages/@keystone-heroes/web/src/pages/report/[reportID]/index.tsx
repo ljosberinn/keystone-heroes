@@ -3,6 +3,7 @@ import { isValidReportId } from "@keystone-heroes/wcl/utils";
 import type { GetStaticPaths, GetStaticProps } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import { classnames } from "src/utils/classnames";
 
 import { LinkBox, LinkOverlay } from "../../../components/LinkBox";
 import { useAbortableFetch } from "../../../hooks/useAbortableFetch";
@@ -102,26 +103,34 @@ type FightCardProps = {
 function FightCard({ fight, reportID }: FightCardProps) {
   if (!fight) {
     return (
-      <div className="flex items-center justify-center h-12 text-2xl font-extrabold text-red-900 bg-pink-200 rounded-md">
+      <div className="flex items-center justify-center h-12 text-2xl font-extrabold text-red-900 rounded-md">
         fallback
       </div>
     );
   }
 
   return (
-    <LinkBox
-      className="relative flex items-center justify-center h-12 h-64 text-2xl font-extrabold text-red-900 bg-pink-200 rounded-md"
-      // style={{
-      //   backgroundImage: fight.dungeon
-      //     ? `url(/static/dungeons/${fight.dungeon.id}.jpg)`
-      //     : undefined,
-      // }}
-    >
-      <LinkOverlay href={`/report/${reportID}/${fight.id}`}>
-        {fight.id}
-      </LinkOverlay>
+    <>
+      {fight.dungeon && (
+        <style jsx>
+          {`
+            .bg-${fight.dungeon.slug.toLowerCase()} {
+              background-image: url(/static/dungeons/${fight.dungeon.slug.toLowerCase()}.jpg);
+            }
+          `}
+        </style>
+      )}
+      <LinkBox
+        className={classnames(
+          "relative flex items-center justify-center h-12 h-64 text-2xl font-extrabold text-red-900 rounded-md bg-cover bg-white bg-blend-luminosity",
+          fight.dungeon && `bg-${fight.dungeon.slug.toLowerCase()}`
+        )}
+      >
+        <LinkOverlay href={`/report/${reportID}/${fight.id}`}>
+          {fight.id}
+        </LinkOverlay>
 
-      {/* <table>
+        {/* <table>
         <tbody>
           <tr>
             {fight.player.map((player, index) => (
@@ -160,7 +169,8 @@ function FightCard({ fight, reportID }: FightCardProps) {
           </tr>
         </tbody>
       </table> */}
-    </LinkBox>
+      </LinkBox>
+    </>
   );
 }
 
