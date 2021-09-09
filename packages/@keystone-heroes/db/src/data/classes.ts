@@ -5,6 +5,7 @@ type Ability = {
   name: string;
   id: number;
   cd:
+    | 25
     | 30
     | 40
     | 45
@@ -157,6 +158,12 @@ export const classes: Class[] = [
             id: 227_847,
             cd: 90,
             icon: "ability_warrior_bladestorm",
+          },
+          {
+            name: "Colossus Smash",
+            cd: 90,
+            id: 167_105,
+            icon: "ability_warrior_colossussmash",
           },
         ],
       },
@@ -813,6 +820,18 @@ export const classes: Class[] = [
         cd: 60,
         icon: "ability_bastion_hunter",
       },
+      {
+        name: "Flayed Shot",
+        id: 324_149,
+        cd: 30,
+        icon: "ability_revendreth_hunter",
+      },
+      {
+        name: "Death Chakram",
+        id: 325_028,
+        cd: 45,
+        icon: "ability_maldraxxus_hunter",
+      },
     ],
     specs: [
       {
@@ -1124,6 +1143,12 @@ export const classes: Class[] = [
         cd: 60,
         icon: "ability_bastion_druid",
       },
+      {
+        name: "Adaptive Swarm",
+        id: 325_727,
+        cd: 25,
+        icon: "ability_maldraxxus_druid",
+      },
     ],
     specs: [
       {
@@ -1269,7 +1294,14 @@ export const classes: Class[] = [
   },
   {
     name: PlayableClass.DemonHunter,
-    cooldowns: [],
+    cooldowns: [
+      {
+        name: "Spectral Sight",
+        id: 188_501,
+        cd: 60,
+        icon: "ability_demonhunter_spectralsight",
+      },
+    ],
     covenantAbilities: [
       {
         name: "Elysian Decree",
@@ -1289,6 +1321,7 @@ export const classes: Class[] = [
         cd: 60,
         icon: "ability_revendreth_demonhunter",
       },
+      // Fodder to the Flame is passive
     ],
     specs: [
       {
@@ -1373,6 +1406,12 @@ export const classes: Class[] = [
             id: 191_427,
             cd: 240,
             icon: "ability_demonhunter_metamorphasisdps",
+          },
+          {
+            name: "Blur",
+            id: 198_589,
+            cd: 60,
+            icon: "ability_demonhunter_blur",
           },
         ],
       },

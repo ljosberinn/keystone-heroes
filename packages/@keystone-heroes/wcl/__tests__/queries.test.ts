@@ -1,5 +1,5 @@
 import { DungeonIDs } from "@keystone-heroes/db/data/dungeons";
-import { Affixes, PlayableClass } from "@keystone-heroes/db/types";
+import { Affixes } from "@keystone-heroes/db/types";
 import { graphql } from "msw";
 import { setupServer } from "msw/node";
 
@@ -81,23 +81,23 @@ describe("getEvents", () => {
           [
             {
               actorID: 1,
-              class: PlayableClass.DemonHunter,
+              class: 9,
             },
             {
               actorID: 2,
-              class: PlayableClass.DemonHunter,
+              class: 9,
             },
             {
               actorID: 3,
-              class: PlayableClass.DemonHunter,
+              class: 9,
             },
             {
               actorID: 5,
-              class: PlayableClass.DemonHunter,
+              class: 9,
             },
             {
               actorID: 60,
-              class: PlayableClass.DemonHunter,
+              class: 9,
             },
           ]
         );

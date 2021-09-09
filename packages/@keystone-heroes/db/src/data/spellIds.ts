@@ -8,11 +8,12 @@ export const remarkableSpellIDs = new Set(
     );
     const allCovenantIds = data.covenantAbilities.map((ability) => ability.id);
 
-    return [
-      ...acc,
+    const unique = new Set([
       ...allSharedCooldownIds,
       ...allSpecCooldownIds,
       ...allCovenantIds,
-    ];
+    ]);
+
+    return [...acc, ...unique];
   }, [])
 );
