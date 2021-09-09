@@ -4,6 +4,7 @@ import type { GetStaticPaths, GetStaticProps } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+import { WCL_ASSET_URL } from "src/components/AbilityIcon";
 import { classnames } from "src/utils/classnames";
 
 import { LinkBox, LinkOverlay } from "../../../components/LinkBox";
@@ -114,7 +115,7 @@ export default function Report({ cache }: ReportProps): JSX.Element | null {
             loading="lazy"
             alt={affix.name}
             key={affix.name}
-            src={`https://assets.rpglogs.com/img/warcraft/abilities/${affix.icon}`}
+            src={`${WCL_ASSET_URL}${affix.icon}.jpg`}
           />
         ))}
       </div>

@@ -3,19 +3,19 @@ import type { Covenant } from "@prisma/client";
 
 export const covenantMap: Record<Covenant["id"], Omit<Covenant, "id">> = {
   1: {
-    icon: "ui_sigil_kyrian.jpg",
+    icon: "ui_sigil_kyrian",
     name: Covenants.Kyrian,
   },
   2: {
-    icon: "ui_sigil_venthyr.jpg",
+    icon: "ui_sigil_venthyr",
     name: Covenants.Venthyr,
   },
   3: {
-    icon: "ui_sigil_nightfae.jpg",
+    icon: "ui_sigil_nightfae",
     name: Covenants.NightFae,
   },
   4: {
-    icon: "ui_sigil_necrolord.jpg",
+    icon: "ui_sigil_necrolord",
     name: Covenants.Necrolord,
   },
 };

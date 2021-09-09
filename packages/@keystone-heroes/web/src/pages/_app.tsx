@@ -5,6 +5,7 @@ import "../styles/globals.css";
 import type { NextRouter } from "next/router";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+import { StaticDataProvider } from "src/context/StaticData";
 import { parseWCLUrl } from "src/utils";
 
 import { Footer } from "../components/Footer";
@@ -29,7 +30,7 @@ export default function App({
   useWCLURLPaste();
 
   return (
-    <>
+    <StaticDataProvider>
       <Head>
         <meta
           name="viewport"
@@ -46,7 +47,7 @@ export default function App({
         </div>
         <Footer />
       </ThemeProvider>
-    </>
+    </StaticDataProvider>
   );
 }
 

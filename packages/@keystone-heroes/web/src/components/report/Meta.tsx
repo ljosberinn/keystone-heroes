@@ -47,7 +47,7 @@ export function Meta(): JSX.Element {
             {fight.affixes.map((affix) => (
               <div key={affix.name} className="w-10 h-10">
                 <img
-                  src={`${WCL_ASSET_URL}${affix.icon}`}
+                  src={`${WCL_ASSET_URL}${affix.icon}.jpg`}
                   alt={affix.name}
                   title={affix.name}
                   className="object-cover w-full h-full rounded-full"

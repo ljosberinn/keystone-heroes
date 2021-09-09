@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "postinstall": "yarn static-data",
+    "static-data": "ts-node -r tsconfig-paths/register src/createStaticData && prettier --write src/staticData.ts && eslint --fix src/staticData.ts",
     "build": "next build",
     "start": "next start",
     "format": "prettier --write src",
@@ -53,6 +55,7 @@
     "postcss": "8.3.6",
     "storybook": "6.3.8",
     "ts-jest": "27.0.5",
+    "ts-node": "10.2.1",
     "typescript": "4.4.2"
   }
 }

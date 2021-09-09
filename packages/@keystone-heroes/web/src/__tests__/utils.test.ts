@@ -76,4 +76,17 @@ describe("parseWCLUrl", () => {
       }
     `);
   });
+
+  test("passes given report url with trailing slash", () => {
+    expect(
+      parseWCLUrl(
+        "https://www.warcraftlogs.com/reports/aZ9y3jMctCqRvhKA/#fight=last"
+      )
+    ).toMatchInlineSnapshot(`
+      Object {
+        "fightID": "last",
+        "reportID": "aZ9y3jMctCqRvhKA",
+      }
+    `);
+  });
 });

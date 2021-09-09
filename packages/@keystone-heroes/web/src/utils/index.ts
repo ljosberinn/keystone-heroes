@@ -55,7 +55,7 @@ export const parseWCLUrl = (
     const { pathname, host, hash } = new URL(maybeURL);
 
     if (host === "www.warcraftlogs.com" && pathname.startsWith("/reports/")) {
-      const maybeReportID = pathname.replace("/reports/", "");
+      const maybeReportID = pathname.replace("/reports/", "").replace("/", "");
 
       if (!isValidReportId(maybeReportID)) {
         return {

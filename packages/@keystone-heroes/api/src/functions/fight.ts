@@ -118,7 +118,7 @@ export type FightSuccessResponse = {
     covenantTraits: Pick<CovenantTrait, "icon" | "name">[];
     talents: Pick<Talent, "icon" | "name">[];
     covenant: Pick<Covenant, "name" | "icon"> | null;
-    soulbind: Pick<Soulbind, "name" | "icon"> | null;
+    soulbind: Pick<Soulbind, "name"> | null;
     name: Character["name"];
     class: Class["name"];
     server: Server["name"];
@@ -232,7 +232,7 @@ type RawFight =
             talent: Pick<Talent, "icon" | "name">;
           }[];
           covenant: Pick<Covenant, "name" | "icon"> | null;
-          soulbind: Pick<Soulbind, "name" | "icon"> | null;
+          soulbind: Pick<Soulbind, "name"> | null;
           character: Pick<Character, "name"> & {
             class: Pick<Class, "name">;
             // TODO: re-evaluate whether we need ids here; maybe for x-linking?
@@ -382,7 +382,6 @@ const createFightFindFirst = (reportID: string, fightID: number) => {
               soulbind: {
                 select: {
                   name: true,
-                  icon: true,
                 },
               },
               character: {
