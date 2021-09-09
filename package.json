@@ -11,7 +11,7 @@
     "start": "yarn --cwd packages/@keystone-heroes/web start",
     "storybook": "yarn --cwd packages/@keystone-heroes/web storybook",
     "test": "yarn workspaces -p run test",
-    "postinstall": "yarn-deduplicate -l && yarn --cwd packages/@keystone-heroes/db generate",
+    "postinstall": "yarn-deduplicate -l && yarn --cwd packages/@keystone-heroes/db generate && yarn --cwd packages/@keystone-heroes/web static-data",
     "lint": "yarn workspaces run lint",
     "lint:fix": "yarn workspaces run lint --fix && yarn workspaces run format",
     "types": "yarn --cwd packages/@keystone-heroes/web types",

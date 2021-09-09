@@ -4,7 +4,6 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "postinstall": "yarn static-data",
     "static-data": "ts-node -r tsconfig-paths/register src/createStaticData && prettier --write src/staticData.ts && eslint --fix src/staticData.ts",
     "build": "next build",
     "start": "next start",
@@ -24,8 +23,8 @@
     "next": "11.1.2",
     "next-connect": "0.10.2",
     "next-themes": "0.0.15",
-    "react": "18.0.0-alpha-ed6c091fe-20210701",
-    "react-dom": "18.0.0-alpha-ed6c091fe-20210701",
+    "react": "18.0.0-alpha-edfe50510-20210823",
+    "react-dom": "18.0.0-alpha-edfe50510-20210823",
     "react-icons": "4.2.0",
     "tailwindcss": "2.2.14",
     "zustand": "3.5.10"
@@ -41,7 +40,7 @@
     "@testing-library/jest-dom": "5.14.1",
     "@testing-library/react": "12.0.0",
     "@types/jest": "27.0.1",
-    "@types/node": "16.9.0",
+    "@types/node": "16.9.1",
     "@types/react": "17.0.20",
     "@types/react-dom": "17.0.9",
     "@types/tailwindcss": "2.2.1",

@@ -277,6 +277,7 @@ export function Map(): JSX.Element {
                     role="tab"
                     data-orientation="horizontal"
                     aria-controls={`tabpanel-${zone.id}`}
+                    data-selected={selected ? "true" : "false"}
                     id={`tab-${zone.id}`}
                     onKeyDown={onKeyDown}
                     ref={(ref) => {

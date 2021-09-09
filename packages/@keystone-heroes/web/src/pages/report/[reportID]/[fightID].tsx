@@ -10,6 +10,7 @@ import { createContext, useContext } from "react";
 import { Data } from "src/components/report/Data";
 import { Map } from "src/components/report/Map";
 import { Meta } from "src/components/report/Meta";
+import { useStaticData } from "src/context/StaticData";
 import { useAbortableFetch } from "src/hooks/useAbortableFetch";
 import { fightTimeToString } from "src/utils";
 
@@ -125,12 +126,7 @@ export default function FightID({ cache }: FightIDProps): JSX.Element | null {
 
   return (
     <FightContext.Provider value={value}>
-      <Head>
-        <title>
-          KSH | {fight.dungeon.slug} +{fight.meta.level} in{" "}
-          {fightTimeToString(fight.meta.time)}
-        </title>
-      </Head>
+      <FightIDHead />
 
       <div className="flex flex-col space-x-0 lg:space-x-4 lg:flex-row">
         <Meta />
@@ -166,3 +162,27 @@ export const getStaticProps: GetStaticProps<FightIDProps, StaticPathParams> =
       },
     };
   };
+
+function FightIDHead() {
+  const { fight } = useFight();
+  const { dungeons } = useStaticData();
+
+  if (!fight) {
+    return (
+      <Head>
+        <title>Keystone Heroes | loading...</title>
+      </Head>
+    );
+  }
+
+  const dungeon = dungeons[fight.dungeon];
+
+  return (
+    <Head>
+      <title>
+        KSH | {dungeon.slug} +{fight.meta.level} in{" "}
+        {fightTimeToString(fight.meta.time)}
+      </title>
+    </Head>
+  );
+}
