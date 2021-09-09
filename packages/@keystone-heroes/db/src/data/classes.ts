@@ -918,6 +918,12 @@ export const classes: Class[] = [
         cd: 30,
         icon: "ability_ardenweald_monk",
       },
+      {
+        name: "Touch of Death",
+        id: 322_109,
+        icon: "ability_monk_touchofdeath",
+        cd: 180,
+      },
     ],
     specs: [
       {
@@ -961,12 +967,6 @@ export const classes: Class[] = [
             cd: 180,
             icon: "ability_monk_fortifyingale_new",
           },
-          {
-            name: "Touch of Death",
-            id: 322_109,
-            icon: "ability_monk_touchofdeath",
-            cd: 180,
-          },
         ],
       },
       {
@@ -1009,12 +1009,6 @@ export const classes: Class[] = [
             id: 115_203,
             cd: 360,
             icon: "ability_monk_fortifyingale_new",
-          },
-          {
-            name: "Touch of Death",
-            id: 322_109,
-            icon: "ability_monk_touchofdeath",
-            cd: 180,
           },
         ],
       },
@@ -1063,12 +1057,6 @@ export const classes: Class[] = [
             id: 115_288,
             cd: 60,
             icon: "ability_monk_energizingwine",
-          },
-          {
-            name: "Touch of Death",
-            id: 322_109,
-            icon: "ability_monk_touchofdeath",
-            cd: 120,
           },
         ],
       },

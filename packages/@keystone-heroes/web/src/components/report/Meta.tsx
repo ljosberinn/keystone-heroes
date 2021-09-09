@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events, jsx-a11y/anchor-is-valid */
 import type { FightSuccessResponse } from "@keystone-heroes/api/functions/fight";
 import Link from "next/link";
+import { useStaticData } from "src/context/StaticData";
 import { useFight } from "src/pages/report/[reportID]/[fightID]";
 import { createWCLUrl, fightTimeToString } from "src/utils";
 
@@ -19,14 +20,19 @@ const classTextMap: Record<string, string> = {
   paladin: "text-paladin",
   monk: "text-monk",
   druid: "text-druid",
+  mage: "text-mage",
 };
 
 export function Meta(): JSX.Element {
   const { reportID, fightID, fight } = useFight();
 
+  const { classes, dungeons } = useStaticData();
+
   if (!fight) {
     return <h1>loading</h1>;
   }
+
+  const dungeon = dungeons[fight.dungeon];
 
   return (
     <div className="flex flex-col justify-between w-full lg:w-2/6">
@@ -34,11 +40,9 @@ export function Meta(): JSX.Element {
         <div className="justify-between p-4 md:flex lg:block ">
           <h1 className="text-4xl font-bold">
             <ExternalLink href={createWCLUrl({ reportID, fightID })}>
-              <span className="lg:hidden 2xl:inline-block">
-                {fight.dungeon.name}
-              </span>
+              <span className="lg:hidden 2xl:inline-block">{dungeon.name}</span>
               <span className="hidden lg:inline-block 2xl:hidden">
-                {fight.dungeon.slug}
+                {dungeon.slug}
               </span>{" "}
               +{fight.meta.level}
             </ExternalLink>
@@ -67,7 +71,7 @@ export function Meta(): JSX.Element {
               fight.meta.chests > 1 ? "s" : ""
             }`}
           >
-            +{fightTimeToString(fight.dungeon.time - fight.meta.time)}
+            +{fightTimeToString(dungeon.timer[0] - fight.meta.time)}
           </span>
           {fight.meta.totalDeaths > 0 && (
             <span
@@ -86,7 +90,14 @@ export function Meta(): JSX.Element {
         <h2 className="pb-4 text-xl font-bold">Group Composition</h2>
         <div className="flex flex-col justify-between sm:flex-row lg:flex-col lg:space-y-2">
           {fight.player.map((player) => {
-            const classColor = classTextMap[player.class.toLowerCase()];
+            const { name, specs } = classes[player.class];
+            const spec = specs.find((spec) => spec.id === player.spec);
+
+            if (!spec) {
+              return null;
+            }
+
+            const classColor = classTextMap[name.toLowerCase()];
 
             return (
               <div
@@ -109,14 +120,14 @@ export function Meta(): JSX.Element {
                     >
                       <div className="w-8 h-8">
                         <img
-                          src={`/static/specs/${player.class}-${player.spec.name}.jpg`}
-                          alt={`${player.spec.name} ${player.class}`}
+                          src={`/static/specs/${name}-${spec.name}.jpg`}
+                          alt={`${spec.name} ${name}`}
                           className="object-cover w-full h-full rounded-full"
                         />
                       </div>{" "}
                       <span
                         className={`font-semibold ${
-                          player.class === "Priest"
+                          name === "Priest"
                             ? `text-black dark:${classColor}`
                             : classColor
                         }`}

@@ -231,6 +231,16 @@ const createCharacterKey = (
   character: Omit<Prisma.CharacterCreateManyInput, "classID">
 ) => `${character.name}-${character.serverID}`;
 
+const removeImageFormat = (icon: string) => {
+  if (!icon.includes(".")) {
+    return icon;
+  }
+
+  const [name] = icon.split(".");
+
+  return name;
+};
+
 const persistCharacters = async (
   data: Prisma.CharacterCreateManyInput[]
 ): Promise<Record<string, number>> => {
@@ -941,7 +951,7 @@ export const reportHandler: RequestHandler<Request, ReportResponse> = async (
         return {
           id: conduit.guid,
           name: conduit.name,
-          icon: conduit.abilityIcon,
+          icon: removeImageFormat(conduit.abilityIcon),
         };
       })
   );
@@ -952,7 +962,7 @@ export const reportHandler: RequestHandler<Request, ReportResponse> = async (
         return {
           id: talent.guid,
           name: talent.name,
-          icon: talent.abilityIcon,
+          icon: removeImageFormat(talent.abilityIcon),
           classID: player.classID,
           specID: player.specID,
         };
@@ -976,7 +986,7 @@ export const reportHandler: RequestHandler<Request, ReportResponse> = async (
           return {
             id: trait.guid,
             name: trait.name,
-            icon: trait.abilityIcon,
+            icon: removeImageFormat(trait.abilityIcon),
             covenantID: dataset.covenantID,
           };
         });

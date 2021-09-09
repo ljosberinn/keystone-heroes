@@ -10,6 +10,7 @@ import React, {
   useEffect,
   useCallback,
 } from "react";
+import { useStaticData } from "src/context/StaticData";
 import { usePrevious } from "src/hooks/usePrevious";
 import { useFight } from "src/pages/report/[reportID]/[fightID]";
 import {
@@ -144,13 +145,18 @@ export function Map(): JSX.Element {
   const selectedPull = useReportStore((state) => state.selectedPull);
   const previouslySelectedPull = usePrevious(selectedPull);
   // const [isOffscreen, setIsOffscreen] = useState(false);
+  const { dungeons } = useStaticData();
+  const zones = useMemo(
+    () => (fight ? dungeons[fight.dungeon].zones : []),
+    [fight, dungeons]
+  );
+  const pulls = useMemo(() => (fight ? fight.pulls : []), [fight]);
 
   const [selectedTab, setSelectedTab] = useState(() => {
     if (fight) {
+      const dungeon = dungeons[fight.dungeon];
       const zoneToSelect = fight.pulls[selectedPull - 1].zone;
-      const tab = fight.dungeon.zones.findIndex(
-        (zone) => zone.id === zoneToSelect
-      );
+      const tab = dungeon.zones.findIndex((zone) => zone.id === zoneToSelect);
 
       return tab > -1 ? tab : 0;
     }
@@ -167,9 +173,6 @@ export function Map(): JSX.Element {
       buttonRefs.current[selectedTab]?.focus();
     }
   });
-
-  const zones = useMemo(() => (fight ? fight.dungeon.zones : []), [fight]);
-  const pulls = useMemo(() => (fight ? fight.pulls : []), [fight]);
 
   // synchronize selected tab with pull selection in <Data />
   useEffect(() => {

@@ -1,5 +1,5 @@
 import type { DungeonIDs } from "@keystone-heroes/db/data/dungeons";
-import type { PlayableClass, Affixes } from "@keystone-heroes/db/types";
+import type { Affixes } from "@keystone-heroes/db/types";
 
 import {
   deathFilterExpression,
@@ -48,7 +48,7 @@ const generateFilterExpression = ({
 
 export const getEvents = async (
   params: EventParams,
-  playerMetaInformation: { actorID: number; class: PlayableClass }[]
+  playerMetaInformation: { actorID: number; class: number }[]
 ): Promise<{
   allEvents: AllTrackedEventTypes[];
   playerDeathEvents: DeathEvent[];

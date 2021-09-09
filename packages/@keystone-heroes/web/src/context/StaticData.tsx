@@ -1,9 +1,8 @@
 import type { ReactNode } from "react";
 import { useContext, createContext } from "react";
 
+import type { StaticData } from "../staticData";
 import { staticData } from "../staticData";
-
-type StaticData = typeof staticData;
 
 const StaticDataContext = createContext<null | StaticData>(null);
 

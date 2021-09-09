@@ -396,6 +396,7 @@ export const staticData = {
               icon: "spell_holy_ashestoashes",
             },
           ],
+          id: 1,
         },
         {
           name: "Fury",
@@ -414,6 +415,7 @@ export const staticData = {
               icon: "ability_warrior_focusedrage",
             },
           ],
+          id: 2,
         },
         {
           name: "Arms",
@@ -438,6 +440,7 @@ export const staticData = {
               icon: "ability_warrior_bladestorm",
             },
           ],
+          id: 3,
         },
       ],
     },
@@ -508,6 +511,7 @@ export const staticData = {
               icon: "spell_mage_altertime",
             },
           ],
+          id: 4,
         },
         {
           name: "Frost",
@@ -544,6 +548,7 @@ export const staticData = {
               icon: "ability_mage_rayoffrost",
             },
           ],
+          id: 5,
         },
         {
           name: "Arcane",
@@ -562,6 +567,7 @@ export const staticData = {
               icon: "spell_nature_enchantarmor",
             },
           ],
+          id: 6,
         },
       ],
     },
@@ -629,6 +635,7 @@ export const staticData = {
               icon: "ability_rogue_deadliness",
             },
           ],
+          id: 7,
         },
         {
           name: "Subtlety",
@@ -653,6 +660,7 @@ export const staticData = {
               icon: "ability_rogue_throwingspecialization",
             },
           ],
+          id: 8,
         },
         {
           name: "Outlaw",
@@ -671,6 +679,7 @@ export const staticData = {
               icon: "ability_rogue_murderspree",
             },
           ],
+          id: 9,
         },
       ],
     },
@@ -788,6 +797,7 @@ export const staticData = {
               icon: "spell_nature_stoneskintotem",
             },
           ],
+          id: 10,
         },
         {
           name: "Elemental",
@@ -836,6 +846,7 @@ export const staticData = {
               icon: "spell_fire_elemental_totem",
             },
           ],
+          id: 11,
         },
         {
           name: "Enhancement",
@@ -866,6 +877,7 @@ export const staticData = {
               icon: "ability_tracking",
             },
           ],
+          id: 12,
         },
       ],
     },
@@ -971,6 +983,7 @@ export const staticData = {
               icon: "spell_priest_voidblast",
             },
           ],
+          id: 13,
         },
         {
           name: "Holy",
@@ -1025,6 +1038,7 @@ export const staticData = {
               icon: "spell_holy_chastise",
             },
           ],
+          id: 14,
         },
         {
           name: "Discipline",
@@ -1068,6 +1082,7 @@ export const staticData = {
               icon: "spell_shadow_shadowfiend",
             },
           ],
+          id: 15,
         },
       ],
     },
@@ -1149,6 +1164,7 @@ export const staticData = {
               icon: "ability_devour",
             },
           ],
+          id: 16,
         },
         {
           name: "Survival",
@@ -1173,6 +1189,7 @@ export const staticData = {
               icon: "inv_coordinatedassault",
             },
           ],
+          id: 17,
         },
         {
           name: "Marksmanship",
@@ -1191,6 +1208,7 @@ export const staticData = {
               icon: "ability_trueshot",
             },
           ],
+          id: 18,
         },
       ],
     },
@@ -1234,6 +1252,12 @@ export const staticData = {
           id: 327_104,
           cd: 30,
           icon: "ability_ardenweald_monk",
+        },
+        {
+          name: "Touch of Death",
+          id: 322_109,
+          icon: "ability_monk_touchofdeath",
+          cd: 180,
         },
       ],
       specs: [
@@ -1283,13 +1307,8 @@ export const staticData = {
               cd: 180,
               icon: "ability_monk_fortifyingale_new",
             },
-            {
-              name: "Touch of Death",
-              id: 322_109,
-              icon: "ability_monk_touchofdeath",
-              cd: 180,
-            },
           ],
+          id: 19,
         },
         {
           name: "Brewmaster",
@@ -1331,13 +1350,8 @@ export const staticData = {
               cd: 360,
               icon: "ability_monk_fortifyingale_new",
             },
-            {
-              name: "Touch of Death",
-              id: 322_109,
-              icon: "ability_monk_touchofdeath",
-              cd: 180,
-            },
           ],
+          id: 20,
         },
         {
           name: "Windwalker",
@@ -1385,13 +1399,8 @@ export const staticData = {
               cd: 60,
               icon: "ability_monk_energizingwine",
             },
-            {
-              name: "Touch of Death",
-              id: 322_109,
-              icon: "ability_monk_touchofdeath",
-              cd: 120,
-            },
           ],
+          id: 21,
         },
       ],
     },
@@ -1505,6 +1514,7 @@ export const staticData = {
               icon: "ability_druid_improvedtreeform",
             },
           ],
+          id: 22,
         },
         {
           name: "Guardian",
@@ -1529,6 +1539,7 @@ export const staticData = {
               icon: "ability_druid_berserk",
             },
           ],
+          id: 23,
         },
         {
           name: "Balance",
@@ -1571,6 +1582,7 @@ export const staticData = {
               icon: "spell_druid_incarnation",
             },
           ],
+          id: 24,
         },
         {
           name: "Feral",
@@ -1595,6 +1607,7 @@ export const staticData = {
               icon: "ability_druid_tigersroar",
             },
           ],
+          id: 25,
         },
       ],
     },
@@ -1675,6 +1688,7 @@ export const staticData = {
               icon: "inv_glaive_1h_artifactaldorchi_d_06",
             },
           ],
+          id: 26,
         },
         {
           name: "Havoc",
@@ -1711,6 +1725,7 @@ export const staticData = {
               icon: "ability_demonhunter_metamorphasisdps",
             },
           ],
+          id: 27,
         },
       ],
     },
@@ -1834,6 +1849,7 @@ export const staticData = {
               icon: "ability_paladin_veneration",
             },
           ],
+          id: 28,
         },
         {
           name: "Holy",
@@ -1864,6 +1880,7 @@ export const staticData = {
               icon: "spell_paladin_lightshammer",
             },
           ],
+          id: 29,
         },
         {
           name: "Retribution",
@@ -1900,6 +1917,7 @@ export const staticData = {
               icon: "spell_holy_weaponmastery",
             },
           ],
+          id: 30,
         },
       ],
     },
@@ -1993,6 +2011,7 @@ export const staticData = {
               icon: "spell_shadow_summoninfernal",
             },
           ],
+          id: 31,
         },
         {
           name: "Demonology",
@@ -2023,6 +2042,7 @@ export const staticData = {
               icon: "ability_warlock_demonicempowerment",
             },
           ],
+          id: 32,
         },
         {
           name: "Affliction",
@@ -2041,6 +2061,7 @@ export const staticData = {
               icon: "inv_beholderwarlock",
             },
           ],
+          id: 33,
         },
       ],
     },
@@ -2165,6 +2186,7 @@ export const staticData = {
               icon: "inv_sword_07",
             },
           ],
+          id: 34,
         },
         {
           name: "Unholy",
@@ -2201,6 +2223,7 @@ export const staticData = {
               icon: "artifactability_unholydeathknight_deathsembrace",
             },
           ],
+          id: 35,
         },
         {
           name: "Frost",
@@ -2237,6 +2260,7 @@ export const staticData = {
               icon: "ability_deathknight_pillaroffrost",
             },
           ],
+          id: 36,
         },
       ],
     },
@@ -2247,4 +2271,12 @@ export const staticData = {
     "3": { icon: "ui_sigil_nightfae", name: "NightFae" },
     "4": { icon: "ui_sigil_necrolord", name: "Necrolord" },
   },
+};
+
+export type StaticData = {
+  classes: Record<number, typeof staticData.classes[1]>;
+  dungeons: Record<number, typeof staticData.dungeons["2290"]>;
+  affixes: Record<number, typeof staticData.affixes["0"]>;
+  soulbinds: Record<number, typeof staticData.soulbinds[1]>;
+  covenants: Record<number, typeof staticData.covenants[1]>;
 };

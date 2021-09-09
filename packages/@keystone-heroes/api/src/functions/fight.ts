@@ -95,19 +95,14 @@ export type FightSuccessResponse = {
     outOfCombatTime: number;
     startTime: number;
   };
-  dungeon: {
-    id: DungeonIDs;
-    name: string;
-    time: number;
-    zones: Pick<Zone, "id" | "name">[];
-    slug: string;
-  };
+  dungeon: DungeonIDs;
   affixes: Pick<Affix, "name" | "icon">[];
   player: (Pick<
     Player,
     "id" | "actorID" | "deaths" | "dps" | "hps" | "itemLevel"
   > & {
-    spec: Pick<Spec, "name" | "role">;
+    class: Class["id"];
+    spec: Spec["id"];
     legendary: Pick<
       Legendary,
       "effectIcon" | "effectName" | "id" | "itemID"
@@ -117,10 +112,9 @@ export type FightSuccessResponse = {
     })[];
     covenantTraits: Pick<CovenantTrait, "icon" | "name">[];
     talents: Pick<Talent, "icon" | "name">[];
-    covenant: Pick<Covenant, "name" | "icon"> | null;
-    soulbind: Pick<Soulbind, "name"> | null;
+    covenant: Covenant["id"] | null;
+    soulbind: Soulbind["id"] | null;
     name: Character["name"];
-    class: Class["name"];
     server: Server["name"];
     region: Region["slug"];
     tormented: (Pick<
@@ -207,17 +201,13 @@ type RawFight =
       | "percent"
       | "rating"
     > & {
-      dungeon:
-        | (Pick<Dungeon, "name" | "id" | "time"> & {
-            Zone: Pick<Zone, "id" | "name">[];
-          })
-        | null;
+      dungeon: Pick<Dungeon, "id"> | null;
       PlayerFight: {
         player: Pick<
           Player,
           "id" | "actorID" | "deaths" | "dps" | "hps" | "itemLevel"
         > & {
-          spec: Pick<Spec, "name" | "role">;
+          spec: Pick<Spec, "id" | "role">;
           legendary: Pick<
             Legendary,
             "effectIcon" | "effectName" | "id" | "itemID"
@@ -231,10 +221,10 @@ type RawFight =
           PlayerTalent: {
             talent: Pick<Talent, "icon" | "name">;
           }[];
-          covenant: Pick<Covenant, "name" | "icon"> | null;
-          soulbind: Pick<Soulbind, "name"> | null;
+          covenant: Pick<Covenant, "id"> | null;
+          soulbind: Pick<Soulbind, "id"> | null;
           character: Pick<Character, "name"> & {
-            class: Pick<Class, "name">;
+            class: Pick<Class, "id">;
             // TODO: re-evaluate whether we need ids here; maybe for x-linking?
             server: Pick<Server, "id" | "name"> & {
               region: Pick<Region, "id" | "slug">;
@@ -304,18 +294,7 @@ const createFightFindFirst = (reportID: string, fightID: number) => {
       rating: true,
       dungeon: {
         select: {
-          name: true,
-          time: true,
           id: true,
-          Zone: {
-            select: {
-              id: true,
-              name: true,
-            },
-            orderBy: {
-              order: "asc",
-            },
-          },
         },
       },
       PlayerFight: {
@@ -330,7 +309,7 @@ const createFightFindFirst = (reportID: string, fightID: number) => {
               itemLevel: true,
               spec: {
                 select: {
-                  name: true,
+                  id: true,
                   role: true,
                 },
               },
@@ -375,13 +354,12 @@ const createFightFindFirst = (reportID: string, fightID: number) => {
               },
               covenant: {
                 select: {
-                  name: true,
-                  icon: true,
+                  id: true,
                 },
               },
               soulbind: {
                 select: {
-                  name: true,
+                  id: true,
                 },
               },
               character: {
@@ -389,7 +367,7 @@ const createFightFindFirst = (reportID: string, fightID: number) => {
                   name: true,
                   class: {
                     select: {
-                      name: true,
+                      id: true,
                     },
                   },
                   server: {
@@ -534,8 +512,6 @@ const detectTormentedPowers = (
 const createResponseFromStoredFight = (
   dataset: RawFightWithDungeon
 ): FightSuccessResponse => {
-  const dungeon = dungeonMap[dataset.dungeon.id];
-
   const allEvents = dataset.Pull.flatMap((pull) => pull.Event);
 
   const pulls = dataset.Pull.map((pull, index) => {
@@ -579,15 +555,7 @@ const createResponseFromStoredFight = (
       rating: dataset.rating,
       startTime: dataset.startTime,
     },
-    dungeon: {
-      id: dataset.dungeon.id,
-      name: dungeon.name,
-      time: dungeon.timer[0],
-      slug: dungeon.slug,
-      zones: [...dungeon.zones]
-        .sort((a, b) => a.order - b.order)
-        .map(({ id, name }) => ({ id, name })),
-    },
+    dungeon: dataset.dungeon.id,
     affixes: [
       dataset.Report.week.affix1,
       dataset.Report.week.affix2,
@@ -604,7 +572,7 @@ const createResponseFromStoredFight = (
           dps: playerFight.player.dps,
           hps: playerFight.player.hps,
           itemLevel: playerFight.player.itemLevel,
-          spec: playerFight.player.spec,
+          spec: playerFight.player.spec.id,
           legendary: playerFight.player.legendary,
           conduits: playerFight.player.PlayerConduit.map((playerConduit) => {
             return {
@@ -619,11 +587,15 @@ const createResponseFromStoredFight = (
             (playerTalent) => playerTalent.talent
           ),
           name: playerFight.player.character.name,
-          class: playerFight.player.character.class.name,
+          class: playerFight.player.character.class.id,
           server: playerFight.player.character.server.name,
           region: playerFight.player.character.server.region.slug,
-          covenant: playerFight.player.covenant,
-          soulbind: playerFight.player.covenant,
+          covenant: playerFight.player.covenant
+            ? playerFight.player.covenant.id
+            : null,
+          soulbind: playerFight.player.soulbind
+            ? playerFight.player.soulbind.id
+            : null,
           tormented: detectTormentedPowers(allEvents, playerFight.player.id),
         };
       }),
@@ -740,7 +712,7 @@ const getResponseOrRetrieveAndCreateFight = async (
     (playerFight) => {
       return {
         actorID: playerFight.player.actorID,
-        class: playerFight.player.character.class.name,
+        class: playerFight.player.character.class.id,
       };
     }
   );
@@ -915,15 +887,7 @@ const handler: RequestHandler<Request, FightResponse> = async (req, res) => {
 };
 
 const ensureCorrectDungeonID = (
-  storedDungeon: {
-    Zone: {
-      id: number;
-      name: string;
-    }[];
-    id: number;
-    name: string;
-    time: number;
-  } | null,
+  storedDungeon: { id: number } | null,
   pulls: Omit<PersistedDungeonPull, "id" | "isWipe" | "percent">[]
 ): DungeonIDs | null => {
   const allNPCIDs = new Set(
