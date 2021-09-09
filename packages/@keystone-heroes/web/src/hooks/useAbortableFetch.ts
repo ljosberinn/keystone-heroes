@@ -3,11 +3,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useIsMounted } from "./useIsMounted";
 import { usePrevious } from "./usePrevious";
 
-type State<T> = {
-  data: T | null;
-  loading: boolean;
-};
-
 export function useAbortableFetch<T>({
   url,
   options,
@@ -17,7 +12,10 @@ export function useAbortableFetch<T>({
   options?: Omit<RequestInit, "signal">;
   initialState: T | null;
 }): [T | null, boolean, () => void] {
-  const [{ data, loading }, setState] = useState<State<T>>({
+  const [{ data, loading }, setState] = useState<{
+    data: T | null;
+    loading: boolean;
+  }>({
     data: initialState,
     loading: false,
   });
