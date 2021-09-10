@@ -138,7 +138,6 @@ export type FightSuccessResponse = {
   pulls: (Pick<Pull, "startTime" | "endTime" | "x" | "y" | "isWipe"> & {
     events: (Pick<
       Event,
-      | "eventType"
       | "timestamp"
       | "sourcePlayerID"
       | "targetPlayerID"
@@ -148,9 +147,10 @@ export type FightSuccessResponse = {
       | "healingDone"
       | "stacks"
     > & {
+      type: Event["eventType"];
       sourceNPC: NPC | null;
       targetNPC: NPC | null;
-      ability: Ability | null;
+      ability: (Pick<Ability, "id"> & { lastUse: null | number }) | null;
       interruptedAbility: Ability | null;
     })[];
     zone: Zone["id"];
@@ -514,31 +514,61 @@ const createResponseFromStoredFight = (
 ): FightSuccessResponse => {
   const allEvents = dataset.Pull.flatMap((pull) => pull.Event);
 
-  const pulls = dataset.Pull.map((pull, index) => {
-    const npcs = pull.PullNPC.map((pullNPC) => {
+  const lastAbilityUsageMap: Record<number, number> = {};
+
+  const pulls = dataset.Pull.map<FightSuccessResponse["pulls"][number]>(
+    (pull, index) => {
+      const npcs = pull.PullNPC.map<
+        FightSuccessResponse["pulls"][number]["npcs"][number]
+      >((pullNPC) => {
+        return {
+          count: pullNPC.count,
+          id: pullNPC.npc.id,
+          name: pullNPC.npc.name,
+        };
+      });
+
+      const hasBoss = npcs.some((npc) => allBossIDs.has(npc.id));
+
+      const events = pull.Event.map<
+        FightSuccessResponse["pulls"][number]["events"][number]
+      >(({ eventType, ability, ...rest }) => {
+        if (ability) {
+          const lastUse = lastAbilityUsageMap[ability.id] ?? null;
+          lastAbilityUsageMap[ability.id] = rest.timestamp;
+
+          return {
+            ...rest,
+            type: eventType,
+            ability: {
+              id: ability.id,
+              lastUse,
+            },
+          };
+        }
+
+        return {
+          ...rest,
+          type: eventType,
+          ability: null,
+        };
+      }).map(omitNullValues);
+
       return {
-        count: pullNPC.count,
-        id: pullNPC.npc.id,
-        name: pullNPC.npc.name,
+        startTime: pull.startTime,
+        endTime: pull.endTime,
+        x: pull.x,
+        y: pull.y,
+        isWipe: pull.isWipe,
+        events,
+        percent: pull.percent,
+        npcs,
+        zone: pull.PullZone[0].zone.id,
+        id: index + 1,
+        hasBoss,
       };
-    });
-
-    const hasBoss = npcs.some((npc) => allBossIDs.has(npc.id));
-
-    return {
-      startTime: pull.startTime,
-      endTime: pull.endTime,
-      x: pull.x,
-      y: pull.y,
-      isWipe: pull.isWipe,
-      events: pull.Event.map(omitNullValues),
-      percent: pull.percent,
-      npcs,
-      zone: pull.PullZone[0].zone.id,
-      id: index + 1,
-      hasBoss,
-    };
-  });
+    }
+  );
 
   return {
     meta: {

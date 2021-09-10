@@ -8,7 +8,22 @@ import { writeFileSync } from "fs";
 
 const dungeons = Object.fromEntries(
   rawDungeons.map(({ id, name, timer, slug, zones }) => {
-    return [id, { name, timer, slug, zones }];
+    return [
+      id,
+      {
+        name,
+        timer,
+        slug,
+        zones: zones
+          .sort((a, b) => a.order - b.order)
+          .map((zone) => {
+            return {
+              id: zone.id,
+              name: zone.name,
+            };
+          }),
+      },
+    ];
   })
 );
 
@@ -21,16 +36,28 @@ const affixes = Object.fromEntries(
 const soulbinds = soulbindMap;
 const classes = Object.fromEntries(
   Object.entries(classMap).map(([key, value]) => {
+    const cooldowns = value.cooldowns.map((cd) => cd.id);
+    const covenantAbilities = value.covenantAbilities.map((cd) => cd.id);
+
     return [
       key,
       {
         ...value,
+        cooldowns,
+        covenantAbilities,
         specs: value.specs.map((spec) => {
           const match = specs.find(
             (s) => `${s.classID}` === key && s.name === spec.name
           );
+          if (!match) {
+            throw new Error(
+              `[createStaticData] found no matching spec for ${spec.name}-${value.name} in specs`
+            );
+          }
 
-          return match ? { ...spec, id: match.id } : spec;
+          const cooldowns = spec.cooldowns.map((cd) => cd.id);
+
+          return { ...spec, cooldowns, id: match.id };
         }),
       },
     ];
@@ -39,16 +66,35 @@ const classes = Object.fromEntries(
 
 const covenants = covenantMap;
 
+const spells = Object.fromEntries(
+  Object.entries(classMap).flatMap(([, value]) => {
+    return [
+      ...new Set([
+        ...value.cooldowns,
+        ...value.covenantAbilities,
+        ...value.specs.flatMap((spec) => spec.cooldowns),
+      ]),
+    ].map((ability) => [
+      ability.id,
+      {
+        icon: ability.icon,
+        name: ability.name,
+        cd: ability.cd,
+      },
+    ]);
+  })
+);
+
 const data = {
   dungeons,
   affixes,
   soulbinds,
   classes,
   covenants,
+  spells,
 };
 
 const template = `
-/* eslint-disable sonarjs/no-duplicate-string */
 export const staticData = ${JSON.stringify(data)};
 
 export type StaticData = {
@@ -57,6 +103,7 @@ export type StaticData = {
   affixes: Record<number, typeof staticData.affixes['0']>;
   soulbinds: Record<number, typeof staticData.soulbinds[1]>;
   covenants: Record<number, typeof staticData.covenants[1]>;
+  spells: Record<string, { icon: string; name: string; cd: number }>
 }
 `;
 

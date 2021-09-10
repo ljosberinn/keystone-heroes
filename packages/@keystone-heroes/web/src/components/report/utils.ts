@@ -11,13 +11,13 @@ export const findTormentedLieutenantPull = (
   return match ?? null;
 };
 
-const bloodlustTypes = new Set(["Heroism", "Bloodlust", "Drums of Ferocity"]);
+const bloodlustTypes = new Set([2825, 32_182, 309_658]);
 
 export const hasBloodLust = (
   pull: FightSuccessResponse["pulls"][number]
 ): boolean => {
   return pull.events.some(
-    (event) => event.ability?.name && bloodlustTypes.has(event.ability.name)
+    (event) => event.ability && bloodlustTypes.has(event.ability.id)
   );
 };
 
@@ -30,7 +30,7 @@ export const detectInvisibilityUsage = (
 
   const invisEvent = pull.events.find(
     (event) =>
-      event.eventType === "ApplyBuff" &&
+      event.type === "ApplyBuff" &&
       (event.ability?.id === 307_195 || event.ability?.id === 321_422)
   );
 
@@ -39,7 +39,7 @@ export const detectInvisibilityUsage = (
   }
 
   const shroudEvent = pull.events.find(
-    (event) => event.eventType === "Cast" && event.ability?.id === 114_018
+    (event) => event.type === "Cast" && event.ability?.id === 114_018
   );
 
   if (shroudEvent && eventWasBeforeThisPull(shroudEvent)) {

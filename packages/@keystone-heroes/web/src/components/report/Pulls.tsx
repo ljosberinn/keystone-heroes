@@ -1,9 +1,11 @@
 import type { FightSuccessResponse } from "@keystone-heroes/api/functions/fight";
+import { useStaticData } from "src/context/StaticData";
 import { useFight } from "src/pages/report/[reportID]/[fightID]";
 import { useReportStore } from "src/store";
 import { createWCLUrl, fightTimeToString } from "src/utils";
 import { classnames } from "src/utils/classnames";
 
+import { AbilityIcon } from "../AbilityIcon";
 import { ExternalLink } from "../ExternalLink";
 
 const findRelevantEvents = (
@@ -68,7 +70,7 @@ function PullHeader({
   const { reportID, fightID } = useFight();
 
   const deaths = pull.events.filter(
-    (event) => event.eventType === "Death"
+    (event) => event.type === "Death" && !event.targetNPC
   ).length;
   const setSelectedPull = useReportStore((state) => state.setSelectedPull);
 
@@ -209,6 +211,7 @@ type PullBodyProps = {
 };
 
 function PullBody({ pull, allPulls, player }: PullBodyProps) {
+  const { spells } = useStaticData();
   const { during } = findRelevantEvents(
     pull,
     allPulls,
@@ -225,15 +228,19 @@ function PullBody({ pull, allPulls, player }: PullBodyProps) {
         <>
           <h2 className="text-xl font-bold">During Pull</h2>
           {during.map((event) => {
+            const ability = event.ability ? spells[event.ability.id] : null;
+
             return (
               <p
                 key={`${event.timestamp}-${
                   event.sourceNPC
                     ? event.sourceNPC.id
-                    : event.sourcePlayerID ?? "unknown"
+                    : event.sourcePlayerID
+                    ? event.sourcePlayerID
+                    : event.targetPlayerID ?? "unknown"
                 }`}
               >
-                Type: {event.eventType} | Source:{" "}
+                Type: {event.type} | Source:{" "}
                 {event.sourcePlayerID ? (
                   sourceIDPlayerNameMap[event.sourcePlayerID]
                 ) : event.sourceNPC ? (
@@ -246,11 +253,23 @@ function PullBody({ pull, allPulls, player }: PullBodyProps) {
                   "unknown"
                 )}{" "}
                 | Ability:{" "}
-                {event.ability ? (
+                {event.ability && ability ? (
                   <ExternalLink
                     href={`https://wowhead.com/spell=${event.ability.id}`}
                   >
-                    {event.ability.name}
+                    <AbilityIcon
+                      className="inline w-6 h-6"
+                      icon={ability.icon}
+                      alt={ability.name}
+                      title={
+                        event.ability.lastUse
+                          ? `Last used ${Math.round(
+                              (event.timestamp - event.ability.lastUse) / 1000
+                            )} seconds ago.`
+                          : "First usage."
+                      }
+                    />{" "}
+                    {ability.name}
                   </ExternalLink>
                 ) : (
                   "-"
