@@ -1003,7 +1003,7 @@ export const reportHandler: RequestHandler<Request, ReportResponse> = async (
     .map((dataset) => {
       return {
         id: dataset.legendary.effectID,
-        effectIcon: dataset.legendary.effectIcon,
+        effectIcon: removeImageFormat(dataset.legendary.effectIcon),
         itemID: dataset.legendary.id,
         effectName: dataset.legendary.effectName ?? "Unknown Legendary",
       };

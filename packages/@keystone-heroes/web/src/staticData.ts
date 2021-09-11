@@ -1434,5 +1434,5 @@ export type StaticData = {
     number,
     typeof staticData.covenants[keyof typeof staticData.covenants]
   >;
-  spells: Record<string, { icon: string; name: string; cd: number }>;
+  spells: Record<number, { icon: string; name: string; cd: number }>;
 };

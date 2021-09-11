@@ -1032,31 +1032,31 @@ Array [
     Object {
       "data": Array [
         Object {
-          "effectIcon": "spell_shadow_focusedpower.jpg",
+          "effectIcon": "spell_shadow_focusedpower",
           "effectName": "Koltira's Favor",
           "id": 334583,
           "itemID": 171417,
         },
         Object {
-          "effectIcon": "inv__felbarrage.jpg",
+          "effectIcon": "inv__felbarrage",
           "effectName": "Fiery Soul",
           "id": 337547,
           "itemID": 172321,
         },
         Object {
-          "effectIcon": "inv_60crafted_ring4b.jpg",
+          "effectIcon": "inv_60crafted_ring4b",
           "effectName": "Signet of Tormented Kings",
           "id": 335266,
           "itemID": 178926,
         },
         Object {
-          "effectIcon": "ability_paladin_conviction.jpg",
+          "effectIcon": "ability_paladin_conviction",
           "effectName": "The Mad Paragon",
           "id": 337594,
           "itemID": 171413,
         },
         Object {
-          "effectIcon": "spell_shadow_soulleech_2.jpg",
+          "effectIcon": "spell_shadow_soulleech_2",
           "effectName": "Freezing Winds",
           "id": 327364,
           "itemID": 173244,

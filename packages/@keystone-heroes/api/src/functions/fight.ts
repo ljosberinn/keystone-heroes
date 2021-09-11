@@ -96,7 +96,7 @@ export type FightSuccessResponse = {
     startTime: number;
   };
   dungeon: DungeonIDs;
-  affixes: Pick<Affix, "name" | "icon">[];
+  affixes: Affix["id"][];
   player: (Pick<
     Player,
     "id" | "actorID" | "deaths" | "dps" | "hps" | "itemLevel"
@@ -117,22 +117,9 @@ export type FightSuccessResponse = {
     name: Character["name"];
     server: Server["name"];
     region: Region["slug"];
-    tormented: (Pick<
-      Event,
-      | "eventType"
-      | "timestamp"
-      | "sourcePlayerID"
-      | "targetPlayerID"
-      | "sourceNPCInstance"
-      | "targetNPCInstance"
-      | "damage"
-      | "healingDone"
-      | "stacks"
-    > & {
-      sourceNPC: NPC | null;
-      targetNPC: NPC | null;
-      ability: Ability | null;
-      interruptedAbility: Ability | null;
+    tormented: (Pick<Event, "timestamp"> & {
+      ability: NonNullable<Ability>;
+      type: "ApplyBuff" | "ApplyBuffStack";
     })[];
   })[];
   pulls: (Pick<Pull, "startTime" | "endTime" | "x" | "y" | "isWipe"> & {
@@ -151,7 +138,7 @@ export type FightSuccessResponse = {
       sourceNPC: NPC | null;
       targetNPC: NPC | null;
       ability: (Pick<Ability, "id"> & { lastUse: null | number }) | null;
-      interruptedAbility: Ability | null;
+      interruptedAbility: Ability["id"] | null;
     })[];
     zone: Zone["id"];
     percent: number;
@@ -219,7 +206,7 @@ type RawFight =
             covenantTrait: Pick<CovenantTrait, "icon" | "name">;
           }[];
           PlayerTalent: {
-            talent: Pick<Talent, "icon" | "name">;
+            talent: Pick<Talent, "id" | "icon" | "name">;
           }[];
           covenant: Pick<Covenant, "id"> | null;
           soulbind: Pick<Soulbind, "id"> | null;
@@ -252,18 +239,18 @@ type RawFight =
         > & {
           sourceNPC: NPC | null;
           targetNPC: NPC | null;
-          ability: Ability | null;
-          interruptedAbility: Ability | null;
+          ability: Pick<Ability, "id" | "name" | "icon"> | null;
+          interruptedAbility: Pick<Ability, "id"> | null;
         })[];
       })[];
       Report: Pick<Report, "id"> & {
         week: {
           season: {
-            affix: Pick<Affix, "name" | "icon">;
+            affix: Pick<Affix, "id" | "name">;
           };
-          affix1: Pick<Affix, "name" | "icon">;
-          affix2: Pick<Affix, "name" | "icon">;
-          affix3: Pick<Affix, "name" | "icon">;
+          affix1: Pick<Affix, "id" | "name">;
+          affix2: Pick<Affix, "id" | "name">;
+          affix3: Pick<Affix, "id" | "name">;
         };
       };
     })
@@ -346,6 +333,7 @@ const createFightFindFirst = (reportID: string, fightID: number) => {
                 select: {
                   talent: {
                     select: {
+                      id: true,
                       icon: true,
                       name: true,
                     },
@@ -410,8 +398,18 @@ const createFightFindFirst = (reportID: string, fightID: number) => {
               damage: true,
               healingDone: true,
               stacks: true,
-              ability: true,
-              interruptedAbility: true,
+              ability: {
+                select: {
+                  id: true,
+                  name: true,
+                  icon: true,
+                },
+              },
+              interruptedAbility: {
+                select: {
+                  id: true,
+                },
+              },
               sourceNPC: true,
               targetNPC: true,
             },
@@ -450,28 +448,28 @@ const createFightFindFirst = (reportID: string, fightID: number) => {
                 select: {
                   affix: {
                     select: {
+                      id: true,
                       name: true,
-                      icon: true,
                     },
                   },
                 },
               },
               affix1: {
                 select: {
+                  id: true,
                   name: true,
-                  icon: true,
                 },
               },
               affix2: {
                 select: {
+                  id: true,
                   name: true,
-                  icon: true,
                 },
               },
               affix3: {
                 select: {
+                  id: true,
                   name: true,
-                  icon: true,
                 },
               },
             },
@@ -503,7 +501,14 @@ const detectTormentedPowers = (
         return acc;
       }
 
-      return [...acc, omitNullValues(event)];
+      return [
+        ...acc,
+        {
+          timestamp: event.timestamp,
+          ability: event.ability,
+          type: event.eventType,
+        },
+      ];
     },
     []
   );
@@ -533,6 +538,10 @@ const createResponseFromStoredFight = (
       const events = pull.Event.map<
         FightSuccessResponse["pulls"][number]["events"][number]
       >(({ eventType, ability, ...rest }) => {
+        const interruptedAbility = rest.interruptedAbility
+          ? rest.interruptedAbility.id
+          : null;
+
         if (ability) {
           const lastUse = lastAbilityUsageMap[ability.id] ?? null;
           lastAbilityUsageMap[ability.id] = rest.timestamp;
@@ -540,6 +549,7 @@ const createResponseFromStoredFight = (
           return {
             ...rest,
             type: eventType,
+            interruptedAbility,
             ability: {
               id: ability.id,
               lastUse,
@@ -550,6 +560,7 @@ const createResponseFromStoredFight = (
         return {
           ...rest,
           type: eventType,
+          interruptedAbility,
           ability: null,
         };
       }).map(omitNullValues);
@@ -587,10 +598,10 @@ const createResponseFromStoredFight = (
     },
     dungeon: dataset.dungeon.id,
     affixes: [
-      dataset.Report.week.affix1,
-      dataset.Report.week.affix2,
-      dataset.Report.week.affix3,
-      dataset.Report.week.season.affix,
+      dataset.Report.week.affix1.id,
+      dataset.Report.week.affix2.id,
+      dataset.Report.week.affix3.id,
+      dataset.Report.week.season.affix.id,
     ],
     player: [...dataset.PlayerFight]
       .sort((a, b) => sortByRole(a.player.spec.role, b.player.spec.role))

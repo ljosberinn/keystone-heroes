@@ -177,7 +177,7 @@ export type StaticData = {
   affixes: Record<number, typeof staticData.affixes[keyof typeof staticData.affixes]>;
   soulbinds: Record<number, typeof staticData.soulbinds[keyof typeof staticData.soulbinds]>;
   covenants: Record<number, typeof staticData.covenants[keyof typeof staticData.covenants]>;
-  spells: Record<string, { icon: string; name: string; cd: number }>
+  spells: Record<number, { icon: string; name: string; cd: number }>
 }`;
 
   writeFileSync(targetPath, template);

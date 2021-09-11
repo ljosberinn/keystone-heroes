@@ -26,7 +26,7 @@ const classTextMap: Record<string, string> = {
 export function Meta(): JSX.Element {
   const { reportID, fightID, fight } = useFight();
 
-  const { classes, dungeons } = useStaticData();
+  const { classes, dungeons, affixes } = useStaticData();
 
   if (!fight) {
     return <h1>loading</h1>;
@@ -49,11 +49,11 @@ export function Meta(): JSX.Element {
           </h1>
           <div className="flex pt-2 space-x-1 space-x-2 md:pt-0 lg:pt-2 ">
             {fight.affixes.map((affix) => (
-              <div key={affix.name} className="w-10 h-10">
+              <div key={affix} className="w-10 h-10">
                 <img
-                  src={`${WCL_ASSET_URL}${affix.icon}.jpg`}
-                  alt={affix.name}
-                  title={affix.name}
+                  src={`${WCL_ASSET_URL}${affixes[affix].icon}.jpg`}
+                  alt={affixes[affix].name}
+                  title={affixes[affix].name}
                   className="object-cover w-full h-full rounded-full"
                 />
               </div>
@@ -151,13 +151,10 @@ export function Meta(): JSX.Element {
                 <div className="flex pt-2 space-x-2 sm:space-y-2 sm:space-x-0 md:space-x-2 sm:flex-col md:flex-row md:space-y-0 lg:space-x-2 lg:pt-0">
                   {player.tormented.map((powerPickupEvent) => {
                     return (
-                      <div
-                        key={powerPickupEvent?.timestamp}
-                        className="w-8 h-8"
-                      >
+                      <div key={powerPickupEvent.timestamp} className="w-8 h-8">
                         <AbilityIcon
-                          icon={powerPickupEvent?.ability?.icon}
-                          alt={powerPickupEvent?.ability?.name ?? "Skipped"}
+                          icon={powerPickupEvent.ability.icon}
+                          alt={powerPickupEvent.ability.name ?? "Skipped"}
                           className="object-cover w-full h-full rounded-full"
                         />
                       </div>

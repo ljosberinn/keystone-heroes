@@ -24,5 +24,5 @@ async function loadSchema() {
 }
 
 loadSchema()
-  // eslint-disable-next-line no-console
+  // eslint-disable-next-line no-console, unicorn/prefer-top-level-await
   .catch(console.error);
