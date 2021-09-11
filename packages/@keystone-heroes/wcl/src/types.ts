@@ -23,12 +23,12 @@ export type Scalars = {
 /** A bracket description for a given raid zone. Brackets have a minimum value, maximum value, and a bucket that can be used to establish all of the possible brackets. The type field indicates what the brackets represent, e.g., item levels or game patches, etc. */
 export type Bracket = {
   __typename?: "Bracket";
-  /** An integer representing the minimum value used by bracket number 1, etc. */
-  min: Scalars["Float"];
-  /** An integer representing the value used by bracket N when there are a total of N brackets, etc. */
-  max: Scalars["Float"];
   /** A float representing the value to increment when moving from bracket 1 to bracket N, etc. */
   bucket: Scalars["Float"];
+  /** An integer representing the value used by bracket N when there are a total of N brackets, etc. */
+  max: Scalars["Float"];
+  /** An integer representing the minimum value used by bracket number 1, etc. */
+  min: Scalars["Float"];
   /** The localized name of the bracket type. */
   type?: Maybe<Scalars["String"]>;
 };
@@ -121,8 +121,8 @@ export type CharacterData = {
 export type CharacterDataCharacterArgs = {
   id?: Maybe<Scalars["Int"]>;
   name?: Maybe<Scalars["String"]>;
-  serverSlug?: Maybe<Scalars["String"]>;
   serverRegion?: Maybe<Scalars["String"]>;
+  serverSlug?: Maybe<Scalars["String"]>;
 };
 
 /** The CharacterData object enables the retrieval of single characters or filtered collections of characters. */
@@ -134,22 +134,22 @@ export type CharacterDataCharactersArgs = {
 
 export type CharacterPagination = {
   __typename?: "CharacterPagination";
-  /** List of items on the current page */
-  data?: Maybe<Maybe<Character>[]>;
-  /** Number of total items selected by the query */
-  total: Scalars["Int"];
-  /** Number of items returned per page */
-  per_page: Scalars["Int"];
   /** Current page of the cursor */
   current_page: Scalars["Int"];
+  /** List of items on the current page */
+  data?: Maybe<Maybe<Character>[]>;
   /** Number of the first item returned */
   from?: Maybe<Scalars["Int"]>;
-  /** Number of the last item returned */
-  to?: Maybe<Scalars["Int"]>;
-  /** The last page (number of pages) */
-  last_page: Scalars["Int"];
   /** Determines if cursor has more pages after the current page */
   has_more_pages: Scalars["Boolean"];
+  /** The last page (number of pages) */
+  last_page: Scalars["Int"];
+  /** Number of items returned per page */
+  per_page: Scalars["Int"];
+  /** Number of the last item returned */
+  to?: Maybe<Scalars["Int"]>;
+  /** Number of total items selected by the query */
+  total: Scalars["Int"];
 };
 
 /** All the possible metrics. */
@@ -162,6 +162,14 @@ export enum CharacterRankingMetricType {
   Default = "default",
   /** Damage per second. */
   Dps = "dps",
+  /** Unique to FFXIV. Represents the combined ranking for a pair of healers in 8-man content. */
+  Healercombinedbossdps = "healercombinedbossdps",
+  /** Unique to FFXIV. Represents the combined ranking for a pair of healers in 8-man content. */
+  Healercombinedbossrdps = "healercombinedbossrdps",
+  /** Unique to FFXIV. Represents the combined ranking for a pair of healers in 8-man content. */
+  Healercombineddps = "healercombineddps",
+  /** Unique to FFXIV. Represents the combined ranking for a pair of healers in 8-man content. */
+  Healercombinedrdps = "healercombinedrdps",
   /** Healing per second. */
   Hps = "hps",
   /** Survivability ranking for tanks. Deprecated. Only supported for some older WoW zones. */
@@ -172,26 +180,18 @@ export enum CharacterRankingMetricType {
   Playerspeed = "playerspeed",
   /** rDPS is unique to FFXIV and is damage done adjusted for raid-contributing buffs and debuffs. */
   Rdps = "rdps",
+  /** Unique to FFXIV. Represents the combined ranking for a pair of tanks in 8-man content. */
+  Tankcombinedbossdps = "tankcombinedbossdps",
+  /** Unique to FFXIV. Represents the combined ranking for a pair of tanks in 8-man content. */
+  Tankcombinedbossrdps = "tankcombinedbossrdps",
+  /** Unique to FFXIV. Represents the combined ranking for a pair of tanks in 8-man content. */
+  Tankcombineddps = "tankcombineddps",
+  /** Unique to FFXIV. Represents the combined ranking for a pair of tanks in 8-man content. */
+  Tankcombinedrdps = "tankcombinedrdps",
   /** Healing done per second to tanks. */
   Tankhps = "tankhps",
   /** Weighted damage per second. Unique to WoW currently. Used to remove pad damage and reward damage done to high priority targets. */
   Wdps = "wdps",
-  /** Unique to FFXIV. Represents the combined ranking for a pair of healers in 8-man content. */
-  Healercombineddps = "healercombineddps",
-  /** Unique to FFXIV. Represents the combined ranking for a pair of healers in 8-man content. */
-  Healercombinedbossdps = "healercombinedbossdps",
-  /** Unique to FFXIV. Represents the combined ranking for a pair of healers in 8-man content. */
-  Healercombinedrdps = "healercombinedrdps",
-  /** Unique to FFXIV. Represents the combined ranking for a pair of healers in 8-man content. */
-  Healercombinedbossrdps = "healercombinedbossrdps",
-  /** Unique to FFXIV. Represents the combined ranking for a pair of tanks in 8-man content. */
-  Tankcombineddps = "tankcombineddps",
-  /** Unique to FFXIV. Represents the combined ranking for a pair of tanks in 8-man content. */
-  Tankcombinedbossdps = "tankcombinedbossdps",
-  /** Unique to FFXIV. Represents the combined ranking for a pair of tanks in 8-man content. */
-  Tankcombinedrdps = "tankcombinedrdps",
-  /** Unique to FFXIV. Represents the combined ranking for a pair of tanks in 8-man content. */
-  Tankcombinedbossrdps = "tankcombinedbossrdps",
 }
 
 /** A single difficulty for a given raid zone. Difficulties have an integer value representing the actual difficulty, a localized name that describes the difficulty level, and a list of valid sizes for the difficulty level. */
@@ -208,24 +208,25 @@ export type Difficulty = {
 /** A single encounter for the game. */
 export type Encounter = {
   __typename?: "Encounter";
-  /** The ID of the encounter. */
-  id: Scalars["Int"];
-  /** The localized name of the encounter. */
-  name: Scalars["String"];
   /** Player rankings information for a zone. This data is not considered frozen, and it can change without notice. Use at your own risk. */
   characterRankings?: Maybe<Scalars["JSON"]>;
   /** Fight rankings information for a zone. This data is not considered frozen, and it can change without notice. Use at your own risk. */
   fightRankings?: Maybe<Scalars["JSON"]>;
-  /** The zone that this encounter is found in. */
-  zone: Zone;
+  /** The ID of the encounter. */
+  id: Scalars["Int"];
   /** The Blizzard journal ID, used as the identifier in the encounter journal and various Blizzard APIs like progression. */
   journalID: Scalars["Int"];
+  /** The localized name of the encounter. */
+  name: Scalars["String"];
+  /** The zone that this encounter is found in. */
+  zone: Zone;
 };
 
 /** A single encounter for the game. */
 export type EncounterCharacterRankingsArgs = {
   bracket?: Maybe<Scalars["Int"]>;
   className?: Maybe<Scalars["String"]>;
+  covenantID?: Maybe<Scalars["Int"]>;
   difficulty?: Maybe<Scalars["Int"]>;
   filter?: Maybe<Scalars["String"]>;
   includeCombatantInfo?: Maybe<Scalars["Boolean"]>;
@@ -235,9 +236,8 @@ export type EncounterCharacterRankingsArgs = {
   serverRegion?: Maybe<Scalars["String"]>;
   serverSlug?: Maybe<Scalars["String"]>;
   size?: Maybe<Scalars["Int"]>;
-  specName?: Maybe<Scalars["String"]>;
-  covenantID?: Maybe<Scalars["Int"]>;
   soulbindID?: Maybe<Scalars["Int"]>;
+  specName?: Maybe<Scalars["String"]>;
 };
 
 /** A single encounter for the game. */
@@ -313,72 +313,72 @@ export enum FightRankingMetricType {
 /** A single ability for the game. */
 export type GameAbility = {
   __typename?: "GameAbility";
-  /** The ID of the ability. */
-  id: Scalars["Int"];
   /** The icon for the ability. */
   icon?: Maybe<Scalars["String"]>;
+  /** The ID of the ability. */
+  id: Scalars["Int"];
   /** The localized name of the ability. Will be null if no localization information exists for the ability. */
   name?: Maybe<Scalars["String"]>;
 };
 
 export type GameAbilityPagination = {
   __typename?: "GameAbilityPagination";
-  /** List of items on the current page */
-  data?: Maybe<Maybe<GameAbility>[]>;
-  /** Number of total items selected by the query */
-  total: Scalars["Int"];
-  /** Number of items returned per page */
-  per_page: Scalars["Int"];
   /** Current page of the cursor */
   current_page: Scalars["Int"];
+  /** List of items on the current page */
+  data?: Maybe<Maybe<GameAbility>[]>;
   /** Number of the first item returned */
   from?: Maybe<Scalars["Int"]>;
-  /** Number of the last item returned */
-  to?: Maybe<Scalars["Int"]>;
-  /** The last page (number of pages) */
-  last_page: Scalars["Int"];
   /** Determines if cursor has more pages after the current page */
   has_more_pages: Scalars["Boolean"];
+  /** The last page (number of pages) */
+  last_page: Scalars["Int"];
+  /** Number of items returned per page */
+  per_page: Scalars["Int"];
+  /** Number of the last item returned */
+  to?: Maybe<Scalars["Int"]>;
+  /** Number of total items selected by the query */
+  total: Scalars["Int"];
 };
 
 /** A single achievement for the game. */
 export type GameAchievement = {
   __typename?: "GameAchievement";
-  /** The ID of the achievement. */
-  id: Scalars["Int"];
   /** The icon for the achievement. */
   icon?: Maybe<Scalars["String"]>;
+  /** The ID of the achievement. */
+  id: Scalars["Int"];
   /** The localized name of the achievement. Will be null if no localization information exists for the achievement. */
   name?: Maybe<Scalars["String"]>;
 };
 
 export type GameAchievementPagination = {
   __typename?: "GameAchievementPagination";
-  /** List of items on the current page */
-  data?: Maybe<Maybe<GameAchievement>[]>;
-  /** Number of total items selected by the query */
-  total: Scalars["Int"];
-  /** Number of items returned per page */
-  per_page: Scalars["Int"];
   /** Current page of the cursor */
   current_page: Scalars["Int"];
+  /** List of items on the current page */
+  data?: Maybe<Maybe<GameAchievement>[]>;
   /** Number of the first item returned */
   from?: Maybe<Scalars["Int"]>;
-  /** Number of the last item returned */
-  to?: Maybe<Scalars["Int"]>;
-  /** The last page (number of pages) */
-  last_page: Scalars["Int"];
   /** Determines if cursor has more pages after the current page */
   has_more_pages: Scalars["Boolean"];
+  /** The last page (number of pages) */
+  last_page: Scalars["Int"];
+  /** Number of items returned per page */
+  per_page: Scalars["Int"];
+  /** Number of the last item returned */
+  to?: Maybe<Scalars["Int"]>;
+  /** Number of total items selected by the query */
+  total: Scalars["Int"];
 };
 
 /** A single affix for Mythic Keystone dungeons. */
 export type GameAffix = {
   __typename?: "GameAffix";
-  /** The ID of the affix. */
-  id: Scalars["Int"];
   /** The icon for the affix. */
   icon?: Maybe<Scalars["String"]>;
+  /** The ID of the affix. */
+  id: Scalars["Int"];
   /** The localized name of the affix. Will be null if no localization information exists for the affix. */
   name?: Maybe<Scalars["String"]>;
 };
@@ -468,8 +468,8 @@ export type GameDataAffixArgs = {
 
 /** The game object contains collections of data such as NPCs, classes, abilities, items, maps, etc. Game data only changes when major game patches are released, so you should cache results for as long as possible and only update when new content is released for the game. */
 export type GameDataClassArgs = {
-  id?: Maybe<Scalars["Int"]>;
   faction_id?: Maybe<Scalars["Int"]>;
+  id?: Maybe<Scalars["Int"]>;
   zone_id?: Maybe<Scalars["Int"]>;
 };
 
@@ -545,22 +545,22 @@ export type GameEnchant = {
 
 export type GameEnchantPagination = {
   __typename?: "GameEnchantPagination";
-  /** List of items on the current page */
-  data?: Maybe<Maybe<GameEnchant>[]>;
-  /** Number of total items selected by the query */
-  total: Scalars["Int"];
-  /** Number of items returned per page */
-  per_page: Scalars["Int"];
   /** Current page of the cursor */
   current_page: Scalars["Int"];
+  /** List of items on the current page */
+  data?: Maybe<Maybe<GameEnchant>[]>;
   /** Number of the first item returned */
   from?: Maybe<Scalars["Int"]>;
-  /** Number of the last item returned */
-  to?: Maybe<Scalars["Int"]>;
-  /** The last page (number of pages) */
-  last_page: Scalars["Int"];
   /** Determines if cursor has more pages after the current page */
   has_more_pages: Scalars["Boolean"];
+  /** The last page (number of pages) */
+  last_page: Scalars["Int"];
+  /** Number of items returned per page */
+  per_page: Scalars["Int"];
+  /** Number of the last item returned */
+  to?: Maybe<Scalars["Int"]>;
+  /** Number of total items selected by the query */
+  total: Scalars["Int"];
 };
 
 /** A faction that a player or guild can belong to. Factions have an integer id used to identify them throughout the API and a localized name describing the faction. */
@@ -575,32 +575,32 @@ export type GameFaction = {
 /** A single item for the game. */
 export type GameItem = {
   __typename?: "GameItem";
-  /** The ID of the item. */
-  id: Scalars["Int"];
   /** The icon for the item. */
   icon?: Maybe<Scalars["String"]>;
+  /** The ID of the item. */
+  id: Scalars["Int"];
   /** The localized name of the item. Will be null if no localization information exists for the item. */
   name?: Maybe<Scalars["String"]>;
 };
 
 export type GameItemPagination = {
   __typename?: "GameItemPagination";
-  /** List of items on the current page */
-  data?: Maybe<Maybe<GameItem>[]>;
-  /** Number of total items selected by the query */
-  total: Scalars["Int"];
-  /** Number of items returned per page */
-  per_page: Scalars["Int"];
   /** Current page of the cursor */
   current_page: Scalars["Int"];
+  /** List of items on the current page */
+  data?: Maybe<Maybe<GameItem>[]>;
   /** Number of the first item returned */
   from?: Maybe<Scalars["Int"]>;
-  /** Number of the last item returned */
-  to?: Maybe<Scalars["Int"]>;
-  /** The last page (number of pages) */
-  last_page: Scalars["Int"];
   /** Determines if cursor has more pages after the current page */
   has_more_pages: Scalars["Boolean"];
+  /** The last page (number of pages) */
+  last_page: Scalars["Int"];
+  /** Number of items returned per page */
+  per_page: Scalars["Int"];
+  /** Number of the last item returned */
+  to?: Maybe<Scalars["Int"]>;
+  /** Number of total items selected by the query */
+  total: Scalars["Int"];
 };
 
 /** A single item set for the game. */
@@ -623,22 +623,22 @@ export type GameMap = {
 
 export type GameMapPagination = {
   __typename?: "GameMapPagination";
-  /** List of items on the current page */
-  data?: Maybe<Maybe<GameMap>[]>;
-  /** Number of total items selected by the query */
-  total: Scalars["Int"];
-  /** Number of items returned per page */
-  per_page: Scalars["Int"];
   /** Current page of the cursor */
   current_page: Scalars["Int"];
+  /** List of items on the current page */
+  data?: Maybe<Maybe<GameMap>[]>;
   /** Number of the first item returned */
   from?: Maybe<Scalars["Int"]>;
-  /** Number of the last item returned */
-  to?: Maybe<Scalars["Int"]>;
-  /** The last page (number of pages) */
-  last_page: Scalars["Int"];
   /** Determines if cursor has more pages after the current page */
   has_more_pages: Scalars["Boolean"];
+  /** The last page (number of pages) */
+  last_page: Scalars["Int"];
+  /** Number of items returned per page */
+  per_page: Scalars["Int"];
+  /** Number of the last item returned */
+  to?: Maybe<Scalars["Int"]>;
+  /** Number of total items selected by the query */
+  total: Scalars["Int"];
 };
 
 /** A single NPC for the game. */
@@ -652,22 +652,22 @@ export type GameNpc = {
 
 export type GameNpcPagination = {
   __typename?: "GameNPCPagination";
-  /** List of items on the current page */
-  data?: Maybe<Maybe<GameNpc>[]>;
-  /** Number of total items selected by the query */
-  total: Scalars["Int"];
-  /** Number of items returned per page */
-  per_page: Scalars["Int"];
   /** Current page of the cursor */
   current_page: Scalars["Int"];
+  /** List of items on the current page */
+  data?: Maybe<Maybe<GameNpc>[]>;
   /** Number of the first item returned */
   from?: Maybe<Scalars["Int"]>;
-  /** Number of the last item returned */
-  to?: Maybe<Scalars["Int"]>;
-  /** The last page (number of pages) */
-  last_page: Scalars["Int"];
   /** Determines if cursor has more pages after the current page */
   has_more_pages: Scalars["Boolean"];
+  /** The last page (number of pages) */
+  last_page: Scalars["Int"];
+  /** Number of items returned per page */
+  per_page: Scalars["Int"];
+  /** Number of the last item returned */
+  to?: Maybe<Scalars["Int"]>;
+  /** Number of total items selected by the query */
+  total: Scalars["Int"];
 };
 
 /** A single zone for the game. */
@@ -681,28 +681,26 @@ export type GameZone = {
 
 export type GameZonePagination = {
   __typename?: "GameZonePagination";
-  /** List of items on the current page */
-  data?: Maybe<Maybe<GameZone>[]>;
-  /** Number of total items selected by the query */
-  total: Scalars["Int"];
-  /** Number of items returned per page */
-  per_page: Scalars["Int"];
   /** Current page of the cursor */
   current_page: Scalars["Int"];
+  /** List of items on the current page */
+  data?: Maybe<Maybe<GameZone>[]>;
   /** Number of the first item returned */
   from?: Maybe<Scalars["Int"]>;
-  /** Number of the last item returned */
-  to?: Maybe<Scalars["Int"]>;
-  /** The last page (number of pages) */
-  last_page: Scalars["Int"];
   /** Determines if cursor has more pages after the current page */
   has_more_pages: Scalars["Boolean"];
+  /** The last page (number of pages) */
+  last_page: Scalars["Int"];
+  /** Number of items returned per page */
+  per_page: Scalars["Int"];
+  /** Number of the last item returned */
+  to?: Maybe<Scalars["Int"]>;
+  /** Number of total items selected by the query */
+  total: Scalars["Int"];
 };
 
 /** The type of graph to examine. */
 export enum GraphDataType {
-  /** Summary Overview */
-  Summary = "Summary",
   /** Buffs. */
   Buffs = "Buffs",
   /** Casts. */
@@ -723,6 +721,8 @@ export enum GraphDataType {
   Interrupts = "Interrupts",
   /** Resources. */
   Resources = "Resources",
+  /** Summary Overview */
+  Summary = "Summary",
   /** Summons */
   Summons = "Summons",
   /** Survivability (death info across multiple pulls). */
@@ -743,6 +743,8 @@ export type Guild = {
   faction: GameFaction;
   /** The ID of the guild. */
   id: Scalars["Int"];
+  /** The member roster for a specific guild. The result of this query is a paginated list of characters. This query only works for games where the guild roster is verifiable, e.g., it does not work for Classic Warcraft. */
+  members: CharacterPagination;
   /** The name of the guild. */
   name: Scalars["String"];
   /** The server that the guild belongs to. */
@@ -751,8 +753,6 @@ export type Guild = {
   stealthMode: Scalars["Boolean"];
   /** The tags used to label reports. In the site UI, these are called raid teams. */
   tags?: Maybe<Maybe<GuildTag>[]>;
-  /** The member roster for a specific guild. The result of this query is a paginated list of characters. This query only works for games where the guild roster is verifiable, e.g., it does not work for Classic Warcraft. */
-  members: CharacterPagination;
 };
 
 /** A single guild. Guilds earn their own rankings and contain characters. They may correspond to a guild in-game or be a custom guild created just to hold reports and rankings. */
@@ -784,22 +784,22 @@ export type GuildAttendance = {
 
 export type GuildAttendancePagination = {
   __typename?: "GuildAttendancePagination";
-  /** List of items on the current page */
-  data?: Maybe<Maybe<GuildAttendance>[]>;
-  /** Number of total items selected by the query */
-  total: Scalars["Int"];
-  /** Number of items returned per page */
-  per_page: Scalars["Int"];
   /** Current page of the cursor */
   current_page: Scalars["Int"];
+  /** List of items on the current page */
+  data?: Maybe<Maybe<GuildAttendance>[]>;
   /** Number of the first item returned */
   from?: Maybe<Scalars["Int"]>;
-  /** Number of the last item returned */
-  to?: Maybe<Scalars["Int"]>;
-  /** The last page (number of pages) */
-  last_page: Scalars["Int"];
   /** Determines if cursor has more pages after the current page */
   has_more_pages: Scalars["Boolean"];
+  /** The last page (number of pages) */
+  last_page: Scalars["Int"];
+  /** Number of items returned per page */
+  per_page: Scalars["Int"];
+  /** Number of the last item returned */
+  to?: Maybe<Scalars["Int"]>;
+  /** Number of total items selected by the query */
+  total: Scalars["Int"];
 };
 
 /** The GuildData object enables the retrieval of single guilds or filtered collections of guilds. */
@@ -815,8 +815,8 @@ export type GuildData = {
 export type GuildDataGuildArgs = {
   id?: Maybe<Scalars["Int"]>;
   name?: Maybe<Scalars["String"]>;
-  serverSlug?: Maybe<Scalars["String"]>;
   serverRegion?: Maybe<Scalars["String"]>;
+  serverSlug?: Maybe<Scalars["String"]>;
 };
 
 /** The GuildData object enables the retrieval of single guilds or filtered collections of guilds. */
@@ -824,47 +824,47 @@ export type GuildDataGuildsArgs = {
   limit?: Maybe<Scalars["Int"]>;
   page?: Maybe<Scalars["Int"]>;
   serverID?: Maybe<Scalars["Int"]>;
-  serverSlug?: Maybe<Scalars["String"]>;
   serverRegion?: Maybe<Scalars["String"]>;
+  serverSlug?: Maybe<Scalars["String"]>;
 };
 
 export type GuildPagination = {
   __typename?: "GuildPagination";
-  /** List of items on the current page */
-  data?: Maybe<Maybe<Guild>[]>;
-  /** Number of total items selected by the query */
-  total: Scalars["Int"];
-  /** Number of items returned per page */
-  per_page: Scalars["Int"];
   /** Current page of the cursor */
   current_page: Scalars["Int"];
+  /** List of items on the current page */
+  data?: Maybe<Maybe<Guild>[]>;
   /** Number of the first item returned */
   from?: Maybe<Scalars["Int"]>;
-  /** Number of the last item returned */
-  to?: Maybe<Scalars["Int"]>;
-  /** The last page (number of pages) */
-  last_page: Scalars["Int"];
   /** Determines if cursor has more pages after the current page */
   has_more_pages: Scalars["Boolean"];
+  /** The last page (number of pages) */
+  last_page: Scalars["Int"];
+  /** Number of items returned per page */
+  per_page: Scalars["Int"];
+  /** Number of the last item returned */
+  to?: Maybe<Scalars["Int"]>;
+  /** Number of total items selected by the query */
+  total: Scalars["Int"];
 };
 
 /** The tag for a specific guild. Tags can be used to categorize reports within a guild. In the site UI, they are referred to as report tags. */
 export type GuildTag = {
   __typename?: "GuildTag";
-  /** The ID of the tag. */
-  id: Scalars["Int"];
   /** The guild that the tag belongs to. */
   guild: Guild;
+  /** The ID of the tag. */
+  id: Scalars["Int"];
   /** The name of the guild. */
   name: Scalars["String"];
 };
 
 /** Whether or not to fetch information for friendlies or enemies. */
 export enum HostilityType {
-  /** Fetch information for friendlies. */
-  Friendlies = "Friendlies",
   /** Fetch information for enemies. */
   Enemies = "Enemies",
+  /** Fetch information for friendlies. */
+  Friendlies = "Friendlies",
 }
 
 /** A filter for kills vs wipes and encounters vs trash. */
@@ -884,14 +884,14 @@ export enum KillType {
 /** A single partition for a given raid zone. Partitions have an integer value representing the actual partition and a localized name that describes what the partition represents. Partitions contain their own rankings, statistics and all stars. */
 export type Partition = {
   __typename?: "Partition";
-  /** An integer representing a specific partition within a zone. */
-  id: Scalars["Int"];
-  /** The localized name for partition. */
-  name: Scalars["String"];
   /** The compact localized name for the partition. Typically an abbreviation to conserve space. */
   compactName: Scalars["String"];
   /** Whether or not the partition is the current default when viewing rankings or statistics for the zone. */
   default: Scalars["Boolean"];
+  /** An integer representing a specific partition within a zone. */
+  id: Scalars["Int"];
+  /** The localized name for partition. */
+  name: Scalars["String"];
 };
 
 /** Attendance for a specific player on a specific raid night. */
@@ -899,10 +899,10 @@ export type PlayerAttendance = {
   __typename?: "PlayerAttendance";
   /** The name of the player. */
   name?: Maybe<Scalars["String"]>;
-  /** The class of the player. */
-  type?: Maybe<Scalars["String"]>;
   /** Presence info for the player. A value of 1 means the player was present. A value of 2 indicates present but on the bench. */
   presence?: Maybe<Scalars["Int"]>;
+  /** The class of the player. */
+  type?: Maybe<Scalars["String"]>;
 };
 
 /** A way to obtain data for the top guilds involved in an ongoing world first or realm first progress race. */
@@ -914,11 +914,11 @@ export type ProgressRaceData = {
 
 /** A way to obtain data for the top guilds involved in an ongoing world first or realm first progress race. */
 export type ProgressRaceDataProgressRaceArgs = {
-  serverRegion?: Maybe<Scalars["String"]>;
-  serverSubregion?: Maybe<Scalars["String"]>;
-  serverSlug?: Maybe<Scalars["String"]>;
-  zoneID?: Maybe<Scalars["Int"]>;
   difficulty?: Maybe<Scalars["Int"]>;
+  serverRegion?: Maybe<Scalars["String"]>;
+  serverSlug?: Maybe<Scalars["String"]>;
+  serverSubregion?: Maybe<Scalars["String"]>;
+  zoneID?: Maybe<Scalars["Int"]>;
 };
 
 export type Query = {
@@ -943,18 +943,18 @@ export type Query = {
 
 /** Whether or not rankings are compared against best scores for the entire tier or against all parses in a two week window. */
 export enum RankingCompareType {
-  /** Compare against rankings. */
-  Rankings = "Rankings",
   /** Compare against all parses in a two week window. */
   Parses = "Parses",
+  /** Compare against rankings. */
+  Rankings = "Rankings",
 }
 
 /** Whether or not rankings are today or historical. */
 export enum RankingTimeframeType {
-  /** Compare against today's rankings. */
-  Today = "Today",
   /** Compare against historical rankings. */
   Historical = "Historical",
+  /** Compare against today's rankings. */
+  Today = "Today",
 }
 
 /** A way to obtain your current rate limit usage. */
@@ -962,27 +962,27 @@ export type RateLimitData = {
   __typename?: "RateLimitData";
   /** The total amount of points this API key can spend per hour. */
   limitPerHour: Scalars["Int"];
-  /** The total amount of points spent during this hour. */
-  pointsSpentThisHour: Scalars["Float"];
   /** The number of seconds remaining until the points reset. */
   pointsResetIn: Scalars["Int"];
+  /** The total amount of points spent during this hour. */
+  pointsSpentThisHour: Scalars["Float"];
 };
 
 /** A single region for the game. */
 export type Region = {
   __typename?: "Region";
-  /** The ID of the region. */
-  id: Scalars["Int"];
   /** The localized compact name of the region, e.g., US for United States. */
   compactName: Scalars["String"];
+  /** The ID of the region. */
+  id: Scalars["Int"];
   /** The localized name of the region. */
   name: Scalars["String"];
+  /** The servers found within this region. */
+  servers?: Maybe<ServerPagination>;
   /** The slug for the region, usable when looking up characters and guilds by server. */
   slug: Scalars["String"];
   /** The subregions found within this region. */
   subregions?: Maybe<Maybe<Subregion>[]>;
-  /** The servers found within this region. */
-  servers?: Maybe<ServerPagination>;
 };
 
 /** A single region for the game. */
@@ -1010,10 +1010,10 @@ export type Report = {
   guild?: Maybe<Guild>;
   /** The guild tag that the report belongs to. If this is null, then the report was not tagged. */
   guildTag?: Maybe<GuildTag>;
-  /** The user that uploaded the report. */
-  owner?: Maybe<User>;
   /** Data from the report's master file. This includes version info, all of the players, NPCs and pets that occur in the report, and all the game abilities used in the report. */
   masterData?: Maybe<ReportMasterData>;
+  /** The user that uploaded the report. */
+  owner?: Maybe<User>;
   /** A list of all characters that ranked on kills in the report. */
   rankedCharacters?: Maybe<Maybe<Character>[]>;
   /** Rankings information for a report, filterable to specific fights, bosses, metrics, etc. This data is not considered frozen, and it can change without notice. Use at your own risk. */
@@ -1091,8 +1091,8 @@ export type ReportGraphArgs = {
   targetID?: Maybe<Scalars["Int"]>;
   targetInstanceID?: Maybe<Scalars["Int"]>;
   translate?: Maybe<Scalars["Boolean"]>;
-  viewOptions?: Maybe<Scalars["Int"]>;
   viewBy?: Maybe<ViewType>;
+  viewOptions?: Maybe<Scalars["Int"]>;
   wipeCutoff?: Maybe<Scalars["Int"]>;
 };
 
@@ -1131,8 +1131,8 @@ export type ReportTableArgs = {
   targetID?: Maybe<Scalars["Int"]>;
   targetInstanceID?: Maybe<Scalars["Int"]>;
   translate?: Maybe<Scalars["Boolean"]>;
-  viewOptions?: Maybe<Scalars["Int"]>;
   viewBy?: Maybe<ViewType>;
+  viewOptions?: Maybe<Scalars["Int"]>;
   wipeCutoff?: Maybe<Scalars["Int"]>;
 };
 
@@ -1189,13 +1189,13 @@ export type ReportDataReportsArgs = {
   endTime?: Maybe<Scalars["Float"]>;
   guildID?: Maybe<Scalars["Int"]>;
   guildName?: Maybe<Scalars["String"]>;
-  guildServerSlug?: Maybe<Scalars["String"]>;
   guildServerRegion?: Maybe<Scalars["String"]>;
+  guildServerSlug?: Maybe<Scalars["String"]>;
   guildTagID?: Maybe<Scalars["Int"]>;
-  userID?: Maybe<Scalars["Int"]>;
   limit?: Maybe<Scalars["Int"]>;
   page?: Maybe<Scalars["Int"]>;
   startTime?: Maybe<Scalars["Float"]>;
+  userID?: Maybe<Scalars["Int"]>;
   zoneID?: Maybe<Scalars["Int"]>;
 };
 
@@ -1229,18 +1229,18 @@ export type ReportDungeonPull = {
 /** The ReportDungeonPullNPC represents participation info within a single dungeon pull for an NPC. */
 export type ReportDungeonPullNpc = {
   __typename?: "ReportDungeonPullNPC";
-  /** The report ID of the actor. This ID is used in events to identify sources and targets. */
-  id?: Maybe<Scalars["Int"]>;
   /** The game ID of the actor, e.g., so it can be looked up on external Web sites. */
   gameID?: Maybe<Scalars["Int"]>;
-  /** The lowest instance ID seen during the pull. */
-  minimumInstanceID?: Maybe<Scalars["Int"]>;
+  /** The report ID of the actor. This ID is used in events to identify sources and targets. */
+  id?: Maybe<Scalars["Int"]>;
+  /** The highest instance group ID seen during the pull. */
+  maximumInstanceGroupID?: Maybe<Scalars["Int"]>;
   /** The highest instance ID seen during the pull. */
   maximumInstanceID?: Maybe<Scalars["Int"]>;
   /** The lowest instance group ID seen during the pull. */
   minimumInstanceGroupID?: Maybe<Scalars["Int"]>;
-  /** The highest instance group ID seen during the pull. */
-  maximumInstanceGroupID?: Maybe<Scalars["Int"]>;
+  /** The lowest instance ID seen during the pull. */
+  minimumInstanceID?: Maybe<Scalars["Int"]>;
 };
 
 /** The ReportEventPaginator represents a paginated list of report events. */
@@ -1320,12 +1320,12 @@ export type ReportFightNpc = {
   __typename?: "ReportFightNPC";
   /** The game ID of the actor. This ID is used in events to identify sources and targets. */
   gameID?: Maybe<Scalars["Int"]>;
+  /** How many packs of the NPC were seen during the fight. */
+  groupCount?: Maybe<Scalars["Int"]>;
   /** The report ID of the actor. This ID is used in events to identify sources and targets. */
   id?: Maybe<Scalars["Int"]>;
   /** How many instances of the NPC were seen during the fight. */
   instanceCount?: Maybe<Scalars["Int"]>;
-  /** How many packs of the NPC were seen during the fight. */
-  groupCount?: Maybe<Scalars["Int"]>;
 };
 
 /** The ReportMap represents a single map that a fight can occur on. */
@@ -1338,55 +1338,55 @@ export type ReportMap = {
 /** The ReportMapBoundingBox is a box that encloses the positions of all players and enemies in a fight or dungeon pull. */
 export type ReportMapBoundingBox = {
   __typename?: "ReportMapBoundingBox";
-  /** The smallest X position. */
-  minX: Scalars["Int"];
   /** The largest X position. */
   maxX: Scalars["Int"];
-  /** The smallest Y position. */
-  minY: Scalars["Int"];
   /** The largest Y position. */
   maxY: Scalars["Int"];
+  /** The smallest X position. */
+  minX: Scalars["Int"];
+  /** The smallest Y position. */
+  minY: Scalars["Int"];
 };
 
 /** The ReporMastertData object contains information about the log version of a report, as well as the actors and abilities used in the report. */
 export type ReportMasterData = {
   __typename?: "ReportMasterData";
-  /** The version of the client parser that was used to parse and upload this log file. */
-  logVersion: Scalars["Int"];
-  /** The version of the game that generated the log file. Used to distinguish Classic and Retail Warcraft primarily. */
-  gameVersion?: Maybe<Scalars["Int"]>;
-  /** The auto-detected locale of the report. This is the source language of the original log file. */
-  lang?: Maybe<Scalars["String"]>;
   /** A list of every ability that occurs in the report. */
   abilities?: Maybe<Maybe<ReportAbility>[]>;
   /** A list of every actor (player, NPC, pet) that occurs in the report. */
   actors?: Maybe<Maybe<ReportActor>[]>;
+  /** The version of the game that generated the log file. Used to distinguish Classic and Retail Warcraft primarily. */
+  gameVersion?: Maybe<Scalars["Int"]>;
+  /** The auto-detected locale of the report. This is the source language of the original log file. */
+  lang?: Maybe<Scalars["String"]>;
+  /** The version of the client parser that was used to parse and upload this log file. */
+  logVersion: Scalars["Int"];
 };
 
 /** The ReporMastertData object contains information about the log version of a report, as well as the actors and abilities used in the report. */
 export type ReportMasterDataActorsArgs = {
-  type?: Maybe<Scalars["String"]>;
   subType?: Maybe<Scalars["String"]>;
+  type?: Maybe<Scalars["String"]>;
 };
 
 export type ReportPagination = {
   __typename?: "ReportPagination";
-  /** List of items on the current page */
-  data?: Maybe<Maybe<Report>[]>;
-  /** Number of total items selected by the query */
-  total: Scalars["Int"];
-  /** Number of items returned per page */
-  per_page: Scalars["Int"];
   /** Current page of the cursor */
   current_page: Scalars["Int"];
+  /** List of items on the current page */
+  data?: Maybe<Maybe<Report>[]>;
   /** Number of the first item returned */
   from?: Maybe<Scalars["Int"]>;
-  /** Number of the last item returned */
-  to?: Maybe<Scalars["Int"]>;
-  /** The last page (number of pages) */
-  last_page: Scalars["Int"];
   /** Determines if cursor has more pages after the current page */
   has_more_pages: Scalars["Boolean"];
+  /** The last page (number of pages) */
+  last_page: Scalars["Int"];
+  /** Number of items returned per page */
+  per_page: Scalars["Int"];
+  /** Number of the last item returned */
+  to?: Maybe<Scalars["Int"]>;
+  /** Number of total items selected by the query */
+  total: Scalars["Int"];
 };
 
 /** All the possible metrics. */
@@ -1430,20 +1430,20 @@ export enum RoleType {
 /** A single server. Servers correspond to actual game servers that characters and guilds reside on. */
 export type Server = {
   __typename?: "Server";
+  /** The guilds found on this server (and any servers connected to this one. */
+  guilds?: Maybe<GuildPagination>;
   /** The ID of the server. */
   id: Scalars["Int"];
   /** The name of the server in the locale of the subregion that the server belongs to. */
   name: Scalars["String"];
   /** The normalized name is a transformation of the name, dropping spaces. It is how the server appears in a World of Warcraft log file. */
   normalizedName: Scalars["String"];
-  /** The server slug, also a transformation of the name following Blizzard rules. For retail World of Warcraft realms, this slug will be in English. For all other games, the slug is just a transformation of the name field. */
-  slug: Scalars["String"];
   /** The region that this server belongs to. */
   region: Region;
+  /** The server slug, also a transformation of the name following Blizzard rules. For retail World of Warcraft realms, this slug will be in English. For all other games, the slug is just a transformation of the name field. */
+  slug: Scalars["String"];
   /** The subregion that this server belongs to. */
   subregion: Subregion;
-  /** The guilds found on this server (and any servers connected to this one. */
-  guilds?: Maybe<GuildPagination>;
 };
 
 /** A single server. Servers correspond to actual game servers that characters and guilds reside on. */
@@ -1454,31 +1454,31 @@ export type ServerGuildsArgs = {
 
 export type ServerPagination = {
   __typename?: "ServerPagination";
-  /** List of items on the current page */
-  data?: Maybe<Maybe<Server>[]>;
-  /** Number of total items selected by the query */
-  total: Scalars["Int"];
-  /** Number of items returned per page */
-  per_page: Scalars["Int"];
   /** Current page of the cursor */
   current_page: Scalars["Int"];
+  /** List of items on the current page */
+  data?: Maybe<Maybe<Server>[]>;
   /** Number of the first item returned */
   from?: Maybe<Scalars["Int"]>;
-  /** Number of the last item returned */
-  to?: Maybe<Scalars["Int"]>;
-  /** The last page (number of pages) */
-  last_page: Scalars["Int"];
   /** Determines if cursor has more pages after the current page */
   has_more_pages: Scalars["Boolean"];
+  /** The last page (number of pages) */
+  last_page: Scalars["Int"];
+  /** Number of items returned per page */
+  per_page: Scalars["Int"];
+  /** Number of the last item returned */
+  to?: Maybe<Scalars["Int"]>;
+  /** Number of total items selected by the query */
+  total: Scalars["Int"];
 };
 
 /** A spec for a given player class. */
 export type Spec = {
   __typename?: "Spec";
-  /** An integer used to identify the spec. */
-  id: Scalars["Int"];
   /** The player class that the spec belongs to. */
   class: GameClass;
+  /** An integer used to identify the spec. */
+  id: Scalars["Int"];
   /** The localized name of the class. */
   name: Scalars["String"];
   /** A slug used to identify the spec. */
@@ -1506,8 +1506,6 @@ export type SubregionServersArgs = {
 
 /** The type of table to examine. */
 export enum TableDataType {
-  /** Summary Overview */
-  Summary = "Summary",
   /** Buffs. */
   Buffs = "Buffs",
   /** Casts. */
@@ -1528,6 +1526,8 @@ export enum TableDataType {
   Interrupts = "Interrupts",
   /** Resources. */
   Resources = "Resources",
+  /** Summary Overview */
+  Summary = "Summary",
   /** Summons */
   Summons = "Summons",
   /** Survivability (death info across multiple pulls). */
@@ -1539,21 +1539,21 @@ export enum TableDataType {
 /** A single user of the site. */
 export type User = {
   __typename?: "User";
+  /** The battle tag of the user if they have linked it. */
+  battleTag?: Maybe<Scalars["String"]>;
   /** The ID of the user. */
   id: Scalars["Int"];
   /** The name of the user. */
   name: Scalars["String"];
-  /** The battle tag of the user if they have linked it. */
-  battleTag?: Maybe<Scalars["String"]>;
 };
 
 /** The user data object contains basic information about users and lets you retrieve specific users (or the current user if using the user endpoint). */
 export type UserData = {
   __typename?: "UserData";
-  /** Obtain a specific user by id. */
-  user?: Maybe<User>;
   /** Obtain the current user (only works with user endpoint). */
   currentUser?: Maybe<User>;
+  /** Obtain a specific user by id. */
+  user?: Maybe<User>;
 };
 
 /** The user data object contains basic information about users and lets you retrieve specific users (or the current user if using the user endpoint). */
@@ -1563,12 +1563,18 @@ export type UserDataUserArgs = {
 
 export type ViewModels = {
   __typename?: "ViewModels";
-  googleAnalytics?: Maybe<Scalars["JSON"]>;
-  game?: Maybe<Scalars["JSON"]>;
-  headerTitle?: Maybe<Scalars["JSON"]>;
+  article?: Maybe<Scalars["JSON"]>;
   articleCategories?: Maybe<Scalars["JSON"]>;
   articleSlugs?: Maybe<Scalars["JSON"]>;
-  article?: Maybe<Scalars["JSON"]>;
+  game?: Maybe<Scalars["JSON"]>;
+  googleAnalytics?: Maybe<Scalars["JSON"]>;
+  headerTitle?: Maybe<Scalars["JSON"]>;
+};
+
+export type ViewModelsArticleArgs = {
+  articleCategorySlug?: Maybe<Scalars["String"]>;
+  articleSlug?: Maybe<Scalars["String"]>;
+  siteName?: Maybe<Scalars["String"]>;
 };
 
 export type ViewModelsArticleSlugsArgs = {
@@ -1576,18 +1582,12 @@ export type ViewModelsArticleSlugsArgs = {
   siteName?: Maybe<Scalars["String"]>;
 };
 
-export type ViewModelsArticleArgs = {
-  articleSlug?: Maybe<Scalars["String"]>;
-  articleCategorySlug?: Maybe<Scalars["String"]>;
-  siteName?: Maybe<Scalars["String"]>;
-};
-
 /** Whether the view is by source, target, or ability. */
 export enum ViewType {
-  /** Use the same default that the web site picks based off the other selected parameters. */
-  Default = "Default",
   /** View by ability. */
   Ability = "Ability",
+  /** Use the same default that the web site picks based off the other selected parameters. */
+  Default = "Default",
   /** View. by source. */
   Source = "Source",
   /** View by target. */
@@ -1657,8 +1657,6 @@ export type WorldDataZonesArgs = {
 /** A single zone from an expansion that represents a raid, dungeon, arena, etc. */
 export type Zone = {
   __typename?: "Zone";
-  /** The ID of the zone. */
-  id: Scalars["Int"];
   /** The bracket information for this zone. This field will be null if the zone does not support brackets. */
   brackets?: Maybe<Bracket>;
   /** A list of all the difficulties supported for this zone. */
@@ -1669,6 +1667,8 @@ export type Zone = {
   expansion: Expansion;
   /** Whether or not the entire zone (including all its partitions) is permanently frozen. When a zone is frozen, data involving that zone will never change and can be cached forever. */
   frozen: Scalars["Boolean"];
+  /** The ID of the zone. */
+  id: Scalars["Int"];
   /** The name of the zone. */
   name: Scalars["String"];
   /** A list of all the partitions supported for this zone. */

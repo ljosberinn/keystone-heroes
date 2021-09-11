@@ -7,13 +7,23 @@
     "subscriptionType": null,
     "types": [
       {
+        "kind": "SCALAR",
+        "name": "Boolean",
+        "description": "The `Boolean` scalar type represents `true` or `false`.",
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
         "kind": "OBJECT",
         "name": "Bracket",
         "description": "A bracket description for a given raid zone. Brackets have a minimum value, maximum value, and a bucket that can be used to establish all of the possible brackets. The type field indicates what the brackets represent, e.g., item levels or game patches, etc.",
         "fields": [
           {
-            "name": "min",
-            "description": "An integer representing the minimum value used by bracket number 1, etc.",
+            "name": "bucket",
+            "description": "A float representing the value to increment when moving from bracket 1 to bracket N, etc.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -44,8 +54,8 @@
             "deprecationReason": null
           },
           {
-            "name": "bucket",
-            "description": "A float representing the value to increment when moving from bracket 1 to bracket N, etc.",
+            "name": "min",
+            "description": "An integer representing the minimum value used by bracket number 1, etc.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -74,26 +84,6 @@
         ],
         "inputFields": null,
         "interfaces": [],
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
-        "kind": "SCALAR",
-        "name": "Float",
-        "description": "The `Float` scalar type represents signed double-precision fractional values as specified by [IEEE 754](https://en.wikipedia.org/wiki/IEEE_floating_point).",
-        "fields": null,
-        "inputFields": null,
-        "interfaces": null,
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
-        "kind": "SCALAR",
-        "name": "String",
-        "description": "The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.",
-        "fields": null,
-        "inputFields": null,
-        "interfaces": null,
         "enumValues": null,
         "possibleTypes": null
       },
@@ -633,26 +623,6 @@
         "possibleTypes": null
       },
       {
-        "kind": "SCALAR",
-        "name": "Int",
-        "description": "The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1.",
-        "fields": null,
-        "inputFields": null,
-        "interfaces": null,
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
-        "kind": "SCALAR",
-        "name": "Boolean",
-        "description": "The `Boolean` scalar type represents `true` or `false`.",
-        "fields": null,
-        "inputFields": null,
-        "interfaces": null,
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
         "kind": "OBJECT",
         "name": "CharacterData",
         "description": "The CharacterData object enables the retrieval of single characters or filtered collections of characters.",
@@ -686,8 +656,8 @@
                 "deprecationReason": null
               },
               {
-                "name": "serverSlug",
-                "description": "Optional. The slug of a specific server. Must be used in conjunction with name and serverRegion to uniquely identify a character.",
+                "name": "serverRegion",
+                "description": "Optional. The region for a specific character. Must be used in conjunction with name and serverRegion to uniquely identify a character.",
                 "type": {
                   "kind": "SCALAR",
                   "name": "String",
@@ -698,8 +668,8 @@
                 "deprecationReason": null
               },
               {
-                "name": "serverRegion",
-                "description": "Optional. The region for a specific character. Must be used in conjunction with name and serverRegion to uniquely identify a character.",
+                "name": "serverSlug",
+                "description": "Optional. The slug of a specific server. Must be used in conjunction with name and serverRegion to uniquely identify a character.",
                 "type": {
                   "kind": "SCALAR",
                   "name": "String",
@@ -779,6 +749,22 @@
         "description": null,
         "fields": [
           {
+            "name": "current_page",
+            "description": "Current page of the cursor",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "data",
             "description": "List of items on the current page",
             "args": [],
@@ -795,8 +781,36 @@
             "deprecationReason": null
           },
           {
-            "name": "total",
-            "description": "Number of total items selected by the query",
+            "name": "from",
+            "description": "Number of the first item returned",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "has_more_pages",
+            "description": "Determines if cursor has more pages after the current page",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "last_page",
+            "description": "The last page (number of pages)",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -827,34 +841,6 @@
             "deprecationReason": null
           },
           {
-            "name": "current_page",
-            "description": "Current page of the cursor",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "from",
-            "description": "Number of the first item returned",
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "to",
             "description": "Number of the last item returned",
             "args": [],
@@ -867,8 +853,8 @@
             "deprecationReason": null
           },
           {
-            "name": "last_page",
-            "description": "The last page (number of pages)",
+            "name": "total",
+            "description": "Number of total items selected by the query",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -876,22 +862,6 @@
               "ofType": {
                 "kind": "SCALAR",
                 "name": "Int",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "has_more_pages",
-            "description": "Determines if cursor has more pages after the current page",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Boolean",
                 "ofType": null
               }
             },
@@ -937,6 +907,30 @@
             "deprecationReason": null
           },
           {
+            "name": "healercombinedbossdps",
+            "description": "Unique to FFXIV. Represents the combined ranking for a pair of healers in 8-man content.",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "healercombinedbossrdps",
+            "description": "Unique to FFXIV. Represents the combined ranking for a pair of healers in 8-man content.",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "healercombineddps",
+            "description": "Unique to FFXIV. Represents the combined ranking for a pair of healers in 8-man content.",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "healercombinedrdps",
+            "description": "Unique to FFXIV. Represents the combined ranking for a pair of healers in 8-man content.",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "hps",
             "description": "Healing per second.",
             "isDeprecated": false,
@@ -967,49 +961,19 @@
             "deprecationReason": null
           },
           {
-            "name": "tankhps",
-            "description": "Healing done per second to tanks.",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "wdps",
-            "description": "Weighted damage per second. Unique to WoW currently. Used to remove pad damage and reward damage done to high priority targets.",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "healercombineddps",
-            "description": "Unique to FFXIV. Represents the combined ranking for a pair of healers in 8-man content.",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "healercombinedbossdps",
-            "description": "Unique to FFXIV. Represents the combined ranking for a pair of healers in 8-man content.",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "healercombinedrdps",
-            "description": "Unique to FFXIV. Represents the combined ranking for a pair of healers in 8-man content.",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "healercombinedbossrdps",
-            "description": "Unique to FFXIV. Represents the combined ranking for a pair of healers in 8-man content.",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "tankcombineddps",
+            "name": "tankcombinedbossdps",
             "description": "Unique to FFXIV. Represents the combined ranking for a pair of tanks in 8-man content.",
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
-            "name": "tankcombinedbossdps",
+            "name": "tankcombinedbossrdps",
+            "description": "Unique to FFXIV. Represents the combined ranking for a pair of tanks in 8-man content.",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "tankcombineddps",
             "description": "Unique to FFXIV. Represents the combined ranking for a pair of tanks in 8-man content.",
             "isDeprecated": false,
             "deprecationReason": null
@@ -1021,8 +985,14 @@
             "deprecationReason": null
           },
           {
-            "name": "tankcombinedbossrdps",
-            "description": "Unique to FFXIV. Represents the combined ranking for a pair of tanks in 8-man content.",
+            "name": "tankhps",
+            "description": "Healing done per second to tanks.",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "wdps",
+            "description": "Weighted damage per second. Unique to WoW currently. Used to remove pad damage and reward damage done to high priority targets.",
             "isDeprecated": false,
             "deprecationReason": null
           }
@@ -1094,38 +1064,6 @@
         "description": "A single encounter for the game.",
         "fields": [
           {
-            "name": "id",
-            "description": "The ID of the encounter.",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "name",
-            "description": "The localized name of the encounter.",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "characterRankings",
             "description": "Player rankings information for a zone. This data is not considered frozen, and it can change without notice. Use at your own risk.",
             "args": [
@@ -1150,6 +1088,18 @@
                   "ofType": null
                 },
                 "defaultValue": "\"Any\"",
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "covenantID",
+                "description": "Optional. The covenant ID to filter to if viewing Shadowlands rankings.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": "0",
                 "isDeprecated": false,
                 "deprecationReason": null
               },
@@ -1262,30 +1212,6 @@
                 "deprecationReason": null
               },
               {
-                "name": "specName",
-                "description": "Optional. The slug for a specific spec. Whether or not to filter rankings to a specific spec. If omitted, data for all specs will be used.",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                },
-                "defaultValue": "\"Any\"",
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "covenantID",
-                "description": "Optional. The covenant ID to filter to if viewing Shadowlands rankings.",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                },
-                "defaultValue": "0",
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
                 "name": "soulbindID",
                 "description": "Optional. The soulbind ID to filter to if viewing Shadowlands rankings.",
                 "type": {
@@ -1294,6 +1220,18 @@
                   "ofType": null
                 },
                 "defaultValue": "0",
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "specName",
+                "description": "Optional. The slug for a specific spec. Whether or not to filter rankings to a specific spec. If omitted, data for all specs will be used.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": "\"Any\"",
                 "isDeprecated": false,
                 "deprecationReason": null
               }
@@ -1428,15 +1366,15 @@
             "deprecationReason": null
           },
           {
-            "name": "zone",
-            "description": "The zone that this encounter is found in.",
+            "name": "id",
+            "description": "The ID of the encounter.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
-                "kind": "OBJECT",
-                "name": "Zone",
+                "kind": "SCALAR",
+                "name": "Int",
                 "ofType": null
               }
             },
@@ -1453,6 +1391,38 @@
               "ofType": {
                 "kind": "SCALAR",
                 "name": "Int",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "name",
+            "description": "The localized name of the encounter.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "zone",
+            "description": "The zone that this encounter is found in.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "Zone",
                 "ofType": null
               }
             },
@@ -1661,10 +1631,32 @@
         "possibleTypes": null
       },
       {
+        "kind": "SCALAR",
+        "name": "Float",
+        "description": "The `Float` scalar type represents signed double-precision fractional values as specified by [IEEE 754](https://en.wikipedia.org/wiki/IEEE_floating_point).",
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
         "kind": "OBJECT",
         "name": "GameAbility",
         "description": "A single ability for the game.",
         "fields": [
+          {
+            "name": "icon",
+            "description": "The icon for the ability.",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
           {
             "name": "id",
             "description": "The ID of the ability.",
@@ -1677,18 +1669,6 @@
                 "name": "Int",
                 "ofType": null
               }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "icon",
-            "description": "The icon for the ability.",
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -1717,6 +1697,22 @@
         "description": null,
         "fields": [
           {
+            "name": "current_page",
+            "description": "Current page of the cursor",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "data",
             "description": "List of items on the current page",
             "args": [],
@@ -1733,8 +1729,36 @@
             "deprecationReason": null
           },
           {
-            "name": "total",
-            "description": "Number of total items selected by the query",
+            "name": "from",
+            "description": "Number of the first item returned",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "has_more_pages",
+            "description": "Determines if cursor has more pages after the current page",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "last_page",
+            "description": "The last page (number of pages)",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -1765,34 +1789,6 @@
             "deprecationReason": null
           },
           {
-            "name": "current_page",
-            "description": "Current page of the cursor",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "from",
-            "description": "Number of the first item returned",
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "to",
             "description": "Number of the last item returned",
             "args": [],
@@ -1805,8 +1801,8 @@
             "deprecationReason": null
           },
           {
-            "name": "last_page",
-            "description": "The last page (number of pages)",
+            "name": "total",
+            "description": "Number of total items selected by the query",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -1814,22 +1810,6 @@
               "ofType": {
                 "kind": "SCALAR",
                 "name": "Int",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "has_more_pages",
-            "description": "Determines if cursor has more pages after the current page",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Boolean",
                 "ofType": null
               }
             },
@@ -1848,6 +1828,18 @@
         "description": "A single achievement for the game.",
         "fields": [
           {
+            "name": "icon",
+            "description": "The icon for the achievement.",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "id",
             "description": "The ID of the achievement.",
             "args": [],
@@ -1859,18 +1851,6 @@
                 "name": "Int",
                 "ofType": null
               }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "icon",
-            "description": "The icon for the achievement.",
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -1899,6 +1879,22 @@
         "description": null,
         "fields": [
           {
+            "name": "current_page",
+            "description": "Current page of the cursor",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "data",
             "description": "List of items on the current page",
             "args": [],
@@ -1915,8 +1911,36 @@
             "deprecationReason": null
           },
           {
-            "name": "total",
-            "description": "Number of total items selected by the query",
+            "name": "from",
+            "description": "Number of the first item returned",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "has_more_pages",
+            "description": "Determines if cursor has more pages after the current page",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "last_page",
+            "description": "The last page (number of pages)",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -1947,34 +1971,6 @@
             "deprecationReason": null
           },
           {
-            "name": "current_page",
-            "description": "Current page of the cursor",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "from",
-            "description": "Number of the first item returned",
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "to",
             "description": "Number of the last item returned",
             "args": [],
@@ -1987,8 +1983,8 @@
             "deprecationReason": null
           },
           {
-            "name": "last_page",
-            "description": "The last page (number of pages)",
+            "name": "total",
+            "description": "Number of total items selected by the query",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -1996,22 +1992,6 @@
               "ofType": {
                 "kind": "SCALAR",
                 "name": "Int",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "has_more_pages",
-            "description": "Determines if cursor has more pages after the current page",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Boolean",
                 "ofType": null
               }
             },
@@ -2030,6 +2010,18 @@
         "description": "A single affix for Mythic Keystone dungeons.",
         "fields": [
           {
+            "name": "icon",
+            "description": "The icon for the affix.",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "id",
             "description": "The ID of the affix.",
             "args": [],
@@ -2041,18 +2033,6 @@
                 "name": "Int",
                 "ofType": null
               }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "icon",
-            "description": "The icon for the affix.",
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -2325,8 +2305,8 @@
             "description": "Obtain a single class for the game.",
             "args": [
               {
-                "name": "id",
-                "description": "Required. Specify a specific class to retrieve by its id.",
+                "name": "faction_id",
+                "description": "Optional. Specify which faction you are retrieving the set of classes for. If the game has faction-specific classes, then the correct slugs and names will be returned for that faction.",
                 "type": {
                   "kind": "SCALAR",
                   "name": "Int",
@@ -2337,8 +2317,8 @@
                 "deprecationReason": null
               },
               {
-                "name": "faction_id",
-                "description": "Optional. Specify which faction you are retrieving the set of classes for. If the game has faction-specific classes, then the correct slugs and names will be returned for that faction.",
+                "name": "id",
+                "description": "Required. Specify a specific class to retrieve by its id.",
                 "type": {
                   "kind": "SCALAR",
                   "name": "Int",
@@ -2787,6 +2767,22 @@
         "description": null,
         "fields": [
           {
+            "name": "current_page",
+            "description": "Current page of the cursor",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "data",
             "description": "List of items on the current page",
             "args": [],
@@ -2803,8 +2799,36 @@
             "deprecationReason": null
           },
           {
-            "name": "total",
-            "description": "Number of total items selected by the query",
+            "name": "from",
+            "description": "Number of the first item returned",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "has_more_pages",
+            "description": "Determines if cursor has more pages after the current page",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "last_page",
+            "description": "The last page (number of pages)",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -2835,34 +2859,6 @@
             "deprecationReason": null
           },
           {
-            "name": "current_page",
-            "description": "Current page of the cursor",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "from",
-            "description": "Number of the first item returned",
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "to",
             "description": "Number of the last item returned",
             "args": [],
@@ -2875,8 +2871,8 @@
             "deprecationReason": null
           },
           {
-            "name": "last_page",
-            "description": "The last page (number of pages)",
+            "name": "total",
+            "description": "Number of total items selected by the query",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -2884,22 +2880,6 @@
               "ofType": {
                 "kind": "SCALAR",
                 "name": "Int",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "has_more_pages",
-            "description": "Determines if cursor has more pages after the current page",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Boolean",
                 "ofType": null
               }
             },
@@ -2961,6 +2941,18 @@
         "description": "A single item for the game.",
         "fields": [
           {
+            "name": "icon",
+            "description": "The icon for the item.",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "id",
             "description": "The ID of the item.",
             "args": [],
@@ -2972,18 +2964,6 @@
                 "name": "Int",
                 "ofType": null
               }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "icon",
-            "description": "The icon for the item.",
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -3012,6 +2992,22 @@
         "description": null,
         "fields": [
           {
+            "name": "current_page",
+            "description": "Current page of the cursor",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "data",
             "description": "List of items on the current page",
             "args": [],
@@ -3028,8 +3024,36 @@
             "deprecationReason": null
           },
           {
-            "name": "total",
-            "description": "Number of total items selected by the query",
+            "name": "from",
+            "description": "Number of the first item returned",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "has_more_pages",
+            "description": "Determines if cursor has more pages after the current page",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "last_page",
+            "description": "The last page (number of pages)",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -3060,34 +3084,6 @@
             "deprecationReason": null
           },
           {
-            "name": "current_page",
-            "description": "Current page of the cursor",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "from",
-            "description": "Number of the first item returned",
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "to",
             "description": "Number of the last item returned",
             "args": [],
@@ -3100,8 +3096,8 @@
             "deprecationReason": null
           },
           {
-            "name": "last_page",
-            "description": "The last page (number of pages)",
+            "name": "total",
+            "description": "Number of total items selected by the query",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -3109,22 +3105,6 @@
               "ofType": {
                 "kind": "SCALAR",
                 "name": "Int",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "has_more_pages",
-            "description": "Determines if cursor has more pages after the current page",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Boolean",
                 "ofType": null
               }
             },
@@ -3221,6 +3201,22 @@
         "description": null,
         "fields": [
           {
+            "name": "current_page",
+            "description": "Current page of the cursor",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "data",
             "description": "List of items on the current page",
             "args": [],
@@ -3237,8 +3233,36 @@
             "deprecationReason": null
           },
           {
-            "name": "total",
-            "description": "Number of total items selected by the query",
+            "name": "from",
+            "description": "Number of the first item returned",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "has_more_pages",
+            "description": "Determines if cursor has more pages after the current page",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "last_page",
+            "description": "The last page (number of pages)",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -3269,34 +3293,6 @@
             "deprecationReason": null
           },
           {
-            "name": "current_page",
-            "description": "Current page of the cursor",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "from",
-            "description": "Number of the first item returned",
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "to",
             "description": "Number of the last item returned",
             "args": [],
@@ -3309,8 +3305,8 @@
             "deprecationReason": null
           },
           {
-            "name": "last_page",
-            "description": "The last page (number of pages)",
+            "name": "total",
+            "description": "Number of total items selected by the query",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -3318,22 +3314,6 @@
               "ofType": {
                 "kind": "SCALAR",
                 "name": "Int",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "has_more_pages",
-            "description": "Determines if cursor has more pages after the current page",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Boolean",
                 "ofType": null
               }
             },
@@ -3391,6 +3371,22 @@
         "description": null,
         "fields": [
           {
+            "name": "current_page",
+            "description": "Current page of the cursor",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "data",
             "description": "List of items on the current page",
             "args": [],
@@ -3407,8 +3403,36 @@
             "deprecationReason": null
           },
           {
-            "name": "total",
-            "description": "Number of total items selected by the query",
+            "name": "from",
+            "description": "Number of the first item returned",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "has_more_pages",
+            "description": "Determines if cursor has more pages after the current page",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "last_page",
+            "description": "The last page (number of pages)",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -3439,34 +3463,6 @@
             "deprecationReason": null
           },
           {
-            "name": "current_page",
-            "description": "Current page of the cursor",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "from",
-            "description": "Number of the first item returned",
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "to",
             "description": "Number of the last item returned",
             "args": [],
@@ -3479,8 +3475,8 @@
             "deprecationReason": null
           },
           {
-            "name": "last_page",
-            "description": "The last page (number of pages)",
+            "name": "total",
+            "description": "Number of total items selected by the query",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -3488,22 +3484,6 @@
               "ofType": {
                 "kind": "SCALAR",
                 "name": "Int",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "has_more_pages",
-            "description": "Determines if cursor has more pages after the current page",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Boolean",
                 "ofType": null
               }
             },
@@ -3561,6 +3541,22 @@
         "description": null,
         "fields": [
           {
+            "name": "current_page",
+            "description": "Current page of the cursor",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "data",
             "description": "List of items on the current page",
             "args": [],
@@ -3577,8 +3573,36 @@
             "deprecationReason": null
           },
           {
-            "name": "total",
-            "description": "Number of total items selected by the query",
+            "name": "from",
+            "description": "Number of the first item returned",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "has_more_pages",
+            "description": "Determines if cursor has more pages after the current page",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "last_page",
+            "description": "The last page (number of pages)",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -3609,34 +3633,6 @@
             "deprecationReason": null
           },
           {
-            "name": "current_page",
-            "description": "Current page of the cursor",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "from",
-            "description": "Number of the first item returned",
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "to",
             "description": "Number of the last item returned",
             "args": [],
@@ -3649,8 +3645,8 @@
             "deprecationReason": null
           },
           {
-            "name": "last_page",
-            "description": "The last page (number of pages)",
+            "name": "total",
+            "description": "Number of total items selected by the query",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -3658,22 +3654,6 @@
               "ofType": {
                 "kind": "SCALAR",
                 "name": "Int",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "has_more_pages",
-            "description": "Determines if cursor has more pages after the current page",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Boolean",
                 "ofType": null
               }
             },
@@ -3694,12 +3674,6 @@
         "inputFields": null,
         "interfaces": null,
         "enumValues": [
-          {
-            "name": "Summary",
-            "description": "Summary Overview",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
           {
             "name": "Buffs",
             "description": "Buffs.",
@@ -3757,6 +3731,12 @@
           {
             "name": "Resources",
             "description": "Resources.",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "Summary",
+            "description": "Summary Overview",
             "isDeprecated": false,
             "deprecationReason": null
           },
@@ -3916,6 +3896,47 @@
             "deprecationReason": null
           },
           {
+            "name": "members",
+            "description": "The member roster for a specific guild. The result of this query is a paginated list of characters. This query only works for games where the guild roster is verifiable, e.g., it does not work for Classic Warcraft.",
+            "args": [
+              {
+                "name": "limit",
+                "description": "Optional. The number of guilds to retrieve per page. If omitted, defaults to 100. The maximum allowed value is 100, and minimum allowed value is 1.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": "100",
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "page",
+                "description": "Optional. The page of paginated data to retrieve. If omitted, defaults to the first page.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": "1",
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "CharacterPagination",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "name",
             "description": "The name of the guild.",
             "args": [],
@@ -3973,47 +3994,6 @@
               "ofType": {
                 "kind": "OBJECT",
                 "name": "GuildTag",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "members",
-            "description": "The member roster for a specific guild. The result of this query is a paginated list of characters. This query only works for games where the guild roster is verifiable, e.g., it does not work for Classic Warcraft.",
-            "args": [
-              {
-                "name": "limit",
-                "description": "Optional. The number of guilds to retrieve per page. If omitted, defaults to 100. The maximum allowed value is 100, and minimum allowed value is 1.",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                },
-                "defaultValue": "100",
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "page",
-                "description": "Optional. The page of paginated data to retrieve. If omitted, defaults to the first page.",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                },
-                "defaultValue": "1",
-                "isDeprecated": false,
-                "deprecationReason": null
-              }
-            ],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "CharacterPagination",
                 "ofType": null
               }
             },
@@ -4099,6 +4079,22 @@
         "description": null,
         "fields": [
           {
+            "name": "current_page",
+            "description": "Current page of the cursor",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "data",
             "description": "List of items on the current page",
             "args": [],
@@ -4115,8 +4111,36 @@
             "deprecationReason": null
           },
           {
-            "name": "total",
-            "description": "Number of total items selected by the query",
+            "name": "from",
+            "description": "Number of the first item returned",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "has_more_pages",
+            "description": "Determines if cursor has more pages after the current page",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "last_page",
+            "description": "The last page (number of pages)",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -4147,34 +4171,6 @@
             "deprecationReason": null
           },
           {
-            "name": "current_page",
-            "description": "Current page of the cursor",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "from",
-            "description": "Number of the first item returned",
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "to",
             "description": "Number of the last item returned",
             "args": [],
@@ -4187,8 +4183,8 @@
             "deprecationReason": null
           },
           {
-            "name": "last_page",
-            "description": "The last page (number of pages)",
+            "name": "total",
+            "description": "Number of total items selected by the query",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -4196,22 +4192,6 @@
               "ofType": {
                 "kind": "SCALAR",
                 "name": "Int",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "has_more_pages",
-            "description": "Determines if cursor has more pages after the current page",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Boolean",
                 "ofType": null
               }
             },
@@ -4258,8 +4238,8 @@
                 "deprecationReason": null
               },
               {
-                "name": "serverSlug",
-                "description": "Optional. The name of a specific guild. Must be used in conjunction with name and serverRegion to uniquely identify a guild.",
+                "name": "serverRegion",
+                "description": "Optional. The region for a specific guild. Must be used in conjunction with name and serverRegion to uniquely identify a guild.",
                 "type": {
                   "kind": "SCALAR",
                   "name": "String",
@@ -4270,8 +4250,8 @@
                 "deprecationReason": null
               },
               {
-                "name": "serverRegion",
-                "description": "Optional. The region for a specific guild. Must be used in conjunction with name and serverRegion to uniquely identify a guild.",
+                "name": "serverSlug",
+                "description": "Optional. The name of a specific guild. Must be used in conjunction with name and serverRegion to uniquely identify a guild.",
                 "type": {
                   "kind": "SCALAR",
                   "name": "String",
@@ -4331,8 +4311,8 @@
                 "deprecationReason": null
               },
               {
-                "name": "serverSlug",
-                "description": "Optional. The slug for a specific server. Must be used in conjunction with serverRegion to uniquely identify a server. Only guilds from that server (and any connected servers) will be fetched.",
+                "name": "serverRegion",
+                "description": "Optional. The region for a specific server. Must be used in conjunction with serverSlug to uniquely identify a server. Only guilds from that server (and any connected servers) will be fetched.",
                 "type": {
                   "kind": "SCALAR",
                   "name": "String",
@@ -4343,8 +4323,8 @@
                 "deprecationReason": null
               },
               {
-                "name": "serverRegion",
-                "description": "Optional. The region for a specific server. Must be used in conjunction with serverSlug to uniquely identify a server. Only guilds from that server (and any connected servers) will be fetched.",
+                "name": "serverSlug",
+                "description": "Optional. The slug for a specific server. Must be used in conjunction with serverRegion to uniquely identify a server. Only guilds from that server (and any connected servers) will be fetched.",
                 "type": {
                   "kind": "SCALAR",
                   "name": "String",
@@ -4375,6 +4355,22 @@
         "description": null,
         "fields": [
           {
+            "name": "current_page",
+            "description": "Current page of the cursor",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "data",
             "description": "List of items on the current page",
             "args": [],
@@ -4391,8 +4387,36 @@
             "deprecationReason": null
           },
           {
-            "name": "total",
-            "description": "Number of total items selected by the query",
+            "name": "from",
+            "description": "Number of the first item returned",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "has_more_pages",
+            "description": "Determines if cursor has more pages after the current page",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "last_page",
+            "description": "The last page (number of pages)",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -4423,34 +4447,6 @@
             "deprecationReason": null
           },
           {
-            "name": "current_page",
-            "description": "Current page of the cursor",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "from",
-            "description": "Number of the first item returned",
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "to",
             "description": "Number of the last item returned",
             "args": [],
@@ -4463,8 +4459,8 @@
             "deprecationReason": null
           },
           {
-            "name": "last_page",
-            "description": "The last page (number of pages)",
+            "name": "total",
+            "description": "Number of total items selected by the query",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -4472,22 +4468,6 @@
               "ofType": {
                 "kind": "SCALAR",
                 "name": "Int",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "has_more_pages",
-            "description": "Determines if cursor has more pages after the current page",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Boolean",
                 "ofType": null
               }
             },
@@ -4506,22 +4486,6 @@
         "description": "The tag for a specific guild. Tags can be used to categorize reports within a guild. In the site UI, they are referred to as report tags.",
         "fields": [
           {
-            "name": "id",
-            "description": "The ID of the tag.",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "guild",
             "description": "The guild that the tag belongs to.",
             "args": [],
@@ -4531,6 +4495,22 @@
               "ofType": {
                 "kind": "OBJECT",
                 "name": "Guild",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "id",
+            "description": "The ID of the tag.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int",
                 "ofType": null
               }
             },
@@ -4568,18 +4548,28 @@
         "interfaces": null,
         "enumValues": [
           {
-            "name": "Friendlies",
-            "description": "Fetch information for friendlies.",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "Enemies",
             "description": "Fetch information for enemies.",
             "isDeprecated": false,
             "deprecationReason": null
+          },
+          {
+            "name": "Friendlies",
+            "description": "Fetch information for friendlies.",
+            "isDeprecated": false,
+            "deprecationReason": null
           }
         ],
+        "possibleTypes": null
+      },
+      {
+        "kind": "SCALAR",
+        "name": "Int",
+        "description": "The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1.",
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": null,
         "possibleTypes": null
       },
       {
@@ -4639,38 +4629,6 @@
         "description": "A single partition for a given raid zone. Partitions have an integer value representing the actual partition and a localized name that describes what the partition represents. Partitions contain their own rankings, statistics and all stars.",
         "fields": [
           {
-            "name": "id",
-            "description": "An integer representing a specific partition within a zone.",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "name",
-            "description": "The localized name for partition.",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "compactName",
             "description": "The compact localized name for the partition. Typically an abbreviation to conserve space.",
             "args": [],
@@ -4701,6 +4659,38 @@
             },
             "isDeprecated": false,
             "deprecationReason": null
+          },
+          {
+            "name": "id",
+            "description": "An integer representing a specific partition within a zone.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "name",
+            "description": "The localized name for partition.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
           }
         ],
         "inputFields": null,
@@ -4726,24 +4716,24 @@
             "deprecationReason": null
           },
           {
-            "name": "type",
-            "description": "The class of the player.",
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "presence",
             "description": "Presence info for the player. A value of 1 means the player was present. A value of 2 indicates present but on the bench.",
             "args": [],
             "type": {
               "kind": "SCALAR",
               "name": "Int",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "type",
+            "description": "The class of the player.",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
               "ofType": null
             },
             "isDeprecated": false,
@@ -4765,20 +4755,20 @@
             "description": "Progress race information including best percentages, pull counts and streams for top guilds. This API is only active when there is an ongoing race. The format of this JSON may change without notice and is not considered frozen.",
             "args": [
               {
-                "name": "serverRegion",
-                "description": "Optional. The short name of a region to filter to. If paired with a server slug, will uniquely identify a server. If used by itself, rankings for that specific region will be fetched.",
+                "name": "difficulty",
+                "description": "Optional. If not specified, the highest difficulty will be used.",
                 "type": {
                   "kind": "SCALAR",
-                  "name": "String",
+                  "name": "Int",
                   "ofType": null
                 },
-                "defaultValue": "\"\"",
+                "defaultValue": "0",
                 "isDeprecated": false,
                 "deprecationReason": null
               },
               {
-                "name": "serverSubregion",
-                "description": "Optional. The short name of a subregion to filter to. Must be paired with serverRegion. Rankings for that specific subregion will be fetched.",
+                "name": "serverRegion",
+                "description": "Optional. The short name of a region to filter to. If paired with a server slug, will uniquely identify a server. If used by itself, rankings for that specific region will be fetched.",
                 "type": {
                   "kind": "SCALAR",
                   "name": "String",
@@ -4801,20 +4791,20 @@
                 "deprecationReason": null
               },
               {
-                "name": "zoneID",
-                "description": "Optional. If not specified, the latest zone will be used.",
+                "name": "serverSubregion",
+                "description": "Optional. The short name of a subregion to filter to. Must be paired with serverRegion. Rankings for that specific subregion will be fetched.",
                 "type": {
                   "kind": "SCALAR",
-                  "name": "Int",
+                  "name": "String",
                   "ofType": null
                 },
-                "defaultValue": "0",
+                "defaultValue": "\"\"",
                 "isDeprecated": false,
                 "deprecationReason": null
               },
               {
-                "name": "difficulty",
-                "description": "Optional. If not specified, the highest difficulty will be used.",
+                "name": "zoneID",
+                "description": "Optional. If not specified, the latest zone will be used.",
                 "type": {
                   "kind": "SCALAR",
                   "name": "Int",
@@ -4955,14 +4945,14 @@
         "interfaces": null,
         "enumValues": [
           {
-            "name": "Rankings",
-            "description": "Compare against rankings.",
+            "name": "Parses",
+            "description": "Compare against all parses in a two week window.",
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
-            "name": "Parses",
-            "description": "Compare against all parses in a two week window.",
+            "name": "Rankings",
+            "description": "Compare against rankings.",
             "isDeprecated": false,
             "deprecationReason": null
           }
@@ -4978,14 +4968,14 @@
         "interfaces": null,
         "enumValues": [
           {
-            "name": "Today",
-            "description": "Compare against today's rankings.",
+            "name": "Historical",
+            "description": "Compare against historical rankings.",
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
-            "name": "Historical",
-            "description": "Compare against historical rankings.",
+            "name": "Today",
+            "description": "Compare against today's rankings.",
             "isDeprecated": false,
             "deprecationReason": null
           }
@@ -5014,22 +5004,6 @@
             "deprecationReason": null
           },
           {
-            "name": "pointsSpentThisHour",
-            "description": "The total amount of points spent during this hour.",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Float",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "pointsResetIn",
             "description": "The number of seconds remaining until the points reset.",
             "args": [],
@@ -5039,6 +5013,22 @@
               "ofType": {
                 "kind": "SCALAR",
                 "name": "Int",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "pointsSpentThisHour",
+            "description": "The total amount of points spent during this hour.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Float",
                 "ofType": null
               }
             },
@@ -5057,22 +5047,6 @@
         "description": "A single region for the game.",
         "fields": [
           {
-            "name": "id",
-            "description": "The ID of the region.",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "compactName",
             "description": "The localized compact name of the region, e.g., US for United States.",
             "args": [],
@@ -5089,6 +5063,22 @@
             "deprecationReason": null
           },
           {
+            "name": "id",
+            "description": "The ID of the region.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "name",
             "description": "The localized name of the region.",
             "args": [],
@@ -5098,38 +5088,6 @@
               "ofType": {
                 "kind": "SCALAR",
                 "name": "String",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "slug",
-            "description": "The slug for the region, usable when looking up characters and guilds by server.",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "subregions",
-            "description": "The subregions found within this region.",
-            "args": [],
-            "type": {
-              "kind": "LIST",
-              "name": null,
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "Subregion",
                 "ofType": null
               }
             },
@@ -5169,6 +5127,38 @@
               "kind": "OBJECT",
               "name": "ServerPagination",
               "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "slug",
+            "description": "The slug for the region, usable when looking up characters and guilds by server.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "subregions",
+            "description": "The subregions found within this region.",
+            "args": [],
+            "type": {
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "Subregion",
+                "ofType": null
+              }
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -5819,18 +5809,6 @@
                 "deprecationReason": null
               },
               {
-                "name": "viewOptions",
-                "description": "Optional. A bitfield set of options used in the site UI. You can experiment in each view with the options to see what these values are.",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
                 "name": "viewBy",
                 "description": "Optional. Whether to view by source, by target or by ability.",
                 "type": {
@@ -5839,6 +5817,18 @@
                   "ofType": null
                 },
                 "defaultValue": "Default",
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "viewOptions",
+                "description": "Optional. A bitfield set of options used in the site UI. You can experiment in each view with the options to see what these values are.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null,
                 "isDeprecated": false,
                 "deprecationReason": null
               },
@@ -5888,18 +5878,6 @@
             "deprecationReason": null
           },
           {
-            "name": "owner",
-            "description": "The user that uploaded the report.",
-            "args": [],
-            "type": {
-              "kind": "OBJECT",
-              "name": "User",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "masterData",
             "description": "Data from the report's master file. This includes version info, all of the players, NPCs and pets that occur in the report, and all the game abilities used in the report.",
             "args": [
@@ -5919,6 +5897,18 @@
             "type": {
               "kind": "OBJECT",
               "name": "ReportMasterData",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "owner",
+            "description": "The user that uploaded the report.",
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "User",
               "ofType": null
             },
             "isDeprecated": false,
@@ -6314,18 +6304,6 @@
                 "deprecationReason": null
               },
               {
-                "name": "viewOptions",
-                "description": "Optional. A bitfield set of options used in the site UI. You can experiment in each view with the options to see what these values are.",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
                 "name": "viewBy",
                 "description": "Optional. Whether to view by source, by target or by ability.",
                 "type": {
@@ -6334,6 +6312,18 @@
                   "ofType": null
                 },
                 "defaultValue": "Default",
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "viewOptions",
+                "description": "Optional. A bitfield set of options used in the site UI. You can experiment in each view with the options to see what these values are.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null,
                 "isDeprecated": false,
                 "deprecationReason": null
               },
@@ -6645,18 +6635,6 @@
                 "deprecationReason": null
               },
               {
-                "name": "guildServerSlug",
-                "description": "Optional. The name of a specific guild. Must be used in conjunction with guildName and guildServerRegion to uniquely identify a guild.",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
                 "name": "guildServerRegion",
                 "description": "Optional. The region for a specific guild. Must be used in conjunction with guildName and guildServerRegion to uniquely identify a guild.",
                 "type": {
@@ -6669,20 +6647,20 @@
                 "deprecationReason": null
               },
               {
-                "name": "guildTagID",
-                "description": "Optional. The ID of a specific guild tag. Reports from that guild tag will be fetched. This will take precedence over all other guild arguments.",
+                "name": "guildServerSlug",
+                "description": "Optional. The name of a specific guild. Must be used in conjunction with guildName and guildServerRegion to uniquely identify a guild.",
                 "type": {
                   "kind": "SCALAR",
-                  "name": "Int",
+                  "name": "String",
                   "ofType": null
                 },
-                "defaultValue": "0",
+                "defaultValue": null,
                 "isDeprecated": false,
                 "deprecationReason": null
               },
               {
-                "name": "userID",
-                "description": "Optional. The ID of a specific user. Reports from that user's personal logs will be fetched.",
+                "name": "guildTagID",
+                "description": "Optional. The ID of a specific guild tag. Reports from that guild tag will be fetched. This will take precedence over all other guild arguments.",
                 "type": {
                   "kind": "SCALAR",
                   "name": "Int",
@@ -6722,6 +6700,18 @@
                 "type": {
                   "kind": "SCALAR",
                   "name": "Float",
+                  "ofType": null
+                },
+                "defaultValue": "0",
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "userID",
+                "description": "Optional. The ID of a specific user. Reports from that user's personal logs will be fetched.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
                   "ofType": null
                 },
                 "defaultValue": "0",
@@ -6940,18 +6930,6 @@
         "description": "The ReportDungeonPullNPC represents participation info within a single dungeon pull for an NPC.",
         "fields": [
           {
-            "name": "id",
-            "description": "The report ID of the actor. This ID is used in events to identify sources and targets.",
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "gameID",
             "description": "The game ID of the actor, e.g., so it can be looked up on external Web sites.",
             "args": [],
@@ -6964,8 +6942,20 @@
             "deprecationReason": null
           },
           {
-            "name": "minimumInstanceID",
-            "description": "The lowest instance ID seen during the pull.",
+            "name": "id",
+            "description": "The report ID of the actor. This ID is used in events to identify sources and targets.",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "maximumInstanceGroupID",
+            "description": "The highest instance group ID seen during the pull.",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -7000,8 +6990,8 @@
             "deprecationReason": null
           },
           {
-            "name": "maximumInstanceGroupID",
-            "description": "The highest instance group ID seen during the pull.",
+            "name": "minimumInstanceID",
+            "description": "The lowest instance ID seen during the pull.",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -7481,6 +7471,18 @@
             "deprecationReason": null
           },
           {
+            "name": "groupCount",
+            "description": "How many packs of the NPC were seen during the fight.",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "id",
             "description": "The report ID of the actor. This ID is used in events to identify sources and targets.",
             "args": [],
@@ -7495,18 +7497,6 @@
           {
             "name": "instanceCount",
             "description": "How many instances of the NPC were seen during the fight.",
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "groupCount",
-            "description": "How many packs of the NPC were seen during the fight.",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -7555,40 +7545,8 @@
         "description": "The ReportMapBoundingBox is a box that encloses the positions of all players and enemies in a fight or dungeon pull.",
         "fields": [
           {
-            "name": "minX",
-            "description": "The smallest X position.",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "maxX",
             "description": "The largest X position.",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "minY",
-            "description": "The smallest Y position.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -7617,6 +7575,38 @@
             },
             "isDeprecated": false,
             "deprecationReason": null
+          },
+          {
+            "name": "minX",
+            "description": "The smallest X position.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "minY",
+            "description": "The smallest Y position.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
           }
         ],
         "inputFields": null,
@@ -7630,15 +7620,56 @@
         "description": "The ReporMastertData object contains information about the log version of a report, as well as the actors and abilities used in the report.",
         "fields": [
           {
-            "name": "logVersion",
-            "description": "The version of the client parser that was used to parse and upload this log file.",
+            "name": "abilities",
+            "description": "A list of every ability that occurs in the report.",
             "args": [],
             "type": {
-              "kind": "NON_NULL",
+              "kind": "LIST",
               "name": null,
               "ofType": {
-                "kind": "SCALAR",
-                "name": "Int",
+                "kind": "OBJECT",
+                "name": "ReportAbility",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "actors",
+            "description": "A list of every actor (player, NPC, pet) that occurs in the report.",
+            "args": [
+              {
+                "name": "subType",
+                "description": "Optional. A filter on the actors in a report. If the subType field of the actor matches the specified subType field, it will be included.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": "\"\"",
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "type",
+                "description": "Optional. A filter on the actors in a report. If the type field of the actor matches the specified type field, it will be included.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": "\"\"",
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
+            "type": {
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "ReportActor",
                 "ofType": null
               }
             },
@@ -7670,56 +7701,15 @@
             "deprecationReason": null
           },
           {
-            "name": "abilities",
-            "description": "A list of every ability that occurs in the report.",
+            "name": "logVersion",
+            "description": "The version of the client parser that was used to parse and upload this log file.",
             "args": [],
             "type": {
-              "kind": "LIST",
+              "kind": "NON_NULL",
               "name": null,
               "ofType": {
-                "kind": "OBJECT",
-                "name": "ReportAbility",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "actors",
-            "description": "A list of every actor (player, NPC, pet) that occurs in the report.",
-            "args": [
-              {
-                "name": "type",
-                "description": "Optional. A filter on the actors in a report. If the type field of the actor matches the specified type field, it will be included.",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                },
-                "defaultValue": "\"\"",
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "subType",
-                "description": "Optional. A filter on the actors in a report. If the subType field of the actor matches the specified subType field, it will be included.",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                },
-                "defaultValue": "\"\"",
-                "isDeprecated": false,
-                "deprecationReason": null
-              }
-            ],
-            "type": {
-              "kind": "LIST",
-              "name": null,
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "ReportActor",
+                "kind": "SCALAR",
+                "name": "Int",
                 "ofType": null
               }
             },
@@ -7738,6 +7728,22 @@
         "description": null,
         "fields": [
           {
+            "name": "current_page",
+            "description": "Current page of the cursor",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "data",
             "description": "List of items on the current page",
             "args": [],
@@ -7754,8 +7760,36 @@
             "deprecationReason": null
           },
           {
-            "name": "total",
-            "description": "Number of total items selected by the query",
+            "name": "from",
+            "description": "Number of the first item returned",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "has_more_pages",
+            "description": "Determines if cursor has more pages after the current page",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "last_page",
+            "description": "The last page (number of pages)",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -7786,34 +7820,6 @@
             "deprecationReason": null
           },
           {
-            "name": "current_page",
-            "description": "Current page of the cursor",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "from",
-            "description": "Number of the first item returned",
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "to",
             "description": "Number of the last item returned",
             "args": [],
@@ -7826,8 +7832,8 @@
             "deprecationReason": null
           },
           {
-            "name": "last_page",
-            "description": "The last page (number of pages)",
+            "name": "total",
+            "description": "Number of total items selected by the query",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -7835,22 +7841,6 @@
               "ofType": {
                 "kind": "SCALAR",
                 "name": "Int",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "has_more_pages",
-            "description": "Determines if cursor has more pages after the current page",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Boolean",
                 "ofType": null
               }
             },
@@ -7981,6 +7971,43 @@
         "description": "A single server. Servers correspond to actual game servers that characters and guilds reside on.",
         "fields": [
           {
+            "name": "guilds",
+            "description": "The guilds found on this server (and any servers connected to this one.",
+            "args": [
+              {
+                "name": "limit",
+                "description": "Optional. The number of guilds to retrieve per page. The maximum allowed value is 100, and minimum allowed value is 1.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": "10",
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "page",
+                "description": "Optional. The page of paginated data to retrieve. If omitted, defaults to the first page.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": "1",
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
+            "type": {
+              "kind": "OBJECT",
+              "name": "GuildPagination",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "id",
             "description": "The ID of the server.",
             "args": [],
@@ -8029,22 +8056,6 @@
             "deprecationReason": null
           },
           {
-            "name": "slug",
-            "description": "The server slug, also a transformation of the name following Blizzard rules. For retail World of Warcraft realms, this slug will be in English. For all other games, the slug is just a transformation of the name field.",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "region",
             "description": "The region that this server belongs to.",
             "args": [],
@@ -8054,6 +8065,22 @@
               "ofType": {
                 "kind": "OBJECT",
                 "name": "Region",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "slug",
+            "description": "The server slug, also a transformation of the name following Blizzard rules. For retail World of Warcraft realms, this slug will be in English. For all other games, the slug is just a transformation of the name field.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
                 "ofType": null
               }
             },
@@ -8075,43 +8102,6 @@
             },
             "isDeprecated": false,
             "deprecationReason": null
-          },
-          {
-            "name": "guilds",
-            "description": "The guilds found on this server (and any servers connected to this one.",
-            "args": [
-              {
-                "name": "limit",
-                "description": "Optional. The number of guilds to retrieve per page. The maximum allowed value is 100, and minimum allowed value is 1.",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                },
-                "defaultValue": "10",
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "page",
-                "description": "Optional. The page of paginated data to retrieve. If omitted, defaults to the first page.",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                },
-                "defaultValue": "1",
-                "isDeprecated": false,
-                "deprecationReason": null
-              }
-            ],
-            "type": {
-              "kind": "OBJECT",
-              "name": "GuildPagination",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
           }
         ],
         "inputFields": null,
@@ -8124,6 +8114,22 @@
         "name": "ServerPagination",
         "description": null,
         "fields": [
+          {
+            "name": "current_page",
+            "description": "Current page of the cursor",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
           {
             "name": "data",
             "description": "List of items on the current page",
@@ -8141,8 +8147,36 @@
             "deprecationReason": null
           },
           {
-            "name": "total",
-            "description": "Number of total items selected by the query",
+            "name": "from",
+            "description": "Number of the first item returned",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "has_more_pages",
+            "description": "Determines if cursor has more pages after the current page",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "last_page",
+            "description": "The last page (number of pages)",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -8173,34 +8207,6 @@
             "deprecationReason": null
           },
           {
-            "name": "current_page",
-            "description": "Current page of the cursor",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "from",
-            "description": "Number of the first item returned",
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "to",
             "description": "Number of the last item returned",
             "args": [],
@@ -8213,8 +8219,8 @@
             "deprecationReason": null
           },
           {
-            "name": "last_page",
-            "description": "The last page (number of pages)",
+            "name": "total",
+            "description": "Number of total items selected by the query",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -8222,22 +8228,6 @@
               "ofType": {
                 "kind": "SCALAR",
                 "name": "Int",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "has_more_pages",
-            "description": "Determines if cursor has more pages after the current page",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Boolean",
                 "ofType": null
               }
             },
@@ -8256,22 +8246,6 @@
         "description": "A spec for a given player class.",
         "fields": [
           {
-            "name": "id",
-            "description": "An integer used to identify the spec.",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "class",
             "description": "The player class that the spec belongs to.",
             "args": [],
@@ -8281,6 +8255,22 @@
               "ofType": {
                 "kind": "OBJECT",
                 "name": "GameClass",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "id",
+            "description": "An integer used to identify the spec.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int",
                 "ofType": null
               }
             },
@@ -8322,6 +8312,16 @@
         ],
         "inputFields": null,
         "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "SCALAR",
+        "name": "String",
+        "description": "The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.",
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
         "enumValues": null,
         "possibleTypes": null
       },
@@ -8430,12 +8430,6 @@
         "interfaces": null,
         "enumValues": [
           {
-            "name": "Summary",
-            "description": "Summary Overview",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "Buffs",
             "description": "Buffs.",
             "isDeprecated": false,
@@ -8496,6 +8490,12 @@
             "deprecationReason": null
           },
           {
+            "name": "Summary",
+            "description": "Summary Overview",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "Summons",
             "description": "Summons",
             "isDeprecated": false,
@@ -8521,6 +8521,18 @@
         "name": "User",
         "description": "A single user of the site.",
         "fields": [
+          {
+            "name": "battleTag",
+            "description": "The battle tag of the user if they have linked it.",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
           {
             "name": "id",
             "description": "The ID of the user.",
@@ -8552,18 +8564,6 @@
             },
             "isDeprecated": false,
             "deprecationReason": null
-          },
-          {
-            "name": "battleTag",
-            "description": "The battle tag of the user if they have linked it.",
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
           }
         ],
         "inputFields": null,
@@ -8576,6 +8576,18 @@
         "name": "UserData",
         "description": "The user data object contains basic information about users and lets you retrieve specific users (or the current user if using the user endpoint).",
         "fields": [
+          {
+            "name": "currentUser",
+            "description": "Obtain the current user (only works with user endpoint).",
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "User",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
           {
             "name": "user",
             "description": "Obtain a specific user by id.",
@@ -8600,18 +8612,6 @@
             },
             "isDeprecated": false,
             "deprecationReason": null
-          },
-          {
-            "name": "currentUser",
-            "description": "Obtain the current user (only works with user endpoint).",
-            "args": [],
-            "type": {
-              "kind": "OBJECT",
-              "name": "User",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
           }
         ],
         "inputFields": null,
@@ -8625,33 +8625,46 @@
         "description": null,
         "fields": [
           {
-            "name": "googleAnalytics",
+            "name": "article",
             "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "JSON",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "game",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "JSON",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "headerTitle",
-            "description": null,
-            "args": [],
+            "args": [
+              {
+                "name": "articleCategorySlug",
+                "description": null,
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "articleSlug",
+                "description": null,
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "siteName",
+                "description": null,
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
             "type": {
               "kind": "SCALAR",
               "name": "JSON",
@@ -8710,46 +8723,33 @@
             "deprecationReason": null
           },
           {
-            "name": "article",
+            "name": "game",
             "description": null,
-            "args": [
-              {
-                "name": "articleSlug",
-                "description": null,
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "articleCategorySlug",
-                "description": null,
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "siteName",
-                "description": null,
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              }
-            ],
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "JSON",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "googleAnalytics",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "JSON",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "headerTitle",
+            "description": null,
+            "args": [],
             "type": {
               "kind": "SCALAR",
               "name": "JSON",
@@ -8773,14 +8773,14 @@
         "interfaces": null,
         "enumValues": [
           {
-            "name": "Default",
-            "description": "Use the same default that the web site picks based off the other selected parameters.",
+            "name": "Ability",
+            "description": "View by ability.",
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
-            "name": "Ability",
-            "description": "View by ability.",
+            "name": "Default",
+            "description": "Use the same default that the web site picks based off the other selected parameters.",
             "isDeprecated": false,
             "deprecationReason": null
           },
@@ -9051,22 +9051,6 @@
         "description": "A single zone from an expansion that represents a raid, dungeon, arena, etc.",
         "fields": [
           {
-            "name": "id",
-            "description": "The ID of the zone.",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "brackets",
             "description": "The bracket information for this zone. This field will be null if the zone does not support brackets.",
             "args": [],
@@ -9143,6 +9127,22 @@
             "deprecationReason": null
           },
           {
+            "name": "id",
+            "description": "The ID of the zone.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "name",
             "description": "The name of the zone.",
             "args": [],
@@ -9170,6 +9170,516 @@
                 "name": "Partition",
                 "ofType": null
               }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "__Directive",
+        "description": "A Directive provides a way to describe alternate runtime execution and type validation behavior in a GraphQL document.\n\nIn some cases, you need to provide options to alter GraphQL's execution behavior in ways field arguments will not suffice, such as conditionally including or skipping a field. Directives provide this by describing additional information to the executor.",
+        "fields": [
+          {
+            "name": "name",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "description",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "isRepeatable",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "locations",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "ENUM",
+                    "name": "__DirectiveLocation",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "args",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "__InputValue",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "__DirectiveLocation",
+        "description": "A Directive can be adjacent to many parts of the GraphQL language, a __DirectiveLocation describes one such possible adjacencies.",
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": [
+          {
+            "name": "QUERY",
+            "description": "Location adjacent to a query operation.",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "MUTATION",
+            "description": "Location adjacent to a mutation operation.",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "SUBSCRIPTION",
+            "description": "Location adjacent to a subscription operation.",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "FIELD",
+            "description": "Location adjacent to a field.",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "FRAGMENT_DEFINITION",
+            "description": "Location adjacent to a fragment definition.",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "FRAGMENT_SPREAD",
+            "description": "Location adjacent to a fragment spread.",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "INLINE_FRAGMENT",
+            "description": "Location adjacent to an inline fragment.",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "VARIABLE_DEFINITION",
+            "description": "Location adjacent to a variable definition.",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "SCHEMA",
+            "description": "Location adjacent to a schema definition.",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "SCALAR",
+            "description": "Location adjacent to a scalar definition.",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "OBJECT",
+            "description": "Location adjacent to an object type definition.",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "FIELD_DEFINITION",
+            "description": "Location adjacent to a field definition.",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "ARGUMENT_DEFINITION",
+            "description": "Location adjacent to an argument definition.",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "INTERFACE",
+            "description": "Location adjacent to an interface definition.",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "UNION",
+            "description": "Location adjacent to a union definition.",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "ENUM",
+            "description": "Location adjacent to an enum definition.",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "ENUM_VALUE",
+            "description": "Location adjacent to an enum value definition.",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "INPUT_OBJECT",
+            "description": "Location adjacent to an input object type definition.",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "INPUT_FIELD_DEFINITION",
+            "description": "Location adjacent to an input object field definition.",
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "__EnumValue",
+        "description": "One possible value for a given Enum. Enum values are unique values, not a placeholder for a string or numeric value. However an Enum value is returned in a JSON response as a string.",
+        "fields": [
+          {
+            "name": "name",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "description",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "isDeprecated",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "deprecationReason",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "__Field",
+        "description": "Object and Interface types are described by a list of Fields, each of which has a name, potentially a list of arguments, and a return type.",
+        "fields": [
+          {
+            "name": "name",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "description",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "args",
+            "description": null,
+            "args": [
+              {
+                "name": "includeDeprecated",
+                "description": null,
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                },
+                "defaultValue": "false",
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "__InputValue",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "type",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "__Type",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "isDeprecated",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "deprecationReason",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "__InputValue",
+        "description": "Arguments provided to Fields or Directives and the input fields of an InputObject are represented as Input Values which describe their type and optionally a default value.",
+        "fields": [
+          {
+            "name": "name",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "description",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "type",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "__Type",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "defaultValue",
+            "description": "A GraphQL-formatted string representing the default value for this input value.",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "isDeprecated",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "deprecationReason",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -9563,519 +10073,34 @@
           }
         ],
         "possibleTypes": null
-      },
-      {
-        "kind": "OBJECT",
-        "name": "__Field",
-        "description": "Object and Interface types are described by a list of Fields, each of which has a name, potentially a list of arguments, and a return type.",
-        "fields": [
-          {
-            "name": "name",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "description",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "args",
-            "description": null,
-            "args": [
-              {
-                "name": "includeDeprecated",
-                "description": null,
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Boolean",
-                  "ofType": null
-                },
-                "defaultValue": "false",
-                "isDeprecated": false,
-                "deprecationReason": null
-              }
-            ],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "OBJECT",
-                    "name": "__InputValue",
-                    "ofType": null
-                  }
-                }
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "type",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "__Type",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "isDeprecated",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "deprecationReason",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          }
-        ],
-        "inputFields": null,
-        "interfaces": [],
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
-        "kind": "OBJECT",
-        "name": "__InputValue",
-        "description": "Arguments provided to Fields or Directives and the input fields of an InputObject are represented as Input Values which describe their type and optionally a default value.",
-        "fields": [
-          {
-            "name": "name",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "description",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "type",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "__Type",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "defaultValue",
-            "description": "A GraphQL-formatted string representing the default value for this input value.",
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "isDeprecated",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "deprecationReason",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          }
-        ],
-        "inputFields": null,
-        "interfaces": [],
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
-        "kind": "OBJECT",
-        "name": "__EnumValue",
-        "description": "One possible value for a given Enum. Enum values are unique values, not a placeholder for a string or numeric value. However an Enum value is returned in a JSON response as a string.",
-        "fields": [
-          {
-            "name": "name",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "description",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "isDeprecated",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "deprecationReason",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          }
-        ],
-        "inputFields": null,
-        "interfaces": [],
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
-        "kind": "OBJECT",
-        "name": "__Directive",
-        "description": "A Directive provides a way to describe alternate runtime execution and type validation behavior in a GraphQL document.\n\nIn some cases, you need to provide options to alter GraphQL's execution behavior in ways field arguments will not suffice, such as conditionally including or skipping a field. Directives provide this by describing additional information to the executor.",
-        "fields": [
-          {
-            "name": "name",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "description",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "isRepeatable",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "locations",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "ENUM",
-                    "name": "__DirectiveLocation",
-                    "ofType": null
-                  }
-                }
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "args",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "OBJECT",
-                    "name": "__InputValue",
-                    "ofType": null
-                  }
-                }
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          }
-        ],
-        "inputFields": null,
-        "interfaces": [],
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
-        "kind": "ENUM",
-        "name": "__DirectiveLocation",
-        "description": "A Directive can be adjacent to many parts of the GraphQL language, a __DirectiveLocation describes one such possible adjacencies.",
-        "fields": null,
-        "inputFields": null,
-        "interfaces": null,
-        "enumValues": [
-          {
-            "name": "QUERY",
-            "description": "Location adjacent to a query operation.",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "MUTATION",
-            "description": "Location adjacent to a mutation operation.",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "SUBSCRIPTION",
-            "description": "Location adjacent to a subscription operation.",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "FIELD",
-            "description": "Location adjacent to a field.",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "FRAGMENT_DEFINITION",
-            "description": "Location adjacent to a fragment definition.",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "FRAGMENT_SPREAD",
-            "description": "Location adjacent to a fragment spread.",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "INLINE_FRAGMENT",
-            "description": "Location adjacent to an inline fragment.",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "VARIABLE_DEFINITION",
-            "description": "Location adjacent to a variable definition.",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "SCHEMA",
-            "description": "Location adjacent to a schema definition.",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "SCALAR",
-            "description": "Location adjacent to a scalar definition.",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "OBJECT",
-            "description": "Location adjacent to an object type definition.",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "FIELD_DEFINITION",
-            "description": "Location adjacent to a field definition.",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "ARGUMENT_DEFINITION",
-            "description": "Location adjacent to an argument definition.",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "INTERFACE",
-            "description": "Location adjacent to an interface definition.",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "UNION",
-            "description": "Location adjacent to a union definition.",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "ENUM",
-            "description": "Location adjacent to an enum definition.",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "ENUM_VALUE",
-            "description": "Location adjacent to an enum value definition.",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "INPUT_OBJECT",
-            "description": "Location adjacent to an input object type definition.",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "INPUT_FIELD_DEFINITION",
-            "description": "Location adjacent to an input object field definition.",
-            "isDeprecated": false,
-            "deprecationReason": null
-          }
-        ],
-        "possibleTypes": null
       }
     ],
     "directives": [
+      {
+        "name": "deprecated",
+        "description": "Marks an element of a GraphQL schema as no longer supported.",
+        "isRepeatable": false,
+        "locations": [
+          "ARGUMENT_DEFINITION",
+          "ENUM_VALUE",
+          "FIELD_DEFINITION",
+          "INPUT_FIELD_DEFINITION"
+        ],
+        "args": [
+          {
+            "name": "reason",
+            "description": "Explains why this element was deprecated, usually also including a suggestion for how to access supported similar data. Formatted using the Markdown syntax, as specified by [CommonMark](https://commonmark.org/).",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": "\"No longer supported\"",
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ]
+      },
       {
         "name": "include",
         "description": "Directs the executor to include this field or fragment only when the `if` argument is true.",
@@ -10119,31 +10144,6 @@
               }
             },
             "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          }
-        ]
-      },
-      {
-        "name": "deprecated",
-        "description": "Marks an element of a GraphQL schema as no longer supported.",
-        "isRepeatable": false,
-        "locations": [
-          "FIELD_DEFINITION",
-          "ARGUMENT_DEFINITION",
-          "INPUT_FIELD_DEFINITION",
-          "ENUM_VALUE"
-        ],
-        "args": [
-          {
-            "name": "reason",
-            "description": "Explains why this element was deprecated, usually also including a suggestion for how to access supported similar data. Formatted using the Markdown syntax, as specified by [CommonMark](https://commonmark.org/).",
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "defaultValue": "\"No longer supported\"",
             "isDeprecated": false,
             "deprecationReason": null
           }
