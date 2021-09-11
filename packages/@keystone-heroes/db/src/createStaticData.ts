@@ -181,6 +181,8 @@ export type StaticData = {
 }`;
 
   writeFileSync(targetPath, template);
+
+  await prisma.$disconnect();
 }
 
 // eslint-disable-next-line unicorn/prefer-top-level-await, no-console

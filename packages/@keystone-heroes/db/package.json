@@ -16,9 +16,9 @@
     "@keystone-heroes/api": "1.0.0",
     "@keystone-heroes/env": "1.0.0",
     "@keystone-heroes/wcl": "1.0.0",
-    "@prisma/client": "3.0.1",
+    "@prisma/client": "3.0.2",
     "dotenv": "10.0.0",
-    "prisma": "3.0.1",
+    "prisma": "3.0.2",
     "ts-node": "10.2.1"
   },
   "devDependencies": {
@@ -26,7 +26,7 @@
     "eslint-config-galex": "2.16.11",
     "jest": "27.1.1",
     "ts-jest": "27.0.5",
-    "typescript": "4.4.2"
+    "typescript": "4.4.3"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
