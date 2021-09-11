@@ -24,7 +24,12 @@
       "@keystone-heroes/env/*": ["../env/src/*"],
       "@keystone-heroes/wcl/*": ["../wcl/src/*"]
     },
-    "types": ["react/next", "react-dom/next", "@testing-library/jest-dom"]
+    "types": [
+      "react/next",
+      "react-dom/next",
+      "@testing-library/jest-dom",
+      "node"
+    ]
   },
   "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]

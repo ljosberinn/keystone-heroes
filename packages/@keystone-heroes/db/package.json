@@ -9,7 +9,8 @@
     "seed": "prisma db seed",
     "format": "prettier --write src",
     "lint": "set TIMING=1 && eslint src --cache",
-    "test": "jest --passWithNoTests"
+    "test": "jest --passWithNoTests",
+    "static-data": "ts-node -r tsconfig-paths/register src/createStaticData && prettier --write ../web/src/staticData.ts && eslint --fix ../web/src/staticData.ts"
   },
   "dependencies": {
     "@keystone-heroes/api": "1.0.0",

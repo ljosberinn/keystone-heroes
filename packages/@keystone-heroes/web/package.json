@@ -4,7 +4,6 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "static-data": "ts-node -r tsconfig-paths/register src/createStaticData && prettier --write src/staticData.ts && eslint --fix src/staticData.ts",
     "build": "next build",
     "start": "next start",
     "format": "prettier --write src",

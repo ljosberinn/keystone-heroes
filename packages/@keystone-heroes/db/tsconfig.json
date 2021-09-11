@@ -1,4 +1,4 @@
 {
   "extends": "../web/tsconfig.json",
-  "include": ["**/*.ts"]
+  "include": ["**/*.ts", "../web/src/staticData.ts"]
 }

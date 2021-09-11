@@ -1,10 +1,9 @@
-/* eslint-disable sonarjs/no-duplicate-string */
 export const staticData = {
   dungeons: {
     "2284": {
       name: "Sanguine Depths",
-      timer: [2_460_000, 1_968_000, 1_476_000],
       slug: "SD",
+      time: 2_460_000,
       zones: [
         { id: 1675, name: "Depths of Despair" },
         { id: 1676, name: "Amphitheater of Sorrow" },
@@ -12,8 +11,8 @@ export const staticData = {
     },
     "2285": {
       name: "Spires of Ascension",
-      timer: [2_340_000, 1_872_000, 1_404_000],
       slug: "SoA",
+      time: 2_340_000,
       zones: [
         { id: 1692, name: "Honor's Ascent" },
         { id: 1693, name: "Garden of Repose" },
@@ -23,8 +22,8 @@ export const staticData = {
     },
     "2286": {
       name: "The Necrotic Wake",
-      timer: [2_160_000, 1_728_000, 1_296_000],
       slug: "NW",
+      time: 2_160_000,
       zones: [
         { id: 1666, name: "The Necrotic Wake" },
         { id: 1667, name: "Stitchwerks" },
@@ -33,8 +32,8 @@ export const staticData = {
     },
     "2287": {
       name: "Halls of Atonement",
-      timer: [1_920_000, 1_536_000, 1_152_000],
       slug: "HoA",
+      time: 1_920_000,
       zones: [
         { id: 1663, name: "Halls of Atonement" },
         { id: 1664, name: "The Nave of Pain" },
@@ -43,8 +42,8 @@ export const staticData = {
     },
     "2289": {
       name: "Plaguefall",
-      timer: [2_280_000, 1_824_000, 1_368_000],
       slug: "PF",
+      time: 2_280_000,
       zones: [
         { id: 1674, name: "Plaguefall" },
         { id: 1697, name: "The Festering Sanctum" },
@@ -52,14 +51,14 @@ export const staticData = {
     },
     "2290": {
       name: "Mists of Tirna Scithe",
-      timer: [1_800_000, 1_440_000, 1_080_000],
       slug: "MoTS",
+      time: 1_800_000,
       zones: [{ id: 1669, name: "Mists of Tirna Scithe" }],
     },
     "2291": {
       name: "De Other Side",
-      timer: [2_580_000, 2_064_000, 1_548_000],
       slug: "DOS",
+      time: 2_580_000,
       zones: [
         { id: 1680, name: "De Other Side" },
         { id: 1679, name: "Zul'Gurub" },
@@ -69,8 +68,8 @@ export const staticData = {
     },
     "2293": {
       name: "Theater of Pain",
-      timer: [2_220_000, 1_776_000, 1_332_000],
       slug: "TOP",
+      time: 2_220_000,
       zones: [
         { id: 1683, name: "Theater of Pain" },
         { id: 1684, name: "Chamber of Conquest" },
@@ -81,27 +80,30 @@ export const staticData = {
     },
   },
   affixes: {
-    "0": { name: "Skittish", icon: "spell_magic_lesserinvisibilty" },
-    "1": { name: "Volcanic", icon: "spell_shaman_lavasurge" },
-    "2": { name: "Necrotic", icon: "spell_deathknight_necroticplague" },
-    "3": { name: "Raging", icon: "ability_warrior_focusedrage" },
-    "4": { name: "Bolstering", icon: "ability_warrior_battleshout" },
-    "5": { name: "Sanguine", icon: "spell_shadow_bloodboil" },
-    "6": { name: "Tyrannical", icon: "achievement_boss_archaedas" },
-    "7": { name: "Fortified", icon: "ability_toughness" },
-    "8": { name: "Bursting", icon: "ability_ironmaidens_whirlofblood" },
-    "9": { name: "Grievous", icon: "ability_backstab" },
-    "10": { name: "Explosive", icon: "spell_fire_felflamering_red" },
-    "11": { name: "Quaking", icon: "spell_nature_earthquake" },
-    "12": { name: "Infested", icon: "achievement_nazmir_boss_ghuun" },
-    "13": { name: "Reaping", icon: "ability_racial_embraceoftheloa_bwonsomdi" },
-    "14": { name: "Beguiling", icon: "spell_shadow_mindshear" },
-    "15": { name: "Awakened", icon: "trade_archaeology_nerubian_obelisk" },
-    "16": { name: "Prideful", icon: "spell_animarevendreth_buff" },
-    "17": { name: "Inspiring", icon: "spell_holy_prayerofspirit" },
-    "18": { name: "Spiteful", icon: "spell_holy_prayerofshadowprotection" },
-    "19": { name: "Storming", icon: "spell_nature_cyclone" },
-    "20": { name: "Tormented", icon: "spell_animamaw_orb" },
+    "2": { name: "Skittish", icon: "spell_magic_lesserinvisibilty" },
+    "3": { name: "Volcanic", icon: "spell_shaman_lavasurge" },
+    "4": { name: "Necrotic", icon: "spell_deathknight_necroticplague" },
+    "6": { name: "Raging", icon: "ability_warrior_focusedrage" },
+    "7": { name: "Bolstering", icon: "ability_warrior_battleshout" },
+    "8": { name: "Sanguine", icon: "spell_shadow_bloodboil" },
+    "9": { name: "Tyrannical", icon: "achievement_boss_archaedas" },
+    "10": { name: "Fortified", icon: "ability_toughness" },
+    "11": { name: "Bursting", icon: "ability_ironmaidens_whirlofblood" },
+    "12": { name: "Grievous", icon: "ability_backstab" },
+    "13": { name: "Explosive", icon: "spell_fire_felflamering_red" },
+    "14": { name: "Quaking", icon: "spell_nature_earthquake" },
+    "16": { name: "Infested", icon: "achievement_nazmir_boss_ghuun" },
+    "117": {
+      name: "Reaping",
+      icon: "ability_racial_embraceoftheloa_bwonsomdi",
+    },
+    "119": { name: "Beguiling", icon: "spell_shadow_mindshear" },
+    "120": { name: "Awakened", icon: "trade_archaeology_nerubian_obelisk" },
+    "121": { name: "Prideful", icon: "spell_animarevendreth_buff" },
+    "122": { name: "Inspiring", icon: "spell_holy_prayerofspirit" },
+    "123": { name: "Spiteful", icon: "spell_holy_prayerofshadowprotection" },
+    "124": { name: "Storming", icon: "spell_nature_cyclone" },
+    "128": { name: "Tormented", icon: "spell_animamaw_orb" },
   },
   soulbinds: {
     "1": { name: "Niya", covenantID: 3 },
@@ -120,307 +122,273 @@ export const staticData = {
   classes: {
     "1": {
       name: "Warrior",
-      cooldowns: [1719, 97_462, 1161, 5246, 64_382, 18_499],
-      covenantAbilities: [307_865, 324_143, 325_886],
+      cooldowns: [
+        97_462, 64_382, 5246, 262_228, 307_865, 1161, 871, 325_886, 1719,
+        167_105, 46_924, 227_847, 324_143, 12_975, 184_364, 107_574, 107_574,
+        18_499,
+      ],
       specs: [
+        { id: 2, name: "Fury", cooldowns: [46_924, 184_364] },
+        { id: 1, name: "Protection", cooldowns: [871, 12_975, 107_574] },
         {
-          name: "Protection",
-          role: "tank",
-          cooldowns: [871, 107_574, 12_975],
-          id: 1,
-        },
-        { name: "Fury", role: "dps", cooldowns: [46_924, 184_364], id: 2 },
-        {
-          name: "Arms",
-          role: "dps",
-          cooldowns: [107_574, 262_228, 227_847, 167_105],
           id: 3,
+          name: "Arms",
+          cooldowns: [262_228, 167_105, 227_847, 107_574],
         },
       ],
     },
     "2": {
       name: "Mage",
-      cooldowns: [66, 80_353, 45_438, 55_342],
-      covenantAbilities: [314_793, 307_443, 324_220, 314_791],
+      cooldowns: [
+        66, 12_042, 314_793, 205_021, 45_438, 84_714, 80_353, 190_319, 198_154,
+        307_443, 108_978, 324_220, 55_342, 12_472, 235_219, 314_791, 108_978,
+      ],
       specs: [
-        { name: "Fire", role: "dps", cooldowns: [190_319, 108_978], id: 4 },
+        { id: 4, name: "Fire", cooldowns: [190_319, 108_978] },
         {
-          name: "Frost",
-          role: "dps",
-          cooldowns: [12_472, 84_714, 108_978, 235_219, 205_021],
           id: 5,
+          name: "Frost",
+          cooldowns: [205_021, 84_714, 108_978, 12_472, 235_219],
         },
-        { name: "Arcane", role: "dps", cooldowns: [12_042, 198_154], id: 6 },
+        { id: 6, name: "Arcane", cooldowns: [12_042, 198_154] },
       ],
     },
     "3": {
       name: "Rogue",
-      cooldowns: [114_018, 2094, 2983, 5277, 31_224, 1856, 137_619],
-      covenantAbilities: [323_547, 323_654, 328_547, 328_305],
+      cooldowns: [
+        31_224, 2094, 323_654, 328_547, 328_305, 2983, 185_313, 51_690, 79_140,
+        323_547, 5277, 137_619, 13_750, 121_471, 114_018, 1856, 277_925,
+      ],
       specs: [
-        { name: "Assassination", role: "dps", cooldowns: [79_140], id: 7 },
-        {
-          name: "Subtlety",
-          role: "dps",
-          cooldowns: [185_313, 121_471, 277_925],
-          id: 8,
-        },
-        { name: "Outlaw", role: "dps", cooldowns: [13_750, 51_690], id: 9 },
+        { id: 7, name: "Assassination", cooldowns: [79_140] },
+        { id: 9, name: "Outlaw", cooldowns: [51_690, 13_750] },
+        { id: 8, name: "Subtlety", cooldowns: [185_313, 121_471, 277_925] },
       ],
     },
     "4": {
       name: "Shaman",
-      cooldowns: [192_058, 2825, 32_182, 198_103, 108_271, 8143],
-      covenantAbilities: [324_386, 320_674, 326_059, 328_923],
+      cooldowns: [
+        192_058, 108_280, 320_137, 8143, 198_067, 320_674, 108_281, 32_182,
+        198_838, 79_206, 192_249, 51_533, 114_051, 324_386, 191_634, 108_271,
+        16_191, 2825, 207_399, 58_875, 326_059, 192_222, 98_008, 114_052,
+        198_103, 114_050, 328_923, 79_206,
+      ],
       specs: [
         {
-          name: "Restoration",
-          role: "healer",
-          cooldowns: [
-            98_008, 79_206, 114_052, 207_399, 108_280, 16_191, 198_838,
-          ],
           id: 10,
-        },
-        {
-          name: "Elemental",
-          role: "dps",
+          name: "Restoration",
           cooldowns: [
-            114_050, 191_634, 79_206, 108_281, 192_222, 192_249, 198_067,
+            108_280, 198_838, 79_206, 16_191, 207_399, 98_008, 114_052,
           ],
-          id: 11,
         },
         {
-          name: "Enhancement",
-          role: "dps",
-          cooldowns: [51_533, 114_051, 320_137, 58_875],
           id: 12,
+          name: "Enhancement",
+          cooldowns: [320_137, 51_533, 114_051, 58_875],
+        },
+        {
+          id: 11,
+          name: "Elemental",
+          cooldowns: [
+            198_067, 108_281, 192_249, 191_634, 192_222, 114_050, 79_206,
+          ],
         },
       ],
     },
     "5": {
       name: "Priest",
-      cooldowns: [10_060, 73_325, 19_236, 8122, 62_618],
-      covenantAbilities: [325_013, 323_673, 324_724, 327_661],
+      cooldowns: [
+        47_788, 123_040, 323_673, 64_901, 265_202, 62_618, 200_183, 47_585,
+        15_286, 88_625, 319_952, 73_325, 109_964, 33_206, 8122, 228_260, 62_618,
+        10_060, 34_433, 47_536, 200_174, 246_287, 325_013, 34_861, 327_661,
+        2050, 19_236, 64_843, 34_433, 324_724,
+      ],
       specs: [
         {
-          name: "Shadow",
-          role: "dps",
-          cooldowns: [319_952, 200_174, 47_585, 34_433, 15_286, 228_260],
-          id: 13,
-        },
-        {
-          name: "Holy",
-          role: "healer",
-          cooldowns: [
-            47_788, 64_843, 64_901, 200_183, 2050, 265_202, 34_861, 88_625,
-          ],
           id: 14,
+          name: "Holy",
+          cooldowns: [
+            47_788, 64_901, 265_202, 200_183, 88_625, 34_861, 2050, 64_843,
+          ],
         },
         {
-          name: "Discipline",
-          role: "healer",
-          cooldowns: [
-            33_206, 246_287, 109_964, 62_618, 47_536, 123_040, 34_433,
-          ],
+          id: 13,
+          name: "Shadow",
+          cooldowns: [47_585, 15_286, 319_952, 228_260, 34_433, 200_174],
+        },
+        {
           id: 15,
+          name: "Discipline",
+          cooldowns: [
+            123_040, 109_964, 33_206, 62_618, 47_536, 246_287, 34_433,
+          ],
         },
       ],
     },
     "6": {
       name: "Hunter",
-      cooldowns: [186_265, 186_257, 109_304, 131_894],
-      covenantAbilities: [328_231, 308_491, 324_149, 325_028],
+      cooldowns: [
+        325_028, 186_289, 186_257, 19_577, 324_149, 308_491, 321_530, 19_574,
+        193_530, 201_430, 109_304, 260_402, 131_894, 266_779, 19_577, 186_265,
+        328_231, 288_613,
+      ],
       specs: [
+        { id: 18, name: "Marksmanship", cooldowns: [260_402, 288_613] },
+        { id: 17, name: "Survival", cooldowns: [186_289, 19_577, 266_779] },
         {
-          name: "BeastMastery",
-          role: "dps",
-          cooldowns: [19_574, 193_530, 321_530, 201_430, 19_577],
           id: 16,
-        },
-        {
-          name: "Survival",
-          role: "dps",
-          cooldowns: [19_577, 186_289, 266_779],
-          id: 17,
-        },
-        {
-          name: "Marksmanship",
-          role: "dps",
-          cooldowns: [260_402, 288_613],
-          id: 18,
+          name: "BeastMastery",
+          cooldowns: [321_530, 19_574, 193_530, 201_430, 19_577],
         },
       ],
     },
     "7": {
       name: "Monk",
-      cooldowns: [119_381, 122_278],
-      covenantAbilities: [310_454, 326_860, 325_216, 327_104, 322_109],
+      cooldowns: [
+        310_454, 325_153, 115_310, 122_470, 325_197, 137_639, 116_849, 115_203,
+        122_278, 322_109, 119_381, 322_507, 115_203, 327_104, 115_176, 326_860,
+        132_578, 325_216, 123_904, 115_399, 152_173, 197_908, 122_783, 122_783,
+        115_203, 322_118, 115_288,
+      ],
       specs: [
         {
-          name: "Mistweaver",
-          role: "healer",
-          cooldowns: [
-            122_783, 322_118, 325_197, 115_310, 116_849, 197_908, 115_203,
-          ],
-          id: 19,
-        },
-        {
-          name: "Brewmaster",
-          role: "tank",
-          cooldowns: [325_153, 115_399, 132_578, 115_176, 322_507, 115_203],
           id: 20,
+          name: "Brewmaster",
+          cooldowns: [325_153, 322_507, 115_176, 132_578, 115_399, 115_203],
         },
         {
-          name: "Windwalker",
-          role: "dps",
-          cooldowns: [
-            123_904, 137_639, 122_470, 122_783, 115_203, 152_173, 115_288,
-          ],
           id: 21,
+          name: "Windwalker",
+          cooldowns: [
+            122_470, 137_639, 115_203, 123_904, 152_173, 122_783, 115_288,
+          ],
+        },
+        {
+          id: 19,
+          name: "Mistweaver",
+          cooldowns: [
+            115_310, 325_197, 116_849, 115_203, 197_908, 122_783, 322_118,
+          ],
         },
       ],
     },
     "8": {
       name: "Druid",
       cooldowns: [
-        20_484, 22_812, 1850, 106_898, 102_793, 5211, 319_454, 108_238,
+        20_484, 323_764, 194_223, 132_158, 205_636, 319_454, 102_558, 22_812,
+        325_727, 202_770, 5211, 197_721, 203_651, 102_560, 61_336, 106_898, 740,
+        106_951, 1850, 102_342, 102_543, 102_793, 33_891, 326_434, 29_166,
+        29_166, 78_675, 108_238, 61_336, 323_546, 50_334,
       ],
-      covenantAbilities: [323_764, 323_546, 326_434, 325_727],
       specs: [
+        { id: 25, name: "Feral", cooldowns: [61_336, 106_951, 102_543] },
         {
-          name: "Restoration",
-          role: "healer",
-          cooldowns: [29_166, 132_158, 197_721, 102_342, 740, 203_651, 33_891],
           id: 22,
+          name: "Restoration",
+          cooldowns: [132_158, 197_721, 203_651, 740, 102_342, 33_891, 29_166],
         },
         {
-          name: "Guardian",
-          role: "tank",
-          cooldowns: [61_336, 102_558, 50_334],
-          id: 23,
-        },
-        {
-          name: "Balance",
-          role: "dps",
-          cooldowns: [202_770, 29_166, 205_636, 78_675, 194_223, 102_560],
           id: 24,
+          name: "Balance",
+          cooldowns: [194_223, 205_636, 202_770, 102_560, 29_166, 78_675],
         },
-        {
-          name: "Feral",
-          role: "dps",
-          cooldowns: [102_543, 106_951, 61_336],
-          id: 25,
-        },
+        { id: 23, name: "Guardian", cooldowns: [102_558, 61_336, 50_334] },
       ],
     },
     "9": {
       name: "DemonHunter",
-      cooldowns: [188_501],
-      covenantAbilities: [306_830, 323_639, 317_009],
+      cooldowns: [
+        204_021, 202_137, 306_830, 317_009, 196_718, 207_684, 344_867, 209_258,
+        320_341, 188_501, 258_925, 187_827, 196_555, 202_138, 323_639, 191_427,
+        212_084, 198_589,
+      ],
       specs: [
         {
-          name: "Vengeance",
-          role: "tank",
-          cooldowns: [
-            187_827, 212_084, 204_021, 320_341, 202_137, 202_138, 207_684,
-            209_258,
-          ],
           id: 26,
+          name: "Vengeance",
+          cooldowns: [
+            204_021, 202_137, 207_684, 209_258, 320_341, 187_827, 202_138,
+            212_084,
+          ],
         },
         {
-          name: "Havoc",
-          role: "dps",
-          cooldowns: [344_867, 258_925, 196_718, 196_555, 191_427, 198_589],
           id: 27,
+          name: "Havoc",
+          cooldowns: [196_718, 344_867, 258_925, 196_555, 191_427, 198_589],
         },
       ],
     },
     "10": {
       name: "Paladin",
-      cooldowns: [31_884, 1022, 642, 6940, 853, 633],
-      covenantAbilities: [
-        316_958, 304_971, 328_204, 328_282, 328_620, 328_622, 328_281,
+      cooldowns: [
+        642, 327_193, 853, 31_850, 31_884, 328_622, 343_527, 328_282, 184_662,
+        316_958, 304_971, 216_331, 498, 205_191, 1022, 31_821, 6940, 498,
+        328_204, 114_158, 204_018, 633, 86_659, 328_620, 343_721, 328_281,
+        231_895,
       ],
       specs: [
         {
-          name: "Protection",
-          role: "tank",
-          cooldowns: [498, 31_850, 86_659, 204_018, 327_193],
-          id: 28,
-        },
-        {
-          name: "Holy",
-          role: "healer",
-          cooldowns: [216_331, 31_821, 498, 114_158],
-          id: 29,
-        },
-        {
-          name: "Retribution",
-          role: "dps",
-          cooldowns: [184_662, 343_527, 231_895, 343_721, 205_191],
           id: 30,
+          name: "Retribution",
+          cooldowns: [343_527, 184_662, 205_191, 343_721, 231_895],
+        },
+        { id: 29, name: "Holy", cooldowns: [216_331, 498, 31_821, 114_158] },
+        {
+          id: 28,
+          name: "Protection",
+          cooldowns: [327_193, 31_850, 498, 204_018, 86_659],
         },
       ],
     },
     "11": {
       name: "Warlock",
-      cooldowns: [29_893, 30_283, 104_773, 20_707, 698, 342_601, 333_889],
-      covenantAbilities: [321_792, 325_640, 312_321, 325_289],
+      cooldowns: [
+        20_707, 113_858, 333_889, 325_289, 325_640, 104_773, 111_898, 1122, 698,
+        267_217, 29_893, 267_171, 321_792, 113_860, 342_601, 265_187, 30_283,
+        205_180, 312_321,
+      ],
       specs: [
+        { id: 33, name: "Affliction", cooldowns: [113_860, 205_180] },
         {
-          name: "Destruction",
-          role: "dps",
-          cooldowns: [113_858, 1122],
-          id: 31,
-        },
-        {
-          name: "Demonology",
-          role: "dps",
-          cooldowns: [267_217, 111_898, 265_187, 267_171],
           id: 32,
+          name: "Demonology",
+          cooldowns: [111_898, 267_217, 267_171, 265_187],
         },
-        {
-          name: "Affliction",
-          role: "dps",
-          cooldowns: [113_860, 205_180],
-          id: 33,
-        },
+        { id: 31, name: "Destruction", cooldowns: [113_858, 1122] },
       ],
     },
     "12": {
       name: "DeathKnight",
       cooldowns: [
-        48_707, 48_792, 61_999, 49_039, 327_574, 46_585, 51_052, 212_552,
-        48_743,
+        324_128, 207_167, 219_809, 207_289, 48_707, 51_052, 108_199, 61_999,
+        221_699, 48_743, 194_844, 63_560, 49_206, 312_202, 47_568, 327_574,
+        49_028, 311_648, 42_650, 212_552, 275_699, 48_792, 46_585, 279_302,
+        315_443, 152_279, 49_039, 55_233, 51_271,
       ],
-      covenantAbilities: [312_202, 315_443, 311_648, 324_128],
       specs: [
         {
-          name: "Blood",
-          role: "tank",
-          cooldowns: [194_844, 219_809, 221_699, 55_233, 108_199, 49_028],
-          id: 34,
-        },
-        {
-          name: "Unholy",
-          role: "dps",
-          cooldowns: [49_206, 207_289, 42_650, 63_560, 275_699],
-          id: 35,
-        },
-        {
-          name: "Frost",
-          role: "dps",
-          cooldowns: [152_279, 47_568, 279_302, 207_167, 51_271],
           id: 36,
+          name: "Frost",
+          cooldowns: [207_167, 47_568, 279_302, 152_279, 51_271],
+        },
+        {
+          id: 35,
+          name: "Unholy",
+          cooldowns: [207_289, 63_560, 49_206, 42_650, 275_699],
+        },
+        {
+          id: 34,
+          name: "Blood",
+          cooldowns: [219_809, 108_199, 221_699, 194_844, 49_028, 55_233],
         },
       ],
     },
   },
   covenants: {
-    "1": { icon: "ui_sigil_kyrian", name: "Kyrian" },
-    "2": { icon: "ui_sigil_venthyr", name: "Venthyr" },
-    "3": { icon: "ui_sigil_nightfae", name: "NightFae" },
-    "4": { icon: "ui_sigil_necrolord", name: "Necrolord" },
+    "1": { name: "Kyrian", icon: "ui_sigil_kyrian" },
+    "2": { name: "Venthyr", icon: "ui_sigil_venthyr" },
+    "3": { name: "NightFae", icon: "ui_sigil_nightfae" },
+    "4": { name: "Necrolord", icon: "ui_sigil_necrolord" },
   },
   spells: {
     "66": { icon: "ability_mage_invisibility", name: "Invisibility", cd: 300 },
@@ -815,7 +783,11 @@ export const staticData = {
       name: "Fortifying Brew",
       cd: 180,
     },
-    "115288": { icon: "ability_monk_energizingwine", name: "Energy", cd: 60 },
+    "115288": {
+      icon: "ability_monk_energizingwine",
+      name: "Energizing Elixir",
+      cd: 60,
+    },
     "115310": { icon: "spell_monk_revival", name: "Revival", cd: 180 },
     "115399": { icon: "ability_monk_chibrew", name: "Black Ox Brew", cd: 120 },
     "116849": { icon: "ability_monk_chicocoon", name: "Life Cocoon", cd: 120 },
@@ -864,7 +836,7 @@ export const staticData = {
     },
     "137639": {
       icon: "spell_nature_giftofthewild",
-      name: "Storm, Earth and Fire",
+      name: "Storm, Earth, and Fire",
       cd: 90,
     },
     "152173": { icon: "ability_monk_serenity", name: "Serenity", cd: 90 },
@@ -931,7 +903,7 @@ export const staticData = {
     },
     "192058": {
       icon: "spell_nature_brilliance",
-      name: "Capacitator Totem",
+      name: "Capacitor Totem",
       cd: 60,
     },
     "192222": {
@@ -1080,7 +1052,11 @@ export const staticData = {
       name: "Bladestorm",
       cd: 90,
     },
-    "228260": { icon: "spell_priest_voidblast", name: "Void Eruption", cd: 90 },
+    "228260": {
+      icon: "spell_priest_void-blast",
+      name: "Void Eruption",
+      cd: 90,
+    },
     "231895": {
       icon: "ability_paladin_sanctifiedwrath",
       name: "Crusade",
@@ -1438,10 +1414,25 @@ export const staticData = {
 };
 
 export type StaticData = {
-  classes: Record<number, typeof staticData.classes[1]>;
-  dungeons: Record<number, typeof staticData.dungeons["2290"]>;
-  affixes: Record<number, typeof staticData.affixes["0"]>;
-  soulbinds: Record<number, typeof staticData.soulbinds[1]>;
-  covenants: Record<number, typeof staticData.covenants[1]>;
+  classes: Record<
+    number,
+    typeof staticData.classes[keyof typeof staticData.classes]
+  >;
+  dungeons: Record<
+    number,
+    typeof staticData.dungeons[keyof typeof staticData.dungeons]
+  >;
+  affixes: Record<
+    number,
+    typeof staticData.affixes[keyof typeof staticData.affixes]
+  >;
+  soulbinds: Record<
+    number,
+    typeof staticData.soulbinds[keyof typeof staticData.soulbinds]
+  >;
+  covenants: Record<
+    number,
+    typeof staticData.covenants[keyof typeof staticData.covenants]
+  >;
   spells: Record<string, { icon: string; name: string; cd: number }>;
 };

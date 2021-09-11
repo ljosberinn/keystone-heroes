@@ -5,6 +5,7 @@ import allNPCs from "../raw/all-npcs.json";
 import allAbilities from "../raw/all-spells.json";
 import { affixes } from "../src/data/affixes";
 import { classes } from "../src/data/classes";
+import { cooldowns } from "../src/data/cooldowns";
 import { covenants } from "../src/data/covenants";
 import { dungeons } from "../src/data/dungeons";
 import { expansions } from "../src/data/expansions";
@@ -244,6 +245,26 @@ async function seedAbilities() {
   }
 }
 
+async function seedCooldowns() {
+  await Promise.all(
+    cooldowns.map((cd) => {
+      return prisma.cooldown.upsert({
+        create: {
+          cd: cd.cd,
+          abilityID: cd.abilityID,
+          classID: cd.classID,
+          specID: cd.specID,
+          id: cd.id,
+        },
+        where: {
+          id: cd.id,
+        },
+        update: {},
+      });
+    })
+  );
+}
+
 async function seed(): Promise<void> {
   await seedDungeons();
   await seedZones();
@@ -258,6 +279,7 @@ async function seed(): Promise<void> {
   await seedRegions();
   await seedNPCs();
   await seedAbilities();
+  await seedCooldowns();
 
   await prisma.$disconnect();
 

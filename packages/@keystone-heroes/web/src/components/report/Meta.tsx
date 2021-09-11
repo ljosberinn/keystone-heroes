@@ -71,7 +71,7 @@ export function Meta(): JSX.Element {
               fight.meta.chests > 1 ? "s" : ""
             }`}
           >
-            +{fightTimeToString(dungeon.timer[0] - fight.meta.time)}
+            +{fightTimeToString(dungeon.time - fight.meta.time)}
           </span>
           {fight.meta.totalDeaths > 0 && (
             <span

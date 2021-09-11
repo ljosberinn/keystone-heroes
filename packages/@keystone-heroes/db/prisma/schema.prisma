@@ -14,6 +14,7 @@ model Class {
   Character Character[]
   Spec      Spec[]
   Talent    Talent[]
+  Cooldown  Cooldown[]
 }
 
 model Spec {
@@ -27,6 +28,22 @@ model Spec {
   Talent Talent[]
 
   @@unique([name, classID])
+  Cooldown Cooldown[]
+}
+
+model Cooldown {
+  id Int @id
+
+  abilityID Int
+  ability   Ability @relation(fields: [abilityID], references: [id])
+
+  classID Int
+  class   Class @relation(fields: [classID], references: [id])
+
+  specID Int?
+  spec   Spec? @relation(fields: [specID], references: [id])
+
+  cd Int
 }
 
 model Dungeon {
@@ -440,8 +457,9 @@ model Ability {
   name String
   icon String?
 
-  ability            Event[] @relation("ability")
-  interruptedAbility Event[] @relation("interruptedAbility")
+  ability            Event[]    @relation("ability")
+  interruptedAbility Event[]    @relation("interruptedAbility")
+  Cooldown           Cooldown[]
 }
 
 enum EventType {
