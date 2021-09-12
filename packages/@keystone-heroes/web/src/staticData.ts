@@ -1,3 +1,13 @@
+const tormentedLieutenantIDs = new Set<number>([
+  179_891, 179_446, 179_892, 179_890,
+]);
+const allBossIDs = new Set<number>([
+  162_059, 163_077, 162_058, 162_060, 162_061, 162_691, 163_157, 162_689,
+  162_693, 164_558, 164_556, 164_555, 164_450, 166_608, 165_408, 164_185,
+  165_410, 164_218, 164_463, 164_451, 164_461, 162_317, 162_329, 162_309,
+  165_946, 162_100, 162_103, 162_102, 162_099, 164_567, 164_804, 164_501,
+  164_517, 164_255, 164_967, 164_266, 164_267,
+]);
 export const staticData = {
   dungeons: {
     "2284": {
@@ -123,74 +133,75 @@ export const staticData = {
     "1": {
       name: "Warrior",
       cooldowns: [
-        97_462, 64_382, 5246, 262_228, 307_865, 1161, 871, 325_886, 1719,
-        167_105, 46_924, 227_847, 324_143, 12_975, 184_364, 107_574, 107_574,
-        18_499,
+        5246, 871, 107_574, 97_462, 107_574, 1161, 325_886, 64_382, 12_975,
+        167_105, 227_847, 324_143, 46_924, 307_865, 262_228, 18_499, 1719,
+        184_364,
       ],
       specs: [
-        { id: 2, name: "Fury", cooldowns: [46_924, 184_364] },
-        { id: 1, name: "Protection", cooldowns: [871, 12_975, 107_574] },
         {
           id: 3,
           name: "Arms",
-          cooldowns: [262_228, 167_105, 227_847, 107_574],
+          cooldowns: [107_574, 167_105, 227_847, 262_228],
         },
+        { id: 1, name: "Protection", cooldowns: [871, 107_574, 12_975] },
+        { id: 2, name: "Fury", cooldowns: [46_924, 184_364] },
       ],
     },
     "2": {
       name: "Mage",
       cooldowns: [
-        66, 12_042, 314_793, 205_021, 45_438, 84_714, 80_353, 190_319, 198_154,
-        307_443, 108_978, 324_220, 55_342, 12_472, 235_219, 314_791, 108_978,
+        314_791, 108_978, 235_219, 45_438, 108_978, 84_714, 12_472, 55_342,
+        190_319, 80_353, 205_021, 314_793, 307_443, 198_154, 66, 12_042,
+        324_220,
       ],
       specs: [
-        { id: 4, name: "Fire", cooldowns: [190_319, 108_978] },
+        { id: 4, name: "Fire", cooldowns: [108_978, 190_319] },
+        { id: 6, name: "Arcane", cooldowns: [198_154, 12_042] },
         {
           id: 5,
           name: "Frost",
-          cooldowns: [205_021, 84_714, 108_978, 12_472, 235_219],
+          cooldowns: [108_978, 235_219, 84_714, 12_472, 205_021],
         },
-        { id: 6, name: "Arcane", cooldowns: [12_042, 198_154] },
       ],
     },
     "3": {
       name: "Rogue",
       cooldowns: [
-        31_224, 2094, 323_654, 328_547, 328_305, 2983, 185_313, 51_690, 79_140,
-        323_547, 5277, 137_619, 13_750, 121_471, 114_018, 1856, 277_925,
+        328_305, 1856, 13_750, 2094, 323_547, 2983, 323_654, 5277, 328_547,
+        121_471, 277_925, 51_690, 137_619, 114_018, 31_224, 79_140, 185_313,
       ],
       specs: [
+        { id: 9, name: "Outlaw", cooldowns: [13_750, 51_690] },
+        { id: 8, name: "Subtlety", cooldowns: [121_471, 277_925, 185_313] },
         { id: 7, name: "Assassination", cooldowns: [79_140] },
-        { id: 9, name: "Outlaw", cooldowns: [51_690, 13_750] },
-        { id: 8, name: "Subtlety", cooldowns: [185_313, 121_471, 277_925] },
       ],
     },
     "4": {
       name: "Shaman",
       cooldowns: [
-        192_058, 108_280, 320_137, 8143, 198_067, 320_674, 108_281, 32_182,
-        198_838, 79_206, 192_249, 51_533, 114_051, 324_386, 191_634, 108_271,
-        16_191, 2825, 207_399, 58_875, 326_059, 192_222, 98_008, 114_052,
-        198_103, 114_050, 328_923, 79_206,
+        198_103, 192_249, 192_222, 114_050, 114_051, 16_191, 58_875, 32_182,
+        326_059, 51_533, 328_923, 108_280, 207_399, 2825, 324_386, 79_206,
+        79_206, 320_137, 192_058, 114_052, 98_008, 108_271, 320_674, 108_281,
+        8143, 191_634, 198_067, 198_838,
       ],
       specs: [
+        {
+          id: 12,
+          name: "Enhancement",
+          cooldowns: [114_051, 58_875, 51_533, 320_137],
+        },
         {
           id: 10,
           name: "Restoration",
           cooldowns: [
-            108_280, 198_838, 79_206, 16_191, 207_399, 98_008, 114_052,
+            16_191, 108_280, 207_399, 79_206, 114_052, 98_008, 198_838,
           ],
-        },
-        {
-          id: 12,
-          name: "Enhancement",
-          cooldowns: [320_137, 51_533, 114_051, 58_875],
         },
         {
           id: 11,
           name: "Elemental",
           cooldowns: [
-            198_067, 108_281, 192_249, 191_634, 192_222, 114_050, 79_206,
+            192_249, 192_222, 114_050, 79_206, 108_281, 191_634, 198_067,
           ],
         },
       ],
@@ -198,29 +209,29 @@ export const staticData = {
     "5": {
       name: "Priest",
       cooldowns: [
-        47_788, 123_040, 323_673, 64_901, 265_202, 62_618, 200_183, 47_585,
-        15_286, 88_625, 319_952, 73_325, 109_964, 33_206, 8122, 228_260, 62_618,
-        10_060, 34_433, 47_536, 200_174, 246_287, 325_013, 34_861, 327_661,
-        2050, 19_236, 64_843, 34_433, 324_724,
+        64_901, 64_843, 327_661, 34_861, 15_286, 319_952, 33_206, 246_287,
+        34_433, 109_964, 62_618, 62_618, 47_536, 19_236, 47_585, 323_673,
+        265_202, 8122, 325_013, 200_183, 10_060, 200_174, 88_625, 47_788,
+        123_040, 2050, 34_433, 73_325, 324_724, 228_260,
       ],
       specs: [
+        {
+          id: 13,
+          name: "Shadow",
+          cooldowns: [15_286, 319_952, 34_433, 47_585, 200_174, 228_260],
+        },
         {
           id: 14,
           name: "Holy",
           cooldowns: [
-            47_788, 64_901, 265_202, 200_183, 88_625, 34_861, 2050, 64_843,
+            64_901, 64_843, 34_861, 265_202, 200_183, 88_625, 47_788, 2050,
           ],
-        },
-        {
-          id: 13,
-          name: "Shadow",
-          cooldowns: [47_585, 15_286, 319_952, 228_260, 34_433, 200_174],
         },
         {
           id: 15,
           name: "Discipline",
           cooldowns: [
-            123_040, 109_964, 33_206, 62_618, 47_536, 246_287, 34_433,
+            33_206, 246_287, 109_964, 62_618, 47_536, 123_040, 34_433,
           ],
         },
       ],
@@ -228,46 +239,46 @@ export const staticData = {
     "6": {
       name: "Hunter",
       cooldowns: [
-        325_028, 186_289, 186_257, 19_577, 324_149, 308_491, 321_530, 19_574,
-        193_530, 201_430, 109_304, 260_402, 131_894, 266_779, 19_577, 186_265,
-        328_231, 288_613,
+        325_028, 19_577, 266_779, 201_430, 328_231, 131_894, 260_402, 186_257,
+        19_574, 324_149, 288_613, 186_265, 19_577, 193_530, 109_304, 308_491,
+        321_530, 186_289,
       ],
       specs: [
-        { id: 18, name: "Marksmanship", cooldowns: [260_402, 288_613] },
-        { id: 17, name: "Survival", cooldowns: [186_289, 19_577, 266_779] },
         {
           id: 16,
           name: "BeastMastery",
-          cooldowns: [321_530, 19_574, 193_530, 201_430, 19_577],
+          cooldowns: [201_430, 19_574, 19_577, 193_530, 321_530],
         },
+        { id: 17, name: "Survival", cooldowns: [19_577, 266_779, 186_289] },
+        { id: 18, name: "Marksmanship", cooldowns: [260_402, 288_613] },
       ],
     },
     "7": {
       name: "Monk",
       cooldowns: [
-        310_454, 325_153, 115_310, 122_470, 325_197, 137_639, 116_849, 115_203,
-        122_278, 322_109, 119_381, 322_507, 115_203, 327_104, 115_176, 326_860,
-        132_578, 325_216, 123_904, 115_399, 152_173, 197_908, 122_783, 122_783,
-        115_203, 322_118, 115_288,
+        122_278, 115_203, 322_109, 115_176, 326_860, 119_381, 115_203, 310_454,
+        122_470, 115_310, 115_288, 115_399, 325_197, 322_507, 325_153, 132_578,
+        325_216, 115_203, 322_118, 122_783, 122_783, 116_849, 137_639, 197_908,
+        152_173, 327_104, 123_904,
       ],
       specs: [
-        {
-          id: 20,
-          name: "Brewmaster",
-          cooldowns: [325_153, 322_507, 115_176, 132_578, 115_399, 115_203],
-        },
         {
           id: 21,
           name: "Windwalker",
           cooldowns: [
-            122_470, 137_639, 115_203, 123_904, 152_173, 122_783, 115_288,
+            115_203, 122_470, 115_288, 122_783, 137_639, 152_173, 123_904,
           ],
+        },
+        {
+          id: 20,
+          name: "Brewmaster",
+          cooldowns: [115_176, 115_399, 322_507, 325_153, 132_578, 115_203],
         },
         {
           id: 19,
           name: "Mistweaver",
           cooldowns: [
-            115_310, 325_197, 116_849, 115_203, 197_908, 122_783, 322_118,
+            115_203, 115_310, 325_197, 322_118, 122_783, 116_849, 197_908,
           ],
         },
       ],
@@ -275,111 +286,110 @@ export const staticData = {
     "8": {
       name: "Druid",
       cooldowns: [
-        20_484, 323_764, 194_223, 132_158, 205_636, 319_454, 102_558, 22_812,
-        325_727, 202_770, 5211, 197_721, 203_651, 102_560, 61_336, 106_898, 740,
-        106_951, 1850, 102_342, 102_543, 102_793, 33_891, 326_434, 29_166,
-        29_166, 78_675, 108_238, 61_336, 323_546, 50_334,
+        20_484, 325_727, 50_334, 326_434, 197_721, 102_560, 323_764, 61_336,
+        106_951, 22_812, 78_675, 1850, 205_636, 108_238, 740, 61_336, 319_454,
+        102_342, 132_158, 194_223, 102_793, 202_770, 106_898, 203_651, 323_546,
+        29_166, 29_166, 102_558, 5211, 33_891, 102_543,
       ],
       specs: [
-        { id: 25, name: "Feral", cooldowns: [61_336, 106_951, 102_543] },
-        {
-          id: 22,
-          name: "Restoration",
-          cooldowns: [132_158, 197_721, 203_651, 740, 102_342, 33_891, 29_166],
-        },
+        { id: 25, name: "Feral", cooldowns: [106_951, 61_336, 102_543] },
         {
           id: 24,
           name: "Balance",
-          cooldowns: [194_223, 205_636, 202_770, 102_560, 29_166, 78_675],
+          cooldowns: [102_560, 78_675, 205_636, 194_223, 202_770, 29_166],
         },
-        { id: 23, name: "Guardian", cooldowns: [102_558, 61_336, 50_334] },
+        { id: 23, name: "Guardian", cooldowns: [50_334, 61_336, 102_558] },
+        {
+          id: 22,
+          name: "Restoration",
+          cooldowns: [197_721, 740, 102_342, 132_158, 203_651, 29_166, 33_891],
+        },
       ],
     },
     "9": {
       name: "DemonHunter",
       cooldowns: [
-        204_021, 202_137, 306_830, 317_009, 196_718, 207_684, 344_867, 209_258,
-        320_341, 188_501, 258_925, 187_827, 196_555, 202_138, 323_639, 191_427,
-        212_084, 198_589,
+        317_009, 198_589, 207_684, 344_867, 320_341, 209_258, 212_084, 202_137,
+        191_427, 188_501, 204_021, 187_827, 196_718, 306_830, 196_555, 202_138,
+        323_639, 258_925,
       ],
       specs: [
         {
           id: 26,
           name: "Vengeance",
           cooldowns: [
-            204_021, 202_137, 207_684, 209_258, 320_341, 187_827, 202_138,
-            212_084,
+            207_684, 320_341, 209_258, 212_084, 202_137, 204_021, 187_827,
+            202_138,
           ],
         },
         {
           id: 27,
           name: "Havoc",
-          cooldowns: [196_718, 344_867, 258_925, 196_555, 191_427, 198_589],
+          cooldowns: [198_589, 344_867, 191_427, 196_718, 196_555, 258_925],
         },
       ],
     },
     "10": {
       name: "Paladin",
       cooldowns: [
-        642, 327_193, 853, 31_850, 31_884, 328_622, 343_527, 328_282, 184_662,
-        316_958, 304_971, 216_331, 498, 205_191, 1022, 31_821, 6940, 498,
-        328_204, 114_158, 204_018, 633, 86_659, 328_620, 343_721, 328_281,
-        231_895,
+        343_527, 498, 633, 31_821, 327_193, 343_721, 304_971, 204_018, 328_622,
+        6940, 316_958, 498, 31_884, 328_282, 642, 31_850, 231_895, 216_331,
+        184_662, 114_158, 1022, 328_281, 86_659, 853, 328_204, 205_191, 328_620,
       ],
       specs: [
         {
-          id: 30,
-          name: "Retribution",
-          cooldowns: [343_527, 184_662, 205_191, 343_721, 231_895],
-        },
-        { id: 29, name: "Holy", cooldowns: [216_331, 498, 31_821, 114_158] },
-        {
           id: 28,
           name: "Protection",
-          cooldowns: [327_193, 31_850, 498, 204_018, 86_659],
+          cooldowns: [498, 327_193, 204_018, 31_850, 86_659],
         },
+        {
+          id: 30,
+          name: "Retribution",
+          cooldowns: [343_527, 343_721, 231_895, 184_662, 205_191],
+        },
+        { id: 29, name: "Holy", cooldowns: [31_821, 498, 216_331, 114_158] },
       ],
     },
     "11": {
       name: "Warlock",
       cooldowns: [
-        20_707, 113_858, 333_889, 325_289, 325_640, 104_773, 111_898, 1122, 698,
-        267_217, 29_893, 267_171, 321_792, 113_860, 342_601, 265_187, 30_283,
-        205_180, 312_321,
+        325_640, 698, 333_889, 113_858, 265_187, 29_893, 111_898, 321_792,
+        20_707, 104_773, 312_321, 113_860, 30_283, 267_171, 1122, 205_180,
+        267_217, 342_601, 325_289,
       ],
       specs: [
+        { id: 31, name: "Destruction", cooldowns: [113_858, 1122] },
         { id: 33, name: "Affliction", cooldowns: [113_860, 205_180] },
         {
           id: 32,
           name: "Demonology",
-          cooldowns: [111_898, 267_217, 267_171, 265_187],
+          cooldowns: [265_187, 111_898, 267_171, 267_217],
         },
-        { id: 31, name: "Destruction", cooldowns: [113_858, 1122] },
       ],
     },
     "12": {
       name: "DeathKnight",
       cooldowns: [
-        324_128, 207_167, 219_809, 207_289, 48_707, 51_052, 108_199, 61_999,
-        221_699, 48_743, 194_844, 63_560, 49_206, 312_202, 47_568, 327_574,
-        49_028, 311_648, 42_650, 212_552, 275_699, 48_792, 46_585, 279_302,
-        315_443, 152_279, 49_039, 55_233, 51_271,
+        61_999, 221_699, 46_585, 51_271, 194_844, 207_289, 48_707, 312_202,
+        152_279, 315_443, 55_233, 48_792, 219_809, 51_052, 275_699, 49_206,
+        311_648, 63_560, 324_128, 108_199, 47_568, 212_552, 42_650, 207_167,
+        327_574, 49_039, 49_028, 48_743, 279_302,
       ],
       specs: [
         {
           id: 36,
           name: "Frost",
-          cooldowns: [207_167, 47_568, 279_302, 152_279, 51_271],
-        },
-        {
-          id: 35,
-          name: "Unholy",
-          cooldowns: [207_289, 63_560, 49_206, 42_650, 275_699],
+          cooldowns: [51_271, 152_279, 47_568, 207_167, 279_302],
         },
         {
           id: 34,
           name: "Blood",
-          cooldowns: [219_809, 108_199, 221_699, 194_844, 49_028, 55_233],
+          cooldowns: [221_699, 194_844, 55_233, 219_809, 108_199, 49_028],
+        },
+        {
+          id: 35,
+          name: "Unholy",
+          cooldowns: [207_289, 275_699, 49_206, 63_560, 42_650],
         },
       ],
     },
@@ -1411,6 +1421,150 @@ export const staticData = {
     },
     "344867": { icon: "spell_fire_felfirenova", name: "Chaos Nova", cd: 60 },
   },
+  tormentedLieutenants: {
+    "179446": {
+      name: "Incinerator Arkolath",
+      icon: "ability_warlock_fireandbrimstone",
+    },
+    "179890": { name: "Executioner Varruth", icon: "spell_misc_emotionafraid" },
+    "179891": { name: "Soggodon the Breaker", icon: "inv_icon_wingbroken04a" },
+    "179892": { name: "Oros Coldheart", icon: "spell_shadow_soulleech_2" },
+  },
+  tormentedPowers: {
+    "356827": {
+      name: "Tiny Dancing Shoes",
+      icon: "inv_boots_pvppriest_e_01",
+      sourceTormentorID: [179_891],
+    },
+    "356828": {
+      name: "Dripping Fang",
+      icon: "inv_misc_monsterfang_01",
+      sourceTormentorID: [179_891],
+    },
+    "357524": {
+      name: "The Stone Ward",
+      icon: "ability_mage_shattershield",
+      sourceTormentorID: [179_891],
+    },
+    "357556": {
+      name: "Self-Embalming Kit",
+      icon: "inv_mummypet",
+      sourceTormentorID: [179_891],
+    },
+    "357575": {
+      name: "Champion's Brand",
+      icon: "spell_warrior_sharpenblade",
+      sourceTormentorID: [179_446, 179_890],
+    },
+    "357604": {
+      name: "Siegebreaker's Stand",
+      icon: "ability_warrior_unrelentingassault",
+      sourceTormentorID: [179_890],
+    },
+    "357609": {
+      name: "Dagger of Necrotic Wounding",
+      icon: "inv_glaive_1h_maldraxxusquest_b_01",
+      sourceTormentorID: [179_890],
+    },
+    "357706": {
+      name: "Volcanig Plumage",
+      icon: "artifactability_firemage_phoenixbolt",
+      sourceTormentorID: [179_890],
+    },
+    "357747": {
+      name: "Overflowing Chalice",
+      icon: "inv_drink_22",
+      sourceTormentorID: [179_890],
+    },
+    "357778": {
+      name: "Broken Mirror",
+      icon: "trade_archaeology_highbornesoulmirror",
+      sourceTormentorID: [179_891],
+    },
+    "357814": {
+      name: "Regenerative Fungus",
+      icon: "inv_misc_starspecklemushroom",
+      sourceTormentorID: [179_892],
+    },
+    "357815": {
+      name: "Satchel of the Hunt",
+      icon: "inv_misc_coinbag11",
+      sourceTormentorID: [179_892],
+    },
+    "357817": {
+      name: "Huntman's Horn",
+      icon: "inv_misc_horn_01",
+      sourceTormentorID: [179_892],
+    },
+    "357820": {
+      name: "Pendant of the Martyr",
+      icon: "inv_jewelry_necklace_75",
+      sourceTormentorID: [179_892],
+    },
+    "357825": {
+      name: "Vial of Desperation",
+      icon: "trade_archaeology_crackedcrystalvial",
+      sourceTormentorID: [179_892],
+    },
+    "357829": {
+      name: "Gavel of Judgement",
+      icon: "inv_hammer_17",
+      sourceTormentorID: [179_892],
+    },
+    "357834": {
+      name: "Handbook of Uncivil Etiquette",
+      icon: "inv_misc_profession_book_cooking",
+      sourceTormentorID: [179_892],
+    },
+    "357839": {
+      name: "The Fifth Skull",
+      icon: "inv_misc_bone_skull_02",
+      sourceTormentorID: [179_446],
+    },
+    "357842": {
+      name: "Portable Feeding Trough",
+      icon: "inv_crate_07",
+      sourceTormentorID: [179_892],
+    },
+    "357847": {
+      name: "Stabilizing Diamond Alembic",
+      icon: "inv_trinket_80_alchemy01",
+      sourceTormentorID: [179_890],
+    },
+    "357848": {
+      name: "Signet of Bolstering",
+      icon: "ability_socererking_arcanefortification",
+      sourceTormentorID: [179_446],
+    },
+    "357863": {
+      name: "The Stygian King's Barbs",
+      icon: "inv_misc_herb_goldthorn_bramble",
+      sourceTormentorID: [179_890],
+    },
+    "357864": {
+      name: "Raging Battle-Axe",
+      icon: "ability_hunter_swiftstrike",
+      sourceTormentorID: [179_446],
+    },
+    "357889": {
+      name: "Pedestal of Utter Hubris",
+      icon: "ability_paladin_beaconoflight",
+      sourceTormentorID: [179_446],
+    },
+    "357897": {
+      name: "Crumbling Bulwark",
+      icon: "trade_archaeology_stoneshield",
+      sourceTormentorID: [179_446],
+    },
+    "357900": {
+      name: "Bottle of Sanguine Ichor",
+      icon: "inv_potion_27",
+      sourceTormentorID: [179_446],
+    },
+  },
+  isBoss: (id: number): boolean => allBossIDs.has(id),
+  isTormentedLieutenant: (id: number): boolean =>
+    tormentedLieutenantIDs.has(id),
 };
 
 export type StaticData = {
@@ -1435,4 +1589,14 @@ export type StaticData = {
     typeof staticData.covenants[keyof typeof staticData.covenants]
   >;
   spells: Record<number, { icon: string; name: string; cd: number }>;
+  tormentedLieutenants: Record<
+    number,
+    typeof staticData.tormentedLieutenants[keyof typeof staticData.tormentedLieutenants]
+  >;
+  tormentedPowers: Record<
+    number,
+    typeof staticData.tormentedPowers[keyof typeof staticData.tormentedPowers]
+  >;
+  isBoss: (id: number) => boolean;
+  isTormentedLieutenant: (id: number) => boolean;
 };

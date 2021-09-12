@@ -27,7 +27,7 @@ const classTextMap: Record<string, string> = {
 export function Meta(): JSX.Element {
   const { reportID, fightID, fight } = useFight();
 
-  const { classes, dungeons, affixes } = useStaticData();
+  const { classes, dungeons, affixes, tormentedPowers } = useStaticData();
 
   if (!fight) {
     return <h1>loading</h1>;
@@ -58,16 +58,23 @@ export function Meta(): JSX.Element {
               </sup>
             </ExternalLink>
           </h1>
-          <div className="flex pt-2 space-x-1 space-x-2 md:pt-0 lg:pt-2 ">
+          <div className="flex pt-2 space-x-1 space-x-2 md:pt-0 lg:pt-2">
             {fight.affixes.map((affix) => (
-              <div key={affix} className="w-10 h-10">
+              <ExternalLink
+                href={createWowheadUrl({
+                  category: "affix",
+                  id: affix,
+                })}
+                key={affix}
+                className="w-10 h-10"
+              >
                 <img
                   src={`${WCL_ASSET_URL}${affixes[affix].icon}.jpg`}
                   alt={affixes[affix].name}
                   title={affixes[affix].name}
                   className="object-cover w-full h-full rounded-full"
                 />
-              </div>
+              </ExternalLink>
             ))}
           </div>
         </div>
@@ -160,22 +167,25 @@ export function Meta(): JSX.Element {
                   />
                 </div>
                 <div className="flex pt-2 space-x-2 sm:space-y-2 sm:space-x-0 md:space-x-2 sm:flex-col md:flex-row md:space-y-0 lg:space-x-2 lg:pt-0">
-                  {player.tormented.map((powerPickupEvent) => {
+                  {player.tormented.map((id, index) => {
+                    const power = tormentedPowers[id];
+
                     return (
-                      <div key={powerPickupEvent.timestamp} className="w-8 h-8">
-                        <ExternalLink
-                          href={createWowheadUrl({
-                            category: "spell",
-                            id: powerPickupEvent.ability.id,
-                          })}
-                        >
-                          <AbilityIcon
-                            icon={powerPickupEvent.ability.icon}
-                            alt={powerPickupEvent.ability.name ?? "Skipped"}
-                            className="object-cover w-full h-full rounded-full"
-                          />
-                        </ExternalLink>
-                      </div>
+                      <ExternalLink
+                        href={createWowheadUrl({
+                          category: "spell",
+                          id,
+                        })}
+                        className="w-8 h-8"
+                        // eslint-disable-next-line react/no-array-index-key
+                        key={`${id}-${index}}`}
+                      >
+                        <AbilityIcon
+                          icon={power.icon}
+                          alt={power.name ?? "Skipped"}
+                          className="object-cover w-full h-full rounded-full"
+                        />
+                      </ExternalLink>
                     );
                   })}
                 </div>

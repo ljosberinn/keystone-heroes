@@ -58,8 +58,6 @@ export enum Boss {
   MARGRAVE_STRADAMA = 164_267,
 }
 
-// export const isBoss = (id: number): id is Boss => id in Boss;
-
 export enum DungeonIDs {
   SANGUINE_DEPTHS = 2284,
   SPIRES_OF_ASCENSION = 2285,
@@ -723,7 +721,9 @@ export const dungeonMap: Record<Dungeon["id"], DungeonMeta> = {
   [DungeonIDs.THEATER_OF_PAIN]: THEATER_OF_PAIN,
 };
 
-export const allBossIDs = new Set(Object.values(Boss));
+export const allBossIDs = new Set<number>(
+  Object.values(Boss).filter((id): id is number => typeof id === "number")
+);
 
 export const dungeons: (Omit<Dungeon, "time"> & DungeonMeta)[] = Object.entries(
   dungeonMap

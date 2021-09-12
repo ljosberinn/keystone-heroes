@@ -10,7 +10,7 @@
     "format": "prettier --write src",
     "lint": "set TIMING=1 && eslint src --cache",
     "test": "jest --passWithNoTests",
-    "static-data": "ts-node -r tsconfig-paths/register src/createStaticData && prettier --write ../web/src/staticData.ts && eslint --fix ../web/src/staticData.ts"
+    "static-data": "ts-node -r tsconfig-paths/register src/createStaticData && eslint --fix ../web/src/staticData.ts && prettier --write ../web/src/staticData.ts"
   },
   "dependencies": {
     "@keystone-heroes/api": "1.0.0",

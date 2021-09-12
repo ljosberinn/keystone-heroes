@@ -28,11 +28,7 @@ import {
   SHROUD_ICON,
   WCL_ASSET_URL,
 } from "../AbilityIcon";
-import {
-  hasBloodLust,
-  detectInvisibilityUsage,
-  findTormentedLieutenantPull,
-} from "./utils";
+import { hasBloodLust, detectInvisibilityUsage } from "./utils";
 
 function useImageDimensions() {
   const [imageSize, setImageSize] = useState<SvgProps["imageSize"]>({
@@ -587,6 +583,8 @@ type PullIndicatorIconProps = {
 function PullIndicatorIcon({ pull, x, y }: PullIndicatorIconProps) {
   const selectedPull = useReportStore((state) => state.selectedPull);
   const setSelectedPull = useReportStore((state) => state.setSelectedPull);
+  const { isTormentedLieutenant, tormentedLieutenants, isBoss } =
+    useStaticData();
 
   const selected = selectedPull === pull.id;
 
@@ -633,14 +631,18 @@ function PullIndicatorIcon({ pull, x, y }: PullIndicatorIconProps) {
     );
   }
 
-  const tormentedLieutenant = findTormentedLieutenantPull(pull);
+  const tormentedLieutenantNPC = pull.npcs.find((npc) =>
+    isTormentedLieutenant(npc.id)
+  );
 
-  if (tormentedLieutenant) {
+  if (tormentedLieutenantNPC) {
+    const lieutenant = tormentedLieutenants[tormentedLieutenantNPC.id];
+
     return (
       <g {...gProps}>
         <image
-          aria-label={tormentedLieutenant.name}
-          href={`${WCL_ASSET_URL}${tormentedLieutenant.icon}.jpg`}
+          aria-label={lieutenant.name}
+          href={`${WCL_ASSET_URL}${lieutenant.icon}.jpg`}
           {...sharedProps}
         />
         <text
@@ -655,16 +657,14 @@ function PullIndicatorIcon({ pull, x, y }: PullIndicatorIconProps) {
     );
   }
 
-  // const boss = pull.npcs.find((npc) => {
-  //   return isBoss(npc.id);
-  // });
+  const bossNPC = pull.npcs.find((npc) => isBoss(npc.id));
 
   return (
     <g {...gProps}>
-      {/* {boss ? (
+      {bossNPC ? (
         <image
-          aria-label={boss.name}
-          href={`/static/npcs/${boss.id}.png`}
+          aria-label={bossNPC.name}
+          href={`/static/npcs/${bossNPC.id}.png`}
           className={classnames(
             selected ? "outline-white opacity-100" : "opacity-70"
           )}
@@ -674,18 +674,18 @@ function PullIndicatorIcon({ pull, x, y }: PullIndicatorIconProps) {
           y={y - 32 / 2}
         />
       ) : (
-        <> */}
-      <circle cx={x} cy={y} r={15} className={sharedProps.className} />
-      <text
-        textAnchor="middle"
-        x={x}
-        y={y + 21.02 / 4}
-        className="text-white fill-current"
-      >
-        {pull.id}
-      </text>
-      {/* </>
-      )} */}
+        <>
+          <circle cx={x} cy={y} r={15} className={sharedProps.className} />
+          <text
+            textAnchor="middle"
+            x={x}
+            y={y + 21.02 / 4}
+            className="text-white fill-current"
+          >
+            {pull.id}
+          </text>
+        </>
+      )}
     </g>
   );
 }

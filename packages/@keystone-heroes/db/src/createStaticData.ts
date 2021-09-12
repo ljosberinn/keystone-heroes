@@ -1,6 +1,11 @@
+import {
+  tormentedSpells,
+  tormentedLieutenants,
+} from "@keystone-heroes/wcl/queries/events/affixes/tormented";
 import { writeFileSync } from "fs";
 import { resolve } from "path";
 
+import { allBossIDs } from "./data/dungeons";
 import { prisma } from "./prisma";
 
 async function create() {
@@ -72,6 +77,7 @@ async function create() {
       icon: true,
     },
   });
+
   const affixes = Object.fromEntries(
     rawAffixes.map((affix) => {
       return [
@@ -157,6 +163,31 @@ async function create() {
     })
   );
 
+  const tormentedLieutenantMap = Object.fromEntries(
+    tormentedLieutenants.map((lt) => {
+      return [
+        lt.id,
+        {
+          name: lt.name,
+          icon: lt.icon,
+        },
+      ];
+    })
+  );
+
+  const tormentedPowerMap = Object.fromEntries(
+    tormentedSpells.map((spell) => {
+      return [
+        spell.id,
+        {
+          name: spell.name,
+          icon: spell.icon,
+          sourceTormentorID: spell.sourceTormentorID,
+        },
+      ];
+    })
+  );
+
   const targetPath = resolve("../web/src/staticData.ts");
 
   const data = {
@@ -166,10 +197,21 @@ async function create() {
     classes,
     covenants,
     spells,
+    isBoss: (id: number) => allBossIDs.has(id),
+    tormentedLieutenants: tormentedLieutenantMap,
+    tormentedPowers: tormentedPowerMap,
   };
 
   const template = `
-export const staticData = ${JSON.stringify(data)};
+const tormentedLieutenantIDs = new Set<number>(${JSON.stringify(
+    tormentedLieutenants.map((lt) => lt.id)
+  )});  
+const allBossIDs = new Set<number>(${JSON.stringify([...allBossIDs])});
+export const staticData = {
+  ...${JSON.stringify(data)},
+  isBoss: (id: number): boolean => allBossIDs.has(id),
+  isTormentedLieutenant: (id: number): boolean => tormentedLieutenantIDs.has(id),
+};
 
 export type StaticData = {
   classes: Record<number, typeof staticData.classes[keyof typeof staticData.classes]>;
@@ -177,7 +219,11 @@ export type StaticData = {
   affixes: Record<number, typeof staticData.affixes[keyof typeof staticData.affixes]>;
   soulbinds: Record<number, typeof staticData.soulbinds[keyof typeof staticData.soulbinds]>;
   covenants: Record<number, typeof staticData.covenants[keyof typeof staticData.covenants]>;
-  spells: Record<number, { icon: string; name: string; cd: number }>
+  spells: Record<number, { icon: string; name: string; cd: number }>;
+  tormentedLieutenants: Record<number, typeof staticData.tormentedLieutenants[keyof typeof staticData.tormentedLieutenants]>;
+  tormentedPowers: Record<number, typeof staticData.tormentedPowers[keyof typeof staticData.tormentedPowers]>;
+  isBoss: (id: number) => boolean;
+  isTormentedLieutenant: (id: number) => boolean;
 }`;
 
   writeFileSync(targetPath, template);

@@ -27,7 +27,7 @@ describe("getEvents", () => {
     const endTime = 1;
     const reportID = "reportID";
 
-    const filterExpressions: (string | undefined | null)[] = [];
+    const filterExpressions: string[] = [];
 
     server.use(
       graphql.query<EventDataQuery, EventDataQueryVariables>(
@@ -40,7 +40,9 @@ describe("getEvents", () => {
           expect(req.variables.filterExpression).not.toBeUndefined();
           expect(req.variables.filterExpression).not.toBeNull();
 
-          filterExpressions.push(req.variables.filterExpression);
+          if (req.variables.filterExpression) {
+            filterExpressions.push(req.variables.filterExpression);
+          }
 
           return res(
             ctx.data({
@@ -105,6 +107,13 @@ describe("getEvents", () => {
     );
 
     expect(result).toMatchSnapshot();
-    expect(filterExpressions).toMatchSnapshot();
+
+    const individualExpressions = filterExpressions.flatMap((expr) =>
+      expr.split(" or ")
+    );
+
+    individualExpressions.forEach((expr) => {
+      expect(expr).toMatchSnapshot();
+    });
   });
 });

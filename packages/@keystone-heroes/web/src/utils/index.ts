@@ -41,7 +41,7 @@ export const createWCLUrl = ({
 };
 
 type WowheadParams = {
-  category: "spell" | "npc";
+  category: "spell" | "npc" | "affix";
   id: string | number;
 };
 

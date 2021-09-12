@@ -117,10 +117,7 @@ export type FightSuccessResponse = {
     name: Character["name"];
     server: Server["name"];
     region: Region["slug"];
-    tormented: (Pick<Event, "timestamp"> & {
-      ability: NonNullable<Ability>;
-      type: "ApplyBuff" | "ApplyBuffStack";
-    })[];
+    tormented: Ability["id"][];
   })[];
   pulls: (Pick<Pull, "startTime" | "endTime" | "x" | "y" | "isWipe"> & {
     events: (Pick<
@@ -501,14 +498,7 @@ const detectTormentedPowers = (
         return acc;
       }
 
-      return [
-        ...acc,
-        {
-          timestamp: event.timestamp,
-          ability: event.ability,
-          type: event.eventType,
-        },
-      ];
+      return [...acc, event.ability.id];
     },
     []
   );
