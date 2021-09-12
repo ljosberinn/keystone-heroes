@@ -40,6 +40,15 @@ export const createWCLUrl = ({
   return `${url}&${params}`;
 };
 
+type WowheadParams = {
+  category: "spell" | "npc";
+  id: string | number;
+};
+
+export const createWowheadUrl = ({ category, id }: WowheadParams): string => {
+  return `https://wowhead.com/${category}=${id}`;
+};
+
 export const parseWCLUrl = (
   maybeURL: string
 ): { reportID: null | string; fightID: null | string } => {

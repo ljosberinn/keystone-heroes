@@ -29,6 +29,7 @@ module.exports = {
       red: colors.red,
       transparent: "transparent",
       white: colors.white,
+      yellow: colors.yellow,
     },
     extend: {
       colors: classColors,

@@ -2,8 +2,9 @@
 import type { FightSuccessResponse } from "@keystone-heroes/api/functions/fight";
 import Link from "next/link";
 import { useStaticData } from "src/context/StaticData";
+import { icons } from "src/icons";
 import { useFight } from "src/pages/report/[reportID]/[fightID]";
-import { createWCLUrl, fightTimeToString } from "src/utils";
+import { createWCLUrl, fightTimeToString, createWowheadUrl } from "src/utils";
 
 import { AbilityIcon, WCL_ASSET_URL } from "../AbilityIcon";
 import { ExternalLink } from "../ExternalLink";
@@ -45,6 +46,16 @@ export function Meta(): JSX.Element {
                 {dungeon.slug}
               </span>{" "}
               +{fight.meta.level}
+              <sup className="pl-2 space-x-1">
+                {Array.from({ length: fight.meta.chests }, (_, index) => (
+                  <svg
+                    key={index}
+                    className="inline w-4 h-4 text-yellow-500 fill-current"
+                  >
+                    <use href={`#${icons.star.id}`} />
+                  </svg>
+                ))}
+              </sup>
             </ExternalLink>
           </h1>
           <div className="flex pt-2 space-x-1 space-x-2 md:pt-0 lg:pt-2 ">
@@ -152,11 +163,18 @@ export function Meta(): JSX.Element {
                   {player.tormented.map((powerPickupEvent) => {
                     return (
                       <div key={powerPickupEvent.timestamp} className="w-8 h-8">
-                        <AbilityIcon
-                          icon={powerPickupEvent.ability.icon}
-                          alt={powerPickupEvent.ability.name ?? "Skipped"}
-                          className="object-cover w-full h-full rounded-full"
-                        />
+                        <ExternalLink
+                          href={createWowheadUrl({
+                            category: "spell",
+                            id: powerPickupEvent.ability.id,
+                          })}
+                        >
+                          <AbilityIcon
+                            icon={powerPickupEvent.ability.icon}
+                            alt={powerPickupEvent.ability.name ?? "Skipped"}
+                            className="object-cover w-full h-full rounded-full"
+                          />
+                        </ExternalLink>
                       </div>
                     );
                   })}

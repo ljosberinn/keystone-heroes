@@ -20,9 +20,8 @@ export function AbilityIcon({
     <img
       src={`${WCL_ASSET_URL}${icon ?? "inv_misc_questionmark"}.jpg`}
       alt={alt}
-      // title={alt}
+      title={title ?? alt}
       className={className}
-      title={title}
     />
   );
 }

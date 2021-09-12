@@ -17,7 +17,7 @@ export default function CustomDocument(/* props: DocumentProps*/): JSX.Element {
         <svg className="hidden">
           <defs>
             {Object.values(icons).map(({ component: Component, id }) => (
-              <Component id={id} size="1em" key={id} />
+              <Component id={id} size="100%" key={id} />
             ))}
           </defs>
         </svg>

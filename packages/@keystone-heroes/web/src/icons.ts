@@ -1,4 +1,4 @@
-import { FaSun, FaMoon } from "react-icons/fa";
+import { FaSun, FaMoon, FaStar } from "react-icons/fa";
 
 export const icons = {
   sun: {
@@ -8,5 +8,9 @@ export const icons = {
   moon: {
     id: "fa-moon",
     component: FaMoon,
+  },
+  star: {
+    id: "fa-star",
+    component: FaStar,
   },
 } as const;

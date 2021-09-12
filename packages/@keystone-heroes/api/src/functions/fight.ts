@@ -581,20 +581,30 @@ const createResponseFromStoredFight = (
     }
   );
 
+  const { inCombatTime, outOfCombatTime } = calculateCombatTime(
+    dataset.keystoneTime,
+    dataset.Pull
+  );
+
+  const dps = Math.round((dataset.dps * dataset.keystoneTime) / inCombatTime);
+  const dtps = Math.round((dataset.dtps * dataset.keystoneTime) / inCombatTime);
+  const hps = Math.round((dataset.hps * dataset.keystoneTime) / inCombatTime);
+
   return {
     meta: {
-      ...calculateCombatTime(dataset.keystoneTime, dataset.Pull),
+      inCombatTime,
+      outOfCombatTime,
       level: dataset.keystoneLevel,
       time: dataset.keystoneTime,
       chests: dataset.chests,
-      dps: dataset.dps,
-      hps: dataset.hps,
-      dtps: dataset.dtps,
       averageItemLevel: dataset.averageItemLevel,
       totalDeaths: dataset.totalDeaths,
       percent: dataset.percent,
       rating: dataset.rating,
       startTime: dataset.startTime,
+      dps,
+      hps,
+      dtps,
     },
     dungeon: dataset.dungeon.id,
     affixes: [
@@ -606,12 +616,18 @@ const createResponseFromStoredFight = (
     player: [...dataset.PlayerFight]
       .sort((a, b) => sortByRole(a.player.spec.role, b.player.spec.role))
       .map((playerFight) => {
+        const dps = Math.round(
+          (playerFight.player.dps * dataset.keystoneTime) / inCombatTime
+        );
+        const hps = Math.round(
+          (playerFight.player.hps * dataset.keystoneTime) / inCombatTime
+        );
+
         return {
           id: playerFight.player.id,
           actorID: playerFight.player.actorID,
           deaths: playerFight.player.deaths,
-          dps: playerFight.player.dps,
-          hps: playerFight.player.hps,
+
           itemLevel: playerFight.player.itemLevel,
           spec: playerFight.player.spec.id,
           legendary: playerFight.player.legendary,
@@ -638,6 +654,8 @@ const createResponseFromStoredFight = (
             ? playerFight.player.soulbind.id
             : null,
           tormented: detectTormentedPowers(allEvents, playerFight.player.id),
+          dps,
+          hps,
         };
       }),
     pulls,

@@ -21,7 +21,6 @@ import {
 } from "src/store";
 import { fightTimeToString } from "src/utils";
 import { classnames } from "src/utils/classnames";
-import shallow from "zustand/shallow";
 
 import {
   BLOODLUST_ICON,
@@ -202,8 +201,11 @@ export function Map(): JSX.Element {
     (event: KeyboardEvent<HTMLButtonElement>) => {
       const { key } = event;
 
-      const lookupValue =
-        key === "ArrowRight" ? 1 : key === "ArrowLeft" ? -1 : null;
+      const isSMOrLarger = window.innerWidth >= 640;
+      const nextKey = isSMOrLarger ? "ArrowRight" : "ArrowDown";
+      const lastKey = isSMOrLarger ? "ArrowLeft" : "ArrowUp";
+
+      const lookupValue = key === nextKey ? 1 : key === lastKey ? -1 : null;
 
       if (!lookupValue) {
         return;
@@ -232,75 +234,64 @@ export function Map(): JSX.Element {
     [zones.length]
   );
 
-  // useEffect(() => {
-  //   const listener = () => {
-  //     if (!tabPanelRef.current) {
-  //       return;
-  //     }
-
-  //     const boundingClientRect = tabPanelRef.current.getBoundingClientRect();
-
-  //     const isScrolledOffscreen =
-  //       window.scrollY >
-  //       boundingClientRect.height + tabPanelRef.current.offsetTop;
-
-  //   };
-
-  //   window.addEventListener("scroll", listener);
-
-  //   return () => {
-  //     window.removeEventListener("scroll", listener);
-  //   };
-  // }, []);
-
-  // console.log({ isOffscreen });
-
   return (
-    <section className="w-full h-full max-w-screen-xl pt-4 lg:pt-0 lg:w-4/6">
+    <section
+      className="w-full h-full max-w-screen-xl pt-4 lg:pt-0 lg:w-4/6"
+      aria-labelledby="section-route"
+    >
       <Triangle />
-      <div className="px-4 pt-4 bg-white rounded-t-lg shadow-sm dark:bg-coolgray-700">
-        <h2 className="text-2xl font-bold">Route</h2>
+      <div className="px-4 pt-4 bg-white rounded-t-lg shadow-sm sm:p-4 dark:bg-coolgray-700">
+        <h2 id="section-route" className="text-2xl font-bold">
+          Route
+        </h2>
 
-        <div className="flex justify-between">
-          <div
-            role="tablist"
-            aria-orientation="horizontal"
-            className="flex space-x-4"
-          >
-            {zones.map((zone, index) => {
-              const selected = index === selectedTab;
+        <div className="pt-2">
+          <h3 id="zone-selection-heading" className="text-xl">
+            Zone Selection
+          </h3>
 
-              return (
-                <div className="py-4" key={zone.id}>
-                  <button
-                    type="button"
-                    role="tab"
-                    data-orientation="horizontal"
-                    aria-controls={`tabpanel-${zone.id}`}
-                    data-selected={selected ? "true" : "false"}
-                    id={`tab-${zone.id}`}
-                    onKeyDown={onKeyDown}
-                    ref={(ref) => {
-                      buttonRefs.current[index] = ref;
-                    }}
-                    className={`focus:outline-none focus:ring rounded-md px-2 ${
-                      selected
-                        ? "dark:bg-coolgray-500 bg-coolgray-400"
-                        : "dark:bg-coolgray-600 bg-coolgray-200 hover:bg-coolgray-400"
-                    }`}
-                    onClick={
-                      selected
-                        ? undefined
-                        : () => {
-                            onTabButtonClick(index);
-                          }
-                    }
-                  >
-                    {zone.name}
-                  </button>
-                </div>
-              );
-            })}
+          <div className="flex justify-between">
+            <div
+              role="tablist"
+              aria-orientation="horizontal"
+              aria-labelledby="zone-selection-heading"
+              className="flex flex-col w-full pt-2 pb-4 space-y-4 sm:space-x-4 sm:space-y-0 sm:flex-row sm:py-0 sm:w-initial"
+            >
+              {zones.map((zone, index) => {
+                const selected = index === selectedTab;
+
+                return (
+                  <div className="sm:pt-2" key={zone.id}>
+                    <button
+                      type="button"
+                      role="tab"
+                      aria-controls={`tabpanel-${zone.id}`}
+                      aria-selected={selected ? "true" : "false"}
+                      id={`tab-${zone.id}`}
+                      onKeyDown={onKeyDown}
+                      ref={(ref) => {
+                        buttonRefs.current[index] = ref;
+                      }}
+                      tabIndex={selected ? undefined : -1}
+                      className={`focus:outline-none focus:ring rounded-md p-2 sm:py-0 px-2 sm:w-initial w-full ${
+                        selected
+                          ? "dark:bg-coolgray-500 bg-coolgray-400"
+                          : "dark:bg-coolgray-600 bg-coolgray-200 hover:bg-coolgray-400"
+                      }`}
+                      onClick={
+                        selected
+                          ? undefined
+                          : () => {
+                              onTabButtonClick(index);
+                            }
+                      }
+                    >
+                      {zone.name}
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>
@@ -327,60 +318,57 @@ export function Map(): JSX.Element {
                 tabIndex={0}
                 ref={hidden ? undefined : tabPanelRef}
                 key={zone.id}
-                className={classnames(
-                  /* isOffscreen ? "absolute bottom-4 right-4 h-1/5" : */ "h-full"
-                )}
+                className="h-full"
+                hidden={hidden}
               >
-                {hidden ? null : (
-                  <div className="relative h-full mapPanel">
-                    <picture>
-                      {imageTuples.map(([w, prefix]) => {
-                        const url = `/static/maps/${prefix}-${w * 16}/${
-                          zone.id
-                        }.png`;
+                <div className="relative h-full mapPanel">
+                  <picture>
+                    {imageTuples.map(([w, prefix]) => {
+                      const url = `/static/maps/${prefix}-${w * 16}/${
+                        zone.id
+                      }.png`;
 
-                        return (
-                          <source
-                            key={w}
-                            srcSet={url}
-                            media={`(min-width: ${w * 16}px)`}
-                          />
-                        );
-                      })}
+                      return (
+                        <source
+                          key={w}
+                          srcSet={url}
+                          media={`(min-width: ${w * 16}px)`}
+                        />
+                      );
+                    })}
 
-                      {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
-                      <img
-                        src={`/static/maps/sm-640/${zone.id}.png`}
-                        alt={zone.name}
-                        ref={imageRef}
-                        className="object-cover w-full h-full rounded-md"
-                        onLoad={handleResize}
-                        width="1280px"
-                        height="853px"
-                      />
-                    </picture>
-
-                    <Svg
-                      imageSize={imageSize}
-                      zoneID={zone.id}
-                      onDoorClick={(zoneID: number) => {
-                        const nextZoneIndex = zones.findIndex(
-                          (zone) => zone.id === zoneID
-                        );
-
-                        if (nextZoneIndex > -1) {
-                          onTabButtonClick(nextZoneIndex);
-                        }
-                      }}
+                    {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
+                    <img
+                      src={`/static/maps/sm-640/${zone.id}.png`}
+                      alt={zone.name}
+                      ref={hidden ? undefined : imageRef}
+                      className="object-cover w-full h-full rounded-md"
+                      onLoad={handleResize}
+                      width="1280px"
+                      height="853px"
                     />
+                  </picture>
 
-                    <MapOptionsWrapper />
-                    <LegendWrapper />
+                  <Svg
+                    imageSize={imageSize}
+                    zoneID={zone.id}
+                    onDoorClick={(zoneID: number) => {
+                      const nextZoneIndex = zones.findIndex(
+                        (zone) => zone.id === zoneID
+                      );
 
-                    <MapOptionsToggle />
-                    <LegendToggle />
-                  </div>
-                )}
+                      if (nextZoneIndex > -1) {
+                        onTabButtonClick(nextZoneIndex);
+                      }
+                    }}
+                  />
+
+                  <MapOptionsWrapper />
+                  <LegendWrapper />
+
+                  <MapOptionsToggle />
+                  <LegendToggle />
+                </div>
               </div>
             );
           })
@@ -597,10 +585,8 @@ type PullIndicatorIconProps = {
 };
 
 function PullIndicatorIcon({ pull, x, y }: PullIndicatorIconProps) {
-  const [selectedPull, setSelectedPull] = useReportStore(
-    (state) => [state.selectedPull, state.setSelectedPull],
-    shallow
-  );
+  const selectedPull = useReportStore((state) => state.selectedPull);
+  const setSelectedPull = useReportStore((state) => state.setSelectedPull);
 
   const selected = selectedPull === pull.id;
 

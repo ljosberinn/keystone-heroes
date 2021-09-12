@@ -22,8 +22,8 @@
     "next": "11.1.2",
     "next-connect": "0.10.2",
     "next-themes": "0.0.15",
-    "react": "18.0.0-alpha-edfe50510-20210823",
-    "react-dom": "18.0.0-alpha-edfe50510-20210823",
+    "react": "npm:react@next",
+    "react-dom": "npm:react-dom@next",
     "react-icons": "4.2.0",
     "tailwindcss": "2.2.15",
     "zustand": "3.5.10"

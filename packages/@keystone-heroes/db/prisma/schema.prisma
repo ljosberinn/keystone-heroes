@@ -27,8 +27,8 @@ model Spec {
   Player Player[]
   Talent Talent[]
 
-  @@unique([name, classID])
   Cooldown Cooldown[]
+  @@unique([name, classID])
 }
 
 model Cooldown {
