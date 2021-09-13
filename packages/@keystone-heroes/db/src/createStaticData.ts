@@ -15,6 +15,10 @@ const log = (str: string) => {
 };
 
 async function create() {
+  if (process.env.NODE_ENV === "test") {
+    return;
+  }
+
   log("loading static data");
 
   const rawCovenants = await prisma.covenant.findMany({
