@@ -5,17 +5,26 @@ import { classnames } from "src/utils/classnames";
 import styles from "./LinkBox.module.css";
 
 type LinkBoxProps = {
-  as?: "div" | "article";
+  as?: "div" | "section";
   className?: string;
   children: ReactNode;
+  "aria-labelledby"?: string;
 };
 
 export function LinkBox({
   as: As = "div",
   className,
   children,
+  "aria-labelledby": ariaLabelledBy,
 }: LinkBoxProps): JSX.Element {
-  return <As className={classnames(styles.box, className)}>{children}</As>;
+  return (
+    <As
+      aria-labelledby={ariaLabelledBy}
+      className={classnames(styles.box, className)}
+    >
+      {children}
+    </As>
+  );
 }
 
 type LinkOverlayProps = {
