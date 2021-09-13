@@ -4,25 +4,16 @@ import Link from "next/link";
 import { useStaticData } from "src/context/StaticData";
 import { icons } from "src/icons";
 import { useFight } from "src/pages/report/[reportID]/[fightID]";
-import { createWCLUrl, fightTimeToString, createWowheadUrl } from "src/utils";
+import {
+  createWCLUrl,
+  fightTimeToString,
+  createWowheadUrl,
+  classTextColorMap,
+} from "src/utils";
 
-import { AbilityIcon, WCL_ASSET_URL } from "../AbilityIcon";
+import { AbilityIcon } from "../AbilityIcon";
 import { ExternalLink } from "../ExternalLink";
-
-const classTextMap: Record<string, string> = {
-  demonhunter: "text-demonhunter",
-  warlock: "text-warlock",
-  rogue: "text-rogue",
-  warrior: "text-warrior",
-  priest: "text-priest",
-  hunter: "text-hunter",
-  deathknight: "text-deathknight",
-  shaman: "text-shaman",
-  paladin: "text-paladin",
-  monk: "text-monk",
-  druid: "text-druid",
-  mage: "text-mage",
-};
+import { SpecIcon } from "../SpecIcon";
 
 export function Meta(): JSX.Element {
   const { reportID, fightID, fight } = useFight();
@@ -68,8 +59,8 @@ export function Meta(): JSX.Element {
                 key={affix}
                 className="w-10 h-10"
               >
-                <img
-                  src={`${WCL_ASSET_URL}${affixes[affix].icon}.jpg`}
+                <AbilityIcon
+                  icon={affixes[affix].icon}
                   alt={affixes[affix].name}
                   title={affixes[affix].name}
                   className="object-cover w-full h-full rounded-full"
@@ -115,7 +106,7 @@ export function Meta(): JSX.Element {
               return null;
             }
 
-            const classColor = classTextMap[name.toLowerCase()];
+            const classColor = classTextColorMap[name.toLowerCase()];
 
             return (
               <div
@@ -137,11 +128,7 @@ export function Meta(): JSX.Element {
                       }}
                     >
                       <div className="w-8 h-8">
-                        <img
-                          src={`/static/specs/${name}-${spec.name}.jpg`}
-                          alt={`${spec.name} ${name}`}
-                          className="object-cover w-full h-full rounded-full"
-                        />
+                        <SpecIcon class={name} spec={spec.name} />
                       </div>{" "}
                       <span
                         className={`font-semibold ${

@@ -26,7 +26,7 @@ import {
   BLOODLUST_ICON,
   INVIS_POTION_ICON,
   SHROUD_ICON,
-  WCL_ASSET_URL,
+  STATIC_ICON_PREFIX,
 } from "../AbilityIcon";
 import { hasBloodLust, detectInvisibilityUsage } from "./utils";
 
@@ -642,7 +642,7 @@ function PullIndicatorIcon({ pull, x, y }: PullIndicatorIconProps) {
       <g {...gProps}>
         <image
           aria-label={lieutenant.name}
-          href={`${WCL_ASSET_URL}${lieutenant.icon}.jpg`}
+          href={`${STATIC_ICON_PREFIX}${lieutenant.icon}.jpg`}
           {...sharedProps}
         />
         <text

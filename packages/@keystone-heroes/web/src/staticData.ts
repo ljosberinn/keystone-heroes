@@ -133,75 +133,74 @@ export const staticData = {
     "1": {
       name: "Warrior",
       cooldowns: [
-        5246, 871, 107_574, 97_462, 107_574, 1161, 325_886, 64_382, 12_975,
-        167_105, 227_847, 324_143, 46_924, 307_865, 262_228, 18_499, 1719,
-        184_364,
+        97_462, 64_382, 5246, 262_228, 307_865, 1161, 871, 325_886, 1719,
+        167_105, 46_924, 227_847, 324_143, 12_975, 184_364, 107_574, 107_574,
+        18_499,
       ],
       specs: [
+        { id: 2, name: "Fury", cooldowns: [46_924, 184_364] },
+        { id: 1, name: "Protection", cooldowns: [871, 12_975, 107_574] },
         {
           id: 3,
           name: "Arms",
-          cooldowns: [107_574, 167_105, 227_847, 262_228],
+          cooldowns: [262_228, 167_105, 227_847, 107_574],
         },
-        { id: 1, name: "Protection", cooldowns: [871, 107_574, 12_975] },
-        { id: 2, name: "Fury", cooldowns: [46_924, 184_364] },
       ],
     },
     "2": {
       name: "Mage",
       cooldowns: [
-        314_791, 108_978, 235_219, 45_438, 108_978, 84_714, 12_472, 55_342,
-        190_319, 80_353, 205_021, 314_793, 307_443, 198_154, 66, 12_042,
-        324_220,
+        66, 12_042, 314_793, 205_021, 45_438, 84_714, 80_353, 190_319, 198_154,
+        307_443, 108_978, 324_220, 55_342, 12_472, 235_219, 314_791, 108_978,
       ],
       specs: [
-        { id: 4, name: "Fire", cooldowns: [108_978, 190_319] },
-        { id: 6, name: "Arcane", cooldowns: [198_154, 12_042] },
+        { id: 4, name: "Fire", cooldowns: [190_319, 108_978] },
         {
           id: 5,
           name: "Frost",
-          cooldowns: [108_978, 235_219, 84_714, 12_472, 205_021],
+          cooldowns: [205_021, 84_714, 108_978, 12_472, 235_219],
         },
+        { id: 6, name: "Arcane", cooldowns: [12_042, 198_154] },
       ],
     },
     "3": {
       name: "Rogue",
       cooldowns: [
-        328_305, 1856, 13_750, 2094, 323_547, 2983, 323_654, 5277, 328_547,
-        121_471, 277_925, 51_690, 137_619, 114_018, 31_224, 79_140, 185_313,
+        31_224, 2094, 323_654, 328_547, 328_305, 2983, 185_313, 51_690, 79_140,
+        323_547, 5277, 137_619, 13_750, 121_471, 114_018, 1856, 277_925,
       ],
       specs: [
-        { id: 9, name: "Outlaw", cooldowns: [13_750, 51_690] },
-        { id: 8, name: "Subtlety", cooldowns: [121_471, 277_925, 185_313] },
         { id: 7, name: "Assassination", cooldowns: [79_140] },
+        { id: 9, name: "Outlaw", cooldowns: [51_690, 13_750] },
+        { id: 8, name: "Subtlety", cooldowns: [185_313, 121_471, 277_925] },
       ],
     },
     "4": {
       name: "Shaman",
       cooldowns: [
-        198_103, 192_249, 192_222, 114_050, 114_051, 16_191, 58_875, 32_182,
-        326_059, 51_533, 328_923, 108_280, 207_399, 2825, 324_386, 79_206,
-        79_206, 320_137, 192_058, 114_052, 98_008, 108_271, 320_674, 108_281,
-        8143, 191_634, 198_067, 198_838,
+        192_058, 108_280, 320_137, 8143, 198_067, 320_674, 108_281, 32_182,
+        198_838, 79_206, 192_249, 51_533, 114_051, 324_386, 191_634, 108_271,
+        16_191, 2825, 207_399, 58_875, 326_059, 192_222, 98_008, 114_052,
+        198_103, 114_050, 328_923, 79_206,
       ],
       specs: [
-        {
-          id: 12,
-          name: "Enhancement",
-          cooldowns: [114_051, 58_875, 51_533, 320_137],
-        },
         {
           id: 10,
           name: "Restoration",
           cooldowns: [
-            16_191, 108_280, 207_399, 79_206, 114_052, 98_008, 198_838,
+            108_280, 198_838, 79_206, 16_191, 207_399, 98_008, 114_052,
           ],
+        },
+        {
+          id: 12,
+          name: "Enhancement",
+          cooldowns: [320_137, 51_533, 114_051, 58_875],
         },
         {
           id: 11,
           name: "Elemental",
           cooldowns: [
-            192_249, 192_222, 114_050, 79_206, 108_281, 191_634, 198_067,
+            198_067, 108_281, 192_249, 191_634, 192_222, 114_050, 79_206,
           ],
         },
       ],
@@ -209,29 +208,29 @@ export const staticData = {
     "5": {
       name: "Priest",
       cooldowns: [
-        64_901, 64_843, 327_661, 34_861, 15_286, 319_952, 33_206, 246_287,
-        34_433, 109_964, 62_618, 62_618, 47_536, 19_236, 47_585, 323_673,
-        265_202, 8122, 325_013, 200_183, 10_060, 200_174, 88_625, 47_788,
-        123_040, 2050, 34_433, 73_325, 324_724, 228_260,
+        47_788, 123_040, 323_673, 64_901, 265_202, 62_618, 200_183, 47_585,
+        15_286, 88_625, 319_952, 73_325, 109_964, 33_206, 8122, 228_260, 62_618,
+        10_060, 34_433, 47_536, 200_174, 246_287, 325_013, 34_861, 327_661,
+        2050, 19_236, 64_843, 34_433, 324_724,
       ],
       specs: [
-        {
-          id: 13,
-          name: "Shadow",
-          cooldowns: [15_286, 319_952, 34_433, 47_585, 200_174, 228_260],
-        },
         {
           id: 14,
           name: "Holy",
           cooldowns: [
-            64_901, 64_843, 34_861, 265_202, 200_183, 88_625, 47_788, 2050,
+            47_788, 64_901, 265_202, 200_183, 88_625, 34_861, 2050, 64_843,
           ],
+        },
+        {
+          id: 13,
+          name: "Shadow",
+          cooldowns: [47_585, 15_286, 319_952, 228_260, 34_433, 200_174],
         },
         {
           id: 15,
           name: "Discipline",
           cooldowns: [
-            33_206, 246_287, 109_964, 62_618, 47_536, 123_040, 34_433,
+            123_040, 109_964, 33_206, 62_618, 47_536, 246_287, 34_433,
           ],
         },
       ],
@@ -239,46 +238,46 @@ export const staticData = {
     "6": {
       name: "Hunter",
       cooldowns: [
-        325_028, 19_577, 266_779, 201_430, 328_231, 131_894, 260_402, 186_257,
-        19_574, 324_149, 288_613, 186_265, 19_577, 193_530, 109_304, 308_491,
-        321_530, 186_289,
+        325_028, 186_289, 186_257, 19_577, 324_149, 308_491, 321_530, 19_574,
+        193_530, 201_430, 109_304, 260_402, 131_894, 266_779, 19_577, 186_265,
+        328_231, 288_613,
       ],
       specs: [
+        { id: 18, name: "Marksmanship", cooldowns: [260_402, 288_613] },
+        { id: 17, name: "Survival", cooldowns: [186_289, 19_577, 266_779] },
         {
           id: 16,
           name: "BeastMastery",
-          cooldowns: [201_430, 19_574, 19_577, 193_530, 321_530],
+          cooldowns: [321_530, 19_574, 193_530, 201_430, 19_577],
         },
-        { id: 17, name: "Survival", cooldowns: [19_577, 266_779, 186_289] },
-        { id: 18, name: "Marksmanship", cooldowns: [260_402, 288_613] },
       ],
     },
     "7": {
       name: "Monk",
       cooldowns: [
-        122_278, 115_203, 322_109, 115_176, 326_860, 119_381, 115_203, 310_454,
-        122_470, 115_310, 115_288, 115_399, 325_197, 322_507, 325_153, 132_578,
-        325_216, 115_203, 322_118, 122_783, 122_783, 116_849, 137_639, 197_908,
-        152_173, 327_104, 123_904,
+        310_454, 325_153, 115_310, 122_470, 325_197, 137_639, 116_849, 115_203,
+        122_278, 322_109, 119_381, 322_507, 115_203, 327_104, 115_176, 326_860,
+        132_578, 325_216, 123_904, 115_399, 152_173, 197_908, 122_783, 122_783,
+        115_203, 322_118, 115_288,
       ],
       specs: [
+        {
+          id: 20,
+          name: "Brewmaster",
+          cooldowns: [325_153, 322_507, 115_176, 132_578, 115_399, 115_203],
+        },
         {
           id: 21,
           name: "Windwalker",
           cooldowns: [
-            115_203, 122_470, 115_288, 122_783, 137_639, 152_173, 123_904,
+            122_470, 137_639, 115_203, 123_904, 152_173, 122_783, 115_288,
           ],
-        },
-        {
-          id: 20,
-          name: "Brewmaster",
-          cooldowns: [115_176, 115_399, 322_507, 325_153, 132_578, 115_203],
         },
         {
           id: 19,
           name: "Mistweaver",
           cooldowns: [
-            115_203, 115_310, 325_197, 322_118, 122_783, 116_849, 197_908,
+            115_310, 325_197, 116_849, 115_203, 197_908, 122_783, 322_118,
           ],
         },
       ],
@@ -286,110 +285,111 @@ export const staticData = {
     "8": {
       name: "Druid",
       cooldowns: [
-        20_484, 325_727, 50_334, 326_434, 197_721, 102_560, 323_764, 61_336,
-        106_951, 22_812, 78_675, 1850, 205_636, 108_238, 740, 61_336, 319_454,
-        102_342, 132_158, 194_223, 102_793, 202_770, 106_898, 203_651, 323_546,
-        29_166, 29_166, 102_558, 5211, 33_891, 102_543,
+        20_484, 323_764, 194_223, 132_158, 205_636, 319_454, 102_558, 22_812,
+        325_727, 202_770, 5211, 197_721, 203_651, 102_560, 61_336, 106_898, 740,
+        106_951, 1850, 102_342, 102_543, 102_793, 33_891, 326_434, 29_166,
+        29_166, 78_675, 108_238, 61_336, 323_546, 50_334,
       ],
       specs: [
-        { id: 25, name: "Feral", cooldowns: [106_951, 61_336, 102_543] },
-        {
-          id: 24,
-          name: "Balance",
-          cooldowns: [102_560, 78_675, 205_636, 194_223, 202_770, 29_166],
-        },
-        { id: 23, name: "Guardian", cooldowns: [50_334, 61_336, 102_558] },
+        { id: 25, name: "Feral", cooldowns: [61_336, 106_951, 102_543] },
         {
           id: 22,
           name: "Restoration",
-          cooldowns: [197_721, 740, 102_342, 132_158, 203_651, 29_166, 33_891],
+          cooldowns: [132_158, 197_721, 203_651, 740, 102_342, 33_891, 29_166],
         },
+        {
+          id: 24,
+          name: "Balance",
+          cooldowns: [194_223, 205_636, 202_770, 102_560, 29_166, 78_675],
+        },
+        { id: 23, name: "Guardian", cooldowns: [102_558, 61_336, 50_334] },
       ],
     },
     "9": {
       name: "DemonHunter",
       cooldowns: [
-        317_009, 198_589, 207_684, 344_867, 320_341, 209_258, 212_084, 202_137,
-        191_427, 188_501, 204_021, 187_827, 196_718, 306_830, 196_555, 202_138,
-        323_639, 258_925,
+        204_021, 202_137, 306_830, 317_009, 196_718, 207_684, 344_867, 209_258,
+        320_341, 188_501, 258_925, 187_827, 196_555, 202_138, 323_639, 191_427,
+        212_084, 198_589,
       ],
       specs: [
         {
           id: 26,
           name: "Vengeance",
           cooldowns: [
-            207_684, 320_341, 209_258, 212_084, 202_137, 204_021, 187_827,
-            202_138,
+            204_021, 202_137, 207_684, 209_258, 320_341, 187_827, 202_138,
+            212_084,
           ],
         },
         {
           id: 27,
           name: "Havoc",
-          cooldowns: [198_589, 344_867, 191_427, 196_718, 196_555, 258_925],
+          cooldowns: [196_718, 344_867, 258_925, 196_555, 191_427, 198_589],
         },
       ],
     },
     "10": {
       name: "Paladin",
       cooldowns: [
-        343_527, 498, 633, 31_821, 327_193, 343_721, 304_971, 204_018, 328_622,
-        6940, 316_958, 498, 31_884, 328_282, 642, 31_850, 231_895, 216_331,
-        184_662, 114_158, 1022, 328_281, 86_659, 853, 328_204, 205_191, 328_620,
+        642, 327_193, 853, 31_850, 31_884, 328_622, 343_527, 328_282, 184_662,
+        316_958, 304_971, 216_331, 498, 205_191, 1022, 31_821, 6940, 498,
+        328_204, 114_158, 204_018, 633, 86_659, 328_620, 343_721, 328_281,
+        231_895,
       ],
       specs: [
         {
-          id: 28,
-          name: "Protection",
-          cooldowns: [498, 327_193, 204_018, 31_850, 86_659],
-        },
-        {
           id: 30,
           name: "Retribution",
-          cooldowns: [343_527, 343_721, 231_895, 184_662, 205_191],
+          cooldowns: [343_527, 184_662, 205_191, 343_721, 231_895],
         },
-        { id: 29, name: "Holy", cooldowns: [31_821, 498, 216_331, 114_158] },
+        { id: 29, name: "Holy", cooldowns: [216_331, 498, 31_821, 114_158] },
+        {
+          id: 28,
+          name: "Protection",
+          cooldowns: [327_193, 31_850, 498, 204_018, 86_659],
+        },
       ],
     },
     "11": {
       name: "Warlock",
       cooldowns: [
-        325_640, 698, 333_889, 113_858, 265_187, 29_893, 111_898, 321_792,
-        20_707, 104_773, 312_321, 113_860, 30_283, 267_171, 1122, 205_180,
-        267_217, 342_601, 325_289,
+        20_707, 113_858, 333_889, 325_289, 325_640, 104_773, 111_898, 1122, 698,
+        267_217, 29_893, 267_171, 321_792, 113_860, 342_601, 265_187, 30_283,
+        205_180, 312_321,
       ],
       specs: [
-        { id: 31, name: "Destruction", cooldowns: [113_858, 1122] },
         { id: 33, name: "Affliction", cooldowns: [113_860, 205_180] },
         {
           id: 32,
           name: "Demonology",
-          cooldowns: [265_187, 111_898, 267_171, 267_217],
+          cooldowns: [111_898, 267_217, 267_171, 265_187],
         },
+        { id: 31, name: "Destruction", cooldowns: [113_858, 1122] },
       ],
     },
     "12": {
       name: "DeathKnight",
       cooldowns: [
-        61_999, 221_699, 46_585, 51_271, 194_844, 207_289, 48_707, 312_202,
-        152_279, 315_443, 55_233, 48_792, 219_809, 51_052, 275_699, 49_206,
-        311_648, 63_560, 324_128, 108_199, 47_568, 212_552, 42_650, 207_167,
-        327_574, 49_039, 49_028, 48_743, 279_302,
+        324_128, 207_167, 219_809, 207_289, 48_707, 51_052, 108_199, 61_999,
+        221_699, 48_743, 194_844, 63_560, 49_206, 312_202, 47_568, 327_574,
+        49_028, 311_648, 42_650, 212_552, 275_699, 48_792, 46_585, 279_302,
+        315_443, 152_279, 49_039, 55_233, 51_271,
       ],
       specs: [
         {
           id: 36,
           name: "Frost",
-          cooldowns: [51_271, 152_279, 47_568, 207_167, 279_302],
-        },
-        {
-          id: 34,
-          name: "Blood",
-          cooldowns: [221_699, 194_844, 55_233, 219_809, 108_199, 49_028],
+          cooldowns: [207_167, 47_568, 279_302, 152_279, 51_271],
         },
         {
           id: 35,
           name: "Unholy",
-          cooldowns: [207_289, 275_699, 49_206, 63_560, 42_650],
+          cooldowns: [207_289, 63_560, 49_206, 42_650, 275_699],
+        },
+        {
+          id: 34,
+          name: "Blood",
+          cooldowns: [219_809, 108_199, 221_699, 194_844, 49_028, 55_233],
         },
       ],
     },
@@ -1562,6 +1562,581 @@ export const staticData = {
       sourceTormentorID: [179_446],
     },
   },
+  legendaries: {
+    "327364": {
+      effectName: "Freezing Winds",
+      icon: "spell_shadow_soulleech_2",
+    },
+    "327365": {
+      effectName: "Disciplinary Command",
+      icon: "spell_fire_masterofelements",
+    },
+    "327508": {
+      effectName: "Slick Ice",
+      icon: "inv_enchant_shardshadowfrostlarge",
+    },
+    "334888": {
+      effectName: "Frenzied Monstrosity",
+      icon: "ability_warlock_baneofhavoc",
+    },
+    "334949": { effectName: "Deadliest Coil", icon: "spell_shadow_deathcoil" },
+    "335266": {
+      effectName: "Signet of Tormented Kings",
+      icon: "inv_60crafted_ring4b",
+    },
+    "335889": {
+      effectName: "Primal Tide Core",
+      icon: "ability_shaman_repulsiontotem",
+    },
+    "335902": {
+      effectName: "Doom Winds",
+      icon: "ability_ironmaidens_swirlingvortex",
+    },
+    "336266": {
+      effectName: "Flash Concentration",
+      icon: "ability_priest_flashoflight",
+    },
+    "336844": {
+      effectName: "Rylakstalker's Piercing Fangs",
+      icon: "inv_misc_monsterfang_02",
+    },
+    "336867": {
+      effectName: "Surging Shots",
+      icon: "ability_hunter_resistanceisfutile",
+    },
+    "337020": {
+      effectName: "Wilfred's Sigil of Superior Summoning",
+      icon: "spell_warlock_demonicportal_purple",
+    },
+    "337166": {
+      effectName: "Cinders of the Azj'Aqir",
+      icon: "spell_fire_fireball",
+    },
+    "337298": {
+      effectName: "Invoker's Delight",
+      icon: "inv_inscription_80_warscroll_battleshout",
+    },
+    "337544": {
+      effectName: "Razelikh's Defilement",
+      icon: "ability_demonhunter_concentratedsigils",
+    },
+    "337547": { effectName: "Fiery Soul", icon: "inv__felbarrage" },
+    "337594": {
+      effectName: "The Mad Paragon",
+      icon: "ability_paladin_conviction",
+    },
+    "337825": {
+      effectName: "Shock Barrier",
+      icon: "spell_holy_greaterblessingoflight",
+    },
+    "339056": {
+      effectName: "Ursoc's Fury Remembered",
+      icon: "achievement_emeraldnightmare_ursoc",
+    },
+    "339942": {
+      effectName: "Balance of All Things",
+      icon: "ability_druid_balanceofpower",
+    },
+    "340087": { effectName: "Celerity", icon: "ability_rogue_slicedice" },
+    "340089": { effectName: "Finality", icon: "ability_rogue_eviscerate" },
+    "346279": { effectName: "Burning Wound", icon: "spell_fire_felhellfire" },
+    "354109": {
+      effectName: "Sinful Hysteria",
+      icon: "ability_revendreth_druid",
+    },
+    "354118": {
+      effectName: "Celestial Spirits",
+      icon: "ability_ardenweald_druid",
+    },
+    "354703": { effectName: "Obedience", icon: "ability_revendreth_rogue" },
+    "356362": {
+      effectName: "Decaying Soul Satchel",
+      icon: "spell_misc_zandalari_council_soulswap",
+    },
+    "356375": {
+      effectName: "Fragments of the Elder Antlers",
+      icon: "trade_archaeology_antleredcloakclasp",
+    },
+    "356789": {
+      effectName: "Raging Vesper Vortex",
+      icon: "ability_bastion_shaman",
+    },
+  },
+  talents: {
+    "6789": { name: "Mortal Coil", icon: "ability_warlock_mortalcoil" },
+    "31230": { name: "Cheat Death", icon: "ability_rogue_cheatdeath" },
+    "48181": { name: "Haunt", icon: "ability_warlock_haunt" },
+    "51485": { name: "Earthgrab Totem", icon: "spell_nature_stranglevines" },
+    "56377": { name: "Splitting Ice", icon: "spell_frost_ice-shards" },
+    "102359": {
+      name: "Mass Entanglement",
+      icon: "spell_druid_massentanglement",
+    },
+    "102401": { name: "Wild Charge", icon: "spell_druid_wildcharge" },
+    "102558": {
+      name: "Incarnation: Guardian of Ursoc",
+      icon: "spell_druid_incarnation",
+    },
+    "105809": { name: "Holy Avenger", icon: "ability_paladin_holyavenger" },
+    "108194": { name: "Asphyxiate", icon: "ability_deathknight_asphixiate" },
+    "108216": { name: "Dirty Tricks", icon: "ability_rogue_dirtydeeds" },
+    "108238": { name: "Renewal", icon: "spell_nature_natureblessing" },
+    "108283": {
+      name: "Echo of the Elements",
+      icon: "ability_shaman_echooftheelements",
+    },
+    "108416": { name: "Dark Pact", icon: "spell_shadow_deathpact" },
+    "109186": { name: "Surge of Light", icon: "spell_holy_surgeoflight" },
+    "109215": { name: "Posthaste", icon: "ability_hunter_posthaste" },
+    "109248": { name: "Binding Shot", icon: "spell_shaman_bindelemental" },
+    "111400": {
+      name: "Burning Rush",
+      icon: "ability_deathwing_sealarmorbreachtga",
+    },
+    "113724": { name: "Ring of Frost", icon: "spell_frost_ring-of-frost" },
+    "113858": {
+      name: "Dark Soul: Instability",
+      icon: "spell_warlock_soulburn",
+    },
+    "113860": { name: "Dark Soul: Misery", icon: "spell_warlock_soulburn" },
+    "114052": { name: "Ascendance", icon: "spell_fire_elementaldevastation" },
+    "114107": { name: "Soul of the Forest", icon: "ability_druid_manatree" },
+    "114154": { name: "Unbreakable Spirit", icon: "spell_holy_holyguidance" },
+    "114158": { name: "Light's Hammer", icon: "spell_paladin_lightshammer" },
+    "115396": { name: "Ascension", icon: "ability_monk_ascension" },
+    "115750": { name: "Blinding Light", icon: "ability_paladin_blindinglight" },
+    "115989": { name: "Unholy Blight", icon: "spell_shadow_contagion" },
+    "116011": { name: "Rune of Power", icon: "spell_mage_runeofpower" },
+    "116841": { name: "Tiger's Lust", icon: "ability_monk_tigerslust" },
+    "116844": { name: "Ring of Peace", icon: "spell_monk_ringofpeace" },
+    "121536": {
+      name: "Angelic Feather",
+      icon: "ability_priest_angelicfeather",
+    },
+    "122783": { name: "Diffuse Magic", icon: "spell_monk_diffusemagic" },
+    "123986": { name: "Chi Burst", icon: "spell_arcane_arcanetorrent" },
+    "137619": {
+      name: "Marked for Death",
+      icon: "achievement_bg_killingblow_berserker",
+    },
+    "152108": { name: "Cataclysm", icon: "achievement_zone_cataclysm" },
+    "152175": {
+      name: "Whirling Dragon Punch",
+      icon: "ability_monk_hurricanestrike",
+    },
+    "152262": { name: "Seraphim", icon: "ability_paladin_seraphim" },
+    "155148": { name: "Kindling", icon: "spell_mage_kindling" },
+    "155149": { name: "Thermal Void", icon: "spell_mage_thermalvoid" },
+    "156910": {
+      name: "Beacon of Faith",
+      icon: "ability_paladin_beaconsoflight",
+    },
+    "157153": {
+      name: "Cloudburst Totem",
+      icon: "ability_shaman_condensationtotem",
+    },
+    "158476": { name: "Soul of the Forest", icon: "ability_druid_manatree" },
+    "183778": {
+      name: "Judgment of Light",
+      icon: "spell_holy_divineprovidence",
+    },
+    "191384": {
+      name: "Aspect of the Beast",
+      icon: "ability_deathwing_assualtaspects",
+    },
+    "192077": { name: "Wind Rush Totem", icon: "ability_shaman_windwalktotem" },
+    "192088": {
+      name: "Graceful Spirit",
+      icon: "spell_shaman_spectraltransformation",
+    },
+    "193157": { name: "Benediction", icon: "spell_monk_diffusemagic" },
+    "193532": { name: "Scent of Blood", icon: "ability_hunter_sickem" },
+    "193539": { name: "Alacrity", icon: "ability_paladin_speedoflight" },
+    "194917": {
+      name: "Pestilent Pustules",
+      icon: "spell_yorsahj_bloodboil_purpleoil",
+    },
+    "196102": { name: "Writhe in Agony", icon: "spell_shadow_curseofsargeras" },
+    "196226": { name: "Sow the Seeds", icon: "spell_shadow_seedofdestruction" },
+    "196447": {
+      name: "Channel Demonfire",
+      icon: "spell_fire_ragnaros_lavaboltgreen",
+    },
+    "196555": { name: "Netherwalk", icon: "spell_warlock_demonsoul" },
+    "196607": {
+      name: "Eye of the Tiger",
+      icon: "ability_druid_primalprecision",
+    },
+    "196725": {
+      name: "Refreshing Jade Wind",
+      icon: "ability_monk_rushingjadewind",
+    },
+    "196924": { name: "Acrobatic Strikes", icon: "spell_warrior_wildstrike" },
+    "196938": { name: "Quick Draw", icon: "inv_weapon_rifle_40" },
+    "197488": {
+      name: "Balance Affinity",
+      icon: "ability_druid_improvedmoonkinform",
+    },
+    "197492": {
+      name: "Restoration Affinity",
+      icon: "ability_druid_improvedtreeform",
+    },
+    "197900": { name: "Mist Wrap", icon: "ability_monk_pathofmists" },
+    "197908": { name: "Mana Tea", icon: "monk_ability_cherrymanatea" },
+    "197995": { name: "Wellspring", icon: "ability_shawaterelemental_split" },
+    "198590": { name: "Drain Soul", icon: "spell_shadow_haunting" },
+    "198838": {
+      name: "Earthen Wall Totem",
+      icon: "spell_nature_stoneskintotem",
+    },
+    "199483": { name: "Camouflage", icon: "ability_hunter_camouflage" },
+    "199530": { name: "Stomp", icon: "warrior_talent_icon_thunderstruck" },
+    "200071": { name: "Undulation", icon: "spell_nature_healingwavelesser" },
+    "200072": { name: "Torrent", icon: "spell_nature_riptide" },
+    "200128": { name: "Trail of Light", icon: "ability_priest_wordsofmeaning" },
+    "200183": { name: "Apotheosis", icon: "ability_priest_ascension" },
+    "200209": {
+      name: "Guardian Angel",
+      icon: "ability_priest_pathofthedevout",
+    },
+    "202031": { name: "Sabertooth", icon: "inv_misc_monsterfang_01" },
+    "202138": {
+      name: "Sigil of Chains",
+      icon: "ability_demonhunter_sigilofchains",
+    },
+    "202354": { name: "Stellar Drift", icon: "ability_druid_starfall" },
+    "202430": {
+      name: "Nature's Balance",
+      icon: "ability_druid_balanceofpower",
+    },
+    "202770": { name: "Fury of Elune", icon: "ability_druid_dreamstate" },
+    "203555": { name: "Demon Blades", icon: "inv_weapon_shortblade_92" },
+    "203556": {
+      name: "Master of the Glaive",
+      icon: "inv_glaive_1h_demonhunter_a_01",
+    },
+    "203962": { name: "Blood Frenzy", icon: "ability_druid_primaltenacity" },
+    "203974": { name: "Earthwarden", icon: "spell_shaman_blessingofeternals" },
+    "204053": { name: "Rend and Tear", icon: "ability_druid_swipe" },
+    "204263": { name: "Shining Force", icon: "ability_paladin_blindinglight2" },
+    "205024": {
+      name: "Lonely Winter",
+      icon: "achievement_dungeon_frozenthrone",
+    },
+    "205029": { name: "Flame On", icon: "inv_helm_circlet_firelands_d_01" },
+    "205036": { name: "Ice Ward", icon: "spell_frost_frostward" },
+    "205037": { name: "Flame Patch", icon: "spell_mage_flameorb" },
+    "205148": {
+      name: "Reverse Entropy",
+      icon: "spell_fire_playingwithfiregreen",
+    },
+    "205184": { name: "Roaring Blaze", icon: "ability_warlock_inferno" },
+    "205636": { name: "Force of Nature", icon: "ability_druid_forceofnature" },
+    "206476": { name: "Momentum", icon: "ability_foundryraid_demolition" },
+    "207264": { name: "Bursting Sores", icon: "ability_druid_infectedwound" },
+    "207272": {
+      name: "Infected Claws",
+      icon: "spell_deathknight_thrash_ghoul",
+    },
+    "207289": { name: "Unholy Assault", icon: "spell_shadow_unholyfrenzy" },
+    "207311": { name: "Clawing Shadows", icon: "warlock_curse_shadow" },
+    "207401": {
+      name: "Ancestral Vigor",
+      icon: "spell_shaman_blessingoftheeternals",
+    },
+    "207548": {
+      name: "Agonizing Flames",
+      icon: "achievment_raid_houroftwilight",
+    },
+    "207739": {
+      name: "Burning Alive",
+      icon: "spell_fire_elementaldevastation",
+    },
+    "209258": {
+      name: "Last Resort",
+      icon: "inv_glaive_1h_artifactaldorchi_d_06",
+    },
+    "209281": {
+      name: "Quickened Sigils",
+      icon: "ability_demonhunter_concentratedsigils",
+    },
+    "212431": { name: "Explosive Shot", icon: "ability_hunter_explosiveshot" },
+    "212552": {
+      name: "Wraith Walk",
+      icon: "inv_helm_plate_raiddeathknight_p_01",
+    },
+    "212653": { name: "Shimmer", icon: "spell_arcane_massdispel" },
+    "219272": { name: "Demon Skin", icon: "spell_shadow_felarmour" },
+    "232893": { name: "Felblade", icon: "ability_demonhunter_felblade" },
+    "235224": { name: "Frigid Winds", icon: "ability_mage_deepfreeze" },
+    "236058": { name: "Frenetic Speed", icon: "spell_fire_burningspeed" },
+    "248033": { name: "Awakening", icon: "inv_helm_plate_raidpaladin_n_01" },
+    "257944": {
+      name: "Thrill of the Hunt",
+      icon: "ability_hunter_thrillofthehunt",
+    },
+    "258860": { name: "Essence Break", icon: "spell_shadow_ritualofsacrifice" },
+    "260243": { name: "Volley", icon: "ability_hunter_rapidkilling" },
+    "260309": {
+      name: "Master Marksman",
+      icon: "ability_hunter_mastermarksman",
+    },
+    "260367": { name: "Streamline", icon: "ability_hunter_runningshot" },
+    "260402": { name: "Double Tap", icon: "ability_hunter_crossfire" },
+    "260878": { name: "Spirit Wolf", icon: "spell_hunter_lonewolf" },
+    "261947": {
+      name: "Fist of the White Tiger",
+      icon: "inv_fistofthewhitetiger",
+    },
+    "263642": { name: "Fracture", icon: "ability_creature_felsunder" },
+    "266086": { name: "Rain of Chaos", icon: "spell_fire_felrainoffire" },
+    "267115": { name: "Flashover", icon: "ability_warlock_backdraft" },
+    "267116": {
+      name: "Animal Companion",
+      icon: "ability_hunter_bestialdiscipline",
+    },
+    "269644": { name: "Searing Touch", icon: "ability_warlock_backdraft" },
+    "270233": { name: "Freezing Rain", icon: "spell_frost_frozenorb" },
+    "270581": { name: "Natural Mending", icon: "ability_hunter_onewithnature" },
+    "271877": { name: "Blade Rush", icon: "ability_arakkoa_spinning_blade" },
+    "273952": { name: "Grip of the Dead", icon: "ability_creature_disease_05" },
+    "274963": { name: "Upwelling", icon: "ability_monk_surgingmist" },
+    "276837": {
+      name: "Army of the Damned",
+      icon: "artifactability_unholydeathknight_deathsembrace",
+    },
+    "278309": { name: "Chain Reaction", icon: "spell_frost_frostblast" },
+    "285381": {
+      name: "Primal Wrath",
+      icon: "artifactability_feraldruid_ashamanesbite",
+    },
+    "319230": { name: "Unholy Pact", icon: "spell_shadow_deathsembrace" },
+    "319439": { name: "Bloodtalons", icon: "spell_druid_bloodythrash" },
+    "319454": {
+      name: "Heart of the Wild",
+      icon: "spell_holy_blessingofagility",
+    },
+    "321453": { name: "Demonic", icon: "spell_shadow_demonform" },
+    "325201": { name: "Dance of Chi-Ji", icon: "ability_monk_cranekick_new" },
+    "336639": { name: "Charred Flesh", icon: "ability_warlock_backdraft" },
+    "343294": { name: "Soul Reaper", icon: "ability_deathknight_soulreaper" },
+    "347461": {
+      name: "Unbound Chaos",
+      icon: "artifactability_vengeancedemonhunter_painbringer",
+    },
+  },
+  conduits: {
+    "336379": { name: "Harm Denial", icon: "ability_monk_chiswirl" },
+    "336460": { name: "Unrelenting Cold", icon: "spell_fire_blueflamering" },
+    "336472": { name: "Shivering Core", icon: "spell_fire_blueflamestrike" },
+    "336522": { name: "Icy Propulsion", icon: "spell_frost_coldhearted" },
+    "336526": {
+      name: "Calculated Strikes",
+      icon: "spell_magic_lesserinvisibilty",
+    },
+    "336569": { name: "Ice Bite", icon: "spell_frost_frostblast" },
+    "336598": {
+      name: "Coordinated Offensive",
+      icon: "ability_fixated_state_red",
+    },
+    "336632": { name: "Grounding Breath", icon: "inv_misc_volatileearth" },
+    "336636": { name: "Flow of Time", icon: "spell_arcane_blink" },
+    "336773": { name: "Jade Bond", icon: "inv_inscription_deck_jadeserpent" },
+    "336777": {
+      name: "Grounding Surge",
+      icon: "ability_priest_surgeofdarkness",
+    },
+    "336821": { name: "Infernal Cascade", icon: "ability_rhyolith_immolation" },
+    "336852": { name: "Master Flame", icon: "inv_elemental_primal_fire" },
+    "336890": { name: "Dizzying Tumble", icon: "inv_elemental_mote_air01" },
+    "336992": {
+      name: "Discipline of the Grove",
+      icon: "achievement_bg_wineos",
+    },
+    "337084": {
+      name: "Tumbling Technique",
+      icon: "ability_titankeeper_phasing",
+    },
+    "337087": { name: "Siphoned Malice", icon: "inv_artifact_stolenpower" },
+    "337099": { name: "Rising Sun Revival", icon: "spell_monk_revival" },
+    "337123": { name: "Cryo-Freeze", icon: "spell_frost_icefloes" },
+    "337136": { name: "Diverted Energy", icon: "inv_soulbarrier" },
+    "337250": { name: "Evasive Stride", icon: "ability_monk_uplift" },
+    "337264": { name: "Walk with the Ox", icon: "monk_stance_drunkenox" },
+    "337275": { name: "Incantation of Swiftness", icon: "rogue_burstofspeed" },
+    "337293": {
+      name: "Tempest Barrier",
+      icon: "inv_shield_1h_artifactstormfist_d_04",
+    },
+    "337295": { name: "Bone Marrow Hops", icon: "spell_animamaldraxxus_nova" },
+    "337381": { name: "Eternal Hunger", icon: "inv_artifact_stolenpower" },
+    "337704": {
+      name: "Chilled Resilience",
+      icon: "ability_deathknight_heartstopaura",
+    },
+    "337705": { name: "Spirit Drain", icon: "spell_deathknight_mindfreeze" },
+    "337748": { name: "Light's Inspiration", icon: "spell_holy_restoration" },
+    "337762": {
+      name: "Power Unto Others",
+      icon: "ability_priest_wordsofmeaning",
+    },
+    "337764": {
+      name: "Reinforced Shell",
+      icon: "spell_deathknight_antimagiczone",
+    },
+    "337811": { name: "Lasting Spirit", icon: "inv_icon_wing06a" },
+    "337947": { name: "Resonant Words", icon: "spell_holy_holybolt" },
+    "337972": { name: "Hardened Bones", icon: "spell_deathknight_subversion" },
+    "337974": {
+      name: "Refreshing Waters",
+      icon: "ability_shaman_fortifyingwaters",
+    },
+    "337981": { name: "Vital Accretion", icon: "ability_accretion" },
+    "338033": { name: "Thunderous Paws", icon: "ability_hunter_longevity" },
+    "338042": { name: "Totemic Surge", icon: "spell_shaman_dropall_03" },
+    "338048": {
+      name: "Spiritual Resonance",
+      icon: "spell_arcane_prismaticcloak",
+    },
+    "338330": {
+      name: "Insatiable Appetite",
+      icon: "ability_ironmaidens_bloodritual",
+    },
+    "338339": { name: "Swirling Currents", icon: "spell_holy_serendipity" },
+    "338343": { name: "Heavy Rainfall", icon: "shaman_pvp_ripplingwaters" },
+    "338345": { name: "Holy Oration", icon: "ability_priest_bindingprayers" },
+    "338553": {
+      name: "Convocation of the Dead",
+      icon: "ability_deathknight_deathsiphon2",
+    },
+    "338671": { name: "Fel Defender", icon: "inv_armor_shield_naxxramas_d_01" },
+    "338682": {
+      name: "Viscous Ink",
+      icon: "inv_archaeology_orcclans_tattooknife",
+    },
+    "338787": {
+      name: "Shielding Words",
+      icon: "ability_vehicle_sonicshockwave",
+    },
+    "338793": {
+      name: "Shattered Restoration",
+      icon: "ability_warlock_soulsiphon",
+    },
+    "338799": { name: "Felfire Haste", icon: "inv_boots_cloth_35v4" },
+    "339018": {
+      name: "Enfeebled Mark",
+      icon: "ability_blackhand_marked4death",
+    },
+    "339048": {
+      name: "Demonic Parole",
+      icon: "inv_misc_codexofxerrath_chains",
+    },
+    "339109": {
+      name: "Spirit Attunement",
+      icon: "inv_archaeology_70_spiritofechero",
+    },
+    "339114": { name: "Golden Path", icon: "ability_priest_cascade" },
+    "339130": { name: "Fel Celerity", icon: "spell_shadow_felmending" },
+    "339182": { name: "Elysian Dirge", icon: "ability_monk_forcesphere" },
+    "339186": { name: "Tumbling Waves", icon: "spell_animamaldraxxus_wave" },
+    "339231": { name: "Growing Inferno", icon: "spell_fel_incinerate" },
+    "339264": {
+      name: "Marksman's Advantage",
+      icon: "ability_argus_soulbombdebuffsmall",
+    },
+    "339268": {
+      name: "Light's Barding",
+      icon: "inv_lightforgedmatrixability_lightsjudgment",
+    },
+    "339272": { name: "Resolute Barrier", icon: "spell_shadow_felarmour" },
+    "339316": {
+      name: "Echoing Blessings",
+      icon: "achievement_dungeon_heroic_gloryoftheraider",
+    },
+    "339399": { name: "Rejuvenating Wind", icon: "ability_druid_galewinds" },
+    "339459": {
+      name: "Resilience of the Hunter",
+      icon: "spell_nature_spiritarmor",
+    },
+    "339481": { name: "Rolling Agony", icon: "warlock_pvp_cursefragility" },
+    "339495": { name: "Reversal of Fortune", icon: "inv_trickshot" },
+    "339558": { name: "Cheetah's Vigor", icon: "rogue_burstofspeed" },
+    "339576": { name: "Withering Bolt", icon: "spell_shadow_shadowbolt" },
+    "339704": {
+      name: "Ferocious Appetite",
+      icon: "ability_hunter_rapidkilling",
+    },
+    "339890": { name: "Duplicitous Havoc", icon: "spell_fel_firebolt" },
+    "339892": { name: "Ashen Remains", icon: "inv_enchanting_dust" },
+    "339895": { name: "Repeat Decree", icon: "ability_mount_goatmountwhite" },
+    "339920": {
+      name: "Sharpshooter's Focus",
+      icon: "ability_creature_cursed_04",
+    },
+    "339973": {
+      name: "Deadly Chain",
+      icon: "ability_hunter_resistanceisfutile",
+    },
+    "339984": { name: "Focused Light", icon: "item_holyspark" },
+    "340033": { name: "Powerful Precision", icon: "ability_hunter_markedshot" },
+    "340041": { name: "Infernal Brand", icon: "warlock_pvp_burninglegion" },
+    "340212": {
+      name: "Hallowed Discernment",
+      icon: "spell_animarevendreth_groundstate",
+    },
+    "340218": { name: "Ringing Clarity", icon: "spell_animabastion_orb" },
+    "340348": { name: "Soul Eater", icon: "ability_ardenweald_warlock" },
+    "340540": { name: "Ursine Vigor", icon: "ability_druid_markofursol" },
+    "340543": { name: "Innate Resolve", icon: "spell_nature_healingway" },
+    "340552": { name: "Unchecked Aggression", icon: "ability_druid_berserk" },
+    "340553": {
+      name: "Well-Honed Instincts",
+      icon: "ability_druid_tigersroar",
+    },
+    "340562": { name: "Diabolic Bloodstone", icon: "warlock_-bloodstone" },
+    "340605": { name: "Layered Mane", icon: "ability_druid_ironfur" },
+    "340682": { name: "Taste for Blood", icon: "ability_druid_ferociousbite" },
+    "340705": {
+      name: "Carnivorous Instinct",
+      icon: "ability_mount_jungletiger",
+    },
+    "340706": {
+      name: "Precise Alignment",
+      icon: "spell_nature_natureguardian",
+    },
+    "340876": { name: "Echoing Call", icon: "ability_fixated_state_yellow" },
+    "341280": { name: "Born Anew", icon: "spell_nature_reincarnation" },
+    "341312": { name: "Recuperator", icon: "inv_gizmo_runichealthinjector" },
+    "341383": { name: "Endless Thirst", icon: "ability_revendreth_druid" },
+    "341446": { name: "Conflux of Elements", icon: "ability_ardenweald_druid" },
+    "341450": {
+      name: "Front of the Pack",
+      icon: "spell_druid_stampedingroar_cat",
+    },
+    "341451": {
+      name: "Born of the Wilds",
+      icon: "ability_hunter_huntervswild",
+    },
+    "341529": {
+      name: "Cloaked in Shadows",
+      icon: "inv_helm_cloth_shadowmoonclan_b_01",
+    },
+    "341535": { name: "Prepared for All", icon: "ability_rogue_ghostpirate" },
+    "341543": { name: "Sleight of Hand", icon: "inv_misc_dice_02" },
+    "341546": { name: "Count the Odds", icon: "inv_misc_dice_01" },
+    "344358": {
+      name: "Unnatural Malice",
+      icon: "spell_animaardenweald_missile",
+    },
+    "357888": {
+      name: "Condensed Anima Sphere",
+      icon: "spell_animarevendreth_orb",
+    },
+    "357902": {
+      name: "Adaptive Armor Fragment",
+      icon: "inv_belt_plate_ardenweald_d_01",
+    },
+  },
   isBoss: (id: number): boolean => allBossIDs.has(id),
   isTormentedLieutenant: (id: number): boolean =>
     tormentedLieutenantIDs.has(id),
@@ -1599,4 +2174,16 @@ export type StaticData = {
   >;
   isBoss: (id: number) => boolean;
   isTormentedLieutenant: (id: number) => boolean;
+  legendaries: Record<
+    number,
+    typeof staticData.legendaries[keyof typeof staticData.legendaries]
+  >;
+  talents: Record<
+    number,
+    typeof staticData.talents[keyof typeof staticData.talents]
+  >;
+  conduits: Record<
+    number,
+    typeof staticData.conduits[keyof typeof staticData.conduits]
+  >;
 };

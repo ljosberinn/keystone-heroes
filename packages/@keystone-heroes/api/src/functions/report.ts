@@ -45,28 +45,30 @@ type Request = {
   };
 };
 
-export type ReportResponse =
-  | (Pick<Report, "title" | "startTime" | "endTime"> & {
-      region: Region["slug"];
-      fights: (Omit<
-        FightWithMeta,
-        "gameZone" | "player" | "startTime" | "endTime"
-      > & {
-        dungeon: Dungeon | null;
-        player: (Pick<Player, "soulbindID" | "covenantID"> & {
-          class: string;
-          spec: string;
-          legendary: Pick<
-            LegendaryItem,
-            "id" | "effectIcon" | "effectName"
-          > | null;
-        })[];
-      })[];
-      affixes: Omit<Affix, "id" | "seasonal">[];
-    })
-  | {
-      error: typeof reportHandlerError[keyof typeof reportHandlerError];
-    };
+export type ReportSuccessResponse = Pick<
+  Report,
+  "title" | "startTime" | "endTime"
+> & {
+  region: Region["slug"];
+  fights: (Omit<
+    FightWithMeta,
+    "gameZone" | "player" | "startTime" | "endTime"
+  > & {
+    dungeon: Dungeon | null;
+    player: (Pick<Player, "soulbindID" | "covenantID"> & {
+      class: string;
+      spec: string;
+      legendary: Pick<LegendaryItem, "id" | "effectIcon" | "effectName"> | null;
+    })[];
+  })[];
+  affixes: Omit<Affix, "id" | "seasonal">[];
+};
+
+export type ReportErrorResponse = {
+  error: typeof reportHandlerError[keyof typeof reportHandlerError];
+};
+
+export type ReportResponse = ReportSuccessResponse | ReportErrorResponse;
 
 export const reportHandlerError = {
   NO_TIMED_KEYS: `This report does not appear to contain any timed keys above or matching the key level requirement (${MIN_KEYSTONE_LEVEL}).`,

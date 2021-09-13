@@ -104,3 +104,18 @@ export const parseWCLUrl = (
     };
   }
 };
+
+export const classTextColorMap: Record<string, string> = {
+  demonhunter: "text-demonhunter",
+  warlock: "text-warlock",
+  rogue: "text-rogue",
+  warrior: "text-warrior",
+  priest: "text-priest",
+  hunter: "text-hunter",
+  deathknight: "text-deathknight",
+  shaman: "text-shaman",
+  paladin: "text-paladin",
+  monk: "text-monk",
+  druid: "text-druid",
+  mage: "text-mage",
+};

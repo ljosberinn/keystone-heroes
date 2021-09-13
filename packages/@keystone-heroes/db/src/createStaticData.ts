@@ -1,14 +1,22 @@
+/* eslint-disable no-console */
 import {
   tormentedSpells,
   tormentedLieutenants,
 } from "@keystone-heroes/wcl/queries/events/affixes/tormented";
-import { writeFileSync } from "fs";
+import { writeFileSync, existsSync, createWriteStream, unlinkSync } from "fs";
+import { get } from "https";
 import { resolve } from "path";
 
 import { allBossIDs } from "./data/dungeons";
 import { prisma } from "./prisma";
 
+const log = (str: string) => {
+  console.info(`[@keystone-heroes/db] ${str}`);
+};
+
 async function create() {
+  log("loading static data");
+
   const rawCovenants = await prisma.covenant.findMany({
     select: {
       name: true,
@@ -29,6 +37,7 @@ async function create() {
       covenantID: true,
     },
   });
+
   const soulbinds = Object.fromEntries(
     rawSoulbinds.map((soulbind) => {
       return [
@@ -128,6 +137,69 @@ async function create() {
     },
   });
 
+  const rawLegendaries = await prisma.legendary.findMany({
+    select: {
+      id: true,
+      effectName: true,
+      effectIcon: true,
+    },
+  });
+
+  log(`found ${rawLegendaries.length} legendaries`);
+
+  const legendaries = Object.fromEntries(
+    rawLegendaries.map((legendary) => [
+      legendary.id,
+      {
+        effectName: legendary.effectName,
+        icon: legendary.effectIcon,
+      },
+    ])
+  );
+
+  const rawTalents = await prisma.talent.findMany({
+    select: {
+      id: true,
+      icon: true,
+      name: true,
+    },
+  });
+
+  log(`found ${rawTalents.length} talents`);
+
+  const talents = Object.fromEntries(
+    rawTalents.map((talent) => [
+      talent.id,
+      {
+        name: talent.name,
+        icon: talent.icon,
+      },
+    ])
+  );
+
+  const rawConduits = await prisma.conduit.findMany({
+    select: {
+      id: true,
+      icon: true,
+      name: true,
+    },
+  });
+
+  const conduits = Object.fromEntries(
+    rawConduits.map((conduit) => [
+      conduit.id,
+      {
+        name: conduit.name,
+        icon: conduit.icon,
+      },
+    ])
+  );
+
+  log(`found ${rawConduits.length} conduits`);
+
+  await prisma.$disconnect();
+  log(`db disconnected`);
+
   const spells = Object.fromEntries(
     rawClasses.flatMap((classData) => {
       return [
@@ -200,6 +272,9 @@ async function create() {
     isBoss: (id: number) => allBossIDs.has(id),
     tormentedLieutenants: tormentedLieutenantMap,
     tormentedPowers: tormentedPowerMap,
+    legendaries,
+    talents,
+    conduits,
   };
 
   const template = `
@@ -224,12 +299,69 @@ export type StaticData = {
   tormentedPowers: Record<number, typeof staticData.tormentedPowers[keyof typeof staticData.tormentedPowers]>;
   isBoss: (id: number) => boolean;
   isTormentedLieutenant: (id: number) => boolean;
+  legendaries: Record<number, typeof staticData.legendaries[keyof typeof staticData.legendaries]>;
+  talents: Record<number, typeof staticData.talents[keyof typeof staticData.talents]>;
+  conduits: Record<number, typeof staticData.conduits[keyof typeof staticData.conduits]>;
 }`;
+
+  log(`writing template`);
 
   writeFileSync(targetPath, template);
 
-  await prisma.$disconnect();
+  const spellIconBasePath = resolve("../web/public/static/icons");
+
+  const allLoadableIcons = [
+    ...Object.values(spells).map((spell) => spell.icon),
+    ...tormentedLieutenants.map((lt) => lt.icon),
+    ...tormentedSpells.map((spell) => spell.icon),
+    ...rawAffixes.map((affix) => affix.icon),
+    ...rawLegendaries.map((legendary) => legendary.effectIcon),
+    ...rawTalents.map((talent) => talent.icon),
+    ...rawConduits.map((conduit) => conduit.icon),
+    "inv_alchemy_80_potion02orange",
+    "inv_misc_questionmark",
+  ].filter((path): path is string => !!path);
+
+  log(`verifying presence of ${allLoadableIcons.length} icons`);
+
+  const origin = "https://wow.zamimg.com/images/wow/icons/medium/";
+
+  await Promise.all(
+    allLoadableIcons.map(async (icon) => {
+      const path = resolve(spellIconBasePath, `${icon}.jpg`);
+      const exists = existsSync(path);
+
+      if (exists) {
+        return Promise.resolve(true);
+      }
+
+      log(`loading ${icon}.jpg`);
+
+      const sourcePath = `${origin}${icon}.jpg`;
+
+      return new Promise((resolve, reject) => {
+        const file = createWriteStream(path);
+
+        get(sourcePath, (response) => {
+          response.pipe(file);
+
+          file.on("finish", () => {
+            resolve(true);
+            file.close();
+          });
+
+          file.on("error", (error) => {
+            unlinkSync(path);
+            console.error(error);
+            reject(error);
+          });
+        });
+      });
+    })
+  );
+
+  log(`done creating static data`);
 }
 
-// eslint-disable-next-line unicorn/prefer-top-level-await, no-console
+// eslint-disable-next-line unicorn/prefer-top-level-await
 create().catch(console.error);

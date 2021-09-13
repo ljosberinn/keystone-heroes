@@ -5,10 +5,11 @@ type AbilityIconProps = {
   title?: string;
 };
 
-export const WCL_ASSET_URL = `https://assets.rpglogs.com/img/warcraft/abilities/`;
-export const BLOODLUST_ICON = `${WCL_ASSET_URL}spell_nature_bloodlust.jpg`;
-export const SHROUD_ICON = `${WCL_ASSET_URL}ability_rogue_shroudofconcealment.jpg`;
-export const INVIS_POTION_ICON = `${WCL_ASSET_URL}inv_alchemy_80_potion02orange.jpg`;
+export const STATIC_ICON_PREFIX = "/static/icons/";
+export const BLOODLUST_ICON = `${STATIC_ICON_PREFIX}spell_nature_bloodlust.jpg`;
+export const SHROUD_ICON = `${STATIC_ICON_PREFIX}ability_rogue_shroudofconcealment.jpg`;
+export const INVIS_POTION_ICON = `${STATIC_ICON_PREFIX}inv_alchemy_80_potion02orange.jpg`;
+export const QUESTIONMARK_ICON = "inv_misc_questionmark";
 
 export function AbilityIcon({
   icon,
@@ -18,7 +19,7 @@ export function AbilityIcon({
 }: AbilityIconProps): JSX.Element {
   return (
     <img
-      src={`${WCL_ASSET_URL}${icon ?? "inv_misc_questionmark"}.jpg`}
+      src={`${STATIC_ICON_PREFIX}${icon ?? QUESTIONMARK_ICON}.jpg`}
       alt={alt}
       title={title ?? alt}
       className={className}
