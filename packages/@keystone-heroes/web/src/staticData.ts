@@ -1665,6 +1665,7 @@ export const staticData = {
   talents: {
     "6789": { name: "Mortal Coil", icon: "ability_warlock_mortalcoil" },
     "31230": { name: "Cheat Death", icon: "ability_rogue_cheatdeath" },
+    "46924": { name: "Bladestorm", icon: "ability_warrior_bladestorm" },
     "48181": { name: "Haunt", icon: "ability_warlock_haunt" },
     "51485": { name: "Earthgrab Totem", icon: "spell_nature_stranglevines" },
     "56377": { name: "Splitting Ice", icon: "spell_frost_ice-shards" },
@@ -1678,6 +1679,7 @@ export const staticData = {
       icon: "spell_druid_incarnation",
     },
     "105809": { name: "Holy Avenger", icon: "ability_paladin_holyavenger" },
+    "107570": { name: "Storm Bolt", icon: "warrior_talent_icon_stormbolt" },
     "108194": { name: "Asphyxiate", icon: "ability_deathknight_asphixiate" },
     "108216": { name: "Dirty Tricks", icon: "ability_rogue_dirtydeeds" },
     "108238": { name: "Renewal", icon: "spell_nature_natureblessing" },
@@ -1725,6 +1727,10 @@ export const staticData = {
       icon: "ability_monk_hurricanestrike",
     },
     "152262": { name: "Seraphim", icon: "ability_paladin_seraphim" },
+    "152278": {
+      name: "Anger Management",
+      icon: "warrior_talent_icon_angermanagement",
+    },
     "155148": { name: "Kindling", icon: "spell_mage_kindling" },
     "155149": { name: "Thermal Void", icon: "spell_mage_thermalvoid" },
     "156910": {
@@ -1832,6 +1838,7 @@ export const staticData = {
     },
     "205184": { name: "Roaring Blaze", icon: "ability_warlock_inferno" },
     "205636": { name: "Force of Nature", icon: "ability_druid_forceofnature" },
+    "206315": { name: "Massacre", icon: "inv_sword_48" },
     "206476": { name: "Momentum", icon: "ability_foundryraid_demolition" },
     "207264": { name: "Bursting Sores", icon: "ability_druid_infectedwound" },
     "207272": {
@@ -1852,6 +1859,7 @@ export const staticData = {
       name: "Burning Alive",
       icon: "spell_fire_elementaldevastation",
     },
+    "208154": { name: "Warpaint", icon: "ability_rogue_preparation" },
     "209258": {
       name: "Last Resort",
       icon: "inv_glaive_1h_artifactaldorchi_d_06",
@@ -1906,6 +1914,10 @@ export const staticData = {
       icon: "artifactability_unholydeathknight_deathsembrace",
     },
     "278309": { name: "Chain Reaction", icon: "spell_frost_frostblast" },
+    "280721": {
+      name: "Sudden Death",
+      icon: "ability_warrior_improveddisciplines",
+    },
     "285381": {
       name: "Primal Wrath",
       icon: "artifactability_feraldruid_ashamanesbite",
@@ -1918,6 +1930,7 @@ export const staticData = {
     },
     "321453": { name: "Demonic", icon: "spell_shadow_demonform" },
     "325201": { name: "Dance of Chi-Ji", icon: "ability_monk_cranekick_new" },
+    "335070": { name: "Cruelty", icon: "spell_nature_focusedmind" },
     "336639": { name: "Charred Flesh", icon: "ability_warlock_backdraft" },
     "343294": { name: "Soul Reaper", icon: "ability_deathknight_soulreaper" },
     "347461": {
@@ -1926,6 +1939,12 @@ export const staticData = {
     },
   },
   conduits: {
+    "334993": {
+      name: "Stalwart Guardian",
+      icon: "ability_warrior_shieldmastery",
+    },
+    "335034": { name: "Inspiring Presence", icon: "ability_toughness" },
+    "336191": { name: "Indelible Victory", icon: "ability_warrior_secondwind" },
     "336379": { name: "Harm Denial", icon: "ability_monk_chiswirl" },
     "336460": { name: "Unrelenting Cold", icon: "spell_fire_blueflamering" },
     "336472": { name: "Shivering Core", icon: "spell_fire_blueflamestrike" },
@@ -1948,6 +1967,10 @@ export const staticData = {
     },
     "336821": { name: "Infernal Cascade", icon: "ability_rhyolith_immolation" },
     "336852": { name: "Master Flame", icon: "inv_elemental_primal_fire" },
+    "336884": {
+      name: "Lingering Numbness",
+      icon: "sha_ability_rogue_bloodyeye",
+    },
     "336890": { name: "Dizzying Tumble", icon: "inv_elemental_mote_air01" },
     "336992": {
       name: "Discipline of the Grove",
@@ -1961,6 +1984,7 @@ export const staticData = {
     "337099": { name: "Rising Sun Revival", icon: "spell_monk_revival" },
     "337123": { name: "Cryo-Freeze", icon: "spell_frost_icefloes" },
     "337136": { name: "Diverted Energy", icon: "inv_soulbarrier" },
+    "337162": { name: "Depths of Insanity", icon: "spell_shadow_summonimp" },
     "337250": { name: "Evasive Stride", icon: "ability_monk_uplift" },
     "337264": { name: "Walk with the Ox", icon: "monk_stance_drunkenox" },
     "337275": { name: "Incantation of Swiftness", icon: "rogue_burstofspeed" },
@@ -2073,6 +2097,11 @@ export const staticData = {
       name: "Sharpshooter's Focus",
       icon: "ability_creature_cursed_04",
     },
+    "339939": {
+      name: "Destructive Reverberations",
+      icon: "spell_animaardenweald_wave",
+    },
+    "339948": { name: "Disturb the Peace", icon: "warrior_disruptingshout" },
     "339973": {
       name: "Deadly Chain",
       icon: "ability_hunter_resistanceisfutile",

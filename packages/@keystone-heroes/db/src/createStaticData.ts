@@ -1,8 +1,8 @@
-/* eslint-disable no-console */
 import {
   tormentedSpells,
   tormentedLieutenants,
 } from "@keystone-heroes/wcl/queries/events/affixes/tormented";
+import { config } from "dotenv";
 import { writeFileSync, existsSync, createWriteStream, unlinkSync } from "fs";
 import { get } from "https";
 import { resolve } from "path";
@@ -10,7 +10,10 @@ import { resolve } from "path";
 import { allBossIDs } from "./data/dungeons";
 import { prisma } from "./prisma";
 
+config();
+
 const log = (str: string) => {
+  // eslint-disable-next-line no-console
   console.info(`[@keystone-heroes/db] ${str}`);
 };
 
@@ -324,6 +327,7 @@ export type StaticData = {
     ...rawConduits.map((conduit) => conduit.icon),
     "inv_alchemy_80_potion02orange",
     "inv_misc_questionmark",
+    "inv_misc_spyglass_03",
   ].filter((path): path is string => !!path);
 
   log(`verifying presence of ${allLoadableIcons.length} icons`);

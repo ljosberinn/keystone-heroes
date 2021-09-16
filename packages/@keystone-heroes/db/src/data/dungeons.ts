@@ -136,6 +136,7 @@ export const EXCLUDED_NPCS = new Set([
   170_234, // Oppressive Banner via Xav the Unfallen
   165_260, // Oozing Leftovers via Gorechop
   // PF
+  164_362, // Slimy Morsel, adds spawned by Globgrog
   168_398, // Slimy Morsel, adds spawned by Plaguebelcher
   168_394, // Slimy Morsel, adds spawned by Plaguebelcher
   164_550, // Slithering Ooze, spawns from dead Blighted Spinebreaker
@@ -623,7 +624,7 @@ export const DE_OTHER_SIDE: DungeonMeta = {
 
 export const THEATER_OF_PAIN: DungeonMeta = {
   name: "Theater of Pain",
-  timer: createDungeonTimer(37),
+  timer: createDungeonTimer(38),
   slug: "TOP",
   bossIDs: [
     Boss.PACERAN_THE_VIRULENT,

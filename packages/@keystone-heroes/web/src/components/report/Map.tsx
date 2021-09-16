@@ -1,7 +1,7 @@
 import type { FightSuccessResponse } from "@keystone-heroes/api/functions/fight";
 // import { isBoss } from "@keystone-heroes/db/data/boss";
 import dynamic from "next/dynamic";
-import type { KeyboardEvent } from "react";
+import type { KeyboardEvent as ReactKeyboardEvent } from "react";
 import React, {
   useMemo,
   Fragment,
@@ -25,8 +25,10 @@ import { classnames } from "src/utils/classnames";
 import {
   BLOODLUST_ICON,
   INVIS_POTION_ICON,
+  QUESTIONMARK_ICON,
   SHROUD_ICON,
   STATIC_ICON_PREFIX,
+  ZOOM_ICON,
 } from "../AbilityIcon";
 import { hasBloodLust, detectInvisibilityUsage } from "./utils";
 
@@ -136,10 +138,9 @@ export function Map(): JSX.Element {
   const { loading, fight } = useFight();
   const { imageRef, imageSize, handleResize } = useImageDimensions();
   const tabPanelRef = useRef<HTMLDivElement | null>(null);
-
+  const [fullscreen, setFullscreen] = useState(false);
   const selectedPull = useReportStore((state) => state.selectedPull);
   const previouslySelectedPull = usePrevious(selectedPull);
-  // const [isOffscreen, setIsOffscreen] = useState(false);
   const { dungeons } = useStaticData();
   const zones = useMemo(
     () => (fight ? dungeons[fight.dungeon].zones : []),
@@ -193,8 +194,12 @@ export function Map(): JSX.Element {
     setSelectedTab(nextIndex);
   };
 
+  const toggleFullscreen = useCallback(() => {
+    setFullscreen((prev) => !prev);
+  }, []);
+
   const onKeyDown = useCallback(
-    (event: KeyboardEvent<HTMLButtonElement>) => {
+    (event: ReactKeyboardEvent<HTMLButtonElement>) => {
       const { key } = event;
 
       const isSMOrLarger = window.innerWidth >= 640;
@@ -317,7 +322,14 @@ export function Map(): JSX.Element {
                 className="h-full"
                 hidden={hidden}
               >
-                <div className="relative h-full mapPanel">
+                <div
+                  className={classnames(
+                    "h-full",
+                    fullscreen
+                      ? "absolute w-full top-0 left-0 p-4 z-10"
+                      : "relative"
+                  )}
+                >
                   <picture>
                     {imageTuples.map(([w, prefix]) => {
                       const url = `/static/maps/${prefix}-${w * 16}/${
@@ -359,11 +371,23 @@ export function Map(): JSX.Element {
                     }}
                   />
 
+                  <div
+                    className={classnames(
+                      "absolute flex flex-col space-y-2",
+                      fullscreen ? "right-6 top-6" : "right-2 top-2"
+                    )}
+                  >
+                    <MapOptionsToggle />
+                    <LegendToggle />
+
+                    <FullScreenToggle
+                      active={fullscreen}
+                      toggle={toggleFullscreen}
+                    />
+                  </div>
+
                   <MapOptionsWrapper />
                   <LegendWrapper />
-
-                  <MapOptionsToggle />
-                  <LegendToggle />
                 </div>
               </div>
             );
@@ -429,7 +453,7 @@ function MapOptionsToggle() {
       type="button"
       onClick={toggleMapOptions}
       title="Map Options"
-      className="absolute flex p-1 bg-white rounded-full focus:outline-none focus:ring top-2 right-2 dark:bg-coolgray-600 dark:focus:bg-transparent"
+      className="flex p-1 bg-white rounded-full focus:outline-none focus:ring dark:bg-coolgray-600 dark:focus:bg-transparent"
     >
       <img
         src="/static/icons/trade_engineering.jpg"
@@ -448,12 +472,65 @@ function LegendToggle() {
       onClick={toggle}
       type="button"
       title="Legend"
-      className="absolute flex p-1 bg-white rounded-full focus:outline-none focus:ring top-14 right-2 dark:bg-coolgray-600 dark:focus:bg-transparent"
+      className="flex p-1 bg-white rounded-full focus:outline-none focus:ring dark:bg-coolgray-600 dark:focus:bg-transparent"
     >
       <img
-        src="/static/icons/inv_misc_questionmark.jpg"
+        src={`${STATIC_ICON_PREFIX}${QUESTIONMARK_ICON}.jpg`}
         alt="Legend"
         className="object-cover w-8 h-8 rounded-full"
+      />
+    </button>
+  );
+}
+
+type FullScreenToggleProps = {
+  toggle: () => void;
+  active: boolean;
+};
+
+function FullScreenToggle({ toggle, active }: FullScreenToggleProps) {
+  const firstRenderRef = useRef(true);
+
+  useEffect(() => {
+    if (active) {
+      const listener = (event: KeyboardEvent) => {
+        if (event.key === "Escape") {
+          toggle();
+        }
+      };
+
+      document.body.style.overflow = "hidden";
+
+      document.addEventListener("keydown", listener);
+
+      return () => {
+        document.removeEventListener("keydown", listener);
+        document.body.removeAttribute("style");
+      };
+    }
+  }, [active, toggle]);
+
+  useEffect(() => {
+    // trigger resize to recalculate pull position icons if
+    // - active
+    // - not first render and no longer active
+    if (active || (!active && !firstRenderRef.current)) {
+      firstRenderRef.current = false;
+      window.dispatchEvent(new CustomEvent("resize"));
+    }
+  }, [active]);
+
+  return (
+    <button
+      type="button"
+      onClick={toggle}
+      title="Toggle Fullscreen"
+      className="flex hidden p-1 bg-white rounded-full focus:outline-none focus:ring dark:bg-coolgray-600 dark:focus:bg-transparent lg:block"
+    >
+      <img
+        src={ZOOM_ICON}
+        className="object-cover w-8 h-8 rounded-full"
+        alt="Toggle Fullscreen"
       />
     </button>
   );
