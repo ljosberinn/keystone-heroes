@@ -19,6 +19,10 @@ module.exports = {
   mode: "jit",
   purge: ["./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
+    fontFamily: {
+      sans: ["Rubik"],
+      mono: ["IBM Plex Mono", "ui-monospace", "SFMono-Regular", "monospace"],
+    },
     colors: {
       black: colors.black,
       blue: colors.blue,

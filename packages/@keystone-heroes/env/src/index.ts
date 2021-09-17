@@ -20,6 +20,12 @@ export const WCL_CLIENT_ID = process.env.WCL_CLIENT_ID!;
 export const WCL_CLIENT_SECRET = process.env.WCL_CLIENT_SECRET!;
 
 /** *********************
+ * Battle.net
+ *********************/
+export const BATTLENET_CLIENT_ID = process.env.BATTLENET_CLIENT_ID!;
+export const BATTLENET_CLIENT_SECRET = process.env.BATTLENET_CLIENT_SECRET!;
+
+/** *********************
  * general
  *********************/
 export const MIN_KEYSTONE_LEVEL = 15;

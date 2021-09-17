@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import type { FormEvent } from "react";
+import type { FormEvent, ChangeEvent } from "react";
 import { useState } from "react";
 import { parseWCLUrl } from "src/utils";
 
@@ -27,7 +27,7 @@ export default function Home(): JSX.Element | null {
     <form onSubmit={handleSubmit}>
       <input
         placeholder="wcl link"
-        onChange={(event) => {
+        onChange={(event: ChangeEvent<HTMLInputElement>) => {
           setUrl(event.target.value.trim());
         }}
       />

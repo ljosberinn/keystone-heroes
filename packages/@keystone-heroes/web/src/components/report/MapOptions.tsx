@@ -1,3 +1,4 @@
+import type { ChangeEvent } from "react";
 import { useMapOptions } from "src/store";
 
 // eslint-disable-next-line import/no-default-export
@@ -118,7 +119,7 @@ function PullConnectionLineColor() {
         type="color"
         id="pullConnectionLineColor"
         aria-labelledby="pullConnectionLineColor"
-        onChange={(event) => {
+        onChange={(event: ChangeEvent<HTMLInputElement>) => {
           setPullConnectionLineColor(event.target.value);
         }}
         value={pullConnectionLineColor}
@@ -151,7 +152,7 @@ function InvisPullConnectionLineColor() {
         type="color"
         id="invisPullConnectionLineColor"
         aria-labelledby="invisPullConnectionLineColor"
-        onChange={(event) => {
+        onChange={(event: ChangeEvent<HTMLInputElement>) => {
           setInvisPullConnectionLineColor(event.target.value);
         }}
         value={invisPullConnectionLineColor}

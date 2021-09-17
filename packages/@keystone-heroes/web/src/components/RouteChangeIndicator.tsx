@@ -38,6 +38,7 @@ export function RouteChangeIndicator(): JSX.Element {
 
   return (
     <>
+      {/* @ts-expect-error typings issue */}
       <style jsx>{`
         .bar {
           height: 2px;
