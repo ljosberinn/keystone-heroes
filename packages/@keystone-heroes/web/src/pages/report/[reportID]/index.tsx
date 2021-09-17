@@ -144,7 +144,6 @@ export default function Report({ cache }: ReportProps): JSX.Element | null {
         <title>Keystone Heroes - {report?.title ?? "unknown report"}</title>
       </Head>
       <h1>{loading ? "loading" : report?.title ?? "unknown report"}</h1>
-      {/* @ts-expect-error typings issue */}
       <style jsx>{styles}</style>
       {/* <div>
         {report?.affixes?.map((affix) => (

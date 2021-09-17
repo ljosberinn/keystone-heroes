@@ -360,6 +360,7 @@ export type StaticData = {
 
           file.on("error", (error) => {
             unlinkSync(path);
+            // eslint-disable-next-line no-console
             console.error(error);
             reject(error);
           });
@@ -371,5 +372,5 @@ export type StaticData = {
   log(`done creating static data`);
 }
 
-// eslint-disable-next-line unicorn/prefer-top-level-await
+// eslint-disable-next-line no-console
 create().catch(console.error);

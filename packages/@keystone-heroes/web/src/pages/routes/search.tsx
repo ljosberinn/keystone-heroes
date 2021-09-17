@@ -67,7 +67,6 @@ export default function Search({
               key={dungeon.slug}
               className={`bg-${dungeon.slug} p-4 bg-cover bg-no-repeat`}
             >
-              {/* @ts-expect-error typings issue */}
               <style jsx>
                 {`
                   .bg-${dungeon.slug} {

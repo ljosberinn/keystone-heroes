@@ -120,7 +120,6 @@ function PullHeader({
               type: "deaths",
             })}
           >
-            {/* @ts-expect-error typings issue */}
             <style jsx>
               {`
                 .deaths {

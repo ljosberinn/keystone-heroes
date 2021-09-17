@@ -551,7 +551,6 @@ function Svg({ imageSize, zoneID, onDoorClick }: SvgProps) {
 
   return (
     <>
-      {/* @ts-expect-error typings issue */}
       <style jsx>
         {`
           .svg {
