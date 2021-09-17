@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "cd ../db && yarn && yarn generate && yarn static-data && cd ../web && next build",
+    "build": "cd ../../.. && yarn && cd packages/@keystone-heroes/web && next build",
     "start": "next start",
     "format": "prettier --write src",
     "types": "tsc --noEmit",
