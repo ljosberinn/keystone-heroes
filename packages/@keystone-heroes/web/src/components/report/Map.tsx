@@ -1,7 +1,10 @@
 import type { FightSuccessResponse } from "@keystone-heroes/api/functions/fight";
 // import { isBoss } from "@keystone-heroes/db/data/boss";
 import dynamic from "next/dynamic";
-import type { KeyboardEvent as ReactKeyboardEvent } from "react";
+import type {
+  KeyboardEvent as ReactKeyboardEvent,
+  MutableRefObject,
+} from "react";
 import React, {
   useMemo,
   Fragment,
@@ -31,6 +34,20 @@ import {
   ZOOM_ICON,
 } from "../AbilityIcon";
 import { hasBloodLust, detectInvisibilityUsage } from "./utils";
+
+const createRafCleanup = <K extends keyof WindowEventMap>(
+  rafRef: MutableRefObject<number | null>,
+  eventType: K,
+  listener: () => void
+) => {
+  return () => {
+    if (rafRef.current) {
+      cancelAnimationFrame(rafRef.current);
+    }
+
+    window.removeEventListener(eventType, listener);
+  };
+};
 
 function useImageDimensions() {
   const [imageSize, setImageSize] = useState<SvgProps["imageSize"]>({
@@ -77,12 +94,7 @@ function useImageDimensions() {
 
     window.addEventListener("resize", listener);
 
-    return () => {
-      if (rafRef.current) {
-        cancelAnimationFrame(rafRef.current);
-      }
-      window.removeEventListener("resize", listener);
-    };
+    return createRafCleanup(rafRef, "resize", listener);
   }, [handleResize]);
 
   return {
@@ -194,8 +206,10 @@ export function Map(): JSX.Element {
     setSelectedTab(nextIndex);
   };
 
-  const toggleFullscreen = useCallback(() => {
-    setFullscreen((prev) => !prev);
+  const toggleFullscreen = useCallback((nextValue?: boolean) => {
+    setFullscreen((prev) => {
+      return typeof nextValue === "undefined" ? !prev : nextValue;
+    });
   }, []);
 
   const onKeyDown = useCallback(
@@ -326,9 +340,10 @@ export function Map(): JSX.Element {
                   className={classnames(
                     "h-full",
                     fullscreen
-                      ? "absolute w-full top-0 left-0 p-4 z-10"
+                      ? "absolute w-max top-0 left-0 p-4 z-10"
                       : "relative"
                   )}
+                  data-map-container
                 >
                   <picture>
                     {imageTuples.map(([w, prefix]) => {
@@ -373,8 +388,10 @@ export function Map(): JSX.Element {
 
                   <div
                     className={classnames(
-                      "absolute flex flex-col space-y-2",
-                      fullscreen ? "right-6 top-6" : "right-2 top-2"
+                      "flex flex-col space-y-2 z-20",
+                      fullscreen
+                        ? "fixed right-6 top-6"
+                        : "absolute right-2 top-2"
                     )}
                   >
                     <MapOptionsToggle />
@@ -484,12 +501,13 @@ function LegendToggle() {
 }
 
 type FullScreenToggleProps = {
-  toggle: () => void;
+  toggle: (nextValue?: boolean) => void;
   active: boolean;
 };
 
 function FullScreenToggle({ toggle, active }: FullScreenToggleProps) {
   const firstRenderRef = useRef(true);
+  const rafRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (active) {
@@ -520,10 +538,56 @@ function FullScreenToggle({ toggle, active }: FullScreenToggleProps) {
     }
   }, [active]);
 
+  useEffect(() => {
+    const container = document.querySelector<HTMLDivElement>(
+      "[data-map-container]"
+    );
+
+    if (!container) {
+      return;
+    }
+
+    if (active) {
+      const listener = () => {
+        if (rafRef.current) {
+          return;
+        }
+
+        rafRef.current = requestAnimationFrame(() => {
+          rafRef.current = null;
+
+          // recalculate left offset of map container to ensure:
+          // - map indicators are pointing to the correct position
+          // - map stays centered
+          const { clientWidth } = document.documentElement;
+
+          // map cant be fullscreen below 1006px; deactive fullscreen
+          if (clientWidth < 1006) {
+            toggle(false);
+            return;
+          }
+
+          const diff = container.clientWidth - clientWidth;
+          const half = (diff / 2) * -1;
+
+          container.style.left = `${half}px`;
+        });
+      };
+
+      window.addEventListener("resize", listener);
+
+      return createRafCleanup(rafRef, "resize", listener);
+    }
+
+    container.removeAttribute("style");
+  }, [active, toggle]);
+
   return (
     <button
       type="button"
-      onClick={toggle}
+      onClick={() => {
+        toggle();
+      }}
       title="Toggle Fullscreen"
       className="flex hidden p-1 bg-white rounded-full focus:outline-none focus:ring dark:bg-coolgray-600 dark:focus:bg-transparent lg:block"
     >
