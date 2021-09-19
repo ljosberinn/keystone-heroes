@@ -7,6 +7,7 @@ import {
   SOA_FINAL_BOSS_ANGELS,
   Boss,
 } from "@keystone-heroes/db/data/dungeons";
+import { spells } from "@keystone-heroes/db/data/spellIds";
 import { prisma } from "@keystone-heroes/db/prisma";
 import type {
   Dungeon,
@@ -131,10 +132,21 @@ export type FightSuccessResponse = {
       | "healingDone"
       | "stacks"
     > & {
-      type: Event["eventType"];
+      type: Event["eventType"] | "AbilityReady";
       sourceNPC: NPC | null;
       targetNPC: NPC | null;
-      ability: (Pick<Ability, "id"> & { lastUse: null | number }) | null;
+      ability:
+        | (Pick<Ability, "id"> & {
+            lastUse: null | number;
+            nextUse: null | number;
+            wasted: boolean;
+          })
+        | null;
+      /**
+       * timestamp of the event relative to its pull
+       */
+      relTimestamp: number;
+      category: EventCategory;
       interruptedAbility: Ability["id"] | null;
     })[];
     zone: Zone["id"];
@@ -483,7 +495,10 @@ const omitNullValues = <T extends Record<string, unknown>>(dataset: T): T =>
   ) as T;
 
 const detectTormentedPowers = (
-  allEvents: RawFightWithDungeon["Pull"][number]["Event"],
+  allEvents: Omit<
+    FightSuccessResponse["pulls"][number]["events"][number],
+    "category" | "relTimestamp"
+  >[],
   playerID: number
 ) => {
   return allEvents.reduce<FightSuccessResponse["player"][number]["tormented"]>(
@@ -492,8 +507,7 @@ const detectTormentedPowers = (
         !event.ability ||
         !tormentedAbilityGameIDSet.has(event.ability.id) ||
         event.targetPlayerID !== playerID ||
-        (event.eventType !== "ApplyBuff" &&
-          event.eventType !== "ApplyBuffStack")
+        (event.type !== "ApplyBuff" && event.type !== "ApplyBuffStack")
       ) {
         return acc;
       }
@@ -504,12 +518,295 @@ const detectTormentedPowers = (
   );
 };
 
+type EventWithAbilityAndSourcePlayerID = Omit<
+  FightSuccessResponse["pulls"][number]["events"][number],
+  "ability" | "sourcePlayerID" | "category" | "relTimestamp"
+> & {
+  ability: NonNullable<
+    FightSuccessResponse["pulls"][number]["events"][number]["ability"]
+  >;
+  sourcePlayerID: number;
+};
+
+const eventHasRelevantAbilityAndSourcePlayerID = (
+  event: Omit<
+    FightSuccessResponse["pulls"][number]["events"][number],
+    "category" | "relTimestamp"
+  >
+): event is EventWithAbilityAndSourcePlayerID => {
+  return (
+    "ability" in event &&
+    event.ability !== null &&
+    event.ability.id in spells &&
+    event.sourcePlayerID !== null
+  );
+};
+
+const abilitiesWithCDR = new Set([
+  324_386, 306_830, 204_021, 1719, 212_084, 207_684, 79_206, 325_886, 12_472,
+  84_714, 1122, 20_707, 202_137, 307_865, 307_443, 20_484, 137_639, 325_216,
+  265_187, 308_491, 198_589,
+]);
+
+const calculateAbilityReadyEvents = (
+  allEvents: Omit<
+    FightSuccessResponse["pulls"][number]["events"][number],
+    "category" | "relTimestamp"
+  >[]
+): Omit<
+  FightSuccessResponse["pulls"][number]["events"][number],
+  "category" | "relTimestamp"
+>[] => {
+  return allEvents.reduce<
+    Omit<
+      FightSuccessResponse["pulls"][number]["events"][number],
+      "category" | "relTimestamp"
+    >[]
+  >((acc, event) => {
+    if (!eventHasRelevantAbilityAndSourcePlayerID(event)) {
+      return acc;
+    }
+
+    const { cd } = spells[event.ability.id];
+
+    const nextCast = allEvents.find(
+      (dataset) =>
+        dataset.timestamp > event.timestamp &&
+        eventHasRelevantAbilityAndSourcePlayerID(dataset) &&
+        dataset.sourcePlayerID === event.sourcePlayerID &&
+        dataset.ability.id === event.ability.id
+    );
+
+    if (nextCast) {
+      const diff = (nextCast.timestamp - event.timestamp) / 1000;
+
+      if (diff >= cd) {
+        const wasted = diff >= 2 * cd;
+
+        return [
+          ...acc,
+          {
+            type: "AbilityReady",
+            timestamp: event.timestamp + cd * 1000,
+            sourcePlayerID: event.sourcePlayerID,
+            ability: {
+              id: event.ability.id,
+              lastUse: event.timestamp,
+              nextUse: nextCast.timestamp,
+              wasted,
+            },
+            damage: null,
+            healingDone: null,
+            stacks: null,
+            interruptedAbility: null,
+            sourceNPC: null,
+            sourceNPCInstance: null,
+            targetNPC: null,
+            targetNPCInstance: null,
+            targetPlayerID: null,
+          },
+        ];
+      }
+
+      // ability used before technically ready
+      // hints on any kind of cooldown reduction or a wrong stored cd
+      if (diff < cd) {
+        if (!abilitiesWithCDR.has(event.ability.id)) {
+          console.log(
+            event.timestamp,
+            nextCast.timestamp,
+            `detected cdr on ${event.ability.id} - expected cd of ${cd}, saw ${diff}`
+          );
+          abilitiesWithCDR.add(event.ability.id);
+        }
+
+        return acc;
+      }
+    }
+
+    return [
+      ...acc,
+      {
+        type: "AbilityReady",
+        timestamp: event.timestamp + cd * 1000,
+        sourcePlayerID: event.sourcePlayerID,
+        ability: {
+          id: event.ability.id,
+          lastUse: event.timestamp,
+          nextUse: null,
+          wasted: false,
+        },
+        damage: null,
+        healingDone: null,
+        stacks: null,
+        interruptedAbility: null,
+        sourceNPC: null,
+        sourceNPCInstance: null,
+        targetNPC: null,
+        targetNPCInstance: null,
+        targetPlayerID: null,
+      },
+    ];
+  }, []);
+};
+
+const calculateEventsBeforeDuringAfterPull = ({
+  allEvents,
+  lastPullEnd,
+  nextPullStart,
+  pullStart,
+  pullEnd,
+}: {
+  allEvents: Omit<
+    FightSuccessResponse["pulls"][number]["events"][number],
+    "category" | "relTimestamp"
+  >[];
+  lastPullEnd: number;
+  nextPullStart: number;
+  pullStart: number;
+  pullEnd: number;
+}) => {
+  // events that occured later than 50% of the time between two pulls count
+  // towards this pull
+  const middleAfterLastPull = lastPullEnd
+    ? lastPullEnd + (pullStart - lastPullEnd) / 2
+    : null;
+
+  // events that occured earlier than 50% of the time between two pulls count
+  // towards this pull
+  const middleAfterThisPull = nextPullStart
+    ? pullEnd + (nextPullStart - pullEnd) / 2
+    : null;
+
+  const before =
+    lastPullEnd && middleAfterLastPull
+      ? allEvents
+          .filter((event) => {
+            return (
+              event.timestamp >= middleAfterLastPull &&
+              event.timestamp < pullStart
+            );
+          })
+          .map((event) => ({
+            ...event,
+            category: EventCategory.BEFORE,
+            relTimestamp: event.timestamp - pullStart,
+          }))
+      : [];
+
+  const during = allEvents
+    .filter((event) => {
+      return event.timestamp >= pullStart && event.timestamp <= pullEnd;
+    })
+    .map((event) => ({
+      ...event,
+      category: EventCategory.DURING,
+    }));
+
+  const after =
+    nextPullStart && middleAfterThisPull
+      ? allEvents
+          .filter(
+            (event) =>
+              event.timestamp > pullEnd && event.timestamp < middleAfterThisPull
+          )
+          .map((event) => ({
+            ...event,
+            category: EventCategory.AFTER,
+          }))
+      : [];
+
+  return {
+    before,
+    during,
+    after,
+    middleAfterLastPull,
+    middleAfterThisPull,
+  };
+};
+
+enum EventCategory {
+  BEFORE = "BEFORE",
+  DURING = "DURING",
+  AFTER = "AFTER",
+}
+
+const findThisPullsAbilityReadyEvents = (
+  abilityReadyEvents: ReturnType<typeof calculateAbilityReadyEvents>,
+  {
+    middleAfterLastPull,
+    middleAfterThisPull,
+    pullEnd,
+    pullStart,
+  }: {
+    middleAfterLastPull: number;
+    middleAfterThisPull: number;
+    pullStart: number;
+    pullEnd: number;
+  }
+) => {
+  return abilityReadyEvents
+    .filter(
+      (event) =>
+        event.timestamp >= middleAfterLastPull &&
+        event.timestamp <= middleAfterThisPull
+    )
+    .map((event) => ({
+      ...event,
+      category:
+        event.timestamp < pullStart
+          ? EventCategory.BEFORE
+          : event.timestamp > pullEnd
+          ? EventCategory.AFTER
+          : EventCategory.DURING,
+    }));
+};
+
 const createResponseFromStoredFight = (
   dataset: RawFightWithDungeon
 ): FightSuccessResponse => {
-  const allEvents = dataset.Pull.flatMap((pull) => pull.Event);
-
   const lastAbilityUsageMap: Record<number, number> = {};
+
+  const allEvents = dataset.Pull.flatMap((pull) =>
+    pull.Event.map<
+      Omit<
+        FightSuccessResponse["pulls"][number]["events"][number],
+        "category" | "relTimestamp"
+      >
+    >(({ eventType, ability, timestamp, ...rest }) => {
+      const interruptedAbility = rest.interruptedAbility
+        ? rest.interruptedAbility.id
+        : null;
+
+      if (ability) {
+        const lastUse = lastAbilityUsageMap[ability.id] ?? null;
+        lastAbilityUsageMap[ability.id] = timestamp;
+
+        return {
+          ...rest,
+          timestamp,
+          interruptedAbility,
+          type: eventType,
+          ability: {
+            id: ability.id,
+            lastUse,
+            nextUse: null,
+            wasted: false,
+          },
+        };
+      }
+
+      return {
+        ...rest,
+        timestamp,
+        interruptedAbility,
+        type: eventType,
+        ability: null,
+      };
+    })
+  );
+
+  const abilityReadyEvents = calculateAbilityReadyEvents(allEvents);
 
   const pulls = dataset.Pull.map<FightSuccessResponse["pulls"][number]>(
     (pull, index) => {
@@ -525,35 +822,42 @@ const createResponseFromStoredFight = (
 
       const hasBoss = npcs.some((npc) => allBossIDs.has(npc.id));
 
-      const events = pull.Event.map<
-        FightSuccessResponse["pulls"][number]["events"][number]
-      >(({ eventType, ability, ...rest }) => {
-        const interruptedAbility = rest.interruptedAbility
-          ? rest.interruptedAbility.id
-          : null;
+      const {
+        before,
+        during,
+        after,
+        middleAfterLastPull,
+        middleAfterThisPull,
+      } = calculateEventsBeforeDuringAfterPull({
+        allEvents,
+        lastPullEnd: dataset.Pull[index - 1]?.endTime ?? 0,
+        nextPullStart: dataset.Pull[index + 1]?.startTime ?? 0,
+        pullStart: pull.startTime,
+        pullEnd: pull.endTime,
+      });
 
-        if (ability) {
-          const lastUse = lastAbilityUsageMap[ability.id] ?? null;
-          lastAbilityUsageMap[ability.id] = rest.timestamp;
-
-          return {
-            ...rest,
-            type: eventType,
-            interruptedAbility,
-            ability: {
-              id: ability.id,
-              lastUse,
-            },
-          };
+      const thisPullAbilityReadyEvents = findThisPullsAbilityReadyEvents(
+        abilityReadyEvents,
+        {
+          middleAfterLastPull: middleAfterLastPull ?? pull.startTime,
+          middleAfterThisPull: middleAfterThisPull ?? pull.endTime,
+          pullStart: pull.startTime,
+          pullEnd: pull.endTime,
         }
+      );
 
-        return {
-          ...rest,
-          type: eventType,
-          interruptedAbility,
-          ability: null,
-        };
-      }).map(omitNullValues);
+      const events: FightSuccessResponse["pulls"][number]["events"] = [
+        ...before,
+        ...during,
+        ...after,
+        ...thisPullAbilityReadyEvents,
+      ]
+        .map((event) => ({
+          ...event,
+          relTimestamp: event.timestamp - pull.startTime,
+        }))
+        .map(omitNullValues)
+        .sort((a, b) => a.timestamp - b.timestamp);
 
       return {
         startTime: pull.startTime,
@@ -1035,7 +1339,7 @@ const calculateCombatTime = <
 const isPullWipe = <T extends { startTime: number; endTime: number }>(
   playerDeathEvents: DeathEvent[],
   { startTime, endTime }: T
-) => {
+): boolean => {
   return (
     new Set(
       playerDeathEvents
@@ -1068,7 +1372,7 @@ const calculatePullCoordinates = (
   { maxX, minX, minY, maxY, id }: Omit<Zone, "dungeonID">,
   dungeonID: DungeonIDs,
   npcs: { gameID: number }[]
-) => {
+): { x: number; y: number } => {
   // pulling the 3rd Lieutenant through the gate on 1st boss results in out of
   // bounds coordinates
   if (
@@ -1372,7 +1676,7 @@ const calculatePullsWithWipesAndPercent = (
 const createPullNPCDeathEventMap = (
   pulls: Omit<PersistedDungeonPull, "id" | "percent" | "isWipe">[],
   enemyDeathEvents: (BeginCastEvent | DeathEvent)[]
-) => {
+): Record<number, (BeginCastEvent | DeathEvent)[]> => {
   return Object.fromEntries<(DeathEvent | BeginCastEvent)[]>(
     pulls.map(({ startTime, endTime }) => {
       return [
@@ -1388,7 +1692,7 @@ const createPullNPCDeathEventMap = (
 // map of { [startTime]: { [targetID]: count } } including every pull
 const createPullNPCDeathCountMap = (
   deathEventMap: ReturnType<typeof createPullNPCDeathEventMap>
-) => {
+): Record<number, Record<number, number>> => {
   return Object.fromEntries<Record<number, number>>(
     Object.entries(deathEventMap).map(([startTimeStr, events]) => {
       const startTime = Number.parseInt(startTimeStr);

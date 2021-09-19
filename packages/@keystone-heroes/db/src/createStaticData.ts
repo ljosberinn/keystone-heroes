@@ -8,6 +8,7 @@ import { get } from "https";
 import { resolve } from "path";
 
 import { allBossIDs } from "./data/dungeons";
+import { spells } from "./data/spellIds";
 import { prisma } from "./prisma";
 
 config();
@@ -206,22 +207,6 @@ async function create() {
 
   await prisma.$disconnect();
   log(`db disconnected`);
-
-  const spells = Object.fromEntries(
-    rawClasses.flatMap((classData) => {
-      return [
-        ...classData.Cooldown,
-        ...classData.Spec.flatMap((spec) => spec.Cooldown),
-      ].map((cd) => [
-        cd.ability.id,
-        {
-          icon: cd.ability.icon,
-          name: cd.ability.name,
-          cd: cd.cd,
-        },
-      ]);
-    })
-  );
 
   const classes = Object.fromEntries(
     rawClasses.map((classData) => {

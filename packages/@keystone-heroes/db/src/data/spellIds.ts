@@ -1,19 +1,22 @@
 import { classes } from "./classes";
 
-export const remarkableSpellIDs = new Set(
-  classes.reduce<number[]>((acc, data) => {
-    const allSharedCooldownIds = data.cooldowns.map((cooldown) => cooldown.id);
-    const allSpecCooldownIds = data.specs.flatMap((spec) =>
-      spec.cooldowns.map((cooldown) => cooldown.id)
-    );
-    const allCovenantIds = data.covenantAbilities.map((ability) => ability.id);
-
-    const unique = new Set([
-      ...allSharedCooldownIds,
-      ...allSpecCooldownIds,
-      ...allCovenantIds,
+export const spells = Object.fromEntries(
+  classes.flatMap((data) => {
+    return [
+      ...data.cooldowns,
+      ...data.specs.flatMap((spec) => spec.cooldowns),
+      ...data.covenantAbilities,
+    ].map((cd) => [
+      cd.id,
+      {
+        icon: cd.icon,
+        name: cd.name,
+        cd: cd.cd,
+      },
     ]);
+  })
+);
 
-    return [...acc, ...unique];
-  }, [])
+export const remarkableSpellIDs = new Set(
+  Object.keys(spells).map((id) => Number.parseInt(id))
 );

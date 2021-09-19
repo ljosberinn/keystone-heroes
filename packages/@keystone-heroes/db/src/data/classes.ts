@@ -126,7 +126,7 @@ export const classes: Class[] = [
           {
             name: "Bladestorm",
             id: 46_924,
-            cd: 90,
+            cd: 60,
             icon: "ability_warrior_bladestorm",
           },
           {
@@ -1732,7 +1732,7 @@ export const classes: Class[] = [
           {
             name: "Summon Darkglare",
             id: 205_180,
-            cd: 180,
+            cd: 120,
             icon: "inv_beholderwarlock",
           },
         ],

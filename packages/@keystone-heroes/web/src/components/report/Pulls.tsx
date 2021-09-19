@@ -8,52 +8,6 @@ import { classnames } from "src/utils/classnames";
 import { AbilityIcon } from "../AbilityIcon";
 import { ExternalLink } from "../ExternalLink";
 
-const findRelevantEvents = (
-  thisPull: FightSuccessResponse["pulls"][number],
-  allPulls: FightSuccessResponse["pulls"],
-  index: number
-) => {
-  const { events: lastPullEvents, endTime: lastPullEnd } = allPulls[
-    index - 1
-  ] ?? [{ events: [], endTime: 0 }];
-  const { events: nextPullEvents, startTime: nextPullStart } = allPulls[
-    index + 1
-  ] ?? [{ events: [], startTime: 0 }];
-
-  // events that occured later than 50% of the time between two pulls count
-  // towards this pull
-  const middleAfterLastPull = lastPullEnd
-    ? lastPullEnd + (thisPull.startTime - lastPullEnd) / 2
-    : null;
-
-  // events that occured earlier than 50% of the time between two pulls count
-  // towards this pull
-  const middleAfterThisPull = nextPullStart
-    ? thisPull.endTime + (nextPullStart - thisPull.endTime) / 2
-    : null;
-
-  const eventsBeforeThisPull = middleAfterLastPull
-    ? lastPullEvents.filter((event) => {
-        return (
-          event.timestamp >= middleAfterLastPull &&
-          event.timestamp < thisPull.startTime
-        );
-      })
-    : [];
-
-  const eventsAfterThisPull = middleAfterThisPull
-    ? nextPullEvents.filter((event) => {
-        return event.timestamp < middleAfterThisPull;
-      })
-    : [];
-
-  return {
-    before: eventsBeforeThisPull,
-    during: thisPull.events,
-    after: eventsAfterThisPull,
-  };
-};
-
 type PullHeaderProps = {
   percentUpToThisPull: string;
   pull: FightSuccessResponse["pulls"][number];
@@ -194,9 +148,7 @@ export function Pulls(): JSX.Element {
               firstPullStartTime={pulls[0].startTime}
               selected={selected}
             />
-            {selected && (
-              <PullBody pull={pull} allPulls={pulls} player={player} />
-            )}
+            {selected && <PullBody pull={pull} player={player} />}
           </div>
         );
       })}
@@ -207,16 +159,11 @@ export function Pulls(): JSX.Element {
 type PullBodyProps = {
   pull: FightSuccessResponse["pulls"][number];
   player: FightSuccessResponse["player"];
-  allPulls: FightSuccessResponse["pulls"];
 };
 
-function PullBody({ pull, allPulls, player }: PullBodyProps) {
+function PullBody({ pull, player }: PullBodyProps) {
   const { spells } = useStaticData();
-  const { during } = findRelevantEvents(
-    pull,
-    allPulls,
-    allPulls.findIndex((_pull) => _pull.id === pull.id)
-  );
+  const { events } = pull;
 
   const sourceIDPlayerNameMap = Object.fromEntries(
     player.map((p) => [p.id, p.name])
@@ -224,61 +171,61 @@ function PullBody({ pull, allPulls, player }: PullBodyProps) {
 
   return (
     <div className="p-2 rounded-b-lg shadow-sm bg-coolgray-100 dark:bg-coolgray-600">
-      {during.length > 0 && (
-        <>
-          <h2 className="text-xl font-bold">During Pull</h2>
-          {during.map((event) => {
-            const ability = event.ability ? spells[event.ability.id] : null;
+      {events
+        .filter(
+          (event) => "sourcePlayerID" in event && event.sourcePlayerID !== null
+        )
+        .map((event) => {
+          const ability = event.ability ? spells[event.ability.id] : null;
 
-            return (
-              <p
-                key={`${event.timestamp}-${
-                  event.sourceNPC
-                    ? event.sourceNPC.id
-                    : event.sourcePlayerID
-                    ? event.sourcePlayerID
-                    : event.targetPlayerID ?? "unknown"
-                }`}
-              >
-                Type: {event.type} | Source:{" "}
-                {event.sourcePlayerID ? (
-                  sourceIDPlayerNameMap[event.sourcePlayerID]
-                ) : event.sourceNPC ? (
-                  <ExternalLink
-                    href={`https://wowhead.com/npc=${event.sourceNPC.id}`}
-                  >
-                    {event.sourceNPC.name}
-                  </ExternalLink>
-                ) : (
-                  "unknown"
-                )}{" "}
-                | Ability:{" "}
-                {event.ability && ability ? (
-                  <ExternalLink
-                    href={`https://wowhead.com/spell=${event.ability.id}`}
-                  >
-                    <AbilityIcon
-                      className="inline w-6 h-6"
-                      icon={ability.icon}
-                      alt={ability.name}
-                      title={
-                        event.ability.lastUse
-                          ? `Last used ${Math.round(
-                              (event.timestamp - event.ability.lastUse) / 1000
-                            )} seconds ago.`
-                          : "First usage."
-                      }
-                    />{" "}
-                    {ability.name}
-                  </ExternalLink>
-                ) : (
-                  "-"
-                )}
-              </p>
-            );
-          })}
-        </>
-      )}
+          return (
+            <p
+              key={`${event.timestamp}-${
+                event.sourceNPC
+                  ? event.sourceNPC.id
+                  : event.sourcePlayerID
+                  ? event.sourcePlayerID
+                  : event.targetPlayerID ?? "unknown"
+              }-${event.ability?.id ?? ""}`}
+              data-category={event.category}
+            >
+              Type: {event.type} | Source:{" "}
+              {event.sourcePlayerID ? (
+                sourceIDPlayerNameMap[event.sourcePlayerID]
+              ) : event.sourceNPC ? (
+                <ExternalLink
+                  href={`https://wowhead.com/npc=${event.sourceNPC.id}`}
+                >
+                  {event.sourceNPC.name}
+                </ExternalLink>
+              ) : (
+                "unknown"
+              )}{" "}
+              | Ability:{" "}
+              {event.ability && ability ? (
+                <ExternalLink
+                  href={`https://wowhead.com/spell=${event.ability.id}`}
+                >
+                  <AbilityIcon
+                    className="inline w-6 h-6"
+                    icon={ability.icon}
+                    alt={ability.name}
+                    title={
+                      event.ability.lastUse
+                        ? `Last used ${Math.round(
+                            (event.timestamp - event.ability.lastUse) / 1000
+                          )} seconds ago.`
+                        : "First usage."
+                    }
+                  />{" "}
+                  {ability.name}
+                </ExternalLink>
+              ) : (
+                "-"
+              )}
+            </p>
+          );
+        })}
     </div>
   );
 }
