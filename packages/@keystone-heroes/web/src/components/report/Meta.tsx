@@ -130,13 +130,7 @@ export function Meta(): JSX.Element {
                       <div className="w-8 h-8">
                         <SpecIcon class={name} spec={spec.name} />
                       </div>{" "}
-                      <span
-                        className={`font-semibold ${
-                          name === "Priest"
-                            ? `text-black dark:${classColor}`
-                            : classColor
-                        }`}
-                      >
+                      <span className={`font-semibold ${classColor}`}>
                         {player.name}
                       </span>
                     </a>

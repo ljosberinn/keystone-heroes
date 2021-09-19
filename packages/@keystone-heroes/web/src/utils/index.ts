@@ -110,7 +110,7 @@ export const classTextColorMap: Record<string, string> = {
   warlock: "text-warlock",
   rogue: "text-rogue",
   warrior: "text-warrior",
-  priest: "text-priest",
+  priest: "text-black dark:text-priest",
   hunter: "text-hunter",
   deathknight: "text-deathknight",
   shaman: "text-shaman",
