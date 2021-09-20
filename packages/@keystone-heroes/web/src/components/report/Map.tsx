@@ -22,6 +22,7 @@ import {
   useReportStore,
   useRestoreMapOptions,
 } from "src/store";
+import { bgPrimary } from "src/styles/tokens";
 import { fightTimeToString } from "src/utils";
 import { classnames } from "src/utils/classnames";
 
@@ -251,11 +252,11 @@ export function Map(): JSX.Element {
 
   return (
     <section
-      className="w-full h-full max-w-screen-xl pt-4 lg:pt-0 lg:w-4/6"
+      className="flex flex-col w-full h-auto max-w-screen-xl pt-4 lg:pt-0 lg:w-4/6"
       aria-labelledby="section-route"
     >
       <Triangle />
-      <div className="px-4 pt-4 bg-white rounded-t-lg shadow-sm sm:p-4 dark:bg-coolgray-700">
+      <div className={`px-4 pt-4 rounded-t-lg shadow-sm sm:p-4 ${bgPrimary}`}>
         <h2 id="section-route" className="text-2xl font-bold">
           Route
         </h2>
@@ -310,7 +311,7 @@ export function Map(): JSX.Element {
           </div>
         </div>
       </div>
-      <div className="p-2 rounded-b-lg shadow-sm bg-coolgray-100 dark:bg-coolgray-600">
+      <div className="h-full p-2 rounded-b-lg shadow-sm bg-coolgray-100 dark:bg-coolgray-600">
         {loading ? (
           <img
             src="/static/maps/ph.jpg"
@@ -365,10 +366,10 @@ export function Map(): JSX.Element {
                       src={`/static/maps/sm-640/${zone.id}.png`}
                       alt={zone.name}
                       ref={hidden ? undefined : imageRef}
-                      className="object-cover w-full h-full rounded-md"
+                      className="w-full h-full rounded-md"
                       onLoad={handleResize}
-                      width="1280px"
-                      height="853px"
+                      width="1280"
+                      height="853"
                     />
                   </picture>
 
@@ -521,6 +522,10 @@ function FullScreenToggle({ toggle, active }: FullScreenToggleProps) {
 
       document.addEventListener("keydown", listener);
 
+      window.scrollTo({
+        top: 0,
+      });
+
       return () => {
         document.removeEventListener("keydown", listener);
         document.body.removeAttribute("style");
@@ -548,6 +553,26 @@ function FullScreenToggle({ toggle, active }: FullScreenToggleProps) {
     }
 
     if (active) {
+      const recalculate = () => {
+        // recalculate left offset of map container to ensure:
+        // - map indicators are pointing to the correct position
+        // - map stays centered
+        const { clientWidth } = document.documentElement;
+
+        // map cant be fullscreen below 1006px; deactive fullscreen
+        if (clientWidth < 1006) {
+          toggle(false);
+          return;
+        }
+
+        const diff = container.clientWidth - clientWidth;
+        const half = (diff / 2) * -1;
+
+        container.style.left = `${half}px`;
+      };
+
+      recalculate();
+
       const listener = () => {
         if (rafRef.current) {
           return;
@@ -555,22 +580,7 @@ function FullScreenToggle({ toggle, active }: FullScreenToggleProps) {
 
         rafRef.current = requestAnimationFrame(() => {
           rafRef.current = null;
-
-          // recalculate left offset of map container to ensure:
-          // - map indicators are pointing to the correct position
-          // - map stays centered
-          const { clientWidth } = document.documentElement;
-
-          // map cant be fullscreen below 1006px; deactive fullscreen
-          if (clientWidth < 1006) {
-            toggle(false);
-            return;
-          }
-
-          const diff = container.clientWidth - clientWidth;
-          const half = (diff / 2) * -1;
-
-          container.style.left = `${half}px`;
+          recalculate();
         });
       };
 
@@ -1328,7 +1338,6 @@ function MapChangePolyline({
             />
           );
         })}
-      )
     </>
   );
 }

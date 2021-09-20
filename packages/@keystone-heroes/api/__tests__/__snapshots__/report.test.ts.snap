@@ -25,7 +25,6 @@ Object {
     Object {
       "averageItemLevel": 223.4,
       "dps": 16927,
-      "dtps": 5902,
       "dungeon": Object {
         "id": 2289,
         "name": "Plaguefall",
@@ -99,7 +98,6 @@ Object {
     Object {
       "averageItemLevel": 223.2,
       "dps": 18616,
-      "dtps": 6659,
       "dungeon": Object {
         "id": 2289,
         "name": "Plaguefall",
@@ -173,7 +171,6 @@ Object {
     Object {
       "averageItemLevel": 223.8,
       "dps": 25559,
-      "dtps": 9132,
       "dungeon": Object {
         "id": 2290,
         "name": "Mists of Tirna Scithe",
@@ -247,7 +244,6 @@ Object {
     Object {
       "averageItemLevel": 224,
       "dps": 20347,
-      "dtps": 7276,
       "dungeon": Object {
         "id": 2293,
         "name": "Theater of Pain",
@@ -321,7 +317,6 @@ Object {
     Object {
       "averageItemLevel": 223.6,
       "dps": 25437,
-      "dtps": 7374,
       "dungeon": Object {
         "id": 2293,
         "name": "Theater of Pain",
@@ -395,7 +390,6 @@ Object {
     Object {
       "averageItemLevel": 223.8,
       "dps": 25767,
-      "dtps": 7148,
       "dungeon": Object {
         "id": 2286,
         "name": "The Necrotic Wake",
@@ -1636,7 +1630,6 @@ Array [
         "averageItemLevel": 223.4,
         "chests": 1,
         "dps": 16927,
-        "dtps": 5902,
         "dungeon": Object {},
         "endTime": 1910367,
         "fightID": 99,
@@ -1678,7 +1671,6 @@ Object {
     Object {
       "averageItemLevel": 223.4,
       "dps": 16927,
-      "dtps": 5902,
       "dungeon": null,
       "hps": 5401,
       "id": 99,

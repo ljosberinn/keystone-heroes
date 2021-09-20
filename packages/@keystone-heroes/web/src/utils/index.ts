@@ -119,3 +119,18 @@ export const classTextColorMap: Record<string, string> = {
   druid: "text-druid",
   mage: "text-mage",
 };
+
+export const classBorderColorMap: Record<string, string> = {
+  demonhunter: "border-demonhunter",
+  warlock: "border-warlock",
+  rogue: "border-rogue",
+  warrior: "border-warrior",
+  priest: "border-priest",
+  hunter: "border-hunter",
+  deathknight: "border-deathknight",
+  shaman: "border-shaman",
+  paladin: "border-paladin",
+  monk: "border-monk",
+  druid: "border-druid",
+  mage: "border-mage",
+};

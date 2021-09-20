@@ -153,13 +153,15 @@ model Fight {
   chests           Int
   dps              Int
   hps              Int
-  dtps             Int
   totalDeaths      Int
   averageItemLevel Float
   startTime        Int
   endTime          Int
   percent          Float
   rating           Int
+
+  twitchTvUrl String?
+  youtubeUrl  String?
 
   dungeonID Int?
 
@@ -195,6 +197,9 @@ model Character {
   class  Class    @relation(fields: [classID], references: [id])
   server Server   @relation(fields: [serverID], references: [id])
   Player Player[]
+
+  userID Int?
+  user   User? @relation(fields: [userID], references: [id])
 
   @@unique([name, serverID])
 }
@@ -460,6 +465,16 @@ model Ability {
   ability            Event[]    @relation("ability")
   interruptedAbility Event[]    @relation("interruptedAbility")
   Cooldown           Cooldown[]
+}
+
+model User {
+  id Int @id
+
+  token     String
+  expiresAt Int
+  banned    Boolean @default(false)
+
+  Character Character[]
 }
 
 enum EventType {

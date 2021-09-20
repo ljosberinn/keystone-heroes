@@ -128,7 +128,7 @@ export default function FightID({ cache }: FightIDProps): JSX.Element | null {
     <FightContext.Provider value={value}>
       <FightIDHead />
 
-      <div className="flex flex-col space-x-0 lg:space-x-4 lg:flex-row">
+      <div className="space-x-0 lg:space-x-4 lg:flex lg:flex-row">
         <Meta />
         <Map />
       </div>

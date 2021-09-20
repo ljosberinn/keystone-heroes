@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+[title] {
+  cursor: help;
+}
+
+a [title] {
+  cursor: pointer;
+}

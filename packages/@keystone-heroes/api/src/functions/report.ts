@@ -131,7 +131,6 @@ type FightWithMeta = Omit<
   "friendlyPlayers" | "maps" | "__typename" | "keystoneAffixes" | "maps"
 > & {
   player: Player[];
-  dtps: number;
 };
 
 export const fightIsFight = (
@@ -429,7 +428,6 @@ type RawReport = {
     | "keystoneTime"
     | "dps"
     | "hps"
-    | "dtps"
     | "totalDeaths"
     | "rating"
   > & {
@@ -505,7 +503,6 @@ const createResponseFromDB = (
             };
           }),
         averageItemLevel: fight.averageItemLevel,
-        dtps: fight.dtps,
         hps: fight.hps,
         dps: fight.dps,
         keystoneLevel: fight.keystoneLevel,
@@ -610,7 +607,6 @@ const createReportFindFirst = (reportID: string) => {
           keystoneLevel: true,
           dps: true,
           hps: true,
-          dtps: true,
           totalDeaths: true,
           rating: true,
           dungeon: {
@@ -800,7 +796,7 @@ export const reportHandler: RequestHandler<Request, ReportResponse> = async (
         averageItemLevel,
         ...rest
       } = fight;
-      const { damageDone, healingDone, deathEvents, damageTaken } =
+      const { damageDone, healingDone, deathEvents } =
         table.reportData.report.table.data;
       const playerDetails = Object.values(
         table.reportData.report.table.data.playerDetails
@@ -885,11 +881,6 @@ export const reportHandler: RequestHandler<Request, ReportResponse> = async (
         return null;
       }
 
-      const dtps = Math.round(
-        damageTaken.reduce((acc, dataset) => acc + dataset.total, 0) /
-          keystoneTimeInSeconds
-      );
-
       const normalizedAverageItemLevel = Number.parseFloat(
         averageItemLevel.toFixed(2)
       );
@@ -898,7 +889,6 @@ export const reportHandler: RequestHandler<Request, ReportResponse> = async (
       return {
         ...rest,
         player,
-        dtps,
         averageItemLevel: normalizedAverageItemLevel,
         maps: uniqueMaps,
       };
@@ -1092,7 +1082,6 @@ export const reportHandler: RequestHandler<Request, ReportResponse> = async (
         rating: fight.rating ?? 0,
         dps: fight.player.reduce((acc, player) => acc + player.dps, 0),
         hps: fight.player.reduce((acc, player) => acc + player.hps, 0),
-        dtps: fight.dtps,
         totalDeaths: fight.player.reduce(
           (acc, player) => acc + player.deaths,
           0

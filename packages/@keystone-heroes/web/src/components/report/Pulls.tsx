@@ -1,231 +1,241 @@
-import type { FightSuccessResponse } from "@keystone-heroes/api/functions/fight";
-import { useStaticData } from "src/context/StaticData";
-import { useFight } from "src/pages/report/[reportID]/[fightID]";
-import { useReportStore } from "src/store";
-import { createWCLUrl, fightTimeToString } from "src/utils";
-import { classnames } from "src/utils/classnames";
+// import type { FightSuccessResponse } from "@keystone-heroes/api/functions/fight";
+// import { useStaticData } from "src/context/StaticData";
+// import { useFight } from "src/pages/report/[reportID]/[fightID]";
+// import { useReportStore } from "src/store";
+// import { bgPrimary } from "src/styles/tokens";
+// import { createWCLUrl, fightTimeToString } from "src/utils";
+// import { classnames } from "src/utils/classnames";
 
-import { AbilityIcon } from "../AbilityIcon";
-import { ExternalLink } from "../ExternalLink";
+// import { AbilityIcon } from "../AbilityIcon";
+// import { ExternalLink } from "../ExternalLink";
 
-type PullHeaderProps = {
-  percentUpToThisPull: string;
-  pull: FightSuccessResponse["pulls"][number];
-  firstPullStartTime: number;
-  selected: boolean;
-};
+// type PullHeaderProps = {
+//   percentUpToThisPull: string;
+//   pull: FightSuccessResponse["pulls"][number];
+//   firstPullStartTime: number;
+//   selected: boolean;
+// };
 
-function PullHeader({
-  percentUpToThisPull,
-  pull,
-  firstPullStartTime,
-  selected,
-}: PullHeaderProps) {
-  const { reportID, fightID } = useFight();
+// function PullHeader({
+//   percentUpToThisPull,
+//   pull,
+//   firstPullStartTime,
+//   selected,
+// }: PullHeaderProps) {
+//   const { reportID, fightID } = useFight();
 
-  const deaths = pull.events.filter(
-    (event) => event.type === "Death" && !event.targetNPC
-  ).length;
-  const setSelectedPull = useReportStore((state) => state.setSelectedPull);
+//   const deaths = pull.events.filter(
+//     (event) => event.type === "Death" && !event.targetNPC
+//   ).length;
+//   const setSelectedPull = useReportStore((state) => state.setSelectedPull);
 
-  return (
-    <div
-      className={classnames(
-        "flex justify-between w-full p-2 shadow-lg dark:bg-coolgray-700 bg-white shadow-sm",
-        selected ? "rounded-t-lg" : "rounded-lg"
-      )}
-    >
-      <div className="flex items-center">
-        <span>{pull.id}</span>
-        <span>{pull.percent > 0 ? <>{pull.percent.toFixed(2)}%</> : "-"}</span>
-        <span className="italic text-gray-500 dark:text-gray-400">
-          ({percentUpToThisPull}%)
-        </span>
-        <span>{fightTimeToString(pull.endTime - pull.startTime, true)}</span>
-        <span className="italic text-gray-500 dark:text-gray-400">
-          ({fightTimeToString(pull.endTime - firstPullStartTime, true)})
-        </span>
-        <span className="flex space-x-2">
-          {pull.npcs.map((npc) => (
-            <span
-              key={npc.id}
-              className="flex items-center w-10 h-10 space-x-2 lg:w-12 lg:h-12"
-            >
-              <span>{npc.count}</span>
-              <img
-                src={`/static/npcs/${npc.id}.png`}
-                alt={npc.name}
-                title={npc.name}
-                className="object-cover w-8 h-8 rounded-full"
-              />
-            </span>
-          ))}
-        </span>
-      </div>
-      <div className="flex items-center space-x-2">
-        {deaths > 0 && (
-          <ExternalLink
-            className="relative inline-flex items-center justify-center w-8 h-8"
-            href={createWCLUrl({
-              reportID,
-              fightID,
-              start: pull.startTime,
-              end: pull.endTime,
-              type: "deaths",
-            })}
-          >
-            <style jsx>
-              {`
-                .deaths {
-                  background-image: url(/static/icons/ability_rogue_feigndeath.jpg);
-                }
-              `}
-            </style>
-            <div
-              className="absolute w-full h-full bg-center bg-cover rounded-full opacity-25 deaths"
-              title="View deaths of this pull on WarcraftLogs"
-            />
-            <div className="font-bold text-red-500">{deaths}</div>
-          </ExternalLink>
-        )}
-        <ExternalLink
-          href={createWCLUrl({
-            reportID,
-            fightID,
-            start: pull.startTime,
-            end: pull.endTime,
-          })}
-        >
-          <img
-            src="/static/icons/wcl.png"
-            alt="View this pull on WarcraftLogs"
-            title="View this pull on WarcraftLogs"
-            className="w-8 h-8"
-          />
-        </ExternalLink>
-        <button
-          type="button"
-          onClick={() => {
-            setSelectedPull(pull.id);
-          }}
-        >
-          <img
-            src="/static/icons/misc_arrowdown.jpg"
-            alt={`${selected ? "Hide" : "Show"} pull details`}
-            title={`${selected ? "Hide" : "Show"} pull details`}
-            className={classnames(
-              "w-8 h-8 filter rounded-full",
-              selected ? "" : "grayscale hover:grayscale-0"
-            )}
-          />
-        </button>
-      </div>
-    </div>
-  );
-}
+//   return (
+//     <div
+//       className={classnames(
+//         "flex justify-between w-full p-2 shadow-lg shadow-sm",
+//         bgPrimary,
+//         selected ? "rounded-t-lg" : "rounded-lg"
+//       )}
+//     >
+//       <div className="flex items-center">
+//         <span>{pull.id}</span>
+//         <span>{pull.percent > 0 ? <>{pull.percent.toFixed(2)}%</> : "-"}</span>
+//         <span className="italic text-gray-500 dark:text-gray-400">
+//           ({percentUpToThisPull}%)
+//         </span>
+//         <span>{fightTimeToString(pull.endTime - pull.startTime, true)}</span>
+//         <span className="italic text-gray-500 dark:text-gray-400">
+//           ({fightTimeToString(pull.endTime - firstPullStartTime, true)})
+//         </span>
+//         <span className="flex space-x-2">
+//           {pull.npcs.map((npc) => (
+//             <span
+//               key={npc.id}
+//               className="flex items-center w-10 h-10 space-x-2 lg:w-12 lg:h-12"
+//             >
+//               <span>{npc.count}</span>
+//               <img
+//                 src={`/static/npcs/${npc.id}.png`}
+//                 alt={npc.name}
+//                 title={npc.name}
+//                 className="object-cover w-8 h-8 rounded-full"
+//               />
+//             </span>
+//           ))}
+//         </span>
+//       </div>
+//       <div className="flex items-center space-x-2">
+//         {deaths > 0 && (
+//           <ExternalLink
+//             className="relative inline-flex items-center justify-center w-8 h-8"
+//             href={createWCLUrl({
+//               reportID,
+//               fightID,
+//               start: pull.startTime,
+//               end: pull.endTime,
+//               type: "deaths",
+//             })}
+//           >
+//             <style jsx>
+//               {`
+//                 .deaths {
+//                   background-image: url(/static/icons/ability_rogue_feigndeath.jpg);
+//                 }
+//               `}
+//             </style>
+//             <div
+//               className="absolute w-full h-full bg-center bg-cover rounded-full opacity-25 deaths"
+//               title="View deaths of this pull on WarcraftLogs"
+//             />
+//             <div className="font-bold text-red-500">{deaths}</div>
+//           </ExternalLink>
+//         )}
+//         <ExternalLink
+//           href={createWCLUrl({
+//             reportID,
+//             fightID,
+//             start: pull.startTime,
+//             end: pull.endTime,
+//           })}
+//         >
+//           <img
+//             src="/static/icons/wcl.png"
+//             alt="View this pull on WarcraftLogs"
+//             title="View this pull on WarcraftLogs"
+//             className="w-8 h-8"
+//           />
+//         </ExternalLink>
+//         <button
+//           type="button"
+//           onClick={() => {
+//             setSelectedPull(pull.id);
+//           }}
+//         >
+//           <img
+//             src="/static/icons/misc_arrowdown.jpg"
+//             alt={`${selected ? "Hide" : "Show"} pull details`}
+//             title={`${selected ? "Hide" : "Show"} pull details`}
+//             className={classnames(
+//               "w-8 h-8 filter rounded-full",
+//               selected ? "" : "grayscale hover:grayscale-0"
+//             )}
+//           />
+//         </button>
+//       </div>
+//     </div>
+//   );
+// }
 
 export function Pulls(): JSX.Element {
-  const { fight } = useFight();
-  const pulls = fight ? fight.pulls : [];
-  const player = fight ? fight.player : [];
-  const selectedPull = useReportStore((state) => state.selectedPull);
+  // const { fight } = useFight();
+  // const pulls = fight ? fight.pulls : [];
+  // const player = fight ? fight.player : [];
+  // const selectedPull = useReportStore((state) => state.selectedPull);
 
   return (
-    <div className="space-y-4">
-      {pulls.map((pull, index) => {
-        const selected = selectedPull === pull.id;
-
-        const percentUpToThisPull = pulls
-          .slice(0, index + 1)
-          .reduce((acc, pull) => acc + pull.percent, 0)
-          .toFixed(2);
-
-        return (
-          <div key={pull.id}>
-            <PullHeader
-              pull={pull}
-              percentUpToThisPull={percentUpToThisPull}
-              firstPullStartTime={pulls[0].startTime}
-              selected={selected}
-            />
-            {selected && <PullBody pull={pull} player={player} />}
-          </div>
-        );
-      })}
+    <div className="pt-2">
+      <h3 id="zone-selection-heading" className="text-xl">
+        Pulls & Events
+      </h3>
     </div>
   );
+
+  // return (
+  //   <div className="space-y-4">
+  //     {pulls.map((pull, index) => {
+  //       const selected = selectedPull === pull.id;
+
+  //       const percentUpToThisPull = pulls
+  //         .slice(0, index + 1)
+  //         .reduce((acc, pull) => acc + pull.percent, 0)
+  //         .toFixed(2);
+
+  //       return (
+  //         <div key={pull.id}>
+  //           <PullHeader
+  //             pull={pull}
+  //             percentUpToThisPull={percentUpToThisPull}
+  //             firstPullStartTime={pulls[0].startTime}
+  //             selected={selected}
+  //           />
+  //           {selected && <PullBody pull={pull} player={player} />}
+  //         </div>
+  //       );
+  //     })}
+  //   </div>
+  // );
 }
 
-type PullBodyProps = {
-  pull: FightSuccessResponse["pulls"][number];
-  player: FightSuccessResponse["player"];
-};
+// type PullBodyProps = {
+//   pull: FightSuccessResponse["pulls"][number];
+//   player: FightSuccessResponse["player"];
+// };
 
-function PullBody({ pull, player }: PullBodyProps) {
-  const { spells } = useStaticData();
-  const { events } = pull;
+// function PullBody({ pull, player }: PullBodyProps) {
+//   const { spells } = useStaticData();
+//   const { events } = pull;
 
-  const sourceIDPlayerNameMap = Object.fromEntries(
-    player.map((p) => [p.id, p.name])
-  );
+//   const sourceIDPlayerNameMap = Object.fromEntries(
+//     player.map((p) => [p.id, p.name])
+//   );
 
-  return (
-    <div className="p-2 rounded-b-lg shadow-sm bg-coolgray-100 dark:bg-coolgray-600">
-      {events
-        .filter(
-          (event) => "sourcePlayerID" in event && event.sourcePlayerID !== null
-        )
-        .map((event) => {
-          const ability = event.ability ? spells[event.ability.id] : null;
+//   return (
+//     <div className="p-2 rounded-b-lg shadow-sm bg-coolgray-100 dark:bg-coolgray-600">
+//       {events
+//         .filter(
+//           (event) => "sourcePlayerID" in event && event.sourcePlayerID !== null
+//         )
+//         .map((event) => {
+//           const ability = event.ability ? spells[event.ability.id] : null;
 
-          return (
-            <p
-              key={`${event.timestamp}-${
-                event.sourceNPC
-                  ? event.sourceNPC.id
-                  : event.sourcePlayerID
-                  ? event.sourcePlayerID
-                  : event.targetPlayerID ?? "unknown"
-              }-${event.ability?.id ?? ""}`}
-              data-category={event.category}
-            >
-              Type: {event.type} | Source:{" "}
-              {event.sourcePlayerID ? (
-                sourceIDPlayerNameMap[event.sourcePlayerID]
-              ) : event.sourceNPC ? (
-                <ExternalLink
-                  href={`https://wowhead.com/npc=${event.sourceNPC.id}`}
-                >
-                  {event.sourceNPC.name}
-                </ExternalLink>
-              ) : (
-                "unknown"
-              )}{" "}
-              | Ability:{" "}
-              {event.ability && ability ? (
-                <ExternalLink
-                  href={`https://wowhead.com/spell=${event.ability.id}`}
-                >
-                  <AbilityIcon
-                    className="inline w-6 h-6"
-                    icon={ability.icon}
-                    alt={ability.name}
-                    title={
-                      event.ability.lastUse
-                        ? `Last used ${Math.round(
-                            (event.timestamp - event.ability.lastUse) / 1000
-                          )} seconds ago.`
-                        : "First usage."
-                    }
-                  />{" "}
-                  {ability.name}
-                </ExternalLink>
-              ) : (
-                "-"
-              )}
-            </p>
-          );
-        })}
-    </div>
-  );
-}
+//           return (
+//             <p
+//               key={`${event.timestamp}-${
+//                 event.sourceNPC
+//                   ? event.sourceNPC.id
+//                   : event.sourcePlayerID
+//                   ? event.sourcePlayerID
+//                   : event.targetPlayerID ?? "unknown"
+//               }-${event.ability?.id ?? ""}`}
+//               data-category={event.category}
+//             >
+//               Type: {event.type} | Source:{" "}
+//               {event.sourcePlayerID ? (
+//                 sourceIDPlayerNameMap[event.sourcePlayerID]
+//               ) : event.sourceNPC ? (
+//                 <ExternalLink
+//                   href={`https://wowhead.com/npc=${event.sourceNPC.id}`}
+//                 >
+//                   {event.sourceNPC.name}
+//                 </ExternalLink>
+//               ) : (
+//                 "unknown"
+//               )}{" "}
+//               | Ability:{" "}
+//               {event.ability && ability ? (
+//                 <ExternalLink
+//                   href={`https://wowhead.com/spell=${event.ability.id}`}
+//                 >
+//                   <AbilityIcon
+//                     className="inline w-6 h-6"
+//                     icon={ability.icon}
+//                     alt={ability.name}
+//                     title={
+//                       event.ability.lastUse
+//                         ? `Last used ${Math.round(
+//                             (event.timestamp - event.ability.lastUse) / 1000
+//                           )} seconds ago.`
+//                         : "First usage."
+//                     }
+//                   />{" "}
+//                   {ability.name}
+//                 </ExternalLink>
+//               ) : (
+//                 "-"
+//               )}
+//             </p>
+//           );
+//         })}
+//     </div>
+//   );
+// }

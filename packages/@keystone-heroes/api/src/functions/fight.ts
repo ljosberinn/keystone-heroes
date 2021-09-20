@@ -81,7 +81,6 @@ export type FightSuccessResponse = {
   meta: Pick<
     Fight,
     | "dps"
-    | "dtps"
     | "hps"
     | "totalDeaths"
     | "averageItemLevel"
@@ -190,7 +189,6 @@ type RawFight =
       | "keystoneLevel"
       | "keystoneTime"
       | "dps"
-      | "dtps"
       | "hps"
       | "totalDeaths"
       | "averageItemLevel"
@@ -279,7 +277,6 @@ const createFightFindFirst = (reportID: string, fightID: number) => {
       endTime: true,
       fightID: true,
       dps: true,
-      dtps: true,
       hps: true,
       totalDeaths: true,
       averageItemLevel: true,
@@ -881,7 +878,6 @@ const createResponseFromStoredFight = (
   );
 
   const dps = Math.round((dataset.dps * dataset.keystoneTime) / inCombatTime);
-  const dtps = Math.round((dataset.dtps * dataset.keystoneTime) / inCombatTime);
   const hps = Math.round((dataset.hps * dataset.keystoneTime) / inCombatTime);
 
   return {
@@ -898,7 +894,6 @@ const createResponseFromStoredFight = (
       startTime: dataset.startTime,
       dps,
       hps,
-      dtps,
     },
     dungeon: dataset.dungeon.id,
     affixes: [

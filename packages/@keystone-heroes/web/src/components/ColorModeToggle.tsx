@@ -42,8 +42,8 @@ export function ColorModeToggle(): JSX.Element | null {
       <span className="mr-3">
         {isMounted ? (isDark ? "Dark" : "Light") : ""} Mode
       </span>
-      <div className="flex-shrink-0 w-16 h-10 p-1 bg-gray-100 rounded-full dark:bg-coolgray-800">
-        <div
+      <span className="flex-shrink-0 w-16 h-10 p-1 bg-gray-100 rounded-full dark:bg-coolgray-800">
+        <span
           className={classnames(
             "bg-white w-8 h-8 rounded-full shadow-md duration-300 ease-in-out flex items-center justify-center dark:bg-coolgray-900",
             isMounted && isDark && "translate-x-6"
@@ -54,8 +54,8 @@ export function ColorModeToggle(): JSX.Element | null {
               <use href={`#${icon.id}`} />
             </svg>
           )}
-        </div>
-      </div>
+        </span>
+      </span>
     </button>
   );
 }

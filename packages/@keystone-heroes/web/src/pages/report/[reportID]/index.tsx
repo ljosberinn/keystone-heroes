@@ -9,6 +9,7 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { SpecIcon } from "src/components/SpecIcon";
 import { useStaticData } from "src/context/StaticData";
+import { bgPrimary } from "src/styles/tokens";
 import { fightTimeToString } from "src/utils";
 import { classnames } from "src/utils/classnames";
 
@@ -129,7 +130,6 @@ export default function Report({ cache }: ReportProps): JSX.Element | null {
     : Array.from({ length: 6 }, (_, index) => ({
         id: index,
         averageItemLevel: 0,
-        dtps: 0,
         dungeon: null,
         keystoneBonus: 1,
         keystoneLevel: 15,
@@ -154,7 +154,12 @@ export default function Report({ cache }: ReportProps): JSX.Element | null {
         {reportID &&
           fights.map((fight) => {
             return (
-              <FightCard reportID={reportID} fight={fight} key={fight.id} />
+              <FightCard
+                reportID={reportID}
+                fight={fight}
+                key={fight.id}
+                loading={loading}
+              />
             );
           })}
       </div>
@@ -169,9 +174,10 @@ type PickFromUnion<T, K extends string> = T extends { [P in K]: unknown }
 type FightCardProps = {
   fight?: PickFromUnion<ReportResponse, "fights">[number];
   reportID: string;
+  loading: boolean;
 };
 
-function FightCard({ fight, reportID }: FightCardProps) {
+function FightCard({ fight, reportID, loading }: FightCardProps) {
   if (!fight) {
     return (
       <div className="flex items-center justify-center h-12 text-2xl font-extrabold text-red-900 rounded-md">
@@ -181,60 +187,62 @@ function FightCard({ fight, reportID }: FightCardProps) {
   }
 
   return (
-    <div className="p-2 bg-white rounded-lg shadow-sm dark:bg-coolgray-700">
+    <div className={`p-2 rounded-lg shadow-sm ${bgPrimary}`}>
       <LinkBox
         className={classnames(
           "relative flex items-center justify-center h-12 h-64 text-2xl rounded-md bg-cover bg-white bg-blend-luminosity hover:bg-blend-normal hover:bg-transparent transition-colors duration-500",
           fight.dungeon
             ? `bg-${fight.dungeon.slug.toLowerCase()}`
-            : "bg-fallback"
+            : "bg-fallback",
+          loading && "animate-pulse"
         )}
         as="section"
         aria-labelledby={`fight-${fight.id}`}
       >
-        <LinkOverlay
-          href={`/report/${reportID}/${fight.id}`}
-          className="p-4 bg-white rounded-lg dark:bg-coolgray-900"
-        >
-          <h2 id={`fight-${fight.id}`} className="font-extrabold">
-            {fight.dungeon ? fight.dungeon.name : "Unknown Dungeon"} +
-            {fight.keystoneLevel}
-          </h2>
+        {loading ? null : (
+          <LinkOverlay
+            href={`/report/${reportID}/${fight.id}`}
+            className="p-4 bg-white rounded-lg dark:bg-coolgray-900"
+          >
+            <h2 id={`fight-${fight.id}`} className="font-extrabold">
+              {fight.dungeon ? fight.dungeon.name : "Unknown Dungeon"} +
+              {fight.keystoneLevel}
+            </h2>
 
-          <p className="flex justify-center w-full space-x-2">
-            <span>{fightTimeToString(fight.keystoneTime)}</span>
-            {fight.dungeon && (
-              <span
-                className="italic text-green-600 dark:text-green-500"
-                title={`${fight.keystoneBonus} chest${
-                  fight.keystoneBonus > 1 ? "s" : ""
-                }`}
-              >
-                +{fightTimeToString(fight.dungeon.time - fight.keystoneTime)}
-              </span>
-            )}
-          </p>
+            <p className="flex justify-center w-full space-x-2">
+              <span>{fightTimeToString(fight.keystoneTime)}</span>
+              {fight.dungeon && (
+                <span
+                  className="italic text-green-600 dark:text-green-500"
+                  title={`${fight.keystoneBonus} chest${
+                    fight.keystoneBonus > 1 ? "s" : ""
+                  }`}
+                >
+                  +{fightTimeToString(fight.dungeon.time - fight.keystoneTime)}
+                </span>
+              )}
+            </p>
 
-          <p className="flex justify-center w-full space-x-2 font-xl">
-            Ø {fight.averageItemLevel} | +{fight.rating}
-          </p>
+            <p className="flex justify-center w-full space-x-2 font-xl">
+              Ø {fight.averageItemLevel} | +{fight.rating}
+            </p>
 
-          {/* specs */}
+            {/* specs */}
 
-          <div className="flex justify-center w-full pt-4 space-x-2">
-            {fight.player.map((player, index) => {
-              return (
-                // eslint-disable-next-line react/no-array-index-key
-                <div className="w-8 h-8" key={index}>
-                  <SpecIcon class={player.class} spec={player.spec} />
-                </div>
-              );
-            })}
-          </div>
+            <div className="flex justify-center w-full pt-4 space-x-2">
+              {fight.player.map((player, index) => {
+                return (
+                  // eslint-disable-next-line react/no-array-index-key
+                  <div className="w-8 h-8" key={index}>
+                    <SpecIcon class={player.class} spec={player.spec} />
+                  </div>
+                );
+              })}
+            </div>
 
-          {/* soulbinds */}
+            {/* soulbinds */}
 
-          {/* <div className="flex justify-center w-full pt-2 space-x-2">
+            {/* <div className="flex justify-center w-full pt-2 space-x-2">
             {fight.player.map((player, index) => {
               return (
                 // eslint-disable-next-line react/no-array-index-key
@@ -257,9 +265,9 @@ function FightCard({ fight, reportID }: FightCardProps) {
             })}
           </div> */}
 
-          {/* legendaries */}
+            {/* legendaries */}
 
-          {/* <div className="flex justify-center w-full pt-2 space-x-2">
+            {/* <div className="flex justify-center w-full pt-2 space-x-2">
             {fight.player.map((player, index) => {
               return (
                 // eslint-disable-next-line react/no-array-index-key
@@ -273,7 +281,8 @@ function FightCard({ fight, reportID }: FightCardProps) {
               );
             })}
           </div> */}
-        </LinkOverlay>
+          </LinkOverlay>
+        )}
       </LinkBox>
     </div>
   );
