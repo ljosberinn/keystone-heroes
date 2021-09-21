@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { PrismaClient } from "@prisma/client";
 import type { Class, Zone } from "@prisma/client";
 
@@ -17,7 +18,7 @@ import { weeks } from "../src/data/weeks";
 
 import "@keystone-heroes/env/src/loader";
 
-const prisma = new PrismaClient();
+let prisma: PrismaClient;
 
 function seedDungeons() {
   return Promise.all(
@@ -224,7 +225,6 @@ async function seedAbilities() {
 
     const key = `abilities-${start}-${end}`;
 
-    // eslint-disable-next-line no-console
     console.time(key);
 
     const data = allAbilities
@@ -240,52 +240,128 @@ async function seedAbilities() {
       skipDuplicates: true,
     });
 
-    // eslint-disable-next-line no-console
     console.timeEnd(key);
   }
 }
 
 async function seedCooldowns() {
   await Promise.all(
-    cooldowns.map((cd) => {
-      return prisma.cooldown.upsert({
-        create: {
-          cd: cd.cd,
-          abilityID: cd.abilityID,
-          classID: cd.classID,
-          specID: cd.specID,
-          id: cd.id,
-        },
-        where: {
-          id: cd.id,
-        },
-        update: {},
-      });
-    })
+    cooldowns
+      .filter((cd) => cd.classID === 12)
+      .map((cd) => {
+        return prisma.cooldown.upsert({
+          create: {
+            cd: cd.cd,
+            abilityID: cd.abilityID,
+            classID: cd.classID,
+            specID: cd.specID,
+            id: cd.id,
+          },
+          where: {
+            id: cd.id,
+          },
+          update: {
+            cd: cd.cd,
+          },
+        });
+      })
   );
 }
 
-async function seed(): Promise<void> {
-  await seedDungeons();
-  await seedZones();
-  await seedClasses();
-  await seedSpecs();
-  await seedAffixes();
-  await seedExpansions();
-  await seedSeasons();
-  await seedWeeks();
-  await seedCovenants();
-  await seedSoulbinds();
-  await seedRegions();
-  await seedNPCs();
-  await seedAbilities();
-  await seedCooldowns();
+async function seed1(): Promise<void> {
+  console.log("seed1 begin");
+  console.time("seed1");
 
-  await prisma.$disconnect();
+  try {
+    prisma = new PrismaClient();
 
-  // eslint-disable-next-line unicorn/no-process-exit
-  process.exit(0);
+    console.time("seedDungeons");
+    await seedDungeons();
+    console.timeEnd("seedDungeons");
+
+    console.time("seedZones");
+    await seedZones();
+    console.timeEnd("seedZones");
+
+    console.time("seedClasses");
+    await seedClasses();
+    console.timeEnd("seedClasses");
+
+    console.time("seedSpecs");
+    await seedSpecs();
+    console.timeEnd("seedSpecs");
+
+    console.time("seedAffixes");
+    await seedAffixes();
+    console.timeEnd("seedAffixes");
+
+    console.time("seedExpansions");
+    await seedExpansions();
+    console.timeEnd("seedExpansions");
+
+    console.time("seedSeasons");
+    await seedSeasons();
+    console.timeEnd("seedSeasons");
+
+    console.time("seedWeeks");
+    await seedWeeks();
+    console.timeEnd("seedWeeks");
+
+    console.time("seedCovenants");
+    await seedCovenants();
+    console.timeEnd("seedCovenants");
+
+    console.time("seedSoulbinds");
+    await seedSoulbinds();
+    console.timeEnd("seedSoulbinds");
+
+    console.time("seedRegions");
+    await seedRegions();
+    console.timeEnd("seedRegions");
+
+    console.time("seedNPCs");
+    await seedNPCs();
+    console.timeEnd("seedNPCs");
+  } catch (error) {
+    console.log(error);
+  } finally {
+    console.log("seed1 done; disconnecting");
+    await prisma.$disconnect();
+    console.log("disconnected");
+  }
+
+  console.timeEnd("seed1");
 }
 
-// eslint-disable-next-line @typescript-eslint/no-floating-promises
-seed();
+async function seed2(): Promise<void> {
+  console.log("seed2 begin");
+  console.time("seed2");
+
+  try {
+    prisma = new PrismaClient();
+
+    console.time("seedAbilities");
+    await seedAbilities();
+    console.timeEnd("seedAbilities");
+
+    console.time("seedCooldowns");
+    await seedCooldowns();
+    console.timeEnd("seedCooldowns");
+  } catch (error) {
+    console.log(error);
+  } finally {
+    console.log("seed2 done; disconnecting");
+    await prisma.$disconnect();
+    console.log("disconnected");
+  }
+
+  console.timeEnd("seed2");
+}
+
+seed1()
+  .then(() => seed2())
+  .catch(console.log)
+  .finally(() => {
+    // eslint-disable-next-line unicorn/no-process-exit
+    process.exit(0);
+  });
