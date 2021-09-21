@@ -13,19 +13,19 @@ import React, {
   useEffect,
   useCallback,
 } from "react";
-import { useStaticData } from "src/context/StaticData";
-import { usePrevious } from "src/hooks/usePrevious";
-import { useFight } from "src/pages/report/[reportID]/[fightID]";
+
+import { useStaticData } from "../../context/StaticData";
+import { usePrevious } from "../../hooks/usePrevious";
+import { useFight } from "../../pages/report/[reportID]/[fightID]";
 import {
   useLegend,
   useMapOptions,
   useReportStore,
   useRestoreMapOptions,
-} from "src/store";
-import { bgPrimary } from "src/styles/tokens";
-import { fightTimeToString } from "src/utils";
-import { classnames } from "src/utils/classnames";
-
+} from "../../store";
+import { bgPrimary } from "../../styles/tokens";
+import { fightTimeToString } from "../../utils";
+import { classnames } from "../../utils/classnames";
 import {
   BLOODLUST_ICON,
   INVIS_POTION_ICON,

@@ -1,17 +1,19 @@
-import type { Config } from "@jest/types";
+// @ts-check
+const baseConfig = require("../../../jest.config");
 
-import baseConfig from "../../../jest.config";
-
-const config: Config.InitialOptions = {
+/**
+ * @type import('@jest/types').Config.InitialOptions
+ */
+const config = {
   ...baseConfig,
   displayName: "wcl",
   setupFilesAfterEnv: ["<rootDir>/jest/setupTests.js"],
   coverageThreshold: {
     global: {
-      statements: 94,
+      statements: 92,
       branches: 87,
       functions: 87,
-      lines: 94,
+      lines: 92,
     },
   },
   coveragePathIgnorePatterns: [
@@ -22,4 +24,4 @@ const config: Config.InitialOptions = {
   ],
 };
 
-export default config;
+module.exports = config;

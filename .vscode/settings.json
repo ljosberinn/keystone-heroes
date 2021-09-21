@@ -26,5 +26,7 @@
     "./packages/@keystone-heroes/env",
     "./packages/@keystone-heroes/web"
   ],
-  "typescript.tsdk": "node_modules\\typescript\\lib"
+  "typescript.tsdk": "node_modules\\typescript\\lib",
+  "typescript.preferences.importModuleSpecifier": "relative",
+  "editor.bracketPairColorization.enabled": true
 }

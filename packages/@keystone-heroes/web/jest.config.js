@@ -1,8 +1,10 @@
-import type { Config } from "@jest/types";
+// @ts-check
+const baseConfig = require("../../../jest.config");
 
-import baseConfig from "../../../jest.config";
-
-const config: Config.InitialOptions = {
+/**
+ * @type import('@jest/types').Config.InitialOptions
+ */
+const config = {
   ...baseConfig,
   setupFilesAfterEnv: ["<rootDir>/jest/setupTests.js"],
   moduleNameMapper: {
@@ -12,9 +14,9 @@ const config: Config.InitialOptions = {
   displayName: "web",
   testEnvironment: "jsdom",
   transform: {
-    ...baseConfig.transform,
     "^.+\\.css$": "<rootDir>/jest/cssTransform.js",
+    "^.+\\.(js|jsx|ts|tsx)$": ["babel-jest", { presets: ["next/babel"] }],
   },
 };
 
-export default config;
+module.exports = config;

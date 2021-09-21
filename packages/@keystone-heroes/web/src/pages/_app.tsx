@@ -5,12 +5,12 @@ import "../styles/globals.css";
 import type { NextRouter } from "next/router";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import { StaticDataProvider } from "src/context/StaticData";
-import { parseWCLUrl } from "src/utils";
 
 import { Footer } from "../components/Footer";
 import { Header } from "../components/Header";
 import { RouteChangeIndicator } from "../components/RouteChangeIndicator";
+import { StaticDataProvider } from "../context/StaticData";
+import { parseWCLUrl } from "../utils";
 
 export type AppRenderProps = {
   pageProps: Record<string, unknown>;

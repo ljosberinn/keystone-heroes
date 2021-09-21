@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { classnames } from "src/utils/classnames";
 
+import { classnames } from "../utils/classnames";
 import styles from "./LinkBox.module.css";
 
 type LinkBoxProps = {

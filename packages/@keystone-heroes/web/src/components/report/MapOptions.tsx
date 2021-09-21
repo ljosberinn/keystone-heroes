@@ -1,6 +1,6 @@
 import type { ChangeEvent } from "react";
-import { useMapOptions } from "src/store";
 
+import { useMapOptions } from "../../store";
 import { Dialog } from "../Dialog";
 
 // eslint-disable-next-line import/no-default-export

@@ -9,3 +9,31 @@
 a [title] {
   cursor: pointer;
 }
+
+.bg-sd {
+  background-image: url(/static/dungeons/sd.jpg);
+}
+.bg-soa {
+  background-image: url(/static/dungeons/soa.jpg);
+}
+.bg-nw {
+  background-image: url(/static/dungeons/nw.jpg);
+}
+.bg-hoa {
+  background-image: url(/static/dungeons/hoa.jpg);
+}
+.bg-pf {
+  background-image: url(/static/dungeons/pf.jpg);
+}
+.bg-mots {
+  background-image: url(/static/dungeons/mots.jpg);
+}
+.bg-dos {
+  background-image: url(/static/dungeons/dos.jpg);
+}
+.bg-top {
+  background-image: url(/static/dungeons/top.jpg);
+}
+.bg-fallback {
+  background-image: url(/static/dungeons/fallback.jpg);
+}

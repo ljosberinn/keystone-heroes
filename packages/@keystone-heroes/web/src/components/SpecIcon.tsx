@@ -1,4 +1,4 @@
-import { classnames } from "src/utils/classnames";
+import { classnames } from "../utils/classnames";
 
 export type SpecIconProps = {
   spec: string;

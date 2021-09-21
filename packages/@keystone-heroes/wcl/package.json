@@ -32,7 +32,6 @@
     "msw": "0.35.0",
     "prettier": "2.4.1",
     "ts-essentials": "8.1.0",
-    "ts-jest": "27.0.5",
     "ts-node": "10.2.1",
     "typescript": "4.4.3"
   },

@@ -7,12 +7,13 @@ import type { GetStaticPaths, GetStaticProps } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { createContext, useContext } from "react";
-import { Data } from "src/components/report/Data";
-import { Map } from "src/components/report/Map";
-import { Meta } from "src/components/report/Meta";
-import { useStaticData } from "src/context/StaticData";
-import { useAbortableFetch } from "src/hooks/useAbortableFetch";
-import { fightTimeToString } from "src/utils";
+
+import { Data } from "../../../components/report/Data";
+import { Map } from "../../../components/report/Map";
+import { Meta } from "../../../components/report/Meta";
+import { useStaticData } from "../../../context/StaticData";
+import { useAbortableFetch } from "../../../hooks/useAbortableFetch";
+import { fightTimeToString } from "../../../utils";
 
 type FightIDProps = {
   cache?: {

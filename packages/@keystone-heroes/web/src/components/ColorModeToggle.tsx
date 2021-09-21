@@ -1,9 +1,9 @@
 import { useTheme } from "next-themes";
 import { useEffect } from "react";
-import { classnames } from "src/utils/classnames";
 
 import { useIsHydrated } from "../hooks/useIsHydrated";
 import { icons } from "../icons";
+import { classnames } from "../utils/classnames";
 
 export function ColorModeToggle(): JSX.Element | null {
   const isMounted = useIsHydrated();

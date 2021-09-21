@@ -99,8 +99,7 @@ export function Meta(): JSX.Element {
           </span>
           {fight.meta.totalDeaths > 0 && (
             <span className={`italic ${redText}`}>
-              -{fightTimeToString(fight.meta.totalDeaths * 5 * 1000, true)} |{" "}
-              {fight.meta.totalDeaths} deaths
+              -{fightTimeToString(fight.meta.totalDeaths * 5 * 1000, true)}
             </span>
           )}
         </div>

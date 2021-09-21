@@ -1,7 +1,8 @@
 import { useRouter } from "next/router";
 import type { FormEvent, ChangeEvent } from "react";
 import { useState } from "react";
-import { parseWCLUrl } from "src/utils";
+
+import { parseWCLUrl } from "../utils";
 
 export default function Home(): JSX.Element | null {
   const { push } = useRouter();

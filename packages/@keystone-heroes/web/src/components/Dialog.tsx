@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
-import { classnames } from "src/utils/classnames";
+
+import { classnames } from "../utils/classnames";
 
 export type DialogProps = {
   defaultOpen?: boolean;

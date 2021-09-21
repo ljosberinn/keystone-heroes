@@ -7,14 +7,13 @@ import type { GetStaticPaths, GetStaticProps } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import { SpecIcon } from "src/components/SpecIcon";
-import { useStaticData } from "src/context/StaticData";
-import { bgPrimary } from "src/styles/tokens";
-import { fightTimeToString } from "src/utils";
-import { classnames } from "src/utils/classnames";
 
 import { LinkBox, LinkOverlay } from "../../../components/LinkBox";
+import { SpecIcon } from "../../../components/SpecIcon";
 import { useAbortableFetch } from "../../../hooks/useAbortableFetch";
+import { bgPrimary } from "../../../styles/tokens";
+import { fightTimeToString } from "../../../utils";
+import { classnames } from "../../../utils/classnames";
 
 type ReportProps = {
   cache?: {
@@ -93,23 +92,6 @@ function useSeamlessFightRedirect(
   }, [report, fightID, push, reportID]);
 }
 
-function useBackgroundStyles() {
-  const { dungeons } = useStaticData();
-
-  const slugs = [
-    ...Object.values(dungeons).map((dungeon) => dungeon.slug.toLowerCase()),
-    "fallback",
-  ];
-
-  return slugs
-    .map((slug) => {
-      return `.bg-${slug} {
-  background-image: url(/static/dungeons/${slug}.jpg)
-}`;
-    })
-    .join("");
-}
-
 export default function Report({ cache }: ReportProps): JSX.Element | null {
   const { url, reportID, fightID } = useReportURL(cache);
 
@@ -119,7 +101,6 @@ export default function Report({ cache }: ReportProps): JSX.Element | null {
   });
 
   useSeamlessFightRedirect(report, reportID, fightID);
-  const styles = useBackgroundStyles();
 
   if (report && "error" in report) {
     return <h1>error: {report.error}</h1>;
@@ -144,7 +125,7 @@ export default function Report({ cache }: ReportProps): JSX.Element | null {
         <title>Keystone Heroes - {report?.title ?? "unknown report"}</title>
       </Head>
       <h1>{loading ? "loading" : report?.title ?? "unknown report"}</h1>
-      <style jsx>{styles}</style>
+
       {/* <div>
         {report?.affixes?.map((affix) => (
           <AbilityIcon alt={affix.name} key={affix.name} icon={affix.icon} />

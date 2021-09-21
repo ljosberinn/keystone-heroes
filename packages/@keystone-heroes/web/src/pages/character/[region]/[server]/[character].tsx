@@ -1,6 +1,7 @@
 import type { GetStaticPaths, GetStaticProps } from "next";
 import Link from "next/link";
-import { createPageContext } from "src/context/PageData";
+
+import { createPageContext } from "../../../../context/PageData";
 
 type CharacterProps = {
   character: string;

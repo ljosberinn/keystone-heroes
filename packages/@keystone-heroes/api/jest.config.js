@@ -1,8 +1,11 @@
-import type { Config } from "@jest/types";
+// @ts-check
 
-import baseConfig from "../../../jest.config";
+const baseConfig = require("../../../jest.config.js");
 
-const config: Config.InitialOptions = {
+/**
+ * @type import('@jest/types').Config.InitialOptions
+ */
+const config = {
   ...baseConfig,
   displayName: "api",
   setupFilesAfterEnv: ["<rootDir>/jest/setupTests.ts"],
@@ -16,4 +19,4 @@ const config: Config.InitialOptions = {
   },
 };
 
-export default config;
+module.exports = config;
