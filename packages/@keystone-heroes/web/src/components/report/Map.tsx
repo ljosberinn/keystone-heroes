@@ -766,7 +766,7 @@ function PullIndicatorIcon({ pull, x, y }: PullIndicatorIconProps) {
     return (
       <g {...gProps}>
         <image
-          aria-label="Bloodlust was used on this pull."
+          aria-label="Bloodlust | Heroism | Drums was/were used on this pull."
           href={BLOODLUST_ICON}
           {...sharedProps}
         />

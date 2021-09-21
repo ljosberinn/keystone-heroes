@@ -6,7 +6,10 @@ export const hasBloodLust = (
   pull: FightSuccessResponse["pulls"][number]
 ): boolean => {
   return pull.events.some(
-    (event) => event.ability && bloodlustTypes.has(event.ability.id)
+    (event) =>
+      event.type !== "AbilityReady" &&
+      event.ability &&
+      bloodlustTypes.has(event.ability.id)
   );
 };
 
