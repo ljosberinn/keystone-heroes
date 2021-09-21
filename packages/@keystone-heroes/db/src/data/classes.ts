@@ -1424,7 +1424,7 @@ export const classes: Class[] = [
       {
         name: "Avenging Wrath",
         id: 31_884,
-        cd: 180,
+        cd: 120,
         icon: "spell_holy_avenginewrath",
       },
       {
