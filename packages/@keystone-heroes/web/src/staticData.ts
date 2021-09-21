@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/no-duplicate-string */
 const tormentedLieutenantIDs = new Set<number>([
   179_891, 179_446, 179_892, 179_890,
 ]);
@@ -1567,6 +1568,10 @@ export const staticData = {
       effectName: "Slick Ice",
       icon: "inv_enchant_shardshadowfrostlarge",
     },
+    "332769": {
+      effectName: "Arcane Harmony",
+      icon: "ability_creature_cursed_04",
+    },
     "334888": {
       effectName: "Frenzied Monstrosity",
       icon: "ability_warlock_baneofhavoc",
@@ -1683,6 +1688,7 @@ export const staticData = {
   },
   talents: {
     "772": { name: "Rend", icon: "ability_gouge" },
+    "5484": { name: "Howl of Terror", icon: "ability_warlock_howlofterror" },
     "6789": { name: "Mortal Coil", icon: "ability_warlock_mortalcoil" },
     "14062": { name: "Nightstalker", icon: "ability_stealth" },
     "20066": { name: "Repentance", icon: "spell_holy_prayerofhealing" },
@@ -1698,6 +1704,10 @@ export const staticData = {
     "56377": { name: "Splitting Ice", icon: "spell_frost_ice-shards" },
     "64044": { name: "Psychic Horror", icon: "spell_shadow_psychichorrors" },
     "64129": { name: "Body and Soul", icon: "spell_holy_symbolofhope" },
+    "102351": {
+      name: "Cenarion Ward",
+      icon: "ability_druid_naturalperfection",
+    },
     "102359": {
       name: "Mass Entanglement",
       icon: "spell_druid_massentanglement",
@@ -1770,6 +1780,8 @@ export const staticData = {
       name: "Anger Management",
       icon: "warrior_talent_icon_angermanagement",
     },
+    "153626": { name: "Arcane Orb", icon: "spell_mage_arcaneorb" },
+    "155147": { name: "Overpowered", icon: "spell_mage_overpowered" },
     "155148": { name: "Kindling", icon: "spell_mage_kindling" },
     "155149": { name: "Thermal Void", icon: "spell_mage_thermalvoid" },
     "156910": {
@@ -1781,6 +1793,7 @@ export const staticData = {
       icon: "ability_shaman_condensationtotem",
     },
     "158476": { name: "Soul of the Forest", icon: "ability_druid_manatree" },
+    "158478": { name: "Soul of the Forest", icon: "ability_druid_manatree" },
     "183778": {
       name: "Judgment of Light",
       icon: "spell_holy_divineprovidence",
@@ -1836,10 +1849,15 @@ export const staticData = {
       name: "Restoration Affinity",
       icon: "ability_druid_improvedtreeform",
     },
+    "197632": {
+      name: "Balance Affinity",
+      icon: "ability_druid_improvedmoonkinform",
+    },
     "197690": {
       name: "Defensive Stance",
       icon: "ability_warrior_defensivestance",
     },
+    "197721": { name: "Flourish", icon: "spell_druid_wildburst" },
     "197900": { name: "Mist Wrap", icon: "ability_monk_pathofmists" },
     "197908": { name: "Mana Tea", icon: "monk_ability_cherrymanatea" },
     "197995": { name: "Wellspring", icon: "ability_shawaterelemental_split" },
@@ -1896,6 +1914,7 @@ export const staticData = {
       name: "Lonely Winter",
       icon: "achievement_dungeon_frozenthrone",
     },
+    "205028": { name: "Resonance", icon: "spell_arcane_arcane01" },
     "205029": { name: "Flame On", icon: "inv_helm_circlet_firelands_d_01" },
     "205036": { name: "Ice Ward", icon: "spell_frost_frostward" },
     "205037": { name: "Flame Patch", icon: "spell_mage_flameorb" },
@@ -1924,6 +1943,7 @@ export const staticData = {
     },
     "207289": { name: "Unholy Assault", icon: "spell_shadow_unholyfrenzy" },
     "207311": { name: "Clawing Shadows", icon: "warlock_curse_shadow" },
+    "207385": { name: "Spring Blossoms", icon: "inv_misc_trailofflowers" },
     "207401": {
       name: "Ancestral Vigor",
       icon: "spell_shaman_blessingoftheeternals",
@@ -1959,6 +1979,7 @@ export const staticData = {
     "234299": { name: "Fist of Justice", icon: "spell_holy_fistofjustice" },
     "235224": { name: "Frigid Winds", icon: "ability_mage_deepfreeze" },
     "236058": { name: "Frenetic Speed", icon: "spell_fire_burningspeed" },
+    "236628": { name: "Amplification", icon: "spell_arcane_invocation" },
     "238104": {
       name: "Enveloping Shadows",
       icon: "ability_rogue_envelopingshadows",
@@ -2098,6 +2119,7 @@ export const staticData = {
       name: "Fortifying Ingredients",
       icon: "inv_misc_food_vendor_blackpepper",
     },
+    "336873": { name: "Arcane Prodigy", icon: "spell_nature_moonglow" },
     "336884": {
       name: "Lingering Numbness",
       icon: "sha_ability_rogue_bloodyeye",
@@ -2107,6 +2129,7 @@ export const staticData = {
       name: "Discipline of the Grove",
       icon: "achievement_bg_wineos",
     },
+    "337058": { name: "Ire of the Ascended", icon: "paladin_holy" },
     "337084": {
       name: "Tumbling Technique",
       icon: "ability_titankeeper_phasing",
@@ -2116,6 +2139,10 @@ export const staticData = {
     "337123": { name: "Cryo-Freeze", icon: "spell_frost_icefloes" },
     "337136": { name: "Diverted Energy", icon: "inv_soulbarrier" },
     "337162": { name: "Depths of Insanity", icon: "spell_shadow_summonimp" },
+    "337192": {
+      name: "Magi's Brand",
+      icon: "spell_arcane_arcane01_nightborne",
+    },
     "337250": { name: "Evasive Stride", icon: "ability_monk_uplift" },
     "337264": { name: "Walk with the Ox", icon: "monk_stance_drunkenox" },
     "337275": { name: "Incantation of Swiftness", icon: "rogue_burstofspeed" },
@@ -2304,6 +2331,7 @@ export const staticData = {
     "340540": { name: "Ursine Vigor", icon: "ability_druid_markofursol" },
     "340543": { name: "Innate Resolve", icon: "spell_nature_healingway" },
     "340545": { name: "Tireless Pursuit", icon: "spell_druid_tirelesspursuit" },
+    "340549": { name: "Unstoppable Growth", icon: "ability_druid_flourish" },
     "340552": { name: "Unchecked Aggression", icon: "ability_druid_berserk" },
     "340553": {
       name: "Well-Honed Instincts",

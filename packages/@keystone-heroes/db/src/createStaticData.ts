@@ -270,6 +270,7 @@ async function create() {
   };
 
   const template = `
+/* eslint-disable sonarjs/no-duplicate-string */
 const tormentedLieutenantIDs = new Set<number>(${JSON.stringify(
     tormentedLieutenants.map((lt) => lt.id)
   )});  
