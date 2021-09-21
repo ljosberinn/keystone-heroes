@@ -542,7 +542,7 @@ const eventHasRelevantAbilityAndSourcePlayerID = (
 const abilitiesWithCDR = new Set([
   324_386, 306_830, 204_021, 1719, 212_084, 207_684, 79_206, 325_886, 12_472,
   84_714, 1122, 20_707, 202_137, 307_865, 307_443, 20_484, 137_639, 325_216,
-  265_187, 308_491, 198_589,
+  265_187, 308_491, 198_589, 12_042, 323_764,
 ]);
 
 const calculateAbilityReadyEvents = (
@@ -610,8 +610,6 @@ const calculateAbilityReadyEvents = (
       if (diff < cd) {
         if (!abilitiesWithCDR.has(event.ability.id)) {
           console.log(
-            event.timestamp,
-            nextCast.timestamp,
             `detected cdr on ${event.ability.id} - expected cd of ${cd}, saw ${diff}`
           );
           abilitiesWithCDR.add(event.ability.id);
