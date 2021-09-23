@@ -13,6 +13,7 @@ import {
   createWowheadUrl,
   classBorderColorMap,
 } from "../../utils";
+import { classnames } from "../../utils/classnames";
 import { AbilityIcon } from "../AbilityIcon";
 import { ExternalLink } from "../ExternalLink";
 import { SpecIcon } from "../SpecIcon";
@@ -20,22 +21,14 @@ import { SpecIcon } from "../SpecIcon";
 export function Meta(): JSX.Element {
   const { reportID, fightID, fight } = useFight();
 
-  const { classes, dungeons, affixes, tormentedPowers } = useStaticData();
+  const { classes, dungeons, affixes, tormentedPowers, soulbinds, covenants } =
+    useStaticData();
 
   if (!fight) {
     return <h1>loading</h1>;
   }
 
   const dungeon = dungeons[fight.dungeon];
-
-  const lowestItemlevel = fight.player.reduce(
-    (acc, player) => (player.itemLevel < acc ? player.itemLevel : acc),
-    fight.player[0].itemLevel
-  );
-  const highestItemLevel = fight.player.reduce(
-    (acc, player) => (player.itemLevel > acc ? player.itemLevel : acc),
-    fight.player[0].itemLevel
-  );
 
   return (
     <section
@@ -110,18 +103,13 @@ export function Meta(): JSX.Element {
               fight.meta.percent < 101
                 ? greenText
                 : fight.meta.percent < 103
-                ? "text-orange-600"
+                ? "text-yellow-600"
                 : redText
             }
           >
             {fight.meta.percent.toFixed(2)}%
           </span>{" "}
           trash cleared
-        </div>
-
-        <div className="p-4 pt-0">
-          Itemlevel Ø {fight.meta.averageItemLevel} ({lowestItemlevel}-
-          {highestItemLevel})
         </div>
       </div>
 
@@ -140,8 +128,10 @@ export function Meta(): JSX.Element {
         <table className="w-full paddingLessTable">
           <thead>
             <tr>
-              <th className="text-xl text-left h-14" colSpan={2}>
-                Composition
+              <th className="text-xl text-left h-14">Composition</th>
+              <th className="text-right">
+                <span className="hidden xl:inline">Itemlevel</span>
+                <span className="inline xl:hidden">ILVL</span>
               </th>
               <th className="text-right">DPS</th>
               <th className="text-right">HPS</th>
@@ -161,7 +151,7 @@ export function Meta(): JSX.Element {
               return (
                 <Fragment key={player.actorID}>
                   <tr>
-                    <td className="flex h-12 space-x-2">
+                    <td className="flex h-10 space-x-2">
                       <Link
                         href={`/character/${player.region.toLowerCase()}/${player.server.toLowerCase()}/${player.name.toLowerCase()}`}
                         key={player.actorID}
@@ -175,12 +165,28 @@ export function Meta(): JSX.Element {
                             alert("not yet implemented");
                           }}
                         >
-                          <span className="inline-flex items-center w-full space-x-2">
+                          <span className="inline-flex items-center w-full">
                             <span className="w-8 h-8">
                               <SpecIcon class={name} spec={spec.name} />
                             </span>
+                            {player.covenant ? (
+                              <span className="w-4 h-4 ml-2">
+                                <img
+                                  src={`https://assets.rpglogs.com/img/warcraft/abilities/${
+                                    covenants[player.covenant].icon
+                                  }.jpg`}
+                                  alt={covenants[player.covenant].name}
+                                  title={covenants[player.covenant].name}
+                                  className="relative object-cover w-full h-full rounded-full -top-4 -left-4"
+                                />
+                              </span>
+                            ) : null}
                             <span
-                              className={`${classColor} border-b-2 flex-grow`}
+                              className={classnames(
+                                classColor,
+                                player.covenant ? "-ml-3" : "pl-2",
+                                "border-b-2 border-opacity-75 dark:border-opacity-50 flex-grow"
+                              )}
                             >
                               {player.name}
                             </span>
@@ -188,49 +194,72 @@ export function Meta(): JSX.Element {
                         </a>
                       </Link>
                     </td>
-                    <td>
-                      <div
-                        className={`${classColor} border-b-2 flex space-x-2 justify-evenly`}
+
+                    <td className="text-right">
+                      <span
+                        className={`${classColor} border-b-2 border-opacity-75 dark:border-opacity-50 text-right flex flex-grow justify-end`}
                       >
-                        <sup className="lg:hidden xl:inline">
-                          <WarcraftLogsProfileLink
-                            name={player.name}
-                            server={player.server}
-                            region={player.region}
-                          />
-                        </sup>
-                        <sup className="lg:hidden xl:inline">
-                          <RaiderIOLink
-                            name={player.name}
-                            server={player.server}
-                            region={player.region}
-                          />
-                        </sup>
-                      </div>
+                        {player.itemLevel}
+                      </span>
                     </td>
                     <td className="text-right">
                       <span
-                        className={`${classColor} border-b-2 text-right flex flex-grow justify-end`}
+                        className={`${classColor} border-b-2 border-opacity-75 dark:border-opacity-50 text-right flex flex-grow justify-end`}
                       >
                         {player.dps.toLocaleString("en-US")}
                       </span>
                     </td>
                     <td>
                       <span
-                        className={`${classColor} border-b-2 text-right flex flex-grow justify-end`}
+                        className={`${classColor} border-b-2 border-opacity-75 dark:border-opacity-50 text-right flex flex-grow justify-end`}
                       >
                         {player.hps.toLocaleString("en-US")}
                       </span>
                     </td>
                   </tr>
                   <tr>
-                    <td colSpan={4}>
-                      <div className="flex pl-10 space-x-2">
+                    <td colSpan={3}>
+                      <div className="flex space-x-1">
+                        <div
+                          className={`${classColor} relative w-4 h-4 mr-4 border-b-2 border-opacity-75 dark:border-opacity-50 border-l-2 border-solid left-4`}
+                        />
+                        {player.legendary ? (
+                          <>
+                            <ExternalLink
+                              href={createWowheadUrl({
+                                category: "spell",
+                                id: player.legendary.id,
+                              })}
+                              className="w-6 h-6"
+                            >
+                              <AbilityIcon
+                                icon={player.legendary.effectIcon}
+                                alt={player.legendary.effectName}
+                                className="object-cover w-full h-full rounded-full"
+                              />
+                            </ExternalLink>
+                            <span>|</span>
+                          </>
+                        ) : null}
+                        {player.soulbind ? (
+                          <>
+                            <div className="w-6 h-6">
+                              <img
+                                // TODO: store assets locally
+                                src={`https://assets.rpglogs.com/img/warcraft/soulbinds/soulbind-${player.soulbind}.jpg`}
+                                alt={soulbinds[player.soulbind].name}
+                                title={soulbinds[player.soulbind].name}
+                                className="object-cover w-full h-full rounded-full"
+                              />
+                            </div>
+                            <span>|</span>
+                          </>
+                        ) : null}
                         {player.tormented.map((id, index) => {
                           const power = tormentedPowers[id];
 
                           return (
-                            <div
+                            <span
                               className="w-6 h-6"
                               // eslint-disable-next-line react/no-array-index-key
                               key={`${id}-${index}}`}
@@ -247,9 +276,27 @@ export function Meta(): JSX.Element {
                                   className="object-cover w-full h-full rounded-full"
                                 />
                               </ExternalLink>
-                            </div>
+                            </span>
                           );
                         })}
+                      </div>
+                    </td>
+                    <td>
+                      <div className="flex justify-end space-x-1">
+                        <span className="lg:hidden xl:inline">
+                          <WarcraftLogsProfileLink
+                            name={player.name}
+                            server={player.server}
+                            region={player.region}
+                          />
+                        </span>
+                        <span className="lg:hidden xl:inline">
+                          <RaiderIOLink
+                            name={player.name}
+                            server={player.server}
+                            region={player.region}
+                          />
+                        </span>
                       </div>
                     </td>
                   </tr>
@@ -259,7 +306,10 @@ export function Meta(): JSX.Element {
           </tbody>
           <tfoot>
             <tr>
-              <td colSpan={3} className="text-right">
+              <td colSpan={2} className="text-right">
+                Ø {fight.meta.averageItemLevel}
+              </td>
+              <td className="text-right">
                 {fight.meta.dps.toLocaleString("en-US")}
               </td>
               <td className="text-right">
@@ -286,7 +336,8 @@ function RaiderIOLink({ name, server, region }: LinkProps): JSX.Element {
     >
       <img
         src="/static/icons/rio.svg"
-        alt="Raider.io profile"
+        alt={`Visit Raider.io profile of ${name}`}
+        title={`Visit Raider.io profile of ${name}`}
         className="w-6 h-6"
       />
     </ExternalLink>
@@ -305,7 +356,8 @@ function WarcraftLogsProfileLink({
     >
       <img
         src="/static/icons/wcl.png"
-        alt="WarcraftLogs profile"
+        alt={`Visit WarcraftLogs profile of ${name}`}
+        title={`Visit WarcraftLogs profile of ${name}`}
         className="w-6 h-6"
       />
     </ExternalLink>
