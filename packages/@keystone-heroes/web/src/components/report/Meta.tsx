@@ -185,7 +185,7 @@ export function Meta(): JSX.Element {
                               className={classnames(
                                 classColor,
                                 player.covenant ? "-ml-3" : "pl-2",
-                                "border-b-2 border-opacity-75 dark:border-opacity-50 flex-grow"
+                                "border-b-2 dark:border-opacity-50 flex-grow"
                               )}
                             >
                               {player.name}
@@ -197,21 +197,21 @@ export function Meta(): JSX.Element {
 
                     <td className="text-right">
                       <span
-                        className={`${classColor} border-b-2 border-opacity-75 dark:border-opacity-50 text-right flex flex-grow justify-end`}
+                        className={`${classColor} border-b-2 dark:border-opacity-50 text-right flex flex-grow justify-end`}
                       >
                         {player.itemLevel}
                       </span>
                     </td>
                     <td className="text-right">
                       <span
-                        className={`${classColor} border-b-2 border-opacity-75 dark:border-opacity-50 text-right flex flex-grow justify-end`}
+                        className={`${classColor} border-b-2 dark:border-opacity-50 text-right flex flex-grow justify-end`}
                       >
                         {player.dps.toLocaleString("en-US")}
                       </span>
                     </td>
                     <td>
                       <span
-                        className={`${classColor} border-b-2 border-opacity-75 dark:border-opacity-50 text-right flex flex-grow justify-end`}
+                        className={`${classColor} border-b-2 dark:border-opacity-50 text-right flex flex-grow justify-end`}
                       >
                         {player.hps.toLocaleString("en-US")}
                       </span>
@@ -219,9 +219,9 @@ export function Meta(): JSX.Element {
                   </tr>
                   <tr>
                     <td colSpan={3}>
-                      <div className="flex space-x-1">
+                      <div className="flex h-10 space-x-1">
                         <div
-                          className={`${classColor} relative w-4 h-4 mr-4 border-b-2 border-opacity-75 dark:border-opacity-50 border-l-2 border-solid left-4`}
+                          className={`${classColor} relative w-4 h-4 mr-4 border-b-2 dark:border-opacity-50 border-l-2 border-solid left-4`}
                         />
                         {player.legendary ? (
                           <>
@@ -282,7 +282,7 @@ export function Meta(): JSX.Element {
                       </div>
                     </td>
                     <td>
-                      <div className="flex justify-end space-x-1">
+                      <div className="flex justify-end h-10 space-x-1">
                         <span className="lg:hidden xl:inline">
                           <WarcraftLogsProfileLink
                             name={player.name}

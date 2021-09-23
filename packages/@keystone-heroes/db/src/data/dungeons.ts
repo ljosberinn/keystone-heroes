@@ -147,6 +147,7 @@ export const EXCLUDED_NPCS = new Set([
   170_474, // Brood Assassin via Domina Venomblade
   165_430, // Malignant Spawn via Margrave Stradama
   171_188, // Plaguebound Devoted via Margrave Stradama
+  168_747, // Venomfang
 ]);
 
 export const SOA_FINAL_BOSS_ANGELS = new Set([
@@ -483,7 +484,8 @@ export const PLAGUEFALL: DungeonMeta = {
     163_892: 6, // Rotting Slimeclaw
     164_705: 6, // Pestilence Slime
     168_886: 25, // Virulax Blightweaver
-    168_747: 0, // Venomfang
+    // 168_747: 0, // Venomfang; entirely disabled due to RP surrounding 3rd boss
+    // ------- see excluded npcs
     168_907: 10, // Slime Tentacle
     164_737: 12, // Brood Ambusher
     168_968: 0, // Plaguebound Fallen

@@ -17,6 +17,10 @@ export default function CustomDocument(/* props: DocumentProps*/): JSX.Element {
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap"
         />
+        <script>{`
+          const whTooltips = {colorLinks: true, iconizeLinks: true };
+          `}</script>
+        <script async src="https://wow.zamimg.com/widgets/power.js" />
       </Head>
       <body className="bg-white dark:bg-coolgray-900 dark:text-coolgray-200">
         <Main />

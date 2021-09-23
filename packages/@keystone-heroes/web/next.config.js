@@ -63,9 +63,9 @@ module.exports = withTM(config);
 // https://securityheaders.com
 const ContentSecurityPolicy = `
   default-src 'self';
-  script-src 'self' 'unsafe-eval' 'unsafe-inline' *.youtube.com *.twitter.com;
+  script-src 'self' 'unsafe-eval' 'unsafe-inline' *.youtube.com *.twitter.com wow.zamimg.com;
   child-src *.youtube.com *.google.com *.twitter.com;
-  style-src 'self' 'unsafe-inline' *.googleapis.com;
+  style-src 'self' 'unsafe-inline' *.googleapis.com wow.zamimg.com;
   img-src * blob: data:;
   media-src 'none';
   connect-src *;

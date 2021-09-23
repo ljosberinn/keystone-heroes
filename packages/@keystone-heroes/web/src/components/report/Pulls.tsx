@@ -3,7 +3,7 @@ import { useStaticData } from "src/context/StaticData";
 import { useFight } from "src/pages/report/[reportID]/[fightID]";
 import { useReportStore } from "src/store";
 import { bgPrimary } from "src/styles/tokens";
-import { createWCLUrl, fightTimeToString } from "src/utils";
+import { createWCLUrl, createWowheadUrl, fightTimeToString } from "src/utils";
 import { classnames } from "src/utils/classnames";
 
 import { AbilityIcon } from "../AbilityIcon";
@@ -54,12 +54,19 @@ function PullHeader({
               className="flex items-center w-10 h-10 space-x-2 lg:w-12 lg:h-12"
             >
               <span>{npc.count}</span>
-              <img
-                src={`/static/npcs/${npc.id}.png`}
-                alt={npc.name}
-                title={npc.name}
-                className="object-cover w-8 h-8 rounded-full"
-              />
+              <ExternalLink
+                href={createWowheadUrl({
+                  category: "npc",
+                  id: npc.id,
+                })}
+              >
+                <img
+                  src={`/static/npcs/${npc.id}.png`}
+                  alt={npc.name}
+                  title={npc.name}
+                  className="object-cover w-8 h-8 rounded-full"
+                />
+              </ExternalLink>
             </span>
           ))}
         </span>
