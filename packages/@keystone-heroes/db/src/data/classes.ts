@@ -835,7 +835,6 @@ export const classes: Class[] = [
     ],
     specs: [
       {
-        // eslint-disable-next-line inclusive-language/use-inclusive-words
         name: SpecName.BeastMastery,
         role: Role.dps,
         cooldowns: [
@@ -989,7 +988,6 @@ export const classes: Class[] = [
         ],
       },
       {
-        // eslint-disable-next-line inclusive-language/use-inclusive-words
         name: SpecName.Brewmaster,
         role: Role.tank,
         cooldowns: [

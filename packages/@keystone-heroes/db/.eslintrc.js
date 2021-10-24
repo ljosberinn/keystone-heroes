@@ -7,12 +7,10 @@ const jestConfigOverride = {
   },
 };
 
-module.exports = {
-  ...createConfig({
-    rules: {
-      "unicorn/no-keyword-prefix": "off",
-    },
-    overrides: [jestConfigOverride],
-  }),
+module.exports = createConfig({
+  rules: {
+    "unicorn/no-keyword-prefix": "off",
+  },
+  overrides: [jestConfigOverride],
   root: true,
-};
+});

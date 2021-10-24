@@ -9,4 +9,5 @@ const jestConfigOverride = {
 
 module.exports = createConfig({
   overrides: [jestConfigOverride],
+  root: true,
 });

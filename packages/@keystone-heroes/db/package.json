@@ -4,28 +4,28 @@
   "private": true,
   "main": "src",
   "scripts": {
+    "format": "prettier --write src",
     "generate": "prisma generate",
+    "lint": "set TIMING=1 && eslint src --cache",
     "push": "prisma db push",
     "seed": "prisma db seed",
-    "format": "prettier --write src",
-    "lint": "set TIMING=1 && eslint src --cache",
-    "test": "jest --passWithNoTests",
-    "static-data": "ts-node -r tsconfig-paths/register src/createStaticData && eslint --fix ../web/src/staticData.ts && prettier --write ../web/src/staticData.ts"
+    "static-data": "ts-node -r tsconfig-paths/register src/createStaticData && eslint --fix ../web/src/staticData.ts && prettier --write ../web/src/staticData.ts",
+    "test": "jest --passWithNoTests"
   },
   "dependencies": {
     "@keystone-heroes/api": "1.0.0",
     "@keystone-heroes/env": "1.0.0",
     "@keystone-heroes/wcl": "1.0.0",
-    "@prisma/client": "3.1.1",
+    "@prisma/client": "3.3.0",
     "dotenv": "10.0.0",
-    "prisma": "3.1.1",
-    "ts-node": "10.2.1"
+    "prisma": "3.3.0",
+    "ts-node": "10.4.0"
   },
   "devDependencies": {
-    "eslint": "7.32.0",
-    "eslint-config-galex": "2.16.12",
-    "jest": "27.2.1",
-    "typescript": "4.4.3"
+    "eslint": "8.1.0",
+    "eslint-config-galex": "3.1.0",
+    "jest": "27.3.1",
+    "typescript": "4.4.4"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"

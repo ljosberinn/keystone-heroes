@@ -20,9 +20,7 @@ const jestConfigOverride = {
   },
 };
 
-module.exports = {
-  ...createConfig({
-    overrides: [jestOverride, jestConfigOverride],
-  }),
+module.exports = createConfig({
+  overrides: [jestOverride, jestConfigOverride],
   root: true,
-};
+});

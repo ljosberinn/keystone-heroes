@@ -540,6 +540,7 @@ const createResponseFromRawData = ({
     region,
     fights: fightsWithMeta
       .map((fight) => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { gameZone, player, startTime, endTime, ...rest } = fight;
 
         const dungeon = gameZone ? dungeonMap[gameZone.id] : null;
@@ -577,6 +578,7 @@ const createResponseFromRawData = ({
       })
       .sort((a, b) => a.id - b.id),
     affixes: affixes.map((affix) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { id, seasonal, ...data } = getAffixByID(affix);
       return data;
     }),
@@ -791,6 +793,7 @@ export const reportHandler: RequestHandler<Request, ReportResponse> = async (
 
       const {
         friendlyPlayers,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         keystoneAffixes,
         maps,
         averageItemLevel,

@@ -31,4 +31,5 @@ module.exports = createConfig({
     "inclusive-language/use-inclusive-words": "off",
   },
   overrides: [jestConfigOverride, mockOverride, generatedTypesOverride],
+  root: true,
 });

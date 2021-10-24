@@ -188,7 +188,6 @@ export const SANGUINE_DEPTHS: DungeonMeta = {
     },
   ],
   unitCountMap: {
-    // eslint-disable-next-line inclusive-language/use-inclusive-words
     171_448: 4, // Dreadful Huntmaster
     // TODO: these respawn with the same ID aswell, so pull & thus total %
     // has minor deviations based on additionally spawned ticks
@@ -406,7 +405,6 @@ export const HALLS_OF_ATONEMENT: DungeonMeta = {
   unitCountMap: {
     165_515: 4, // Depraved Darkblade - male
     167_615: 4, // Depraved Darkblade - female
-    // eslint-disable-next-line inclusive-language/use-inclusive-words
     164_562: 4, // Depraved Houndmaster
     164_563: 4, // Vicious Gargon
     165_414: 4, // Depraved Obliterator
