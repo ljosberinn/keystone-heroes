@@ -1,5 +1,3 @@
-import type { ChangeEvent } from "react";
-
 import { useMapOptions } from "../../store";
 import { Dialog } from "../Dialog";
 
@@ -123,7 +121,7 @@ function PullConnectionLineColor() {
         type="color"
         id="pullConnectionLineColor"
         aria-labelledby="pullConnectionLineColor"
-        onChange={(event: ChangeEvent<HTMLInputElement>) => {
+        onChange={(event) => {
           setPullConnectionLineColor(event.target.value);
         }}
         value={pullConnectionLineColor}
@@ -156,7 +154,7 @@ function InvisPullConnectionLineColor() {
         type="color"
         id="invisPullConnectionLineColor"
         aria-labelledby="invisPullConnectionLineColor"
-        onChange={(event: ChangeEvent<HTMLInputElement>) => {
+        onChange={(event) => {
           setInvisPullConnectionLineColor(event.target.value);
         }}
         value={invisPullConnectionLineColor}

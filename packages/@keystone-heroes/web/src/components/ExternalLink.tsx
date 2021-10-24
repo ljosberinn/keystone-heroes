@@ -1,5 +1,7 @@
 import type { ReactNode, HTMLAttributes } from "react";
 
+import { classnames } from "../utils/classnames";
+
 export type ExternalLinkProps = Pick<HTMLAttributes<"a">, "className"> & {
   href: string;
   children: ReactNode;
@@ -15,7 +17,7 @@ export function ExternalLink({
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className={className}
+      className={classnames("hover:underline", className)}
     >
       {children}
     </a>

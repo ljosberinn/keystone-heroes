@@ -1,12 +1,15 @@
-/* eslint-disable jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events, jsx-a11y/anchor-is-valid */
 import type { FightSuccessResponse } from "@keystone-heroes/api/functions/fight";
-import Link from "next/link";
 import { Fragment } from "react";
 
 import { useStaticData } from "../../context/StaticData";
 import { icons } from "../../icons";
 import { useFight } from "../../pages/report/[reportID]/[fightID]";
-import { bgPrimary, greenText, redText } from "../../styles/tokens";
+import {
+  bgPrimary,
+  bgSecondary,
+  greenText,
+  redText,
+} from "../../styles/tokens";
 import {
   createWCLUrl,
   fightTimeToString,
@@ -72,6 +75,8 @@ export function Meta(): JSX.Element {
                   alt={affixes[affix].name}
                   title={affixes[affix].name}
                   className="object-cover w-full h-full rounded-full"
+                  width={40}
+                  height={40}
                 />
               </ExternalLink>
             ))}
@@ -115,7 +120,7 @@ export function Meta(): JSX.Element {
 
       {/* <-------> */}
 
-      <div className="h-full p-4 rounded-b-lg shadow-sm bg-coolgray-100 dark:bg-coolgray-600">
+      <div className={`h-full p-4 rounded-b-lg shadow-sm ${bgSecondary}`}>
         <style jsx>
           {`
             .paddingLessTable th,
@@ -152,47 +157,36 @@ export function Meta(): JSX.Element {
                 <Fragment key={player.actorID}>
                   <tr>
                     <td className="flex h-10 space-x-2">
-                      <Link
-                        href={`/character/${player.region.toLowerCase()}/${player.server.toLowerCase()}/${player.name.toLowerCase()}`}
-                        key={player.actorID}
-                        prefetch={false}
-                      >
-                        <a
-                          className="flex items-center w-full space-x-2"
-                          onClick={(event) => {
-                            event.preventDefault();
-                            // eslint-disable-next-line no-alert
-                            alert("not yet implemented");
-                          }}
-                        >
-                          <span className="inline-flex items-center w-full">
-                            <span className="w-8 h-8">
-                              <SpecIcon class={name} spec={spec.name} />
-                            </span>
-                            {player.covenant ? (
-                              <span className="w-4 h-4 ml-2">
-                                <img
-                                  src={`https://assets.rpglogs.com/img/warcraft/abilities/${
-                                    covenants[player.covenant].icon
-                                  }.jpg`}
-                                  alt={covenants[player.covenant].name}
-                                  title={covenants[player.covenant].name}
-                                  className="relative object-cover w-full h-full rounded-full -top-4 -left-4"
-                                />
-                              </span>
-                            ) : null}
-                            <span
-                              className={classnames(
-                                classColor,
-                                player.covenant ? "-ml-3" : "pl-2",
-                                "border-b-2 dark:border-opacity-50 flex-grow"
-                              )}
-                            >
-                              {player.name}
-                            </span>
+                      <span className="flex items-center w-full space-x-2">
+                        <span className="inline-flex items-center w-full">
+                          <span className="w-8 h-8">
+                            <SpecIcon class={name} spec={spec.name} />
                           </span>
-                        </a>
-                      </Link>
+                          {player.covenant ? (
+                            <span className="w-4 h-4 ml-2">
+                              <img
+                                src={`https://assets.rpglogs.com/img/warcraft/abilities/${
+                                  covenants[player.covenant].icon
+                                }.jpg`}
+                                alt={covenants[player.covenant].name}
+                                title={covenants[player.covenant].name}
+                                className="relative object-cover w-full h-full rounded-full -top-4 -left-4"
+                                width={16}
+                                height={16}
+                              />
+                            </span>
+                          ) : null}
+                          <span
+                            className={classnames(
+                              classColor,
+                              player.covenant ? "-ml-3" : "pl-2",
+                              "border-b-2 dark:border-opacity-50 flex-grow"
+                            )}
+                          >
+                            {player.name}
+                          </span>
+                        </span>
+                      </span>
                     </td>
 
                     <td className="text-right">
@@ -203,18 +197,30 @@ export function Meta(): JSX.Element {
                       </span>
                     </td>
                     <td className="text-right">
-                      <span
+                      <ExternalLink
+                        href={createWCLUrl({
+                          reportID,
+                          fightID,
+                          type: "damage-done",
+                          source: player.actorID,
+                        })}
                         className={`${classColor} border-b-2 dark:border-opacity-50 text-right flex flex-grow justify-end`}
                       >
                         {player.dps.toLocaleString("en-US")}
-                      </span>
+                      </ExternalLink>
                     </td>
                     <td>
-                      <span
+                      <ExternalLink
+                        href={createWCLUrl({
+                          reportID,
+                          fightID,
+                          type: "healing",
+                          source: player.actorID,
+                        })}
                         className={`${classColor} border-b-2 dark:border-opacity-50 text-right flex flex-grow justify-end`}
                       >
                         {player.hps.toLocaleString("en-US")}
-                      </span>
+                      </ExternalLink>
                     </td>
                   </tr>
                   <tr>
@@ -236,6 +242,8 @@ export function Meta(): JSX.Element {
                                 icon={player.legendary.effectIcon}
                                 alt={player.legendary.effectName}
                                 className="object-cover w-full h-full rounded-full"
+                                width={24}
+                                height={24}
                               />
                             </ExternalLink>
                             <span>|</span>
@@ -250,6 +258,8 @@ export function Meta(): JSX.Element {
                                 alt={soulbinds[player.soulbind].name}
                                 title={soulbinds[player.soulbind].name}
                                 className="object-cover w-full h-full rounded-full"
+                                width={24}
+                                height={24}
                               />
                             </div>
                             <span>|</span>
@@ -274,6 +284,8 @@ export function Meta(): JSX.Element {
                                   icon={power.icon}
                                   alt={power.name ?? "Skipped"}
                                   className="object-cover w-full h-full rounded-full"
+                                  width={24}
+                                  height={24}
                                 />
                               </ExternalLink>
                             </span>
@@ -339,6 +351,8 @@ function RaiderIOLink({ name, server, region }: LinkProps): JSX.Element {
         alt={`Visit Raider.io profile of ${name}`}
         title={`Visit Raider.io profile of ${name}`}
         className="w-6 h-6"
+        width={24}
+        height={24}
       />
     </ExternalLink>
   );
@@ -359,6 +373,8 @@ function WarcraftLogsProfileLink({
         alt={`Visit WarcraftLogs profile of ${name}`}
         title={`Visit WarcraftLogs profile of ${name}`}
         className="w-6 h-6"
+        width={24}
+        height={24}
       />
     </ExternalLink>
   );

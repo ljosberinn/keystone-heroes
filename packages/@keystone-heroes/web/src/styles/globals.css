@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-[title] {
+:not(.cursor-pointer) > [title] {
   cursor: help;
 }
 

@@ -135,6 +135,7 @@ export const EXCLUDED_NPCS = new Set([
   // TOP
   170_234, // Oppressive Banner via Xav the Unfallen
   165_260, // Oozing Leftovers via Gorechop
+  166_524, // Deathwalker via Mordretha
   // PF
   164_362, // Slimy Morsel, adds spawned by Globgrog
   168_398, // Slimy Morsel, adds spawned by Plaguebelcher

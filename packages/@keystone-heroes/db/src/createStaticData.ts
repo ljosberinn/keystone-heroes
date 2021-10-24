@@ -7,7 +7,7 @@ import { writeFileSync, existsSync, createWriteStream, unlinkSync } from "fs";
 import { get } from "https";
 import { resolve } from "path";
 
-import { allBossIDs } from "./data/dungeons";
+import { allBossIDs, dungeons as rawDungeons } from "./data/dungeons";
 import { spells } from "./data/spellIds";
 import { prisma } from "./prisma";
 
@@ -55,24 +55,6 @@ async function create() {
     })
   );
 
-  const rawDungeons = await prisma.dungeon.findMany({
-    select: {
-      name: true,
-      slug: true,
-      id: true,
-      time: true,
-      Zone: {
-        select: {
-          id: true,
-          name: true,
-        },
-        orderBy: {
-          order: "asc",
-        },
-      },
-    },
-  });
-
   const dungeons = Object.fromEntries(
     rawDungeons.map((dungeon) => {
       return [
@@ -80,8 +62,13 @@ async function create() {
         {
           name: dungeon.name,
           slug: dungeon.slug,
-          time: dungeon.time,
-          zones: dungeon.Zone,
+          time: dungeon.timer[0],
+          zones: dungeon.zones.map((zone) => ({
+            id: zone.id,
+            name: zone.name,
+          })),
+          unitCountMap: dungeon.unitCountMap,
+          count: dungeon.count,
         },
       ];
     })
@@ -261,7 +248,6 @@ async function create() {
     classes,
     covenants,
     spells,
-    isBoss: (id: number) => allBossIDs.has(id),
     tormentedLieutenants: tormentedLieutenantMap,
     tormentedPowers: tormentedPowerMap,
     legendaries,
@@ -275,23 +261,19 @@ const tormentedLieutenantIDs = new Set<number>(${JSON.stringify(
     tormentedLieutenants.map((lt) => lt.id)
   )});  
 const allBossIDs = new Set<number>(${JSON.stringify([...allBossIDs])});
-export const staticData = {
-  ...${JSON.stringify(data)},
-  isBoss: (id: number): boolean => allBossIDs.has(id),
-  isTormentedLieutenant: (id: number): boolean => tormentedLieutenantIDs.has(id),
-};
+export const isBoss = (id: number): boolean => allBossIDs.has(id);
+export const isTormentedLieutenant = (id: number): boolean => tormentedLieutenantIDs.has(id);
+export const staticData = ${JSON.stringify(data)};
 
 export type StaticData = {
   classes: Record<number, typeof staticData.classes[keyof typeof staticData.classes]>;
-  dungeons: Record<number, typeof staticData.dungeons[keyof typeof staticData.dungeons]>;
+  dungeons: Record<number, Omit<typeof staticData.dungeons[keyof typeof staticData.dungeons], 'unitCountMap'> & { unitCountMap: Record<number, number> }>;
   affixes: Record<number, typeof staticData.affixes[keyof typeof staticData.affixes]>;
   soulbinds: Record<number, typeof staticData.soulbinds[keyof typeof staticData.soulbinds]>;
   covenants: Record<number, typeof staticData.covenants[keyof typeof staticData.covenants]>;
   spells: Record<number, { icon: string; name: string; cd: number }>;
   tormentedLieutenants: Record<number, typeof staticData.tormentedLieutenants[keyof typeof staticData.tormentedLieutenants]>;
   tormentedPowers: Record<number, typeof staticData.tormentedPowers[keyof typeof staticData.tormentedPowers]>;
-  isBoss: (id: number) => boolean;
-  isTormentedLieutenant: (id: number) => boolean;
   legendaries: Record<number, typeof staticData.legendaries[keyof typeof staticData.legendaries]>;
   talents: Record<number, typeof staticData.talents[keyof typeof staticData.talents]>;
   conduits: Record<number, typeof staticData.conduits[keyof typeof staticData.conduits]>;

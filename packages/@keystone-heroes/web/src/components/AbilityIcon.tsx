@@ -3,6 +3,8 @@ type AbilityIconProps = {
   alt: string;
   className?: string;
   title?: string;
+  width?: number;
+  height?: number;
 };
 
 export const STATIC_ICON_PREFIX = "/static/icons/";
@@ -17,13 +19,17 @@ export function AbilityIcon({
   alt,
   className,
   title,
+  height,
+  width,
 }: AbilityIconProps): JSX.Element {
   return (
     <img
       src={`${STATIC_ICON_PREFIX}${icon ?? QUESTIONMARK_ICON}.jpg`}
       alt={alt}
-      title={title ?? alt}
+      title={title}
       className={className}
+      width={width}
+      height={height}
     />
   );
 }

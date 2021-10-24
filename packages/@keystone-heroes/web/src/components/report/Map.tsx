@@ -17,13 +17,14 @@ import React, {
 import { useStaticData } from "../../context/StaticData";
 import { usePrevious } from "../../hooks/usePrevious";
 import { useFight } from "../../pages/report/[reportID]/[fightID]";
+import { isBoss, isTormentedLieutenant } from "../../staticData";
 import {
   useLegend,
   useMapOptions,
   useReportStore,
   useRestoreMapOptions,
 } from "../../store";
-import { bgPrimary } from "../../styles/tokens";
+import { bgPrimary, bgSecondary } from "../../styles/tokens";
 import { fightTimeToString } from "../../utils";
 import { classnames } from "../../utils/classnames";
 import {
@@ -34,6 +35,7 @@ import {
   STATIC_ICON_PREFIX,
   ZOOM_ICON,
 } from "../AbilityIcon";
+import { TabList, TabButton, TabPanel } from "../Tabs";
 import { hasBloodLust, detectInvisibilityUsage } from "./utils";
 
 const createRafCleanup = <K extends keyof WindowEventMap>(
@@ -256,62 +258,60 @@ export function Map(): JSX.Element {
       aria-labelledby="section-route"
     >
       <Triangle />
-      <div className={`px-4 pt-4 rounded-t-lg shadow-sm sm:p-4 ${bgPrimary}`}>
-        <h2 id="section-route" className="text-2xl font-bold">
+      <div className={`rounded-t-lg shadow-sm ${bgPrimary}`}>
+        <h2 id="section-route" className="px-4 pt-4 text-2xl font-bold">
           Route
         </h2>
 
-        <div className="pt-2">
-          <h3 id="zone-selection-heading" className="text-xl">
-            Zone Selection
-          </h3>
+        <h3 id="zone-selection-heading" className="px-4 text-xl">
+          Zone Selection
+        </h3>
 
-          <div className="flex justify-between">
-            <div
-              role="tablist"
-              aria-orientation="horizontal"
-              aria-labelledby="zone-selection-heading"
-              className="flex flex-col w-full pt-2 pb-4 space-y-4 sm:space-x-4 sm:space-y-0 sm:flex-row sm:py-0 sm:w-initial"
-            >
-              {zones.map((zone, index) => {
-                const selected = index === selectedTab;
+        <TabList aria-label="Zone Selection">
+          {zones.map((zone, index) => {
+            function onClick() {
+              onTabButtonClick(index);
+            }
 
-                return (
-                  <div className="sm:pt-2" key={zone.id}>
-                    <button
-                      type="button"
-                      role="tab"
-                      aria-controls={`tabpanel-${zone.id}`}
-                      aria-selected={selected ? "true" : "false"}
-                      id={`tab-${zone.id}`}
-                      onKeyDown={onKeyDown}
-                      ref={(ref) => {
-                        buttonRefs.current[index] = ref;
-                      }}
-                      tabIndex={selected ? undefined : -1}
-                      className={`focus:outline-none focus:ring rounded-md p-2 sm:py-0 px-2 sm:w-initial w-full ${
-                        selected
-                          ? "dark:bg-coolgray-500 bg-coolgray-400"
-                          : "dark:bg-coolgray-600 bg-coolgray-200 hover:bg-coolgray-400"
-                      }`}
-                      onClick={
-                        selected
-                          ? undefined
-                          : () => {
-                              onTabButtonClick(index);
-                            }
-                      }
-                    >
-                      {zone.name}
-                    </button>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+            return (
+              <TabButton
+                key={zone.id}
+                id={zone.id}
+                ref={(ref) => {
+                  buttonRefs.current[index] = ref;
+                }}
+                onKeyDown={onKeyDown}
+                selectedIndex={selectedTab}
+                onClick={onClick}
+                index={index}
+                listLength={zones.length}
+                className="w-1/5"
+              >
+                {zone.name}
+              </TabButton>
+            );
+          })}
+        </TabList>
+
+        <div className="p-4 sm:hidden">
+          <select
+            className="w-full py-2 text-center"
+            value={selectedTab}
+            onChange={(event) => {
+              onTabButtonClick(Number.parseInt(event.target.value));
+            }}
+          >
+            {zones.map((zone, index) => {
+              return (
+                <option value={index} key={zone.id}>
+                  {zone.name}
+                </option>
+              );
+            })}
+          </select>
         </div>
       </div>
-      <div className="h-full p-2 rounded-b-lg shadow-sm bg-coolgray-100 dark:bg-coolgray-600">
+      <div className={`h-full p-2 rounded-b-lg shadow-sm ${bgSecondary}`}>
         {loading ? (
           <img
             src="/static/maps/ph.jpg"
@@ -324,17 +324,10 @@ export function Map(): JSX.Element {
             const hidden = index !== selectedTab;
 
             return (
-              <div
-                role="tabpanel"
-                data-orientation="horizontal"
-                data-state="active"
-                id={`tabpanel-${zone.id}`}
-                aria-labelledby={`tab-${zone.id}`}
-                // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
-                tabIndex={0}
-                ref={hidden ? undefined : tabPanelRef}
+              <TabPanel
+                id={zone.id}
+                ref={tabPanelRef}
                 key={zone.id}
-                className="h-full"
                 hidden={hidden}
               >
                 <div
@@ -387,6 +380,8 @@ export function Map(): JSX.Element {
                     }}
                   />
 
+                  <BossKillIndicator />
+
                   <div
                     className={classnames(
                       "flex flex-col space-y-2 z-20",
@@ -407,7 +402,7 @@ export function Map(): JSX.Element {
                   <MapOptionsWrapper />
                   <LegendWrapper />
                 </div>
-              </div>
+              </TabPanel>
             );
           })
         )}
@@ -416,11 +411,8 @@ export function Map(): JSX.Element {
   );
 }
 
-type BossIndicatorKillProps = {
-  imageHeight: number;
-};
-
-function BossKillIndicator({ imageHeight }: BossIndicatorKillProps) {
+function BossKillIndicator() {
+  const setSelectedPull = useReportStore((state) => state.setSelectedPull);
   const { fight } = useFight();
   const pulls = fight ? fight.pulls : [];
   const startTime = fight ? fight.meta.startTime : 0;
@@ -428,16 +420,75 @@ function BossKillIndicator({ imageHeight }: BossIndicatorKillProps) {
   const pullsWithBoss = pulls.filter((pull) => pull.hasBoss);
 
   return (
-    <g>
-      <text className="text-white fill-current" x={10} y={imageHeight - 10}>
-        {pullsWithBoss.map((pull, index) => (
-          <Fragment key={pull.startTime}>
-            Boss {index + 1} {fightTimeToString(pull.endTime - startTime, true)}
-            {index !== pullsWithBoss.length - 1 && " > "}
-          </Fragment>
-        ))}
-      </text>
-    </g>
+    <div
+      className={classnames(
+        bgSecondary,
+        "absolute left-2 bottom-2 rounded-lg p-2 hidden sm:block opacity-75"
+      )}
+    >
+      {pullsWithBoss.map((pull) => {
+        const usedLust = hasBloodLust(pull);
+
+        const [firstBossName] = pull.npcs
+          .filter((npc) => isBoss(npc.id))
+          .map((npc) => npc.name);
+
+        const fightStart = fightTimeToString(
+          pull.startTime - startTime,
+          true
+        ).padStart(5, "0");
+
+        const fightEnd = fightTimeToString(
+          pull.endTime - startTime,
+          true
+        ).padStart(5, "0");
+
+        const fightDuration = fightTimeToString(
+          pull.endTime - pull.startTime,
+          true
+        ).padStart(5, "0");
+
+        const percentUpToThisPull = pulls.reduce((acc, p) => {
+          if (p.id >= pull.id) {
+            return acc;
+          }
+
+          return acc + p.percent;
+        }, 0);
+
+        return (
+          <span
+            className="flex justify-between block w-full"
+            key={pull.startTime}
+          >
+            <button
+              type="button"
+              className="cursor-pointer md:truncate md:max-w-1/2 hover:underline"
+              onClick={() => {
+                setSelectedPull(pull.id);
+              }}
+            >
+              {firstBossName}{" "}
+              {usedLust && (
+                <img
+                  className="inline w-6 h-6 rounded-full"
+                  src={BLOODLUST_ICON}
+                  alt="Some form of Bloodlust/Heroism was used on this pull."
+                  width={24}
+                  height={24}
+                />
+              )}
+            </button>{" "}
+            <span className="hidden pl-2 md:block">
+              <span>{percentUpToThisPull.toFixed(2)}%</span>{" "}
+              <span title={`killed in ${fightDuration}`}>
+                {fightStart}-{fightEnd}
+              </span>
+            </span>
+          </span>
+        );
+      })}
+    </div>
   );
 }
 
@@ -477,6 +528,8 @@ function MapOptionsToggle() {
         src="/static/icons/trade_engineering.jpg"
         className="object-cover w-8 h-8 rounded-full"
         alt="Map Options"
+        width={32}
+        height={32}
       />
     </button>
   );
@@ -496,6 +549,8 @@ function LegendToggle() {
         src={`${STATIC_ICON_PREFIX}${QUESTIONMARK_ICON}.jpg`}
         alt="Legend"
         className="object-cover w-8 h-8 rounded-full"
+        width={32}
+        height={32}
       />
     </button>
   );
@@ -605,6 +660,8 @@ function FullScreenToggle({ toggle, active }: FullScreenToggleProps) {
         src={ZOOM_ICON}
         className="object-cover w-8 h-8 rounded-full"
         alt="Toggle Fullscreen"
+        width={32}
+        height={32}
       />
     </button>
   );
@@ -634,7 +691,6 @@ function Svg({ imageSize, zoneID, onDoorClick }: SvgProps) {
         `}
       </style>
       <svg className="absolute w-full h-full svg focus:outline-none">
-        <BossKillIndicator imageHeight={imageSize.clientHeight} />
         <DoorIndicators
           id={zoneID}
           xFactor={imageSize.clientWidth}
@@ -661,6 +717,7 @@ function Svg({ imageSize, zoneID, onDoorClick }: SvgProps) {
               <PullConnectionPolyline
                 x={x}
                 y={y}
+                pull={pull}
                 nextPull={nextPull}
                 imageSize={imageSize}
               />
@@ -734,8 +791,7 @@ type PullIndicatorIconProps = {
 function PullIndicatorIcon({ pull, x, y }: PullIndicatorIconProps) {
   const selectedPull = useReportStore((state) => state.selectedPull);
   const setSelectedPull = useReportStore((state) => state.setSelectedPull);
-  const { isTormentedLieutenant, tormentedLieutenants, isBoss } =
-    useStaticData();
+  const { tormentedLieutenants } = useStaticData();
 
   const selected = selectedPull === pull.id;
 
@@ -844,6 +900,7 @@ function PullIndicatorIcon({ pull, x, y }: PullIndicatorIconProps) {
 type PullConnectionPolylineProps = {
   x: number;
   y: number;
+  pull: FightSuccessResponse["pulls"][number];
   nextPull: FightSuccessResponse["pulls"][number] | null;
   imageSize: Pick<
     HTMLImageElement,
@@ -853,6 +910,7 @@ type PullConnectionPolylineProps = {
 
 function PullConnectionPolyline({
   nextPull,
+  pull,
   x,
   y,
   imageSize,
@@ -872,7 +930,7 @@ function PullConnectionPolyline({
     return null;
   }
 
-  const invisibilityUsage = nextPull ? detectInvisibilityUsage(nextPull) : null;
+  const invisibilityUsage = detectInvisibilityUsage(pull);
 
   const nextX = nextPull ? nextPull.x * (imageSize.clientWidth ?? 0) : null;
   const nextY = nextPull ? nextPull.y * (imageSize.clientHeight ?? 0) : null;
@@ -1207,6 +1265,8 @@ function DoorIndicators({
           onClick={() => {
             onDoorClick(door.to);
           }}
+          width={32}
+          height={24}
         />
       ))}
     </g>

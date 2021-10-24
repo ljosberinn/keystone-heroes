@@ -19,9 +19,10 @@ export const fightTimeToString = (time: number, omitMs = false): string => {
 type WCLUrlParams = {
   reportID: string;
   fightID: string;
-  type?: "deaths";
+  type?: "deaths" | "damage-done" | "healing";
   start?: number;
   end?: number;
+  source?: number;
 };
 
 export const createWCLUrl = ({

@@ -20,6 +20,8 @@ export function SpecIcon({
         "object-cover w-full h-full rounded-full",
         className
       )}
+      width={32}
+      height={32}
     />
   );
 }
