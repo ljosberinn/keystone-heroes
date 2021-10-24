@@ -676,7 +676,7 @@ export type GameNpcPagination = {
 export type GameZone = {
   __typename?: "GameZone";
   /** The ID of the zone. */
-  id: Scalars["Int"];
+  id: Scalars["Float"];
   /** The localized name of the zone. Will be null if no localization information exists for the zone. */
   name?: Maybe<Scalars["String"]>;
 };
@@ -1275,12 +1275,16 @@ export type ReportFight = {
   endTime: Scalars["Float"];
   /** Information about enemy NPCs involved in the fight. Includes report IDs, instance counts, and instance group counts for each NPC. */
   enemyNPCs?: Maybe<Maybe<ReportFightNpc>[]>;
+  /** Information about enemy pets involved in the fight. Includes report IDs, instance counts, and instance group counts for each pet. */
+  enemyPets?: Maybe<Maybe<ReportFightNpc>[]>;
   /** The IDs of all players involved in a fight. These players can be referenced in the master data actors table to get detailed information about each participant. */
   enemyPlayers?: Maybe<Maybe<Scalars["Int"]>[]>;
   /** The actual completion percentage of the fight. This is the field used to indicate how far into a fight a wipe was, since fights can be complicated and have multiple bosses, no bosses, bosses that heal, etc. */
   fightPercentage?: Maybe<Scalars["Float"]>;
   /** Information about friendly NPCs involved in the fight. Includes report IDs, instance counts, and instance group counts for each NPC. */
   friendlyNPCs?: Maybe<Maybe<ReportFightNpc>[]>;
+  /** Information about friendly pets involved in the fight. Includes report IDs, instance counts, and instance group counts for each pet. */
+  friendlyPets?: Maybe<Maybe<ReportFightNpc>[]>;
   /** The IDs of all players involved in a fight. These players can be referenced in the master data actors table to get detailed information about each participant. */
   friendlyPlayers?: Maybe<Maybe<Scalars["Int"]>[]>;
   /** The game zone the fight takes place in. This should not be confused with the zones used by the sites for rankings. This is the actual in-game zone info. */
@@ -1328,6 +1332,8 @@ export type ReportFightNpc = {
   id?: Maybe<Scalars["Int"]>;
   /** How many instances of the NPC were seen during the fight. */
   instanceCount?: Maybe<Scalars["Int"]>;
+  /** The report ID of the actor that owns this NPC (if it is a pet). This ID is used in events to identify sources and targets. */
+  petOwner?: Maybe<Scalars["Int"]>;
 };
 
 /** The ReportMap represents a single map that a fight can occur on. */

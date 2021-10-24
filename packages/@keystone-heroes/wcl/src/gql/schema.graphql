@@ -1942,6 +1942,11 @@ type ReportFight {
   enemyNPCs: [ReportFightNPC]
 
   """
+  Information about enemy pets involved in the fight. Includes report IDs, instance counts, and instance group counts for each pet.
+  """
+  enemyPets: [ReportFightNPC]
+
+  """
   The IDs of all players involved in a fight. These players can be referenced in the master data actors table to get detailed information about each participant.
   """
   enemyPlayers: [Int]
@@ -1955,6 +1960,11 @@ type ReportFight {
   Information about friendly NPCs involved in the fight. Includes report IDs, instance counts, and instance group counts for each NPC.
   """
   friendlyNPCs: [ReportFightNPC]
+
+  """
+  Information about friendly pets involved in the fight. Includes report IDs, instance counts, and instance group counts for each pet.
+  """
+  friendlyPets: [ReportFightNPC]
 
   """
   The IDs of all players involved in a fight. These players can be referenced in the master data actors table to get detailed information about each participant.
@@ -2195,6 +2205,11 @@ type ReportFightNPC {
   How many packs of the NPC were seen during the fight.
   """
   groupCount: Int
+
+  """
+  The report ID of the actor that owns this NPC (if it is a pet). This ID is used in events to identify sources and targets.
+  """
+  petOwner: Int
 }
 
 """
@@ -2204,7 +2219,7 @@ type GameZone {
   """
   The ID of the zone.
   """
-  id: Int!
+  id: Float!
 
   """
   The localized name of the zone. Will be null if no localization information exists for the zone.

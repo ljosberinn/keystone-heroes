@@ -3510,7 +3510,7 @@
               "name": null,
               "ofType": {
                 "kind": "SCALAR",
-                "name": "Int",
+                "name": "Float",
                 "ofType": null
               }
             },
@@ -7176,6 +7176,22 @@
             "deprecationReason": null
           },
           {
+            "name": "enemyPets",
+            "description": "Information about enemy pets involved in the fight. Includes report IDs, instance counts, and instance group counts for each pet.",
+            "args": [],
+            "type": {
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "ReportFightNPC",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "enemyPlayers",
             "description": "The IDs of all players involved in a fight. These players can be referenced in the master data actors table to get detailed information about each participant.",
             "args": [],
@@ -7206,6 +7222,22 @@
           {
             "name": "friendlyNPCs",
             "description": "Information about friendly NPCs involved in the fight. Includes report IDs, instance counts, and instance group counts for each NPC.",
+            "args": [],
+            "type": {
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "ReportFightNPC",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "friendlyPets",
+            "description": "Information about friendly pets involved in the fight. Includes report IDs, instance counts, and instance group counts for each pet.",
             "args": [],
             "type": {
               "kind": "LIST",
@@ -7497,6 +7529,18 @@
           {
             "name": "instanceCount",
             "description": "How many instances of the NPC were seen during the fight.",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "petOwner",
+            "description": "The report ID of the actor that owns this NPC (if it is a pet). This ID is used in events to identify sources and targets.",
             "args": [],
             "type": {
               "kind": "SCALAR",
