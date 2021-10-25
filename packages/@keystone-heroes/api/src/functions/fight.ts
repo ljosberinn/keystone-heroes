@@ -1107,7 +1107,13 @@ const getResponseOrRetrieveAndCreateFight = async (
         // default to 1 for npcs that appear in the pull and thus are enemy
         // units but didn't die, e.g. for some reason Dealer in DoS,
         // slime minigame in DoS as well as invisible units
-        const deathCountOfThisNPC = npcDeathCountMap[npc.id] ?? 1;
+
+        // first boss in top  ends based on a _second_ death of Dessia
+        // which leads to a false positive of Dessia appearing twice
+        const deathCountOfThisNPC =
+          npc.gameID === Boss.DESSIA_THE_DECAPITATOR
+            ? 1
+            : npcDeathCountMap[npc.id] ?? 1;
 
         return {
           npcID: npc.gameID,

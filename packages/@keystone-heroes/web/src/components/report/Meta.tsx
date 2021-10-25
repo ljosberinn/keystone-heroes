@@ -42,8 +42,10 @@ export function Meta(): JSX.Element {
         <div className="justify-between p-4 md:flex lg:block ">
           <h1 className="text-3xl font-bold" id="meta-title">
             <ExternalLink href={createWCLUrl({ reportID, fightID })}>
-              <span className="lg:hidden 2xl:inline-block">{dungeon.name}</span>
-              <span className="hidden lg:inline-block 2xl:hidden">
+              <span className="lg:hidden 2xl:inline-block hover:underline">
+                {dungeon.name}
+              </span>
+              <span className="hidden lg:inline-block 2xl:hidden hover:underline">
                 {dungeon.slug}
               </span>{" "}
               +{fight.meta.level}
