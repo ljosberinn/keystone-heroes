@@ -20,21 +20,7 @@ const jestConfigOverride = {
   },
 };
 
-const config = createConfig({
+module.exports = createConfig({
   overrides: [jestOverride, jestConfigOverride],
   root: true,
 });
-
-// fix until eslint-plugin-react-hooks supports ESLint v8
-config.overrides = config.overrides.map((override) => {
-  return {
-    ...override,
-    rules: Object.fromEntries(
-      Object.entries(override.rules).filter(
-        ([key]) => !key.startsWith("react-hooks")
-      )
-    ),
-  };
-});
-
-module.exports = config;
