@@ -2,6 +2,11 @@ import type {
   ReportResponse,
   ReportSuccessResponse,
 } from "@keystone-heroes/api/functions/report";
+import {
+  createResponseFromDB,
+  loadExistingReport,
+} from "@keystone-heroes/api/functions/report";
+import { prisma } from "@keystone-heroes/db/prisma";
 import { isValidReportId } from "@keystone-heroes/wcl/utils";
 import type { GetStaticPaths, GetStaticProps } from "next";
 import Head from "next/head";
@@ -26,20 +31,20 @@ type ReportProps = {
 const useReportURL = (cache: ReportProps["cache"]) => {
   const { query, isFallback } = useRouter();
 
+  if (cache?.report) {
+    return {
+      url: null,
+      reportID: cache.reportID,
+      fightID: null,
+    };
+  }
+
   if (isFallback) {
     return {
       url: null,
       reportID: null,
       fightID:
         query.fightID && !Array.isArray(query.fightID) ? query.fightID : null,
-    };
-  }
-
-  if (cache?.report) {
-    return {
-      url: null,
-      reportID: cache.reportID,
-      fightID: null,
     };
   }
 
@@ -273,22 +278,60 @@ type StaticPathParams = {
   reportID: string;
 };
 
-export const getStaticPaths: GetStaticPaths<StaticPathParams> = () => {
+export const getStaticPaths: GetStaticPaths<StaticPathParams> = async () => {
+  const paths = await prisma.report.findMany({
+    select: {
+      report: true,
+    },
+  });
+
   return {
     fallback: true,
-    paths: [],
+    paths: paths.map((path) => ({
+      params: {
+        reportID: path.report,
+      },
+    })),
   };
 };
 
 export const getStaticProps: GetStaticProps<ReportProps, StaticPathParams> =
-  () => {
+  async (ctx) => {
+    if (!ctx.params?.reportID) {
+      return {
+        props: {
+          cache: {
+            report: null,
+            reportID: null,
+            fightID: null,
+          },
+        },
+      };
+    }
+
+    const reportSuccessResponse = await loadExistingReport(ctx.params.reportID);
+
+    if (!reportSuccessResponse) {
+      return {
+        props: {
+          cache: {
+            report: null,
+            reportID: null,
+            fightID: null,
+          },
+        },
+      };
+    }
+
+    const cache: ReportProps["cache"] = {
+      reportID: ctx.params.reportID,
+      fightID: null,
+      report: createResponseFromDB(reportSuccessResponse),
+    };
+
     return {
       props: {
-        cache: {
-          report: null,
-          reportID: null,
-          fightID: null,
-        },
+        cache,
       },
     };
   };

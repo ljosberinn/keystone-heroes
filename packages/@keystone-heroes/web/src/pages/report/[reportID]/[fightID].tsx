@@ -2,6 +2,12 @@ import type {
   FightResponse,
   FightSuccessResponse,
 } from "@keystone-heroes/api/functions/fight";
+import {
+  createResponseFromStoredFight,
+  loadExistingFight,
+  fightHasDungeon,
+} from "@keystone-heroes/api/functions/fight";
+import { prisma } from "@keystone-heroes/db/prisma";
 import { isValidReportId } from "@keystone-heroes/wcl/utils";
 import type { GetStaticPaths, GetStaticProps } from "next";
 import Head from "next/head";
@@ -26,19 +32,19 @@ type FightIDProps = {
 const useFightURL = (cache: FightIDProps["cache"]) => {
   const { query, isFallback } = useRouter();
 
-  if (isFallback) {
-    return {
-      url: null,
-      reportID: null,
-      fightID: null,
-    };
-  }
-
   if (cache?.fight) {
     return {
       url: null,
       reportID: cache.reportID,
       fightID: cache.fightID ? `${cache.fightID}` : null,
+    };
+  }
+
+  if (isFallback) {
+    return {
+      url: null,
+      reportID: null,
+      fightID: null,
     };
   }
 
@@ -144,22 +150,71 @@ type StaticPathParams = {
   fightID: string;
 };
 
-export const getStaticPaths: GetStaticPaths<StaticPathParams> = () => {
+export const getStaticPaths: GetStaticPaths<StaticPathParams> = async () => {
+  const paths = await prisma.fight.findMany({
+    select: {
+      fightID: true,
+      Report: {
+        select: {
+          report: true,
+        },
+      },
+    },
+  });
+
   return {
     fallback: true,
-    paths: [],
+    paths: paths.map((path) => ({
+      params: {
+        reportID: path.Report.report,
+        fightID: `${path.fightID}`,
+      },
+    })),
   };
 };
 
 export const getStaticProps: GetStaticProps<FightIDProps, StaticPathParams> =
-  () => {
+  async (ctx) => {
+    if (!ctx.params?.fightID || !ctx.params.reportID) {
+      return {
+        props: {
+          cache: {
+            fight: null,
+            fightID: null,
+            reportID: null,
+          },
+        },
+      };
+    }
+
+    const fightID = Number.parseInt(ctx.params.fightID);
+
+    const fightSuccessResponse = await loadExistingFight(
+      ctx.params.reportID,
+      fightID
+    );
+
+    if (!fightSuccessResponse || !fightHasDungeon(fightSuccessResponse)) {
+      return {
+        props: {
+          cache: {
+            fight: null,
+            reportID: null,
+            fightID: null,
+          },
+        },
+      };
+    }
+
+    const cache: FightIDProps["cache"] = {
+      reportID: ctx.params.reportID,
+      fightID,
+      fight: createResponseFromStoredFight(fightSuccessResponse),
+    };
+
     return {
       props: {
-        cache: {
-          fight: null,
-          fightID: null,
-          reportID: null,
-        },
+        cache,
       },
     };
   };

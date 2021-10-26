@@ -66,6 +66,14 @@ export function useAbortableFetch<T>({
     };
   }, [loading, url, options, isMounted]);
 
+  // required for getStaticProps in dev
+  // server side props won't be present in initial render
+  useEffect(() => {
+    if (!data && initialState) {
+      setState((prev) => ({ ...prev, data: initialState, loading: false }));
+    }
+  }, [initialState, data]);
+
   useEffect(() => {
     // run when initially executed or whenever the url changes
     if (firstRenderRef.current || url !== previousUrl) {

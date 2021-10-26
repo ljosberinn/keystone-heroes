@@ -474,9 +474,9 @@ const getFightIDsOfExistingReport = (existingReport: RawReport) => {
   return existingReport.Fight.map((fight) => fight.fightID);
 };
 
-const createResponseFromDB = (
+export const createResponseFromDB = (
   existingReport: NonNullable<RawReport>
-): ReportResponse => {
+): ReportSuccessResponse => {
   return {
     affixes: [
       existingReport.week.affix1,
@@ -585,8 +585,10 @@ const createResponseFromRawData = ({
   };
 };
 
-const createReportFindFirst = (reportID: string) => {
-  return {
+export const loadExistingReport = async (
+  reportID: string
+): Promise<RawReport> => {
+  return prisma.report.findFirst({
     where: {
       report: reportID,
     },
@@ -690,7 +692,7 @@ const createReportFindFirst = (reportID: string) => {
         },
       },
     },
-  } as const;
+  });
 };
 
 export const reportHandler: RequestHandler<Request, ReportResponse> = async (
@@ -707,9 +709,7 @@ export const reportHandler: RequestHandler<Request, ReportResponse> = async (
   }
 
   const { reportID } = req.query;
-  const existingReport: RawReport = await prisma.report.findFirst(
-    createReportFindFirst(reportID)
-  );
+  const existingReport = await loadExistingReport(reportID);
 
   if (existingReport && !maybeOngoingReport(existingReport.endTime.getTime())) {
     res.json(createResponseFromDB(existingReport));

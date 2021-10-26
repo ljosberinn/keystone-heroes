@@ -168,7 +168,9 @@ export const fightHandlerError = {
   FATAL_ERROR: "Something went wrong.",
 } as const;
 
-const fightHasDungeon = (fight: RawFight): fight is RawFightWithDungeon => {
+export const fightHasDungeon = (
+  fight: RawFight
+): fight is RawFightWithDungeon => {
   return fight?.dungeon !== null;
 };
 
@@ -263,8 +265,11 @@ type RawFight =
     })
   | null;
 
-const createFightFindFirst = (reportID: string, fightID: number) => {
-  return {
+export const loadExistingFight = async (
+  reportID: string,
+  fightID: number
+): Promise<RawFight> => {
+  return prisma.fight.findFirst({
     where: {
       Report: {
         report: reportID,
@@ -483,7 +488,7 @@ const createFightFindFirst = (reportID: string, fightID: number) => {
         },
       },
     },
-  } as const;
+  });
 };
 
 const omitNullValues = <T extends Record<string, unknown>>(dataset: T): T =>
@@ -786,7 +791,7 @@ const findThisPullsAbilityReadyEvents = (
     }));
 };
 
-const createResponseFromStoredFight = (
+export const createResponseFromStoredFight = (
   dataset: RawFightWithDungeon
 ): FightSuccessResponse => {
   const lastAbilityUsageMap: Record<number, number> = {};
@@ -980,7 +985,8 @@ const createResponseFromStoredFight = (
 
 const getResponseOrRetrieveAndCreateFight = async (
   maybeStoredFight: NonNullable<RawFight>,
-  selector: ReturnType<typeof createFightFindFirst>
+  reportID: string,
+  fightID: number
 ): Promise<{ status: number; json: FightResponse }> => {
   if (
     maybeStoredFight.Pull.length > 0 &&
@@ -994,7 +1000,7 @@ const getResponseOrRetrieveAndCreateFight = async (
   }
 
   const maybeFightPulls = await getFightPulls({
-    reportID: selector.where.Report.report,
+    reportID,
     fightIDs: [maybeStoredFight.fightID],
   });
 
@@ -1070,7 +1076,7 @@ const getResponseOrRetrieveAndCreateFight = async (
   }
 
   const params: EventParams = {
-    reportID: selector.where.Report.report,
+    reportID,
     startTime: maybeStoredFight.startTime,
     endTime: maybeStoredFight.endTime,
     fightID: maybeStoredFight.fightID,
@@ -1227,7 +1233,7 @@ const getResponseOrRetrieveAndCreateFight = async (
     }),
   ]);
 
-  const rawFight: RawFight = await prisma.fight.findFirst(selector);
+  const rawFight = await loadExistingFight(reportID, fightID);
 
   if (!fightHasDungeon(rawFight)) {
     return {
@@ -1248,11 +1254,7 @@ const handler: RequestHandler<Request, FightResponse> = async (req, res) => {
   const { reportID } = req.query;
   const fightID = Number.parseInt(req.query.fightID);
 
-  const fightFindFirstSelector = createFightFindFirst(reportID, fightID);
-
-  const maybeStoredFight: RawFight = await prisma.fight.findFirst(
-    fightFindFirstSelector
-  );
+  const maybeStoredFight = await loadExistingFight(reportID, fightID);
 
   if (!maybeStoredFight) {
     res.status(NOT_FOUND).json({ error: fightHandlerError.UNKNOWN_REPORT });
@@ -1261,7 +1263,8 @@ const handler: RequestHandler<Request, FightResponse> = async (req, res) => {
 
   const { status, json } = await getResponseOrRetrieveAndCreateFight(
     maybeStoredFight,
-    fightFindFirstSelector
+    reportID,
+    fightID
   );
 
   res.status(status).json(json);
