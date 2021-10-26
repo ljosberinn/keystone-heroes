@@ -92,7 +92,7 @@ const useMostRelevantNPCByPull = (
 
 const findMostRelevantNPCOfPull = (
   pull: FightSuccessResponse["pulls"][number],
-  dungeon: StaticData["dungeons"][number]
+  dungeon: typeof dungeons[number]
 ) => {
   const boss = pull.npcs.find((npc) => isBoss(npc.id));
 
