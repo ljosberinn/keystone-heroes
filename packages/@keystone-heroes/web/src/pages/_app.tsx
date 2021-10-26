@@ -9,7 +9,6 @@ import { useEffect } from "react";
 import { Footer } from "../components/Footer";
 import { Header } from "../components/Header";
 import { RouteChangeIndicator } from "../components/RouteChangeIndicator";
-import { StaticDataProvider } from "../context/StaticData";
 import { parseWCLUrl } from "../utils";
 
 export type AppRenderProps = {
@@ -30,7 +29,7 @@ export default function App({
   useWCLURLPaste();
 
   return (
-    <StaticDataProvider>
+    <>
       <Head>
         <meta
           name="viewport"
@@ -47,7 +46,7 @@ export default function App({
         </div>
         <Footer />
       </ThemeProvider>
-    </StaticDataProvider>
+    </>
   );
 }
 

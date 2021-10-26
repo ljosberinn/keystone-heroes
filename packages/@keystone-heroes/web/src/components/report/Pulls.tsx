@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { MdTimeline } from "react-icons/md";
 import { RiTableLine } from "react-icons/ri";
-import { useStaticData } from "src/context/StaticData";
 import { useFight } from "src/pages/report/[reportID]/[fightID]";
 import { useReportStore } from "src/store";
 import { bgSecondary } from "src/styles/tokens";
@@ -13,8 +12,13 @@ import {
 import { classnames } from "src/utils/classnames";
 
 import type { FightSuccessResponse } from "../../../../api/src/functions/fight";
-import type { StaticData } from "../../staticData";
-import { isBoss, isTormentedLieutenant } from "../../staticData";
+import {
+  classes,
+  dungeons,
+  spells,
+  isBoss,
+  isTormentedLieutenant,
+} from "../../staticData";
 import {
   AbilityIcon,
   BLOODLUST_ICON,
@@ -34,7 +38,6 @@ const useMostRelevantNPCByPull = (
   selectedPullID: number
 ): MostRelevantNPCReturn => {
   const { fight } = useFight();
-  const { dungeons } = useStaticData();
 
   if (!fight) {
     return {
@@ -277,7 +280,6 @@ function Sidebar() {
   const pulls = fight ? fight.pulls : [];
 
   const selectedPullID = useReportStore((state) => state.selectedPull);
-  const { dungeons } = useStaticData();
   // const player = fight ? fight.player : [];
 
   const selectedPull = pulls.find((pull) => pull.id === selectedPullID);
@@ -399,7 +401,6 @@ function Sidebar() {
 function Events() {
   const { fight } = useFight();
   const { pulls, player } = fight ?? { pulls: [], player: [] };
-  const { classes, spells } = useStaticData();
 
   const selectedPullID = useReportStore((state) => state.selectedPull);
   const selectedPull = pulls.find((pull) => pull.id === selectedPullID);

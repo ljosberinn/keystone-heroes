@@ -1,9 +1,16 @@
 import type { FightSuccessResponse } from "@keystone-heroes/api/functions/fight";
 import { Fragment } from "react";
 
-import { useStaticData } from "../../context/StaticData";
 import { icons } from "../../icons";
 import { useFight } from "../../pages/report/[reportID]/[fightID]";
+import {
+  affixes,
+  classes,
+  covenants,
+  soulbinds,
+  tormentedPowers,
+  dungeons,
+} from "../../staticData";
 import {
   bgPrimary,
   bgSecondary,
@@ -23,9 +30,6 @@ import { SpecIcon } from "../SpecIcon";
 
 export function Meta(): JSX.Element {
   const { reportID, fightID, fight } = useFight();
-
-  const { classes, dungeons, affixes, tormentedPowers, soulbinds, covenants } =
-    useStaticData();
 
   if (!fight) {
     return <h1>loading</h1>;

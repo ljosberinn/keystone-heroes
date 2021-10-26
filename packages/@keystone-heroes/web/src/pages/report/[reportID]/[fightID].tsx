@@ -11,8 +11,8 @@ import { createContext, useContext } from "react";
 import { Data } from "../../../components/report/Data";
 import { Map } from "../../../components/report/Map";
 import { Meta } from "../../../components/report/Meta";
-import { useStaticData } from "../../../context/StaticData";
 import { useAbortableFetch } from "../../../hooks/useAbortableFetch";
+import { dungeons } from "../../../staticData";
 import { fightTimeToString } from "../../../utils";
 
 type FightIDProps = {
@@ -166,7 +166,6 @@ export const getStaticProps: GetStaticProps<FightIDProps, StaticPathParams> =
 
 function FightIDHead() {
   const { fight } = useFight();
-  const { dungeons } = useStaticData();
 
   if (!fight) {
     return (

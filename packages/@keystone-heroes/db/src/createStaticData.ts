@@ -241,20 +241,6 @@ async function create() {
 
   const targetPath = resolve("../web/src/staticData.ts");
 
-  const data = {
-    dungeons,
-    affixes,
-    soulbinds,
-    classes,
-    covenants,
-    spells,
-    tormentedLieutenants: tormentedLieutenantMap,
-    tormentedPowers: tormentedPowerMap,
-    legendaries,
-    talents,
-    conduits,
-  };
-
   const template = `
 /* eslint-disable sonarjs/no-duplicate-string */
 const tormentedLieutenantIDs = new Set<number>(${JSON.stringify(
@@ -263,21 +249,40 @@ const tormentedLieutenantIDs = new Set<number>(${JSON.stringify(
 const allBossIDs = new Set<number>(${JSON.stringify([...allBossIDs])});
 export const isBoss = (id: number): boolean => allBossIDs.has(id);
 export const isTormentedLieutenant = (id: number): boolean => tormentedLieutenantIDs.has(id);
-export const staticData = ${JSON.stringify(data)};
-
-export type StaticData = {
-  classes: Record<number, typeof staticData.classes[keyof typeof staticData.classes]>;
-  dungeons: Record<number, Omit<typeof staticData.dungeons[keyof typeof staticData.dungeons], 'unitCountMap'> & { unitCountMap: Record<number, number> }>;
-  affixes: Record<number, typeof staticData.affixes[keyof typeof staticData.affixes]>;
-  soulbinds: Record<number, typeof staticData.soulbinds[keyof typeof staticData.soulbinds]>;
-  covenants: Record<number, typeof staticData.covenants[keyof typeof staticData.covenants]>;
-  spells: Record<number, { icon: string; name: string; cd: number }>;
-  tormentedLieutenants: Record<number, typeof staticData.tormentedLieutenants[keyof typeof staticData.tormentedLieutenants]>;
-  tormentedPowers: Record<number, typeof staticData.tormentedPowers[keyof typeof staticData.tormentedPowers]>;
-  legendaries: Record<number, typeof staticData.legendaries[keyof typeof staticData.legendaries]>;
-  talents: Record<number, typeof staticData.talents[keyof typeof staticData.talents]>;
-  conduits: Record<number, typeof staticData.conduits[keyof typeof staticData.conduits]>;
-}`;
+export const classes: Record<number, { name: string; cooldowns: number[]; specs: { id: number; name: string; cooldowns: number[]; }[]}> = ${JSON.stringify(
+    classes
+  )};
+export const dungeons: Record<number, { name: string; slug: string; time: number; zones: {id: number; name: string; }[]; unitCountMap: Record<number, number>; count: number; }> = ${JSON.stringify(
+    dungeons
+  )};
+export const affixes: Record<number, { name: string; icon: string;}>= ${JSON.stringify(
+    affixes
+  )};
+export const soulbinds: Record<number, { name: string; covenantID: number}> = ${JSON.stringify(
+    soulbinds
+  )};
+export const covenants: Record<number, { name: string; icon: string;}> = ${JSON.stringify(
+    covenants
+  )};
+export const spells: Record<number, { icon: string; name: string; cd: number; }>= ${JSON.stringify(
+    spells
+  )};
+export const tormentedLieutenants: Record<number, { name: string; icon: string; }> = ${JSON.stringify(
+    tormentedLieutenantMap
+  )};
+export const tormentedPowers: Record<number, { name: string; icon: string; sourceTormentorID: number[]; }> = ${JSON.stringify(
+    tormentedPowerMap
+  )};
+export const legendaries: Record<number, { effectName: string; icon: string; }> = ${JSON.stringify(
+    legendaries
+  )};
+export const talents: Record<number, { name: string; icon: string; }> = ${JSON.stringify(
+    talents
+  )};
+export const conduits: Record<number, { name: string; icon: string }> = ${JSON.stringify(
+    conduits
+  )};
+`;
 
   log(`writing template`);
 

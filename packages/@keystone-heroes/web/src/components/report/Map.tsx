@@ -14,10 +14,14 @@ import React, {
   useCallback,
 } from "react";
 
-import { useStaticData } from "../../context/StaticData";
 import { usePrevious } from "../../hooks/usePrevious";
 import { useFight } from "../../pages/report/[reportID]/[fightID]";
-import { isBoss, isTormentedLieutenant } from "../../staticData";
+import {
+  dungeons,
+  isBoss,
+  isTormentedLieutenant,
+  tormentedLieutenants,
+} from "../../staticData";
 import {
   useLegend,
   useMapOptions,
@@ -156,7 +160,6 @@ export function Map(): JSX.Element {
   const [fullscreen, setFullscreen] = useState(false);
   const selectedPull = useReportStore((state) => state.selectedPull);
   const previouslySelectedPull = usePrevious(selectedPull);
-  const { dungeons } = useStaticData();
   const zones = useMemo(
     () => (fight ? dungeons[fight.dungeon].zones : []),
     [fight, dungeons]
@@ -791,7 +794,6 @@ type PullIndicatorIconProps = {
 function PullIndicatorIcon({ pull, x, y }: PullIndicatorIconProps) {
   const selectedPull = useReportStore((state) => state.selectedPull);
   const setSelectedPull = useReportStore((state) => state.setSelectedPull);
-  const { tormentedLieutenants } = useStaticData();
 
   const selected = selectedPull === pull.id;
 
