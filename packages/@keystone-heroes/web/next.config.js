@@ -44,7 +44,9 @@ const config = {
   webpack: (config, options) => {
     // disables transpiling all `__tests__` files, speeding up build process
     // this reduces build time by ~ 25%
-    config.plugins.push(new options.webpack.IgnorePlugin(/\/__tests__\//u));
+    config.plugins.push(
+      new options.webpack.IgnorePlugin({ resourceRegExp: /\/__tests__\//u })
+    );
 
     return config;
   },
@@ -56,6 +58,7 @@ const config = {
       },
     ];
   },
+  swcMinify: true,
 };
 
 module.exports = withTM(config);

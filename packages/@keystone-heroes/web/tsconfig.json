@@ -29,7 +29,8 @@
       "react-dom/next",
       "@testing-library/jest-dom",
       "node"
-    ]
+    ],
+    "incremental": true
   },
   "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]
