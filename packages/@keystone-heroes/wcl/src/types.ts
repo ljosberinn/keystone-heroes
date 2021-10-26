@@ -1689,33 +1689,63 @@ export type InitialReportDataQueryVariables = Exact<{
 
 export type InitialReportDataQuery = {
   __typename?: "Query";
-  reportData?: Maybe<{
-    __typename?: "ReportData";
-    report?: Maybe<{
-      __typename?: "Report";
-      title: string;
-      startTime: number;
-      endTime: number;
-      region?: Maybe<{ __typename?: "Region"; slug: string }>;
-      fights?: Maybe<
-        Maybe<{
-          __typename?: "ReportFight";
-          id: number;
-          startTime: number;
-          endTime: number;
-          keystoneLevel?: Maybe<number>;
-          keystoneAffixes?: Maybe<Maybe<number>[]>;
-          keystoneBonus?: Maybe<number>;
-          keystoneTime?: Maybe<number>;
-          rating?: Maybe<number>;
-          averageItemLevel?: Maybe<number>;
-          friendlyPlayers?: Maybe<Maybe<number>[]>;
-          gameZone?: Maybe<{ __typename?: "GameZone"; id: number }>;
-          maps?: Maybe<Maybe<{ __typename?: "ReportMap"; id: number }>[]>;
-        }>[]
-      >;
-    }>;
-  }>;
+  reportData?:
+    | {
+        __typename?: "ReportData";
+        report?:
+          | {
+              __typename?: "Report";
+              title: string;
+              startTime: number;
+              endTime: number;
+              region?:
+                | { __typename?: "Region"; slug: string }
+                | null
+                | undefined;
+              fights?:
+                | (
+                    | {
+                        __typename?: "ReportFight";
+                        id: number;
+                        startTime: number;
+                        endTime: number;
+                        keystoneLevel?: number | null | undefined;
+                        keystoneAffixes?:
+                          | (number | null | undefined)[]
+                          | null
+                          | undefined;
+                        keystoneBonus?: number | null | undefined;
+                        keystoneTime?: number | null | undefined;
+                        rating?: number | null | undefined;
+                        averageItemLevel?: number | null | undefined;
+                        friendlyPlayers?:
+                          | (number | null | undefined)[]
+                          | null
+                          | undefined;
+                        gameZone?:
+                          | { __typename?: "GameZone"; id: number }
+                          | null
+                          | undefined;
+                        maps?:
+                          | (
+                              | { __typename?: "ReportMap"; id: number }
+                              | null
+                              | undefined
+                            )[]
+                          | null
+                          | undefined;
+                      }
+                    | null
+                    | undefined
+                  )[]
+                | null
+                | undefined;
+            }
+          | null
+          | undefined;
+      }
+    | null
+    | undefined;
 };
 
 export type EventDataQueryVariables = Exact<{
@@ -1728,17 +1758,26 @@ export type EventDataQueryVariables = Exact<{
 
 export type EventDataQuery = {
   __typename?: "Query";
-  reportData?: Maybe<{
-    __typename?: "ReportData";
-    report?: Maybe<{
-      __typename?: "Report";
-      events?: Maybe<{
-        __typename?: "ReportEventPaginator";
-        data?: Maybe<any>;
-        nextPageTimestamp?: Maybe<number>;
-      }>;
-    }>;
-  }>;
+  reportData?:
+    | {
+        __typename?: "ReportData";
+        report?:
+          | {
+              __typename?: "Report";
+              events?:
+                | {
+                    __typename?: "ReportEventPaginator";
+                    data?: any | null | undefined;
+                    nextPageTimestamp?: number | null | undefined;
+                  }
+                | null
+                | undefined;
+            }
+          | null
+          | undefined;
+      }
+    | null
+    | undefined;
 };
 
 export type PetActorsQueryVariables = Exact<{
@@ -1747,23 +1786,37 @@ export type PetActorsQueryVariables = Exact<{
 
 export type PetActorsQuery = {
   __typename?: "Query";
-  reportData?: Maybe<{
-    __typename?: "ReportData";
-    report?: Maybe<{
-      __typename?: "Report";
-      masterData?: Maybe<{
-        __typename?: "ReportMasterData";
-        actors?: Maybe<
-          Maybe<{
-            __typename?: "ReportActor";
-            gameID?: Maybe<number>;
-            petOwner?: Maybe<number>;
-            id?: Maybe<number>;
-          }>[]
-        >;
-      }>;
-    }>;
-  }>;
+  reportData?:
+    | {
+        __typename?: "ReportData";
+        report?:
+          | {
+              __typename?: "Report";
+              masterData?:
+                | {
+                    __typename?: "ReportMasterData";
+                    actors?:
+                      | (
+                          | {
+                              __typename?: "ReportActor";
+                              gameID?: number | null | undefined;
+                              petOwner?: number | null | undefined;
+                              id?: number | null | undefined;
+                            }
+                          | null
+                          | undefined
+                        )[]
+                      | null
+                      | undefined;
+                  }
+                | null
+                | undefined;
+            }
+          | null
+          | undefined;
+      }
+    | null
+    | undefined;
 };
 
 export type EnemyNpcIdsQueryVariables = Exact<{
@@ -1773,24 +1826,40 @@ export type EnemyNpcIdsQueryVariables = Exact<{
 
 export type EnemyNpcIdsQuery = {
   __typename?: "Query";
-  reportData?: Maybe<{
-    __typename?: "ReportData";
-    report?: Maybe<{
-      __typename?: "Report";
-      fights?: Maybe<
-        Maybe<{
-          __typename?: "ReportFight";
-          enemyNPCs?: Maybe<
-            Maybe<{
-              __typename?: "ReportFightNPC";
-              id?: Maybe<number>;
-              gameID?: Maybe<number>;
-            }>[]
-          >;
-        }>[]
-      >;
-    }>;
-  }>;
+  reportData?:
+    | {
+        __typename?: "ReportData";
+        report?:
+          | {
+              __typename?: "Report";
+              fights?:
+                | (
+                    | {
+                        __typename?: "ReportFight";
+                        enemyNPCs?:
+                          | (
+                              | {
+                                  __typename?: "ReportFightNPC";
+                                  id?: number | null | undefined;
+                                  gameID?: number | null | undefined;
+                                }
+                              | null
+                              | undefined
+                            )[]
+                          | null
+                          | undefined;
+                      }
+                    | null
+                    | undefined
+                  )[]
+                | null
+                | undefined;
+            }
+          | null
+          | undefined;
+      }
+    | null
+    | undefined;
 };
 
 export type TableQueryVariables = Exact<{
@@ -1802,10 +1871,16 @@ export type TableQueryVariables = Exact<{
 
 export type TableQuery = {
   __typename?: "Query";
-  reportData?: Maybe<{
-    __typename?: "ReportData";
-    report?: Maybe<{ __typename?: "Report"; table?: Maybe<any> }>;
-  }>;
+  reportData?:
+    | {
+        __typename?: "ReportData";
+        report?:
+          | { __typename?: "Report"; table?: any | null | undefined }
+          | null
+          | undefined;
+      }
+    | null
+    | undefined;
 };
 
 export type FightPullsQueryVariables = Exact<{
@@ -1815,34 +1890,65 @@ export type FightPullsQueryVariables = Exact<{
 
 export type FightPullsQuery = {
   __typename?: "Query";
-  reportData?: Maybe<{
-    __typename?: "ReportData";
-    report?: Maybe<{
-      __typename?: "Report";
-      fights?: Maybe<
-        Maybe<{
-          __typename?: "ReportFight";
-          dungeonPulls?: Maybe<
-            Maybe<{
-              __typename?: "ReportDungeonPull";
-              startTime: number;
-              endTime: number;
-              x: number;
-              y: number;
-              maps?: Maybe<Maybe<{ __typename?: "ReportMap"; id: number }>[]>;
-              enemyNPCs?: Maybe<
-                Maybe<{
-                  __typename?: "ReportDungeonPullNPC";
-                  id?: Maybe<number>;
-                  gameID?: Maybe<number>;
-                }>[]
-              >;
-            }>[]
-          >;
-        }>[]
-      >;
-    }>;
-  }>;
+  reportData?:
+    | {
+        __typename?: "ReportData";
+        report?:
+          | {
+              __typename?: "Report";
+              fights?:
+                | (
+                    | {
+                        __typename?: "ReportFight";
+                        dungeonPulls?:
+                          | (
+                              | {
+                                  __typename?: "ReportDungeonPull";
+                                  startTime: number;
+                                  endTime: number;
+                                  x: number;
+                                  y: number;
+                                  maps?:
+                                    | (
+                                        | {
+                                            __typename?: "ReportMap";
+                                            id: number;
+                                          }
+                                        | null
+                                        | undefined
+                                      )[]
+                                    | null
+                                    | undefined;
+                                  enemyNPCs?:
+                                    | (
+                                        | {
+                                            __typename?: "ReportDungeonPullNPC";
+                                            id?: number | null | undefined;
+                                            gameID?: number | null | undefined;
+                                          }
+                                        | null
+                                        | undefined
+                                      )[]
+                                    | null
+                                    | undefined;
+                                }
+                              | null
+                              | undefined
+                            )[]
+                          | null
+                          | undefined;
+                      }
+                    | null
+                    | undefined
+                  )[]
+                | null
+                | undefined;
+            }
+          | null
+          | undefined;
+      }
+    | null
+    | undefined;
 };
 
 export const InitialReportDataDocument = gql`
