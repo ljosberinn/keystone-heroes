@@ -206,10 +206,25 @@ export const getStaticProps: GetStaticProps<FightIDProps, StaticPathParams> =
       };
     }
 
+    const fight = createResponseFromStoredFight(fightSuccessResponse);
+
+    // fight is known through report import, but has not finished importing
+    if (fight.pulls.length === 0) {
+      return {
+        props: {
+          cache: {
+            fight: null,
+            reportID: null,
+            fightID: null,
+          },
+        },
+      };
+    }
+
     const cache: FightIDProps["cache"] = {
       reportID: ctx.params.reportID,
       fightID,
-      fight: createResponseFromStoredFight(fightSuccessResponse),
+      fight,
     };
 
     return {

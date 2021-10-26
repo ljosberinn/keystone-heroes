@@ -167,7 +167,7 @@ export function Map(): JSX.Element {
   const pulls = useMemo(() => (fight ? fight.pulls : []), [fight]);
 
   const [selectedTab, setSelectedTab] = useState(() => {
-    if (fight) {
+    if (fight?.pulls && fight.pulls.length > 0) {
       const dungeon = dungeons[fight.dungeon];
       const zoneToSelect = fight.pulls[selectedPull - 1].zone;
       const tab = dungeon.zones.findIndex((zone) => zone.id === zoneToSelect);
