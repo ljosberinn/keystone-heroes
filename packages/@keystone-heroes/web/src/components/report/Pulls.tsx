@@ -789,7 +789,7 @@ function AbilityReadyRow({
   const abilityName = ability?.name ?? "Unknown Ability";
 
   const usedUnderCooldown = cooldown
-    ? (event.timestamp - (event.ability.lastUse ?? 0)) / 1000 <= cooldown
+    ? (event.timestamp - (event.ability.lastUse ?? 0)) / 1000 < cooldown
     : false;
 
   return (
