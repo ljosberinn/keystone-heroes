@@ -1450,6 +1450,12 @@ export const classes: Class[] = [
         icon: "spell_holy_sealofmight",
       },
       { name: "Lay on Hands", id: 633, cd: 600, icon: "spell_holy_layonhands" },
+      {
+        name: "Blinding Light",
+        id: 115_750,
+        cd: 90,
+        icon: "ability_paladin_blindinglight",
+      },
     ],
     covenantAbilities: [
       {

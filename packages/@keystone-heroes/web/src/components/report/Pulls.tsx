@@ -426,7 +426,7 @@ type CastRowProps = {
     sourcePlayerID: NonNullable<DefaultEvent["sourcePlayerID"]>;
     type: "Cast";
   };
-  ability: typeof spells[number];
+  ability: NonNullable<ReturnType<typeof determineAbility>>;
 } & Pick<
   TableRowProps,
   "msSinceLastEvent" | "playerIdPlayerNameMap" | "playerIdTextColorMap"
@@ -617,6 +617,33 @@ const determineAbility = (id: number) => {
       name: "Disposable Spectrophasic Reanimator",
       icon: "inv_engineering_90_lightningbox",
       cd: 0,
+    };
+  }
+
+  // Bursting
+  if (id === 243_237) {
+    return {
+      name: affixes["11"].name,
+      icon: affixes["11"].icon,
+      cd: Number.MAX_SAFE_INTEGER,
+    };
+  }
+
+  // Explosive
+  if (id === 240_446) {
+    return {
+      name: affixes["13"].name,
+      icon: affixes["13"].icon,
+      cd: Number.MAX_SAFE_INTEGER,
+    };
+  }
+
+  // Storming
+  if (id === 343_520) {
+    return {
+      name: affixes["124"].name,
+      icon: affixes["124"].icon,
+      cd: Number.MAX_SAFE_INTEGER,
     };
   }
 
@@ -1058,7 +1085,9 @@ function MaybeWastedCooldownCell({
 }: MaybeWastedCooldownCellProps) {
   const { fight } = useFight();
 
-  if (!fight) {
+  const ability = spells[event.ability.id];
+
+  if (!fight || !ability) {
     return <td />;
   }
 
@@ -1069,8 +1098,6 @@ function MaybeWastedCooldownCell({
   if (isBloodlustIsh) {
     return <td>irrelevant</td>;
   }
-
-  const ability = spells[event.ability.id];
 
   if (!event.ability.wasted && event.ability.nextUse) {
     const msToNextUsage = event.ability.nextUse - event.timestamp;
@@ -1509,7 +1536,13 @@ function TableRow({
   }
 
   if (isAbilityReadyEventWithAbilityAndSourcePlayer(event)) {
-    const ability = spells[event.ability.id];
+    const ability = determineAbility(event.ability.id);
+
+    if (!ability) {
+      console.info(`encountered uncaught ability in event`, event);
+      return null;
+    }
+
     const key = `${event.timestamp}-${event.sourcePlayerID}-${
       event.type
     }-${ability.name.split(" ").join("-")}`.toLowerCase();

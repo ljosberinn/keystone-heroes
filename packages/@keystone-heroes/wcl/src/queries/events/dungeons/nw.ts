@@ -76,6 +76,8 @@ const nwSpearReducer = createChunkByThresholdReducer(16 * 1000);
 // may have to adjust later for multi-orbing...
 const nwOrbReducer = createChunkByThresholdReducer(8 * 1000);
 
+const nwKyrianOrbReducer = createChunkByThresholdReducer(60 * 1000);
+
 export const getNWEvents = (
   allEvents: AllTrackedEventTypes[]
 ): (DamageEvent | HealEvent)[] => {
@@ -89,13 +91,13 @@ export const getNWEvents = (
       .reduce<DamageEvent[][]>(nwOrbReducer, [])
       .flatMap((chunk) => reduceEventsByPlayer(chunk, "sourceID")),
     ...allEvents.filter(isNwHammerEvent),
-    ...reduceEventsByPlayer(
-      allEvents.filter(isNwKyrianOrbDamageEvent),
-      "sourceID"
-    ),
-    ...reduceEventsByPlayer(
-      allEvents.filter(isNwKyrianOrbHealEvent),
-      "sourceID"
-    ),
+    ...allEvents
+      .filter(isNwKyrianOrbDamageEvent)
+      .reduce<DamageEvent[][]>(nwKyrianOrbReducer, [])
+      .flatMap((chunk) => reduceEventsByPlayer(chunk, "sourceID")),
+    ...allEvents
+      .filter(isNwKyrianOrbHealEvent)
+      .reduce<HealEvent[][]>(nwKyrianOrbReducer, [])
+      .flatMap((chunk) => reduceEventsByPlayer(chunk, "sourceID")),
   ];
 };
