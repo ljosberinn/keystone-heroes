@@ -1,7 +1,6 @@
 import { Affixes } from "@keystone-heroes/db/types";
 
 import type { AllTrackedEventTypes, DamageEvent } from "../types";
-import { reduceEventsByPlayer } from "../utils";
 
 export const VOLCANIC = 209_862;
 
@@ -40,5 +39,5 @@ export const getVolcanicEvents = (
     return [];
   }
 
-  return reduceEventsByPlayer(allEvents.filter(isVolcanicEvent), "targetID");
+  return allEvents.filter(isVolcanicEvent);
 };

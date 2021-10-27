@@ -1,7 +1,7 @@
 import { Affixes } from "@keystone-heroes/db/types";
 
 import type { AllTrackedEventTypes, DamageEvent } from "../types";
-import { createIsSpecificEvent, reduceEventsByPlayer } from "../utils";
+import { createIsSpecificEvent } from "../utils";
 
 export const GRIEVOUS_WOUND = 240_559;
 
@@ -41,8 +41,5 @@ export const getGrievousEvents = (
     return [];
   }
 
-  return reduceEventsByPlayer(
-    allEvents.filter(isGrievousDamageEvent),
-    "targetID"
-  );
+  return allEvents.filter(isGrievousDamageEvent);
 };

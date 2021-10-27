@@ -5,7 +5,7 @@ import type {
   ApplyDebuffStackEvent,
   DamageEvent,
 } from "../types";
-import { createIsSpecificEvent, reduceEventsByPlayer } from "../utils";
+import { createIsSpecificEvent } from "../utils";
 
 export const NECROTIC = 209_858;
 
@@ -74,10 +74,7 @@ export const getNecroticEvents = (
   const stacks = getHighestNecroticStack(
     allEvents.filter(isNecroticStackEvent)
   );
-  const damage = reduceEventsByPlayer(
-    allEvents.filter(isNecroticDamageEvent),
-    "targetID"
-  );
+  const damage = allEvents.filter(isNecroticDamageEvent);
 
   return [...stacks, ...damage];
 };

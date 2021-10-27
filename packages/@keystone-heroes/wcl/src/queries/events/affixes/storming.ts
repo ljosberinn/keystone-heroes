@@ -1,7 +1,7 @@
 import { Affixes } from "@keystone-heroes/db/types";
 
 import type { AllTrackedEventTypes, DamageEvent } from "../types";
-import { createIsSpecificEvent, reduceEventsByPlayer } from "../utils";
+import { createIsSpecificEvent } from "../utils";
 
 export const STORMING = 343_520;
 
@@ -39,5 +39,5 @@ export const getStormingEvents = (
     return [];
   }
 
-  return reduceEventsByPlayer(allEvents.filter(isStormingEvent), "targetID");
+  return allEvents.filter(isStormingEvent);
 };

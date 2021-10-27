@@ -1,7 +1,7 @@
 import { Affixes } from "@keystone-heroes/db/types";
 
 import type { AllTrackedEventTypes, DamageEvent, HealEvent } from "../types";
-import { createIsSpecificEvent, reduceEventsByPlayer } from "../utils";
+import { createIsSpecificEvent } from "../utils";
 
 export const SANGUINE_ICHOR_HEALING = 226_510;
 export const SANGUINE_ICHOR_DAMAGE = 226_512;
@@ -67,10 +67,7 @@ export const getSanguineEvents = (
   const healing = reduceHealingDoneBySanguine(
     allEvents.filter(isSanguineHealEvent)
   );
-  const damage = reduceEventsByPlayer(
-    allEvents.filter(isSanguineDamageEvent),
-    "targetID"
-  );
+  const damage = allEvents.filter(isSanguineDamageEvent);
 
   return [...healing, ...damage];
 };

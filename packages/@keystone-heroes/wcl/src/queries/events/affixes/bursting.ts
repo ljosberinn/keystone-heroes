@@ -1,7 +1,7 @@
 import { Affixes } from "@keystone-heroes/db/types";
 
 import type { AllTrackedEventTypes, DamageEvent } from "../types";
-import { createIsSpecificEvent, reduceEventsByPlayer } from "../utils";
+import { createIsSpecificEvent } from "../utils";
 
 export const BURSTING = 243_237;
 
@@ -40,5 +40,5 @@ export const getBurstingEvents = (
     return [];
   }
 
-  return reduceEventsByPlayer(allEvents.filter(isBurstingEvent), "targetID");
+  return allEvents.filter(isBurstingEvent);
 };

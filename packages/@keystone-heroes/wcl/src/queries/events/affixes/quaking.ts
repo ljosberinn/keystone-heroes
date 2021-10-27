@@ -5,7 +5,7 @@ import type {
   DamageEvent,
   InterruptEvent,
 } from "../types";
-import { createIsSpecificEvent, reduceEventsByPlayer } from "../utils";
+import { createIsSpecificEvent } from "../utils";
 
 export const QUAKING = 240_448;
 
@@ -52,10 +52,7 @@ export const getQuakingEvents = (
 
   const interrupts = allEvents.filter(isQuakingInterruptEvent);
 
-  const damage = reduceEventsByPlayer(
-    allEvents.filter(isQuakingDamageEvent),
-    "targetID"
-  );
+  const damage = allEvents.filter(isQuakingDamageEvent);
 
   return [...interrupts, ...damage];
 };

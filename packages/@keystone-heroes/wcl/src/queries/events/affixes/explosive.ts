@@ -1,7 +1,7 @@
 import { Affixes } from "@keystone-heroes/db/types";
 
 import type { AllTrackedEventTypes, DamageEvent } from "../types";
-import { createIsSpecificEvent, reduceEventsByPlayer } from "../utils";
+import { createIsSpecificEvent } from "../utils";
 
 export const EXPLOSIVE = {
   unit: 120_651,
@@ -99,10 +99,7 @@ export const getExplosiveEvents = (
   const explosiveKills = allEvents.filter(
     createIsExplosiveDeathEvent(explosiveTargetID)
   );
-  const explosiveDamage = reduceEventsByPlayer(
-    allEvents.filter(isExplosiveDamageEvent),
-    "targetID"
-  );
+  const explosiveDamage = allEvents.filter(isExplosiveDamageEvent);
 
   return [...explosiveDamage, ...explosiveKills];
 };

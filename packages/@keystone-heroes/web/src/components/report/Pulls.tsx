@@ -21,12 +21,12 @@ import {
 } from "../../staticData";
 import {
   AbilityIcon,
-  BLOODLUST_ICON,
   INVIS_POTION_ICON,
   SHROUD_ICON,
+  STATIC_ICON_PREFIX,
 } from "../AbilityIcon";
 import { ExternalLink } from "../ExternalLink";
-import { detectInvisibilityUsage, hasBloodLust } from "./utils";
+import { detectInvisibilityUsage, findBloodlust } from "./utils";
 
 type MostRelevantNPCReturn = {
   last: null | ReturnType<typeof findMostRelevantNPCOfPull>;
@@ -153,7 +153,10 @@ function PullSelection() {
 
   const lastPull = isFirst ? null : fight.pulls[selectedPullID - 2];
 
-  const usedBloodlustOrHeroism = hasBloodLust(selectedPull);
+  const usedBloodlustOrHeroism = findBloodlust(selectedPull);
+  const lustAbility = usedBloodlustOrHeroism
+    ? spells[usedBloodlustOrHeroism]
+    : null;
   const invisibilityType = lastPull ? detectInvisibilityUsage(lastPull) : null;
 
   return (
@@ -231,9 +234,9 @@ function PullSelection() {
         </ExternalLink>
 
         <span>
-          {usedBloodlustOrHeroism ? (
+          {usedBloodlustOrHeroism && lustAbility ? (
             <img
-              src={BLOODLUST_ICON}
+              src={`${STATIC_ICON_PREFIX}${lustAbility.icon}.jpg`}
               alt="Some form of Bloodlust/Heroism was used on this pull."
               title="Some form of Bloodlust/Heroism was used on this pull."
               className="object-cover w-8 h-8 rounded-full"
@@ -568,7 +571,11 @@ function CastRow({
       >
         {event.ability.lastUse ? (
           <span>
-            {Math.round((event.timestamp - event.ability.lastUse) / 1000)}s ago
+            {timeDurationToString(
+              event.timestamp - event.ability.lastUse,
+              true
+            )}{" "}
+            ago
           </span>
         ) : (
           "first use"
@@ -617,6 +624,15 @@ const determineAbility = (id: number) => {
       name: "Disposable Spectrophasic Reanimator",
       icon: "inv_engineering_90_lightningbox",
       cd: 0,
+    };
+  }
+
+  // Necrotic
+  if (id === 209_858) {
+    return {
+      name: "Necrotic Wound",
+      icon: "ability_rogue_venomouswounds",
+      cd: Number.MAX_SAFE_INTEGER,
     };
   }
 
@@ -697,6 +713,7 @@ const determineAbility = (id: number) => {
     };
   }
 
+  // Grievous
   if (id === 240_559) {
     return {
       name: "Grievous Wound",
@@ -1091,7 +1108,7 @@ function MaybeWastedCooldownCell({
     return <td />;
   }
 
-  const isBloodlustIsh = hasBloodLust({
+  const isBloodlustIsh = findBloodlust({
     events: [{ ...event, type: "Cast" }],
   });
 
@@ -1179,7 +1196,9 @@ function DamageDoneRow({
   const ability = determineAbility(event.ability.id);
 
   if (!ability) {
-    console.log(ability);
+    if (typeof window !== "undefined") {
+      console.log(ability);
+    }
     return null;
   }
 
@@ -1383,6 +1402,21 @@ function Events() {
 
           {before.length > 0 && (
             <tbody>
+              <tr>
+                <td colSpan={6} className="text-center">
+                  <span
+                    className="font-semibold"
+                    title="Events that happend closer to this pull than the last can be found here."
+                  >
+                    Before Pull
+                    <sup>
+                      <svg className="inline w-4 h-4 ml-2 text-black dark:text-white">
+                        <use href={`#${outlineQuestionCircle.id}`} />
+                      </svg>
+                    </sup>
+                  </span>
+                </td>
+              </tr>
               {before.map((event, index) => {
                 const msSinceLastEvent = before[index - 1]
                   ? timeDurationToString(
@@ -1410,6 +1444,11 @@ function Events() {
                 : undefined
             }
           >
+            <tr>
+              <td colSpan={6} className="text-center">
+                <span className="font-semibold">During Pull</span>
+              </td>
+            </tr>
             {during.map((event, index) => {
               const msSinceLastEvent = during[index - 1]
                 ? timeDurationToString(
@@ -1431,6 +1470,21 @@ function Events() {
 
           {after.length > 0 && (
             <tbody className="border-t-2 border-coolgray-900">
+              <tr>
+                <td colSpan={6} className="text-center">
+                  <span
+                    className="font-semibold"
+                    title="Events that happend closer to this pull than the next can be found here."
+                  >
+                    After Pull
+                    <sup>
+                      <svg className="inline w-4 h-4 ml-2 text-black dark:text-white">
+                        <use href={`#${outlineQuestionCircle.id}`} />
+                      </svg>
+                    </sup>
+                  </span>
+                </td>
+              </tr>
               {after.map((event, index) => {
                 const msSinceLastEvent = after[index - 1]
                   ? timeDurationToString(
@@ -1603,7 +1657,9 @@ function TableRow({
     );
   }
 
-  console.log(event.type, event);
+  if (typeof window !== "undefined") {
+    console.log(event.type, event);
+  }
 
   return null;
 }

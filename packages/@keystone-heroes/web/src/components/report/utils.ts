@@ -9,17 +9,19 @@ const bloodlustTypes = new Set([
 ]);
 const invisibilityTypes = new Set([307_195, 321_422]);
 
-export const hasBloodLust = <
+export const findBloodlust = <
   T extends { events: FightSuccessResponse["pulls"][number]["events"] }
 >(
   pull: T
-): boolean => {
-  return pull.events.some(
+): number | null => {
+  const match = pull.events.find(
     (event) =>
       event.type !== "AbilityReady" &&
       event.ability &&
       bloodlustTypes.has(event.ability.id)
   );
+
+  return match?.ability?.id ?? null;
 };
 
 export const detectInvisibilityUsage = (

@@ -20,6 +20,7 @@ import {
   dungeons,
   isBoss,
   isTormentedLieutenant,
+  spells,
   tormentedLieutenants,
 } from "../../staticData";
 import {
@@ -32,7 +33,6 @@ import { bgPrimary, bgSecondary } from "../../styles/tokens";
 import { timeDurationToString } from "../../utils";
 import { classnames } from "../../utils/classnames";
 import {
-  BLOODLUST_ICON,
   INVIS_POTION_ICON,
   QUESTIONMARK_ICON,
   SHROUD_ICON,
@@ -40,7 +40,7 @@ import {
   ZOOM_ICON,
 } from "../AbilityIcon";
 import { TabList, TabButton, TabPanel } from "../Tabs";
-import { hasBloodLust, detectInvisibilityUsage } from "./utils";
+import { findBloodlust, detectInvisibilityUsage } from "./utils";
 
 const createRafCleanup = <K extends keyof WindowEventMap>(
   rafRef: MutableRefObject<number | null>,
@@ -448,7 +448,8 @@ function BossKillIndicator({ fullscreen }: BossKillIndicatorProps) {
         ref={containerRef}
       >
         {pullsWithBoss.map((pull) => {
-          const usedLust = hasBloodLust(pull);
+          const usedLust = findBloodlust(pull);
+          const lustAbility = usedLust ? spells[usedLust] : null;
 
           const [firstBossName] = pull.npcs
             .filter((npc) => isBoss(npc.id))
@@ -490,10 +491,10 @@ function BossKillIndicator({ fullscreen }: BossKillIndicatorProps) {
                 }}
               >
                 {firstBossName}{" "}
-                {usedLust && (
+                {usedLust && lustAbility && (
                   <img
                     className="inline w-6 h-6 rounded-full"
-                    src={BLOODLUST_ICON}
+                    src={`${STATIC_ICON_PREFIX}${lustAbility.icon}.jpg`}
                     alt="Some form of Bloodlust/Heroism was used on this pull."
                     width={24}
                     height={24}
@@ -839,12 +840,16 @@ function PullIndicatorIcon({ pull, x, y }: PullIndicatorIconProps) {
     y: centerY,
   };
 
-  if (hasBloodLust(pull)) {
+  const bloodlust = findBloodlust(pull);
+
+  if (bloodlust) {
+    const ability = spells[bloodlust];
+
     return (
       <g {...gProps}>
         <image
           aria-label="Bloodlust | Heroism | Drums was/were used on this pull."
-          href={BLOODLUST_ICON}
+          href={`${STATIC_ICON_PREFIX}${ability.icon}.jpg`}
           {...sharedProps}
         />
         <text
