@@ -4,11 +4,15 @@ const bloodlustTypes = new Set([
   2825, 32_182, 309_658,
   // Timewarp
   80_353,
+  // Bloodlust
+  2825,
 ]);
 const invisibilityTypes = new Set([307_195, 321_422]);
 
-export const hasBloodLust = (
-  pull: FightSuccessResponse["pulls"][number]
+export const hasBloodLust = <
+  T extends { events: FightSuccessResponse["pulls"][number]["events"] }
+>(
+  pull: T
 ): boolean => {
   return pull.events.some(
     (event) =>

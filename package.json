@@ -10,7 +10,7 @@
     "dev": "yarn --cwd packages/@keystone-heroes/web dev",
     "dev-db:start": "supabase start",
     "dev-db:stop": "supabase stop",
-    "postinstall": "yarn-deduplicate -l && yarn --cwd packages/@keystone-heroes/db generate && yarn --cwd packages/@keystone-heroes/db static-data",
+    "postinstall": "yarn-deduplicate -l && yarn --cwd packages/@keystone-heroes/db generate && yarn --cwd packages/@keystone-heroes/db static-data && yarn --cwd packages/@keystone-heroes/db sync-dbs",
     "install:clean": "rimraf yarn.lock packages/@keystone-heroes/**/node_modules node_modules && yarn",
     "lint": "yarn workspaces run lint",
     "lint:fix": "yarn workspaces run lint --fix && yarn workspaces run format",

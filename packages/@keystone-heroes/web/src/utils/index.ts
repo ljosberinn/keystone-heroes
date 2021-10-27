@@ -1,18 +1,28 @@
 import { isValidReportId } from "@keystone-heroes/wcl/utils";
 
-export const fightTimeToString = (time: number, omitMs = false): string => {
+export const timeDurationToString = (time: number, omitMs = false): string => {
+  const isNegative = time < 0;
+
   const inSeconds = time / 1000;
-  const minutes = Math.floor(inSeconds / 60);
-  const seconds = Math.floor(inSeconds - minutes * 60);
+  const minutes = isNegative
+    ? Math.ceil(inSeconds / 60)
+    : Math.floor(inSeconds / 60);
+  const seconds = isNegative
+    ? Math.ceil(inSeconds - minutes * 60) * -1
+    : Math.floor(inSeconds - minutes * 60);
+
+  const prefix = inSeconds < 0 ? "-" : "";
 
   if (omitMs) {
-    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+    return `${prefix}${minutes}:${seconds.toString().padStart(2, "0")}`;
   }
 
-  const ms = time - minutes * 60 * 1000 - seconds * 1000;
+  const ms =
+    (time - minutes * 60 * 1000 - seconds * 1000) * (isNegative ? -1 : 1);
 
-  return `${minutes}:${seconds.toString().padStart(2, "0")}.${ms
+  return `${prefix}${minutes}:${seconds.toString().padStart(2, "0")}.${ms
     .toString()
+    .slice(0, 3)
     .padStart(3, "0")}`;
 };
 

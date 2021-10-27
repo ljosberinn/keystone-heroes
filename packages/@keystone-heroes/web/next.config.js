@@ -35,8 +35,8 @@ const config = {
     NEXT_PUBLIC_BUILD_TIMESTAMP: Number(date).toString(),
   },
   experimental: {
-    // conformance: true,
-    reactRoot: true,
+    concurrentFeatures: true,
+    serverComponents: true,
   },
   future: {
     strictPostcssConfiguration: true,

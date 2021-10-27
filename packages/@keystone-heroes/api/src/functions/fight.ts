@@ -550,7 +550,8 @@ const abilitiesWithCDR = new Set([
   204_021,
   1719,
   212_084,
-  207_684,
+  // DH
+  207_684, // Sigil of Misery
   79_206,
   325_886,
   12_472,
@@ -579,21 +580,18 @@ const abilitiesWithCDR = new Set([
   192_058, // Capacitor Totem
 ]);
 
+type CalcAbilityReadyEventsReturn = Omit<
+  FightSuccessResponse["pulls"][number]["events"][number],
+  "category" | "relTimestamp"
+>[];
+
 const calculateAbilityReadyEvents = (
   allEvents: Omit<
     FightSuccessResponse["pulls"][number]["events"][number],
     "category" | "relTimestamp"
   >[]
-): Omit<
-  FightSuccessResponse["pulls"][number]["events"][number],
-  "category" | "relTimestamp"
->[] => {
-  return allEvents.reduce<
-    Omit<
-      FightSuccessResponse["pulls"][number]["events"][number],
-      "category" | "relTimestamp"
-    >[]
-  >((acc, event) => {
+): CalcAbilityReadyEventsReturn => {
+  return allEvents.reduce<CalcAbilityReadyEventsReturn>((acc, event) => {
     if (!eventHasRelevantAbilityAndSourcePlayerID(event)) {
       return acc;
     }
@@ -794,46 +792,78 @@ const findThisPullsAbilityReadyEvents = (
 export const createResponseFromStoredFight = (
   dataset: RawFightWithDungeon
 ): FightSuccessResponse => {
-  const lastAbilityUsageMap: Record<number, number> = {};
+  const lastAbilityUsageMap = new Map<string, number>();
 
-  const allEvents = dataset.Pull.flatMap((pull) =>
-    pull.Event.map<
-      Omit<
-        FightSuccessResponse["pulls"][number]["events"][number],
-        "category" | "relTimestamp"
-      >
-    >(({ eventType, ability, timestamp, ...rest }) => {
-      const interruptedAbility = rest.interruptedAbility
-        ? rest.interruptedAbility.id
-        : null;
+  const flatEvents = dataset.Pull.flatMap((pull) => pull.Event);
 
-      if (ability) {
-        const lastUse = lastAbilityUsageMap[ability.id] ?? null;
-        lastAbilityUsageMap[ability.id] = timestamp;
+  const allEvents = flatEvents.map<
+    Omit<
+      FightSuccessResponse["pulls"][number]["events"][number],
+      "category" | "relTimestamp"
+    >
+  >(({ eventType, ability, timestamp, sourcePlayerID, ...rest }) => {
+    const interruptedAbility = rest.interruptedAbility
+      ? rest.interruptedAbility.id
+      : null;
+
+    if (ability) {
+      // player actor
+      if (sourcePlayerID) {
+        const key = `${sourcePlayerID}-${ability.id}`;
+        const lastUse = lastAbilityUsageMap.get(key) ?? null;
+        lastAbilityUsageMap.set(key, timestamp);
+
+        const nextUsageEvent = flatEvents.find(
+          (event) =>
+            event.timestamp > timestamp &&
+            event.ability &&
+            event.ability.id === ability.id &&
+            event.sourcePlayerID &&
+            event.sourcePlayerID === sourcePlayerID
+        );
+
+        const nextUse = nextUsageEvent ? nextUsageEvent.timestamp : null;
 
         return {
           ...rest,
+          sourcePlayerID,
           timestamp,
           interruptedAbility,
           type: eventType,
           ability: {
             id: ability.id,
             lastUse,
-            nextUse: null,
+            nextUse,
             wasted: false,
           },
         };
       }
 
+      // other actors, e.g. environment or npcs
       return {
         ...rest,
+        sourcePlayerID,
         timestamp,
         interruptedAbility,
         type: eventType,
-        ability: null,
+        ability: {
+          id: ability.id,
+          lastUse: null,
+          nextUse: null,
+          wasted: false,
+        },
       };
-    })
-  );
+    }
+
+    return {
+      ...rest,
+      sourcePlayerID,
+      timestamp,
+      interruptedAbility,
+      type: eventType,
+      ability: null,
+    };
+  });
 
   const abilityReadyEvents = calculateAbilityReadyEvents(allEvents);
 

@@ -19,7 +19,7 @@ import { Map } from "../../../components/report/Map";
 import { Meta } from "../../../components/report/Meta";
 import { useAbortableFetch } from "../../../hooks/useAbortableFetch";
 import { dungeons } from "../../../staticData";
-import { fightTimeToString } from "../../../utils";
+import { timeDurationToString } from "../../../utils";
 
 type FightIDProps = {
   cache?: {
@@ -251,7 +251,7 @@ function FightIDHead() {
     <Head>
       <title>
         KSH | {dungeon.slug} +{fight.meta.level} in{" "}
-        {fightTimeToString(fight.meta.time)}
+        {timeDurationToString(fight.meta.time)}
       </title>
     </Head>
   );

@@ -1803,6 +1803,10 @@ export const legendaries: Record<number, { effectName: string; icon: string }> =
       effectName: "Balance of All Things",
       icon: "ability_druid_balanceofpower",
     },
+    "340081": {
+      effectName: "Dashing Scoundrel",
+      icon: "ability_rogue_venomouswounds",
+    },
     "340087": { effectName: "Celerity", icon: "ability_rogue_slicedice" },
     "340089": { effectName: "Finality", icon: "ability_rogue_eviscerate" },
     "340092": {
@@ -1857,6 +1861,7 @@ export const talents: Record<number, { name: string; icon: string }> = {
   "772": { name: "Rend", icon: "ability_gouge" },
   "974": { name: "Earth Shield", icon: "spell_nature_skinofearth" },
   "6789": { name: "Mortal Coil", icon: "ability_warlock_mortalcoil" },
+  "14983": { name: "Vigor", icon: "ability_rogue_vigor" },
   "20066": { name: "Repentance", icon: "spell_holy_prayerofhealing" },
   "29725": {
     name: "Sudden Death",
@@ -1887,6 +1892,7 @@ export const talents: Record<number, { name: string; icon: string }> = {
   "107570": { name: "Storm Bolt", icon: "warrior_talent_icon_stormbolt" },
   "107574": { name: "Avatar", icon: "warrior_talent_icon_avatar" },
   "108194": { name: "Asphyxiate", icon: "ability_deathknight_asphixiate" },
+  "108208": { name: "Subterfuge", icon: "rogue_subterfuge" },
   "108209": { name: "Shadow Focus", icon: "rogue_shadowfocus" },
   "108216": { name: "Dirty Tricks", icon: "ability_rogue_dirtydeeds" },
   "108238": { name: "Renewal", icon: "spell_nature_natureblessing" },
@@ -1927,6 +1933,7 @@ export const talents: Record<number, { name: string; icon: string }> = {
     name: "Primal Elementalist",
     icon: "shaman_talent_primalelementalist",
   },
+  "121411": { name: "Crimson Tempest", icon: "inv_knife_1h_cataclysm_c_05" },
   "121536": { name: "Angelic Feather", icon: "ability_priest_angelicfeather" },
   "122783": { name: "Diffuse Magic", icon: "spell_monk_diffusemagic" },
   "123986": { name: "Chi Burst", icon: "spell_arcane_arcanetorrent" },
@@ -1991,6 +1998,7 @@ export const talents: Record<number, { name: string; icon: string }> = {
   "193533": { name: "Steady Focus", icon: "ability_hunter_improvedsteadyshot" },
   "193537": { name: "Weaponmaster", icon: "ability_ironmaidens_bladerush" },
   "193539": { name: "Alacrity", icon: "ability_paladin_speedoflight" },
+  "193640": { name: "Elaborate Planning", icon: "inv_misc_map08" },
   "194844": { name: "Bonestorm", icon: "achievement_boss_lordmarrowgar" },
   "194912": { name: "Gathering Storm", icon: "spell_frost_ice-shards" },
   "194917": {
@@ -2002,6 +2010,7 @@ export const talents: Record<number, { name: string; icon: string }> = {
   "196555": { name: "Netherwalk", icon: "spell_warlock_demonsoul" },
   "196607": { name: "Eye of the Tiger", icon: "ability_druid_primalprecision" },
   "196737": { name: "High Tolerance", icon: "monk_ability_avertharm" },
+  "196861": { name: "Iron Wire", icon: "inv_jewelcrafting_delicatecopperwire" },
   "196924": { name: "Acrobatic Strikes", icon: "spell_warrior_wildstrike" },
   "196926": {
     name: "Crusader's Might",
@@ -2097,6 +2106,7 @@ export const talents: Record<number, { name: string; icon: string }> = {
   "207200": { name: "Permafrost", icon: "achievement_zone_frostfire" },
   "207311": { name: "Clawing Shadows", icon: "warlock_curse_shadow" },
   "207321": { name: "Spell Eater", icon: "ability_creature_cursed_03" },
+  "207383": { name: "Abundance", icon: "ability_druid_empoweredrejuvination" },
   "207385": { name: "Spring Blossoms", icon: "inv_misc_trailofflowers" },
   "207401": {
     name: "Ancestral Vigor",
@@ -2152,6 +2162,8 @@ export const talents: Record<number, { name: string; icon: string }> = {
   "247454": { name: "Spirit Bomb", icon: "inv_icon_shadowcouncilorb_purple" },
   "248033": { name: "Awakening", icon: "inv_helm_plate_raidpaladin_n_01" },
   "252216": { name: "Tiger Dash", icon: "ability_druid_dash_orange" },
+  "255544": { name: "Poison Bomb", icon: "rogue_paralytic_poison" },
+  "255989": { name: "Master Assassin", icon: "ability_criticalstrike" },
   "257505": { name: "Shot in the Dark", icon: "ability_cheapshot" },
   "257944": {
     name: "Thrill of the Hunt",
@@ -2193,6 +2205,7 @@ export const talents: Record<number, { name: string; icon: string }> = {
     name: "Animal Companion",
     icon: "ability_hunter_bestialdiscipline",
   },
+  "269569": { name: "Zeal", icon: "spell_holy_sealofblood" },
   "269644": { name: "Searing Touch", icon: "ability_warlock_backdraft" },
   "269737": { name: "Alpha Predator", icon: "spell_druid_savagery" },
   "270233": { name: "Freezing Rain", icon: "spell_frost_frozenorb" },
@@ -2243,6 +2256,8 @@ export const talents: Record<number, { name: string; icon: string }> = {
   "325197": { name: "Invoke Chi-Ji, the Red Crane", icon: "inv_pet_cranegod" },
   "325201": { name: "Dance of Chi-Ji", icon: "ability_monk_cranekick_new" },
   "325966": { name: "Glimmer of Light", icon: "ability_paladin_toweroflight" },
+  "326732": { name: "Empyrean Power", icon: "ability_paladin_sheathoflight" },
+  "326734": { name: "Healing Hands", icon: "ability_paladin_infusionoflight" },
   "333919": {
     name: "Echo of the Elements",
     icon: "ability_shaman_echooftheelements",
@@ -2261,6 +2276,7 @@ export const talents: Record<number, { name: string; icon: string }> = {
     name: "Solstice",
     icon: "artifactability_balancedruid_moonandstars",
   },
+  "343721": { name: "Final Reckoning", icon: "spell_holy_blessedresillience" },
   "344357": { name: "Stormflurry", icon: "ability_shaman_stormstrike" },
   "345218": {
     name: "Hungering Void",
@@ -2451,6 +2467,7 @@ export const conduits: Record<number, { name: string; icon: string }> = {
   },
   "339182": { name: "Elysian Dirge", icon: "ability_monk_forcesphere" },
   "339185": { name: "Lavish Harvest", icon: "warlock_charredremains" },
+  "339186": { name: "Tumbling Waves", icon: "spell_animamaldraxxus_wave" },
   "339231": { name: "Growing Inferno", icon: "spell_fel_incinerate" },
   "339259": { name: "Piercing Verdict", icon: "spell_animabastion_missile" },
   "339264": {
@@ -2478,6 +2495,11 @@ export const conduits: Record<number, { name: string; icon: string }> = {
   },
   "339481": { name: "Rolling Agony", icon: "warlock_pvp_cursefragility" },
   "339495": { name: "Reversal of Fortune", icon: "inv_trickshot" },
+  "339518": { name: "Virtuous Command", icon: "spell_holy_sealofvengeance" },
+  "339531": {
+    name: "Templar's Vindication",
+    icon: "ability_priest_evangelism",
+  },
   "339558": { name: "Cheetah's Vigor", icon: "rogue_burstofspeed" },
   "339576": { name: "Withering Bolt", icon: "spell_shadow_shadowbolt" },
   "339644": { name: "Roaring Fire", icon: "spell_fire_felflamering" },
@@ -2511,6 +2533,7 @@ export const conduits: Record<number, { name: string; icon: string }> = {
     name: "Resolute Defender",
     icon: "ability_crown_of_the_heavens_icon",
   },
+  "340030": { name: "Royal Decree", icon: "achievement_legionpvp7tier3" },
   "340033": { name: "Powerful Precision", icon: "ability_hunter_markedshot" },
   "340041": { name: "Infernal Brand", icon: "warlock_pvp_burninglegion" },
   "340212": {
@@ -2553,8 +2576,14 @@ export const conduits: Record<number, { name: string; icon: string }> = {
     icon: "inv_helm_cloth_shadowmoonclan_b_01",
   },
   "341531": { name: "Quick Decisions", icon: "inv_misc_hook_01" },
+  "341532": {
+    name: "Fade to Nothing",
+    icon: "ability_warlock_everlastingaffliction",
+  },
   "341534": { name: "Rushed Setup", icon: "ability_skyreach_piercing_rush" },
   "341535": { name: "Prepared for All", icon: "ability_rogue_ghostpirate" },
+  "341536": { name: "Poisoned Katar", icon: "ability_hunter_cobrashot" },
+  "341537": { name: "Well-Placed Steel", icon: "inv_weapon_shortblade_62" },
   "341543": { name: "Sleight of Hand", icon: "inv_misc_dice_02" },
   "341546": { name: "Count the Odds", icon: "inv_misc_dice_01" },
   "341549": { name: "Deeper Daggers", icon: "inv_weapon_shortblade_15" },

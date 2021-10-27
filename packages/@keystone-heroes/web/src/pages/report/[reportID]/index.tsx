@@ -17,7 +17,7 @@ import { LinkBox, LinkOverlay } from "../../../components/LinkBox";
 import { SpecIcon } from "../../../components/SpecIcon";
 import { useAbortableFetch } from "../../../hooks/useAbortableFetch";
 import { bgPrimary } from "../../../styles/tokens";
-import { fightTimeToString } from "../../../utils";
+import { timeDurationToString } from "../../../utils";
 import { classnames } from "../../../utils/classnames";
 
 type ReportProps = {
@@ -196,7 +196,7 @@ function FightCard({ fight, reportID, loading }: FightCardProps) {
             </h2>
 
             <p className="flex justify-center w-full space-x-2">
-              <span>{fightTimeToString(fight.keystoneTime)}</span>
+              <span>{timeDurationToString(fight.keystoneTime)}</span>
               {fight.dungeon && (
                 <span
                   className="italic text-green-600 dark:text-green-500"
@@ -204,7 +204,10 @@ function FightCard({ fight, reportID, loading }: FightCardProps) {
                     fight.keystoneBonus > 1 ? "s" : ""
                   }`}
                 >
-                  +{fightTimeToString(fight.dungeon.time - fight.keystoneTime)}
+                  +
+                  {timeDurationToString(
+                    fight.dungeon.time - fight.keystoneTime
+                  )}
                 </span>
               )}
             </p>

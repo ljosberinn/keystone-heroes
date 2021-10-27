@@ -42,14 +42,18 @@ export const damageProcessor: Processor<DamageEvent> = (
 
   // player taking damage
   if (targetPlayerID) {
-    if (environmentalDamageAffixAbilities.has(event.abilityGameID)) {
+    if (
+      environmentalDamageAffixAbilities.has(event.abilityGameID) &&
+      event.unmitigatedAmount &&
+      event.mitigated
+    ) {
       return {
         timestamp: event.timestamp,
         abilityID: event.abilityGameID,
         eventType: EventType.DamageTaken,
-        damage: event.amount,
         targetPlayerID,
         sourcePlayerID,
+        damage: event.unmitigatedAmount - event.mitigated,
       };
     }
 
@@ -67,14 +71,18 @@ export const damageProcessor: Processor<DamageEvent> = (
     }
 
     // Spiteful Shades do not necessarily have a resolvable sourceNPCID
-    if (event.abilityGameID === SPITEFUL.ability) {
+    if (
+      event.abilityGameID === SPITEFUL.ability &&
+      event.unmitigatedAmount &&
+      event.mitigated
+    ) {
       return {
         timestamp: event.timestamp,
         eventType: EventType.DamageTaken,
         targetPlayerID,
         sourceNPCID: SPITEFUL.unit,
         abilityID: SPITEFUL.ability,
-        damage: event.amount,
+        damage: event.unmitigatedAmount - event.mitigated,
       };
     }
   }

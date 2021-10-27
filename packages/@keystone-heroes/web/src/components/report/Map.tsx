@@ -29,7 +29,7 @@ import {
   useRestoreMapOptions,
 } from "../../store";
 import { bgPrimary, bgSecondary } from "../../styles/tokens";
-import { fightTimeToString } from "../../utils";
+import { timeDurationToString } from "../../utils";
 import { classnames } from "../../utils/classnames";
 import {
   BLOODLUST_ICON,
@@ -169,7 +169,8 @@ export function Map(): JSX.Element {
   const [selectedTab, setSelectedTab] = useState(() => {
     if (fight?.pulls && fight.pulls.length > 0) {
       const dungeon = dungeons[fight.dungeon];
-      const zoneToSelect = fight.pulls[selectedPull - 1].zone;
+
+      const zoneToSelect = fight.pulls[0].zone;
       const tab = dungeon.zones.findIndex((zone) => zone.id === zoneToSelect);
 
       return tab > -1 ? tab : 0;
@@ -383,7 +384,7 @@ export function Map(): JSX.Element {
                     }}
                   />
 
-                  <BossKillIndicator />
+                  <BossKillIndicator fullscreen={fullscreen} />
 
                   <div
                     className={classnames(
@@ -414,8 +415,13 @@ export function Map(): JSX.Element {
   );
 }
 
-function BossKillIndicator() {
+type BossKillIndicatorProps = {
+  fullscreen: boolean;
+};
+
+function BossKillIndicator({ fullscreen }: BossKillIndicatorProps) {
   const setSelectedPull = useReportStore((state) => state.setSelectedPull);
+  const containerRef = useRef<HTMLDivElement>(null);
   const { fight } = useFight();
   const pulls = fight ? fight.pulls : [];
   const startTime = fight ? fight.meta.startTime : 0;
@@ -423,75 +429,88 @@ function BossKillIndicator() {
   const pullsWithBoss = pulls.filter((pull) => pull.hasBoss);
 
   return (
-    <div
-      className={classnames(
-        bgSecondary,
-        "absolute left-2 bottom-2 rounded-lg p-2 hidden sm:block opacity-75"
-      )}
-    >
-      {pullsWithBoss.map((pull) => {
-        const usedLust = hasBloodLust(pull);
-
-        const [firstBossName] = pull.npcs
-          .filter((npc) => isBoss(npc.id))
-          .map((npc) => npc.name);
-
-        const fightStart = fightTimeToString(
-          pull.startTime - startTime,
-          true
-        ).padStart(5, "0");
-
-        const fightEnd = fightTimeToString(
-          pull.endTime - startTime,
-          true
-        ).padStart(5, "0");
-
-        const fightDuration = fightTimeToString(
-          pull.endTime - pull.startTime,
-          true
-        ).padStart(5, "0");
-
-        const percentUpToThisPull = pulls.reduce((acc, p) => {
-          if (p.id >= pull.id) {
-            return acc;
+    <>
+      <style jsx>
+        {`
+          .bossKillIndicator {
+            left: ${containerRef.current
+              ? `calc(50% - ${containerRef.current.clientWidth / 2}px)`
+              : "32px"};
           }
+        `}
+      </style>
+      <div
+        className={classnames(
+          bgSecondary,
+          "absolute rounded-lg p-2 hidden sm:block opacity-75",
+          fullscreen ? "bossKillIndicator bottom-8" : "left-2 bottom-2"
+        )}
+        ref={containerRef}
+      >
+        {pullsWithBoss.map((pull) => {
+          const usedLust = hasBloodLust(pull);
 
-          return acc + p.percent;
-        }, 0);
+          const [firstBossName] = pull.npcs
+            .filter((npc) => isBoss(npc.id))
+            .map((npc) => npc.name);
 
-        return (
-          <span
-            className="flex justify-between block w-full"
-            key={pull.startTime}
-          >
-            <button
-              type="button"
-              className="cursor-pointer md:truncate md:max-w-1/2 hover:underline"
-              onClick={() => {
-                setSelectedPull(pull.id);
-              }}
+          const fightStart = timeDurationToString(
+            pull.startTime - startTime,
+            true
+          ).padStart(5, "0");
+
+          const fightEnd = timeDurationToString(
+            pull.endTime - startTime,
+            true
+          ).padStart(5, "0");
+
+          const fightDuration = timeDurationToString(
+            pull.endTime - pull.startTime,
+            true
+          ).padStart(5, "0");
+
+          const percentUpToThisPull = pulls.reduce((acc, p) => {
+            if (p.id >= pull.id) {
+              return acc;
+            }
+
+            return acc + p.percent;
+          }, 0);
+
+          return (
+            <span
+              className="flex justify-between block w-full"
+              key={pull.startTime}
             >
-              {firstBossName}{" "}
-              {usedLust && (
-                <img
-                  className="inline w-6 h-6 rounded-full"
-                  src={BLOODLUST_ICON}
-                  alt="Some form of Bloodlust/Heroism was used on this pull."
-                  width={24}
-                  height={24}
-                />
-              )}
-            </button>{" "}
-            <span className="hidden pl-2 md:block">
-              <span>{percentUpToThisPull.toFixed(2)}%</span>{" "}
-              <span title={`killed in ${fightDuration}`}>
-                {fightStart}-{fightEnd}
+              <button
+                type="button"
+                className="cursor-pointer md:truncate md:max-w-1/2 hover:underline"
+                onClick={() => {
+                  setSelectedPull(pull.id);
+                }}
+              >
+                {firstBossName}{" "}
+                {usedLust && (
+                  <img
+                    className="inline w-6 h-6 rounded-full"
+                    src={BLOODLUST_ICON}
+                    alt="Some form of Bloodlust/Heroism was used on this pull."
+                    width={24}
+                    height={24}
+                  />
+                )}
+              </button>{" "}
+              <span className="hidden pl-2 md:block">
+                <span>{percentUpToThisPull.toFixed(2)}%</span>{" "}
+                <span title={`killed in ${fightDuration}`}>
+                  {fightStart}-{fightEnd}
+                </span>
               </span>
             </span>
-          </span>
-        );
-      })}
-    </div>
+          );
+        })}
+      </div>
+    </>
   );
 }
 
@@ -626,7 +645,7 @@ function FullScreenToggle({ toggle, active }: FullScreenToggleProps) {
         const diff = container.clientWidth - clientWidth;
         const half = (diff / 2) * -1;
 
-        container.style.left = `${half}px`;
+        container.style.setProperty("left", `${half}px`);
       };
 
       recalculate();

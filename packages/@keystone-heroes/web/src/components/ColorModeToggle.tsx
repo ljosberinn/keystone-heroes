@@ -2,7 +2,7 @@ import { useTheme } from "next-themes";
 import { useEffect } from "react";
 
 import { useIsHydrated } from "../hooks/useIsHydrated";
-import { icons } from "../icons";
+import { sun, moon } from "../icons";
 import { classnames } from "../utils/classnames";
 
 export function ColorModeToggle(): JSX.Element | null {
@@ -31,7 +31,7 @@ export function ColorModeToggle(): JSX.Element | null {
     }
   }, [isMounted, theme]);
 
-  const icon = theme === "dark" ? icons.sun : icons.moon;
+  const icon = theme === "dark" ? sun : moon;
 
   return (
     <button

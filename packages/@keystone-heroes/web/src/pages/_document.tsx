@@ -1,6 +1,7 @@
 import { Html, Head, Main, NextScript } from "next/document";
 
-import { icons } from "../icons";
+// eslint-disable-next-line import/no-namespace
+import * as icons from "../icons";
 
 export default function CustomDocument(/* props: DocumentProps*/): JSX.Element {
   return (

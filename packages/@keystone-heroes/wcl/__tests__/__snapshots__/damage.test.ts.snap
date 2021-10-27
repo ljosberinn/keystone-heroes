@@ -15658,7 +15658,7 @@ Array [
   },
   Object {
     "abilityID": 350163,
-    "damage": 40334,
+    "damage": 43442,
     "eventType": "DamageTaken",
     "sourceNPCID": 174773,
     "targetPlayerID": 1,
@@ -19440,7 +19440,7 @@ Array [
   },
   Object {
     "abilityID": 209858,
-    "damage": 150,
+    "damage": 659,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -19595,7 +19595,7 @@ Array [
   },
   Object {
     "abilityID": 343520,
-    "damage": 4535,
+    "damage": 6504,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -19643,7 +19643,7 @@ Array [
   },
   Object {
     "abilityID": 240446,
-    "damage": 8699,
+    "damage": 13516,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -20821,7 +20821,7 @@ Array [
   },
   Object {
     "abilityID": 240446,
-    "damage": 4486,
+    "damage": 13516,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -20881,7 +20881,7 @@ Array [
   null,
   Object {
     "abilityID": 343520,
-    "damage": 5754,
+    "damage": 7206,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -20905,7 +20905,7 @@ Array [
   },
   Object {
     "abilityID": 209862,
-    "damage": 2788,
+    "damage": 7285,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -21029,7 +21029,7 @@ Array [
   },
   Object {
     "abilityID": 240446,
-    "damage": 14728,
+    "damage": 16519,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -21045,7 +21045,7 @@ Array [
   },
   Object {
     "abilityID": 209862,
-    "damage": 4210,
+    "damage": 7318,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -21158,7 +21158,7 @@ Array [
   },
   Object {
     "abilityID": 343520,
-    "damage": 3654,
+    "damage": 7935,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -21228,7 +21228,7 @@ Array [
   null,
   Object {
     "abilityID": 243237,
-    "damage": 726,
+    "damage": 1386,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -21353,7 +21353,7 @@ Array [
   },
   Object {
     "abilityID": 243237,
-    "damage": 1132,
+    "damage": 1386,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -21418,7 +21418,7 @@ Array [
   },
   Object {
     "abilityID": 243237,
-    "damage": 891,
+    "damage": 1386,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -21499,7 +21499,7 @@ Array [
   },
   Object {
     "abilityID": 243237,
-    "damage": 1015,
+    "damage": 1386,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -21644,7 +21644,7 @@ Array [
   },
   Object {
     "abilityID": 243237,
-    "damage": 729,
+    "damage": 2772,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -21935,7 +21935,7 @@ Array [
   },
   Object {
     "abilityID": 243237,
-    "damage": 501,
+    "damage": 2773,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -21951,7 +21951,7 @@ Array [
   },
   Object {
     "abilityID": 243237,
-    "damage": 994,
+    "damage": 2821,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -22345,7 +22345,7 @@ Array [
   },
   Object {
     "abilityID": 243237,
-    "damage": 3462,
+    "damage": 8093,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -22611,7 +22611,7 @@ Array [
   },
   Object {
     "abilityID": 243237,
-    "damage": 627,
+    "damage": 1349,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -22888,7 +22888,7 @@ Array [
   },
   Object {
     "abilityID": 243237,
-    "damage": 1368,
+    "damage": 1391,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -23025,7 +23025,7 @@ Array [
   },
   Object {
     "abilityID": 243237,
-    "damage": 1566,
+    "damage": 4173,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -23202,7 +23202,7 @@ Array [
   },
   Object {
     "abilityID": 243237,
-    "damage": 274,
+    "damage": 1391,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -23349,7 +23349,7 @@ Array [
   },
   Object {
     "abilityID": 243237,
-    "damage": 844,
+    "damage": 1391,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -23458,7 +23458,7 @@ Array [
   },
   Object {
     "abilityID": 243237,
-    "damage": 749,
+    "damage": 1391,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -23574,7 +23574,7 @@ Array [
   null,
   Object {
     "abilityID": 243237,
-    "damage": 426,
+    "damage": 1391,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -23623,7 +23623,7 @@ Array [
   },
   Object {
     "abilityID": 243237,
-    "damage": 45,
+    "damage": 1410,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -23703,7 +23703,7 @@ Array [
   },
   Object {
     "abilityID": 243237,
-    "damage": 420,
+    "damage": 1391,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -23834,7 +23834,7 @@ Array [
   },
   Object {
     "abilityID": 243237,
-    "damage": 660,
+    "damage": 1454,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -23860,7 +23860,7 @@ Array [
   },
   Object {
     "abilityID": 243237,
-    "damage": 792,
+    "damage": 1391,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -24000,7 +24000,7 @@ Array [
   },
   Object {
     "abilityID": 243237,
-    "damage": 864,
+    "damage": 2782,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -24090,7 +24090,7 @@ Array [
   },
   Object {
     "abilityID": 243237,
-    "damage": 913,
+    "damage": 1391,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -24251,7 +24251,7 @@ Array [
   },
   Object {
     "abilityID": 243237,
-    "damage": 1128,
+    "damage": 2782,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -24485,7 +24485,7 @@ Array [
   },
   Object {
     "abilityID": 243237,
-    "damage": 2531,
+    "damage": 2782,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -24557,7 +24557,7 @@ Array [
   },
   Object {
     "abilityID": 243237,
-    "damage": 2409,
+    "damage": 2795,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -24847,7 +24847,7 @@ Array [
   },
   Object {
     "abilityID": 243237,
-    "damage": 778,
+    "damage": 2781,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -25004,7 +25004,7 @@ Array [
   },
   Object {
     "abilityID": 243237,
-    "damage": 1263,
+    "damage": 1391,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -25156,7 +25156,7 @@ Array [
   },
   Object {
     "abilityID": 243237,
-    "damage": 439,
+    "damage": 5563,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -25207,7 +25207,7 @@ Array [
   null,
   Object {
     "abilityID": 243237,
-    "damage": 1163,
+    "damage": 1391,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -25424,7 +25424,7 @@ Array [
   },
   Object {
     "abilityID": 243237,
-    "damage": 889,
+    "damage": 1391,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -25511,7 +25511,7 @@ Array [
   },
   Object {
     "abilityID": 243237,
-    "damage": 1749,
+    "damage": 4190,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -25559,7 +25559,7 @@ Array [
   },
   Object {
     "abilityID": 243237,
-    "damage": 1099,
+    "damage": 3632,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -25575,7 +25575,7 @@ Array [
   },
   Object {
     "abilityID": 243237,
-    "damage": 4880,
+    "damage": 6981,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -25736,7 +25736,7 @@ Array [
   },
   Object {
     "abilityID": 243237,
-    "damage": 4998,
+    "damage": 7413,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -25744,7 +25744,7 @@ Array [
   },
   Object {
     "abilityID": 243237,
-    "damage": 4187,
+    "damage": 6017,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -25793,7 +25793,7 @@ Array [
   },
   Object {
     "abilityID": 243237,
-    "damage": 1009,
+    "damage": 1397,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -26002,7 +26002,7 @@ Array [
   },
   Object {
     "abilityID": 243237,
-    "damage": 771,
+    "damage": 1396,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -26077,7 +26077,7 @@ Array [
   null,
   Object {
     "abilityID": 243237,
-    "damage": 1311,
+    "damage": 1396,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -26196,7 +26196,7 @@ Array [
   },
   Object {
     "abilityID": 243237,
-    "damage": 2494,
+    "damage": 2821,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -26359,7 +26359,7 @@ Array [
   },
   Object {
     "abilityID": 243237,
-    "damage": 2412,
+    "damage": 2793,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -26416,7 +26416,7 @@ Array [
   },
   Object {
     "abilityID": 243237,
-    "damage": 44,
+    "damage": 2821,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -26543,7 +26543,7 @@ Array [
   },
   Object {
     "abilityID": 243237,
-    "damage": 844,
+    "damage": 1397,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -26716,7 +26716,7 @@ Array [
   },
   Object {
     "abilityID": 243237,
-    "damage": 44,
+    "damage": 2821,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -26956,7 +26956,7 @@ Array [
   },
   Object {
     "abilityID": 243237,
-    "damage": 1176,
+    "damage": 2793,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -27041,7 +27041,7 @@ Array [
   null,
   Object {
     "abilityID": 243237,
-    "damage": 2183,
+    "damage": 2771,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -27073,7 +27073,7 @@ Array [
   },
   Object {
     "abilityID": 243237,
-    "damage": 1454,
+    "damage": 2820,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -27202,7 +27202,7 @@ Array [
   },
   Object {
     "abilityID": 243237,
-    "damage": 953,
+    "damage": 1397,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -27427,7 +27427,7 @@ Array [
   },
   Object {
     "abilityID": 243237,
-    "damage": 398,
+    "damage": 1397,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -27743,7 +27743,7 @@ Array [
   },
   Object {
     "abilityID": 243237,
-    "damage": 703,
+    "damage": 1313,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -27882,7 +27882,7 @@ Array [
   },
   Object {
     "abilityID": 243237,
-    "damage": 850,
+    "damage": 1397,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -27965,7 +27965,7 @@ Array [
   null,
   Object {
     "abilityID": 243237,
-    "damage": 896,
+    "damage": 1396,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -27997,7 +27997,7 @@ Array [
   },
   Object {
     "abilityID": 243237,
-    "damage": 44,
+    "damage": 2821,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -28205,7 +28205,7 @@ Array [
   },
   Object {
     "abilityID": 243237,
-    "damage": 2348,
+    "damage": 4190,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -28238,7 +28238,7 @@ Array [
   },
   Object {
     "abilityID": 243237,
-    "damage": 2167,
+    "damage": 4148,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -28340,7 +28340,7 @@ Array [
   null,
   Object {
     "abilityID": 243237,
-    "damage": 551,
+    "damage": 1396,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -28386,7 +28386,7 @@ Array [
   null,
   Object {
     "abilityID": 240448,
-    "damage": 15057,
+    "damage": 16496,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -28394,7 +28394,7 @@ Array [
   },
   Object {
     "abilityID": 240448,
-    "damage": 14145,
+    "damage": 14403,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -28491,7 +28491,7 @@ Array [
   null,
   Object {
     "abilityID": 226512,
-    "damage": 1820,
+    "damage": 5417,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -28935,7 +28935,7 @@ Array [
   null,
   Object {
     "abilityID": 240559,
-    "damage": 843,
+    "damage": 1515,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -28943,7 +28943,7 @@ Array [
   },
   Object {
     "abilityID": 240559,
-    "damage": 85,
+    "damage": 757,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -28951,7 +28951,7 @@ Array [
   },
   Object {
     "abilityID": 240559,
-    "damage": 843,
+    "damage": 1515,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -28967,7 +28967,7 @@ Array [
   },
   Object {
     "abilityID": 240559,
-    "damage": 85,
+    "damage": 757,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -28983,7 +28983,7 @@ Array [
   },
   Object {
     "abilityID": 240559,
-    "damage": 363,
+    "damage": 1003,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -29049,7 +29049,7 @@ Array [
   },
   Object {
     "abilityID": 240559,
-    "damage": 975,
+    "damage": 1647,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -29065,7 +29065,7 @@ Array [
   },
   Object {
     "abilityID": 240559,
-    "damage": 331,
+    "damage": 1003,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -29081,7 +29081,7 @@ Array [
   },
   Object {
     "abilityID": 240559,
-    "damage": 1333,
+    "damage": 2005,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -29089,7 +29089,7 @@ Array [
   },
   Object {
     "abilityID": 240559,
-    "damage": 347,
+    "damage": 1019,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -29113,7 +29113,7 @@ Array [
   },
   Object {
     "abilityID": 240559,
-    "damage": 1333,
+    "damage": 2005,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -30012,7 +30012,7 @@ Array [
   },
   Object {
     "abilityID": 240559,
-    "damage": 73,
+    "damage": 713,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -30052,7 +30052,7 @@ Array [
   },
   Object {
     "abilityID": 240559,
-    "damage": 785,
+    "damage": 1425,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -30108,7 +30108,7 @@ Array [
   },
   Object {
     "abilityID": 240559,
-    "damage": 1222,
+    "damage": 1894,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -30125,7 +30125,7 @@ Array [
   null,
   Object {
     "abilityID": 240559,
-    "damage": 1466,
+    "damage": 2138,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -30176,7 +30176,7 @@ Array [
   null,
   Object {
     "abilityID": 240559,
-    "damage": 785,
+    "damage": 2890,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -30332,7 +30332,7 @@ Array [
   },
   Object {
     "abilityID": 240559,
-    "damage": 204,
+    "damage": 2890,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -30480,7 +30480,7 @@ Array [
   },
   Object {
     "abilityID": 240559,
-    "damage": 753,
+    "damage": 1425,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -30496,7 +30496,7 @@ Array [
   },
   Object {
     "abilityID": 240559,
-    "damage": 324,
+    "damage": 996,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -30504,7 +30504,7 @@ Array [
   },
   Object {
     "abilityID": 240559,
-    "damage": 349,
+    "damage": 1021,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -30512,7 +30512,7 @@ Array [
   },
   Object {
     "abilityID": 240559,
-    "damage": 1370,
+    "damage": 2042,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -30520,7 +30520,7 @@ Array [
   },
   Object {
     "abilityID": 240559,
-    "damage": 1369,
+    "damage": 2041,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,
@@ -30528,7 +30528,7 @@ Array [
   },
   Object {
     "abilityID": 240559,
-    "damage": 85,
+    "damage": 757,
     "eventType": "DamageTaken",
     "sourcePlayerID": null,
     "targetPlayerID": 1,

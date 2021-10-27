@@ -1,7 +1,7 @@
 import type { FightSuccessResponse } from "@keystone-heroes/api/functions/fight";
 import { Fragment } from "react";
 
-import { icons } from "../../icons";
+import { star } from "../../icons";
 import { useFight } from "../../pages/report/[reportID]/[fightID]";
 import {
   affixes,
@@ -19,7 +19,7 @@ import {
 } from "../../styles/tokens";
 import {
   createWCLUrl,
-  fightTimeToString,
+  timeDurationToString,
   createWowheadUrl,
   classBorderColorMap,
 } from "../../utils";
@@ -60,7 +60,7 @@ export function Meta(): JSX.Element {
                   key={index}
                   className="inline w-4 h-4 text-yellow-500 fill-current"
                 >
-                  <use href={`#${icons.star.id}`} />
+                  <use href={`#${star.id}`} />
                 </svg>
               ))}
             </sup>
@@ -92,18 +92,18 @@ export function Meta(): JSX.Element {
         {/* <-------> */}
 
         <div className="flex p-4 pt-0 space-x-2 text-2xl">
-          <span>{fightTimeToString(fight.meta.time)}</span>
+          <span>{timeDurationToString(fight.meta.time)}</span>
           <span
             className={`italic ${greenText}`}
             title={`${fight.meta.chests} chest${
               fight.meta.chests > 1 ? "s" : ""
             }`}
           >
-            +{fightTimeToString(dungeon.time - fight.meta.time)}
+            +{timeDurationToString(dungeon.time - fight.meta.time)}
           </span>
           {fight.meta.totalDeaths > 0 && (
             <span className={`italic ${redText}`}>
-              -{fightTimeToString(fight.meta.totalDeaths * 5 * 1000, true)}
+              -{timeDurationToString(fight.meta.totalDeaths * 5 * 1000, true)}
             </span>
           )}
         </div>
