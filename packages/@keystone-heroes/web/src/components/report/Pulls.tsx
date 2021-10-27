@@ -879,7 +879,11 @@ function AbilityReadyRow({
       >
         {event.ability.lastUse ? (
           <span>
-            {Math.round((event.timestamp - event.ability.lastUse) / 1000)}s ago
+            {timeDurationToString(
+              event.timestamp - event.ability.lastUse,
+              true
+            )}{" "}
+            ago
           </span>
         ) : (
           "first use"
