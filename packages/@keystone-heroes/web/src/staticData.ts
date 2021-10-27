@@ -1238,7 +1238,7 @@ export const spells: Record<
   "219809": { icon: "ability_fiegndead", name: "Tombstone", cd: 60 },
   "221699": { icon: "spell_deathknight_bloodtap", name: "Blood Tap", cd: 60 },
   "227847": { icon: "ability_warrior_bladestorm", name: "Bladestorm", cd: 90 },
-  "228260": { icon: "spell_priest_voidblast", name: "Void Eruption", cd: 90 },
+  "228260": { icon: "spell_priest_void-blast", name: "Void Eruption", cd: 90 },
   "231895": {
     icon: "ability_paladin_sanctifiedwrath",
     name: "Crusade",

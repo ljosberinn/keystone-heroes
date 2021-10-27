@@ -589,7 +589,7 @@ function CastRow({
         )}
       </td>
 
-      <MaybeWastedCooldownCell event={event} omitMissingCount />
+      <MaybeWastedCooldownCell event={event} />
     </tr>
   );
 }
@@ -1074,36 +1074,9 @@ function InterruptRow({
 
 type MaybeWastedCooldownCellProps = {
   event: AbilityReadyRowProps["event"] | CastRowProps["event"];
-  omitMissingCount?: boolean;
 };
 
-const calcTimesAbilityCouldHaveBeenUsed = (
-  nextUse: number | null,
-  rightNow: number,
-  cd: number,
-  keyEnd: number
-) => {
-  if (!nextUse) {
-    return Math.floor((keyEnd - rightNow) / 1000 / cd);
-  }
-
-  const count = Math.floor((nextUse - rightNow) / 1000 / cd);
-
-  const nextPossibleUsage = count * cd + rightNow;
-  const isPastEnd = nextPossibleUsage >= keyEnd;
-
-  if (isPastEnd) {
-    // adjust by -1 if key ends before nth usage would be possible
-    return count - 1;
-  }
-
-  return count;
-};
-
-function MaybeWastedCooldownCell({
-  event,
-  omitMissingCount,
-}: MaybeWastedCooldownCellProps) {
+function MaybeWastedCooldownCell({ event }: MaybeWastedCooldownCellProps) {
   const { fight } = useFight();
 
   const ability = spells[event.ability.id];
@@ -1120,53 +1093,54 @@ function MaybeWastedCooldownCell({
     return <td>irrelevant</td>;
   }
 
-  if (!event.ability.wasted && event.ability.nextUse) {
-    const msToNextUsage = event.ability.nextUse - event.timestamp;
+  const keyEnd = fight.meta.time + fight.meta.startTime;
+
+  if (event.ability.wasted) {
+    if (event.ability.nextUse) {
+      const couldUseNTimes = Math.floor(
+        (event.ability.nextUse - event.timestamp) / 1000 / ability.cd
+      );
+
+      return (
+        <td className="bg-red-500">
+          in{" "}
+          {timeDurationToString(event.ability.nextUse - event.timestamp, true)}{" "}
+          (missing {couldUseNTimes}x)
+        </td>
+      );
+    }
+
+    const couldUseNTimes = Math.floor(
+      (keyEnd - event.timestamp) / 1000 / ability.cd
+    );
+
+    return <td className="bg-red-500">never (missing {couldUseNTimes}x)</td>;
+  }
+
+  if (event.ability.nextUse) {
+    const isCastEvent = event.type === "Cast";
+    const couldUseNTimes =
+      (event.ability.nextUse - event.timestamp) / 1000 / ability.cd -
+      // offset by 1 if Cast since CD must recuperate first
+      (isCastEvent ? 1 : 0);
+    // offset by 2 if Cast since if the next seen cast requires this cd,
+    // annotating that it could have been used in between would be wrong
+    const wastedCastUpcoming = couldUseNTimes > 1;
 
     return (
-      <td>
-        <span>in {timeDurationToString(msToNextUsage, true)}</span>
+      <td className={wastedCastUpcoming ? "bg-red-500" : undefined}>
+        in {timeDurationToString(event.ability.nextUse - event.timestamp, true)}{" "}
+        {wastedCastUpcoming && <>(missing {Math.floor(couldUseNTimes)}x)</>}
       </td>
     );
   }
 
-  const timesCdCouldHaveBeenUsed = calcTimesAbilityCouldHaveBeenUsed(
-    event.ability.nextUse,
-    event.timestamp,
-    ability.cd,
-    fight.meta.time + fight.meta.startTime
+  // TODO: move to backend, this is identical to the wasted = true branch above
+  const couldUseNTimes = Math.floor(
+    (keyEnd - event.timestamp) / 1000 / ability.cd
   );
 
-  const willBeUsedAgain = timesCdCouldHaveBeenUsed > 0;
-  const couldBeSafelyUsedAgain = timesCdCouldHaveBeenUsed > 1;
-
-  return (
-    <td className={couldBeSafelyUsedAgain ? "bg-red-500" : undefined}>
-      {willBeUsedAgain ? (
-        event.ability.nextUse ? (
-          <>
-            in{" "}
-            {timeDurationToString(
-              event.ability.nextUse - event.timestamp,
-              true
-            )}{" "}
-            {couldBeSafelyUsedAgain && !omitMissingCount && (
-              <>(missed x{timesCdCouldHaveBeenUsed})</>
-            )}
-          </>
-        ) : (
-          <span>
-            never{" "}
-            {couldBeSafelyUsedAgain && !omitMissingCount && (
-              <>(missed x{timesCdCouldHaveBeenUsed})</>
-            )}
-          </span>
-        )
-      ) : (
-        <span>never</span>
-      )}
-    </td>
-  );
+  return <td className="bg-red-500">never (missing {couldUseNTimes}x)</td>;
 }
 
 const isDamageDoneEventWithAbility = (

@@ -675,7 +675,7 @@ export const classes: Class[] = [
             name: "Void Eruption",
             id: 228_260,
             cd: 90,
-            icon: "spell_priest_voidblast",
+            icon: "spell_priest_void-blast",
           },
         ],
       },
