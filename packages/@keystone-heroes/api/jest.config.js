@@ -11,10 +11,10 @@ const config = {
   setupFilesAfterEnv: ["<rootDir>/jest/setupTests.ts"],
   coverageThreshold: {
     global: {
-      statements: 38,
+      statements: 42,
       branches: 26,
-      functions: 38,
-      lines: 39,
+      functions: 40,
+      lines: 42,
     },
   },
 };
