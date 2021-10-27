@@ -1125,7 +1125,7 @@ function MaybeWastedCooldownCell({
 
     return (
       <td>
-        <span>in {timeDurationToString(msToNextUsage, true)} </span>
+        <span>in {timeDurationToString(msToNextUsage, true)}</span>
       </td>
     );
   }
@@ -1562,13 +1562,8 @@ function TableRow({
       return null;
     }
 
-    const key = `${event.timestamp}-${event.sourcePlayerID}-${
-      event.type
-    }-${ability.name.split(" ").join("-")}`.toLowerCase();
-
     return (
       <CastRow
-        key={key}
         event={event}
         ability={ability}
         msSinceLastEvent={msSinceLastEvent}
@@ -1579,12 +1574,8 @@ function TableRow({
   }
 
   if (isDamageTakenEventWithTargetPlayer(event)) {
-    const key =
-      `${event.timestamp}-${event.targetPlayerID}-${event.type}`.toLowerCase();
-
     return (
       <DamageTakenRow
-        key={key}
         event={event}
         msSinceLastEvent={msSinceLastEvent}
         playerIdPlayerNameMap={playerIdPlayerNameMap}
@@ -1601,13 +1592,8 @@ function TableRow({
       return null;
     }
 
-    const key = `${event.timestamp}-${event.sourcePlayerID}-${
-      event.type
-    }-${ability.name.split(" ").join("-")}`.toLowerCase();
-
     return (
       <AbilityReadyRow
-        key={key}
         event={event}
         ability={ability}
         msSinceLastEvent={msSinceLastEvent}
@@ -1618,12 +1604,8 @@ function TableRow({
   }
 
   if (isDeathEventWithTargetPlayer(event)) {
-    const key =
-      `${event.timestamp}-${event.targetPlayerID}-${event.type}}`.toLowerCase();
-
     return (
       <DeathRow
-        key={key}
         event={event}
         msSinceLastEvent={msSinceLastEvent}
         playerIdPlayerNameMap={playerIdPlayerNameMap}
@@ -1633,12 +1615,8 @@ function TableRow({
   }
 
   if (isInterruptEventWithSourceAndTargetPlayerAndAbility(event)) {
-    const key =
-      `${event.timestamp}-${event.sourcePlayerID}-${event.targetPlayerID}-${event.type}}`.toLowerCase();
-
     return (
       <InterruptRow
-        key={key}
         event={event}
         msSinceLastEvent={msSinceLastEvent}
         playerIdPlayerNameMap={playerIdPlayerNameMap}
@@ -1648,11 +1626,8 @@ function TableRow({
   }
 
   if (isDamageDoneEventWithAbility(event)) {
-    const key = `${event.timestamp}-${event.sourcePlayerID}-${event.damage}-${event.ability.id}`;
-
     return (
       <DamageDoneRow
-        key={key}
         event={event}
         msSinceLastEvent={msSinceLastEvent}
         playerIdPlayerNameMap={playerIdPlayerNameMap}

@@ -218,6 +218,7 @@ export const getStaticProps: GetStaticProps<FightIDProps, StaticPathParams> =
             fightID: null,
           },
         },
+        revalidate: 24 * 60 * 60,
       };
     }
 
@@ -231,6 +232,7 @@ export const getStaticProps: GetStaticProps<FightIDProps, StaticPathParams> =
       props: {
         cache,
       },
+      revalidate: 24 * 60 * 60,
     };
   };
 
