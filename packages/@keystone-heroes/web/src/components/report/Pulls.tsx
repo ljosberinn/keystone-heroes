@@ -512,7 +512,9 @@ function CastRow({
     : false;
 
   const possibleUsageCount = event.ability.lastUse
-    ? Math.floor((event.timestamp - event.ability.lastUse) / 1000 / cooldown)
+    ? Math.floor(
+        (event.timestamp - event.ability.lastUse + cooldown) / 1000 / cooldown
+      )
     : 0;
 
   const delayedTooHard = possibleUsageCount > 1;
