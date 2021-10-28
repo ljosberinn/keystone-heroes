@@ -1,17 +1,17 @@
 import type { FightSuccessResponse } from "@keystone-heroes/api/functions/fight";
-// import { isBoss } from "@keystone-heroes/db/data/boss";
 import dynamic from "next/dynamic";
 import type {
   KeyboardEvent as ReactKeyboardEvent,
   MutableRefObject,
 } from "react";
-import React, {
+import {
   useMemo,
   Fragment,
   useState,
   useRef,
   useEffect,
   useCallback,
+  Suspense,
 } from "react";
 
 import { usePrevious } from "../../hooks/usePrevious";
@@ -40,6 +40,7 @@ import {
   ZOOM_ICON,
 } from "../AbilityIcon";
 import { TabList, TabButton, TabPanel } from "../Tabs";
+import { usePointsOfInterest, PointsOfInterestProvider } from "./poi/context";
 import { findBloodlust, detectInvisibilityUsage } from "./utils";
 
 const createRafCleanup = <K extends keyof WindowEventMap>(
@@ -114,14 +115,14 @@ function useImageDimensions() {
 const MapOptions = dynamic(
   () => import(/* webpackChunkName: "MapOptions" */ "./MapOptions"),
   {
-    ssr: false,
+    suspense: true,
   }
 );
 
 const Legend = dynamic(
   () => import(/* webpackChunkName: "Legend" */ "./Legend"),
   {
-    ssr: false,
+    suspense: true,
   }
 );
 
@@ -524,7 +525,11 @@ function MapOptionsWrapper() {
     return null;
   }
 
-  return <MapOptions />;
+  return (
+    <Suspense fallback={null}>
+      <MapOptions />
+    </Suspense>
+  );
 }
 
 function LegendWrapper() {
@@ -534,7 +539,11 @@ function LegendWrapper() {
     return null;
   }
 
-  return <Legend />;
+  return (
+    <Suspense fallback={null}>
+      <Legend />
+    </Suspense>
+  );
 }
 
 function MapOptionsToggle() {
@@ -700,7 +709,8 @@ type SvgProps = {
 };
 
 function Svg({ imageSize, zoneID, onDoorClick }: SvgProps) {
-  const pulls = useFight().fight?.pulls ?? [];
+  const { fight } = useFight();
+  const pulls = fight ? fight.pulls : [];
   const thisZonesPulls = pulls.filter((pull) => pull.zone === zoneID);
 
   return (
@@ -714,17 +724,19 @@ function Svg({ imageSize, zoneID, onDoorClick }: SvgProps) {
         `}
       </style>
       <svg className="absolute w-full h-full svg focus:outline-none">
-        <DoorIndicators
-          id={zoneID}
-          xFactor={imageSize.clientWidth}
-          yFactor={imageSize.clientHeight}
-          onDoorClick={onDoorClick}
-        />
-        <MapChangePolyline
-          xFactor={imageSize.clientWidth}
-          yFactor={imageSize.clientHeight}
-          zoneID={zoneID}
-        />
+        <PointsOfInterestProvider dungeonID={fight?.dungeon}>
+          <DoorIndicators
+            xFactor={imageSize.clientWidth}
+            yFactor={imageSize.clientHeight}
+            onDoorClick={onDoorClick}
+            zoneID={zoneID}
+          />
+          <MapChangePolyline
+            xFactor={imageSize.clientWidth}
+            yFactor={imageSize.clientHeight}
+            zoneID={zoneID}
+          />
+        </PointsOfInterestProvider>
         {thisZonesPulls.map((pull, index) => {
           const x = pull.x * imageSize.clientWidth;
           const y = pull.y * imageSize.clientHeight;
@@ -999,289 +1011,26 @@ function PullConnectionPolyline({
 type DoorIndicatorsProps = Pick<SvgProps, "onDoorClick"> & {
   xFactor: number;
   yFactor: number;
-  id: number;
-};
-
-type DoorType = "left" | "right" | "up" | "down";
-
-const zoneDoors: Record<
-  number,
-  { type: DoorType; x: number; y: number; to: number }[]
-> = {
-  // The Necrotic Wake
-  1666: [
-    {
-      type: "up",
-      x: 0.167_680_278_019_113_8,
-      y: 0.389_830_508_474_576_3,
-      to: 1667,
-    },
-  ],
-  1667: [
-    {
-      type: "up",
-      x: 0.495_221_546_481_320_6,
-      y: 0.544_980_443_285_528_1,
-      to: 1668,
-    },
-  ],
-  1668: [
-    {
-      type: "down",
-      x: 0.492_615_117_289_313_6,
-      y: 0.481_095_176_010_430_2,
-      to: 1666,
-    },
-  ],
-  // Spires of Ascension
-  1692: [
-    {
-      type: "up",
-      x: 0.711_188_204_683_434_5,
-      y: 0.156_046_814_044_213_28,
-      to: 1693,
-    },
-  ],
-  1693: [
-    {
-      type: "down",
-      x: 0.349_522_983_521_248_94,
-      y: 0.609_882_964_889_466_8,
-      to: 1692,
-    },
-    {
-      type: "up",
-      x: 0.693_842_150_910_667_8,
-      y: 0.390_117_035_110_533_14,
-      to: 1694,
-    },
-  ],
-  1694: [
-    {
-      type: "down",
-      x: 0.364_267_129_228_100_6,
-      y: 0.778_933_680_104_031_2,
-      to: 1693,
-    },
-    {
-      type: "up",
-      x: 0.483_954_900_260_190_8,
-      y: 0.457_737_321_196_358_9,
-      to: 1695,
-    },
-  ],
-  1695: [
-    {
-      type: "down",
-      x: 0.410_234_171_725_932_35,
-      y: 0.685_305_591_677_503_3,
-      to: 1694,
-    },
-  ],
-  // Sanguine Depths
-  1675: [
-    {
-      type: "down",
-      x: 0.440_589_765_828_274_1,
-      y: 0.879_063_719_115_734_7,
-      to: 1676,
-    },
-  ],
-  1676: [
-    {
-      type: "up",
-      x: 0.491_760_624_457_935_84,
-      y: 0.767_230_169_050_715_2,
-      to: 1675,
-    },
-  ],
-  // Halls of Atonement
-  1663: [
-    {
-      type: "left",
-      x: 0.130_095_403_295_750_23,
-      y: 0.524_057_217_165_149_5,
-      to: 1664,
-    },
-  ],
-  1664: [
-    {
-      type: "right",
-      x: 0.833_477_883_781_439_7,
-      y: 0.486_345_903_771_131_35,
-      to: 1663,
-    },
-    {
-      type: "up",
-      x: 0.174_327_840_416_305_28,
-      y: 0.361_508_452_535_760_75,
-      to: 1665,
-    },
-  ],
-  1665: [
-    {
-      type: "down",
-      x: 0.677_363_399_826_539_5,
-      y: 0.473_342_002_600_780_24,
-      to: 1664,
-    },
-  ],
-  // Plaguefall
-  1674: [
-    {
-      type: "down",
-      x: 0.562_884_784_520_668_5,
-      y: 0.803_689_064_558_629_8,
-      to: 1697,
-    },
-  ],
-  1697: [
-    {
-      type: "up",
-      x: 0.536_499_560_246_262_1,
-      y: 0.424_242_424_242_424_25,
-      to: 1674,
-    },
-  ],
-  // Theater of Pain
-  1683: [
-    {
-      type: "down",
-      x: 0.490_686_098_654_708_5,
-      y: 0.403_768_506_056_527_6,
-      to: 1684,
-    },
-  ],
-  1684: [
-    {
-      type: "up",
-      x: 0.305_970_149_253_731_34,
-      y: 0.107_692_307_692_307_7,
-      to: 1685,
-    },
-    {
-      type: "left",
-      x: 0.186_567_164_179_104_5,
-      y: 0.268_531_468_531_468_53,
-      to: 1686,
-    },
-    {
-      type: "up",
-      x: 0.306_902_985_074_626_9,
-      y: 0.323_076_923_076_923_1,
-      to: 1683,
-    },
-  ],
-  1685: [
-    {
-      type: "down",
-      x: 0.697_980_684_811_237_9,
-      y: 0.869_565_217_391_304_3,
-      to: 1684,
-    },
-  ],
-  1686: [
-    {
-      type: "down",
-      x: 0.229_148_375_768_217_73,
-      y: 0.304_347_826_086_956_54,
-      to: 1687,
-    },
-    {
-      type: "down",
-      x: 0.160_667_251_975_417_04,
-      y: 0.557_312_252_964_426_9,
-      to: 1687,
-    },
-    {
-      type: "right",
-      x: 0.797_190_517_998_244,
-      y: 0.682_476_943_346_508_5,
-      to: 1684,
-    },
-  ],
-  1687: [
-    {
-      type: "up",
-      x: 0.232_660_228_270_412_63,
-      y: 0.223_978_919_631_093_54,
-      to: 1686,
-    },
-    {
-      type: "up",
-      x: 0.158_911_325_724_319_57,
-      y: 0.565_217_391_304_347_8,
-      to: 1686,
-    },
-    {
-      type: "up",
-      x: 0.631_255_487_269_534_7,
-      y: 0.824_769_433_465_085_7,
-      to: 1686,
-    },
-  ],
-  // De Other Side
-  1680: [
-    {
-      type: "left",
-      x: 0.252_100_840_336_134_45,
-      y: 0.566_204_287_515_762_9,
-      to: 1679,
-    },
-    {
-      type: "down",
-      x: 0.495_119_787_045_252_9,
-      y: 0.897_606_382_978_723_4,
-      to: 1678,
-    },
-    {
-      type: "right",
-      x: 0.739_436_619_718_309_9,
-      y: 0.566_204_287_515_762_9,
-      to: 1677,
-    },
-  ],
-  1679: [
-    {
-      type: "right",
-      x: 0.886_490_807_354_116_7,
-      y: 0.467_625_899_280_575_5,
-      to: 1680,
-    },
-  ],
-  1678: [
-    {
-      type: "up",
-      x: 0.480_069_324_090_121_3,
-      y: 0.117_035_110_533_159_94,
-      to: 1680,
-    },
-  ],
-  1677: [
-    {
-      type: "left",
-      x: 0.064_444_444_444_444_44,
-      y: 0.569_753_810_082_063_3,
-      to: 1680,
-    },
-  ],
+  zoneID: number;
 };
 
 function DoorIndicators({
-  id,
   xFactor,
   yFactor,
   onDoorClick,
+  zoneID,
 }: DoorIndicatorsProps): JSX.Element | null {
-  const doors = zoneDoors[id];
+  const { doors } = usePointsOfInterest();
 
-  if (!doors) {
+  const thisZonesDoors = doors[zoneID];
+
+  if (!thisZonesDoors) {
     return null;
   }
 
   return (
     <g>
-      {doors.map((door) => (
+      {thisZonesDoors.map((door) => (
         <image
           href={`/static/icons/door_${door.type}.png`}
           key={door.x}
@@ -1311,11 +1060,14 @@ function MapChangePolyline({
   zoneID,
 }: MapChangePolylineProps): JSX.Element | null {
   const pulls = useFight().fight?.pulls ?? [];
+  const { doors } = usePointsOfInterest();
   const renderMapChangeLines = useMapOptions(
     (state) => state.renderMapChangeLines
   );
 
-  if (!renderMapChangeLines) {
+  const thisZonesDoors = doors[zoneID];
+
+  if (!renderMapChangeLines || !thisZonesDoors) {
     return null;
   }
 
@@ -1347,13 +1099,13 @@ function MapChangePolyline({
           const thisPullIsInThisZone = pull.zone === zoneID;
 
           if (lastPullWasInOtherZone && thisPullIsInThisZone) {
-            const doors = zoneDoors[pull.zone];
-
             if (!doors) {
               return acc;
             }
 
-            const originDoor = doors.find((door) => door.to === lastPull.zone);
+            const originDoor = thisZonesDoors.find(
+              (door) => door.to === lastPull.zone
+            );
 
             if (!originDoor) {
               return acc;
@@ -1379,13 +1131,13 @@ function MapChangePolyline({
           }
 
           if (!lastPullWasInOtherZone && !thisPullIsInThisZone) {
-            const doors = zoneDoors[lastPull.zone];
-
             if (!doors) {
               return acc;
             }
 
-            const targetDoor = doors.find((door) => door.to === pull.zone);
+            const targetDoor = thisZonesDoors.find(
+              (door) => door.to === pull.zone
+            );
 
             if (!targetDoor) {
               return acc;
