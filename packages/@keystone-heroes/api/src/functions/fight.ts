@@ -578,6 +578,10 @@ const abilitiesWithCDR = new Set([
   13_750, // Adrenaline Rush
   // Shaman
   192_058, // Capacitor Totem
+  // Warrior
+  184_364, // Enraged Regeneration
+  // Warlock
+  333_889, // Fel Domination
 ]);
 
 type CalcAbilityReadyEventsReturn = Omit<

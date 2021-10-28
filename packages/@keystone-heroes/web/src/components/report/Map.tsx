@@ -713,6 +713,10 @@ function Svg({ imageSize, zoneID, onDoorClick }: SvgProps) {
   const pulls = fight ? fight.pulls : [];
   const thisZonesPulls = pulls.filter((pull) => pull.zone === zoneID);
 
+  if (imageSize.clientWidth === 0 || imageSize.clientHeight === 0) {
+    return null;
+  }
+
   return (
     <>
       <style jsx>
@@ -725,13 +729,13 @@ function Svg({ imageSize, zoneID, onDoorClick }: SvgProps) {
       </style>
       <svg className="absolute w-full h-full svg focus:outline-none">
         <PointsOfInterestProvider dungeonID={fight?.dungeon}>
-          <DoorIndicators
+          <DoorIndicatorsWrapper
             xFactor={imageSize.clientWidth}
             yFactor={imageSize.clientHeight}
             onDoorClick={onDoorClick}
             zoneID={zoneID}
           />
-          <MapChangePolyline
+          <MapChangePolylineWrapper
             xFactor={imageSize.clientWidth}
             yFactor={imageSize.clientHeight}
             zoneID={zoneID}
@@ -1008,20 +1012,34 @@ function PullConnectionPolyline({
   );
 }
 
-type DoorIndicatorsProps = Pick<SvgProps, "onDoorClick"> & {
+const MapChangePolyline = dynamic(
+  () =>
+    import(/* webpackChunkName: "MapChangePolyline" */ "./MapChangePolyline"),
+  {
+    suspense: true,
+  }
+);
+
+const DoorIndicators = dynamic(
+  () => import(/* webpackChunkName: "DoorIndicators" */ "./DoorIndicators"),
+  {
+    suspense: true,
+  }
+);
+
+type DoorIndicatorsWrapperProps = Pick<SvgProps, "onDoorClick"> & {
   xFactor: number;
   yFactor: number;
   zoneID: number;
 };
 
-function DoorIndicators({
+function DoorIndicatorsWrapper({
+  onDoorClick,
   xFactor,
   yFactor,
-  onDoorClick,
   zoneID,
-}: DoorIndicatorsProps): JSX.Element | null {
+}: DoorIndicatorsWrapperProps): JSX.Element | null {
   const { doors } = usePointsOfInterest();
-
   const thisZonesDoors = doors[zoneID];
 
   if (!thisZonesDoors) {
@@ -1029,153 +1047,46 @@ function DoorIndicators({
   }
 
   return (
-    <g>
-      {thisZonesDoors.map((door) => (
-        <image
-          href={`/static/icons/door_${door.type}.png`}
-          key={door.x}
-          x={door.x * xFactor}
-          y={door.y * yFactor}
-          className="w-8 h-6 cursor-pointer"
-          onClick={() => {
-            onDoorClick(door.to);
-          }}
-          width={32}
-          height={24}
-        />
-      ))}
-    </g>
+    <Suspense fallback={null}>
+      <DoorIndicators
+        doors={thisZonesDoors}
+        xFactor={xFactor}
+        yFactor={yFactor}
+        onDoorClick={onDoorClick}
+      />
+    </Suspense>
   );
 }
 
-type MapChangePolylineProps = {
+type MapChangePolylineWrapperProps = {
   zoneID: number;
   xFactor: number;
   yFactor: number;
 };
 
-function MapChangePolyline({
+function MapChangePolylineWrapper({
+  zoneID,
   xFactor,
   yFactor,
-  zoneID,
-}: MapChangePolylineProps): JSX.Element | null {
-  const pulls = useFight().fight?.pulls ?? [];
-  const { doors } = usePointsOfInterest();
+}: MapChangePolylineWrapperProps): JSX.Element | null {
   const renderMapChangeLines = useMapOptions(
     (state) => state.renderMapChangeLines
   );
-
+  const { doors } = usePointsOfInterest();
   const thisZonesDoors = doors[zoneID];
 
   if (!renderMapChangeLines || !thisZonesDoors) {
     return null;
   }
 
-  // door width / 2 / svg width
-  const doorXOffset = 0.012_830_793_905_372_895;
-  const doorYOffset = 0.014_440_433_212_996_39;
-
   return (
-    <>
-      {pulls
-        .reduce<
-          {
-            startX: number;
-            middleX: number;
-            endX: number;
-            startY: number;
-            middleY: number;
-            endY: number;
-            key: number;
-          }[]
-        >((acc, pull, index) => {
-          const lastPull = pulls[index - 1];
-
-          if (!lastPull) {
-            return acc;
-          }
-
-          const lastPullWasInOtherZone = lastPull.zone !== zoneID;
-          const thisPullIsInThisZone = pull.zone === zoneID;
-
-          if (lastPullWasInOtherZone && thisPullIsInThisZone) {
-            if (!doors) {
-              return acc;
-            }
-
-            const originDoor = thisZonesDoors.find(
-              (door) => door.to === lastPull.zone
-            );
-
-            if (!originDoor) {
-              return acc;
-            }
-
-            const middleX = pull.x + (originDoor.x + doorXOffset - pull.x) / 2;
-            const middleY = pull.y + (originDoor.y + doorYOffset - pull.y) / 2;
-
-            return [
-              ...acc,
-              {
-                startX: (originDoor.x + doorXOffset) * xFactor,
-                middleX: middleX * xFactor,
-                endX: pull.x * xFactor,
-
-                startY: (originDoor.y + doorYOffset) * yFactor,
-                middleY: middleY * yFactor,
-                endY: pull.y * yFactor,
-
-                key: index,
-              },
-            ];
-          }
-
-          if (!lastPullWasInOtherZone && !thisPullIsInThisZone) {
-            if (!doors) {
-              return acc;
-            }
-
-            const targetDoor = thisZonesDoors.find(
-              (door) => door.to === pull.zone
-            );
-
-            if (!targetDoor) {
-              return acc;
-            }
-
-            const middleX =
-              lastPull.x + (targetDoor.x + doorXOffset - lastPull.x) / 2;
-            const middleY =
-              lastPull.y + (targetDoor.y + doorYOffset - lastPull.y) / 2;
-
-            return [
-              ...acc,
-              {
-                startX: lastPull.x * xFactor,
-                middleX: middleX * xFactor,
-                endX: (targetDoor.x + doorXOffset) * xFactor,
-
-                startY: lastPull.y * yFactor,
-                middleY: middleY * yFactor,
-                endY: (targetDoor.y + doorYOffset) * yFactor,
-
-                key: index,
-              },
-            ];
-          }
-
-          return acc;
-        }, [])
-        .map(({ startX, startY, middleX, middleY, endX, endY, key }) => {
-          return (
-            <polyline
-              key={key}
-              markerMid="url(#triangle)"
-              className="text-blue-900 stroke-current polyline"
-              points={`${startX},${startY} ${middleX},${middleY} ${endX},${endY}`}
-            />
-          );
-        })}
-    </>
+    <Suspense fallback={null}>
+      <MapChangePolyline
+        doors={thisZonesDoors}
+        xFactor={xFactor}
+        yFactor={yFactor}
+        zoneID={zoneID}
+      />
+    </Suspense>
   );
 }
