@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { createContext, useContext, useState } from "react";
 import { useFight } from "src/pages/report/[reportID]/[fightID]";
 import { useReportStore } from "src/store";
 import { bgSecondary } from "src/styles/tokens";
@@ -449,15 +449,14 @@ const isAbilityReadyEventWithAbilityAndSourcePlayer = (
   event.ability !== null &&
   event.sourcePlayerID !== null;
 
-type MsSinceLastEventCellProps = {
+type TimestampCellProps = {
   msSinceLastEvent: string | null;
-  relTimestamp: number;
+  event: DefaultEvent;
 };
 
-function MsSinceLastEventCell({
-  msSinceLastEvent,
-  relTimestamp,
-}: MsSinceLastEventCellProps) {
+function TimestampCell({ msSinceLastEvent, event }: TimestampCellProps) {
+  const { useAbsoluteTimestamps, fightStartTime } = usePullDetailsSettings();
+
   return (
     <td>
       <span
@@ -465,7 +464,11 @@ function MsSinceLastEventCell({
           msSinceLastEvent ? `${msSinceLastEvent} after last event` : undefined
         }
       >
-        {timeDurationToString(relTimestamp)}
+        {timeDurationToString(
+          useAbsoluteTimestamps
+            ? event.timestamp - fightStartTime
+            : event.relTimestamp
+        )}
       </span>
     </td>
   );
@@ -524,10 +527,7 @@ function CastRow({
 
   return (
     <tr className="text-center dark:bg-coolgray-600 dark:hover:bg-coolgray-700">
-      <MsSinceLastEventCell
-        relTimestamp={event.relTimestamp}
-        msSinceLastEvent={msSinceLastEvent}
-      />
+      <TimestampCell event={event} msSinceLastEvent={msSinceLastEvent} />
 
       <TypeCell type="Cast" />
 
@@ -743,10 +743,7 @@ function DamageTakenRow({
 
   return (
     <tr className="text-center bg-red-500">
-      <MsSinceLastEventCell
-        relTimestamp={event.relTimestamp}
-        msSinceLastEvent={msSinceLastEvent}
-      />
+      <TimestampCell event={event} msSinceLastEvent={msSinceLastEvent} />
 
       <TypeCell type="DamageTaken" />
 
@@ -840,10 +837,7 @@ function AbilityReadyRow({
 
   return (
     <tr className="text-center dark:hover:bg-coolgray-600">
-      <MsSinceLastEventCell
-        relTimestamp={event.relTimestamp}
-        msSinceLastEvent={msSinceLastEvent}
-      />
+      <TimestampCell event={event} msSinceLastEvent={msSinceLastEvent} />
 
       <TypeCell type="AbilityReady" />
 
@@ -922,10 +916,7 @@ function DeathRow({
 }: DeathRowProps) {
   return (
     <tr className="text-center bg-red-500">
-      <MsSinceLastEventCell
-        relTimestamp={event.relTimestamp}
-        msSinceLastEvent={msSinceLastEvent}
-      />
+      <TimestampCell event={event} msSinceLastEvent={msSinceLastEvent} />
 
       <TypeCell type="Death" />
 
@@ -990,10 +981,7 @@ function InterruptRow({
 
   return (
     <tr className="text-center bg-red-500">
-      <MsSinceLastEventCell
-        relTimestamp={event.relTimestamp}
-        msSinceLastEvent={msSinceLastEvent}
-      />
+      <TimestampCell event={event} msSinceLastEvent={msSinceLastEvent} />
 
       <TypeCell type="Interrupt" />
 
@@ -1076,6 +1064,20 @@ type MaybeWastedCooldownCellProps = {
   event: AbilityReadyRowProps["event"] | CastRowProps["event"];
 };
 
+const calcMissedUsageCount = ({
+  now,
+  then,
+  cd,
+  offset,
+}: {
+  now: number;
+  then: number;
+  cd: number;
+  offset: number;
+}) => {
+  return (then - now) / 1000 / cd - offset;
+};
+
 function MaybeWastedCooldownCell({ event }: MaybeWastedCooldownCellProps) {
   const { fight } = useFight();
 
@@ -1117,13 +1119,16 @@ function MaybeWastedCooldownCell({ event }: MaybeWastedCooldownCellProps) {
     return <td className="bg-red-500">never (missing {couldUseNTimes}x)</td>;
   }
 
+  const couldUseNTimes = calcMissedUsageCount({
+    now: event.timestamp,
+    then: event.ability.nextUse ? event.ability.nextUse : keyEnd,
+    cd: ability.cd,
+    // offset by 1 if Cast since CD must recuperate first
+    offset: event.ability.nextUse && event.type === "Cast" ? 1 : 0,
+  });
+
   if (event.ability.nextUse) {
-    const isCastEvent = event.type === "Cast";
-    const couldUseNTimes =
-      (event.ability.nextUse - event.timestamp) / 1000 / ability.cd -
-      // offset by 1 if Cast since CD must recuperate first
-      (isCastEvent ? 1 : 0);
-    // offset by 2 if Cast since if the next seen cast requires this cd,
+    // offset by additional 1 if Cast since if the next seen cast requires this cd,
     // annotating that it could have been used in between would be wrong
     const wastedCastUpcoming = couldUseNTimes > 1;
 
@@ -1135,12 +1140,15 @@ function MaybeWastedCooldownCell({ event }: MaybeWastedCooldownCellProps) {
     );
   }
 
-  // TODO: move to backend, this is identical to the wasted = true branch above
-  const couldUseNTimes = Math.floor(
-    (keyEnd - event.timestamp) / 1000 / ability.cd
-  );
+  if (couldUseNTimes <= 1) {
+    return <td>never</td>;
+  }
 
-  return <td className="bg-red-500">never (missing {couldUseNTimes}x)</td>;
+  return (
+    <td className="bg-red-500">
+      never (missing {Math.floor(couldUseNTimes)}x)
+    </td>
+  );
 }
 
 const isDamageDoneEventWithAbility = (
@@ -1182,10 +1190,7 @@ function DamageDoneRow({
 
   return (
     <tr className="text-center bg-green-600">
-      <MsSinceLastEventCell
-        relTimestamp={event.relTimestamp}
-        msSinceLastEvent={msSinceLastEvent}
-      />
+      <TimestampCell event={event} msSinceLastEvent={msSinceLastEvent} />
 
       <TypeCell type="DamageDone" />
 
@@ -1296,177 +1301,157 @@ function Events() {
   );
 
   return (
-    <div className="w-full px-4 py-2 rounded-lg lg:w-9/23 dark:bg-coolgray-700">
-      <div className="flex justify-between w-full">
-        <div className="flex">
-          {player.map((p) => {
-            const checked = trackedPlayer.includes(p.id);
-
-            return (
-              <span className="p-2" key={p.id}>
-                <input
-                  type="checkbox"
-                  aria-labelledby={`player-${p.id}`}
-                  id={`player-${p.id}`}
-                  checked={checked}
-                  disabled={checked && trackedPlayer.length === 1}
-                  onChange={() => {
-                    setTrackedPlayer((prev) =>
-                      prev.includes(p.id)
-                        ? prev.filter((id) => id !== p.id)
-                        : [...prev, p.id]
-                    );
-                  }}
-                />
-                <label
-                  htmlFor={`player-${p.id}`}
-                  className={`pl-2 ${playerIdTextColorMap[p.id]}`}
-                >
-                  {p.name}
-                </label>
-              </span>
-            );
-          })}
-        </div>
-
-        <div className="hidden md:items-center md:flex">
-          <button
-            type="button"
-            className={classnames(
-              "p-2 rounded-tl-lg rounded-bl-lg",
-              isTable ? "bg-coolgray-900" : "bg-coolgray-600"
-            )}
-            onClick={() => {
-              setMode("table");
-            }}
-            disabled={isTable}
-            title="View as Table"
-          >
-            <svg className="w-4 h-4">
-              <use href={`#${tableLine.id}`} />
-            </svg>
-          </button>
-          <button
-            type="button"
-            className={classnames(
-              "p-2 rounded-tr-lg rounded-br-lg",
-              isTable ? "bg-coolgray-600" : "bg-coolgray-900"
-            )}
-            onClick={() => {
-              setMode("timeline");
-            }}
-            disabled={!isTable}
-            title="View as Timeline"
-          >
-            <svg className="w-4 h-4">
-              <use href={`#${timeline.id}`} />
-            </svg>
-          </button>
-        </div>
-      </div>
-
-      {isTable ? (
-        <table className="w-full">
-          <thead>
-            <tr>
-              <th>Rel. Timestamp</th>
-              <th>Type</th>
-              <th>Player</th>
-              <th>Ability</th>
-              <th>Last Use</th>
-              <th>Next Use</th>
-            </tr>
-          </thead>
-
-          {before.length > 0 && (
-            <tbody>
-              <tr>
-                <td colSpan={6} className="text-center">
-                  <span
-                    className="font-semibold"
-                    title="Events that happend closer to this pull than the last can be found here."
-                  >
-                    Before Pull
-                    <sup>
-                      <svg className="inline w-4 h-4 ml-2 text-black dark:text-white">
-                        <use href={`#${outlineQuestionCircle.id}`} />
-                      </svg>
-                    </sup>
-                  </span>
-                </td>
-              </tr>
-              {before.map((event, index) => {
-                const msSinceLastEvent = before[index - 1]
-                  ? timeDurationToString(
-                      event.timestamp - before[index - 1].timestamp
-                    )
-                  : timeDurationToString(0);
-
-                return (
-                  <TableRow
-                    event={event}
-                    key={createRowKey(event, index)}
-                    msSinceLastEvent={msSinceLastEvent}
-                    playerIdPlayerNameMap={playerIdPlayerNameMap}
-                    playerIdTextColorMap={playerIdTextColorMap}
-                  />
-                );
-              })}
-            </tbody>
-          )}
-
-          <tbody
-            className={
-              before.length > 0
-                ? "border-t-2 border-coolgray-900 text-center"
-                : undefined
-            }
-          >
-            <tr>
-              <td colSpan={6} className="text-center">
-                <span className="font-semibold">During Pull</span>
-              </td>
-            </tr>
-            {during.map((event, index) => {
-              const msSinceLastEvent = during[index - 1]
-                ? timeDurationToString(
-                    event.timestamp - during[index - 1].timestamp
-                  )
-                : timeDurationToString(0);
+    <PullDetailsSettingsProvider>
+      <div className="w-full px-4 py-2 rounded-lg lg:w-9/23 dark:bg-coolgray-700">
+        <div className="flex justify-between w-full">
+          <div className="flex">
+            {player.map((p) => {
+              const checked = trackedPlayer.includes(p.id);
 
               return (
-                <TableRow
-                  event={event}
-                  key={createRowKey(event, index)}
-                  msSinceLastEvent={msSinceLastEvent}
-                  playerIdPlayerNameMap={playerIdPlayerNameMap}
-                  playerIdTextColorMap={playerIdTextColorMap}
-                />
+                <span className="p-2" key={p.id}>
+                  <input
+                    type="checkbox"
+                    aria-labelledby={`player-${p.id}`}
+                    id={`player-${p.id}`}
+                    checked={checked}
+                    disabled={checked && trackedPlayer.length === 1}
+                    onChange={() => {
+                      setTrackedPlayer((prev) =>
+                        prev.includes(p.id)
+                          ? prev.filter((id) => id !== p.id)
+                          : [...prev, p.id]
+                      );
+                    }}
+                  />
+                  <label
+                    htmlFor={`player-${p.id}`}
+                    className={`pl-2 ${playerIdTextColorMap[p.id]}`}
+                  >
+                    {p.name}
+                  </label>
+                </span>
               );
             })}
-          </tbody>
 
-          {after.length > 0 && (
-            <tbody className="border-t-2 border-coolgray-900">
+            {/* <span className="p-2">
+              <input
+                type="checkbox"
+                aria-labelledby="rel-abs-timestamps"
+                id="rel-abs-timestamps"
+                checked={useAbsoluteTimestamps}
+                onChange={() => {
+                  setUseAbsoluteTimestamps(!useAbsoluteTimestamps);
+                }}
+              />
+              <label htmlFor="rel-abs-timestamps" className="pl-2">
+                use rel. timestamps
+              </label>
+            </span> */}
+          </div>
+
+          <div className="hidden md:items-center md:flex">
+            <button
+              type="button"
+              className={classnames(
+                "p-2 rounded-tl-lg rounded-bl-lg",
+                isTable ? "bg-coolgray-900" : "bg-coolgray-600"
+              )}
+              onClick={() => {
+                setMode("table");
+              }}
+              disabled={isTable}
+              title="View as Table"
+            >
+              <svg className="w-4 h-4">
+                <use href={`#${tableLine.id}`} />
+              </svg>
+            </button>
+            <button
+              type="button"
+              className={classnames(
+                "p-2 rounded-tr-lg rounded-br-lg",
+                isTable ? "bg-coolgray-600" : "bg-coolgray-900"
+              )}
+              onClick={() => {
+                setMode("timeline");
+              }}
+              disabled={!isTable}
+              title="View as Timeline"
+            >
+              <svg className="w-4 h-4">
+                <use href={`#${timeline.id}`} />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        {isTable ? (
+          <table className="w-full">
+            <thead>
+              <tr>
+                <th>Rel. Timestamp</th>
+                <th>Type</th>
+                <th>Player</th>
+                <th>Ability</th>
+                <th>Last Use</th>
+                <th>Next Use</th>
+              </tr>
+            </thead>
+
+            {before.length > 0 && (
+              <tbody>
+                <tr>
+                  <td colSpan={6} className="text-center">
+                    <span
+                      className="font-semibold"
+                      title="Events that happend closer to this pull than the last can be found here."
+                    >
+                      Before Pull
+                      <sup>
+                        <svg className="inline w-4 h-4 ml-2 text-black dark:text-white">
+                          <use href={`#${outlineQuestionCircle.id}`} />
+                        </svg>
+                      </sup>
+                    </span>
+                  </td>
+                </tr>
+                {before.map((event, index) => {
+                  const msSinceLastEvent = before[index - 1]
+                    ? timeDurationToString(
+                        event.timestamp - before[index - 1].timestamp
+                      )
+                    : timeDurationToString(0);
+
+                  return (
+                    <TableRow
+                      event={event}
+                      key={createRowKey(event, index)}
+                      msSinceLastEvent={msSinceLastEvent}
+                      playerIdPlayerNameMap={playerIdPlayerNameMap}
+                      playerIdTextColorMap={playerIdTextColorMap}
+                    />
+                  );
+                })}
+              </tbody>
+            )}
+
+            <tbody
+              className={
+                before.length > 0
+                  ? "border-t-2 border-coolgray-900 text-center"
+                  : undefined
+              }
+            >
               <tr>
                 <td colSpan={6} className="text-center">
-                  <span
-                    className="font-semibold"
-                    title="Events that happend closer to this pull than the next can be found here."
-                  >
-                    After Pull
-                    <sup>
-                      <svg className="inline w-4 h-4 ml-2 text-black dark:text-white">
-                        <use href={`#${outlineQuestionCircle.id}`} />
-                      </svg>
-                    </sup>
-                  </span>
+                  <span className="font-semibold">During Pull</span>
                 </td>
               </tr>
-              {after.map((event, index) => {
-                const msSinceLastEvent = after[index - 1]
+              {during.map((event, index) => {
+                const msSinceLastEvent = during[index - 1]
                   ? timeDurationToString(
-                      event.timestamp - after[index - 1].timestamp
+                      event.timestamp - during[index - 1].timestamp
                     )
                   : timeDurationToString(0);
 
@@ -1481,10 +1466,47 @@ function Events() {
                 );
               })}
             </tbody>
-          )}
-        </table>
-      ) : null}
-    </div>
+
+            {after.length > 0 && (
+              <tbody className="border-t-2 border-coolgray-900">
+                <tr>
+                  <td colSpan={6} className="text-center">
+                    <span
+                      className="font-semibold"
+                      title="Events that happend closer to this pull than the next can be found here."
+                    >
+                      After Pull
+                      <sup>
+                        <svg className="inline w-4 h-4 ml-2 text-black dark:text-white">
+                          <use href={`#${outlineQuestionCircle.id}`} />
+                        </svg>
+                      </sup>
+                    </span>
+                  </td>
+                </tr>
+                {after.map((event, index) => {
+                  const msSinceLastEvent = after[index - 1]
+                    ? timeDurationToString(
+                        event.timestamp - after[index - 1].timestamp
+                      )
+                    : timeDurationToString(0);
+
+                  return (
+                    <TableRow
+                      event={event}
+                      key={createRowKey(event, index)}
+                      msSinceLastEvent={msSinceLastEvent}
+                      playerIdPlayerNameMap={playerIdPlayerNameMap}
+                      playerIdTextColorMap={playerIdTextColorMap}
+                    />
+                  );
+                })}
+              </tbody>
+            )}
+          </table>
+        ) : null}
+      </div>
+    </PullDetailsSettingsProvider>
   );
 }
 
@@ -1615,4 +1637,53 @@ function TableRow({
   }
 
   return null;
+}
+
+type PullDetailsSettingsDefinition = {
+  useAbsoluteTimestamps: boolean;
+  fightStartTime: number;
+  toggleAbsoluteTimestamps: () => void;
+};
+
+const PullDetailsSettingsContext =
+  createContext<PullDetailsSettingsDefinition | null>(null);
+
+const usePullDetailsSettings = () => {
+  const ctx = useContext(PullDetailsSettingsContext);
+
+  if (!ctx) {
+    throw new Error("used outside of provider");
+  }
+
+  return ctx;
+};
+
+type PullDetailsSettingsProviderProps = {
+  children: JSX.Element | null;
+};
+
+function PullDetailsSettingsProvider({
+  children,
+}: PullDetailsSettingsProviderProps): JSX.Element | null {
+  const [useAbsoluteTimestamps, setUseAbsoluteTimestamps] = useState(false);
+  const { fight } = useFight();
+
+  if (!fight) {
+    return null;
+  }
+
+  // eslint-disable-next-line react/jsx-no-constructed-context-values
+  const value = {
+    useAbsoluteTimestamps,
+    fightStartTime: fight.meta.startTime,
+    toggleAbsoluteTimestamps: () => {
+      setUseAbsoluteTimestamps((prev) => !prev);
+    },
+  };
+
+  return (
+    <PullDetailsSettingsContext.Provider value={value}>
+      {children}
+    </PullDetailsSettingsContext.Provider>
+  );
 }
