@@ -133,9 +133,7 @@ type FightWithMeta = Omit<
   player: Player[];
 };
 
-export const fightIsFight = (
-  fight: MaybeFight
-): fight is FightWithNullableRating => {
+export const fightIsFight = (fight: MaybeFight): fight is Fight => {
   return (
     typeof fight?.averageItemLevel === "number" &&
     typeof fight.keystoneBonus === "number" &&
@@ -167,9 +165,7 @@ export const fightFulfillsKeystoneLevelRequirement = (fight: Fight): boolean =>
  * Beginning SL Season 2 WCL uses the rating increase to detect timing a key
  * @see https://discord.com/channels/180033360939319296/681904912090529801/860180670298980412
  */
-export const fightIsTimedKeystone = (
-  fight: FightWithNullableRating
-): fight is Fight => {
+export const fightIsTimedKeystone = (fight: Fight): fight is Fight => {
   if (!fight.gameZone) {
     // defer checking whether its a timed key to later
     return true;
@@ -712,6 +708,7 @@ export const reportHandler: RequestHandler<Request, ReportResponse> = async (
   const existingReport = await loadExistingReport(reportID);
 
   if (existingReport && !maybeOngoingReport(existingReport.endTime.getTime())) {
+    res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
     res.json(createResponseFromDB(existingReport));
     return;
   }
@@ -752,16 +749,43 @@ export const reportHandler: RequestHandler<Request, ReportResponse> = async (
   const persistedFightIDs = getFightIDsOfExistingReport(existingReport);
   const fightIsUnknown = createFightIsUnknownFilter(persistedFightIDs);
 
-  const fights = report.reportData.report.fights.filter(
-    (fight): fight is Fight => {
-      return (
+  const fights = report.reportData.report.fights.reduce<Fight[]>(
+    (acc, fight) => {
+      if (
         fightIsFight(fight) &&
-        fightIsTimedKeystone(fight) &&
         fightHasFivePlayers(fight) &&
         fightFulfillsKeystoneLevelRequirement(fight) &&
         fightIsUnknown(fight)
-      );
-    }
+      ) {
+        if (!fight.gameZone || fight.gameZone.id in dungeonMap) {
+          return fightIsTimedKeystone(fight) ? [...acc, fight] : acc;
+        }
+
+        const fightMaps = new Set(fight.maps.map((map) => map.id));
+
+        // report K9Mfcb2CtjZ7pX6q contains zone 2222 as starting point, however
+        // via .maps property its clear its the SD21 in the log, which is 2296
+        const match = Object.entries(dungeonMap).find(([_, dungeon]) => {
+          return dungeon.zones.every((zone) => fightMaps.has(zone.id));
+        });
+
+        if (!match) {
+          return acc;
+        }
+
+        const fixedFight: Fight = {
+          ...fight,
+          gameZone: {
+            id: Number.parseInt(match[0]),
+          },
+        };
+
+        return fightIsTimedKeystone(fixedFight) ? [...acc, fixedFight] : acc;
+      }
+
+      return acc;
+    },
+    []
   );
 
   // no valid (new) fights found
@@ -777,7 +801,6 @@ export const reportHandler: RequestHandler<Request, ReportResponse> = async (
     });
     return;
   }
-
   const maybeFightsWithMeta: (FightWithMeta | null)[] = await Promise.all(
     fights.map(async (fight) => {
       const table = await getTableData({
@@ -841,6 +864,35 @@ export const reportHandler: RequestHandler<Request, ReportResponse> = async (
         const dps = Math.round(damageDoneMatch.total / keystoneTimeInSeconds);
         const hps = Math.round(healingDoneMatch.total / keystoneTimeInSeconds);
 
+        const secureFields = {
+          name,
+          server,
+          class: type,
+          spec: specs[0],
+          classID,
+          specID: spec.id,
+          dps,
+          hps,
+          deaths: deaths.length,
+          itemLevel: maxItemLevel,
+          actorID: id,
+        };
+
+        if (Array.isArray(combatantInfo)) {
+          return [
+            ...acc,
+            {
+              ...secureFields,
+              legendary: null,
+              covenantID: null,
+              soulbindID: null,
+              covenantTraits: null,
+              conduits: [],
+              talents: [],
+            },
+          ];
+        }
+
         const legendary =
           combatantInfo.gear.find(
             (item): item is LegendaryItem =>
@@ -857,17 +909,7 @@ export const reportHandler: RequestHandler<Request, ReportResponse> = async (
         return [
           ...acc,
           {
-            name,
-            server,
-            class: type,
-            spec: specs[0],
-            classID,
-            specID: spec.id,
-            dps,
-            hps,
-            deaths: deaths.length,
-            itemLevel: maxItemLevel,
-            actorID: id,
+            ...secureFields,
             talents: combatantInfo.talents,
             conduits:
               combatantInfo.heartOfAzeroth ??

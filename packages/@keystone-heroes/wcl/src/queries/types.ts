@@ -63,7 +63,11 @@ export type InDepthCharacterInformation = {
   specs: SpecName[];
   minItemLevel: number;
   maxItemLevel: number;
-  combatantInfo: CombatantInfo;
+  /**
+   * in report K9Mfcb2CtjZ7pX6q fight 45, combatantInfo is an empty array
+   * for a single player
+   */
+  combatantInfo: CombatantInfo | never[];
 };
 
 type CombatantInfo = {
