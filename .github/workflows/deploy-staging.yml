@@ -88,19 +88,19 @@ jobs:
       - name: Running tests
         run: yarn test --ci --coverage
 
-  deploy:
-    name: Deploy to Staging
-    runs-on: ubuntu-latest
-    # only deploy given successful tests
-    needs: test
-    steps:
-      - uses: actions/checkout@master
-      - uses: amondnet/vercel-action@v20
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID}}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID}}
-          # SET THIS 👇 OR YOU WILL DEPLOY TO YOUR PERSONAL VERCEL NAMESPACE
-          # scope: ${{ secrets.VERCEL_TEAM_ID }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          github-comment: true
+  # deploy:
+  #   name: Deploy to Staging
+  #   runs-on: ubuntu-latest
+  #   # only deploy given successful tests
+  #   needs: test
+  #   steps:
+  #     - uses: actions/checkout@master
+  #     - uses: amondnet/vercel-action@v20
+  #       with:
+  #         vercel-token: ${{ secrets.VERCEL_TOKEN }}
+  #         vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID}}
+  #         vercel-org-id: ${{ secrets.VERCEL_ORG_ID}}
+  #         # SET THIS 👇 OR YOU WILL DEPLOY TO YOUR PERSONAL VERCEL NAMESPACE
+  #         # scope: ${{ secrets.VERCEL_TEAM_ID }}
+  #         github-token: ${{ secrets.GITHUB_TOKEN }}
+  #         github-comment: true

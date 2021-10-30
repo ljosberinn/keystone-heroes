@@ -1,7 +1,6 @@
 import "../src/styles/globals.css";
 import { icons } from "../src/icons";
 import { ColorModeToggle } from "../src/components/ColorModeToggle";
-import { StaticDataProvider } from "../src/context/StaticData";
 export const parameters = {
   actions: { argTypesRegex: "^on[A-Z].*" },
   controls: {
@@ -17,25 +16,23 @@ import { ThemeProvider } from "next-themes";
 export const decorators = [
   (Story) => (
     <ThemeProvider attribute="class" defaultTheme="dark">
-      <StaticDataProvider>
-        <div className="bg-white dark:bg-coolgray-900 dark:text-coolgray-200">
-          <div>
-            <ColorModeToggle />
-          </div>
-
-          <div>
-            <Story />
-          </div>
-
-          <svg className="hidden">
-            <defs>
-              {Object.values(icons).map(({ component: Component, id }) => (
-                <Component id={id} size="1em" key={id} />
-              ))}
-            </defs>
-          </svg>
+      <div className="bg-white dark:bg-coolgray-900 dark:text-coolgray-200">
+        <div>
+          <ColorModeToggle />
         </div>
-      </StaticDataProvider>
+
+        <div>
+          <Story />
+        </div>
+
+        <svg className="hidden">
+          <defs>
+            {Object.values(icons).map(({ component: Component, id }) => (
+              <Component id={id} size="1em" key={id} />
+            ))}
+          </defs>
+        </svg>
+      </div>
     </ThemeProvider>
   ),
 ];

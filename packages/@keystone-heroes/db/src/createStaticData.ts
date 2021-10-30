@@ -1,7 +1,19 @@
+import { BURSTING } from "@keystone-heroes/wcl/queries/events/affixes/bursting";
+import { EXPLOSIVE } from "@keystone-heroes/wcl/queries/events/affixes/explosive";
+import { GRIEVOUS_WOUND } from "@keystone-heroes/wcl/queries/events/affixes/grievous";
+import { NECROTIC } from "@keystone-heroes/wcl/queries/events/affixes/necrotic";
+import { QUAKING } from "@keystone-heroes/wcl/queries/events/affixes/quaking";
+import {
+  SANGUINE_ICHOR_DAMAGE,
+  SANGUINE_ICHOR_HEALING,
+} from "@keystone-heroes/wcl/queries/events/affixes/sanguine";
+import { SPITEFUL } from "@keystone-heroes/wcl/queries/events/affixes/spiteful";
+import { STORMING } from "@keystone-heroes/wcl/queries/events/affixes/storming";
 import {
   tormentedSpells,
   tormentedLieutenants,
 } from "@keystone-heroes/wcl/queries/events/affixes/tormented";
+import { VOLCANIC } from "@keystone-heroes/wcl/queries/events/affixes/volcanic";
 import { config } from "dotenv";
 import { writeFileSync, existsSync, createWriteStream, unlinkSync } from "fs";
 import { get } from "https";
@@ -247,41 +259,51 @@ const tormentedLieutenantIDs = new Set<number>(${JSON.stringify(
     tormentedLieutenants.map((lt) => lt.id)
   )});  
 const allBossIDs = new Set<number>(${JSON.stringify([...allBossIDs])});
+export const VOLCANIC = ${VOLCANIC};
+export const BURSTING = ${BURSTING};
+export const NECROTIC = ${NECROTIC};
+export const GRIEVOUS = ${GRIEVOUS_WOUND};
+export const EXPLOSIVE = JSON.parse(\`${JSON.stringify(EXPLOSIVE)}\`);
+export const SPITEFUL = ${SPITEFUL.ability};
+export const QUAKING = ${QUAKING};
+export const STORMING = ${STORMING};
+export const SANGUINE_ICHOR_DAMAGE = ${SANGUINE_ICHOR_DAMAGE};
+export const SANGUINE_ICHOR_HEALING = ${SANGUINE_ICHOR_HEALING};
 export const isBoss = (id: number): boolean => allBossIDs.has(id);
 export const isTormentedLieutenant = (id: number): boolean => tormentedLieutenantIDs.has(id);
-export const classes: Record<number, { name: string; cooldowns: number[]; specs: { id: number; name: string; cooldowns: number[]; }[]}> = ${JSON.stringify(
+export const classes: Record<number, { name: string; cooldowns: number[]; specs: { id: number; name: string; cooldowns: number[]; }[]}> = JSON.parse(\`${JSON.stringify(
     classes
-  )};
-export const dungeons: Record<number, { name: string; slug: string; time: number; zones: {id: number; name: string; }[]; unitCountMap: Record<number, number>; count: number; }> = ${JSON.stringify(
+  )}\`);
+export const dungeons: Record<number, { name: string; slug: string; time: number; zones: {id: number; name: string; }[]; unitCountMap: Record<number, number>; count: number; }> = JSON.parse(\`${JSON.stringify(
     dungeons
-  )};
-export const affixes: Record<number, { name: string; icon: string;}>= ${JSON.stringify(
+  )}\`);
+export const affixes: Record<number, { name: string; icon: string;}> = JSON.parse(\`${JSON.stringify(
     affixes
-  )};
-export const soulbinds: Record<number, { name: string; covenantID: number}> = ${JSON.stringify(
+  )}\`);
+export const soulbinds: Record<number, { name: string; covenantID: number}> = JSON.parse(\`${JSON.stringify(
     soulbinds
-  )};
-export const covenants: Record<number, { name: string; icon: string;}> = ${JSON.stringify(
+  )}\`);
+export const covenants: Record<number, { name: string; icon: string;}> = JSON.parse(\`${JSON.stringify(
     covenants
-  )};
-export const spells: Record<number, { icon: string; name: string; cd: number; }>= ${JSON.stringify(
+  )}\`);
+export const spells: Record<number, { icon: string; name: string; cd: number; }> = JSON.parse(\`${JSON.stringify(
     spells
-  )};
-export const tormentedLieutenants: Record<number, { name: string; icon: string; }> = ${JSON.stringify(
+  )}\`);
+export const tormentedLieutenants: Record<number, { name: string; icon: string; }> = JSON.parse(\`${JSON.stringify(
     tormentedLieutenantMap
-  )};
-export const tormentedPowers: Record<number, { name: string; icon: string; sourceTormentorID: number[]; }> = ${JSON.stringify(
+  )}\`);
+export const tormentedPowers: Record<number, { name: string; icon: string; sourceTormentorID: number[]; }> = JSON.parse(\`${JSON.stringify(
     tormentedPowerMap
-  )};
-export const legendaries: Record<number, { effectName: string; icon: string; }> = ${JSON.stringify(
+  )}\`);
+export const legendaries: Record<number, { effectName: string; icon: string; }> = JSON.parse(\`${JSON.stringify(
     legendaries
-  )};
-export const talents: Record<number, { name: string; icon: string; }> = ${JSON.stringify(
+  )}\`);
+export const talents: Record<number, { name: string; icon: string; }> = JSON.parse(\`${JSON.stringify(
     talents
-  )};
-export const conduits: Record<number, { name: string; icon: string }> = ${JSON.stringify(
+  )}\`);
+export const conduits: Record<number, { name: string; icon: string }> = JSON.parse(\`${JSON.stringify(
     conduits
-  )};
+  )}\`);
 `;
 
   log(`writing template`);
