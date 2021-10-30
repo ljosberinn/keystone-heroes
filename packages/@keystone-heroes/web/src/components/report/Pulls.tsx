@@ -1,5 +1,5 @@
-/* eslint-disable sonarjs/no-duplicate-string */
-import { createContext, useContext, useState } from "react";
+import dynamic from "next/dynamic";
+import React, { Suspense, useState, SuspenseList } from "react";
 import { useFight } from "src/pages/report/[reportID]/[fightID]";
 import { useReportStore } from "src/store";
 import { bgSecondary } from "src/styles/tokens";
@@ -18,27 +18,6 @@ import {
   spells,
   isBoss,
   isTormentedLieutenant,
-  affixes,
-  QUAKING,
-  VOLCANIC,
-  STORMING,
-  EXPLOSIVE,
-  BURSTING,
-  NECROTIC,
-  GRIEVOUS,
-  SPITEFUL,
-  SANGUINE_ICHOR_DAMAGE,
-  SANGUINE_ICHOR_HEALING,
-  DOS_URN,
-  ENVELOPMENT_OF_MISTS,
-  HOA_GARGOYLE,
-  NW,
-  PF,
-  SD_LANTERN_BUFF,
-  SD_LANTERN_OPENING,
-  SOA_SPEAR,
-  TOP_BANNER_AURA,
-  TORMENTED_ABILITIES,
 } from "../../staticData";
 import {
   AbilityIcon,
@@ -47,7 +26,21 @@ import {
   STATIC_ICON_PREFIX,
 } from "../AbilityIcon";
 import { ExternalLink } from "../ExternalLink";
-import { detectInvisibilityUsage, findBloodlust } from "./utils";
+import { PullDetailsSettingsProvider } from "./PullDetailsSettings";
+import type { DefaultEvent } from "./utils";
+import {
+  isAbilityReadyEventWithAbilityAndSourcePlayer,
+  isApplyBuffEventWithAbility,
+  isCastEventWithAbilityAndSourcePlayer,
+  isDamageDoneEventWithAbility,
+  isDamageTakenEventWithTargetPlayer,
+  isHealingDoneEventWithAbility,
+  isInterruptEventWithSourceAndTargetPlayerAndAbility,
+  isPlayerOrNPCDeathEvent,
+  detectInvisibilityUsage,
+  determineAbility,
+  findBloodlust,
+} from "./utils";
 
 type MostRelevantNPCReturn = {
   last: null | ReturnType<typeof findMostRelevantNPCOfPull>;
@@ -442,1204 +435,6 @@ function Sidebar() {
   );
 }
 
-type DefaultEvent = FightSuccessResponse["pulls"][number]["events"][number];
-
-type CastRowProps = {
-  event: Omit<DefaultEvent, "ability" | "type" | "sourcePlayerID"> & {
-    ability: NonNullable<DefaultEvent["ability"]>;
-    sourcePlayerID: NonNullable<DefaultEvent["sourcePlayerID"]>;
-    type: "Cast" | "BeginCast";
-  };
-  ability: NonNullable<ReturnType<typeof determineAbility>>;
-} & Pick<
-  TableRowProps,
-  "msSinceLastEvent" | "playerIdPlayerNameMap" | "playerIdTextColorMap"
->;
-
-const isCastEventWithAbilityAndSourcePlayer = (
-  event: DefaultEvent
-): event is CastRowProps["event"] =>
-  (event.type === "Cast" || event.type === "BeginCast") &&
-  event.ability !== null &&
-  event.sourcePlayerID !== null;
-
-const isAbilityReadyEventWithAbilityAndSourcePlayer = (
-  event: DefaultEvent
-): event is AbilityReadyRowProps["event"] =>
-  event.type === "AbilityReady" &&
-  event.ability !== null &&
-  event.sourcePlayerID !== null;
-
-type TimestampCellProps<Event = { timestamp: number; relTimestamp: number }> = {
-  msSinceLastEvent: string | null;
-  event: Event;
-};
-
-function TimestampCell({ msSinceLastEvent, event }: TimestampCellProps) {
-  const { useAbsoluteTimestamps, fightStartTime } = usePullDetailsSettings();
-
-  return (
-    <td>
-      <span
-        title={
-          msSinceLastEvent ? `${msSinceLastEvent} after last event` : undefined
-        }
-      >
-        {timeDurationToString(
-          useAbsoluteTimestamps
-            ? event.timestamp - fightStartTime
-            : event.relTimestamp
-        )}
-      </span>
-    </td>
-  );
-}
-
-type SourceOrTargetPlayerCellProps = {
-  playerIdTextColorMap: Record<number, string>;
-  playerIdPlayerNameMap: Record<number, string>;
-  transparent?: boolean;
-} & (
-  | {
-      sourcePlayerID: number;
-      targetPlayerID?: never;
-    }
-  | {
-      targetPlayerID: number;
-      sourcePlayerID?: never;
-    }
-  | {
-      environment: boolean;
-    }
-);
-
-function SourceOrTargetPlayerCell(props: SourceOrTargetPlayerCellProps) {
-  const transparency = props.transparent
-    ? "bg-white dark:bg-coolgray-700 px-2"
-    : undefined;
-
-  if ("environment" in props && props.environment) {
-    return (
-      <td>
-        <span className={transparency}>Environment</span>
-      </td>
-    );
-  }
-
-  const id =
-    "sourcePlayerID" in props && props.sourcePlayerID
-      ? props.sourcePlayerID
-      : "targetPlayerID" in props && props.targetPlayerID
-      ? props.targetPlayerID
-      : null;
-
-  if (!id) {
-    return null;
-  }
-
-  return (
-    <td className={classnames(props.playerIdTextColorMap[id])}>
-      <span className={transparency}>{props.playerIdPlayerNameMap[id]}</span>
-    </td>
-  );
-}
-
-function CastRow({
-  event,
-  ability,
-  playerIdPlayerNameMap,
-  msSinceLastEvent,
-  playerIdTextColorMap,
-}: CastRowProps) {
-  const cooldown = ability ? ability.cd : 0;
-  const abilityName = ability?.name ?? "Unknown Ability";
-
-  const usedUnderCooldown = cooldown
-    ? (event.timestamp - (event.ability.lastUse ?? 0)) / 1000 <= cooldown
-    : false;
-
-  const possibleUsageCount = event.ability.lastUse
-    ? Math.floor(
-        (event.timestamp - event.ability.lastUse + cooldown) / 1000 / cooldown
-      )
-    : 0;
-
-  const delayedTooHard = possibleUsageCount > 1;
-
-  return (
-    <tr className="text-center bg-coolgray-200 hover:bg-white dark:bg-coolgray-600 dark:hover:bg-coolgray-700">
-      <TimestampCell event={event} msSinceLastEvent={msSinceLastEvent} />
-
-      <TypeCell type={event.type} />
-
-      <SourceOrTargetPlayerCell
-        playerIdTextColorMap={playerIdTextColorMap}
-        playerIdPlayerNameMap={playerIdPlayerNameMap}
-        sourcePlayerID={event.sourcePlayerID}
-      />
-
-      <td>
-        <ExternalLink
-          href={createWowheadUrl({
-            category: "spell",
-            id: event.ability.id,
-          })}
-        >
-          <AbilityIcon
-            icon={ability.icon}
-            alt={abilityName}
-            className="inline object-cover w-4 h-4 rounded-lg"
-            width={16}
-            height={16}
-          />
-          <span className="pl-2">{abilityName}</span>
-        </ExternalLink>
-      </td>
-
-      <td
-        className={classnames(
-          delayedTooHard && "text-red-500",
-          usedUnderCooldown && "text-green-500",
-          event.ability.lastUse ? null : "text-yellow-500"
-        )}
-        title={
-          delayedTooHard
-            ? `This ability could have been used at least ${
-                possibleUsageCount - 1
-              }x since its last usage.`
-            : undefined
-        }
-      >
-        {event.ability.lastUse ? (
-          <span>
-            {timeDurationToString(
-              event.timestamp - event.ability.lastUse,
-              true
-            )}{" "}
-            ago
-          </span>
-        ) : (
-          "first use"
-        )}
-        {delayedTooHard && (
-          <sup>
-            <svg className="inline w-4 h-4 ml-2 text-black dark:text-white">
-              <use href={`#${outlineQuestionCircle.id}`} />
-            </svg>
-          </sup>
-        )}
-      </td>
-
-      <MaybeWastedCooldownCell event={event} />
-    </tr>
-  );
-}
-
-const isDamageTakenEventWithTargetPlayer = (
-  event: DefaultEvent
-): event is DamageTakenRowProps["event"] =>
-  event.type === "DamageTaken" &&
-  event.targetPlayerID !== null &&
-  event.damage !== null;
-
-type DamageTakenRowProps = {
-  event: Omit<DefaultEvent, "ability" | "type" | "targetPlayerID"> & {
-    ability: NonNullable<DefaultEvent["ability"]>;
-    targetPlayerID: NonNullable<DefaultEvent["targetPlayerID"]>;
-    type: "DamageTaken";
-    damage: NonNullable<DefaultEvent["damage"]>;
-  };
-} & Pick<
-  TableRowProps,
-  "msSinceLastEvent" | "playerIdPlayerNameMap" | "playerIdTextColorMap"
->;
-
-const determineAbility = (id: number) => {
-  if (spells[id]) {
-    return spells[id];
-  }
-
-  if (id === SANGUINE_ICHOR_DAMAGE || id === SANGUINE_ICHOR_HEALING) {
-    return {
-      name: "Sanguine Ichor",
-      icon: "spell_shadow_bloodboil",
-      cd: 0,
-    };
-  }
-
-  // Engineer rez
-  if (id === 345_130) {
-    return {
-      name: "Disposable Spectrophasic Reanimator",
-      icon: "inv_engineering_90_lightningbox",
-      cd: 0,
-    };
-  }
-
-  // Necrotic
-  if (id === NECROTIC) {
-    return {
-      name: "Necrotic Wound",
-      icon: "ability_rogue_venomouswounds",
-      cd: Number.MAX_SAFE_INTEGER,
-    };
-  }
-
-  // Bursting
-  if (id === BURSTING) {
-    return {
-      name: affixes["11"].name,
-      icon: affixes["11"].icon,
-      cd: Number.MAX_SAFE_INTEGER,
-    };
-  }
-
-  // Explosive
-  if (id === EXPLOSIVE) {
-    return {
-      name: affixes["13"].name,
-      icon: affixes["13"].icon,
-      cd: Number.MAX_SAFE_INTEGER,
-    };
-  }
-
-  // Storming
-  if (id === STORMING) {
-    return {
-      name: affixes["124"].name,
-      icon: affixes["124"].icon,
-      cd: Number.MAX_SAFE_INTEGER,
-    };
-  }
-
-  // Volcanic
-  if (id === VOLCANIC) {
-    return {
-      name: affixes["3"].name,
-      icon: affixes["3"].icon,
-      cd: Number.MAX_SAFE_INTEGER,
-    };
-  }
-
-  // Quaking
-  if (id === QUAKING) {
-    return {
-      name: affixes["14"].name,
-      icon: affixes["14"].icon,
-      cd: Number.MAX_SAFE_INTEGER,
-    };
-  }
-
-  if (id === HOA_GARGOYLE) {
-    return {
-      name: "Loyal Stoneborn",
-      icon: "ability_revendreth_mage",
-      cd: Number.MAX_SAFE_INTEGER,
-    };
-  }
-
-  if (id === NW.ORB) {
-    return {
-      name: "Discharged Anima",
-      icon: "spell_animabastion_orb",
-      cd: Number.MAX_SAFE_INTEGER,
-    };
-  }
-
-  if (id === NW.KYRIAN_ORB_DAMAGE || id === NW.KYRIAN_ORB_HEAL) {
-    return {
-      name: "Anima Exhaust",
-      icon: "spell_animabastion_orb",
-      cd: Number.MAX_SAFE_INTEGER,
-    };
-  }
-
-  if (id === NW.SPEAR) {
-    return {
-      name: "Bloody Javelin",
-      icon: "inv_polearm_2h_bastionquest_b_01",
-      cd: Number.MAX_SAFE_INTEGER,
-    };
-  }
-
-  // Grievous
-  if (id === GRIEVOUS) {
-    return {
-      name: "Grievous Wound",
-      icon: "ability_backstab",
-      cd: Number.MAX_SAFE_INTEGER,
-    };
-  }
-
-  if (id === SPITEFUL) {
-    return {
-      name: "Spiteful Shade",
-      icon: "ability_meleedamage",
-      cd: Number.MAX_SAFE_INTEGER,
-    };
-  }
-
-  if (id === TOP_BANNER_AURA) {
-    return {
-      name: "TOP_BANNER_AURA",
-      icon: "",
-      cd: Number.MAX_SAFE_INTEGER,
-    };
-  }
-
-  if (id === SD_LANTERN_BUFF) {
-    return {
-      name: "Sinfall Boon",
-      icon: "spell_animarevendreth_buff",
-      cd: Number.MAX_SAFE_INTEGER,
-    };
-  }
-
-  if (id === SD_LANTERN_OPENING) {
-    return {
-      name: "Opening",
-      icon: "spell_animarevendreth_orb",
-      cd: Number.MAX_SAFE_INTEGER,
-    };
-  }
-
-  if (id === ENVELOPMENT_OF_MISTS) {
-    return {
-      name: "Envelopment of Mists",
-      icon: "",
-      cd: Number.MAX_SAFE_INTEGER,
-    };
-  }
-
-  if (id === SOA_SPEAR) {
-    return {
-      name: "SOA_SPEAR",
-      icon: "",
-      cd: Number.MAX_SAFE_INTEGER,
-    };
-  }
-
-  if (id === DOS_URN) {
-    return {
-      name: "DOS_URN",
-      icon: "",
-      cd: Number.MAX_SAFE_INTEGER,
-    };
-  }
-
-  if (id === PF.PLAGUE_BOMB) {
-    return {
-      name: "Plague Bomb",
-      icon: "",
-      cd: Number.MAX_SAFE_INTEGER,
-    };
-  }
-
-  if (id === PF.GREEN_BUFF.aura) {
-    return {
-      name: "Corrosive Gunk",
-      icon: "inv_misc_bone_skull_01",
-      cd: Number.MAX_SAFE_INTEGER,
-    };
-  }
-
-  if (id === PF.RED_BUFF.aura) {
-    return {
-      name: "Rapid Infection",
-      icon: "inv_offhand_1h_artifactskulloferedar_d_05",
-      cd: Number.MAX_SAFE_INTEGER,
-    };
-  }
-
-  if (id === PF.PURPLE_BUFF.aura) {
-    return {
-      name: "Congealed Contagion",
-      icon: "ability_titankeeper_amalgam",
-      cd: Number.MAX_SAFE_INTEGER,
-    };
-  }
-
-  const tormentedPower = TORMENTED_ABILITIES.find(
-    (ability) => ability.id === id
-  );
-
-  return tormentedPower
-    ? { ...tormentedPower, cd: Number.MAX_SAFE_INTEGER }
-    : null;
-};
-
-function DamageTakenRow({
-  event,
-  playerIdTextColorMap,
-  playerIdPlayerNameMap,
-  msSinceLastEvent,
-}: DamageTakenRowProps) {
-  const ability = event.ability ? determineAbility(event.ability.id) : null;
-
-  return (
-    <tr className="text-center text-white bg-red-500 hover:bg-red-700">
-      <TimestampCell event={event} msSinceLastEvent={msSinceLastEvent} />
-
-      <TypeCell type="DamageTaken" />
-
-      <SourceOrTargetPlayerCell
-        playerIdTextColorMap={playerIdTextColorMap}
-        playerIdPlayerNameMap={playerIdPlayerNameMap}
-        sourcePlayerID={event.targetPlayerID}
-        transparent
-      />
-
-      <td colSpan={3}>
-        {ability ? (
-          <>
-            <span>hit by</span>{" "}
-            <ExternalLink
-              href={createWowheadUrl({
-                category: "spell",
-                id: event.ability.id,
-              })}
-            >
-              <AbilityIcon
-                icon={ability.icon}
-                alt={ability.name}
-                className="inline object-cover w-4 h-4 rounded-lg"
-                width={16}
-                height={16}
-              />
-              <b className="pl-2">{ability.name}</b>
-            </ExternalLink>
-            {event.damage && (
-              <span>
-                {" "}
-                for <b>{event.damage.toLocaleString("en-US")}</b> damage
-              </span>
-            )}
-            {event.sourcePlayerID && (
-              <>
-                <span> via </span>
-                <span
-                  className={classnames(
-                    playerIdTextColorMap[event.sourcePlayerID],
-                    "dark:bg-coolgray-700 px-2"
-                  )}
-                >
-                  {playerIdPlayerNameMap[event.sourcePlayerID]}
-                </span>
-              </>
-            )}
-          </>
-        ) : null}
-      </td>
-    </tr>
-  );
-}
-
-type TypeCellProps = {
-  type:
-    | "Cast"
-    | "DamageTaken"
-    | "AbilityReady"
-    | "Death"
-    | "Interrupt"
-    | "DamageDone"
-    | "HealingDone"
-    | "ApplyBuff"
-    | "ApplyBuffStack"
-    | "RemoveBuff"
-    | "BeginCast";
-};
-
-function TypeCell({ type }: TypeCellProps) {
-  return <td>{type}</td>;
-}
-
-type AbilityReadyRowProps = {
-  event: Omit<CastRowProps["event"], "type"> & { type: "AbilityReady" };
-  ability: CastRowProps["ability"];
-  playerIdPlayerNameMap: Record<string, string>;
-  playerIdTextColorMap: Record<string, string>;
-  msSinceLastEvent: string | null;
-};
-
-function AbilityReadyRow({
-  event,
-  ability,
-  msSinceLastEvent,
-  playerIdTextColorMap,
-  playerIdPlayerNameMap,
-}: AbilityReadyRowProps) {
-  const cooldown = ability ? ability.cd : 0;
-  const abilityName = ability?.name ?? "Unknown Ability";
-
-  const usedUnderCooldown = cooldown
-    ? (event.timestamp - (event.ability.lastUse ?? 0)) / 1000 < cooldown
-    : false;
-
-  return (
-    <tr className="text-center hover:bg-coolgray-200 dark:hover:bg-coolgray-600">
-      <TimestampCell event={event} msSinceLastEvent={msSinceLastEvent} />
-
-      <TypeCell type="AbilityReady" />
-
-      <SourceOrTargetPlayerCell
-        playerIdTextColorMap={playerIdTextColorMap}
-        playerIdPlayerNameMap={playerIdPlayerNameMap}
-        sourcePlayerID={event.sourcePlayerID}
-      />
-
-      <td>
-        <ExternalLink
-          href={createWowheadUrl({
-            category: "spell",
-            id: event.ability.id,
-          })}
-        >
-          <AbilityIcon
-            icon={ability.icon}
-            alt={abilityName}
-            className="inline object-cover w-4 h-4 rounded-lg"
-            width={16}
-            height={16}
-          />
-          <span className="pl-2">{abilityName}</span>
-        </ExternalLink>
-      </td>
-
-      <td
-        className={classnames(
-          usedUnderCooldown && "text-green-500",
-          event.ability.lastUse ? null : "text-yellow-500"
-        )}
-      >
-        {event.ability.lastUse ? (
-          <span>
-            {timeDurationToString(
-              event.timestamp - event.ability.lastUse,
-              true
-            )}{" "}
-            ago
-          </span>
-        ) : (
-          "first use"
-        )}
-      </td>
-
-      <MaybeWastedCooldownCell event={event} />
-    </tr>
-  );
-}
-
-type PlayerDeathEvent = Omit<DefaultEvent, "type"> & {
-  type: "Death";
-  sourceNPC: DefaultEvent["sourceNPC"];
-  targetPlayerID: NonNullable<DefaultEvent["targetPlayerID"]>;
-};
-
-type NPCDeathEvent = Omit<DefaultEvent, "type"> & {
-  type: "Death";
-  targetNPC: NonNullable<DefaultEvent["targetNPC"]>;
-};
-
-type DeathRowProps = {
-  event: PlayerDeathEvent | NPCDeathEvent;
-} & Pick<
-  TableRowProps,
-  "msSinceLastEvent" | "playerIdPlayerNameMap" | "playerIdTextColorMap"
->;
-
-const isNPCDeathEvent = (event: DefaultEvent): event is NPCDeathEvent =>
-  event.type === "Death" && event.targetNPC !== null;
-const isPlayerDeathEvent = (event: DefaultEvent): event is PlayerDeathEvent =>
-  event.type === "Death" && event.targetPlayerID !== null;
-
-const isPlayerOrNPCDeathEvent = (
-  event: DefaultEvent
-): event is DeathRowProps["event"] => {
-  return isNPCDeathEvent(event) || isPlayerDeathEvent(event);
-};
-
-function DeathRow({
-  event,
-  msSinceLastEvent,
-  playerIdTextColorMap,
-  playerIdPlayerNameMap,
-}: DeathRowProps) {
-  return (
-    <tr
-      className={classnames(
-        "text-center",
-        event.targetPlayerID
-          ? "bg-red-500 hover:bg-red-700"
-          : "bg-green-600 hover:bg-green-800"
-      )}
-    >
-      <TimestampCell event={event} msSinceLastEvent={msSinceLastEvent} />
-
-      <TypeCell type="Death" />
-
-      {event.targetPlayerID && (
-        <SourceOrTargetPlayerCell
-          playerIdTextColorMap={playerIdTextColorMap}
-          playerIdPlayerNameMap={playerIdPlayerNameMap}
-          targetPlayerID={event.targetPlayerID}
-          transparent
-        />
-      )}
-
-      <td colSpan={event.targetPlayerID ? 3 : 4}>
-        {event.targetPlayerID ? (
-          event.sourceNPC ? (
-            <>
-              killed by{" "}
-              <ExternalLink
-                href={createWowheadUrl({
-                  category: "npc",
-                  id: event.sourceNPC.id,
-                })}
-                className="font-bold"
-              >
-                {event.sourceNPC.name}
-              </ExternalLink>
-            </>
-          ) : (
-            <span>Unknown Ability</span>
-          )
-        ) : event.targetNPC ? (
-          <>
-            killed{" "}
-            <ExternalLink
-              href={createWowheadUrl({
-                category: "npc",
-                id: event.targetNPC.id,
-              })}
-              className="font-bold"
-            >
-              {event.targetNPC.name}
-            </ExternalLink>
-          </>
-        ) : null}
-      </td>
-    </tr>
-  );
-}
-
-const isInterruptEventWithSourceAndTargetPlayerAndAbility = (
-  event: DefaultEvent
-): event is InterruptRowProps["event"] =>
-  event.type === "Interrupt" &&
-  event.sourcePlayerID !== null &&
-  event.ability !== null &&
-  event.targetPlayerID !== null;
-
-type InterruptRowProps = {
-  event: Omit<
-    DefaultEvent,
-    "ability" | "type" | "targetPlayerID" | "sourcePlayerID"
-  > & {
-    ability: CastRowProps["event"]["ability"];
-    targetPlayerID: NonNullable<DefaultEvent["targetPlayerID"]>;
-    sourcePlayerID: NonNullable<DefaultEvent["sourcePlayerID"]>;
-    type: "Interrupt";
-    interruptedAbility: number;
-  };
-} & Pick<
-  TableRowProps,
-  "msSinceLastEvent" | "playerIdPlayerNameMap" | "playerIdTextColorMap"
->;
-
-function InterruptRow({
-  event,
-  msSinceLastEvent,
-  playerIdTextColorMap,
-  playerIdPlayerNameMap,
-}: InterruptRowProps) {
-  const ability = determineAbility(event.ability.id);
-  const interruptedAbility = determineAbility(event.interruptedAbility);
-
-  return (
-    <tr className="text-center bg-red-500">
-      <TimestampCell event={event} msSinceLastEvent={msSinceLastEvent} />
-
-      <TypeCell type="Interrupt" />
-
-      <SourceOrTargetPlayerCell
-        playerIdTextColorMap={playerIdTextColorMap}
-        playerIdPlayerNameMap={playerIdPlayerNameMap}
-        targetPlayerID={event.targetPlayerID}
-        transparent
-      />
-
-      <td className="bg-red-500" colSpan={3}>
-        {ability && (
-          <>
-            <span>interrupted </span>
-            <ExternalLink
-              href={createWowheadUrl({
-                category: "spell",
-                id: event.interruptedAbility,
-              })}
-            >
-              {interruptedAbility ? (
-                <>
-                  <AbilityIcon
-                    icon={interruptedAbility.icon}
-                    alt={interruptedAbility.name}
-                    className="inline object-cover w-4 h-4 rounded-lg"
-                    width={16}
-                    height={16}
-                  />
-                  <span className="pl-2"> {interruptedAbility.name}</span>
-                </>
-              ) : (
-                "Untracked Ability"
-              )}
-            </ExternalLink>
-            <span> by </span>
-            <ExternalLink
-              href={createWowheadUrl({
-                category: "spell",
-                id: event.ability.id,
-              })}
-            >
-              <AbilityIcon
-                icon={ability.icon}
-                alt={ability.name}
-                className="inline object-cover w-4 h-4 rounded-lg"
-                width={16}
-                height={16}
-              />
-              <span className="pl-2">{ability.name}</span>
-            </ExternalLink>
-            {event.damage && (
-              <span>
-                {" "}
-                for <b>{event.damage.toLocaleString("en-US")}</b> damage
-              </span>
-            )}
-            {event.sourcePlayerID && (
-              <>
-                {" "}
-                via{" "}
-                <span
-                  className={classnames(
-                    playerIdTextColorMap[event.sourcePlayerID],
-                    "bg-coolgray-700 px-2"
-                  )}
-                >
-                  {playerIdPlayerNameMap[event.sourcePlayerID]}
-                </span>
-              </>
-            )}
-          </>
-        )}
-      </td>
-    </tr>
-  );
-}
-
-type MaybeWastedCooldownCellProps = {
-  event: AbilityReadyRowProps["event"] | CastRowProps["event"];
-};
-
-const calcMissedUsageCount = ({
-  now,
-  then,
-  cd,
-  offset,
-}: {
-  now: number;
-  then: number;
-  cd: number;
-  offset: number;
-}) => {
-  return (then - now) / 1000 / cd - offset;
-};
-
-function MaybeWastedCooldownCell({ event }: MaybeWastedCooldownCellProps) {
-  const { fight } = useFight();
-
-  const ability = spells[event.ability.id];
-
-  if (!fight || !ability) {
-    return <td />;
-  }
-
-  const isBloodlustIsh = findBloodlust({
-    events: [{ ...event, type: "Cast" }],
-  });
-
-  if (isBloodlustIsh) {
-    return <td>irrelevant</td>;
-  }
-
-  const keyEnd = fight.meta.time + fight.meta.startTime;
-
-  if (event.ability.wasted) {
-    if (event.ability.nextUse) {
-      const couldUseNTimes = Math.floor(
-        (event.ability.nextUse - event.timestamp) / 1000 / ability.cd
-      );
-
-      return (
-        <td className="bg-red-500">
-          in{" "}
-          {timeDurationToString(event.ability.nextUse - event.timestamp, true)}{" "}
-          (missing {couldUseNTimes}x)
-        </td>
-      );
-    }
-
-    const couldUseNTimes = Math.floor(
-      (keyEnd - event.timestamp) / 1000 / ability.cd
-    );
-
-    return <td className="bg-red-500">never (missing {couldUseNTimes}x)</td>;
-  }
-
-  const couldUseNTimes = calcMissedUsageCount({
-    now: event.timestamp,
-    then: event.ability.nextUse ? event.ability.nextUse : keyEnd,
-    cd: ability.cd,
-    // offset by 1 if Cast since CD must recuperate first
-    offset: event.ability.nextUse && event.type === "Cast" ? 1 : 0,
-  });
-
-  if (event.ability.nextUse) {
-    // offset by additional 1 if Cast since if the next seen cast requires this cd,
-    // annotating that it could have been used in between would be wrong
-    const wastedCastUpcoming = couldUseNTimes > 1;
-
-    return (
-      <td className={wastedCastUpcoming ? "bg-red-500" : undefined}>
-        in {timeDurationToString(event.ability.nextUse - event.timestamp, true)}{" "}
-        {wastedCastUpcoming && <>(missing {Math.floor(couldUseNTimes)}x)</>}
-      </td>
-    );
-  }
-
-  if (couldUseNTimes <= 1) {
-    return <td>never</td>;
-  }
-
-  return (
-    <td className="bg-red-500">
-      never (missing {Math.floor(couldUseNTimes)}x)
-    </td>
-  );
-}
-
-const isDamageDoneEventWithAbility = (
-  event: DefaultEvent
-): event is DamageDoneRowProps["event"] =>
-  event.type === "DamageDone" &&
-  event.ability !== null &&
-  event.damage !== null &&
-  event.sourcePlayerID !== null;
-
-type DamageDoneRowProps = {
-  event: Omit<
-    DefaultEvent,
-    "ability" | "type" | "sourcePlayerID" | "damage"
-  > & {
-    ability: CastRowProps["event"]["ability"];
-    sourcePlayerID: NonNullable<DefaultEvent["sourcePlayerID"]>;
-    type: "DamageDone";
-    damage: number;
-  };
-} & Pick<
-  TableRowProps,
-  "msSinceLastEvent" | "playerIdPlayerNameMap" | "playerIdTextColorMap"
->;
-function DamageDoneRow({
-  event,
-  msSinceLastEvent,
-  playerIdTextColorMap,
-  playerIdPlayerNameMap,
-}: DamageDoneRowProps) {
-  const ability = determineAbility(event.ability.id);
-
-  if (!ability) {
-    if (typeof window !== "undefined") {
-      console.log(ability);
-    }
-    return null;
-  }
-
-  return (
-    <tr className="text-center text-white bg-green-600">
-      <TimestampCell event={event} msSinceLastEvent={msSinceLastEvent} />
-
-      <TypeCell type="DamageDone" />
-
-      <SourceOrTargetPlayerCell
-        playerIdTextColorMap={playerIdTextColorMap}
-        playerIdPlayerNameMap={playerIdPlayerNameMap}
-        sourcePlayerID={event.sourcePlayerID}
-        transparent
-      />
-
-      <td colSpan={3} className="text-white">
-        <ExternalLink
-          href={createWowheadUrl({
-            category: "spell",
-            id: event.ability.id,
-          })}
-        >
-          <AbilityIcon
-            icon={ability.icon}
-            alt={ability.name}
-            className="inline object-cover w-4 h-4 rounded-lg"
-            width={16}
-            height={16}
-          />
-          <b className="pl-2">{ability.name}</b>
-          <span>
-            {" "}
-            did <b>{event.damage.toLocaleString("en-US")}</b> damage.
-          </span>
-        </ExternalLink>
-      </td>
-    </tr>
-  );
-}
-
-const isHealingDoneEventWithAbility = (
-  event: DefaultEvent
-): event is HealingDoneRowProps["event"] =>
-  event.type === "HealingDone" &&
-  event.ability !== null &&
-  ("sourcePlayerID" in event || "targetNPC" in event);
-
-type HealingDoneRowProps = {
-  event: Omit<
-    DefaultEvent,
-    "ability" | "type" | "healing" | "sourcePlayerID" | "targetNPC"
-  > & {
-    ability: CastRowProps["event"]["ability"];
-    type: "HealingDone";
-    healingDone: number;
-  } & (
-      | {
-          sourcePlayerID: number;
-          targetNPC: null;
-        }
-      | {
-          targetNPC: { id: number; name: string };
-          sourcePlayerID: null;
-        }
-    );
-} & Pick<
-  TableRowProps,
-  "msSinceLastEvent" | "playerIdPlayerNameMap" | "playerIdTextColorMap"
->;
-
-function HealingDoneRow({
-  event,
-  msSinceLastEvent,
-  playerIdPlayerNameMap,
-  playerIdTextColorMap,
-}: HealingDoneRowProps) {
-  const ability = determineAbility(event.ability.id);
-  const { groupDPS } = usePullDetailsSettings();
-
-  if (!ability) {
-    if (typeof window !== "undefined") {
-      console.log(ability);
-    }
-    return null;
-  }
-
-  return (
-    <tr
-      className={classnames(
-        "text-center",
-        event.sourcePlayerID && "bg-green-600 hover:bg-green-800",
-        event.targetNPC && "bg-red-700 hover:bg-red-900"
-      )}
-    >
-      <TimestampCell event={event} msSinceLastEvent={msSinceLastEvent} />
-      <TypeCell type="HealingDone" />
-
-      {event.sourcePlayerID && (
-        <SourceOrTargetPlayerCell
-          playerIdTextColorMap={playerIdTextColorMap}
-          playerIdPlayerNameMap={playerIdPlayerNameMap}
-          sourcePlayerID={event.sourcePlayerID}
-          transparent
-        />
-      )}
-
-      <td colSpan={event.targetNPC ? 4 : 3}>
-        <ExternalLink
-          href={createWowheadUrl({
-            category: "spell",
-            id: event.ability.id,
-          })}
-        >
-          <AbilityIcon
-            icon={ability.icon}
-            alt={ability.name}
-            className="inline object-cover w-4 h-4 rounded-lg"
-            width={16}
-            height={16}
-          />
-          <b className="pl-2">{ability.name}</b>
-        </ExternalLink>
-        <span> healed </span>
-        {event.targetNPC && (
-          <ExternalLink
-            href={createWowheadUrl({
-              category: "npc",
-              id: event.targetNPC.id,
-            })}
-            className="font-bold"
-          >
-            {event.targetNPC.name}
-          </ExternalLink>
-        )}
-        <span> for </span>
-        <b>{event.healingDone.toLocaleString("en-US")} </b>
-        {event.targetNPC && (
-          <span title="This time loss is estimated based on your overall average group DPS.">
-            (+{(event.healingDone / groupDPS).toFixed(2)}s)
-            <sup>
-              <svg className="inline w-4 h-4 ml-2 text-black dark:text-white">
-                <use href={`#${outlineQuestionCircle.id}`} />
-              </svg>
-            </sup>
-          </span>
-        )}
-        .
-      </td>
-    </tr>
-  );
-}
-
-const isApplyBuffEventWithAbility = (
-  event: DefaultEvent
-): event is ApplyBuffRowProps["event"] =>
-  (event.type === "ApplyBuff" ||
-    event.type === "ApplyBuffStack" ||
-    event.type === "RemoveBuff") &&
-  event.ability !== null;
-
-type ApplyBuffRowProps = {
-  event: Omit<DefaultEvent, "ability" | "type"> & {
-    ability: CastRowProps["event"]["ability"];
-    type: "ApplyBuff" | "ApplyBuffStack" | "RemoveBuff";
-  };
-} & Pick<
-  TableRowProps,
-  "msSinceLastEvent" | "playerIdPlayerNameMap" | "playerIdTextColorMap"
->;
-
-function ApplyBuffRow({
-  event,
-  msSinceLastEvent,
-  playerIdPlayerNameMap,
-  playerIdTextColorMap,
-}: ApplyBuffRowProps) {
-  const ability = determineAbility(event.ability.id);
-
-  if (!ability) {
-    if (typeof window !== "undefined") {
-      console.log(event.type, { event });
-    }
-    return null;
-  }
-
-  return (
-    <tr
-      className={classnames(
-        "text-center",
-        event.type === "RemoveBuff"
-          ? "bg-yellow-700 text-white hover:bg-yellow-900"
-          : "bg-green-600 hover:bg-green-800"
-      )}
-    >
-      <TimestampCell event={event} msSinceLastEvent={msSinceLastEvent} />
-
-      <TypeCell type={event.type} />
-
-      <SourceOrTargetPlayerCell
-        playerIdTextColorMap={playerIdTextColorMap}
-        playerIdPlayerNameMap={playerIdPlayerNameMap}
-        environment={!!event.sourcePlayerID && !!event.targetPlayerID}
-        sourcePlayerID={
-          event.sourcePlayerID
-            ? event.sourcePlayerID
-            : event.targetPlayerID
-            ? event.targetPlayerID
-            : undefined
-        }
-        transparent
-      />
-
-      <td colSpan={3}>
-        {event.stacks && "re"}
-        {event.type === "RemoveBuff" ? "removed" : "applied"}{" "}
-        <ExternalLink
-          href={createWowheadUrl({
-            category: "spell",
-            id: event.ability.id,
-          })}
-        >
-          <AbilityIcon
-            icon={ability.icon}
-            alt={ability.name}
-            className="inline object-cover w-4 h-4 rounded-lg"
-            width={16}
-            height={16}
-          />
-          <b className="pl-2">
-            {event.stacks && <>{event.stacks}x</>} {ability.name}
-          </b>
-        </ExternalLink>
-      </td>
-    </tr>
-  );
-}
-
-const isTormentedPowerApplyBuffEvent = (
-  event: DefaultEvent
-): event is TormentedPowerRowProps["event"] =>
-  event.type === "ApplyBuff" &&
-  "sourcePlayerID" in event &&
-  event.sourcePlayerID !== null;
-
-type TormentedPowerRowProps = {
-  event: Omit<DefaultEvent, "ability" | "type" | "sourcePlayerID"> & {
-    ability: CastRowProps["event"]["ability"];
-    type: "ApplyBuff";
-    sourcePlayerID: number;
-  };
-} & Pick<
-  TableRowProps,
-  "msSinceLastEvent" | "playerIdPlayerNameMap" | "playerIdTextColorMap"
->;
-
-function TormentedPowerApplyBuffRow({
-  event,
-  msSinceLastEvent,
-  playerIdPlayerNameMap,
-  playerIdTextColorMap,
-}: TormentedPowerRowProps) {
-  return (
-    <tr className="text-center">
-      <TimestampCell event={event} msSinceLastEvent={msSinceLastEvent} />
-
-      <TypeCell type={event.type} />
-
-      <SourceOrTargetPlayerCell
-        playerIdTextColorMap={playerIdTextColorMap}
-        playerIdPlayerNameMap={playerIdPlayerNameMap}
-        sourcePlayerID={event.sourcePlayerID}
-        transparent
-      />
-    </tr>
-  );
-}
-
 type EventCategory = "before" | "during" | "after";
 
 function Events() {
@@ -1812,7 +607,6 @@ function Events() {
                 <th>Next Use</th>
               </tr>
             </thead>
-
             {before.length > 0 && (
               <tbody>
                 <tr>
@@ -1830,23 +624,29 @@ function Events() {
                     </span>
                   </td>
                 </tr>
-                {before.map((event, index) => {
-                  const msSinceLastEvent = before[index - 1]
-                    ? timeDurationToString(
-                        event.timestamp - before[index - 1].timestamp
-                      )
-                    : timeDurationToString(0);
+                <SuspenseList revealOrder="forwards">
+                  {before.map((event, index) => {
+                    const msSinceLastEvent = before[index - 1]
+                      ? timeDurationToString(
+                          event.timestamp - before[index - 1].timestamp
+                        )
+                      : timeDurationToString(0);
 
-                  return (
-                    <TableRow
-                      event={event}
-                      key={createRowKey(event, index)}
-                      msSinceLastEvent={msSinceLastEvent}
-                      playerIdPlayerNameMap={playerIdPlayerNameMap}
-                      playerIdTextColorMap={playerIdTextColorMap}
-                    />
-                  );
-                })}
+                    return (
+                      <Suspense
+                        fallback={null}
+                        key={createRowKey(event, index)}
+                      >
+                        <TableRow
+                          event={event}
+                          msSinceLastEvent={msSinceLastEvent}
+                          playerIdPlayerNameMap={playerIdPlayerNameMap}
+                          playerIdTextColorMap={playerIdTextColorMap}
+                        />
+                      </Suspense>
+                    );
+                  })}
+                </SuspenseList>
               </tbody>
             )}
 
@@ -1862,27 +662,31 @@ function Events() {
                   <span className="font-semibold">During Pull</span>
                 </td>
               </tr>
-              {during.map((event, index) => {
-                const msSinceLastEvent = during[index - 1]
-                  ? timeDurationToString(
-                      event.timestamp - during[index - 1].timestamp
-                    )
-                  : timeDurationToString(
-                      before.length > 0
-                        ? event.timestamp - before[before.length - 1].timestamp
-                        : 0
-                    );
+              <SuspenseList revealOrder="forwards">
+                {during.map((event, index) => {
+                  const msSinceLastEvent = during[index - 1]
+                    ? timeDurationToString(
+                        event.timestamp - during[index - 1].timestamp
+                      )
+                    : timeDurationToString(
+                        before.length > 0
+                          ? event.timestamp -
+                              before[before.length - 1].timestamp
+                          : 0
+                      );
 
-                return (
-                  <TableRow
-                    event={event}
-                    key={createRowKey(event, index)}
-                    msSinceLastEvent={msSinceLastEvent}
-                    playerIdPlayerNameMap={playerIdPlayerNameMap}
-                    playerIdTextColorMap={playerIdTextColorMap}
-                  />
-                );
-              })}
+                  return (
+                    <Suspense fallback={null} key={createRowKey(event, index)}>
+                      <TableRow
+                        event={event}
+                        msSinceLastEvent={msSinceLastEvent}
+                        playerIdPlayerNameMap={playerIdPlayerNameMap}
+                        playerIdTextColorMap={playerIdTextColorMap}
+                      />
+                    </Suspense>
+                  );
+                })}
+              </SuspenseList>
             </tbody>
 
             {after.length > 0 && (
@@ -1902,25 +706,31 @@ function Events() {
                     </span>
                   </td>
                 </tr>
-                {after.map((event, index) => {
-                  const msSinceLastEvent = after[index - 1]
-                    ? timeDurationToString(
-                        event.timestamp - after[index - 1].timestamp
-                      )
-                    : timeDurationToString(
-                        event.timestamp - during[during.length - 1].timestamp
-                      );
+                <SuspenseList revealOrder="forwards">
+                  {after.map((event, index) => {
+                    const msSinceLastEvent = after[index - 1]
+                      ? timeDurationToString(
+                          event.timestamp - after[index - 1].timestamp
+                        )
+                      : timeDurationToString(
+                          event.timestamp - during[during.length - 1].timestamp
+                        );
 
-                  return (
-                    <TableRow
-                      event={event}
-                      key={createRowKey(event, index)}
-                      msSinceLastEvent={msSinceLastEvent}
-                      playerIdPlayerNameMap={playerIdPlayerNameMap}
-                      playerIdTextColorMap={playerIdTextColorMap}
-                    />
-                  );
-                })}
+                    return (
+                      <Suspense
+                        fallback={null}
+                        key={createRowKey(event, index)}
+                      >
+                        <TableRow
+                          event={event}
+                          msSinceLastEvent={msSinceLastEvent}
+                          playerIdPlayerNameMap={playerIdPlayerNameMap}
+                          playerIdTextColorMap={playerIdTextColorMap}
+                        />
+                      </Suspense>
+                    );
+                  })}
+                </SuspenseList>
               </tbody>
             )}
           </table>
@@ -1946,6 +756,65 @@ export function Pulls(): JSX.Element | null {
   );
 }
 
+const CastRow = dynamic(
+  () => import(/* webpackChunkName: "CastRow" */ "./rows/CastRow"),
+  {
+    suspense: true,
+  }
+);
+
+const DamageTakenRow = dynamic(
+  () =>
+    import(/* webpackChunkName: "DamageTakenRow" */ "./rows/DamageTakenRow"),
+  {
+    suspense: true,
+  }
+);
+
+const AbilityReadyRow = dynamic(
+  () =>
+    import(/* webpackChunkName: "AbilityReadyRow" */ "./rows/AbilityReadyRow"),
+  {
+    suspense: true,
+  }
+);
+
+const DeathRow = dynamic(
+  () => import(/* webpackChunkName: "DeathRow" */ "./rows/DeathRow"),
+  {
+    suspense: true,
+  }
+);
+
+const InterruptRow = dynamic(
+  () => import(/* webpackChunkName: "InterruptRow" */ "./rows/InterruptRow"),
+  {
+    suspense: true,
+  }
+);
+
+const DamageDoneRow = dynamic(
+  () => import(/* webpackChunkName: "DamageDoneRow" */ "./rows/DamageDoneRow"),
+  {
+    suspense: true,
+  }
+);
+
+const HealingDoneRow = dynamic(
+  () =>
+    import(/* webpackChunkName: "HealingDoneRow" */ "./rows/HealingDoneRow"),
+  {
+    suspense: true,
+  }
+);
+
+const ApplyBuffRow = dynamic(
+  () => import(/* webpackChunkName: "ApplyBuffRow" */ "./rows/ApplyBuffRow"),
+  {
+    suspense: true,
+  }
+);
+
 const createRowKey = (event: DefaultEvent, index: number) =>
   `${event.timestamp}-${event.targetNPC ? event.targetNPC.id : "no-npc"}-${
     event.sourcePlayerID ?? "no-sourceplayerid"
@@ -1957,7 +826,7 @@ const createRowKey = (event: DefaultEvent, index: number) =>
       : "no-interrupted-ability"
   }-${index}`;
 
-type TableRowProps = {
+export type TableRowProps = {
   event: DefaultEvent;
   msSinceLastEvent: string;
   playerIdPlayerNameMap: Record<number, string>;
@@ -2063,17 +932,6 @@ function TableRow({
     );
   }
 
-  if (isTormentedPowerApplyBuffEvent(event)) {
-    return (
-      <TormentedPowerApplyBuffRow
-        event={event}
-        msSinceLastEvent={msSinceLastEvent}
-        playerIdPlayerNameMap={playerIdPlayerNameMap}
-        playerIdTextColorMap={playerIdTextColorMap}
-      />
-    );
-  }
-
   if (isApplyBuffEventWithAbility(event)) {
     return (
       <ApplyBuffRow
@@ -2086,59 +944,8 @@ function TableRow({
   }
 
   if (typeof window !== "undefined") {
-    console.log(event.type, event);
+    console.log(event);
   }
 
   return null;
-}
-
-type PullDetailsSettingsDefinition = {
-  useAbsoluteTimestamps: boolean;
-  fightStartTime: number;
-  groupDPS: number;
-  toggleAbsoluteTimestamps: () => void;
-};
-
-const PullDetailsSettingsContext =
-  createContext<PullDetailsSettingsDefinition | null>(null);
-
-const usePullDetailsSettings = () => {
-  const ctx = useContext(PullDetailsSettingsContext);
-
-  if (!ctx) {
-    throw new Error("used outside of provider");
-  }
-
-  return ctx;
-};
-
-type PullDetailsSettingsProviderProps = {
-  children: JSX.Element | null;
-};
-
-function PullDetailsSettingsProvider({
-  children,
-}: PullDetailsSettingsProviderProps): JSX.Element | null {
-  const [useAbsoluteTimestamps, setUseAbsoluteTimestamps] = useState(false);
-  const { fight } = useFight();
-
-  if (!fight) {
-    return null;
-  }
-
-  // eslint-disable-next-line react/jsx-no-constructed-context-values
-  const value = {
-    useAbsoluteTimestamps,
-    fightStartTime: fight.meta.startTime,
-    groupDPS: fight.meta.dps,
-    toggleAbsoluteTimestamps: () => {
-      setUseAbsoluteTimestamps((prev) => !prev);
-    },
-  };
-
-  return (
-    <PullDetailsSettingsContext.Provider value={value}>
-      {children}
-    </PullDetailsSettingsContext.Provider>
-  );
 }
