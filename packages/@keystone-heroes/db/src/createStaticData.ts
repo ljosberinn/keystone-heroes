@@ -14,6 +14,17 @@ import {
   tormentedLieutenants,
 } from "@keystone-heroes/wcl/queries/events/affixes/tormented";
 import { VOLCANIC } from "@keystone-heroes/wcl/queries/events/affixes/volcanic";
+import { DOS_URN } from "@keystone-heroes/wcl/queries/events/dungeons/dos";
+import { HOA_GARGOYLE } from "@keystone-heroes/wcl/queries/events/dungeons/hoa";
+import { ENVELOPMENT_OF_MISTS } from "@keystone-heroes/wcl/queries/events/dungeons/mots";
+import { NW } from "@keystone-heroes/wcl/queries/events/dungeons/nw";
+import { PF } from "@keystone-heroes/wcl/queries/events/dungeons/pf";
+import {
+  SD_LANTERN_BUFF,
+  SD_LANTERN_OPENING,
+} from "@keystone-heroes/wcl/queries/events/dungeons/sd";
+import { SOA_SPEAR } from "@keystone-heroes/wcl/queries/events/dungeons/soa";
+import { TOP_BANNER_AURA } from "@keystone-heroes/wcl/queries/events/dungeons/top";
 import { config } from "dotenv";
 import { writeFileSync, existsSync, createWriteStream, unlinkSync } from "fs";
 import { get } from "https";
@@ -253,6 +264,12 @@ async function create() {
 
   const targetPath = resolve("../web/src/staticData.ts");
 
+  /**
+   * 
+   * 
+import { NW } from "@keystone-heroes/wcl/queries/events/dungeons/nw";
+import { PF } from "@keystone-heroes/wcl/queries/events/dungeons/pf";
+   */
   const template = `
 /* eslint-disable sonarjs/no-duplicate-string */
 const tormentedLieutenantIDs = new Set<number>(${JSON.stringify(
@@ -269,6 +286,26 @@ export const QUAKING = ${QUAKING};
 export const STORMING = ${STORMING};
 export const SANGUINE_ICHOR_DAMAGE = ${SANGUINE_ICHOR_DAMAGE};
 export const SANGUINE_ICHOR_HEALING = ${SANGUINE_ICHOR_HEALING};
+export const TORMENTED_ABILITIES: { id: number; icon: string; name: string; }[] = JSON.parse(\`${JSON.stringify(
+    tormentedSpells.map((power) => {
+      return {
+        id: power.id,
+        name: power.name,
+        icon: power.icon,
+      };
+    })
+  )}\`);
+
+export const DOS_URN = ${DOS_URN};
+export const HOA_GARGOYLE = ${HOA_GARGOYLE};
+export const ENVELOPMENT_OF_MISTS = ${ENVELOPMENT_OF_MISTS};
+export const SOA_SPEAR = ${SOA_SPEAR};
+export const SD_LANTERN_BUFF = ${SD_LANTERN_BUFF};
+export const SD_LANTERN_OPENING = ${SD_LANTERN_OPENING};
+export const NW = JSON.parse(\`${JSON.stringify(NW)}\`);
+export const PF = JSON.parse(\`${JSON.stringify(PF)}\`);
+export const TOP_BANNER_AURA = ${TOP_BANNER_AURA};
+
 export const isBoss = (id: number): boolean => allBossIDs.has(id);
 export const isTormentedLieutenant = (id: number): boolean => tormentedLieutenantIDs.has(id);
 export const classes: Record<number, { name: string; cooldowns: number[]; specs: { id: number; name: string; cooldowns: number[]; }[]}> = JSON.parse(\`${JSON.stringify(

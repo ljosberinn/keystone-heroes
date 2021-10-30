@@ -1,7 +1,7 @@
 import { Affixes } from "@keystone-heroes/db/types";
 
 import type { AllTrackedEventTypes, DamageEvent } from "../types";
-import { createIsSpecificEvent, reduceEventsByPlayer } from "../utils";
+import { createIsSpecificEvent } from "../utils";
 
 export const SPITEFUL = {
   unit: 174_773,
@@ -43,8 +43,5 @@ export const getSpitefulEvents = (
     return [];
   }
 
-  return reduceEventsByPlayer(
-    allEvents.filter(isSpitefulDamageEvent),
-    "targetID"
-  );
+  return allEvents.filter(isSpitefulDamageEvent);
 };

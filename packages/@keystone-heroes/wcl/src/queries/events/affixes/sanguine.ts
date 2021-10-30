@@ -44,18 +44,6 @@ const isSanguineHealEvent = createIsSpecificEvent<HealEvent>({
   abilityGameID: SANGUINE_ICHOR_HEALING,
 });
 
-const reduceHealingDoneBySanguine = (events: HealEvent[]): HealEvent[] => {
-  return [
-    events.reduce<HealEvent>((acc, event) => {
-      return {
-        ...acc,
-        amount: acc.amount + event.amount,
-        overheal: (acc.overheal ?? 0) + (event.overheal ?? 0),
-      };
-    }, events[0]),
-  ];
-};
-
 export const getSanguineEvents = (
   allEvents: AllTrackedEventTypes[],
   affixSet: Set<Affixes>
@@ -64,10 +52,8 @@ export const getSanguineEvents = (
     return [];
   }
 
-  const healing = reduceHealingDoneBySanguine(
-    allEvents.filter(isSanguineHealEvent)
-  );
-  const damage = allEvents.filter(isSanguineDamageEvent);
-
-  return [...healing, ...damage];
+  return [
+    ...allEvents.filter(isSanguineHealEvent),
+    ...allEvents.filter(isSanguineDamageEvent),
+  ];
 };
