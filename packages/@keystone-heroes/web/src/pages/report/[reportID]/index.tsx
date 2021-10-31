@@ -35,7 +35,8 @@ const useReportURL = (cache: ReportProps["cache"]) => {
     return {
       url: null,
       reportID: cache.reportID,
-      fightID: null,
+      fightID:
+        query.fightID && !Array.isArray(query.fightID) ? query.fightID : null,
     };
   }
 
