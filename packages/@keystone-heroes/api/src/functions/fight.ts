@@ -569,7 +569,11 @@ const abilitiesWithCDR = new Set([
   308_491,
   198_589,
   12_042,
-  323_764,
+
+  // Druid
+  323_764, // Convoke the Spirits
+  // DK
+  221_699, // Blood Tap
   31_884,
   // Rogue
   137_619, // Marked for Death
@@ -600,6 +604,7 @@ const abilitiesWithCDR = new Set([
   633, // Lay on Hands
   31_850, // Ardent Defender
   304_971, // Divine Toll
+  498, // Divine Protection
 ]);
 
 type CalcAbilityReadyEventsReturn = Omit<
@@ -964,8 +969,6 @@ export const createResponseFromStoredFight = (
   const dps = Math.round((dataset.dps * dataset.keystoneTime) / inCombatTime);
   const hps = Math.round((dataset.hps * dataset.keystoneTime) / inCombatTime);
 
-  debugger;
-
   return {
     meta: {
       inCombatTime,
@@ -1191,10 +1194,6 @@ const getResponseOrRetrieveAndCreateFight = async (
   const persistableNPCs = persistedPulls.flatMap<Prisma.PullNPCCreateManyInput>(
     (pull) => {
       const npcDeathCountMap = pullNPCDeathCountMap[pull.startTime];
-
-      if (npcDeathCountMap["39"]) {
-        console.log(npcDeathCountMap["39"]);
-      }
 
       return pull.enemyNPCs.map((npc) => {
         // default to 1 for npcs that appear in the pull and thus are enemy

@@ -774,7 +774,10 @@ function Events() {
                           event.timestamp - after[index - 1].timestamp
                         )
                       : timeDurationToString(
-                          event.timestamp - during[during.length - 1].timestamp
+                          event.timestamp -
+                            (during[during.length - 1]?.timestamp ??
+                              before[before.length - 1]?.timestamp ??
+                              0)
                         );
 
                     return (
