@@ -1,10 +1,12 @@
 import { remarkableSpellIDs } from "@keystone-heroes/db/data/spellIds";
 
+import { EXPLOSIVE_HEALTH } from "./affixes/explosive";
 import type {
   AllTrackedEventTypes,
   ApplyBuffEvent,
   BeginCastEvent,
   CastEvent,
+  DamageEvent,
   DeathEvent,
 } from "./types";
 import { createIsSpecificEvent } from "./utils";
@@ -83,8 +85,9 @@ export const filterProfessionEvents = (
 
 export const filterEnemyDeathEvents = (
   allEvents: AllTrackedEventTypes[],
-  actorIDSet: Set<number>
-): (DeathEvent | BeginCastEvent)[] => {
+  actorIDSet: Set<number>,
+  explosiveTargetID: number | null
+): (DeathEvent | BeginCastEvent | DamageEvent)[] => {
   return allEvents.filter((event): event is DeathEvent | BeginCastEvent => {
     if (event.type === "death") {
       return !actorIDSet.has(event.targetID) && event.sourceID === -1;
@@ -92,6 +95,16 @@ export const filterEnemyDeathEvents = (
 
     if (event.type === "begincast") {
       return event.abilityGameID === RENEWING_MIST;
+    }
+
+    if (explosiveTargetID && event.type === "damage") {
+      // explosives do not send death events
+      // however, `overkill` is set given non melee hits
+      // on melee hits, there's no `overkill` but the amount must be higher than 224
+      return (
+        event.targetID === explosiveTargetID &&
+        (event.overkill !== undefined || event.amount >= EXPLOSIVE_HEALTH)
+      );
     }
 
     return false;

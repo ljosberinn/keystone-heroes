@@ -14,9 +14,11 @@ import {
 import type {
   AllTrackedEventTypes,
   BeginCastEvent,
+  DamageEvent,
   DeathEvent,
 } from "../events/types";
 import { filterAffixEvents, getAffixExpression } from "./affixes";
+import { findExplosiveTargetID } from "./affixes/explosive";
 import { getDungeonExpression, filterDungeonEvents } from "./dungeons";
 import { recursiveGetEvents } from "./utils";
 
@@ -52,7 +54,7 @@ export const getEvents = async (
 ): Promise<{
   allEvents: AllTrackedEventTypes[];
   playerDeathEvents: DeathEvent[];
-  enemyDeathEvents: (DeathEvent | BeginCastEvent)[];
+  enemyDeathEvents: (DeathEvent | BeginCastEvent | DamageEvent)[];
 }> => {
   const filterExpression = generateFilterExpression({
     dungeonID: params.dungeonID,
@@ -83,7 +85,11 @@ export const getEvents = async (
     actorIDSet
     // remarkableSpellEvents
   );
-  const enemyDeathEvents = filterEnemyDeathEvents(allEvents, actorIDSet);
+  const enemyDeathEvents = filterEnemyDeathEvents(
+    allEvents,
+    actorIDSet,
+    findExplosiveTargetID(allEvents)
+  );
 
   return {
     allEvents: [

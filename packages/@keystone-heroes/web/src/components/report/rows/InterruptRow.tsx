@@ -96,8 +96,7 @@ export default function InterruptRow({
             )}
             {event.sourcePlayerID && (
               <>
-                {" "}
-                via{" "}
+                <span> via </span>
                 <span
                   className={classnames(
                     playerIdTextColorMap[event.sourcePlayerID],

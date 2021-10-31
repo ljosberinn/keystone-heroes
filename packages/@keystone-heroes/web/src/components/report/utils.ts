@@ -1,6 +1,11 @@
 import type { FightSuccessResponse } from "@keystone-heroes/api/functions/fight";
 
-import { SANGUINE_ICHOR_HEALING, spells, PF } from "../../staticData";
+import {
+  SANGUINE_ICHOR_HEALING,
+  spells,
+  PF,
+  EXPLOSIVE,
+} from "../../staticData";
 import type { AbilityReadyRowProps } from "./rows/AbilityReadyRow";
 import type { ApplyBuffRowProps } from "./rows/ApplyBuffRow";
 import type { ApplyDebuffRowProps } from "./rows/ApplyDebuffRow";
@@ -8,6 +13,7 @@ import type { CastRowProps } from "./rows/CastRow";
 import type { DamageDoneRowProps } from "./rows/DamageDoneRow";
 import type { DamageTakenRowProps } from "./rows/DamageTakenRow";
 import type { DeathRowProps } from "./rows/DeathRow";
+import type { ExplosiveSummaryRowProps } from "./rows/ExplosivesSummaryRow";
 import type { HealingDoneRowProps } from "./rows/HealingDoneRow";
 import type { InterruptRowProps } from "./rows/InterruptRow";
 import type { PlagueBombDamageRowProps } from "./rows/PlagueBombDamageRow";
@@ -190,3 +196,8 @@ export const isViolentDetonationDamageEvent = (
 ): event is ViolentDetonationDamageRowProps["events"][number] =>
   (event.type === "DamageDone" || event.type === "DamageTaken") &&
   event.ability?.id === PF.CANISTER_VIOLENT_DETONATION;
+
+export const isExplosivesDamageEvent = (
+  event: DefaultEvent
+): event is ExplosiveSummaryRowProps["events"][number] =>
+  event.type === "DamageDone" && event.targetNPC?.id === EXPLOSIVE.unit;

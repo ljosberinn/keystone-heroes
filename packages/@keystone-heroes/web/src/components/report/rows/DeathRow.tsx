@@ -45,7 +45,7 @@ export default function DeathRow({
         {event.targetPlayerID ? (
           event.sourceNPC ? (
             <>
-              killed by{" "}
+              <span>killed by </span>
               <ExternalLink
                 href={createWowheadUrl({
                   category: "npc",
@@ -61,7 +61,7 @@ export default function DeathRow({
           )
         ) : event.targetNPC ? (
           <>
-            killed{" "}
+            <span>killed </span>
             <ExternalLink
               href={createWowheadUrl({
                 category: "npc",

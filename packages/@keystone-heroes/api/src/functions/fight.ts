@@ -46,6 +46,7 @@ import {
 import type {
   DeathEvent,
   BeginCastEvent,
+  DamageEvent,
 } from "@keystone-heroes/wcl/queries/events/types";
 import { processEvents } from "@keystone-heroes/wcl/transform";
 import type { PersistedDungeonPull } from "@keystone-heroes/wcl/transform/utils";
@@ -1186,6 +1187,10 @@ const getResponseOrRetrieveAndCreateFight = async (
     (pull) => {
       const npcDeathCountMap = pullNPCDeathCountMap[pull.startTime];
 
+      if (npcDeathCountMap["39"]) {
+        console.log(npcDeathCountMap["39"]);
+      }
+
       return pull.enemyNPCs.map((npc) => {
         // default to 1 for npcs that appear in the pull and thus are enemy
         // units but didn't die, e.g. for some reason Dealer in DoS,
@@ -1593,7 +1598,7 @@ const calculatePullCoordinates = (
 type PullWipePercentMeta = {
   dungeonID: DungeonIDs;
   playerDeathEvents: DeathEvent[];
-  deathEventMap: Record<number, (DeathEvent | BeginCastEvent)[]>;
+  deathEventMap: ReturnType<typeof createPullNPCDeathEventMap>;
   deathCountMap: Record<number, Record<number, number>>;
 };
 
@@ -1756,9 +1761,9 @@ const calculatePullsWithWipesAndPercent = (
 // map of { [startTime]: enemyDeathEvents }
 const createPullNPCDeathEventMap = (
   pulls: Omit<PersistedDungeonPull, "id" | "percent" | "isWipe">[],
-  enemyDeathEvents: (BeginCastEvent | DeathEvent)[]
-): Record<number, (BeginCastEvent | DeathEvent)[]> => {
-  return Object.fromEntries<(DeathEvent | BeginCastEvent)[]>(
+  enemyDeathEvents: (BeginCastEvent | DeathEvent | DamageEvent)[]
+): Record<number, (BeginCastEvent | DeathEvent | DamageEvent)[]> => {
+  return Object.fromEntries<(DeathEvent | BeginCastEvent | DamageEvent)[]>(
     pulls.map(({ startTime, endTime }) => {
       return [
         startTime,

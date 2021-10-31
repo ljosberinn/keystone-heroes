@@ -1,3 +1,4 @@
+import { EXPLOSIVE } from "../../../staticData";
 import { createWowheadUrl } from "../../../utils";
 import { AbilityIcon } from "../../AbilityIcon";
 import { ExternalLink } from "../../ExternalLink";
@@ -29,11 +30,39 @@ export default function DamageDoneRow({
   playerIdTextColorMap,
   playerIdPlayerNameMap,
 }: DamageDoneRowProps): JSX.Element | null {
+  if (event.targetNPC && event.targetNPC.id === EXPLOSIVE.unit) {
+    return (
+      <tr className="text-center text-white bg-green-600">
+        <TimestampCell event={event} msSinceLastEvent={msSinceLastEvent} />
+
+        <TypeCell type="DamageDone" />
+
+        <SourceOrTargetPlayerCell
+          playerIdTextColorMap={playerIdTextColorMap}
+          playerIdPlayerNameMap={playerIdPlayerNameMap}
+          sourcePlayerID={event.sourcePlayerID}
+          transparent
+        />
+
+        <td colSpan={4}>
+          <ExternalLink
+            href={createWowheadUrl({
+              category: "npc",
+              id: event.targetNPC.id,
+            })}
+          >
+            <b className="pl-2">{event.targetNPC.name}</b>
+          </ExternalLink>
+        </td>
+      </tr>
+    );
+  }
+
   const ability = determineAbility(event.ability.id);
 
   if (!ability) {
     if (typeof window !== "undefined") {
-      console.log(ability);
+      console.log(event);
     }
     return null;
   }

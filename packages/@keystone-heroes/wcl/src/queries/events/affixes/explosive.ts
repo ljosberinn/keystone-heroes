@@ -8,6 +8,8 @@ export const EXPLOSIVE = {
   ability: 240_446,
 };
 
+export const EXPLOSIVE_HEALTH = 224 as const;
+
 /**
  * @see https://www.warcraftlogs.com/reports/YrA4zyZgQJvHbn32#fight=1&type=summary&view=events&pins=2%24Off%24%23244F4B%24expression%24target.id%20%3D120651%20AND%20type%20%3D%20%22damage%22%20AND%20overkill%20%3E%200%5E2%24Off%24%23909049%24expression%24target.type%20%3D%20%22player%22%20and%20rawDamage%20%3E%200%20and%20ability.id%20%3D%20240446
  * ```gql
@@ -47,7 +49,7 @@ const createIsExplosiveDeathEvent =
     );
   };
 
-const findExplosiveTargetID = (
+export const findExplosiveTargetID = (
   allEvents: AllTrackedEventTypes[]
 ): number | null => {
   const dataset = allEvents.reduce<{

@@ -18,6 +18,7 @@ import {
   spells,
   isBoss,
   isTormentedLieutenant,
+  EXPLOSIVE,
 } from "../../staticData";
 import {
   AbilityIcon,
@@ -43,6 +44,7 @@ import {
   isSanguineHealEvent,
   findBloodlust,
   isPlagueBombDamageEvent,
+  isExplosivesDamageEvent,
 } from "./utils";
 
 type MostRelevantNPCReturn = {
@@ -310,6 +312,7 @@ function Sidebar() {
   }
 
   const npcs = selectedPull.npcs
+    .filter((npc) => npc.id !== EXPLOSIVE.unit)
     .map((npc) => {
       const countPerNPC =
         npc.id in dungeon.unitCountMap ? dungeon.unitCountMap[npc.id] : 0;
@@ -357,6 +360,17 @@ function Sidebar() {
       return a.totalPercent > b.totalPercent ? -1 : 1;
     });
 
+  const explosives = new Set(
+    selectedPull.events
+      .filter(
+        (event) =>
+          isExplosivesDamageEvent(event) ||
+          (event.type === "DamageTaken" &&
+            event.ability?.id === EXPLOSIVE.ability)
+      )
+      .map((event) => event.timestamp)
+  );
+
   return (
     <div className="flex flex-col w-full bg-white rounded-lg lg:w-3/12 dark:bg-coolgray-700">
       <div className="flex w-full p-2 justify-evenly">
@@ -380,44 +394,21 @@ function Sidebar() {
       </div>
 
       {npcs.map((npc) => {
-        return (
-          <div
-            key={npc.id}
-            className="flex items-center justify-between w-full px-4 py-2"
-          >
-            <span>{npc.count}x</span>
-
-            <ExternalLink
-              href={createWowheadUrl({
-                category: "npc",
-                id: npc.id,
-              })}
-              className="flex items-center flex-1 px-2 truncate"
-            >
-              <img
-                src={`/static/npcs/${npc.id}.png`}
-                alt={npc.name}
-                className="object-cover w-8 h-8 rounded-full"
-                width={32}
-                height={32}
-              />
-
-              <span className="pl-2 truncate">{npc.name}</span>
-            </ExternalLink>
-
-            {npc.totalPercent && npc.percentPerNPC ? (
-              <span
-                title={`${npc.percentPerNPC.toFixed(2)}% or ${
-                  npc.countPerNPC
-                } count per NPC`}
-                className="justify-self-end"
-              >
-                {npc.totalPercent.toFixed(2)}%
-              </span>
-            ) : null}
-          </div>
-        );
+        return <SidebarNPC npc={npc} key={npc.id} />;
       })}
+
+      {explosives.size > 0 && (
+        <SidebarNPC
+          npc={{
+            count: explosives.size,
+            countPerNPC: 0,
+            id: EXPLOSIVE.unit,
+            name: "Explosives",
+            percentPerNPC: null,
+            totalPercent: null,
+          }}
+        />
+      )}
 
       <div className="flex w-full px-4 py-2 border-t-2 place-content-end border-coolgray-600">
         this pull {selectedPull.percent.toFixed(2)}%
@@ -434,6 +425,64 @@ function Sidebar() {
           .toFixed(2)}
         %
       </div>
+    </div>
+  );
+}
+
+type SidebarNPCProps = {
+  npc: {
+    count: number;
+    id: number;
+    name: string;
+    totalPercent: number | null;
+    percentPerNPC: number | null;
+    countPerNPC: number;
+  };
+};
+
+function SidebarNPC({ npc }: SidebarNPCProps) {
+  return (
+    <div className="flex items-center justify-between w-full px-4 py-2">
+      <span>{npc.count}x</span>
+
+      <ExternalLink
+        href={createWowheadUrl({
+          category: "npc",
+          id: npc.id,
+        })}
+        className="flex items-center flex-1 px-2 truncate"
+      >
+        {npc.id === EXPLOSIVE.unit ? (
+          <AbilityIcon
+            icon={spells[EXPLOSIVE.ability].icon}
+            width={32}
+            height={32}
+            className="object-cover w-8 h-8 rounded-full"
+            alt={spells[EXPLOSIVE.ability].name}
+          />
+        ) : (
+          <img
+            src={`/static/npcs/${npc.id}.png`}
+            alt={npc.name}
+            className="object-cover w-8 h-8 rounded-full"
+            width={32}
+            height={32}
+          />
+        )}
+
+        <span className="pl-2 truncate">{npc.name}</span>
+      </ExternalLink>
+
+      {npc.totalPercent && npc.percentPerNPC ? (
+        <span
+          title={`${npc.percentPerNPC.toFixed(2)}% or ${
+            npc.countPerNPC
+          } count per NPC`}
+          className="justify-self-end"
+        >
+          {npc.totalPercent.toFixed(2)}%
+        </span>
+      ) : null}
     </div>
   );
 }
@@ -519,6 +568,7 @@ function Events() {
   const violentDetonationDamageEvents = selectedPull.events.filter(
     isViolentDetonationDamageEvent
   );
+  const explosivesEvents = selectedPull.events.filter(isExplosivesDamageEvent);
 
   return (
     <PullDetailsSettingsProvider>
@@ -746,23 +796,26 @@ function Events() {
             )}
 
             <tfoot>
-              {sanguineHealEvents.length > 0 ? (
-                <Suspense fallback={null}>
+              <Suspense fallback={null}>
+                {sanguineHealEvents.length > 0 ? (
                   <SanguineTimeLossRow events={sanguineHealEvents} />
-                </Suspense>
-              ) : null}
-              {plagueBombDamageEvents.length > 0 ? (
-                <Suspense fallback={null}>
+                ) : null}
+                {plagueBombDamageEvents.length > 0 ? (
                   <PlagueBombDamageRow events={plagueBombDamageEvents} />
-                </Suspense>
-              ) : null}
-              {violentDetonationDamageEvents.length > 0 ? (
-                <Suspense fallback={null}>
+                ) : null}
+                {violentDetonationDamageEvents.length > 0 ? (
                   <ViolentDetonationDamageRow
                     events={violentDetonationDamageEvents}
                   />
-                </Suspense>
-              ) : null}
+                ) : null}
+                {explosivesEvents.length > 0 ? (
+                  <ExplosivesSummaryRow
+                    events={explosivesEvents}
+                    playerIdPlayerNameMap={playerIdPlayerNameMap}
+                    playerIdTextColorMap={playerIdTextColorMap}
+                  />
+                ) : null}
+              </Suspense>
             </tfoot>
           </table>
         ) : null}
@@ -791,6 +844,16 @@ const SanguineTimeLossRow = dynamic(
   () =>
     import(
       /* webpackChunkName: "SanguineTimeLossRow" */ "./rows/SanguineTimeLossRow"
+    ),
+  {
+    suspense: true,
+  }
+);
+
+const ExplosivesSummaryRow = dynamic(
+  () =>
+    import(
+      /* webpackChunkName: "ExplosivesSummaryRow" */ "./rows/ExplosivesSummaryRow"
     ),
   {
     suspense: true,
