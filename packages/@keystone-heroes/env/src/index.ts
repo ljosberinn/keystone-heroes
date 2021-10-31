@@ -28,4 +28,4 @@ export const BATTLENET_CLIENT_SECRET = process.env.BATTLENET_CLIENT_SECRET!;
 /** *********************
  * general
  *********************/
-export const MIN_KEYSTONE_LEVEL = 15;
+export const MIN_KEYSTONE_LEVEL = 10;
