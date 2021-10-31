@@ -8,11 +8,11 @@ import {
   SourceOrTargetPlayerCell,
   MaybeWastedCooldownCell,
 } from "../cells";
+import { determineAbility } from "../utils";
 import type { CastRowProps } from "./CastRow";
 
 export type AbilityReadyRowProps = {
   event: Omit<CastRowProps["event"], "type"> & { type: "AbilityReady" };
-  ability: CastRowProps["ability"];
   playerIdPlayerNameMap: Record<string, string>;
   playerIdTextColorMap: Record<string, string>;
   msSinceLastEvent: string | null;
@@ -21,11 +21,16 @@ export type AbilityReadyRowProps = {
 // eslint-disable-next-line import/no-default-export
 export default function AbilityReadyRow({
   event,
-  ability,
   msSinceLastEvent,
   playerIdTextColorMap,
   playerIdPlayerNameMap,
-}: AbilityReadyRowProps): JSX.Element {
+}: AbilityReadyRowProps): JSX.Element | null {
+  const ability = determineAbility(event.ability.id);
+
+  if (!ability) {
+    return null;
+  }
+
   const cooldown = ability ? ability.cd : 0;
   const abilityName = ability?.name ?? "Unknown Ability";
 

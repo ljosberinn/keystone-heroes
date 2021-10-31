@@ -10,7 +10,8 @@ import {
   SourceOrTargetPlayerCell,
   MaybeWastedCooldownCell,
 } from "../cells";
-import type { DefaultEvent, determineAbility } from "../utils";
+import { determineAbility } from "../utils";
+import type { DefaultEvent } from "../utils";
 
 export type CastRowProps = {
   event: Omit<DefaultEvent, "ability" | "type" | "sourcePlayerID"> & {
@@ -18,7 +19,6 @@ export type CastRowProps = {
     sourcePlayerID: NonNullable<DefaultEvent["sourcePlayerID"]>;
     type: "Cast" | "BeginCast";
   };
-  ability: NonNullable<ReturnType<typeof determineAbility>>;
 } & Pick<
   TableRowProps,
   "msSinceLastEvent" | "playerIdPlayerNameMap" | "playerIdTextColorMap"
@@ -27,11 +27,16 @@ export type CastRowProps = {
 // eslint-disable-next-line import/no-default-export
 export default function CastRow({
   event,
-  ability,
   playerIdPlayerNameMap,
   msSinceLastEvent,
   playerIdTextColorMap,
-}: CastRowProps): JSX.Element {
+}: CastRowProps): JSX.Element | null {
+  const ability = determineAbility(event.ability.id);
+
+  if (!ability) {
+    return null;
+  }
+
   const cooldown = ability ? ability.cd : 0;
   const abilityName = ability?.name ?? "Unknown Ability";
 

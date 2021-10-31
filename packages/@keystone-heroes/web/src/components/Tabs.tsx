@@ -86,12 +86,16 @@ export const TabButton = forwardRef<HTMLButtonElement, TabButtonProps>(
 export type TabPanelProps = {
   hidden: boolean;
   className?: string;
-  children: JSX.Element;
+  children: JSX.Element | (JSX.Element | null)[];
   id: number | string;
+  "data-map-container"?: number;
 };
 
 export const TabPanel = forwardRef<HTMLDivElement, TabPanelProps>(
-  ({ children, className, id, hidden }, ref) => {
+  (
+    { children, className, id, hidden, "data-map-container": dataMapContainer },
+    ref
+  ) => {
     return (
       <div
         hidden={hidden}
@@ -104,6 +108,7 @@ export const TabPanel = forwardRef<HTMLDivElement, TabPanelProps>(
         tabIndex={0}
         ref={hidden ? undefined : ref}
         className={classnames("h-full", className)}
+        data-map-container={dataMapContainer}
       >
         {children}
       </div>

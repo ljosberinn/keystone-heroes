@@ -576,12 +576,26 @@ const abilitiesWithCDR = new Set([
   328_547, // Serrated Bone Spike
   2983, // Sprint
   13_750, // Adrenaline Rush
+  323_654, // Flagellation
+  185_313, // Shadow Dance
+  121_471, // Shadow Blades
   // Shaman
   192_058, // Capacitor Totem
   // Warrior
   184_364, // Enraged Regeneration
   // Warlock
   333_889, // Fel Domination
+  // Monk,
+  322_507, // Celestial Brew
+  310_454, // Weapons of Order
+  132_578, // Invoke Niuzao, the Black Ox
+  // Mage
+  108_978, // Alter Time
+  55_342, // Mirror Image
+  190_319, // Combustion
+  // Paladin
+  642, // Divine Shield
+  633, // Lay on Hands
 ]);
 
 type CalcAbilityReadyEventsReturn = Omit<
@@ -1611,7 +1625,9 @@ const calculatePullsWithWipesAndPercent = (
 
       // TODO: ensure that in deathEventMap pets are not included
       const killedNPCTargetIDsOfThisPull = new Set(
-        deathEventMap[pull.startTime].map((event) => event.targetID)
+        deathEventMap[pull.startTime].map((event) =>
+          event.type === "begincast" ? event.sourceID : event.targetID
+        )
       );
 
       // ensure this pull isn't effectively empty, e.g. only 1 Spiteful Shade

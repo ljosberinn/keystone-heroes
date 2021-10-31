@@ -1,5 +1,3 @@
-import type { Prisma } from "@keystone-heroes/db/types";
-
 import { BURSTING } from "../src/queries/events/affixes/bursting";
 import { EXPLOSIVE } from "../src/queries/events/affixes/explosive";
 import { GRIEVOUS_WOUND } from "../src/queries/events/affixes/grievous";
@@ -84,28 +82,6 @@ describe("damage", () => {
       expect(result.every((dataset) => dataset?.targetNPCID === null)).toBe(
         true
       );
-
-      expect(result).toMatchSnapshot();
-    });
-
-    test("ignores damage amount on Explosive unit", () => {
-      const result = damageEvents.map((event) =>
-        damageProcessor(event, {
-          ...params,
-          targetPlayerID: null,
-          sourcePlayerID: 1,
-          targetNPCID: EXPLOSIVE.unit,
-        })
-      );
-
-      expect(
-        result
-          .filter(
-            (dataset): dataset is Prisma.EventCreateManyPullInput =>
-              dataset !== null
-          )
-          .every((dataset) => dataset.damage === null)
-      ).toBe(true);
 
       expect(result).toMatchSnapshot();
     });

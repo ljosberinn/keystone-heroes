@@ -31,10 +31,11 @@ const GREEN_BUFF = {
 
 export const PF = {
   PLAGUE_BOMB: 328_501,
-  RIGGED_PLAGUEBORER: 168_878,
+  RIGGED_PLAGUEBORER: 168_891,
   GREEN_BUFF,
   RED_BUFF,
   PURPLE_BUFF,
+  CANISTER_VIOLENT_DETONATION: 328_986,
 } as const;
 
 /**
@@ -60,6 +61,7 @@ export const filterExpression = [
   `type = "death" and target.type = "npc" and target.id in (${RED_BUFF.unit}, ${PURPLE_BUFF.unit}, ${GREEN_BUFF.unit})`,
   `type = "applybuff" and target.type = "player" and ability.id in (${RED_BUFF.aura}, ${PURPLE_BUFF.aura}, ${GREEN_BUFF.aura})`,
   `type = "damage" and ability.id = ${PF.PLAGUE_BOMB}`,
+  `type = "damage" and ability.id = ${PF.CANISTER_VIOLENT_DETONATION}`,
 ];
 
 const createIsPfSlimeDeathEvent =
@@ -83,6 +85,11 @@ const isPfPlagueBombDamageEvent = createIsSpecificEvent<DamageEvent>({
   abilityGameID: PF.PLAGUE_BOMB,
 });
 
+const isPfCanisterDetonationEvent = createIsSpecificEvent<DamageEvent>({
+  type: "damage",
+  abilityGameID: PF.CANISTER_VIOLENT_DETONATION,
+});
+
 // ApplyBuff events fire a lot for the PF Slime Auras for some reason
 // Fleshcraft gets its CD reduced, but its unlikely to reduce it by 75%
 const pfSlimeBuffReducer = createChunkByThresholdReducer(30 * 1000);
@@ -100,20 +107,6 @@ export const getPFEvents = (
   const plagueBombDamageDoneEvents = plagueBombDamageEvents.filter(
     (event) => !actorIDSet.has(event.targetID)
   );
-
-  const aggregatedPlagueBombDamageEvent =
-    plagueBombDamageDoneEvents.length > 0
-      ? plagueBombDamageDoneEvents.reduce((acc, event) => {
-          if (acc === event) {
-            return acc;
-          }
-
-          return {
-            ...acc,
-            amount: acc.amount + event.amount - (event.overkill ?? 0),
-          };
-        }, plagueBombDamageDoneEvents[0])
-      : null;
 
   const buffEvents = allEvents.filter(isPfSlimeBuffEvent).reduce<{
     red: ApplyBuffEvent[];
@@ -151,8 +144,7 @@ export const getPFEvents = (
       .reduce<ApplyBuffEvent[][]>(pfSlimeBuffReducer, [])
       .flatMap((chunk) => chunk[0]),
     ...plagueBombDamageTakenEvents,
-    ...(aggregatedPlagueBombDamageEvent
-      ? [aggregatedPlagueBombDamageEvent]
-      : []),
+    ...plagueBombDamageDoneEvents,
+    ...allEvents.filter(isPfCanisterDetonationEvent),
   ];
 };

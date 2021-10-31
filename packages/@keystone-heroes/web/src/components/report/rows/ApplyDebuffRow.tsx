@@ -1,17 +1,16 @@
 import { createWowheadUrl } from "../../../utils";
-import { classnames } from "../../../utils/classnames";
 import { AbilityIcon } from "../../AbilityIcon";
 import { ExternalLink } from "../../ExternalLink";
 import type { TableRowProps } from "../Pulls";
-import { TimestampCell, TypeCell, SourceOrTargetPlayerCell } from "../cells";
+import { TimestampCell, TypeCell } from "../cells";
 import type { DefaultEvent } from "../utils";
 import { determineAbility } from "../utils";
 import type { CastRowProps } from "./CastRow";
 
-export type ApplyBuffRowProps = {
+export type ApplyDebuffRowProps = {
   event: Omit<DefaultEvent, "ability" | "type"> & {
     ability: CastRowProps["event"]["ability"];
-    type: "ApplyBuff" | "ApplyBuffStack" | "RemoveBuff";
+    type: "ApplyDebuff";
   };
 } & Pick<
   TableRowProps,
@@ -19,12 +18,10 @@ export type ApplyBuffRowProps = {
 >;
 
 // eslint-disable-next-line import/no-default-export
-export default function ApplyBuffRow({
+export default function ApplyDebuffRow({
   event,
   msSinceLastEvent,
-  playerIdPlayerNameMap,
-  playerIdTextColorMap,
-}: ApplyBuffRowProps): JSX.Element | null {
+}: ApplyDebuffRowProps): JSX.Element | null {
   const ability = determineAbility(event.ability.id);
 
   if (!ability) {
@@ -35,35 +32,12 @@ export default function ApplyBuffRow({
   }
 
   return (
-    <tr
-      className={classnames(
-        "text-center",
-        event.type === "RemoveBuff"
-          ? "bg-yellow-700 text-white hover:bg-yellow-900"
-          : "bg-green-600 hover:bg-green-800"
-      )}
-    >
+    <tr className="text-center text-white bg-yellow-700 hover:bg-yellow-900">
       <TimestampCell event={event} msSinceLastEvent={msSinceLastEvent} />
 
       <TypeCell type={event.type} />
 
-      <SourceOrTargetPlayerCell
-        playerIdTextColorMap={playerIdTextColorMap}
-        playerIdPlayerNameMap={playerIdPlayerNameMap}
-        environment={!!event.sourcePlayerID && !!event.targetPlayerID}
-        sourcePlayerID={
-          event.sourcePlayerID
-            ? event.sourcePlayerID
-            : event.targetPlayerID
-            ? event.targetPlayerID
-            : undefined
-        }
-        transparent
-      />
-
-      <td colSpan={3}>
-        {event.stacks && "re"}
-        {event.type === "RemoveBuff" ? "removed" : "applied"}{" "}
+      <td colSpan={4}>
         <ExternalLink
           href={createWowheadUrl({
             category: "spell",
@@ -77,9 +51,7 @@ export default function ApplyBuffRow({
             width={16}
             height={16}
           />
-          <b className="pl-2">
-            {event.stacks && <>{event.stacks}x</>} {ability.name}
-          </b>
+          <b className="pl-2">{ability.name}</b>
         </ExternalLink>
       </td>
     </tr>

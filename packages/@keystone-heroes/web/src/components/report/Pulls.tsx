@@ -1,5 +1,5 @@
 import dynamic from "next/dynamic";
-import React, { Suspense, useState, SuspenseList } from "react";
+import { Suspense, useState, SuspenseList } from "react";
 import { useFight } from "src/pages/report/[reportID]/[fightID]";
 import { useReportStore } from "src/store";
 import { bgSecondary } from "src/styles/tokens";
@@ -38,8 +38,11 @@ import {
   isInterruptEventWithSourceAndTargetPlayerAndAbility,
   isPlayerOrNPCDeathEvent,
   detectInvisibilityUsage,
-  determineAbility,
+  isViolentDetonationDamageEvent,
+  isApplyDebuffEventWithAbility,
+  isSanguineHealEvent,
   findBloodlust,
+  isPlagueBombDamageEvent,
 } from "./utils";
 
 type MostRelevantNPCReturn = {
@@ -509,9 +512,17 @@ function Events() {
     }
   );
 
+  const sanguineHealEvents = selectedPull.events.filter(isSanguineHealEvent);
+  const plagueBombDamageEvents = selectedPull.events.filter(
+    isPlagueBombDamageEvent
+  );
+  const violentDetonationDamageEvents = selectedPull.events.filter(
+    isViolentDetonationDamageEvent
+  );
+
   return (
     <PullDetailsSettingsProvider>
-      <div className="w-full px-4 py-2 bg-white rounded-lg lg:w-9/23 dark:bg-coolgray-700">
+      <div className="w-full min-h-screen px-4 py-2 bg-white rounded-lg lg:w-9/23 dark:bg-coolgray-700">
         <div className="flex justify-between w-full">
           <div className="flex">
             {player.map((p) => {
@@ -733,6 +744,26 @@ function Events() {
                 </SuspenseList>
               </tbody>
             )}
+
+            <tfoot>
+              {sanguineHealEvents.length > 0 ? (
+                <Suspense fallback={null}>
+                  <SanguineTimeLossRow events={sanguineHealEvents} />
+                </Suspense>
+              ) : null}
+              {plagueBombDamageEvents.length > 0 ? (
+                <Suspense fallback={null}>
+                  <PlagueBombDamageRow events={plagueBombDamageEvents} />
+                </Suspense>
+              ) : null}
+              {violentDetonationDamageEvents.length > 0 ? (
+                <Suspense fallback={null}>
+                  <ViolentDetonationDamageRow
+                    events={violentDetonationDamageEvents}
+                  />
+                </Suspense>
+              ) : null}
+            </tfoot>
           </table>
         ) : null}
       </div>
@@ -755,6 +786,36 @@ export function Pulls(): JSX.Element | null {
     </div>
   );
 }
+
+const SanguineTimeLossRow = dynamic(
+  () =>
+    import(
+      /* webpackChunkName: "SanguineTimeLossRow" */ "./rows/SanguineTimeLossRow"
+    ),
+  {
+    suspense: true,
+  }
+);
+
+const PlagueBombDamageRow = dynamic(
+  () =>
+    import(
+      /* webpackChunkName: "PlagueBombDamageRow" */ "./rows/PlagueBombDamageRow"
+    ),
+  {
+    suspense: true,
+  }
+);
+
+const ViolentDetonationDamageRow = dynamic(
+  () =>
+    import(
+      /* webpackChunkName: "ViolentDetonationDamageRow" */ "./rows/ViolentDetonationDamageRow"
+    ),
+  {
+    suspense: true,
+  }
+);
 
 const CastRow = dynamic(
   () => import(/* webpackChunkName: "CastRow" */ "./rows/CastRow"),
@@ -815,6 +876,14 @@ const ApplyBuffRow = dynamic(
   }
 );
 
+const ApplyDebuffRow = dynamic(
+  () =>
+    import(/* webpackChunkName: "ApplyDebuffRow" */ "./rows/ApplyDebuffRow"),
+  {
+    suspense: true,
+  }
+);
+
 const createRowKey = (event: DefaultEvent, index: number) =>
   `${event.timestamp}-${event.targetNPC ? event.targetNPC.id : "no-npc"}-${
     event.sourcePlayerID ?? "no-sourceplayerid"
@@ -839,108 +908,46 @@ function TableRow({
   playerIdTextColorMap,
   msSinceLastEvent,
 }: TableRowProps) {
+  const sharedProps = {
+    msSinceLastEvent,
+    playerIdPlayerNameMap,
+    playerIdTextColorMap,
+  };
+
   if (isCastEventWithAbilityAndSourcePlayer(event)) {
-    const ability = determineAbility(event.ability.id);
-
-    if (!ability) {
-      console.info(`encountered uncaught ability in event`, event);
-      return null;
-    }
-
-    return (
-      <CastRow
-        event={event}
-        ability={ability}
-        msSinceLastEvent={msSinceLastEvent}
-        playerIdPlayerNameMap={playerIdPlayerNameMap}
-        playerIdTextColorMap={playerIdTextColorMap}
-      />
-    );
+    return <CastRow event={event} {...sharedProps} />;
   }
 
   if (isDamageTakenEventWithTargetPlayer(event)) {
-    return (
-      <DamageTakenRow
-        event={event}
-        msSinceLastEvent={msSinceLastEvent}
-        playerIdPlayerNameMap={playerIdPlayerNameMap}
-        playerIdTextColorMap={playerIdTextColorMap}
-      />
-    );
+    return <DamageTakenRow event={event} {...sharedProps} />;
   }
 
   if (isAbilityReadyEventWithAbilityAndSourcePlayer(event)) {
-    const ability = determineAbility(event.ability.id);
-
-    if (!ability) {
-      console.info(`encountered uncaught ability in event`, event);
-      return null;
-    }
-
-    return (
-      <AbilityReadyRow
-        event={event}
-        ability={ability}
-        msSinceLastEvent={msSinceLastEvent}
-        playerIdPlayerNameMap={playerIdPlayerNameMap}
-        playerIdTextColorMap={playerIdTextColorMap}
-      />
-    );
+    return <AbilityReadyRow event={event} {...sharedProps} />;
   }
 
   if (isPlayerOrNPCDeathEvent(event)) {
-    return (
-      <DeathRow
-        event={event}
-        msSinceLastEvent={msSinceLastEvent}
-        playerIdPlayerNameMap={playerIdPlayerNameMap}
-        playerIdTextColorMap={playerIdTextColorMap}
-      />
-    );
+    return <DeathRow event={event} {...sharedProps} />;
   }
 
   if (isInterruptEventWithSourceAndTargetPlayerAndAbility(event)) {
-    return (
-      <InterruptRow
-        event={event}
-        msSinceLastEvent={msSinceLastEvent}
-        playerIdPlayerNameMap={playerIdPlayerNameMap}
-        playerIdTextColorMap={playerIdTextColorMap}
-      />
-    );
+    return <InterruptRow event={event} {...sharedProps} />;
   }
 
   if (isDamageDoneEventWithAbility(event)) {
-    return (
-      <DamageDoneRow
-        event={event}
-        msSinceLastEvent={msSinceLastEvent}
-        playerIdPlayerNameMap={playerIdPlayerNameMap}
-        playerIdTextColorMap={playerIdTextColorMap}
-      />
-    );
+    return <DamageDoneRow event={event} {...sharedProps} />;
   }
 
   if (isHealingDoneEventWithAbility(event)) {
-    return (
-      <HealingDoneRow
-        event={event}
-        msSinceLastEvent={msSinceLastEvent}
-        playerIdPlayerNameMap={playerIdPlayerNameMap}
-        playerIdTextColorMap={playerIdTextColorMap}
-      />
-    );
+    return <HealingDoneRow event={event} {...sharedProps} />;
   }
 
   if (isApplyBuffEventWithAbility(event)) {
-    return (
-      <ApplyBuffRow
-        event={event}
-        msSinceLastEvent={msSinceLastEvent}
-        playerIdPlayerNameMap={playerIdPlayerNameMap}
-        playerIdTextColorMap={playerIdTextColorMap}
-      />
-    );
+    return <ApplyBuffRow event={event} {...sharedProps} />;
+  }
+
+  if (isApplyDebuffEventWithAbility(event)) {
+    return <ApplyDebuffRow event={event} {...sharedProps} />;
   }
 
   if (typeof window !== "undefined") {

@@ -262,14 +262,152 @@ async function create() {
     })
   );
 
+  const extendedSpells = {
+    ...spells,
+    [SANGUINE_ICHOR_DAMAGE]: {
+      name: "Sanguine Ichor",
+      icon: "spell_shadow_bloodboil",
+      cd: 0,
+    },
+    [SANGUINE_ICHOR_HEALING]: {
+      name: "Sanguine Ichor",
+      icon: "spell_shadow_bloodboil",
+      cd: 0,
+    },
+    [NECROTIC]: {
+      name: "Necrotic Wound",
+      icon: "ability_rogue_venomouswounds",
+      cd: 0,
+    },
+    [BURSTING]: {
+      name: affixes["11"].name,
+      icon: affixes["11"].icon,
+      cd: 0,
+    },
+    [EXPLOSIVE.ability]: {
+      name: affixes["13"].name,
+      icon: affixes["13"].icon,
+      cd: 0,
+    },
+    [STORMING]: {
+      name: affixes["124"].name,
+      icon: affixes["124"].icon,
+      cd: 0,
+    },
+    [VOLCANIC]: {
+      name: affixes["3"].name,
+      icon: affixes["3"].icon,
+      cd: 0,
+    },
+    [QUAKING]: {
+      name: affixes["14"].name,
+      icon: affixes["14"].icon,
+      cd: 0,
+    },
+    [HOA_GARGOYLE]: {
+      name: "Loyal Stoneborn",
+      icon: "ability_revendreth_mage",
+      cd: 0,
+    },
+    [NW.ORB]: {
+      name: "Discharged Anima",
+      icon: "spell_animabastion_orb",
+      cd: 0,
+    },
+    [NW.KYRIAN_ORB_DAMAGE]: {
+      name: "Anima Exhaust",
+      icon: "spell_animabastion_orb",
+      cd: 0,
+    },
+    [NW.KYRIAN_ORB_HEAL]: {
+      name: "Anima Exhaust",
+      icon: "spell_animabastion_orb",
+      cd: 0,
+    },
+    [NW.SPEAR]: {
+      name: "Bloody Javelin",
+      icon: "inv_polearm_2h_bastionquest_b_01",
+      cd: 0,
+    },
+    [GRIEVOUS_WOUND]: {
+      name: "Grievous Wound",
+      icon: "ability_backstab",
+      cd: 0,
+    },
+    [SPITEFUL.ability]: {
+      name: "Spiteful Shade",
+      icon: "ability_meleedamage",
+      cd: 0,
+    },
+    [TOP_BANNER_AURA]: {
+      name: "Necrolord's Chosen",
+      icon: "ui_sigil_necrolord",
+      cd: 0,
+    },
+    [SD_LANTERN_BUFF]: {
+      name: "Sinfall Boon",
+      icon: "spell_animarevendreth_buff",
+      cd: 0,
+    },
+    [SD_LANTERN_OPENING]: {
+      name: "Opening",
+      icon: "spell_animarevendreth_orb",
+      cd: 0,
+    },
+    [ENVELOPMENT_OF_MISTS]: {
+      name: "Envelopment of Mists",
+      icon: "ability_monk_renewingmists",
+      cd: 0,
+    },
+    [SOA_SPEAR]: {
+      name: "Spear of Destiny",
+      icon: "inv_polearm_2h_bastionquest_b_01",
+      cd: 0,
+    },
+    [DOS_URN]: {
+      name: "Haunted Urn",
+      icon: "inv_misc_urn_01",
+      cd: 0,
+    },
+    [PF.PLAGUE_BOMB]: {
+      name: "Plague Bomb",
+      icon: "ability_vehicle_plaguebarrel",
+      cd: 0,
+    },
+    [PF.CANISTER_VIOLENT_DETONATION]: {
+      name: "Violent Detonation",
+      icon: "ability_vehicle_plaguebarrel",
+      cd: 0,
+    },
+    [PF.GREEN_BUFF.aura]: {
+      name: "Corrosive Gunk",
+      icon: "inv_misc_bone_skull_01",
+      cd: 0,
+    },
+    [PF.RED_BUFF.aura]: {
+      name: "Rapid Infection",
+      icon: "inv_offhand_1h_artifactskulloferedar_d_05",
+      cd: 0,
+    },
+    [PF.PURPLE_BUFF.aura]: {
+      name: "Congealed Contagion",
+      icon: "ability_titankeeper_amalgam",
+      cd: 0,
+    },
+    ...Object.fromEntries(
+      tormentedSpells.map((power) => [
+        power.id,
+        {
+          name: power.name,
+          icon: power.icon,
+          cd: 0,
+        },
+      ])
+    ),
+  };
+
   const targetPath = resolve("../web/src/staticData.ts");
 
-  /**
-   * 
-   * 
-import { NW } from "@keystone-heroes/wcl/queries/events/dungeons/nw";
-import { PF } from "@keystone-heroes/wcl/queries/events/dungeons/pf";
-   */
   const template = `
 /* eslint-disable sonarjs/no-duplicate-string */
 const tormentedLieutenantIDs = new Set<number>(${JSON.stringify(
@@ -324,7 +462,7 @@ export const covenants: Record<number, { name: string; icon: string;}> = JSON.pa
     covenants
   )}\`);
 export const spells: Record<number, { icon: string; name: string; cd: number; }> = JSON.parse(\`${JSON.stringify(
-    spells
+    extendedSpells
   )}\`);
 export const tormentedLieutenants: Record<number, { name: string; icon: string; }> = JSON.parse(\`${JSON.stringify(
     tormentedLieutenantMap
@@ -350,9 +488,8 @@ export const conduits: Record<number, { name: string; icon: string }> = JSON.par
   const spellIconBasePath = resolve("../web/public/static/icons");
 
   const allLoadableIcons = [
-    ...Object.values(spells).map((spell) => spell.icon),
+    ...Object.values(extendedSpells).map((spell) => spell.icon),
     ...tormentedLieutenants.map((lt) => lt.icon),
-    ...tormentedSpells.map((spell) => spell.icon),
     ...rawAffixes.map((affix) => affix.icon),
     ...rawLegendaries.map((legendary) => legendary.effectIcon),
     ...rawTalents.map((talent) => talent.icon),

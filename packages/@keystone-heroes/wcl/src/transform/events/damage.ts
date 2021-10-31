@@ -94,8 +94,7 @@ export const damageProcessor: Processor<DamageEvent> = (
     return {
       timestamp: event.timestamp,
       eventType: EventType.DamageDone,
-      // damage vs Explosives is irrelevant
-      damage: targetNPCID === EXPLOSIVE.unit ? null : event.amount,
+      damage: event.amount,
       targetNPCID: ignoreTargetNPCID ? null : targetNPCID,
       sourcePlayerID,
       abilityID: event.abilityGameID,
@@ -109,6 +108,21 @@ export const damageProcessor: Processor<DamageEvent> = (
       sourceNPCID,
       damage: event.amount,
       abilityID: event.abilityGameID,
+      targetNPCID,
+    };
+  }
+
+  // canisters overkill themselves, adding +1 damage...
+  if (
+    event.abilityGameID === PF.CANISTER_VIOLENT_DETONATION &&
+    sourceNPCID !== targetNPCID
+  ) {
+    return {
+      timestamp: event.timestamp,
+      eventType: EventType.DamageDone,
+      damage: event.amount,
+      abilityID: event.abilityGameID,
+      targetNPCID,
     };
   }
 

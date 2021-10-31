@@ -51,7 +51,7 @@ export default function DamageDoneRow({
         transparent
       />
 
-      <td colSpan={3} className="text-white">
+      <td colSpan={4} className="text-white">
         <ExternalLink
           href={createWowheadUrl({
             category: "spell",
@@ -66,11 +66,35 @@ export default function DamageDoneRow({
             height={16}
           />
           <b className="pl-2">{ability.name}</b>
-          <span>
-            {" "}
-            did <b>{event.damage.toLocaleString("en-US")}</b> damage.
-          </span>
         </ExternalLink>
+        {event.sourceNPC && (
+          <>
+            <span> of </span>
+            <ExternalLink
+              href={createWowheadUrl({
+                category: "npc",
+                id: event.sourceNPC.id,
+              })}
+            >
+              <b>{event.sourceNPC.name}</b>
+            </ExternalLink>
+          </>
+        )}
+        {event.targetNPC && (
+          <>
+            <span> damaged </span>
+            <ExternalLink
+              href={createWowheadUrl({
+                category: "npc",
+                id: event.targetNPC.id,
+              })}
+            >
+              <b>{event.targetNPC.name}</b>
+            </ExternalLink>
+          </>
+        )}
+        <span> for </span>
+        <b>{event.damage.toLocaleString("en-US")}</b>.
       </td>
     </tr>
   );

@@ -53,7 +53,7 @@ export default function HealingDoneRow({
   return (
     <tr
       className={classnames(
-        "text-center",
+        "text-center text-coolgray-200",
         event.sourcePlayerID && "bg-green-600 hover:bg-green-800",
         event.targetNPC && "bg-red-700 hover:bg-red-900"
       )}

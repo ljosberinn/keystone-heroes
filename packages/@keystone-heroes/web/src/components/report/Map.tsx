@@ -325,24 +325,22 @@ export function Map(): JSX.Element {
             alt="Map Placeholder"
           />
         ) : (
-          zones.map((zone, index) => {
-            const hidden = index !== selectedTab;
+          <>
+            {zones.map((zone, index) => {
+              const hidden = index !== selectedTab;
 
-            return (
-              <TabPanel
-                id={zone.id}
-                ref={tabPanelRef}
-                key={zone.id}
-                hidden={hidden}
-              >
-                <div
-                  className={classnames(
-                    "h-full",
+              return (
+                <TabPanel
+                  id={zone.id}
+                  ref={tabPanelRef}
+                  key={zone.id}
+                  hidden={hidden}
+                  className={
                     fullscreen
                       ? "absolute w-max top-0 left-0 p-4 z-10"
                       : "relative"
-                  )}
-                  data-map-container
+                  }
+                  data-map-container={zone.id}
                 >
                   <picture>
                     {imageTuples.map(([w, prefix]) => {
@@ -371,72 +369,104 @@ export function Map(): JSX.Element {
                     />
                   </picture>
 
-                  <Svg
-                    imageSize={imageSize}
-                    zoneID={zone.id}
-                    onDoorClick={(zoneID: number) => {
-                      const nextZoneIndex = zones.findIndex(
-                        (zone) => zone.id === zoneID
-                      );
+                  {hidden ? null : (
+                    <>
+                      <Svg
+                        imageSize={imageSize}
+                        zoneID={zone.id}
+                        onDoorClick={(zoneID: number) => {
+                          const nextZoneIndex = zones.findIndex(
+                            (zone) => zone.id === zoneID
+                          );
 
-                      if (nextZoneIndex > -1) {
-                        onTabButtonClick(nextZoneIndex);
-                      }
-                    }}
-                  />
+                          if (nextZoneIndex > -1) {
+                            onTabButtonClick(nextZoneIndex);
+                          }
+                        }}
+                      />
 
-                  <BossKillIndicator fullscreen={fullscreen} />
+                      <KillIndicator fullscreen={fullscreen} type="boss" />
+                      <KillIndicator
+                        fullscreen={fullscreen}
+                        type="tormentedLieutenant"
+                      />
 
-                  <div
-                    className={classnames(
-                      "flex flex-col space-y-2 z-20",
-                      fullscreen
-                        ? "fixed right-6 top-6"
-                        : "absolute right-2 top-2"
-                    )}
-                  >
-                    <MapOptionsToggle />
-                    <LegendToggle />
+                      <div
+                        className={classnames(
+                          "flex flex-col space-y-2 z-20",
+                          fullscreen
+                            ? "fixed right-6 top-6"
+                            : "absolute right-2 top-2"
+                        )}
+                      >
+                        <MapOptionsToggle />
+                        <LegendToggle />
 
-                    <FullScreenToggle
-                      active={fullscreen}
-                      toggle={toggleFullscreen}
-                    />
-                  </div>
+                        <FullScreenToggle
+                          active={fullscreen}
+                          toggle={toggleFullscreen}
+                          tabPanelRef={tabPanelRef}
+                        />
+                      </div>
 
-                  <MapOptionsWrapper />
-                  <LegendWrapper />
-                </div>
-              </TabPanel>
-            );
-          })
+                      <MapOptionsWrapper />
+                      <LegendWrapper />
+                    </>
+                  )}
+                </TabPanel>
+              );
+            })}
+          </>
         )}
       </div>
     </section>
   );
 }
 
-type BossKillIndicatorProps = {
+type KillIndicatorProps = {
+  type: "boss" | "tormentedLieutenant";
   fullscreen: boolean;
 };
 
-function BossKillIndicator({ fullscreen }: BossKillIndicatorProps) {
+function KillIndicator({ type, fullscreen }: KillIndicatorProps) {
   const setSelectedPull = useReportStore((state) => state.setSelectedPull);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
   const { fight } = useFight();
   const pulls = fight ? fight.pulls : [];
   const startTime = fight ? fight.meta.startTime : 0;
 
-  const pullsWithBoss = pulls.filter((pull) => pull.hasBoss);
+  const [left, setLeft] = useState("32px");
+
+  const isBossType = type === "boss";
+
+  useEffect(() => {
+    setLeft(() => {
+      if (fullscreen && containerRef.current) {
+        const offset = isBossType ? "40" : "60";
+
+        return `calc(${offset}% - ${containerRef.current.clientWidth / 2}px)`;
+      }
+
+      return "32px";
+    });
+  }, [fullscreen, isBossType]);
+
+  const filteredPulls = pulls.filter((pull) => {
+    if (isBossType) {
+      return pulls.filter((pull) => pull.hasBoss);
+    }
+
+    return pull.npcs.some((npc) => isTormentedLieutenant(npc.id));
+  });
+
+  const position = isBossType ? "left-2" : "right-2";
 
   return (
     <>
       <style jsx>
         {`
-          .bossKillIndicator {
-            left: ${containerRef.current
-              ? `calc(50% - ${containerRef.current.clientWidth / 2}px)`
-              : "32px"};
+          .killIndicator {
+            left: ${left};
           }
         `}
       </style>
@@ -444,17 +474,23 @@ function BossKillIndicator({ fullscreen }: BossKillIndicatorProps) {
         className={classnames(
           bgSecondary,
           "absolute rounded-lg p-2 hidden sm:block opacity-75",
-          fullscreen ? "bossKillIndicator bottom-8" : "left-2 bottom-2"
+          fullscreen ? "killIndicator bottom-8" : `${position} bottom-2`
         )}
         ref={containerRef}
       >
-        {pullsWithBoss.map((pull) => {
+        {filteredPulls.map((pull) => {
           const usedLust = findBloodlust(pull);
           const lustAbility = usedLust ? spells[usedLust] : null;
 
-          const [firstBossName] = pull.npcs
-            .filter((npc) => isBoss(npc.id))
-            .map((npc) => npc.name);
+          const maybeRelevantNpcName = isBossType
+            ? pull.npcs
+                .filter((npc) => isBoss(npc.id))
+                .map((npc) => npc.name)?.[0]
+            : pull.npcs.find((npc) => isTormentedLieutenant(npc.id))?.name;
+
+          if (!maybeRelevantNpcName) {
+            return null;
+          }
 
           const fightStart = timeDurationToString(
             pull.startTime - startTime,
@@ -491,12 +527,12 @@ function BossKillIndicator({ fullscreen }: BossKillIndicatorProps) {
                   setSelectedPull(pull.id);
                 }}
               >
-                {firstBossName}{" "}
+                {maybeRelevantNpcName}{" "}
                 {usedLust && lustAbility && (
                   <img
                     className="inline w-6 h-6 rounded-full"
                     src={`${STATIC_ICON_PREFIX}${lustAbility.icon}.jpg`}
-                    alt="Some form of Bloodlust/Heroism was used on this pull."
+                    alt={`${lustAbility.name} was used on this pull.`}
                     width={24}
                     height={24}
                   />
@@ -591,9 +627,14 @@ function LegendToggle() {
 type FullScreenToggleProps = {
   toggle: (nextValue?: boolean) => void;
   active: boolean;
+  tabPanelRef: MutableRefObject<HTMLDivElement | null>;
 };
 
-function FullScreenToggle({ toggle, active }: FullScreenToggleProps) {
+function FullScreenToggle({
+  toggle,
+  active,
+  tabPanelRef,
+}: FullScreenToggleProps) {
   const firstRenderRef = useRef(true);
   const rafRef = useRef<number | null>(null);
 
@@ -631,9 +672,7 @@ function FullScreenToggle({ toggle, active }: FullScreenToggleProps) {
   }, [active]);
 
   useEffect(() => {
-    const container = document.querySelector<HTMLDivElement>(
-      "[data-map-container]"
-    );
+    const container = tabPanelRef.current;
 
     if (!container) {
       return;
@@ -677,7 +716,7 @@ function FullScreenToggle({ toggle, active }: FullScreenToggleProps) {
     }
 
     container.removeAttribute("style");
-  }, [active, toggle]);
+  }, [active, toggle, tabPanelRef.current]);
 
   return (
     <button
@@ -833,7 +872,7 @@ function PullIndicatorIcon({ pull, x, y }: PullIndicatorIconProps) {
 
   const selected = selectedPull === pull.id;
 
-  const size = selected ? 32 : 24;
+  const size = selected || pull.hasBoss ? 32 : 24;
 
   const centerX = x - size / 2;
   const centerY = y - size / 2;

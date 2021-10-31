@@ -1,46 +1,35 @@
 import type { FightSuccessResponse } from "@keystone-heroes/api/functions/fight";
 
-import {
-  affixes,
-  BURSTING,
-  DOS_URN,
-  ENVELOPMENT_OF_MISTS,
-  EXPLOSIVE,
-  GRIEVOUS,
-  HOA_GARGOYLE,
-  NECROTIC,
-  NW,
-  PF,
-  QUAKING,
-  SANGUINE_ICHOR_DAMAGE,
-  SANGUINE_ICHOR_HEALING,
-  SD_LANTERN_BUFF,
-  SD_LANTERN_OPENING,
-  SOA_SPEAR,
-  spells,
-  SPITEFUL,
-  STORMING,
-  TOP_BANNER_AURA,
-  TORMENTED_ABILITIES,
-  VOLCANIC,
-} from "../../staticData";
+import { SANGUINE_ICHOR_HEALING, spells, PF } from "../../staticData";
 import type { AbilityReadyRowProps } from "./rows/AbilityReadyRow";
 import type { ApplyBuffRowProps } from "./rows/ApplyBuffRow";
+import type { ApplyDebuffRowProps } from "./rows/ApplyDebuffRow";
 import type { CastRowProps } from "./rows/CastRow";
 import type { DamageDoneRowProps } from "./rows/DamageDoneRow";
 import type { DamageTakenRowProps } from "./rows/DamageTakenRow";
 import type { DeathRowProps } from "./rows/DeathRow";
 import type { HealingDoneRowProps } from "./rows/HealingDoneRow";
 import type { InterruptRowProps } from "./rows/InterruptRow";
+import type { PlagueBombDamageRowProps } from "./rows/PlagueBombDamageRow";
+import type { SanguineTimeLossRowProps } from "./rows/SanguineTimeLossRow";
+import type { ViolentDetonationDamageRowProps } from "./rows/ViolentDetonationDamageRow";
 
 const bloodlustTypes = new Set([
-  2825, 32_182, 309_658,
+  // Heroism
+  32_182,
+  // Drums of Deathly Ferocity
+  309_658,
   // Timewarp
   80_353,
   // Bloodlust
   2825,
 ]);
-const invisibilityTypes = new Set([307_195, 321_422]);
+const invisibilityTypes = new Set([
+  // Invisible; Potion of the Hidden Spirit
+  307_195,
+  // Dimensional Shifter
+  321_422,
+]);
 
 export const findBloodlust = <
   T extends { events: FightSuccessResponse["pulls"][number]["events"] }
@@ -91,14 +80,6 @@ export const determineAbility = (id: number): typeof spells[number] | null => {
     return spells[id];
   }
 
-  if (id === SANGUINE_ICHOR_DAMAGE || id === SANGUINE_ICHOR_HEALING) {
-    return {
-      name: "Sanguine Ichor",
-      icon: "spell_shadow_bloodboil",
-      cd: 0,
-    };
-  }
-
   // Engineer rez
   if (id === 345_130) {
     return {
@@ -108,196 +89,7 @@ export const determineAbility = (id: number): typeof spells[number] | null => {
     };
   }
 
-  // Necrotic
-  if (id === NECROTIC) {
-    return {
-      name: "Necrotic Wound",
-      icon: "ability_rogue_venomouswounds",
-      cd: Number.MAX_SAFE_INTEGER,
-    };
-  }
-
-  // Bursting
-  if (id === BURSTING) {
-    return {
-      name: affixes["11"].name,
-      icon: affixes["11"].icon,
-      cd: Number.MAX_SAFE_INTEGER,
-    };
-  }
-
-  // Explosive
-  if (id === EXPLOSIVE) {
-    return {
-      name: affixes["13"].name,
-      icon: affixes["13"].icon,
-      cd: Number.MAX_SAFE_INTEGER,
-    };
-  }
-
-  // Storming
-  if (id === STORMING) {
-    return {
-      name: affixes["124"].name,
-      icon: affixes["124"].icon,
-      cd: Number.MAX_SAFE_INTEGER,
-    };
-  }
-
-  // Volcanic
-  if (id === VOLCANIC) {
-    return {
-      name: affixes["3"].name,
-      icon: affixes["3"].icon,
-      cd: Number.MAX_SAFE_INTEGER,
-    };
-  }
-
-  // Quaking
-  if (id === QUAKING) {
-    return {
-      name: affixes["14"].name,
-      icon: affixes["14"].icon,
-      cd: Number.MAX_SAFE_INTEGER,
-    };
-  }
-
-  if (id === HOA_GARGOYLE) {
-    return {
-      name: "Loyal Stoneborn",
-      icon: "ability_revendreth_mage",
-      cd: Number.MAX_SAFE_INTEGER,
-    };
-  }
-
-  if (id === NW.ORB) {
-    return {
-      name: "Discharged Anima",
-      icon: "spell_animabastion_orb",
-      cd: Number.MAX_SAFE_INTEGER,
-    };
-  }
-
-  if (id === NW.KYRIAN_ORB_DAMAGE || id === NW.KYRIAN_ORB_HEAL) {
-    return {
-      name: "Anima Exhaust",
-      icon: "spell_animabastion_orb",
-      cd: Number.MAX_SAFE_INTEGER,
-    };
-  }
-
-  if (id === NW.SPEAR) {
-    return {
-      name: "Bloody Javelin",
-      icon: "inv_polearm_2h_bastionquest_b_01",
-      cd: Number.MAX_SAFE_INTEGER,
-    };
-  }
-
-  // Grievous
-  if (id === GRIEVOUS) {
-    return {
-      name: "Grievous Wound",
-      icon: "ability_backstab",
-      cd: Number.MAX_SAFE_INTEGER,
-    };
-  }
-
-  if (id === SPITEFUL) {
-    return {
-      name: "Spiteful Shade",
-      icon: "ability_meleedamage",
-      cd: Number.MAX_SAFE_INTEGER,
-    };
-  }
-
-  if (id === TOP_BANNER_AURA) {
-    return {
-      name: "TOP_BANNER_AURA",
-      icon: "",
-      cd: Number.MAX_SAFE_INTEGER,
-    };
-  }
-
-  if (id === SD_LANTERN_BUFF) {
-    return {
-      name: "Sinfall Boon",
-      icon: "spell_animarevendreth_buff",
-      cd: Number.MAX_SAFE_INTEGER,
-    };
-  }
-
-  if (id === SD_LANTERN_OPENING) {
-    return {
-      name: "Opening",
-      icon: "spell_animarevendreth_orb",
-      cd: Number.MAX_SAFE_INTEGER,
-    };
-  }
-
-  if (id === ENVELOPMENT_OF_MISTS) {
-    return {
-      name: "Envelopment of Mists",
-      icon: "",
-      cd: Number.MAX_SAFE_INTEGER,
-    };
-  }
-
-  if (id === SOA_SPEAR) {
-    return {
-      name: "SOA_SPEAR",
-      icon: "",
-      cd: Number.MAX_SAFE_INTEGER,
-    };
-  }
-
-  if (id === DOS_URN) {
-    return {
-      name: "DOS_URN",
-      icon: "",
-      cd: Number.MAX_SAFE_INTEGER,
-    };
-  }
-
-  if (id === PF.PLAGUE_BOMB) {
-    return {
-      name: "Plague Bomb",
-      icon: "",
-      cd: Number.MAX_SAFE_INTEGER,
-    };
-  }
-
-  if (id === PF.GREEN_BUFF.aura) {
-    return {
-      name: "Corrosive Gunk",
-      icon: "inv_misc_bone_skull_01",
-      cd: Number.MAX_SAFE_INTEGER,
-    };
-  }
-
-  if (id === PF.RED_BUFF.aura) {
-    return {
-      name: "Rapid Infection",
-      icon: "inv_offhand_1h_artifactskulloferedar_d_05",
-      cd: Number.MAX_SAFE_INTEGER,
-    };
-  }
-
-  if (id === PF.PURPLE_BUFF.aura) {
-    return {
-      name: "Congealed Contagion",
-      icon: "ability_titankeeper_amalgam",
-      cd: Number.MAX_SAFE_INTEGER,
-    };
-  }
-
-  const tormentedPower = TORMENTED_ABILITIES.find(
-    (ability) => ability.id === id
-  );
-
-  return tormentedPower
-    ? { ...tormentedPower, cd: Number.MAX_SAFE_INTEGER }
-    : null;
+  return null;
 };
 
 export type DefaultEvent =
@@ -376,3 +168,25 @@ export const isApplyBuffEventWithAbility = (
     event.type === "ApplyBuffStack" ||
     event.type === "RemoveBuff") &&
   event.ability !== null;
+
+export const isApplyDebuffEventWithAbility = (
+  event: DefaultEvent
+): event is ApplyDebuffRowProps["event"] =>
+  event.type === "ApplyDebuff" && event.ability !== null;
+
+export const isSanguineHealEvent = (
+  event: DefaultEvent
+): event is SanguineTimeLossRowProps["events"][number] =>
+  event.type === "HealingDone" && event.ability?.id === SANGUINE_ICHOR_HEALING;
+
+export const isPlagueBombDamageEvent = (
+  event: DefaultEvent
+): event is PlagueBombDamageRowProps["events"][number] =>
+  (event.type === "DamageDone" || event.type === "DamageTaken") &&
+  event.ability?.id === PF.PLAGUE_BOMB;
+
+export const isViolentDetonationDamageEvent = (
+  event: DefaultEvent
+): event is ViolentDetonationDamageRowProps["events"][number] =>
+  (event.type === "DamageDone" || event.type === "DamageTaken") &&
+  event.ability?.id === PF.CANISTER_VIOLENT_DETONATION;

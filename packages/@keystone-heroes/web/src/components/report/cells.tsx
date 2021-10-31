@@ -90,7 +90,7 @@ export function MaybeWastedCooldownCell({
   }
 
   if (couldUseNTimes <= 1) {
-    return <td>never</td>;
+    return <td>impossible</td>;
   }
 
   return (
@@ -112,7 +112,8 @@ type TypeCellProps = {
     | "ApplyBuff"
     | "ApplyBuffStack"
     | "RemoveBuff"
-    | "BeginCast";
+    | "BeginCast"
+    | "ApplyDebuff";
 };
 
 export function TypeCell({ type }: TypeCellProps): JSX.Element {
