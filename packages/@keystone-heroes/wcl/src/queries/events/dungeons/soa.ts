@@ -1,5 +1,5 @@
 import type { AllTrackedEventTypes, ApplyDebuffEvent } from "../types";
-import { createChunkByThresholdReducer, createIsSpecificEvent } from "../utils";
+import { createIsSpecificEvent } from "../utils";
 
 export const SOA_SPEAR = 339_917 as const;
 
@@ -31,19 +31,8 @@ const isSoaSpearEvent = createIsSpecificEvent<ApplyDebuffEvent>({
   abilityGameID: SOA_SPEAR,
 });
 
-// SoA Spear stun lasts 10 seconds
-// each usage should be thus at least 10s apart of each other
-const soaSpearReducer = createChunkByThresholdReducer(10 * 1000);
-
 export const getSOAEvents = (
   allEvents: AllTrackedEventTypes[]
 ): ApplyDebuffEvent[] => {
-  return (
-    allEvents
-      .filter(isSoaSpearEvent)
-      .reduce<ApplyDebuffEvent[][]>(soaSpearReducer, [])
-      // pick only the first event of each chunk,
-      // indicating when the spear was used
-      .flatMap((chunk) => chunk[0])
-  );
+  return allEvents.filter(isSoaSpearEvent);
 };

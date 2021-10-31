@@ -111,7 +111,7 @@ export default function DamageDoneRow({
         )}
         {event.targetNPC && (
           <>
-            <span> damaged </span>
+            <span> hits </span>
             <ExternalLink
               href={createWowheadUrl({
                 category: "npc",

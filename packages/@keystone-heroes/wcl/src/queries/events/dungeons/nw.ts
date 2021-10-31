@@ -1,20 +1,23 @@
-import type { AllTrackedEventTypes, DamageEvent, HealEvent } from "../types";
-import {
-  createChunkByThresholdReducer,
-  createIsSpecificEvent,
-  reduceEventsByPlayer,
-} from "../utils";
+import type {
+  AllTrackedEventTypes,
+  BeginCastEvent,
+  CastEvent,
+  DamageEvent,
+  HealEvent,
+} from "../types";
+import { createIsSpecificEvent } from "../utils";
 
 export const NW = {
   ORB: 328_406,
   HAMMER: 328_128,
   SPEAR: 328_351,
+  KYRIAN_ORB_BUFF: 335_161,
   KYRIAN_ORB_HEAL: 344_422,
   KYRIAN_ORB_DAMAGE: 344_421,
 } as const;
 
 /**
- * @see https://www.warcraftlogs.com/reports/Jq7KrbYV1hmTWMyw#fight=4&type=summary&view=events&pins=2%24Off%24%23909049%24expression%24type%20%3D%20%22heal%22%20and%20source.type%20%3D%20%22player%22%20and%20ability.id%20%3D344422%5E2%24Off%24%23909049%24expression%24type%20%3D%20%22damage%22%20and%20source.type%20%3D%20%22player%22%20and%20ability.id%20%3D328406%5E2%24Off%24%23a04D8A%24expression%24type%20%3D%20%22damage%22%20and%20source.type%20%3D%20%22player%22%20and%20ability.id%20%3D328128%5E2%24Off%24%23DF5353%24expression%24type%20%3D%20%22damage%22%20and%20source.type%20%3D%20%22player%22%20and%20ability.id%20%3D328351%5E2%24Off%24rgb(78%25,%2061%25,%2043%25)%24expression%24type%20%3D%20%22damage%22%20and%20source.type%20%3D%20%22player%22%20and%20ability.id%20%3D344421
+ * @see https://www.warcraftlogs.com/reports/Jq7KrbYV1hmTWMyw#fight=4&view=events&pins=2%24Off%24%23244F4B%24expression%24(type%20%3D%20%22heal%22%20and%20source.type%20%3D%20%22player%22%20and%20ability.id%20%3D%20344422)%0Aor%20(type%20%3D%20%22damage%22%20and%20source.type%20%3D%20%22player%22%20and%20ability.id%20in%20(328128,%20344421,%20328351,%20328406))%0Aor%20((type%20%3D%20%22begincast%22%20or%20type%20%3D%20%22cast%22)%20and%20source.type%20%3D%20%22player%22%20and%20ability.id%20in%20(328128,%20328351))%0Aor%20(type%20%3D%20%22applybuff%22%20and%20source.type%20%3D%20%22player%22%20and%20ability.id%20%3D%20335161)
  * @example
  * ```gql
  * {
@@ -34,15 +37,30 @@ export const NW = {
  */
 export const filterExpression = [
   `type = "heal" and source.type = "player" and ability.id = ${NW.KYRIAN_ORB_HEAL}`,
-  `type = "damage" and source.type = "player" and ability.id in (${Object.values(
-    NW
-  )
-    .filter((value) => value !== NW.KYRIAN_ORB_HEAL)
-    .join(", ")})`,
+  `type = "damage" and source.type = "player" and ability.id in (${[
+    NW.HAMMER,
+    NW.KYRIAN_ORB_DAMAGE,
+    NW.SPEAR,
+    NW.ORB,
+  ].join(", ")})`,
+  `(type = "begincast" or type = "cast") and source.type = "player" and ability.id in (${[
+    NW.HAMMER,
+    NW.SPEAR,
+  ].join(", ")})`,
 ];
 
 const isNwSpearEvent = createIsSpecificEvent<DamageEvent>({
   type: "damage",
+  abilityGameID: NW.SPEAR,
+});
+
+const isNwSpearCastEvent = createIsSpecificEvent<CastEvent>({
+  type: "cast",
+  abilityGameID: NW.SPEAR,
+});
+
+const isNwSpearBeginCastEvent = createIsSpecificEvent<BeginCastEvent>({
+  type: "begincast",
   abilityGameID: NW.SPEAR,
 });
 
@@ -51,8 +69,23 @@ const isNwHammerEvent = createIsSpecificEvent<DamageEvent>({
   abilityGameID: NW.HAMMER,
 });
 
+const isNwHammerCastEvent = createIsSpecificEvent<CastEvent>({
+  type: "cast",
+  abilityGameID: NW.HAMMER,
+});
+
+const isNwHammerBeginCastEvent = createIsSpecificEvent<BeginCastEvent>({
+  type: "begincast",
+  abilityGameID: NW.HAMMER,
+});
+
 const isNwOrbEvent = createIsSpecificEvent<DamageEvent>({
   type: "damage",
+  abilityGameID: NW.ORB,
+});
+
+const isNwOrbCastEvent = createIsSpecificEvent<CastEvent>({
+  type: "cast",
   abilityGameID: NW.ORB,
 });
 
@@ -66,38 +99,37 @@ const isNwKyrianOrbHealEvent = createIsSpecificEvent<HealEvent>({
   abilityGameID: NW.KYRIAN_ORB_HEAL,
 });
 
-// NW Spear applies a bleed for 16 seconds
-// each usage is hopefully thus at least 16s apart of each other
-// may have to adjust later for multi-spearing...
-const nwSpearReducer = createChunkByThresholdReducer(16 * 1000);
-
-// NW Orb pulses every 1s for 8s
-// each usage is hopefully thus at least 8s apart of each other
-// may have to adjust later for multi-orbing...
-const nwOrbReducer = createChunkByThresholdReducer(8 * 1000);
-
-const nwKyrianOrbReducer = createChunkByThresholdReducer(60 * 1000);
-
 export const getNWEvents = (
   allEvents: AllTrackedEventTypes[]
-): (DamageEvent | HealEvent)[] => {
+): (DamageEvent | HealEvent | BeginCastEvent | CastEvent)[] => {
+  const spearDamageEvents = allEvents.filter(isNwSpearEvent);
+
+  const spearBeginCastEvents = allEvents.filter(isNwSpearBeginCastEvent);
+  const spearCastEvents = allEvents.filter(isNwSpearCastEvent);
+
+  const hammerBeginCastEvents = allEvents.filter(isNwHammerBeginCastEvent);
+  const hammerCastEvents = allEvents.filter(isNwHammerCastEvent);
+  const hammerDamageEvents = allEvents.filter(isNwHammerEvent);
+
+  const orbCastEvents = allEvents.filter(isNwOrbCastEvent);
+  const orbDamageEvents = allEvents.filter(isNwOrbEvent);
+
+  const kyrianOrbDamageEvents = allEvents.filter(isNwKyrianOrbDamageEvent);
+  const kyrianOrbHealEvents = allEvents.filter(isNwKyrianOrbHealEvent);
+
   return [
-    ...allEvents
-      .filter(isNwSpearEvent)
-      .reduce<DamageEvent[][]>(nwSpearReducer, [])
-      .flatMap((chunk) => reduceEventsByPlayer(chunk, "sourceID")),
-    ...allEvents
-      .filter(isNwOrbEvent)
-      .reduce<DamageEvent[][]>(nwOrbReducer, [])
-      .flatMap((chunk) => reduceEventsByPlayer(chunk, "sourceID")),
-    ...allEvents.filter(isNwHammerEvent),
-    ...allEvents
-      .filter(isNwKyrianOrbDamageEvent)
-      .reduce<DamageEvent[][]>(nwKyrianOrbReducer, [])
-      .flatMap((chunk) => reduceEventsByPlayer(chunk, "sourceID")),
-    ...allEvents
-      .filter(isNwKyrianOrbHealEvent)
-      .reduce<HealEvent[][]>(nwKyrianOrbReducer, [])
-      .flatMap((chunk) => reduceEventsByPlayer(chunk, "sourceID")),
+    ...spearDamageEvents,
+    ...spearBeginCastEvents,
+    ...spearCastEvents,
+
+    ...hammerBeginCastEvents,
+    ...hammerCastEvents,
+    ...hammerDamageEvents,
+
+    ...orbCastEvents,
+    ...orbDamageEvents,
+
+    ...kyrianOrbDamageEvents,
+    ...kyrianOrbHealEvents,
   ];
 };

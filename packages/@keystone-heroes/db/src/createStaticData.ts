@@ -41,6 +41,8 @@ const log = (str: string) => {
   console.info(`[@keystone-heroes/db] ${str}`);
 };
 
+const DUMMY_CD = 9999;
+
 async function create() {
   if (process.env.NODE_ENV === "test") {
     return;
@@ -267,132 +269,137 @@ async function create() {
     [SANGUINE_ICHOR_DAMAGE]: {
       name: "Sanguine Ichor",
       icon: "spell_shadow_bloodboil",
-      cd: 0,
+      cd: DUMMY_CD,
     },
     [SANGUINE_ICHOR_HEALING]: {
       name: "Sanguine Ichor",
       icon: "spell_shadow_bloodboil",
-      cd: 0,
+      cd: DUMMY_CD,
     },
     [NECROTIC]: {
       name: "Necrotic Wound",
       icon: "ability_rogue_venomouswounds",
-      cd: 0,
+      cd: DUMMY_CD,
     },
     [BURSTING]: {
       name: affixes["11"].name,
       icon: affixes["11"].icon,
-      cd: 0,
+      cd: DUMMY_CD,
     },
     [EXPLOSIVE.ability]: {
       name: affixes["13"].name,
       icon: affixes["13"].icon,
-      cd: 0,
+      cd: DUMMY_CD,
     },
     [STORMING]: {
       name: affixes["124"].name,
       icon: affixes["124"].icon,
-      cd: 0,
+      cd: DUMMY_CD,
     },
     [VOLCANIC]: {
       name: affixes["3"].name,
       icon: affixes["3"].icon,
-      cd: 0,
+      cd: DUMMY_CD,
     },
     [QUAKING]: {
       name: affixes["14"].name,
       icon: affixes["14"].icon,
-      cd: 0,
+      cd: DUMMY_CD,
     },
     [HOA_GARGOYLE]: {
       name: "Loyal Stoneborn",
       icon: "ability_revendreth_mage",
-      cd: 0,
+      cd: DUMMY_CD,
     },
     [NW.ORB]: {
       name: "Discharged Anima",
       icon: "spell_animabastion_orb",
-      cd: 0,
+      cd: DUMMY_CD,
     },
     [NW.KYRIAN_ORB_DAMAGE]: {
       name: "Anima Exhaust",
       icon: "spell_animabastion_orb",
-      cd: 0,
+      cd: DUMMY_CD,
     },
     [NW.KYRIAN_ORB_HEAL]: {
       name: "Anima Exhaust",
       icon: "spell_animabastion_orb",
-      cd: 0,
+      cd: DUMMY_CD,
     },
     [NW.SPEAR]: {
       name: "Bloody Javelin",
       icon: "inv_polearm_2h_bastionquest_b_01",
-      cd: 0,
+      cd: DUMMY_CD,
+    },
+    [NW.HAMMER]: {
+      name: "Forgotten Forgehammer",
+      icon: "inv_mace_1h_bastionquest_b_01",
+      cd: DUMMY_CD,
     },
     [GRIEVOUS_WOUND]: {
       name: "Grievous Wound",
       icon: "ability_backstab",
-      cd: 0,
+      cd: DUMMY_CD,
     },
     [SPITEFUL.ability]: {
       name: "Spiteful Shade",
       icon: "ability_meleedamage",
-      cd: 0,
+      cd: DUMMY_CD,
     },
     [TOP_BANNER_AURA]: {
       name: "Necrolord's Chosen",
       icon: "ui_sigil_necrolord",
-      cd: 0,
+      cd: DUMMY_CD,
     },
     [SD_LANTERN_BUFF]: {
       name: "Sinfall Boon",
       icon: "spell_animarevendreth_buff",
-      cd: 0,
+      cd: DUMMY_CD,
     },
     [SD_LANTERN_OPENING]: {
       name: "Opening",
       icon: "spell_animarevendreth_orb",
-      cd: 0,
+      cd: DUMMY_CD,
     },
     [ENVELOPMENT_OF_MISTS]: {
       name: "Envelopment of Mists",
       icon: "ability_monk_renewingmists",
-      cd: 0,
+      cd: DUMMY_CD,
     },
     [SOA_SPEAR]: {
       name: "Spear of Destiny",
       icon: "inv_polearm_2h_bastionquest_b_01",
-      cd: 0,
+      cd: DUMMY_CD,
     },
     [DOS_URN]: {
       name: "Haunted Urn",
       icon: "inv_misc_urn_01",
-      cd: 0,
+      cd: DUMMY_CD,
     },
     [PF.PLAGUE_BOMB]: {
       name: "Plague Bomb",
       icon: "ability_vehicle_plaguebarrel",
-      cd: 0,
+      cd: DUMMY_CD,
     },
     [PF.CANISTER_VIOLENT_DETONATION]: {
       name: "Violent Detonation",
       icon: "ability_vehicle_plaguebarrel",
-      cd: 0,
+      cd: DUMMY_CD,
     },
     [PF.GREEN_BUFF.aura]: {
       name: "Corrosive Gunk",
       icon: "inv_misc_bone_skull_01",
-      cd: 0,
+      cd: DUMMY_CD,
     },
     [PF.RED_BUFF.aura]: {
       name: "Rapid Infection",
       icon: "inv_offhand_1h_artifactskulloferedar_d_05",
-      cd: 0,
+      cd: DUMMY_CD,
     },
     [PF.PURPLE_BUFF.aura]: {
       name: "Congealed Contagion",
       icon: "ability_titankeeper_amalgam",
-      cd: 0,
+      cd: DUMMY_CD,
     },
     ...Object.fromEntries(
       tormentedSpells.map((power) => [
@@ -433,7 +440,7 @@ export const TORMENTED_ABILITIES: { id: number; icon: string; name: string; }[] 
       };
     })
   )}\`);
-
+export const DUMMY_CD = ${DUMMY_CD};
 export const DOS_URN = ${DOS_URN};
 export const HOA_GARGOYLE = ${HOA_GARGOYLE};
 export const ENVELOPMENT_OF_MISTS = ${ENVELOPMENT_OF_MISTS};

@@ -151,8 +151,8 @@ export type HealEvent = BaseEvent<{
   absorbed?: number;
 }>;
 
-type EnergizeEvent = BaseEvent<{
-  type: "energize";
+type ResourceChangeEvent = BaseEvent<{
+  type: "resourcechange";
   resourceChange: number;
   resourceChangeType: number;
   otherResourceChange: number;
@@ -201,7 +201,7 @@ export type AnyEvent =
   | AbsorbEvent
   | InterruptEvent
   | ApplyBuffStackEvent
-  | EnergizeEvent
+  | ResourceChangeEvent
   | HealEvent
   | PhaseStartEvent
   | SummonEvent

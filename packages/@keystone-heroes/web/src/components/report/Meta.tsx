@@ -51,8 +51,8 @@ export function Meta(): JSX.Element {
               </span>
               <span className="hidden lg:inline-block 2xl:hidden hover:underline">
                 {dungeon.slug}
-              </span>{" "}
-              +{fight.meta.level}
+              </span>
+              <span> +{fight.meta.level}</span>
             </ExternalLink>
             <sup className="hidden pl-2 space-x-1 sm:inline">
               {Array.from({ length: fight.meta.chests }, (_, index) => (

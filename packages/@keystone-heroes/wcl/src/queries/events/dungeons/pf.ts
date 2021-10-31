@@ -5,11 +5,7 @@ import type {
   DamageEvent,
   DeathEvent,
 } from "../types";
-import {
-  createChunkByThresholdReducer,
-  createIsSpecificEvent,
-  reduceEventsByPlayer,
-} from "../utils";
+import { createChunkByThresholdReducer, createIsSpecificEvent } from "../utils";
 
 const RED_BUFF = {
   unit: 164_705,
@@ -100,9 +96,8 @@ export const getPFEvents = (
 ): (DeathEvent | DamageEvent | ApplyBuffEvent)[] => {
   const plagueBombDamageEvents = allEvents.filter(isPfPlagueBombDamageEvent);
 
-  const plagueBombDamageTakenEvents = reduceEventsByPlayer(
-    plagueBombDamageEvents.filter((event) => actorIDSet.has(event.targetID)),
-    "targetID"
+  const plagueBombDamageTakenEvents = plagueBombDamageEvents.filter((event) =>
+    actorIDSet.has(event.targetID)
   );
   const plagueBombDamageDoneEvents = plagueBombDamageEvents.filter(
     (event) => !actorIDSet.has(event.targetID)

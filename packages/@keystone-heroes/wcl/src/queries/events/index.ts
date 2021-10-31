@@ -1,5 +1,5 @@
 import type { DungeonIDs } from "@keystone-heroes/db/data/dungeons";
-import type { Affixes } from "@keystone-heroes/db/types";
+import { Affixes } from "@keystone-heroes/db/types";
 
 import {
   deathFilterExpression,
@@ -88,7 +88,9 @@ export const getEvents = async (
   const enemyDeathEvents = filterEnemyDeathEvents(
     allEvents,
     actorIDSet,
-    findExplosiveTargetID(allEvents)
+    params.affixes.includes(Affixes.Explosive)
+      ? findExplosiveTargetID(allEvents)
+      : null
   );
 
   return {

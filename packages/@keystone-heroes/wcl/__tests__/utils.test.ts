@@ -1,17 +1,13 @@
 import { graphql } from "msw";
 import { setupServer } from "msw/node";
 
-import { NW } from "../src/queries/events/dungeons/nw";
-import { PF } from "../src/queries/events/dungeons/pf";
-import type { DamageEvent, HealEvent } from "../src/queries/events/types";
+import type { DamageEvent } from "../src/queries/events/types";
 import {
   createChunkByThresholdReducer,
   recursiveGetEvents,
-  reduceEventsByPlayer,
 } from "../src/queries/events/utils";
 import { EventDataType, HostilityType } from "../src/types";
 import { isValidReportId, maybeOngoingReport } from "../src/utils";
-import allEvents from "./fixtures/allEvents.json";
 
 describe("recursiveGetEvents", () => {
   const server = setupServer();
@@ -165,54 +161,6 @@ describe("recursiveGetEvents", () => {
     });
 
     expect(response).toStrictEqual([]);
-  });
-});
-
-describe("reduceEventsByPlayer", () => {
-  describe("DamageEvents", () => {
-    test("targetID === damageTaken by player", () => {
-      const events = allEvents.filter(
-        (event): event is DamageEvent =>
-          event.type === "damage" && event.abilityGameID === PF.PLAGUE_BOMB
-      );
-
-      expect(reduceEventsByPlayer(events, "targetID")).toMatchSnapshot();
-    });
-
-    test("sourceID === damageDone by player", () => {
-      const kyrianOrbDamageEvents = allEvents.filter(
-        (event): event is DamageEvent =>
-          event.type === "damage" && event.abilityGameID === NW.KYRIAN_ORB_HEAL
-      );
-
-      expect(
-        reduceEventsByPlayer(kyrianOrbDamageEvents, "sourceID")
-      ).toMatchSnapshot();
-    });
-  });
-
-  describe("HealEvents", () => {
-    test("targetID === healing received by target", () => {
-      const kyrianOrbHealEvents = allEvents.filter(
-        (event): event is HealEvent =>
-          event.type === "heal" && event.abilityGameID === NW.KYRIAN_ORB_HEAL
-      );
-
-      expect(
-        reduceEventsByPlayer(kyrianOrbHealEvents, "targetID")
-      ).toMatchSnapshot();
-    });
-
-    test("sourceID === healingDone by source", () => {
-      const kyrianOrbHealEvents = allEvents.filter(
-        (event): event is HealEvent =>
-          event.type === "heal" && event.abilityGameID === NW.KYRIAN_ORB_HEAL
-      );
-
-      expect(
-        reduceEventsByPlayer(kyrianOrbHealEvents, "sourceID")
-      ).toMatchSnapshot();
-    });
   });
 });
 

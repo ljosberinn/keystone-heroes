@@ -1,5 +1,5 @@
 import { useFight } from "../../pages/report/[reportID]/[fightID]";
-import { spells } from "../../staticData";
+import { spells, DUMMY_CD } from "../../staticData";
 import { timeDurationToString } from "../../utils";
 import { classnames } from "../../utils/classnames";
 import { usePullDetailsSettings } from "./PullDetailsSettings";
@@ -27,13 +27,17 @@ const calcMissedUsageCount = ({
 
 export function MaybeWastedCooldownCell({
   event,
-}: MaybeWastedCooldownCellProps): JSX.Element {
+}: MaybeWastedCooldownCellProps): JSX.Element | null {
   const { fight } = useFight();
 
   const ability = spells[event.ability.id];
 
   if (!fight || !ability) {
     return <td />;
+  }
+
+  if (ability.cd === DUMMY_CD) {
+    return null;
   }
 
   const isBloodlustIsh = findBloodlust({
@@ -48,9 +52,11 @@ export function MaybeWastedCooldownCell({
 
   if (event.ability.wasted) {
     if (event.ability.nextUse) {
-      const couldUseNTimes = Math.floor(
-        (event.ability.nextUse - event.timestamp) / 1000 / ability.cd
-      );
+      const couldUseNTimes =
+        event.type !== "BeginCast" &&
+        Math.floor(
+          (event.ability.nextUse - event.timestamp) / 1000 / ability.cd
+        );
 
       return (
         <td className="bg-red-500">
@@ -79,7 +85,7 @@ export function MaybeWastedCooldownCell({
   if (event.ability.nextUse) {
     // offset by additional 1 if Cast since if the next seen cast requires this cd,
     // annotating that it could have been used in between would be wrong
-    const wastedCastUpcoming = couldUseNTimes > 1;
+    const wastedCastUpcoming = event.type !== "BeginCast" && couldUseNTimes > 1;
 
     return (
       <td className={wastedCastUpcoming ? "bg-red-500" : undefined}>

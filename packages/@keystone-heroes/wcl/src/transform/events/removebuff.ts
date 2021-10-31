@@ -1,8 +1,11 @@
 import { EventType } from "@keystone-heroes/db/types";
 
 import { SD_LANTERN_BUFF } from "../../queries/events/dungeons/sd";
+import { TOP_BANNER_AURA } from "../../queries/events/dungeons/top";
 import type { RemoveBuffEvent } from "../../queries/events/types";
 import type { Processor } from "../utils";
+
+const relevantBuffs = new Set<number>([SD_LANTERN_BUFF, TOP_BANNER_AURA]);
 
 /**
  * track SD Lantern usage
@@ -11,7 +14,7 @@ export const removeBuffProcessor: Processor<RemoveBuffEvent> = (
   event,
   { targetPlayerID }
 ) => {
-  if (event.abilityGameID === SD_LANTERN_BUFF && targetPlayerID) {
+  if (relevantBuffs.has(event.abilityGameID) && targetPlayerID) {
     return {
       timestamp: event.timestamp,
       eventType: EventType.RemoveBuff,

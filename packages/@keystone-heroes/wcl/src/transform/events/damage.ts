@@ -94,7 +94,7 @@ export const damageProcessor: Processor<DamageEvent> = (
     return {
       timestamp: event.timestamp,
       eventType: EventType.DamageDone,
-      damage: event.amount,
+      damage: event.amount + (event.absorbed ?? 0),
       targetNPCID: ignoreTargetNPCID ? null : targetNPCID,
       sourcePlayerID,
       abilityID: event.abilityGameID,

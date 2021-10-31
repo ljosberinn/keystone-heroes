@@ -1,6 +1,6 @@
 import { getCachedSdk } from "../../client";
 import type { EventDataType, HostilityType, Sdk } from "../../types";
-import type { AnyEvent, DamageEvent, HealEvent, AbsorbEvent } from "./types";
+import type { AnyEvent } from "./types";
 
 export type GetEventBaseParams<
   T extends Record<string, unknown> = Record<string, unknown>
@@ -36,62 +36,6 @@ export const recursiveGetEvents = async <T extends AnyEvent>(
   }
 
   return allEvents;
-};
-
-export const reduceEventsByPlayer = <
-  T extends DamageEvent | HealEvent | AbsorbEvent
->(
-  events: T[],
-  key: "targetID" | "sourceID"
-): T[] => {
-  return events.reduce<T[]>((arr, event) => {
-    const existingIndex = arr.findIndex(
-      (dataset) => dataset[key] === event[key]
-    );
-
-    if (existingIndex === -1) {
-      return [...arr, event];
-    }
-
-    return arr.map((dataset, index) => {
-      if (index !== existingIndex) {
-        return dataset;
-      }
-
-      switch (event.type) {
-        case "absorbed":
-          return {
-            ...dataset,
-            amount: dataset.amount + event.amount,
-          };
-        case "heal":
-          // type guard for overheal; when reducing HealEvents,
-          // dataset must also be of type heal, TS doesn't know this however
-          if (dataset.type === "heal") {
-            return {
-              ...dataset,
-              amount: dataset.amount + event.amount + (event.absorbed ?? 0),
-              overheal: (dataset?.overheal ?? 0) + (event?.overheal ?? 0),
-            };
-          }
-
-          return dataset;
-        case "damage":
-          return {
-            ...dataset,
-            amount:
-              dataset.amount +
-              event.amount +
-              // absorbed damage still contributes to overall dps
-              (event.absorbed ?? 0) -
-              // overkill damage does not
-              (event.overkill ?? 0),
-          };
-        default:
-          return dataset;
-      }
-    });
-  }, []);
 };
 
 export const createChunkByThresholdReducer =

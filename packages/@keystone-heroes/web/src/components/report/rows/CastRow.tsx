@@ -1,4 +1,5 @@
 import { outlineQuestionCircle } from "../../../icons";
+import { DUMMY_CD } from "../../../staticData";
 import { createWowheadUrl, timeDurationToString } from "../../../utils";
 import { classnames } from "../../../utils/classnames";
 import { AbilityIcon } from "../../AbilityIcon";
@@ -34,6 +35,9 @@ export default function CastRow({
   const ability = determineAbility(event.ability.id);
 
   if (!ability) {
+    if (typeof window !== "undefined") {
+      console.log(event);
+    }
     return null;
   }
 
@@ -53,7 +57,14 @@ export default function CastRow({
   const delayedTooHard = possibleUsageCount > 1;
 
   return (
-    <tr className="text-center bg-coolgray-200 hover:bg-white dark:bg-coolgray-600 dark:hover:bg-coolgray-700">
+    <tr
+      className={classnames(
+        "text-center",
+        event.type === "BeginCast"
+          ? "bg-yellow-700 hover:bg-yellow-900"
+          : "bg-coolgray-200 hover:bg-white dark:bg-coolgray-600 dark:hover:bg-coolgray-700"
+      )}
+    >
       <TimestampCell event={event} msSinceLastEvent={msSinceLastEvent} />
 
       <TypeCell type={event.type} />
@@ -64,7 +75,7 @@ export default function CastRow({
         sourcePlayerID={event.sourcePlayerID}
       />
 
-      <td>
+      <td colSpan={ability.cd === DUMMY_CD ? 3 : 1}>
         <ExternalLink
           href={createWowheadUrl({
             category: "spell",
@@ -82,39 +93,41 @@ export default function CastRow({
         </ExternalLink>
       </td>
 
-      <td
-        className={classnames(
-          delayedTooHard && "text-red-500",
-          usedUnderCooldown && "text-green-500",
-          event.ability.lastUse ? null : "text-yellow-500"
-        )}
-        title={
-          delayedTooHard
-            ? `This ability could have been used at least ${
-                possibleUsageCount - 1
-              }x since its last usage.`
-            : undefined
-        }
-      >
-        {event.ability.lastUse ? (
-          <span>
-            {timeDurationToString(
-              event.timestamp - event.ability.lastUse,
-              true
-            )}{" "}
-            ago
-          </span>
-        ) : (
-          "first use"
-        )}
-        {delayedTooHard && (
-          <sup>
-            <svg className="inline w-4 h-4 ml-2 text-black dark:text-white">
-              <use href={`#${outlineQuestionCircle.id}`} />
-            </svg>
-          </sup>
-        )}
-      </td>
+      {ability.cd === DUMMY_CD ? null : (
+        <td
+          className={classnames(
+            delayedTooHard && "text-red-500",
+            usedUnderCooldown && "text-green-500",
+            event.ability.lastUse ? null : "text-yellow-500"
+          )}
+          title={
+            delayedTooHard
+              ? `This ability could have been used at least ${
+                  possibleUsageCount - 1
+                }x since its last usage.`
+              : undefined
+          }
+        >
+          {event.ability.lastUse ? (
+            <span>
+              {timeDurationToString(
+                event.timestamp - event.ability.lastUse,
+                true
+              )}{" "}
+              ago
+            </span>
+          ) : (
+            "first use"
+          )}
+          {delayedTooHard && (
+            <sup>
+              <svg className="inline w-4 h-4 ml-2 text-black dark:text-white">
+                <use href={`#${outlineQuestionCircle.id}`} />
+              </svg>
+            </sup>
+          )}
+        </td>
+      )}
 
       <MaybeWastedCooldownCell event={event} />
     </tr>

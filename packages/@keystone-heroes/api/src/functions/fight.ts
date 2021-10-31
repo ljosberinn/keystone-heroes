@@ -1635,6 +1635,15 @@ const calculatePullsWithWipesAndPercent = (
         )
       );
 
+      /**
+       * EXPERIMENTAL
+       * - in q7KrbYV1hmTWMyw fight 4 pull 2, Blightbone was pulled to reset
+       * - he's instead killed 2 pulls further in, so 0 npcs die in this pull
+       */
+      if (killedNPCTargetIDsOfThisPull.size === 0) {
+        return acc;
+      }
+
       // ensure this pull isn't effectively empty, e.g. only 1 Spiteful Shade
       const enemyNPCs = pull.enemyNPCs.filter((npc) => {
         // ignore generally excluded NPCs to reduce noise
