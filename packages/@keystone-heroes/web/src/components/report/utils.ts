@@ -178,7 +178,8 @@ export const isApplyBuffEventWithAbility = (
 export const isApplyDebuffEventWithAbility = (
   event: DefaultEvent
 ): event is ApplyDebuffRowProps["event"] =>
-  event.type === "ApplyDebuff" && event.ability !== null;
+  (event.type === "ApplyDebuff" || event.type === "ApplyDebuffStack") &&
+  event.ability !== null;
 
 export const isSanguineHealEvent = (
   event: DefaultEvent

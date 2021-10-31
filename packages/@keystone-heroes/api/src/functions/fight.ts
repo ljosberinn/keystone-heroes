@@ -594,9 +594,12 @@ const abilitiesWithCDR = new Set([
   108_978, // Alter Time
   55_342, // Mirror Image
   190_319, // Combustion
+  45_438, // Ice Block
   // Paladin
   642, // Divine Shield
   633, // Lay on Hands
+  31_850, // Ardent Defender
+  304_971, // Divine Toll
 ]);
 
 type CalcAbilityReadyEventsReturn = Omit<
@@ -960,6 +963,8 @@ export const createResponseFromStoredFight = (
 
   const dps = Math.round((dataset.dps * dataset.keystoneTime) / inCombatTime);
   const hps = Math.round((dataset.hps * dataset.keystoneTime) / inCombatTime);
+
+  debugger;
 
   return {
     meta: {

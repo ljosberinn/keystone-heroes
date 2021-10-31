@@ -23,9 +23,6 @@ const dungeonBuffIDs = new Set<number>([
   PF.PURPLE_BUFF.aura,
 ]);
 
-/**
- * track invis potion, bolstering, ToP, SD, PF and Tormented buffs
- */
 export const applyBuffProcessor: Processor<CustomApplyBuffEvent> = (
   event,
   { sourcePlayerID, targetPlayerID, targetNPCID }

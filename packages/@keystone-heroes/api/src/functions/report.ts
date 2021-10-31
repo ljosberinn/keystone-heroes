@@ -801,6 +801,7 @@ export const reportHandler: RequestHandler<Request, ReportResponse> = async (
     });
     return;
   }
+
   const maybeFightsWithMeta: (FightWithMeta | null)[] = await Promise.all(
     fights.map(async (fight) => {
       const table = await getTableData({

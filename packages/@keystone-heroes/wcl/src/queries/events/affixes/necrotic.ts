@@ -2,6 +2,7 @@ import { Affixes } from "@keystone-heroes/db/types";
 
 import type {
   AllTrackedEventTypes,
+  ApplyDebuffEvent,
   ApplyDebuffStackEvent,
   DamageEvent,
 } from "../types";
@@ -28,14 +29,9 @@ export const NECROTIC = 209_858;
  * }
  * ```
  */
-const expressions = {
-  base: `target.type = "player" and ability.id = ${NECROTIC}`,
-  stack: 'type = "applydebuffstack" and stack > 10',
-  damage: 'type = "damage" and rawDamage > 0',
-};
 
 export const filterExpression = [
-  `(${expressions.base}) AND ((${expressions.stack}) OR (${expressions.damage}))`,
+  `type in ("applydebuff", "damage", "applydebuffstack") and ability.id = ${NECROTIC}`,
 ];
 
 const isNecroticDamageEvent = createIsSpecificEvent<DamageEvent>({
@@ -43,38 +39,29 @@ const isNecroticDamageEvent = createIsSpecificEvent<DamageEvent>({
   abilityGameID: NECROTIC,
 });
 
-const isNecroticStackEvent = createIsSpecificEvent<ApplyDebuffStackEvent>({
-  type: "applydebuffstack",
+const isNecroticDebuffStackEvent = createIsSpecificEvent<ApplyDebuffStackEvent>(
+  {
+    type: "applydebuffstack",
+    abilityGameID: NECROTIC,
+  }
+);
+
+const isNecroticDebuffEvent = createIsSpecificEvent<ApplyDebuffEvent>({
+  type: "applydebuff",
   abilityGameID: NECROTIC,
 });
-
-const getHighestNecroticStack = (
-  allEvents: ApplyDebuffStackEvent[]
-): ApplyDebuffStackEvent[] => {
-  const highestStack = allEvents.reduce(
-    (acc, event) => (acc >= event.stack ? acc : event.stack),
-    0
-  );
-
-  // dont care whether this specific stack size was reached multiple times
-  // just need to track one
-  const first = allEvents.find((event) => event.stack === highestStack);
-
-  return first ? [first] : [];
-};
 
 export const getNecroticEvents = (
   allEvents: AllTrackedEventTypes[],
   affixSet: Set<Affixes>
-): (DamageEvent | ApplyDebuffStackEvent)[] => {
+): (DamageEvent | ApplyDebuffStackEvent | ApplyDebuffEvent)[] => {
   if (!affixSet.has(Affixes.Necrotic)) {
     return [];
   }
 
-  const stacks = getHighestNecroticStack(
-    allEvents.filter(isNecroticStackEvent)
-  );
-  const damage = allEvents.filter(isNecroticDamageEvent);
-
-  return [...stacks, ...damage];
+  return [
+    ...allEvents.filter(isNecroticDebuffStackEvent),
+    ...allEvents.filter(isNecroticDamageEvent),
+    ...allEvents.filter(isNecroticDebuffEvent),
+  ];
 };

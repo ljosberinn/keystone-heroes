@@ -25,13 +25,6 @@ const environmentalDamageAffixAbilities = new Set([
   NECROTIC,
 ]);
 
-/**
- * track any damage taken from
- * - affixes
- *
- * track any player damage done to
- * - explosives (pre-filtered to only contain lasthits)
- */
 export const damageProcessor: Processor<DamageEvent> = (
   event,
   { targetPlayerID, sourcePlayerID, sourceNPCID, targetNPCID }

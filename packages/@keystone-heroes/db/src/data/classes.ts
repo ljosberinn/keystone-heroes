@@ -16,6 +16,7 @@ type Ability = {
     | 150
     | 180
     | 240
+    | 270
     | 300
     | 360
     | 480
@@ -258,7 +259,7 @@ export const classes: Class[] = [
           {
             name: "Cold Snap",
             id: 235_219,
-            cd: 300,
+            cd: 270,
             icon: "spell_frost_wizardmark",
           },
           {

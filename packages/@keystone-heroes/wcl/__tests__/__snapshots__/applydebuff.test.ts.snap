@@ -5,36 +5,43 @@ Array [
   Object {
     "abilityID": 228626,
     "eventType": "ApplyDebuff",
+    "targetPlayerID": null,
     "timestamp": 647832,
   },
   Object {
     "abilityID": 228626,
     "eventType": "ApplyDebuff",
+    "targetPlayerID": null,
     "timestamp": 1286270,
   },
   Object {
     "abilityID": 228626,
     "eventType": "ApplyDebuff",
+    "targetPlayerID": null,
     "timestamp": 1286270,
   },
   Object {
     "abilityID": 228626,
     "eventType": "ApplyDebuff",
+    "targetPlayerID": null,
     "timestamp": 1286270,
   },
   Object {
     "abilityID": 228626,
     "eventType": "ApplyDebuff",
+    "targetPlayerID": null,
     "timestamp": 1286270,
   },
   Object {
     "abilityID": 228626,
     "eventType": "ApplyDebuff",
+    "targetPlayerID": null,
     "timestamp": 1286270,
   },
   Object {
     "abilityID": 228626,
     "eventType": "ApplyDebuff",
+    "targetPlayerID": null,
     "timestamp": 1286270,
   },
 ]
@@ -45,26 +52,31 @@ Array [
   Object {
     "abilityID": 323881,
     "eventType": "ApplyDebuff",
+    "targetPlayerID": null,
     "timestamp": 35495540,
   },
   Object {
     "abilityID": 323881,
     "eventType": "ApplyDebuff",
+    "targetPlayerID": null,
     "timestamp": 35495540,
   },
   Object {
     "abilityID": 323881,
     "eventType": "ApplyDebuff",
+    "targetPlayerID": null,
     "timestamp": 35495540,
   },
   Object {
     "abilityID": 323881,
     "eventType": "ApplyDebuff",
+    "targetPlayerID": null,
     "timestamp": 35495540,
   },
   Object {
     "abilityID": 323881,
     "eventType": "ApplyDebuff",
+    "targetPlayerID": null,
     "timestamp": 35495540,
   },
 ]
@@ -75,51 +87,61 @@ Array [
   Object {
     "abilityID": 339917,
     "eventType": "ApplyDebuff",
+    "targetPlayerID": null,
     "timestamp": 11913707,
   },
   Object {
     "abilityID": 339917,
     "eventType": "ApplyDebuff",
+    "targetPlayerID": null,
     "timestamp": 11913707,
   },
   Object {
     "abilityID": 339917,
     "eventType": "ApplyDebuff",
+    "targetPlayerID": null,
     "timestamp": 11913707,
   },
   Object {
     "abilityID": 339917,
     "eventType": "ApplyDebuff",
+    "targetPlayerID": null,
     "timestamp": 11913707,
   },
   Object {
     "abilityID": 339917,
     "eventType": "ApplyDebuff",
+    "targetPlayerID": null,
     "timestamp": 11913707,
   },
   Object {
     "abilityID": 339917,
     "eventType": "ApplyDebuff",
+    "targetPlayerID": null,
     "timestamp": 11913707,
   },
   Object {
     "abilityID": 339917,
     "eventType": "ApplyDebuff",
+    "targetPlayerID": null,
     "timestamp": 11913707,
   },
   Object {
     "abilityID": 339917,
     "eventType": "ApplyDebuff",
+    "targetPlayerID": null,
     "timestamp": 11913707,
   },
   Object {
     "abilityID": 339917,
     "eventType": "ApplyDebuff",
+    "targetPlayerID": null,
     "timestamp": 11913879,
   },
   Object {
     "abilityID": 339917,
     "eventType": "ApplyDebuff",
+    "targetPlayerID": null,
     "timestamp": 12840160,
   },
 ]

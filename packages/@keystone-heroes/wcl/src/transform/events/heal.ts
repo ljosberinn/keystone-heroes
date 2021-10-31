@@ -5,11 +5,6 @@ import { NW } from "../../queries/events/dungeons/nw";
 import type { HealEvent } from "../../queries/events/types";
 import type { Processor } from "../utils";
 
-/**
- * track any heal:
- * - sanguine
- * - kyrian orb
- */
 export const healProcessor: Processor<HealEvent> = (
   event,
   { targetNPCID, targetPlayerID, sourcePlayerID }

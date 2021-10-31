@@ -4,11 +4,6 @@ import { PF } from "@keystone-heroes/wcl/queries/events/dungeons/pf";
 import type { DeathEvent } from "../../queries/events/types";
 import type { PersistedDungeonPull, Processor } from "../utils";
 
-/**
- * track deaths:
- * - all player deaths
- * - PF slimes
- */
 export const deathProcessor: Processor<
   DeathEvent,
   { pull: PersistedDungeonPull }

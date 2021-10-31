@@ -5,7 +5,7 @@ import { NECROTIC } from "../../queries/events/affixes/necrotic";
 import type { ApplyDebuffStackEvent } from "../../queries/events/types";
 import type { Processor } from "../utils";
 
-const relevantDebuffs = new Set<number>([NECROTIC, BURSTING]);
+const relevantDebuffs = new Set<number>([NECROTIC, BURSTING.debuff]);
 
 export const applyDebuffStackprocessor: Processor<ApplyDebuffStackEvent> = (
   event,
@@ -17,6 +17,7 @@ export const applyDebuffStackprocessor: Processor<ApplyDebuffStackEvent> = (
       abilityID: event.abilityGameID,
       stacks: event.stack,
       eventType: EventType.ApplyDebuffStack,
+      targetPlayerID,
     };
   }
 

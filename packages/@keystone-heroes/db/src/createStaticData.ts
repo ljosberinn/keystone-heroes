@@ -281,7 +281,12 @@ async function create() {
       icon: "ability_rogue_venomouswounds",
       cd: DUMMY_CD,
     },
-    [BURSTING]: {
+    [BURSTING.damage]: {
+      name: affixes["11"].name,
+      icon: affixes["11"].icon,
+      cd: DUMMY_CD,
+    },
+    [BURSTING.debuff]: {
       name: affixes["11"].name,
       icon: affixes["11"].icon,
       cd: DUMMY_CD,
@@ -422,7 +427,7 @@ const tormentedLieutenantIDs = new Set<number>(${JSON.stringify(
   )});  
 const allBossIDs = new Set<number>(${JSON.stringify([...allBossIDs])});
 export const VOLCANIC = ${VOLCANIC};
-export const BURSTING = ${BURSTING};
+export const BURSTING = JSON.parse(\`${JSON.stringify(BURSTING)}\`);
 export const NECROTIC = ${NECROTIC};
 export const GRIEVOUS = ${GRIEVOUS_WOUND};
 export const EXPLOSIVE = JSON.parse(\`${JSON.stringify(EXPLOSIVE)}\`);

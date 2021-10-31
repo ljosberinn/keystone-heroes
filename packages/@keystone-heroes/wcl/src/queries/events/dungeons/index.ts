@@ -47,7 +47,7 @@ export const filterDungeonEvents = (
   | CastEvent[]
   | (DeathEvent | DamageEvent | ApplyBuffEvent)[]
   | (BeginCastEvent | ApplyBuffEvent | RemoveBuffEvent | ApplyBuffStackEvent)[]
-  | (DamageEvent | HealEvent)[] => {
+  | (DamageEvent | HealEvent | BeginCastEvent | CastEvent)[] => {
   switch (dungeonID) {
     case DungeonIDs.DE_OTHER_SIDE:
       return getDOSEvents(allEvents);

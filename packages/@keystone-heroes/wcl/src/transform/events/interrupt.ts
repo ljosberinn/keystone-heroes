@@ -4,9 +4,6 @@ import { QUAKING } from "../../queries/events/affixes/quaking";
 import type { InterruptEvent } from "../../queries/events/types";
 import type { Processor } from "../utils";
 
-/**
- * track any interrupts through quaking including the interrupted ability
- */
 export const interruptProcessor: Processor<InterruptEvent> = (
   event,
   { sourcePlayerID, targetPlayerID }

@@ -5,7 +5,10 @@ import type {
   AllTrackedEventTypes,
   ApplyBuffEvent,
   ApplyBuffStackEvent,
+  ApplyDebuffEvent,
   ApplyDebuffStackEvent,
+  BeginCastEvent,
+  CastEvent,
   DamageEvent,
   HealEvent,
   InterruptEvent,
@@ -99,6 +102,9 @@ export const filterAffixEvents = (
   | HealEvent
   | InterruptEvent
   | ApplyDebuffStackEvent
+  | BeginCastEvent
+  | CastEvent
+  | ApplyDebuffEvent
 )[] => {
   const affixSet = new Set(affixes);
 

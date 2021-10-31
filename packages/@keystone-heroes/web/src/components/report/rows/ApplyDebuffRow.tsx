@@ -10,7 +10,7 @@ import type { CastRowProps } from "./CastRow";
 export type ApplyDebuffRowProps = {
   event: Omit<DefaultEvent, "ability" | "type"> & {
     ability: CastRowProps["event"]["ability"];
-    type: "ApplyDebuff";
+    type: "ApplyDebuff" | "ApplyDebuffStack";
   };
 } & Pick<
   TableRowProps,
@@ -21,6 +21,8 @@ export type ApplyDebuffRowProps = {
 export default function ApplyDebuffRow({
   event,
   msSinceLastEvent,
+  playerIdPlayerNameMap,
+  playerIdTextColorMap,
 }: ApplyDebuffRowProps): JSX.Element | null {
   const ability = determineAbility(event.ability.id);
 
@@ -51,8 +53,19 @@ export default function ApplyDebuffRow({
             width={16}
             height={16}
           />
-          <b className="pl-2">{ability.name}</b>
+          <b className="pl-2">
+            {ability.name}
+            {event.stacks ? <> ({event.stacks})</> : null}
+          </b>
         </ExternalLink>
+        {event.targetPlayerID && (
+          <>
+            <span> on </span>
+            <span className={playerIdTextColorMap[event.targetPlayerID]}>
+              {playerIdPlayerNameMap[event.targetPlayerID]}
+            </span>
+          </>
+        )}
       </td>
     </tr>
   );

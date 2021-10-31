@@ -11,9 +11,6 @@ const relevantBeginCastIDs = new Set<number>([
   NW.SPEAR,
 ]);
 
-/**
- * track SD Lantern usage
- */
 export const beginCastProcessor: Processor<BeginCastEvent> = (
   event,
   { sourcePlayerID }

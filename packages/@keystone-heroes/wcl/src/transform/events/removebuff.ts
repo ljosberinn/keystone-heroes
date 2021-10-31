@@ -7,9 +7,6 @@ import type { Processor } from "../utils";
 
 const relevantBuffs = new Set<number>([SD_LANTERN_BUFF, TOP_BANNER_AURA]);
 
-/**
- * track SD Lantern usage
- */
 export const removeBuffProcessor: Processor<RemoveBuffEvent> = (
   event,
   { targetPlayerID }

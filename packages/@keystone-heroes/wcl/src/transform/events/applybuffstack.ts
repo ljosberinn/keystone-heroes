@@ -5,9 +5,6 @@ import { SD_LANTERN_BUFF } from "../../queries/events/dungeons/sd";
 import type { ApplyBuffStackEvent } from "../../queries/events/types";
 import type { Processor } from "../utils";
 
-/**
- * track SD Lantern usage and Tormented buffs
- */
 export const applyBuffStackProcessor: Processor<ApplyBuffStackEvent> = (
   event,
   { targetPlayerID }
