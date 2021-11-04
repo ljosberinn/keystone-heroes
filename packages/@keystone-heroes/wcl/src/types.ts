@@ -1060,6 +1060,8 @@ export type ReportEventsArgs = {
   targetID?: Maybe<Scalars["Int"]>;
   targetInstanceID?: Maybe<Scalars["Int"]>;
   translate?: Maybe<Scalars["Boolean"]>;
+  useAbilityIDs?: Maybe<Scalars["Boolean"]>;
+  useActorIDs?: Maybe<Scalars["Boolean"]>;
   viewOptions?: Maybe<Scalars["Int"]>;
   wipeCutoff?: Maybe<Scalars["Int"]>;
 };

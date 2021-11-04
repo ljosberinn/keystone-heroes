@@ -5455,6 +5455,30 @@
                 "deprecationReason": null
               },
               {
+                "name": "useAbilityIDs",
+                "description": "Optional. Whether or not to include detailed ability information. Adds substantially to bandwidth, so defaults to true. Set to false if you do not want to fetch the master data of the report.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                },
+                "defaultValue": "true",
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "useActorIDs",
+                "description": "Optional. Whether or not to include detailed actor information. Adds substantially to bandwidth, so defaults to true. Set to false if you do not want to fetch the master data of the report.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                },
+                "defaultValue": "true",
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
                 "name": "viewOptions",
                 "description": "Optional. A bitfield set of options used in the site UI. You can experiment in each view with the options to see what these values are.",
                 "type": {
