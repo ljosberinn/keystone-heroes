@@ -4,6 +4,7 @@ import {
   WCL_GQL_ENDPOINT,
   WCL_OAUTH_ENDPOINT,
 } from "@keystone-heroes/env";
+import type { WCLAuth } from "@prisma/client";
 import { GraphQLClient } from "graphql-request";
 import fetch from "node-fetch";
 
@@ -37,6 +38,18 @@ export const getCachedSdk = async (): Promise<Sdk> => {
   return cache.sdk;
 };
 
+const FIVE_DAYS_IN_SECONDS = 5 * 24 * 60 * 60;
+
+const mustRefreshToken = (expiresAt: NonNullable<WCLAuth["expiresAt"]>) => {
+  const now = Math.floor(Date.now() / 1000);
+
+  if (expiresAt <= now || expiresAt - now <= FIVE_DAYS_IN_SECONDS) {
+    return true;
+  }
+
+  return false;
+};
+
 export const getGqlClient = async (): Promise<GraphQLClient> => {
   if (cache.pending) {
     await new Promise((resolve) => {
@@ -46,11 +59,7 @@ export const getGqlClient = async (): Promise<GraphQLClient> => {
     return getGqlClient();
   }
 
-  if (
-    cache.client &&
-    cache.expiresAt &&
-    cache.expiresAt > Date.now() + 60 * 1000
-  ) {
+  if (cache.client && cache.expiresAt && !mustRefreshToken(cache.expiresAt)) {
     return cache.client;
   }
 
@@ -60,6 +69,7 @@ export const getGqlClient = async (): Promise<GraphQLClient> => {
   if (
     persisted?.token &&
     persisted?.expiresAt &&
+    !mustRefreshToken(persisted.expiresAt) &&
     !cache.client &&
     !cache.expiresAt
   ) {

@@ -1,5 +1,5 @@
 import "../src/styles/globals.css";
-import { icons } from "../src/icons";
+import * as icons from "../src/icons";
 import { ColorModeToggle } from "../src/components/ColorModeToggle";
 export const parameters = {
   actions: { argTypesRegex: "^on[A-Z].*" },
