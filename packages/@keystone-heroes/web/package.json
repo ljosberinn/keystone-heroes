@@ -20,7 +20,7 @@
     "@keystone-heroes/wcl": "1.0.0",
     "@sentry/react": "6.14.1",
     "@tanem/react-nprogress": "3.0.82",
-    "next": "12.0.3",
+    "next": "12.0.0",
     "next-connect": "0.11.0",
     "next-themes": "0.0.15",
     "react": "npm:react@next",
