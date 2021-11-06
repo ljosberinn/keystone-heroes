@@ -766,7 +766,7 @@ export const reportHandler: RequestHandler<Request, ReportResponse> = async (
         fightIsUnknown(fight)
       ) {
         if (!fight.gameZone || fight.gameZone.id in dungeonMap) {
-          return fightIsTimedKeystone(fight) ? [...acc, fight] : acc;
+          return [...acc, fight];
         }
 
         const fightMaps = new Set(fight.maps.map((map) => map.id));
@@ -788,7 +788,7 @@ export const reportHandler: RequestHandler<Request, ReportResponse> = async (
           },
         };
 
-        return fightIsTimedKeystone(fixedFight) ? [...acc, fixedFight] : acc;
+        return [...acc, fixedFight];
       }
 
       return acc;

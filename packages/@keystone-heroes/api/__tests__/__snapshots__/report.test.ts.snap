@@ -469,6 +469,17 @@ Object {
 
 exports[`/api/report existing report ongoing report - new fights - table request failing for new report 1`] = `
 Object {
+  "endTime": 24455197,
+  "fightIDs": Array [
+    12,
+  ],
+  "reportID": "THJWBAXcn2j9Nvkt",
+  "startTime": 22291597,
+}
+`;
+
+exports[`/api/report existing report ongoing report - new fights - table request failing for new report 2`] = `
+Object {
   "endTime": 1910367,
   "fightIDs": Array [
     99,
@@ -478,7 +489,7 @@ Object {
 }
 `;
 
-exports[`/api/report existing report ongoing report - new fights - table request failing for new report 2`] = `
+exports[`/api/report existing report ongoing report - new fights - table request failing for new report 3`] = `
 Object {
   "error": "Warcraftlogs could not be reached or the API request limit has been reached. Please try again at a later time.",
 }
@@ -486,6 +497,17 @@ Object {
 
 exports[`/api/report existing report ongoing report - new fights 1`] = `
 Object {
+  "endTime": 24455197,
+  "fightIDs": Array [
+    12,
+  ],
+  "reportID": "THJWBAXcn2j9Nvkt",
+  "startTime": 22291597,
+}
+`;
+
+exports[`/api/report existing report ongoing report - new fights 2`] = `
+Object {
   "endTime": 1910367,
   "fightIDs": Array [
     99,
@@ -495,7 +517,7 @@ Object {
 }
 `;
 
-exports[`/api/report existing report ongoing report - new fights 2`] = `
+exports[`/api/report existing report ongoing report - new fights 3`] = `
 Array [
   Array [
     Object {
@@ -514,7 +536,7 @@ Array [
 ]
 `;
 
-exports[`/api/report existing report ongoing report - new fights 3`] = `
+exports[`/api/report existing report ongoing report - new fights 4`] = `
 Array [
   Array [
     Object {
@@ -631,7 +653,7 @@ Array [
 ]
 `;
 
-exports[`/api/report existing report ongoing report - new fights 4`] = `
+exports[`/api/report existing report ongoing report - new fights 5`] = `
 Array [
   Array [
     Object {
@@ -888,7 +910,7 @@ Array [
 ]
 `;
 
-exports[`/api/report existing report ongoing report - new fights 5`] = `
+exports[`/api/report existing report ongoing report - new fights 6`] = `
 Array [
   Array [
     Object {
@@ -1020,7 +1042,7 @@ Array [
 ]
 `;
 
-exports[`/api/report existing report ongoing report - new fights 6`] = `
+exports[`/api/report existing report ongoing report - new fights 7`] = `
 Array [
   Array [
     Object {
@@ -1062,7 +1084,7 @@ Array [
 ]
 `;
 
-exports[`/api/report existing report ongoing report - new fights 7`] = `
+exports[`/api/report existing report ongoing report - new fights 8`] = `
 Array [
   Array [
     Object {
@@ -1095,7 +1117,7 @@ Array [
 ]
 `;
 
-exports[`/api/report existing report ongoing report - new fights 8`] = `
+exports[`/api/report existing report ongoing report - new fights 9`] = `
 Array [
   Array [
     Object {
@@ -1128,7 +1150,7 @@ Array [
 ]
 `;
 
-exports[`/api/report existing report ongoing report - new fights 9`] = `
+exports[`/api/report existing report ongoing report - new fights 10`] = `
 Array [
   Array [
     Object {
@@ -1171,7 +1193,7 @@ Array [
 ]
 `;
 
-exports[`/api/report existing report ongoing report - new fights 10`] = `
+exports[`/api/report existing report ongoing report - new fights 11`] = `
 Array [
   Array [
     Object {
@@ -1253,7 +1275,7 @@ Array [
 ]
 `;
 
-exports[`/api/report existing report ongoing report - new fights 11`] = `
+exports[`/api/report existing report ongoing report - new fights 12`] = `
 Array [
   Array [
     Object {
@@ -1646,7 +1668,7 @@ Array [
 ]
 `;
 
-exports[`/api/report existing report ongoing report - new fights 12`] = `
+exports[`/api/report existing report ongoing report - new fights 13`] = `
 Object {
   "affixes": Array [
     Object {

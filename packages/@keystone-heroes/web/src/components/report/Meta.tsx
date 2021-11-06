@@ -118,22 +118,7 @@ export function Meta(): JSX.Element {
 
         {/* <-------> */}
 
-        <div className="flex p-4 pt-0 space-x-2 text-2xl">
-          <span>{timeDurationToString(fight.meta.time)}</span>
-          <span
-            className={`italic ${greenText}`}
-            title={`${fight.meta.chests} chest${
-              fight.meta.chests > 1 ? "s" : ""
-            }`}
-          >
-            +{timeDurationToString(dungeon.time - fight.meta.time)}
-          </span>
-          {fight.meta.totalDeaths > 0 && (
-            <span className={`italic ${redText}`}>
-              -{timeDurationToString(fight.meta.totalDeaths * 5 * 1000, true)}
-            </span>
-          )}
-        </div>
+        <TimeInformation meta={fight.meta} dungeon={dungeon} />
 
         <div className="p-4 pt-0">
           <span
@@ -1016,5 +1001,35 @@ function QuickStats() {
         </tbody>
       </table>
     </>
+  );
+}
+
+type TimeInformationProps = {
+  meta: FightSuccessResponse["meta"];
+  dungeon: typeof dungeons[number];
+};
+
+function TimeInformation({ meta, dungeon }: TimeInformationProps) {
+  // threshold of +750 due to API <-> ingame inconsistencies
+  const isTimed = meta.time - 750 <= dungeon.time;
+
+  return (
+    <div className="flex p-4 pt-0 space-x-2 text-2xl">
+      <span>{timeDurationToString(meta.time)}</span>
+      <span
+        className={`italic ${isTimed ? greenText : redText}`}
+        title={`${meta.chests} chest${meta.chests > 1 ? "s" : ""}`}
+      >
+        {isTimed ? "+" : "-"}
+        {timeDurationToString(
+          isTimed ? dungeon.time - meta.time : meta.time - dungeon.time
+        )}
+      </span>
+      {meta.totalDeaths > 0 && (
+        <span className={`italic ${redText}`}>
+          -{timeDurationToString(meta.totalDeaths * 5 * 1000, true)}
+        </span>
+      )}
+    </div>
   );
 }
