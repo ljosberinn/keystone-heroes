@@ -81,6 +81,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, State> {
     const { error, componentStack, eventId } = this.state;
 
     if (error) {
+      console.log({ componentStack, eventId });
       return fallback ?? <h1>welp</h1>;
     }
 

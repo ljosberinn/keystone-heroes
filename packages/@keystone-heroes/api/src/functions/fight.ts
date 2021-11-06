@@ -50,7 +50,6 @@ import type {
 } from "@keystone-heroes/wcl/queries/events/types";
 import { processEvents } from "@keystone-heroes/wcl/transform";
 import type { PersistedDungeonPull } from "@keystone-heroes/wcl/transform/utils";
-import { startTransaction, configureScope } from "@sentry/node";
 import nc from "next-connect";
 
 import {

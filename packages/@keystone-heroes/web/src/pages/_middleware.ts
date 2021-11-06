@@ -14,7 +14,7 @@ font-src 'self' fonts.gstatic.com;
 `;
 
 const headers = {
-  // "Content-Security-Policy": ContentSecurityPolicy.replace(/\n/giu, ""),
+  "Content-Security-Policy": ContentSecurityPolicy.replace(/\n/giu, ""),
   "Referrer-Policy": "origin-when-cross-origin",
   "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
   "Strict-Transport-Security": "max-age=31536000; includeSubDomains; preload",
