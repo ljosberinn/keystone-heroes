@@ -11,8 +11,6 @@
   "dependencies": {
     "@keystone-heroes/db": "1.0.0",
     "@keystone-heroes/wcl": "1.0.0",
-    "@sentry/node": "6.14.1",
-    "blizzard.js": "4.1.1",
     "cookie": "0.4.1",
     "next-connect": "0.11.0"
   },

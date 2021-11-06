@@ -35,6 +35,7 @@ export default function App({
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width"
         />
+        <title>Keystone Heroes</title>
       </Head>
       <RouteChangeIndicator />
       <ThemeProvider attribute="class" defaultTheme="dark">
