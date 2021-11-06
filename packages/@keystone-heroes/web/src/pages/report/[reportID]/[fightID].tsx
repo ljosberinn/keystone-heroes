@@ -14,6 +14,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { createContext, useContext } from "react";
 
+import { Spinner } from "../../../components/Spinner";
 import { Data } from "../../../components/report/Data";
 import { Map } from "../../../components/report/Map";
 import { Meta } from "../../../components/report/Meta";
@@ -115,8 +116,12 @@ export default function FightID({ cache }: FightIDProps): JSX.Element | null {
     initialState: cache?.fight ?? null,
   });
 
-  if (!fightID || !reportID || !fight) {
-    return null;
+  if (!fightID || !reportID || !fight || loading) {
+    return (
+      <div className="self-center w-1/4 h-1/4">
+        <Spinner />
+      </div>
+    );
   }
 
   if ("error" in fight) {

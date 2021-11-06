@@ -59,7 +59,7 @@ function useWCLURLPaste() {
         return;
       }
 
-      const paste = event.clipboardData.getData("text");
+      const paste = event.clipboardData.getData("text").trim();
       const { reportID, fightID } = parseWCLUrl(paste);
 
       if (reportID) {

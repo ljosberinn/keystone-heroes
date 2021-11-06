@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { green, red } from "tailwindcss/colors";
 import create from "zustand";
 
 import { ls } from "./utils/localStorage";
@@ -20,8 +19,8 @@ export const useReportStore = create<ReportStore>((set) => {
   };
 });
 
-const defaultPullConnectionLineColor = green["500"];
-const defaultInvisPullConnectionLineColor = red["500"];
+const defaultPullConnectionLineColor = "#22c55e";
+const defaultInvisPullConnectionLineColor = "#ef4444";
 
 export type MapOptionsStore = {
   visible: boolean;

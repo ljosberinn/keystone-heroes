@@ -26,6 +26,7 @@ import {
   SHROUD_ICON,
   STATIC_ICON_PREFIX,
 } from "../AbilityIcon";
+import { ErrorBoundary } from "../ErrorBoundary";
 import { ExternalLink } from "../ExternalLink";
 import { PullDetailsSettingsProvider } from "./PullDetailsSettings";
 import type { DefaultEvent } from "./utils";
@@ -669,115 +670,74 @@ function Events() {
               </tr>
             </thead>
             {before.length > 0 && (
-              <tbody>
-                <tr>
-                  <td colSpan={6} className="text-center">
-                    <span
-                      className="font-semibold"
-                      title="Events that happend closer to this pull than the last can be found here."
-                    >
-                      Before Pull
-                      <sup>
-                        <svg className="inline w-4 h-4 ml-2 text-black dark:text-white">
-                          <use href={`#${outlineQuestionCircle.id}`} />
-                        </svg>
-                      </sup>
-                    </span>
-                  </td>
-                </tr>
-                <SuspenseList revealOrder="forwards">
-                  {before.map((event, index) => {
-                    const msSinceLastEvent = before[index - 1]
-                      ? timeDurationToString(
-                          event.timestamp - before[index - 1].timestamp
-                        )
-                      : timeDurationToString(0);
-
-                    return (
-                      <Suspense
-                        fallback={null}
-                        key={createRowKey(event, index)}
+              <ErrorBoundary>
+                <tbody>
+                  <tr>
+                    <td colSpan={6} className="text-center">
+                      <span
+                        className="font-semibold"
+                        title="Events that happend closer to this pull than the last can be found here."
                       >
-                        <TableRow
-                          event={event}
-                          msSinceLastEvent={msSinceLastEvent}
-                          playerIdPlayerNameMap={playerIdPlayerNameMap}
-                          playerIdTextColorMap={playerIdTextColorMap}
-                        />
-                      </Suspense>
-                    );
-                  })}
-                </SuspenseList>
-              </tbody>
+                        Before Pull
+                        <sup>
+                          <svg className="inline w-4 h-4 ml-2 text-black dark:text-white">
+                            <use href={`#${outlineQuestionCircle.id}`} />
+                          </svg>
+                        </sup>
+                      </span>
+                    </td>
+                  </tr>
+                  <SuspenseList revealOrder="forwards">
+                    {before.map((event, index) => {
+                      const msSinceLastEvent = before[index - 1]
+                        ? timeDurationToString(
+                            event.timestamp - before[index - 1].timestamp
+                          )
+                        : timeDurationToString(0);
+
+                      return (
+                        <Suspense
+                          fallback={null}
+                          key={createRowKey(event, index)}
+                        >
+                          <TableRow
+                            event={event}
+                            msSinceLastEvent={msSinceLastEvent}
+                            playerIdPlayerNameMap={playerIdPlayerNameMap}
+                            playerIdTextColorMap={playerIdTextColorMap}
+                          />
+                        </Suspense>
+                      );
+                    })}
+                  </SuspenseList>
+                </tbody>
+              </ErrorBoundary>
             )}
 
-            <tbody
-              className={
-                before.length > 0
-                  ? "border-t-2 border-coolgray-900 text-center"
-                  : undefined
-              }
-            >
-              <tr>
-                <td colSpan={6} className="text-center">
-                  <span className="font-semibold">During Pull</span>
-                </td>
-              </tr>
-              <SuspenseList revealOrder="forwards">
-                {during.map((event, index) => {
-                  const msSinceLastEvent = during[index - 1]
-                    ? timeDurationToString(
-                        event.timestamp - during[index - 1].timestamp
-                      )
-                    : timeDurationToString(
-                        before.length > 0
-                          ? event.timestamp -
-                              before[before.length - 1].timestamp
-                          : 0
-                      );
-
-                  return (
-                    <Suspense fallback={null} key={createRowKey(event, index)}>
-                      <TableRow
-                        event={event}
-                        msSinceLastEvent={msSinceLastEvent}
-                        playerIdPlayerNameMap={playerIdPlayerNameMap}
-                        playerIdTextColorMap={playerIdTextColorMap}
-                      />
-                    </Suspense>
-                  );
-                })}
-              </SuspenseList>
-            </tbody>
-
-            {after.length > 0 && (
-              <tbody className="border-t-2 border-coolgray-900">
+            <ErrorBoundary>
+              <tbody
+                className={
+                  before.length > 0
+                    ? "border-t-2 border-coolgray-900 text-center"
+                    : undefined
+                }
+              >
                 <tr>
                   <td colSpan={6} className="text-center">
-                    <span
-                      className="font-semibold"
-                      title="Events that happend closer to this pull than the next can be found here."
-                    >
-                      After Pull
-                      <sup>
-                        <svg className="inline w-4 h-4 ml-2 text-black dark:text-white">
-                          <use href={`#${outlineQuestionCircle.id}`} />
-                        </svg>
-                      </sup>
-                    </span>
+                    <span className="font-semibold">During Pull</span>
                   </td>
                 </tr>
                 <SuspenseList revealOrder="forwards">
-                  {after.map((event, index) => {
-                    const msSinceLastEvent = after[index - 1]
+                  {during.map((event, index) => {
+                    const msSinceLastEvent = during[index - 1]
                       ? timeDurationToString(
-                          event.timestamp - after[index - 1].timestamp
+                          event.timestamp - during[index - 1].timestamp
                         )
                       : timeDurationToString(
-                          event.timestamp -
-                            (during[during.length - 1]?.timestamp ??
-                              before[before.length - 1]?.timestamp ??
-                              0)
+                          before.length > 0
+                            ? event.timestamp -
+                                before[before.length - 1].timestamp
+                            : 0
                         );
 
                     return (
@@ -796,6 +756,56 @@ function Events() {
                   })}
                 </SuspenseList>
               </tbody>
+            </ErrorBoundary>
+
+            {after.length > 0 && (
+              <ErrorBoundary>
+                <tbody className="border-t-2 border-coolgray-900">
+                  <tr>
+                    <td colSpan={6} className="text-center">
+                      <span
+                        className="font-semibold"
+                        title="Events that happend closer to this pull than the next can be found here."
+                      >
+                        After Pull
+                        <sup>
+                          <svg className="inline w-4 h-4 ml-2 text-black dark:text-white">
+                            <use href={`#${outlineQuestionCircle.id}`} />
+                          </svg>
+                        </sup>
+                      </span>
+                    </td>
+                  </tr>
+                  <SuspenseList revealOrder="forwards">
+                    {after.map((event, index) => {
+                      const msSinceLastEvent = after[index - 1]
+                        ? timeDurationToString(
+                            event.timestamp - after[index - 1].timestamp
+                          )
+                        : timeDurationToString(
+                            event.timestamp -
+                              (during[during.length - 1]?.timestamp ??
+                                before[before.length - 1]?.timestamp ??
+                                0)
+                          );
+
+                      return (
+                        <Suspense
+                          fallback={null}
+                          key={createRowKey(event, index)}
+                        >
+                          <TableRow
+                            event={event}
+                            msSinceLastEvent={msSinceLastEvent}
+                            playerIdPlayerNameMap={playerIdPlayerNameMap}
+                            playerIdTextColorMap={playerIdTextColorMap}
+                          />
+                        </Suspense>
+                      );
+                    })}
+                  </SuspenseList>
+                </tbody>
+              </ErrorBoundary>
             )}
 
             <tfoot>

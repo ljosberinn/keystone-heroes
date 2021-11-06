@@ -50,11 +50,14 @@ import type {
 } from "@keystone-heroes/wcl/queries/events/types";
 import { processEvents } from "@keystone-heroes/wcl/transform";
 import type { PersistedDungeonPull } from "@keystone-heroes/wcl/transform/utils";
+import { startTransaction, configureScope } from "@sentry/node";
 import nc from "next-connect";
 
 import {
+  createTransaction,
   createValidReportIDMiddleware,
   validFightIDMiddleware,
+  withSentry,
 } from "../middleware";
 import { sortByRole } from "../utils";
 import {
@@ -1311,9 +1314,19 @@ const handler: RequestHandler<Request, FightResponse> = async (req, res) => {
   const { reportID } = req.query;
   const fightID = Number.parseInt(req.query.fightID);
 
+  const transaction = createTransaction(
+    `api/fight?reportID=${reportID}&fightID=${fightID}`,
+    {
+      reportID,
+      fightID,
+    }
+  );
+
   const maybeStoredFight = await loadExistingFight(reportID, fightID);
 
   if (!maybeStoredFight) {
+    transaction.finish();
+
     res.status(NOT_FOUND).json({ error: fightHandlerError.UNKNOWN_REPORT });
     return;
   }
@@ -1323,6 +1336,8 @@ const handler: RequestHandler<Request, FightResponse> = async (req, res) => {
     reportID,
     fightID
   );
+
+  transaction.finish();
 
   res.status(status).json(json);
 };
@@ -1817,4 +1832,4 @@ const createPullNPCDeathCountMap = (
 export const fightHandler = nc()
   .get(createValidReportIDMiddleware("reportID"))
   .get(validFightIDMiddleware)
-  .get(handler);
+  .get(withSentry<Request, FightResponse>(handler));

@@ -1,7 +1,19 @@
 import { isValidReportId } from "@keystone-heroes/wcl/utils";
+import {
+  init,
+  configureScope,
+  captureException,
+  startTransaction,
+} from "@sentry/node";
+import type { Transaction } from "@sentry/types";
+import nc from "next-connect";
 
 import { BAD_REQUEST } from "../utils/statusCodes";
-import type { Middleware } from "../utils/types";
+import type {
+  Middleware,
+  NextApiRequestWithoutIncomingMessage,
+  RequestHandler,
+} from "../utils/types";
 
 export const createValidReportIDMiddleware =
   (key: string): Middleware =>
@@ -25,4 +37,63 @@ export const validFightIDMiddleware: Middleware = (req, res, next) => {
   }
 
   next();
+};
+
+export const withSentry = <
+  Req extends Partial<NextApiRequestWithoutIncomingMessage> = Record<
+    string,
+    unknown
+  >,
+  Res = undefined
+>(
+  handler: RequestHandler<Req, Res>
+): Middleware => {
+  init({
+    dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
+  });
+
+  configureScope((scope) => {
+    scope.setTag("runtime", "node");
+
+    if (process.env.VERCEL) {
+      scope.setTag("vercel", true);
+    }
+
+    scope.addEventProcessor((event) =>
+      event.type === "transaction" && event.transaction === "/404"
+        ? null
+        : event
+    );
+  });
+
+  const middleware: Middleware<Req, Res> = (req, res, next) => {
+    try {
+      return handler(req, res, next);
+    } catch (error) {
+      if (error instanceof Error) {
+        captureException(error);
+      }
+
+      throw error;
+    }
+  };
+
+  return nc().use(middleware);
+};
+
+export const createTransaction = (
+  name: string,
+  metadata?: Record<string, unknown>
+): Transaction => {
+  const transaction = startTransaction({
+    op: "transaction",
+    name,
+    data: metadata,
+  });
+
+  configureScope((scope) => {
+    scope.setSpan(transaction);
+  });
+
+  return transaction;
 };

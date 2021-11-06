@@ -37,9 +37,9 @@ module.exports = {
     },
     extend: {
       colors: classColors,
-    },
-    maxWidth: {
-      "1/2": "50%",
+      maxWidth: {
+        "1/2": "50%",
+      },
     },
   },
   plugins: [],
