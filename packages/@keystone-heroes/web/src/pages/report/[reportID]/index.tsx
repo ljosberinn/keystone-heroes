@@ -177,7 +177,7 @@ function FightCard({ fight, reportID, loading }: FightCardProps) {
     <div className={`p-2 rounded-lg shadow-sm ${bgPrimary}`}>
       <LinkBox
         className={classnames(
-          "relative flex items-center justify-center h-12 h-64 text-2xl rounded-md bg-cover bg-white bg-blend-luminosity hover:bg-blend-normal hover:bg-transparent transition-colors duration-500",
+          "relative flex items-center justify-center h-12 h-64 text-2xl rounded-md bg-cover bg-white hover:bg-blend-luminosity transition-colors duration-500",
           fight.dungeon
             ? `bg-${fight.dungeon.slug.toLowerCase()}`
             : "bg-fallback",

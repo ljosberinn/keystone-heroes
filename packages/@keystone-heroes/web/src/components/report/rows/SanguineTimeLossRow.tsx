@@ -1,5 +1,6 @@
 import { SANGUINE_ICHOR_HEALING, spells } from "../../../staticData";
 import { createWowheadUrl, timeDurationToString } from "../../../utils";
+import { calculateSanguineMetrics } from "../../../utils/affixes";
 import { AbilityIcon } from "../../AbilityIcon";
 import { ExternalLink } from "../../ExternalLink";
 import { usePullDetailsSettings } from "../PullDetailsSettings";
@@ -21,10 +22,11 @@ export default function SanguineTimeLossRow({
 }: SanguineTimeLossRowProps): JSX.Element {
   const { groupDPS } = usePullDetailsSettings();
 
-  const totalHealing = events.reduce(
-    (acc, event) => acc + event.healingDone,
-    0
-  );
+  const { estTimeLoss, healing } = calculateSanguineMetrics({
+    affixes: [8],
+    events,
+    groupDPS,
+  });
 
   return (
     <tr className="text-white bg-yellow-700 border-t-2 border-coolgray-900 hover:bg-yellow-900">
@@ -46,9 +48,9 @@ export default function SanguineTimeLossRow({
           <b className="pl-2">{ability.name}</b>
         </ExternalLink>
         <span> Healing: </span>
-        <b>{totalHealing.toLocaleString("en-US")}</b>
+        <b>{healing.toLocaleString("en-US")}</b>
         <span> - Estimated Time Loss: </span>
-        <b>{timeDurationToString((totalHealing / groupDPS) * 1000, true)}</b>
+        <b>{timeDurationToString(estTimeLoss * 1000, true)}</b>
       </td>
     </tr>
   );

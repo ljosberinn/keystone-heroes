@@ -316,7 +316,7 @@ export function Map(): JSX.Element {
           </select>
         </div>
       </div>
-      <div className={`h-full p-2 rounded-b-lg shadow-sm ${bgSecondary}`}>
+      <div className={`p-2 rounded-b-lg shadow-sm ${bgSecondary}`}>
         {loading ? (
           <img
             src="/static/maps/ph.jpg"

@@ -16,7 +16,7 @@ export function ExternalLink({
     <a
       href={href}
       target="_blank"
-      rel="noopener noreferrer"
+      rel={`noopener${href.includes("warcraftlogs") ? "" : " noreferrer"}`}
       className={classnames("hover:underline", className)}
     >
       {children}

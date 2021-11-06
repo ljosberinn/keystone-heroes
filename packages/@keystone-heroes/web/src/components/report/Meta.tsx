@@ -10,6 +10,15 @@ import {
   soulbinds,
   tormentedPowers,
   dungeons,
+  EXPLOSIVE,
+  spells,
+  QUAKING,
+  VOLCANIC,
+  STORMING,
+  SPITEFUL,
+  GRIEVOUS,
+  SANGUINE_ICHOR_HEALING,
+  SANGUINE_ICHOR_DAMAGE,
 } from "../../staticData";
 import {
   bgPrimary,
@@ -23,6 +32,24 @@ import {
   createWowheadUrl,
   classBorderColorMap,
 } from "../../utils";
+import {
+  calculateExplosiveMetrics,
+  calculateQuakingMetrics,
+  calculateSpitefulMetrics,
+  calculateStormingMetrics,
+  calculateVolcanicMetrics,
+  calculateGrievousMetrics,
+  calculateSanguineMetrics,
+} from "../../utils/affixes";
+import type {
+  ExplosiveMetrics,
+  GrievousMetrics,
+  QuakingMetrics,
+  SanguineMetrics,
+  SpitefulMetrics,
+  StormingMetrics,
+  VolcanicMetrics,
+} from "../../utils/affixes";
 import { classnames } from "../../utils/classnames";
 import { AbilityIcon } from "../AbilityIcon";
 import { ExternalLink } from "../ExternalLink";
@@ -336,6 +363,8 @@ export function Meta(): JSX.Element {
             </tr>
           </tfoot>
         </table>
+
+        <QuickStats />
       </div>
     </section>
   );
@@ -383,5 +412,609 @@ function WarcraftLogsProfileLink({
         height={24}
       />
     </ExternalLink>
+  );
+}
+
+type Stats = {
+  fightID: string;
+  reportID: string;
+  explosives: ExplosiveMetrics;
+  quaking: QuakingMetrics;
+  volcanic: VolcanicMetrics;
+  storming: StormingMetrics;
+  spiteful: SpitefulMetrics;
+  grievous: GrievousMetrics;
+  sanguine: SanguineMetrics;
+  player: FightSuccessResponse["player"];
+};
+
+const useAffixSpecificQuickStats = (): Stats => {
+  const { fight, fightID, reportID } = useFight();
+  const allEvents = fight ? fight.pulls.flatMap((pull) => pull.events) : [];
+  const player = fight ? fight.player : [];
+  const affixes = fight ? fight.affixes : [];
+  const groupDPS = fight ? fight.meta.dps : 1;
+
+  const params = {
+    affixes,
+    events: allEvents,
+    groupDPS,
+  };
+
+  return {
+    fightID,
+    reportID,
+    explosives: calculateExplosiveMetrics(params),
+    quaking: calculateQuakingMetrics(params),
+    volcanic: calculateVolcanicMetrics(params),
+    storming: calculateStormingMetrics(params),
+    spiteful: calculateSpitefulMetrics(params),
+    grievous: calculateGrievousMetrics(params),
+    sanguine: calculateSanguineMetrics(params),
+    player,
+  };
+};
+
+function QuickStats() {
+  const {
+    explosives,
+    player,
+    quaking,
+    fightID,
+    reportID,
+    volcanic,
+    storming,
+    spiteful,
+    grievous,
+    sanguine,
+  } = useAffixSpecificQuickStats();
+
+  return (
+    <>
+      <style jsx>
+        {`
+          .paddingLessTable th,
+          td {
+            padding-left: 0;
+            padding-right: 0;
+          }
+        `}
+      </style>
+      <table className="w-full paddingLessTable">
+        <thead>
+          <tr>
+            <th className="text-xl text-left h-14">Quick Stats</th>
+          </tr>
+        </thead>
+        <tbody>
+          {explosives.spawned > 0 && (
+            <>
+              <tr>
+                <td className="flex h-10">
+                  <span className="flex items-center w-full space-x-2">
+                    <span className="inline-flex items-center w-full">
+                      <span className="w-8 h-8">
+                        <AbilityIcon
+                          icon={spells[EXPLOSIVE.ability].icon}
+                          alt="Explosives"
+                          className="object-cover w-full h-full rounded-full"
+                        />
+                      </span>
+
+                      <span className="flex-grow ml-3 border-b-2 dark:border-opacity-50">
+                        Explosives
+                      </span>
+
+                      <span className="border-b-2 dark:border-opacity-50">
+                        {(
+                          explosives.spawned - explosives.missed
+                        ).toLocaleString("en-US")}{" "}
+                        / {explosives.spawned.toLocaleString("en-US")} (
+                        {(
+                          ((explosives.spawned - explosives.missed) /
+                            explosives.spawned) *
+                          100
+                        ).toFixed(2)}
+                        % )
+                      </span>
+                    </span>
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td colSpan={2} className="space-x-2 text-center">
+                  {player.map((player) => {
+                    const { name, specs } = classes[player.class];
+                    const spec = specs.find((spec) => spec.id === player.spec);
+
+                    if (!spec) {
+                      return null;
+                    }
+
+                    const kills = explosives.kills[player.id] ?? 0;
+
+                    return (
+                      <span
+                        key={player.actorID}
+                        className="inline-flex space-x-2"
+                      >
+                        <span className="w-6 h-6">
+                          <SpecIcon
+                            size={6}
+                            class={name}
+                            spec={spec.name}
+                            alt={player.name}
+                          />
+                        </span>
+                        <span className={kills === 0 ? redText : greenText}>
+                          {kills.toLocaleString("en-US")}
+                        </span>
+                      </span>
+                    );
+                  })}
+                </td>
+              </tr>
+            </>
+          )}
+
+          {quaking.hasQuaking && (
+            <>
+              <tr>
+                <td className="flex h-10">
+                  <span className="flex items-center w-full space-x-2">
+                    <span className="inline-flex items-center w-full">
+                      <span className="w-8 h-8">
+                        <AbilityIcon
+                          icon={spells[QUAKING].icon}
+                          alt="Explosives"
+                          className="object-cover w-full h-full rounded-full"
+                        />
+                      </span>
+
+                      <span className="flex-grow ml-3 border-b-2 dark:border-opacity-50">
+                        Quaking (Damage Taken & Interrupts)
+                      </span>
+                    </span>
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td colSpan={2} className="space-x-2 text-center">
+                  {player.map((player) => {
+                    const { name, specs } = classes[player.class];
+                    const spec = specs.find((spec) => spec.id === player.spec);
+
+                    if (!spec) {
+                      return null;
+                    }
+
+                    const damageTaken = quaking.damage[player.id] ?? 0;
+
+                    const damageTakenInK = (damageTaken / 1000).toFixed(1);
+
+                    return (
+                      <ExternalLink
+                        href={createWCLUrl({
+                          fightID,
+                          reportID,
+                          // eslint-disable-next-line sonarjs/no-duplicate-string
+                          type: "damage-taken",
+                          source: player.actorID,
+                          ability: QUAKING,
+                        })}
+                        key={player.actorID}
+                        className="inline-flex space-x-2"
+                      >
+                        <span className="w-6 h-6">
+                          <SpecIcon
+                            size={6}
+                            class={name}
+                            spec={spec.name}
+                            alt={player.name}
+                          />
+                        </span>
+                        <span
+                          className={damageTaken === 0 ? greenText : redText}
+                        >
+                          {damageTakenInK}k
+                        </span>
+                      </ExternalLink>
+                    );
+                  })}
+                </td>
+              </tr>
+              <tr>
+                <td colSpan={2} className="space-x-2 text-center">
+                  {player.map((player) => {
+                    const { name, specs } = classes[player.class];
+                    const spec = specs.find((spec) => spec.id === player.spec);
+
+                    if (!spec) {
+                      return null;
+                    }
+
+                    const interrupts = quaking.interrupts[player.id] ?? 0;
+
+                    return (
+                      <ExternalLink
+                        href={`https://www.warcraftlogs.com/reports/${reportID}#fight=${fightID}&type=summary&translate=true&view=events&pins=2%24Off%24%23244F4B%24expression%24type%20%3D%20%22interrupt%22%20and%20target.type%20%3D%20%22player%22`}
+                        key={player.actorID}
+                        className="inline-flex space-x-2"
+                      >
+                        <span className="w-6 h-6">
+                          <SpecIcon
+                            size={6}
+                            class={name}
+                            spec={spec.name}
+                            alt={player.name}
+                          />
+                        </span>
+                        <span
+                          className={interrupts === 0 ? greenText : redText}
+                        >
+                          {interrupts}
+                        </span>
+                      </ExternalLink>
+                    );
+                  })}
+                </td>
+              </tr>
+            </>
+          )}
+
+          {volcanic.hasVolcanic && (
+            <>
+              <tr>
+                <td className="flex h-10">
+                  <span className="flex items-center w-full space-x-2">
+                    <span className="inline-flex items-center w-full">
+                      <span className="w-8 h-8">
+                        <AbilityIcon
+                          icon={spells[VOLCANIC].icon}
+                          alt="Explosives"
+                          className="object-cover w-full h-full rounded-full"
+                        />
+                      </span>
+
+                      <span className="flex-grow ml-3 border-b-2 dark:border-opacity-50">
+                        Volcanic (Damage Taken)
+                      </span>
+                    </span>
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td colSpan={2} className="space-x-2 text-center">
+                  {player.map((player) => {
+                    const { name, specs } = classes[player.class];
+                    const spec = specs.find((spec) => spec.id === player.spec);
+
+                    if (!spec) {
+                      return null;
+                    }
+
+                    const damageTaken = volcanic.damage[player.id] ?? 0;
+
+                    const damageTakenInK = (damageTaken / 1000).toFixed(1);
+
+                    return (
+                      <ExternalLink
+                        href={createWCLUrl({
+                          reportID,
+                          fightID,
+                          source: player.actorID,
+                          type: "damage-taken",
+                          ability: VOLCANIC,
+                        })}
+                        key={player.actorID}
+                        className="inline-flex space-x-2"
+                      >
+                        <span className="w-6 h-6">
+                          <SpecIcon
+                            size={6}
+                            class={name}
+                            spec={spec.name}
+                            alt={player.name}
+                          />
+                        </span>
+                        <span
+                          className={damageTaken === 0 ? greenText : redText}
+                        >
+                          {damageTakenInK}k
+                        </span>
+                      </ExternalLink>
+                    );
+                  })}
+                </td>
+              </tr>
+            </>
+          )}
+
+          {storming.hasStorming && (
+            <>
+              <tr>
+                <td className="flex h-10">
+                  <span className="flex items-center w-full space-x-2">
+                    <span className="inline-flex items-center w-full">
+                      <span className="w-8 h-8">
+                        <AbilityIcon
+                          icon={spells[STORMING].icon}
+                          alt="Explosives"
+                          className="object-cover w-full h-full rounded-full"
+                        />
+                      </span>
+
+                      <span className="flex-grow ml-3 border-b-2 dark:border-opacity-50">
+                        Storming (Damage Taken)
+                      </span>
+                    </span>
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td colSpan={2} className="space-x-2 text-center">
+                  {player.map((player) => {
+                    const { name, specs } = classes[player.class];
+                    const spec = specs.find((spec) => spec.id === player.spec);
+
+                    if (!spec) {
+                      return null;
+                    }
+
+                    const damageTaken = storming.damage[player.id] ?? 0;
+
+                    const damageTakenInK = (damageTaken / 1000).toFixed(1);
+
+                    return (
+                      <ExternalLink
+                        href={createWCLUrl({
+                          reportID,
+                          fightID,
+                          source: player.actorID,
+                          type: "damage-taken",
+                          ability: STORMING,
+                        })}
+                        key={player.actorID}
+                        className="inline-flex space-x-2"
+                      >
+                        <span className="w-6 h-6">
+                          <SpecIcon
+                            size={6}
+                            class={name}
+                            spec={spec.name}
+                            alt={player.name}
+                          />
+                        </span>
+
+                        <span
+                          className={damageTaken === 0 ? greenText : redText}
+                        >
+                          {damageTakenInK}k
+                        </span>
+                      </ExternalLink>
+                    );
+                  })}
+                </td>
+              </tr>
+            </>
+          )}
+
+          {spiteful.hasSpiteful && (
+            <>
+              <tr>
+                <td className="flex h-10">
+                  <span className="flex items-center w-full space-x-2">
+                    <span className="inline-flex items-center w-full">
+                      <span className="w-8 h-8">
+                        <AbilityIcon
+                          icon={spells[SPITEFUL].icon}
+                          alt="Explosives"
+                          className="object-cover w-full h-full rounded-full"
+                        />
+                      </span>
+
+                      <span className="flex-grow ml-3 border-b-2 dark:border-opacity-50">
+                        Spiteful (Damage Taken)
+                      </span>
+                    </span>
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td colSpan={2} className="space-x-2 text-center">
+                  {player.map((player) => {
+                    const { name, specs } = classes[player.class];
+                    const spec = specs.find((spec) => spec.id === player.spec);
+
+                    if (!spec) {
+                      return null;
+                    }
+
+                    const damageTaken = spiteful.damage[player.id] ?? 0;
+
+                    const damageTakenInK = (damageTaken / 1000).toFixed(1);
+
+                    return (
+                      <ExternalLink
+                        href={createWCLUrl({
+                          reportID,
+                          fightID,
+                          source: player.actorID,
+                          type: "damage-taken",
+                          ability: SPITEFUL,
+                        })}
+                        key={player.actorID}
+                        className="inline-flex space-x-2"
+                      >
+                        <span className="w-6 h-6">
+                          <SpecIcon
+                            size={6}
+                            class={name}
+                            spec={spec.name}
+                            alt={player.name}
+                          />
+                        </span>
+                        <span
+                          className={damageTaken === 0 ? greenText : redText}
+                        >
+                          {damageTakenInK}k
+                        </span>
+                      </ExternalLink>
+                    );
+                  })}
+                </td>
+              </tr>
+            </>
+          )}
+
+          {grievous.hasGrievous && (
+            <>
+              <tr>
+                <td className="flex h-10">
+                  <span className="flex items-center w-full space-x-2">
+                    <span className="inline-flex items-center w-full">
+                      <span className="w-8 h-8">
+                        <AbilityIcon
+                          icon={spells[GRIEVOUS].icon}
+                          alt="Explosives"
+                          className="object-cover w-full h-full rounded-full"
+                        />
+                      </span>
+
+                      <span className="flex-grow ml-3 border-b-2 dark:border-opacity-50">
+                        Grievous (Damage Taken)
+                      </span>
+                    </span>
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td colSpan={2} className="space-x-2 text-center">
+                  {player.map((player) => {
+                    const { name, specs } = classes[player.class];
+                    const spec = specs.find((spec) => spec.id === player.spec);
+
+                    if (!spec) {
+                      return null;
+                    }
+
+                    const damageTaken = grievous.damage[player.id] ?? 0;
+                    const damageTakenInK = (damageTaken / 1000).toFixed(1);
+
+                    return (
+                      <ExternalLink
+                        href={createWCLUrl({
+                          reportID,
+                          fightID,
+                          source: player.actorID,
+                          type: "damage-taken",
+                          ability: GRIEVOUS,
+                        })}
+                        key={player.actorID}
+                        className="inline-flex space-x-2"
+                      >
+                        <span className="w-6 h-6">
+                          <SpecIcon
+                            size={6}
+                            class={name}
+                            spec={spec.name}
+                            alt={player.name}
+                          />
+                        </span>
+                        <span>{damageTakenInK}k</span>
+                      </ExternalLink>
+                    );
+                  })}
+                </td>
+              </tr>
+            </>
+          )}
+
+          {sanguine.hasSanguine && (
+            <>
+              <tr>
+                <td className="flex h-10">
+                  <span className="flex items-center w-full space-x-2">
+                    <span className="inline-flex items-center w-full">
+                      <span className="w-8 h-8">
+                        <AbilityIcon
+                          icon={spells[SANGUINE_ICHOR_HEALING].icon}
+                          alt="Explosives"
+                          className="object-cover w-full h-full rounded-full"
+                        />
+                      </span>
+
+                      <span className="flex-grow ml-3 border-b-2 dark:border-opacity-50">
+                        Sanguine (Damage Taken | Healing Done)
+                      </span>
+                    </span>
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td colSpan={2} className="space-x-2 text-center">
+                  {player.map((player) => {
+                    const { name, specs } = classes[player.class];
+                    const spec = specs.find((spec) => spec.id === player.spec);
+
+                    if (!spec) {
+                      return null;
+                    }
+
+                    const damageTaken = sanguine.damage[player.id] ?? 0;
+                    const damageTakenInK = (damageTaken / 1000).toFixed(1);
+
+                    return (
+                      <ExternalLink
+                        href={createWCLUrl({
+                          reportID,
+                          fightID,
+                          source: player.actorID,
+                          type: "damage-taken",
+                          ability: SANGUINE_ICHOR_DAMAGE,
+                        })}
+                        key={player.actorID}
+                        className="inline-flex space-x-2"
+                      >
+                        <span className="w-6 h-6">
+                          <SpecIcon
+                            size={6}
+                            class={name}
+                            spec={spec.name}
+                            alt={player.name}
+                          />
+                        </span>
+                        <span
+                          className={damageTaken === 0 ? greenText : redText}
+                        >
+                          {damageTakenInK}k
+                        </span>
+                      </ExternalLink>
+                    );
+                  })}
+                </td>
+              </tr>
+              <tr>
+                <td colSpan={2} className="space-x-2 text-center">
+                  <ExternalLink
+                    href={createWCLUrl({
+                      fightID,
+                      reportID,
+                      ability: SANGUINE_ICHOR_HEALING,
+                      type: "healing",
+                      hostility: 1,
+                    })}
+                  >
+                    {sanguine.healing.toLocaleString("en-US")}
+                  </ExternalLink>{" "}
+                  (est. time loss:{" "}
+                  {timeDurationToString(sanguine.estTimeLoss * 1000, true)})
+                </td>
+              </tr>
+            </>
+          )}
+        </tbody>
+      </table>
+    </>
   );
 }

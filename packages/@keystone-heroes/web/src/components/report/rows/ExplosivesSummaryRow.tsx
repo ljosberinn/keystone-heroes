@@ -2,6 +2,7 @@ import { Fragment } from "react";
 
 import { EXPLOSIVE } from "../../../staticData";
 import { createWowheadUrl } from "../../../utils";
+import { calculateExplosiveMetrics } from "../../../utils/affixes";
 import { ExternalLink } from "../../ExternalLink";
 import type { TableRowProps } from "../Pulls";
 import type { DefaultEvent } from "../utils";
@@ -24,16 +25,13 @@ export default function ExplosivesSummaryRow({
   playerIdPlayerNameMap,
   playerIdTextColorMap,
 }: ExplosiveSummaryRowProps): JSX.Element {
-  const kills = Object.entries(
-    // eslint-disable-next-line unicorn/prefer-object-from-entries
-    events.reduce<Record<number, number>>((acc, event) => {
-      const id = event.sourcePlayerID;
+  const metrics = calculateExplosiveMetrics({
+    affixes: [13],
+    events,
+    groupDPS: 0,
+  });
 
-      acc[id] = acc[id] ? acc[id] + 1 : 1;
-
-      return acc;
-    }, {})
-  );
+  const kills = Object.entries(metrics.kills);
 
   return (
     <tr className="text-white bg-yellow-700 border-t-2 border-coolgray-900 hover:bg-yellow-900">
