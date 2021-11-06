@@ -7108,6 +7108,18 @@
             "deprecationReason": null
           },
           {
+            "name": "classicSeasonID",
+            "description": "The season ID of a Classic fight. Will only be nonzero for Season of Mastery in Vanilla for now.",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "completeRaid",
             "description": "Whether or not a fight represents an entire raid from start to finish, e.g., in Classic WoW a complete run of Blackwing Lair.",
             "args": [],

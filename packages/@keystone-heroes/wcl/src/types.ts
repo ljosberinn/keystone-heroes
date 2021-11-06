@@ -1265,6 +1265,8 @@ export type ReportFight = {
   bossPercentage?: Maybe<Scalars["Float"]>;
   /** The bounding box that encloses the positions of all players/enemies in the fight. */
   boundingBox?: Maybe<ReportMapBoundingBox>;
+  /** The season ID of a Classic fight. Will only be nonzero for Season of Mastery in Vanilla for now. */
+  classicSeasonID?: Maybe<Scalars["Int"]>;
   /** Whether or not a fight represents an entire raid from start to finish, e.g., in Classic WoW a complete run of Blackwing Lair. */
   completeRaid: Scalars["Boolean"];
   /** The difficulty setting for the raid, dungeon, or arena. Null for trash. */

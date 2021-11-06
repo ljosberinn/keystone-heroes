@@ -1922,6 +1922,11 @@ type ReportFight {
   boundingBox: ReportMapBoundingBox
 
   """
+  The season ID of a Classic fight. Will only be nonzero for Season of Mastery in Vanilla for now.
+  """
+  classicSeasonID: Int
+
+  """
   Whether or not a fight represents an entire raid from start to finish, e.g., in Classic WoW a complete run of Blackwing Lair.
   """
   completeRaid: Boolean!
