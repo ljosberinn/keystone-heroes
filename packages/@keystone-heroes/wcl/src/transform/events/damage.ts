@@ -15,7 +15,7 @@ import type { DamageEvent } from "../../queries/events/types";
 import type { Processor } from "../utils";
 
 const environmentalDamageAffixAbilities = new Set([
-  BURSTING,
+  BURSTING.damage,
   VOLCANIC,
   STORMING,
   EXPLOSIVE.ability,
