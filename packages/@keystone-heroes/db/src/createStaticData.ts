@@ -1,3 +1,4 @@
+import { IS_TEST } from "@keystone-heroes/env/src";
 import { BURSTING } from "@keystone-heroes/wcl/queries/events/affixes/bursting";
 import { EXPLOSIVE } from "@keystone-heroes/wcl/queries/events/affixes/explosive";
 import { GRIEVOUS_WOUND } from "@keystone-heroes/wcl/queries/events/affixes/grievous";
@@ -44,7 +45,7 @@ const log = (str: string) => {
 const DUMMY_CD = 9999;
 
 async function create() {
-  if (process.env.NODE_ENV === "test") {
+  if (IS_TEST) {
     return;
   }
 

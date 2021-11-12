@@ -1,3 +1,4 @@
+import { IS_PRODUCTION } from "@keystone-heroes/env/src";
 import type { ErrorInfo } from "react";
 import { Component } from "react";
 
@@ -41,6 +42,8 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, State> {
 
       Sentry.init({
         dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
+        environment: process.env.NODE_ENV,
+        enabled: IS_PRODUCTION,
       });
 
       /**

@@ -1,3 +1,4 @@
+import { IS_PRODUCTION } from "@keystone-heroes/env/src";
 import { PrismaClient } from "@prisma/client";
 
 // add prisma to the NodeJS global type
@@ -14,6 +15,6 @@ if (typeof window !== "undefined") {
 // Prevent multiple instances of Prisma Client in development
 export const prisma = global.prisma || new PrismaClient();
 
-if (process.env.NODE_ENV !== "production") {
+if (!IS_PRODUCTION) {
   global.prisma = prisma;
 }

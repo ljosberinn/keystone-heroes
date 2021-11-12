@@ -1,4 +1,5 @@
 import { prisma } from "@keystone-heroes/db/prisma";
+import { IS_DEVELOPMENT } from "@keystone-heroes/env/src";
 
 import { INTERNAL_SERVER_ERROR } from "../utils/statusCodes";
 import type { RequestHandler } from "../utils/types";
@@ -15,10 +16,8 @@ export const deleteHandler: RequestHandler<Request> = async (
   res,
   next
 ) => {
-  const isDevelopment = process.env.NODE_ENV === "development";
-
   if (
-    !isDevelopment &&
+    !IS_DEVELOPMENT &&
     (!req.query.key || req.query.key !== process.env.ADMIN_KEY)
   ) {
     next();
