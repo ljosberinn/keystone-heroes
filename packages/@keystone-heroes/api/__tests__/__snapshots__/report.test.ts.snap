@@ -1705,17 +1705,6 @@ Object {
       ],
       "player": Array [
         Object {
-          "class": "DeathKnight",
-          "covenantID": 4,
-          "legendary": Object {
-            "effectIcon": "spell_shadow_focusedpower.jpg",
-            "effectName": "Koltira's Favor",
-            "id": 171417,
-          },
-          "soulbindID": 5,
-          "spec": "Frost",
-        },
-        Object {
           "class": "DemonHunter",
           "covenantID": 1,
           "legendary": Object {
@@ -1727,17 +1716,6 @@ Object {
           "spec": "Vengeance",
         },
         Object {
-          "class": "Warrior",
-          "covenantID": 2,
-          "legendary": Object {
-            "effectIcon": "inv_60crafted_ring4b.jpg",
-            "effectName": "Signet of Tormented Kings",
-            "id": 178926,
-          },
-          "soulbindID": 8,
-          "spec": "Fury",
-        },
-        Object {
           "class": "Paladin",
           "covenantID": 2,
           "legendary": Object {
@@ -1747,6 +1725,28 @@ Object {
           },
           "soulbindID": 9,
           "spec": "Holy",
+        },
+        Object {
+          "class": "DeathKnight",
+          "covenantID": 4,
+          "legendary": Object {
+            "effectIcon": "spell_shadow_focusedpower.jpg",
+            "effectName": "Koltira's Favor",
+            "id": 171417,
+          },
+          "soulbindID": 5,
+          "spec": "Frost",
+        },
+        Object {
+          "class": "Warrior",
+          "covenantID": 2,
+          "legendary": Object {
+            "effectIcon": "inv_60crafted_ring4b.jpg",
+            "effectName": "Signet of Tormented Kings",
+            "id": 178926,
+          },
+          "soulbindID": 8,
+          "spec": "Fury",
         },
         Object {
           "class": "Mage",

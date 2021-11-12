@@ -125,6 +125,7 @@ type Player = {
   covenantID: number | null;
   covenantTraits: CovenantTrait[] | null;
   conduits: Conduit[];
+  role: Role;
 };
 
 type FightWithMeta = Omit<
@@ -556,21 +557,23 @@ const createResponseFromRawData = ({
                   slug: dungeon.slug,
                 }
               : null,
-          player: player.map((player) => {
-            return {
-              class: player.class,
-              spec: player.spec,
-              soulbindID: player.soulbindID,
-              covenantID: player.covenantID,
-              legendary: player.legendary
-                ? {
-                    id: player.legendary.id,
-                    effectIcon: player.legendary.effectIcon,
-                    effectName: player.legendary.effectName,
-                  }
-                : null,
-            };
-          }),
+          player: [...player]
+            .sort((a, b) => sortByRole(a.role, b.role))
+            .map((player) => {
+              return {
+                class: player.class,
+                spec: player.spec,
+                soulbindID: player.soulbindID,
+                covenantID: player.covenantID,
+                legendary: player.legendary
+                  ? {
+                      id: player.legendary.id,
+                      effectIcon: player.legendary.effectIcon,
+                      effectName: player.legendary.effectName,
+                    }
+                  : null,
+              };
+            }),
         };
       })
       .sort((a, b) => a.id - b.id),
@@ -882,6 +885,7 @@ export const reportHandler: RequestHandler<Request, ReportResponse> = async (
           spec: specs[0],
           classID,
           specID: spec.id,
+          role: spec.role,
           dps,
           hps,
           deaths: deaths.length,
