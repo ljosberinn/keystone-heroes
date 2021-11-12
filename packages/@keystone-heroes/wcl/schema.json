@@ -299,7 +299,7 @@
           },
           {
             "name": "gameData",
-            "description": "Cached game data such as gear for the character. This data was fetched from the appropriate source (Blizzard APIs for WoW, XIVAPI for FF). This call will only return a cached copy of the data if it exists already. It will not go out to Blizzard or XIVAPI to fetch a new copy.",
+            "description": "Cached game data such as gear for the character. This data was fetched from the appropriate source (Blizzard APIs for WoW, Lodestone for FF). This call will only return a cached copy of the data if it exists already. It will not go out to Blizzard or Lodestone to fetch a new copy.",
             "args": [
               {
                 "name": "specID",
@@ -5444,7 +5444,7 @@
               },
               {
                 "name": "translate",
-                "description": "Optional. Whether or not the fight data should be auto-translated. Defaults to true. Set to false is speed is a priority, and you do not care about the names.",
+                "description": "Optional. Whether or not the fight data should be auto-translated. Defaults to true. Set to false if is a priority, and you do not care about the names.",
                 "type": {
                   "kind": "SCALAR",
                   "name": "Boolean",
@@ -5585,7 +5585,7 @@
               },
               {
                 "name": "translate",
-                "description": "Optional. Whether or not the fight data should be auto-translated. Defaults to true. Set to false is speed is a priority, and you do not care about the names.",
+                "description": "Optional. Whether or not the fight data should be auto-translated. Defaults to true. Set to false if speed is a priority, and you do not care about the names.",
                 "type": {
                   "kind": "SCALAR",
                   "name": "Boolean",
@@ -5822,7 +5822,7 @@
               },
               {
                 "name": "translate",
-                "description": "Optional. Whether or not the fight data should be auto-translated. Defaults to true. Set to false is speed is a priority, and you do not care about the names.",
+                "description": "Optional. Whether or not the fight data should be auto-translated. Defaults to true. Set to false if speed is a priority, and you do not care about the names.",
                 "type": {
                   "kind": "SCALAR",
                   "name": "Boolean",
@@ -5907,7 +5907,7 @@
             "args": [
               {
                 "name": "translate",
-                "description": "Optional. Whether or not the actors and abilities in the master data should be auto-translated. Defaults to true. Set to false is speed is a priority, and you do not care about the names of abilities and actors.",
+                "description": "Optional. Whether or not the actors and abilities in the master data should be auto-translated. Defaults to true. Set to false if speed is a priority, and you do not care about the names of abilities and actors.",
                 "type": {
                   "kind": "SCALAR",
                   "name": "Boolean",
@@ -5933,6 +5933,107 @@
             "type": {
               "kind": "OBJECT",
               "name": "User",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "playerDetails",
+            "description": "A table of information for the players of a report, including their specs, talents, gear, etc. This data is not considered frozen, and it can change without notice. Use at your own risk.",
+            "args": [
+              {
+                "name": "difficulty",
+                "description": "Optional. Whether or not to filter the fights to a specific difficulty. By default all fights are included.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": "0",
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "encounterID",
+                "description": "Optional. Whether or not to filter the fights to a specific boss. By default all fights are included.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": "0",
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "endTime",
+                "description": "Optional. The end time of the events range to fetch.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Float",
+                  "ofType": null
+                },
+                "defaultValue": "0",
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "fightIDs",
+                "description": "Optional. A list of fight ids to include. Fights with any other id will be excluded.",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": "[]",
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "killType",
+                "description": "Optional. A filter to only include kills, wipes, encounters or trash.",
+                "type": {
+                  "kind": "ENUM",
+                  "name": "KillType",
+                  "ofType": null
+                },
+                "defaultValue": "All",
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "startTime",
+                "description": "Optional. The start time of the events range to fetch.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Float",
+                  "ofType": null
+                },
+                "defaultValue": "0",
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "translate",
+                "description": "Optional. Whether or not the fight data should be auto-translated. Defaults to true. Set to false if speed is a priority, and you do not care about the names.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                },
+                "defaultValue": "true",
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
+            "type": {
+              "kind": "SCALAR",
+              "name": "JSON",
               "ofType": null
             },
             "isDeprecated": false,
@@ -6317,7 +6418,7 @@
               },
               {
                 "name": "translate",
-                "description": "Optional. Whether or not the fight data should be auto-translated. Defaults to true. Set to false is speed is a priority, and you do not care about the names.",
+                "description": "Optional. Whether or not the fight data should be auto-translated. Defaults to true. Set to false if speed is a priority, and you do not care about the names.",
                 "type": {
                   "kind": "SCALAR",
                   "name": "Boolean",

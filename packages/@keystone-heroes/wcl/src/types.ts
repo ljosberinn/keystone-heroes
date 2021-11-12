@@ -46,7 +46,7 @@ export type Character = {
   encounterRankings?: Maybe<Scalars["JSON"]>;
   /** The faction of the character. */
   faction: GameFaction;
-  /** Cached game data such as gear for the character. This data was fetched from the appropriate source (Blizzard APIs for WoW, XIVAPI for FF). This call will only return a cached copy of the data if it exists already. It will not go out to Blizzard or XIVAPI to fetch a new copy. */
+  /** Cached game data such as gear for the character. This data was fetched from the appropriate source (Blizzard APIs for WoW, Lodestone for FF). This call will only return a cached copy of the data if it exists already. It will not go out to Blizzard or Lodestone to fetch a new copy. */
   gameData?: Maybe<Scalars["JSON"]>;
   /** The guild rank of the character in their primary guild. This is not the user rank on the site, but the rank according to the game data, e.g., a Warcraft guild rank or an FFXIV Free Company rank. */
   guildRank: Scalars["Int"];
@@ -1016,6 +1016,8 @@ export type Report = {
   masterData?: Maybe<ReportMasterData>;
   /** The user that uploaded the report. */
   owner?: Maybe<User>;
+  /** A table of information for the players of a report, including their specs, talents, gear, etc. This data is not considered frozen, and it can change without notice. Use at your own risk. */
+  playerDetails?: Maybe<Scalars["JSON"]>;
   /** A list of all characters that ranked on kills in the report. */
   rankedCharacters?: Maybe<Maybe<Character>[]>;
   /** Rankings information for a report, filterable to specific fights, bosses, metrics, etc. This data is not considered frozen, and it can change without notice. Use at your own risk. */
@@ -1102,6 +1104,17 @@ export type ReportGraphArgs = {
 
 /** A single report uploaded by a player to a guild or personal logs. */
 export type ReportMasterDataArgs = {
+  translate?: Maybe<Scalars["Boolean"]>;
+};
+
+/** A single report uploaded by a player to a guild or personal logs. */
+export type ReportPlayerDetailsArgs = {
+  difficulty?: Maybe<Scalars["Int"]>;
+  encounterID?: Maybe<Scalars["Int"]>;
+  endTime?: Maybe<Scalars["Float"]>;
+  fightIDs?: Maybe<Maybe<Scalars["Int"]>[]>;
+  killType?: Maybe<KillType>;
+  startTime?: Maybe<Scalars["Float"]>;
   translate?: Maybe<Scalars["Boolean"]>;
 };
 

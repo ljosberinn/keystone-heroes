@@ -175,7 +175,7 @@ type Character {
   faction: GameFaction!
 
   """
-  Cached game data such as gear for the character. This data was fetched from the appropriate source (Blizzard APIs for WoW, XIVAPI for FF). This call will only return a cached copy of the data if it exists already. It will not go out to Blizzard or XIVAPI to fetch a new copy.
+  Cached game data such as gear for the character. This data was fetched from the appropriate source (Blizzard APIs for WoW, Lodestone for FF). This call will only return a cached copy of the data if it exists already. It will not go out to Blizzard or Lodestone to fetch a new copy.
   """
   gameData(
     """
@@ -1386,7 +1386,7 @@ type Report {
     targetInstanceID: Int = 0
 
     """
-    Optional. Whether or not the fight data should be auto-translated. Defaults to true. Set to false is speed is a priority, and you do not care about the names.
+    Optional. Whether or not the fight data should be auto-translated. Defaults to true. Set to false if is a priority, and you do not care about the names.
     """
     translate: Boolean = true
 
@@ -1441,7 +1441,7 @@ type Report {
     killType: KillType = All
 
     """
-    Optional. Whether or not the fight data should be auto-translated. Defaults to true. Set to false is speed is a priority, and you do not care about the names.
+    Optional. Whether or not the fight data should be auto-translated. Defaults to true. Set to false if speed is a priority, and you do not care about the names.
     """
     translate: Boolean = true
   ): [ReportFight]
@@ -1536,7 +1536,7 @@ type Report {
     targetInstanceID: Int = 0
 
     """
-    Optional. Whether or not the fight data should be auto-translated. Defaults to true. Set to false is speed is a priority, and you do not care about the names.
+    Optional. Whether or not the fight data should be auto-translated. Defaults to true. Set to false if speed is a priority, and you do not care about the names.
     """
     translate: Boolean = true
 
@@ -1576,10 +1576,50 @@ type Report {
   """
   masterData(
     """
-    Optional. Whether or not the actors and abilities in the master data should be auto-translated. Defaults to true. Set to false is speed is a priority, and you do not care about the names of abilities and actors.
+    Optional. Whether or not the actors and abilities in the master data should be auto-translated. Defaults to true. Set to false if speed is a priority, and you do not care about the names of abilities and actors.
     """
     translate: Boolean = true
   ): ReportMasterData
+
+  """
+  A table of information for the players of a report, including their specs, talents, gear, etc. This data is not considered frozen, and it can change without notice. Use at your own risk.
+  """
+  playerDetails(
+    """
+    Optional. Whether or not to filter the fights to a specific difficulty. By default all fights are included.
+    """
+    difficulty: Int = 0
+
+    """
+    Optional. Whether or not to filter the fights to a specific boss. By default all fights are included.
+    """
+    encounterID: Int = 0
+
+    """
+    Optional. The end time of the events range to fetch.
+    """
+    endTime: Float = 0
+
+    """
+    Optional. A list of fight ids to include. Fights with any other id will be excluded.
+    """
+    fightIDs: [Int] = []
+
+    """
+    Optional. A filter to only include kills, wipes, encounters or trash.
+    """
+    killType: KillType = All
+
+    """
+    Optional. The start time of the events range to fetch.
+    """
+    startTime: Float = 0
+
+    """
+    Optional. Whether or not the fight data should be auto-translated. Defaults to true. Set to false if speed is a priority, and you do not care about the names.
+    """
+    translate: Boolean = true
+  ): JSON
 
   """
   A list of all characters that ranked on kills in the report.
@@ -1731,7 +1771,7 @@ type Report {
     targetInstanceID: Int = 0
 
     """
-    Optional. Whether or not the fight data should be auto-translated. Defaults to true. Set to false is speed is a priority, and you do not care about the names.
+    Optional. Whether or not the fight data should be auto-translated. Defaults to true. Set to false if speed is a priority, and you do not care about the names.
     """
     translate: Boolean = true
 
