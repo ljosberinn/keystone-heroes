@@ -41,7 +41,7 @@ export default function App({
       <ThemeProvider attribute="class" defaultTheme="dark">
         <Header />
         <div className="bg-gray-100 dark:bg-coolgray-800">
-          <main className="flex flex-col w-full p-6 mx-auto lg:p-6 max-w-screen-2xl">
+          <main className="flex flex-col py-6">
             <Component {...pageProps} />
           </main>
         </div>

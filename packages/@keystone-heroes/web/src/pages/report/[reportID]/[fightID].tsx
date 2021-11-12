@@ -15,11 +15,13 @@ import { useRouter } from "next/router";
 import { createContext, useContext } from "react";
 
 import { Spinner } from "../../../components/Spinner";
+import { AffixImpact } from "../../../components/report/AffixImpact";
 import { Data } from "../../../components/report/Data";
 import { Map } from "../../../components/report/Map";
 import { Meta } from "../../../components/report/Meta";
 import { useAbortableFetch } from "../../../hooks/useAbortableFetch";
 import { dungeons } from "../../../staticData";
+import { widthConstraint } from "../../../styles/tokens";
 import { timeDurationToString } from "../../../utils";
 
 type FightIDProps = {
@@ -140,10 +142,14 @@ export default function FightID({ cache }: FightIDProps): JSX.Element | null {
     <FightContext.Provider value={value}>
       <FightIDHead />
 
-      <div className="space-x-0 lg:space-x-4 lg:flex lg:flex-row">
+      <div
+        className={`space-x-0 lg:space-x-4 lg:flex lg:flex-row ${widthConstraint}`}
+      >
         <Meta />
         <Map />
       </div>
+
+      <AffixImpact />
 
       <Data />
     </FightContext.Provider>

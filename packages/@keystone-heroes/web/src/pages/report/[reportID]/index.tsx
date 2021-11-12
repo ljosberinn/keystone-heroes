@@ -16,7 +16,7 @@ import { useEffect } from "react";
 import { LinkBox, LinkOverlay } from "../../../components/LinkBox";
 import { SpecIcon } from "../../../components/SpecIcon";
 import { useAbortableFetch } from "../../../hooks/useAbortableFetch";
-import { bgPrimary } from "../../../styles/tokens";
+import { bgPrimary, widthConstraint } from "../../../styles/tokens";
 import { timeDurationToString } from "../../../utils";
 import { classnames } from "../../../utils/classnames";
 
@@ -130,25 +130,27 @@ export default function Report({ cache }: ReportProps): JSX.Element | null {
       <Head>
         <title>Keystone Heroes - {report?.title ?? "unknown report"}</title>
       </Head>
-      <h1>{loading ? "loading" : report?.title ?? "unknown report"}</h1>
+      <div className={widthConstraint}>
+        <h1>{loading ? "loading" : report?.title ?? "unknown report"}</h1>
 
-      {/* <div>
+        {/* <div>
         {report?.affixes?.map((affix) => (
           <AbilityIcon alt={affix.name} key={affix.name} icon={affix.icon} />
         ))}
       </div> */}
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 2xl:grid-cols-3 2xl:gap-8">
-        {reportID &&
-          fights.map((fight) => {
-            return (
-              <FightCard
-                reportID={reportID}
-                fight={fight}
-                key={fight.id}
-                loading={loading}
-              />
-            );
-          })}
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 2xl:grid-cols-3 2xl:gap-8">
+          {reportID &&
+            fights.map((fight) => {
+              return (
+                <FightCard
+                  reportID={reportID}
+                  fight={fight}
+                  key={fight.id}
+                  loading={loading}
+                />
+              );
+            })}
+        </div>
       </div>
     </>
   );

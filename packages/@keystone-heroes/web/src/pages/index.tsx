@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import type { FormEvent, ChangeEvent } from "react";
 import { useState } from "react";
 
+import { widthConstraint } from "../styles/tokens";
 import { parseWCLUrl } from "../utils";
 
 export default function Home(): JSX.Element | null {
@@ -25,13 +26,15 @@ export default function Home(): JSX.Element | null {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        placeholder="wcl link"
-        onChange={(event: ChangeEvent<HTMLInputElement>) => {
-          setUrl(event.target.value.trim());
-        }}
-      />
-    </form>
+    <div className={widthConstraint}>
+      <form onSubmit={handleSubmit}>
+        <input
+          placeholder="wcl link"
+          onChange={(event: ChangeEvent<HTMLInputElement>) => {
+            setUrl(event.target.value.trim());
+          }}
+        />
+      </form>
+    </div>
   );
 }

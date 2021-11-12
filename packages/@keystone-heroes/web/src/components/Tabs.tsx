@@ -1,7 +1,7 @@
 import { forwardRef } from "react";
 import type { MouseEvent, KeyboardEvent } from "react";
 
-import { bgSecondary, hoverBg } from "../styles/tokens";
+import { bgPrimary, hoverBg } from "../styles/tokens";
 import { classnames } from "../utils/classnames";
 
 export type TabListProps = {
@@ -65,7 +65,7 @@ export const TabButton = forwardRef<HTMLButtonElement, TabButtonProps>(
         className={classnames(
           "p-2 truncate focus:outline-none focus:ring",
           hoverBg,
-          selected && bgSecondary,
+          selected && bgPrimary,
           isFirst && "rounded-tl-lg",
           isLast && "rounded-tr-lg",
           className

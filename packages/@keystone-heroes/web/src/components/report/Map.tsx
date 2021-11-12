@@ -263,7 +263,7 @@ export function Map(): JSX.Element {
       aria-labelledby="section-route"
     >
       <Triangle />
-      <div className={`rounded-t-lg shadow-sm ${bgPrimary}`}>
+      <div className={`rounded-t-lg shadow-sm ${bgSecondary}`}>
         <h2 id="section-route" className="px-4 pt-4 text-2xl font-bold">
           Route
         </h2>
@@ -316,7 +316,7 @@ export function Map(): JSX.Element {
           </select>
         </div>
       </div>
-      <div className={`p-2 rounded-b-lg shadow-sm ${bgSecondary}`}>
+      <div className={`p-2 rounded-b-lg shadow-sm ${bgPrimary}`}>
         {loading ? (
           <img
             src="/static/maps/ph.jpg"
