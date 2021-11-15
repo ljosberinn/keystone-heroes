@@ -17,7 +17,6 @@
       "autoAttachChildProcesses": true,
       "skipFiles": ["<node_internals>/**"],
       "console": "integratedTerminal",
-      "cwd": "${workspaceFolder}/packages/@keystone-heroes/web",
       "stopOnEntry": true
     }
   ],
