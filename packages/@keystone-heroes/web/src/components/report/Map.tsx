@@ -163,7 +163,7 @@ export function Map(): JSX.Element {
   const previouslySelectedPull = usePrevious(selectedPull);
   const zones = useMemo(
     () => (fight ? dungeons[fight.dungeon].zones : []),
-    [fight, dungeons]
+    [fight]
   );
   const pulls = useMemo(() => (fight ? fight.pulls : []), [fight]);
 
@@ -716,7 +716,7 @@ function FullScreenToggle({
     }
 
     container.removeAttribute("style");
-  }, [active, toggle, tabPanelRef.current]);
+  }, [active, toggle, tabPanelRef]);
 
   return (
     <button

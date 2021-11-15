@@ -21,13 +21,13 @@
     "tsconfig-paths": "3.11.0"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "2.2.2",
+    "@graphql-codegen/cli": "2.3.0",
     "@graphql-codegen/introspection": "2.1.0",
-    "@graphql-codegen/typescript": "2.3.1",
+    "@graphql-codegen/typescript": "2.4.0",
     "@graphql-codegen/typescript-graphql-request": "4.3.0",
     "@graphql-codegen/typescript-operations": "2.2.0",
     "eslint": "8.2.0",
-    "eslint-config-galex": "3.2.1",
+    "eslint-config-galex": "3.3.3",
     "jest": "27.3.1",
     "msw": "0.35.0",
     "prettier": "2.4.1",
