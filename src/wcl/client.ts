@@ -45,7 +45,11 @@ const mustRefreshToken = (expiresAt: NonNullable<WCLAuth["expiresAt"]>) => {
 };
 
 export const getGqlClient = async (): Promise<GraphQLClient> => {
-  if (!process.env.WCL_CLIENT_ID || !process.env.WCL_CLIENT_SECRET) {
+  if (
+    // in test, `getWLAuthentication` returns mock data
+    process.env.NODE_ENV !== "test" &&
+    (!process.env.WCL_CLIENT_ID || !process.env.WCL_CLIENT_SECRET)
+  ) {
     throw new Error("missing WCL environment variables");
   }
 
@@ -89,8 +93,10 @@ export const getGqlClient = async (): Promise<GraphQLClient> => {
 
   try {
     const body = new URLSearchParams({
-      client_id: process.env.WCL_CLIENT_ID,
-      client_secret: process.env.WCL_CLIENT_SECRET,
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      client_id: process.env.WCL_CLIENT_ID!,
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      client_secret: process.env.WCL_CLIENT_SECRET!,
       grant_type: "client_credentials",
     }).toString();
 
