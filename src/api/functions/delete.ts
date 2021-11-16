@@ -1,5 +1,4 @@
 import { prisma } from "../../db/prisma";
-import { IS_DEVELOPMENT } from "../../web/env";
 import { INTERNAL_SERVER_ERROR } from "../utils/statusCodes";
 import type { RequestHandler } from "../utils/types";
 
@@ -16,7 +15,7 @@ export const deleteHandler: RequestHandler<Request> = async (
   next
 ) => {
   if (
-    !IS_DEVELOPMENT &&
+    process.env.NODE_ENV !== "development" &&
     (!req.query.key || req.query.key !== process.env.ADMIN_KEY)
   ) {
     next();

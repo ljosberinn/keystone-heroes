@@ -1,6 +1,5 @@
 import Link from "next/link";
 
-import { COMMIT_SHA, BUILD_TIME } from "../env";
 import { ColorModeToggle } from "./ColorModeToggle";
 import { ExternalLink } from "./ExternalLink";
 
@@ -60,12 +59,12 @@ export function Footer(): JSX.Element {
           <ColorModeToggle />
         </small>
 
-        {COMMIT_SHA && (
+        {process.env.NEXT_PUBLIC_COMMIT_SHA && (
           <small className="flex items-center justify-center w-full py-6 space-x-6 text-xs text-gray-500 md:justify-end dark:text-gray-300">
             <ExternalLink
-              href={`https://github.com/ljosberinn/wcl-to-mdt/tree/${COMMIT_SHA}`}
+              href={`https://github.com/ljosberinn/wcl-to-mdt/tree/${process.env.NEXT_PUBLIC_COMMIT_SHA}`}
             >
-              Built at {BUILD_TIME}
+              Built at {process.env.NEXT_PUBLIC_BUILD_TIME}
             </ExternalLink>
           </small>
         )}

@@ -1,7 +1,6 @@
 import type { WCLAuth } from "@prisma/client";
 
 import { prisma } from "../db/prisma";
-import { IS_TEST } from "../web/env";
 
 export type WCLOAuthResponse = {
   access_token: string;
@@ -28,7 +27,7 @@ export const setWCLAuthentication = async ({
 };
 
 export const getWCLAuthentication = (): Promise<WCLAuth | null> => {
-  if (IS_TEST) {
+  if (process.env.NODE_ENV === "test") {
     return Promise.resolve({
       id: 1,
       token: "mock-token",

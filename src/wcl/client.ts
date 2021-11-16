@@ -2,12 +2,6 @@ import type { WCLAuth } from "@prisma/client";
 import { GraphQLClient } from "graphql-request";
 import fetch from "node-fetch";
 
-import {
-  WCL_GQL_ENDPOINT,
-  WCL_CLIENT_ID,
-  WCL_CLIENT_SECRET,
-  WCL_OAUTH_ENDPOINT,
-} from "../web/env";
 import type { WCLOAuthResponse } from "./auth";
 import { getWCLAuthentication, setWCLAuthentication } from "./auth";
 import { getSdk } from "./types";
@@ -51,6 +45,10 @@ const mustRefreshToken = (expiresAt: NonNullable<WCLAuth["expiresAt"]>) => {
 };
 
 export const getGqlClient = async (): Promise<GraphQLClient> => {
+  if (!process.env.WCL_CLIENT_ID || !process.env.WCL_CLIENT_SECRET) {
+    throw new Error("missing WCL environment variables");
+  }
+
   if (cache.pending) {
     await new Promise((resolve) => {
       setTimeout(resolve, 50);
@@ -73,12 +71,15 @@ export const getGqlClient = async (): Promise<GraphQLClient> => {
     !cache.client &&
     !cache.expiresAt
   ) {
-    cache.client = new GraphQLClient(WCL_GQL_ENDPOINT, {
-      headers: {
-        authorization: `Bearer ${persisted.token}`,
-      },
-      fetch: global.fetch,
-    });
+    cache.client = new GraphQLClient(
+      "https://www.warcraftlogs.com/api/v2/client",
+      {
+        headers: {
+          authorization: `Bearer ${persisted.token}`,
+        },
+        fetch: global.fetch,
+      }
+    );
 
     cache.expiresAt = persisted.expiresAt * 1000;
     cache.pending = false;
@@ -88,12 +89,12 @@ export const getGqlClient = async (): Promise<GraphQLClient> => {
 
   try {
     const body = new URLSearchParams({
-      client_id: WCL_CLIENT_ID,
-      client_secret: WCL_CLIENT_SECRET,
+      client_id: process.env.WCL_CLIENT_ID,
+      client_secret: process.env.WCL_CLIENT_SECRET,
       grant_type: "client_credentials",
     }).toString();
 
-    const response = await fetch(WCL_OAUTH_ENDPOINT, {
+    const response = await fetch("https://www.warcraftlogs.com/oauth/token", {
       body,
       method: "POST",
       headers: {
@@ -108,7 +109,7 @@ export const getGqlClient = async (): Promise<GraphQLClient> => {
 
       cache.client =
         cache.client ??
-        new GraphQLClient(WCL_GQL_ENDPOINT, {
+        new GraphQLClient("https://www.warcraftlogs.com/api/v2/client", {
           headers: {
             authorization: `Bearer ${json.access_token}`,
           },

@@ -30,7 +30,6 @@ import {
 } from "../wcl/queries/events/dungeons/sd";
 import { SOA_SPEAR } from "../wcl/queries/events/dungeons/soa";
 import { TOP_BANNER_AURA } from "../wcl/queries/events/dungeons/top";
-import { IS_TEST } from "../web/env";
 import { allBossIDs, dungeons as rawDungeons } from "./data/dungeons";
 import { spells } from "./data/spellIds";
 import { prisma } from "./prisma";
@@ -45,7 +44,7 @@ const log = (str: string) => {
 const DUMMY_CD = 9999;
 
 async function create() {
-  if (IS_TEST) {
+  if (process.env.NODE_ENV === "test") {
     return;
   }
 
@@ -419,7 +418,7 @@ async function create() {
     ),
   };
 
-  const targetPath = resolve("../web/staticData.ts");
+  const targetPath = resolve("src/web/staticData.ts");
 
   const template = `
 /* eslint-disable sonarjs/no-duplicate-string */
@@ -437,15 +436,6 @@ export const QUAKING = ${QUAKING};
 export const STORMING = ${STORMING};
 export const SANGUINE_ICHOR_DAMAGE = ${SANGUINE_ICHOR_DAMAGE};
 export const SANGUINE_ICHOR_HEALING = ${SANGUINE_ICHOR_HEALING};
-export const TORMENTED_ABILITIES: { id: number; icon: string; name: string; }[] = JSON.parse(\`${JSON.stringify(
-    tormentedSpells.map((power) => {
-      return {
-        id: power.id,
-        name: power.name,
-        icon: power.icon,
-      };
-    })
-  )}\`);
 export const DUMMY_CD = ${DUMMY_CD};
 export const DOS_URN = ${DOS_URN};
 export const HOA_GARGOYLE = ${HOA_GARGOYLE};
