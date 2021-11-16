@@ -679,6 +679,8 @@ function GenericAffixInformationRow({
                 icon={iconSrc}
                 alt={iconAlt}
                 title={iconAlt}
+                width={32}
+                height={32}
                 className="object-cover w-full h-full rounded-full"
               />
             </span>

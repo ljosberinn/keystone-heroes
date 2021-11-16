@@ -28,6 +28,7 @@ export function SpecIcon({
       )}
       width={width}
       height={width}
+      loading="lazy"
     />
   );
 }

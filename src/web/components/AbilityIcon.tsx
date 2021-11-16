@@ -66,6 +66,7 @@ export function AbilityIcon({
       width={width}
       height={height}
       onError={onError}
+      loading="lazy"
     />
   );
 }

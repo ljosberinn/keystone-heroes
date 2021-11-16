@@ -220,6 +220,7 @@ function PullSelection() {
                 className="object-cover w-8 h-8 rounded-full"
                 width={32}
                 height={32}
+                loading="lazy"
               />
             ) : null}
             {invisibilityType === "invisibility" ? (
@@ -230,6 +231,7 @@ function PullSelection() {
                 className="object-cover w-8 h-8 rounded-full"
                 width={32}
                 height={32}
+                loading="lazy"
               />
             ) : null}
           </span>
@@ -248,6 +250,7 @@ function PullSelection() {
             className="object-cover w-8 h-8 rounded-full"
             width={32}
             height={32}
+            loading="lazy"
           />
 
           <span>{mostRelevantNPCsByPull.current.name}</span>
@@ -262,6 +265,7 @@ function PullSelection() {
               className="object-cover w-8 h-8 rounded-full"
               width={32}
               height={32}
+              loading="lazy"
             />
           ) : null}
         </span>
@@ -468,6 +472,7 @@ function SidebarNPC({ npc }: SidebarNPCProps) {
             className="object-cover w-8 h-8 rounded-full"
             width={32}
             height={32}
+            loading="lazy"
           />
         )}
 

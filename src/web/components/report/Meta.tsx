@@ -164,6 +164,7 @@ export function Meta(): JSX.Element {
                                 className="relative object-cover w-full h-full rounded-full -top-4 -left-4"
                                 width={16}
                                 height={16}
+                                loading="lazy"
                               />
                             </span>
                           ) : null}
@@ -251,6 +252,7 @@ export function Meta(): JSX.Element {
                                 className="object-cover w-full h-full rounded-full"
                                 width={24}
                                 height={24}
+                                loading="lazy"
                               />
                             </div>
                             <span>|</span>
@@ -344,6 +346,7 @@ function RaiderIOLink({ name, server, region }: LinkProps): JSX.Element {
         className="w-6 h-6"
         width={24}
         height={24}
+        loading="lazy"
       />
     </ExternalLink>
   );
@@ -366,6 +369,7 @@ function WarcraftLogsProfileLink({
         className="w-6 h-6"
         width={24}
         height={24}
+        loading="lazy"
       />
     </ExternalLink>
   );
