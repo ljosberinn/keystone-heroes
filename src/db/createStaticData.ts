@@ -44,7 +44,7 @@ const log = (str: string) => {
 const DUMMY_CD = 9999;
 
 async function create() {
-  if (process.env.NODE_ENV === "test") {
+  if (process.env.NODE_ENV === "test" || !process.env.DATABASE_URL) {
     return;
   }
 
