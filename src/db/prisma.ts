@@ -12,7 +12,9 @@ declare const global: CustomNodeJsGlobal;
 // type casted to allow importing this file in the browser while also not
 // bundling prisma at all through treeshaking
 export const prisma =
-  typeof window === "undefined" && process.env.NODE_ENV !== "test"
+  typeof window === "undefined" &&
+  process.env.NODE_ENV !== "test" &&
+  process.env.DATABASE_URL
     ? global.prisma || new PrismaClient()
     : (null as unknown as PrismaClient<
         Prisma.PrismaClientOptions,
