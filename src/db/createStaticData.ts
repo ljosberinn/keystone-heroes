@@ -45,6 +45,7 @@ const DUMMY_CD = 9999;
 
 async function create() {
   if (process.env.NODE_ENV === "test" || !process.env.DATABASE_URL) {
+    log("in test or missing env - skipping static data creation");
     return;
   }
 
