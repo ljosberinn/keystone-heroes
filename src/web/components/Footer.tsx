@@ -1,21 +1,29 @@
 import Link from "next/link";
+import { version } from "react";
 
+import { map, patreon, paypal, twitter } from "../icons";
+import { internalLinKClasses } from "../styles/tokens";
 import { ColorModeToggle } from "./ColorModeToggle";
 import { ExternalLink } from "./ExternalLink";
 
 type FooterNavLinkProps = {
   href: string;
-  children: string;
+  children: string | JSX.Element;
+  internal?: boolean;
 };
 
-function FooterNavLink({ href, children }: FooterNavLinkProps) {
+function FooterNavLink({ href, children, internal }: FooterNavLinkProps) {
   return (
     <li className="py-1 text-base leading-relaxed md:text-sm">
-      <Link href={href} prefetch={false}>
-        <a className="transition-colors duration-150 ease-in-out hover:text-yellow-600">
+      {internal ? (
+        <Link href={href} prefetch={false}>
+          <a className={internalLinKClasses}>{children}</a>
+        </Link>
+      ) : (
+        <ExternalLink className={internalLinKClasses} href={href}>
           {children}
-        </a>
-      </Link>
+        </ExternalLink>
+      )}
     </li>
   );
 }
@@ -37,37 +45,120 @@ export function Footer(): JSX.Element {
 
           <div className="grid items-center w-full grid-cols-1 text-center md:grid-cols-2 lg:pr-8 md:gap-10 md:text-left md:items-start md:w-auto">
             <ul>
-              <FooterNavLink href="/foo">Foo</FooterNavLink>
-              <FooterNavLink href="/bar">Bar</FooterNavLink>
-              <FooterNavLink href="/baz">Baz</FooterNavLink>
+              <FooterNavLink internal href="/search">
+                <span className="md:items-center md:justify-end md:flex">
+                  <svg className="inline w-6 h-6 mr-2">
+                    <use href={`#${map.id}`} />
+                  </svg>
+                  Find Routes
+                </span>
+              </FooterNavLink>
             </ul>
-            <ul>
-              <FooterNavLink href="/foo">Foo</FooterNavLink>
-              <FooterNavLink href="/bar">Bar</FooterNavLink>
-              <FooterNavLink href="/baz">Baz</FooterNavLink>
+            <ul className="md:text-right">
+              <FooterNavLink href="/foo">
+                <span className="md:items-center md:justify-end md:flex">
+                  <svg className="inline w-6 h-6 mr-2">
+                    <use href={`#${patreon.id}`} />
+                  </svg>
+                  Patreon
+                </span>
+              </FooterNavLink>
+              <FooterNavLink href="https://www.paypal.com/paypalme/gerritalex">
+                <span className="md:items-center md:justify-end md:flex">
+                  <svg className="inline w-6 h-6 mr-2">
+                    <use href={`#${paypal.id}`} />
+                  </svg>
+                  PayPal
+                </span>
+              </FooterNavLink>
+              <FooterNavLink href="https://twitter.com/gerrit_alex">
+                <span className="md:items-center md:justify-end md:flex">
+                  <svg className="inline w-6 h-6 mr-2">
+                    <use href={`#${twitter.id}`} />
+                  </svg>
+                  Twitter
+                </span>
+              </FooterNavLink>
             </ul>
           </div>
         </nav>
 
         <small className="flex items-center justify-center w-full py-6 space-x-6 text-xs text-gray-500 md:justify-end dark:text-gray-300">
           <Link href="/terms-and-conditions" prefetch={false}>
-            <a>Terms & Conditions</a>
+            <a className={internalLinKClasses}>Terms & Conditions</a>
           </Link>
           <Link href="/privacy" prefetch={false}>
-            <a>Privacy</a>
+            <a className={internalLinKClasses}>Privacy</a>
           </Link>
           <ColorModeToggle />
         </small>
 
-        {process.env.NEXT_PUBLIC_COMMIT_SHA && (
-          <small className="flex items-center justify-center w-full py-6 space-x-6 text-xs text-gray-500 md:justify-end dark:text-gray-300">
-            <ExternalLink
-              href={`https://github.com/ljosberinn/wcl-to-mdt/tree/${process.env.NEXT_PUBLIC_COMMIT_SHA}`}
-            >
-              Built at {process.env.NEXT_PUBLIC_BUILD_TIME}
+        <small className="flex items-center justify-center w-full py-2 space-x-2 text-xs text-gray-500 md:justify-end dark:text-gray-300">
+          <span>
+            All data is retrieved from{" "}
+            <ExternalLink className="underline" href="https://warcraftlogs.com">
+              Warcraft Logs
             </ExternalLink>
-          </small>
-        )}
+            .
+          </span>
+          <span>
+            Tooltips from{" "}
+            <ExternalLink className="underline" href="https://www.wowhead.com/">
+              Wowhead
+            </ExternalLink>
+            .
+          </span>
+        </small>
+
+        <small className="flex items-center justify-center w-full py-2 text-xs text-gray-500 md:justify-end dark:text-gray-300">
+          World of Warcraft and related artwork is copyright of Blizzard
+          Entertainment, Inc. This is a fan site and we are not affiliated.
+        </small>
+
+        <small className="flex items-center justify-center w-full pt-2 pb-6 space-x-2 text-xs text-gray-500 md:justify-end dark:text-gray-300">
+          <span>
+            hosted on{" "}
+            <ExternalLink className="underline" href="https://vercel.com/">
+              Vercel
+            </ExternalLink>
+          </span>
+          <span>|</span>
+          <span>
+            db via{" "}
+            <ExternalLink className="underline" href="https://vercel.com/">
+              Supabase
+            </ExternalLink>
+          </span>
+          <span>|</span>
+          <span>
+            ui via{" "}
+            <ExternalLink className="underline" href="https://tailwindcss.com/">
+              Tailwind
+            </ExternalLink>{" "}
+            through{" "}
+            <ExternalLink className="underline" href="https://nextjs.org/">
+              Next.js
+            </ExternalLink>{" "}
+            <ExternalLink
+              href={`https://www.npmjs.com/package/react/v/${
+                version.includes("experimental")
+                  ? version.replace("18.0.0", "0.0.0")
+                  : version
+              }`}
+            >
+              (React {version.split("-")[0]})
+            </ExternalLink>
+          </span>
+          <span>|</span>{" "}
+          <ExternalLink
+            href={`https://github.com/ljosberinn/wcl-to-mdt/tree/${
+              process.env.NEXT_PUBLIC_COMMIT_SHA ?? "master"
+            }`}
+          >
+            built at{" "}
+            {process.env.NEXT_PUBLIC_BUILD_TIME ?? new Date().toISOString()}
+          </ExternalLink>
+        </small>
       </footer>
     </div>
   );

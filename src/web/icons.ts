@@ -1,5 +1,6 @@
-import { AiOutlineQuestionCircle } from "react-icons/ai";
-import { FaSun, FaMoon, FaStar } from "react-icons/fa";
+import { AiOutlineQuestionCircle, AiOutlineWarning } from "react-icons/ai";
+import { BsPaypal, BsMap } from "react-icons/bs";
+import { FaTwitter, FaPatreon, FaSun, FaMoon, FaStar } from "react-icons/fa";
 import { MdTimeline } from "react-icons/md";
 import { RiTableLine } from "react-icons/ri";
 
@@ -26,4 +27,24 @@ export const outlineQuestionCircle = {
 export const timeline = {
   id: "timeline",
   component: MdTimeline,
+};
+export const paypal = {
+  id: "paypal",
+  component: BsPaypal,
+};
+export const twitter = {
+  id: "twitter",
+  component: FaTwitter,
+};
+export const patreon = {
+  id: "patreon",
+  component: FaPatreon,
+};
+export const map = {
+  id: "map",
+  component: BsMap,
+};
+export const warning = {
+  id: "warning",
+  component: AiOutlineWarning,
 };

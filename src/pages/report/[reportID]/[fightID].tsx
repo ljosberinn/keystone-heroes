@@ -1,7 +1,8 @@
 import type { GetStaticPaths, GetStaticProps } from "next";
+import dynamic from "next/dynamic";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { createContext, useContext } from "react";
+import { createContext, useContext, Suspense } from "react";
 
 import type {
   FightResponse,
@@ -14,6 +15,7 @@ import {
 } from "../../../api/functions/fight";
 import { prisma } from "../../../db/prisma";
 import { isValidReportId } from "../../../wcl/utils";
+import { Breadcrumbs } from "../../../web/components/Breadcrumbs";
 import { Spinner } from "../../../web/components/Spinner";
 import { AffixImpact } from "../../../web/components/report/AffixImpact";
 import { Data } from "../../../web/components/report/Data";
@@ -23,6 +25,14 @@ import { useAbortableFetch } from "../../../web/hooks/useAbortableFetch";
 import { dungeons } from "../../../web/staticData";
 import { widthConstraint } from "../../../web/styles/tokens";
 import { timeDurationToString } from "../../../web/utils";
+
+const GenericError = dynamic(
+  /* webpackChunkName: "GenericError" */ () =>
+    import("../../../web/components/GenericError"),
+  {
+    suspense: true,
+  }
+);
 
 type FightIDProps = {
   cache?: {
@@ -141,6 +151,24 @@ export default function FightID({ cache }: FightIDProps): JSX.Element | null {
   return (
     <FightContext.Provider value={value}>
       <FightIDHead />
+
+      <Breadcrumbs
+        paths={[
+          {
+            href: `/report/${reportID}`,
+            children: `Report ${reportID}`,
+          },
+          {
+            children: `Fight ${fightID}`,
+          },
+        ]}
+      />
+
+      {fight.meta.percent < 100 && (
+        <Suspense fallback={null}>
+          <GenericError type="missing-percent" percent={fight.meta.percent} />
+        </Suspense>
+      )}
 
       <div
         className={`space-x-0 lg:space-x-4 lg:flex lg:flex-row ${widthConstraint}`}

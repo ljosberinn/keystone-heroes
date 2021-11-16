@@ -16,7 +16,12 @@ import { isValidReportId } from "../../../wcl/utils";
 import { LinkBox, LinkOverlay } from "../../../web/components/LinkBox";
 import { SpecIcon } from "../../../web/components/SpecIcon";
 import { useAbortableFetch } from "../../../web/hooks/useAbortableFetch";
-import { bgPrimary, widthConstraint } from "../../../web/styles/tokens";
+import {
+  bgPrimary,
+  widthConstraint,
+  greenText,
+  redText,
+} from "../../../web/styles/tokens";
 import { timeDurationToString } from "../../../web/utils";
 import { classnames } from "../../../web/utils/classnames";
 
@@ -175,15 +180,22 @@ function FightCard({ fight, reportID, loading }: FightCardProps) {
     );
   }
 
+  const isTimed = fight.dungeon
+    ? fight.dungeon.time - fight.keystoneTime >= 750
+    : true;
+
   return (
     <div className={`p-2 rounded-lg shadow-sm ${bgPrimary}`}>
       <LinkBox
         className={classnames(
-          "relative flex items-center justify-center h-12 h-64 text-2xl rounded-md bg-cover bg-white hover:bg-blend-luminosity transition-colors duration-500",
+          "relative flex items-center justify-center h-12 h-64 text-2xl rounded-md bg-cover bg-white transition-colors duration-500",
           fight.dungeon
             ? `bg-${fight.dungeon.slug.toLowerCase()}`
-            : "bg-fallback",
-          loading && "animate-pulse"
+            : "bg-fallback hover:bg-blend-luminosity",
+          loading && "animate-pulse",
+          isTimed
+            ? "hover:bg-blend-luminosity"
+            : "bg-blend-luminosity hover:bg-blend-normal"
         )}
         as="section"
         aria-labelledby={`fight-${fight.id}`}
@@ -198,22 +210,12 @@ function FightCard({ fight, reportID, loading }: FightCardProps) {
               {fight.keystoneLevel}
             </h2>
 
-            <p className="flex justify-center w-full space-x-2">
-              <span>{timeDurationToString(fight.keystoneTime)}</span>
-              {fight.dungeon && (
-                <span
-                  className="italic text-green-600 dark:text-green-500"
-                  title={`${fight.keystoneBonus} chest${
-                    fight.keystoneBonus > 1 ? "s" : ""
-                  }`}
-                >
-                  +
-                  {timeDurationToString(
-                    fight.dungeon.time - fight.keystoneTime
-                  )}
-                </span>
-              )}
-            </p>
+            <TimeInformation
+              keystoneBonus={fight.keystoneBonus}
+              keystoneTime={fight.keystoneTime}
+              dungeonTimer={fight.dungeon?.time}
+              isTimed={isTimed}
+            />
 
             <p className="flex justify-center w-full space-x-2 font-xl">
               Ø {fight.averageItemLevel} | +{fight.rating}
@@ -277,6 +279,37 @@ function FightCard({ fight, reportID, loading }: FightCardProps) {
         )}
       </LinkBox>
     </div>
+  );
+}
+
+type TimeInformationProps = {
+  keystoneTime: number;
+  keystoneBonus: number;
+  dungeonTimer?: number;
+  isTimed: boolean;
+};
+
+function TimeInformation({
+  keystoneBonus,
+  keystoneTime,
+  dungeonTimer,
+  isTimed,
+}: TimeInformationProps) {
+  return (
+    <p className="flex justify-center w-full space-x-2">
+      <span>{timeDurationToString(keystoneTime)}</span>
+      {dungeonTimer && (
+        <span
+          className={`italic ${isTimed ? greenText : redText}`}
+          title={`${keystoneBonus} chest${keystoneBonus > 1 ? "s" : ""}`}
+        >
+          {isTimed ? "+" : "-"}
+          {timeDurationToString(
+            isTimed ? dungeonTimer - keystoneTime : keystoneTime - dungeonTimer
+          )}
+        </span>
+      )}
+    </p>
   );
 }
 
