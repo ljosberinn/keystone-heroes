@@ -1,0 +1,34 @@
+name: Mergability Check
+
+on:
+  push:
+    branches-ignore:
+      - master
+
+# used actions
+# https://github.com/actions/setup-node - sets up node env
+# https://github.com/actions/cache - caches build deps
+# https://github.com/actions/checkout - checks out repo
+# https://github.com/amondnet/vercel-action - initiates deploy to vercel
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Installing node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: lts/*
+          cache: 'yarn'
+      - name: Install dependencies
+        run: yarn --frozen-lockfile
+      - name: Lint
+        timeout-minutes: 4
+        run: yarn lint
+      - name: TypeScript
+        timeout-minutes: 3
+        run: yarn types
+      - name: Test
+        timeout-minutes: 4
+        run: yarn test --ci --coverage
