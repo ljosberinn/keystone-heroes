@@ -245,7 +245,14 @@ export function AffixImpact(): JSX.Element {
 
                     return (
                       <ExternalLink
-                        href={`https://www.warcraftlogs.com/reports/${reportID}#fight=${fightID}&type=summary&ImpactRowanslate=true&view=events&pins=2%24Off%24%23244F4B%24expression%24type%20%3D%20%22interrupt%22%20and%20target.type%20%3D%20%22player%22`}
+                        href={createWCLUrl({
+                          reportID,
+                          fightID,
+                          type: "interrupts",
+                          view: "events",
+                          pins: `2$Off$244F4B$expression$type = "interrupt" and target.type = "player"`,
+                          source: player.actorID,
+                        })}
                         key={player.actorID}
                         className="inline-flex space-x-2"
                       >

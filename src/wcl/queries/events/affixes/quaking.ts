@@ -50,9 +50,8 @@ export const getQuakingEvents = (
     return [];
   }
 
-  const interrupts = allEvents.filter(isQuakingInterruptEvent);
-
-  const damage = allEvents.filter(isQuakingDamageEvent);
-
-  return [...interrupts, ...damage];
+  return [
+    ...allEvents.filter(isQuakingInterruptEvent),
+    ...allEvents.filter(isQuakingDamageEvent),
+  ];
 };

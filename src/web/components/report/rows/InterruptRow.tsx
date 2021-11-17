@@ -66,7 +66,7 @@ export default function InterruptRow({
                     width={16}
                     height={16}
                   />
-                  <span className="pl-2"> {interruptedAbility.name}</span>
+                  <span className="pl-2">{interruptedAbility.name}</span>
                 </>
               ) : (
                 "Untracked Ability"
