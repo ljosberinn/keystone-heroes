@@ -8,6 +8,8 @@ const ignored = [
   "<rootDir>/src/web",
   "<rootDir>/src/api/jest",
   "<rootDir>/src/api/testUtils",
+  "<rootDir>/src/api/functions/delete",
+  "<rootDir>/src/api/functions/deleteAll",
 ];
 
 /**
@@ -19,10 +21,10 @@ const config = {
   setupFilesAfterEnv: ["<rootDir>/src/api/jest/setupTests.ts"],
   coverageThreshold: {
     global: {
-      statements: 41,
-      branches: 26,
-      functions: 39,
-      lines: 42,
+      statements: 43,
+      branches: 27,
+      functions: 41,
+      lines: 44,
     },
   },
   testPathIgnorePatterns: ignored,
