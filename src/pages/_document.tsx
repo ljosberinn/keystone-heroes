@@ -4,8 +4,12 @@ import { Html, Head, Main, NextScript } from "next/document";
 import * as icons from "../web/icons";
 
 const title = "Keystone Heroes";
+const extendedTitle = `${title} - Mythic+ Log Analysis`;
 const description =
-  "In-depth analysis for Mythic+ runs based on WarcraftLogs including routes, cooldown usage and improvement vectors.";
+  "In-depth analysis for Mythic+ runs based on WarcraftLogs including routes, cooldown usage and other improvement vectors.";
+const logo = "/summary_large_image.png";
+const url = "https://keystone-heroes.com/";
+const twitterHandle = "@gerrit_alex";
 
 export default function CustomDocument(/* props: DocumentProps*/): JSX.Element {
   return (
@@ -25,24 +29,34 @@ export default function CustomDocument(/* props: DocumentProps*/): JSX.Element {
 
         <script async src="https://wow.zamimg.com/widgets/power.js" />
 
+        <meta name="description" content={description} />
+        <link rel="canonical" href={url} />
+
         <meta itemProp="name" content={title} />
         <meta itemProp="description" content={description} />
+        <meta property="image" content={logo} />
         <meta property="image:alt" content={description} />
 
-        <meta property="og:url" content="https://keystone-heroes.com/" />
+        <meta property="og:url" content={url} />
         <meta property="og:type" content="website" />
         <meta property="og:title" content={title} />
-        <meta property="og:image:alt" content={title} />
+        <meta property="og:image" content={logo} />
+        <meta property="og:image:alt" content={extendedTitle} />
         <meta property="og:description" content={description} />
         <meta property="og:site_name" content={title} />
         <meta property="og:locale" content="en_US" />
 
-        <meta name="twitter:card" content="summary" />
-        <meta name="twitter:creator" content="@gerrit_alex" />
-        <meta name="twitter:url" content="https://keystone-heroes.com/" />
-        <meta name="twitter:title" content={title} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:creator" content={twitterHandle} />
+        <meta name="twitter:site" content={twitterHandle} />
+        <meta name="twitter:url" content={url} />
+        <meta name="twitter:title" content={extendedTitle} />
         <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={logo} />
         <meta name="twitter:image:alt" content={title} />
+
+        <meta name="robots" content="index,follow" />
+        <meta name="googlebot" content="index,follow" />
 
         <link
           rel="apple-touch-icon"
