@@ -1,8 +1,9 @@
 import { AiOutlineQuestionCircle, AiOutlineWarning } from "react-icons/ai";
 import { BsPaypal, BsMap } from "react-icons/bs";
-import { FaTwitter, FaPatreon, FaSun, FaMoon, FaStar } from "react-icons/fa";
+import { FaTwitter, FaSun, FaMoon, FaStar, FaDiscord } from "react-icons/fa";
 import { MdTimeline } from "react-icons/md";
 import { RiTableLine } from "react-icons/ri";
+import { SiBuymeacoffee } from "react-icons/si";
 
 export const sun = {
   id: "fa-sun",
@@ -36,9 +37,9 @@ export const twitter = {
   id: "twitter",
   component: FaTwitter,
 };
-export const patreon = {
-  id: "patreon",
-  component: FaPatreon,
+export const buymeacoffee = {
+  id: "buymeacoffee",
+  component: SiBuymeacoffee,
 };
 export const map = {
   id: "map",
@@ -47,4 +48,8 @@ export const map = {
 export const warning = {
   id: "warning",
   component: AiOutlineWarning,
+};
+export const discord = {
+  id: "discord",
+  component: FaDiscord,
 };

@@ -22,16 +22,14 @@ export default function CustomDocument(/* props: DocumentProps*/): JSX.Element {
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap"
         />
+
         <script async src="https://wow.zamimg.com/widgets/power.js" />
 
         <meta itemProp="name" content={title} />
         <meta itemProp="description" content={description} />
-        <meta
-          property="image:alt"
-          content="Mythic+ Estimated Title Cutoff mascot Froggy"
-        />
+        <meta property="image:alt" content={description} />
 
-        <meta property="og:url" content="https://keystone-heroes.vercel.app/" />
+        <meta property="og:url" content="https://keystone-heroes.com/" />
         <meta property="og:type" content="website" />
         <meta property="og:title" content={title} />
         <meta property="og:image:alt" content={title} />
@@ -41,13 +39,32 @@ export default function CustomDocument(/* props: DocumentProps*/): JSX.Element {
 
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:creator" content="@gerrit_alex" />
-        <meta
-          name="twitter:url"
-          content="https://keystone-heroes.vercel.app/"
-        />
+        <meta name="twitter:url" content="https://keystone-heroes.com/" />
         <meta name="twitter:title" content={title} />
         <meta name="twitter:description" content={description} />
         <meta name="twitter:image:alt" content={title} />
+
+        <link
+          rel="apple-touch-icon"
+          sizes="76x76"
+          href="/apple-touch-icon.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="32x32"
+          href="/favicon-32x32.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="16x16"
+          href="/favicon-16x16.png"
+        />
+        <link rel="manifest" href="/site.webmanifest" />
+        <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#111827" />
+        <meta name="msapplication-TileColor" content="#111827" />
+        <meta name="theme-color" content="#111827" />
       </Head>
       <body className="bg-white dark:bg-coolgray-900 dark:text-coolgray-200">
         <Main />

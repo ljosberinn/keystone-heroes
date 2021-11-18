@@ -1,0 +1,15 @@
+{
+  "name": "Keystone Heroes",
+  "short_name": "Keystone Heroes",
+  "icons": [
+    {
+      "src": "/android-chrome-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "theme_color": "#111827",
+  "background_color": "#111827",
+  "display": "standalone"
+}

@@ -6,24 +6,24 @@ import { dungeons as allDungeons } from "../../db/data/dungeons";
 import { prisma } from "../../db/prisma";
 import { MIN_KEYSTONE_LEVEL } from "../../web/env";
 
-type SearchProps = {
+type DiscoverProps = {
   dungeons: { name: string; slug: string; id: number }[];
   itemLevelBrackets: { from: number; to: number }[];
   keyLevels: number[];
 };
 
-export default function Search({
+export default function Discover({
   dungeons,
   itemLevelBrackets,
   keyLevels,
-}: SearchProps): JSX.Element {
+}: DiscoverProps): JSX.Element {
   const { push, query } = useRouter();
 
   useEffect(() => {
     if (Object.keys(query).length === 0) {
       // eslint-disable-next-line no-void
       void push({
-        pathname: "/routes/search",
+        pathname: "/routes/discover",
         query: {
           itemLevelBracket: "any",
           level: 15,
@@ -51,7 +51,7 @@ export default function Search({
     // eslint-disable-next-line no-void
     void push(
       {
-        pathname: "/routes/search",
+        pathname: "/routes/discover",
         query: nextQuery,
       },
       undefined,
@@ -165,7 +165,7 @@ export default function Search({
   );
 }
 
-export const getStaticProps: GetStaticProps<SearchProps> = async () => {
+export const getStaticProps: GetStaticProps<DiscoverProps> = async () => {
   const dungeons = allDungeons.map((dungeon) => {
     return {
       name: dungeon.name,

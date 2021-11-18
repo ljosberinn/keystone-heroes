@@ -2,10 +2,11 @@ import { useTheme } from "next-themes";
 import Link from "next/link";
 import { version } from "react";
 
-import { map, patreon, paypal, twitter } from "../icons";
+import { buymeacoffee, map, paypal, twitter, discord } from "../icons";
 import { internalLinKClasses } from "../styles/tokens";
 import { ColorModeToggle } from "./ColorModeToggle";
 import { ExternalLink } from "./ExternalLink";
+import { Logo } from "./Logo";
 
 type FooterNavLinkProps = {
   href: string;
@@ -35,18 +36,12 @@ export function Footer(): JSX.Element {
       <footer className="w-full mx-auto max-w-screen-2xl">
         <nav className="flex flex-col items-center justify-between w-full py-16 space-y-16 md:space-y-8 md:space-y-0 md:flex-row md:items-start">
           <div className="flex flex-col items-center h-full space-y-6 md:items-start w-72">
-            <Link href="/">
-              <a className="flex flex-col items-center space-y-2 text-center md:flex-row md:items-start md:text-left md:space-x-2 md:space-y-0">
-                <div className="mt-1 text-lg font-semibold tracking-tight leading-tighter">
-                  Keystone Heroes
-                </div>
-              </a>
-            </Link>
+            <Logo />
           </div>
 
           <div className="grid items-center w-full grid-cols-1 text-center md:grid-cols-2 lg:pr-8 md:gap-10 md:text-left md:items-start md:w-auto">
             <ul>
-              <FooterNavLink internal href="/search">
+              <FooterNavLink internal href="/routes/discover">
                 <span className="md:items-center md:justify-end md:flex">
                   <svg className="inline w-6 h-6 mr-2">
                     <use href={`#${map.id}`} />
@@ -56,12 +51,12 @@ export function Footer(): JSX.Element {
               </FooterNavLink>
             </ul>
             <ul className="md:text-right">
-              <FooterNavLink href="/foo">
+              <FooterNavLink href="https://buymeacoffee.com/rOSn8DF">
                 <span className="md:items-center md:justify-end md:flex">
                   <svg className="inline w-6 h-6 mr-2">
-                    <use href={`#${patreon.id}`} />
+                    <use href={`#${buymeacoffee.id}`} />
                   </svg>
-                  Patreon
+                  Buy Me A Coffee
                 </span>
               </FooterNavLink>
               <FooterNavLink href="https://www.paypal.com/paypalme/gerritalex">
@@ -78,6 +73,14 @@ export function Footer(): JSX.Element {
                     <use href={`#${twitter.id}`} />
                   </svg>
                   Twitter
+                </span>
+              </FooterNavLink>
+              <FooterNavLink href="/">
+                <span className="md:items-center md:justify-end md:flex">
+                  <svg className="inline w-6 h-6 mr-2">
+                    <use href={`#${discord.id}`} />
+                  </svg>
+                  Discord
                 </span>
               </FooterNavLink>
             </ul>
