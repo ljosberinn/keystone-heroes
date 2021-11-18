@@ -13,7 +13,7 @@
 
 ### Introduction
 
-This repository initially was bootstrapped with `create-next-app`, was a `yarn workspaces` monorepo for a few months and now is back to being a large repo without individual packages as prisma became fascinatingly slow when importing from a different local package. It's still not blazingly fast bu a lot better.
+This repository initially was bootstrapped with `create-next-app`, was a `yarn workspaces` monorepo for a few months and now is back to being a large repo without individual packages as prisma became fascinatingly slow when importing from a different local package. It's still not blazingly fast but a lot better.
 
 - `src/pages` contains Next.js pages - the folder must be either in `/pages` or `/src/pages` and I don't like having it on top level, so there you go.
 - `src/api` contains all Next.js API routes logic, consumed within `/src/pages/api`

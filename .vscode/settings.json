@@ -21,5 +21,6 @@
   },
   "typescript.tsdk": "node_modules\\typescript\\lib",
   "typescript.preferences.importModuleSpecifier": "relative",
-  "editor.bracketPairColorization.enabled": true
+  "editor.bracketPairColorization.enabled": true,
+  "eslint.workingDirectories": ["src/wcl", "src/api", "src/db"]
 }

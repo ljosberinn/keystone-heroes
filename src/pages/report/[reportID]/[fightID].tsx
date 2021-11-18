@@ -27,8 +27,10 @@ import { widthConstraint } from "../../../web/styles/tokens";
 import { timeDurationToString } from "../../../web/utils";
 
 const GenericError = dynamic(
-  /* webpackChunkName: "GenericError" */ () =>
-    import("../../../web/components/GenericError"),
+  () =>
+    import(
+      /* webpackChunkName: "GenericError" */ "../../../web/components/GenericError"
+    ),
   {
     suspense: true,
   }

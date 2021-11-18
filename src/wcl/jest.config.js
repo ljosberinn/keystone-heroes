@@ -1,16 +1,12 @@
 // @ts-check
-const baseConfig = require("./jest.config.base");
+const baseConfig = require("../../jest.config.base");
 
 const ignored = [
-  "<rootDir>/src/pages",
-  "<rootDir>/src/api",
-  "<rootDir>/src/db",
-  "<rootDir>/src/web",
-  "<rootDir>/src/wcl/jest",
-  "<rootDir>/src/wcl/queries/introspection.ts",
-  "<rootDir>/src/wcl/queries/wcl-static-data.ts",
-  "<rootDir>/src/wcl/queries/index.ts",
-  "<rootDir>/src/wcl/types.ts",
+  "<rootDir>/jest",
+  "<rootDir>/queries/introspection.ts",
+  "<rootDir>/queries/wcl-static-data.ts",
+  "<rootDir>/queries/index.ts",
+  "<rootDir>/types.ts",
 ];
 
 /**
