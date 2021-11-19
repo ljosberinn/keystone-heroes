@@ -12,6 +12,13 @@ type DiscoverProps = {
   keyLevels: number[];
 };
 
+export const url = "/routes/discover";
+
+export const defaultQueryParams = {
+  itemLevelBracket: "any",
+  level: 15,
+};
+
 export default function Discover({
   dungeons,
   itemLevelBrackets,
@@ -23,11 +30,8 @@ export default function Discover({
     if (Object.keys(query).length === 0) {
       // eslint-disable-next-line no-void
       void push({
-        pathname: "/routes/discover",
-        query: {
-          itemLevelBracket: "any",
-          level: 15,
-        },
+        pathname: url,
+        query: defaultQueryParams,
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -51,7 +55,7 @@ export default function Discover({
     // eslint-disable-next-line no-void
     void push(
       {
-        pathname: "/routes/discover",
+        pathname: url,
         query: nextQuery,
       },
       undefined,

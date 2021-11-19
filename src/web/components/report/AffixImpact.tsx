@@ -104,7 +104,7 @@ export function AffixImpact(): JSX.Element {
 
   return (
     <section className="py-6">
-      <div className="px-6 pb-2 bg-white lg:px-0 dark:bg-coolgray-900">
+      <div className="px-6 py-6 bg-white lg:px-0 dark:bg-coolgray-900">
         <style jsx>
           {`
             .paddingLessTable th,
@@ -117,7 +117,7 @@ export function AffixImpact(): JSX.Element {
         <table className="w-full paddingLessTable">
           <thead>
             <tr>
-              <th className="pt-4 pb-2 text-xl text-left lg:text-center">
+              <th className="pb-2 text-xl text-left lg:text-center">
                 Affix Impact
               </th>
             </tr>

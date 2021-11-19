@@ -149,3 +149,18 @@ export const classBorderColorMap: Record<string, string> = {
   druid: "border-druid",
   mage: "border-mage",
 };
+
+export const createInternalUrl = (
+  url: string,
+  defaultQueryParams?: Record<string, string | number>
+): string => {
+  const urld = new URL(url.includes("http") ? url : `http://${url}`);
+
+  if (defaultQueryParams) {
+    Object.entries(defaultQueryParams).forEach(([key, value]) => {
+      urld.searchParams.append(key, `${value}`);
+    });
+  }
+
+  return urld.toString().replace("http://", "");
+};

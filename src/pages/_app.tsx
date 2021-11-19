@@ -41,7 +41,7 @@ export default function App({
       <ThemeProvider attribute="class" defaultTheme="dark">
         <Header />
         <div className="bg-gray-100 dark:bg-coolgray-800">
-          <main className="flex flex-col py-6">
+          <main className="flex flex-col">
             <Component {...pageProps} />
           </main>
         </div>

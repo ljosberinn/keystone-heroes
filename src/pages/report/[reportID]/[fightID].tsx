@@ -155,6 +155,7 @@ export default function FightID({ cache }: FightIDProps): JSX.Element | null {
       <FightIDHead />
 
       <Breadcrumbs
+        className="mt-6"
         paths={[
           {
             href: `/report/${reportID}`,

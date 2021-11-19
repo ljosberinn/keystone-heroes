@@ -6,14 +6,19 @@ import {
   internalLinKClasses,
   widthConstraint,
 } from "../styles/tokens";
+import { classnames } from "../utils/classnames";
 
 type BreadcrumbsProps = {
   paths: { href?: string; children: string }[];
+  className?: string;
 };
 
-export function Breadcrumbs({ paths }: BreadcrumbsProps): JSX.Element {
+export function Breadcrumbs({
+  paths,
+  className,
+}: BreadcrumbsProps): JSX.Element {
   return (
-    <nav className={`${widthConstraint} pb-4`}>
+    <nav className={classnames(widthConstraint, "pb-4", className)}>
       <ol className={`flex p-2 ${bgPrimary} rounded-lg`}>
         {paths.map((path, index) => {
           const isLast = index + 1 === paths.length;

@@ -2,8 +2,10 @@ import { useTheme } from "next-themes";
 import Link from "next/link";
 import { version } from "react";
 
+import { defaultQueryParams, url } from "../../pages/routes/discover";
 import { buymeacoffee, map, paypal, twitter, discord } from "../icons";
 import { internalLinKClasses } from "../styles/tokens";
+import { createInternalUrl } from "../utils";
 import { ColorModeToggle } from "./ColorModeToggle";
 import { ExternalLink } from "./ExternalLink";
 import { Logo } from "./Logo";
@@ -41,12 +43,15 @@ export function Footer(): JSX.Element {
 
           <div className="grid items-center w-full grid-cols-1 text-center md:grid-cols-2 lg:pr-8 md:gap-10 md:text-left md:items-start md:w-auto">
             <ul>
-              <FooterNavLink internal href="/routes/discover">
+              <FooterNavLink
+                internal
+                href={createInternalUrl(url, defaultQueryParams)}
+              >
                 <span className="md:items-center md:justify-end md:flex">
                   <svg className="inline w-6 h-6 mr-2">
                     <use href={`#${map.id}`} />
                   </svg>
-                  Find Routes
+                  Discover Routes
                 </span>
               </FooterNavLink>
             </ul>
@@ -88,9 +93,6 @@ export function Footer(): JSX.Element {
         </nav>
 
         <small className="flex items-center justify-center w-full py-6 space-x-6 text-xs text-gray-500 md:justify-end dark:text-gray-300">
-          <Link href="/terms-and-conditions" prefetch={false}>
-            <a className={internalLinKClasses}>Terms & Conditions</a>
-          </Link>
           <Link href="/privacy" prefetch={false}>
             <a className={internalLinKClasses}>Privacy</a>
           </Link>
@@ -114,7 +116,7 @@ export function Footer(): JSX.Element {
           </span>
         </small>
 
-        <small className="flex flex-col items-center justify-center w-full py-2 space-x-0 space-y-1 text-xs text-gray-500 md:space-x-2 md:space-y-0 md:flex-row md:justify-end dark:text-gray-300">
+        <small className="flex flex-col justify-center w-full py-2 space-x-0 space-y-1 text-xs text-center text-gray-500 md:text-right md:space-x-2 md:space-y-0 md:flex-row md:justify-end dark:text-gray-300">
           <span>
             World of Warcraft and related artwork is copyright of Blizzard
             Entertainment, Inc.

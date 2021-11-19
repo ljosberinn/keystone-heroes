@@ -135,7 +135,8 @@ export default function Report({ cache }: ReportProps): JSX.Element | null {
       <Head>
         <title>Keystone Heroes - {report?.title ?? "unknown report"}</title>
       </Head>
-      <div className={widthConstraint}>
+
+      <div className={`${widthConstraint} py-6`}>
         <h1>{loading ? "loading" : report?.title ?? "unknown report"}</h1>
 
         {/* <div>
