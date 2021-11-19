@@ -222,27 +222,26 @@ export function Meta(): JSX.Element {
                           className={`${classColor} relative w-4 h-4 mr-4 border-b-2 dark:border-opacity-50 border-l-2 border-solid left-4`}
                         />
                         {player.legendary ? (
-                          <>
-                            <ExternalLink
-                              href={createWowheadUrl({
-                                category: "spell",
-                                id: player.legendary.id,
-                              })}
-                              className="w-6 h-6"
-                            >
-                              <AbilityIcon
-                                icon={player.legendary.effectIcon}
-                                alt={player.legendary.effectName}
-                                className="object-cover w-full h-full rounded-full"
-                                width={24}
-                                height={24}
-                              />
-                            </ExternalLink>
-                            <span>|</span>
-                          </>
+                          <ExternalLink
+                            href={createWowheadUrl({
+                              category: "spell",
+                              id: player.legendary.id,
+                            })}
+                            className="w-6 h-6"
+                          >
+                            <AbilityIcon
+                              icon={player.legendary.effectIcon}
+                              alt={player.legendary.effectName}
+                              className="object-cover w-full h-full rounded-full"
+                              width={24}
+                              height={24}
+                            />
+                          </ExternalLink>
                         ) : null}
+
                         {player.soulbind ? (
                           <>
+                            <span>|</span>
                             <div className="w-6 h-6">
                               <img
                                 // TODO: store assets locally
@@ -255,35 +254,40 @@ export function Meta(): JSX.Element {
                                 loading="lazy"
                               />
                             </div>
-                            <span>|</span>
                           </>
                         ) : null}
-                        {player.tormented.map((id, index) => {
-                          const power = tormentedPowers[id];
 
-                          return (
-                            <span
-                              className="w-6 h-6"
-                              // eslint-disable-next-line react/no-array-index-key
-                              key={`${id}-${index}}`}
-                            >
-                              <ExternalLink
-                                href={createWowheadUrl({
-                                  category: "spell",
-                                  id,
-                                })}
-                              >
-                                <AbilityIcon
-                                  icon={power.icon}
-                                  alt={power.name ?? "Skipped"}
-                                  className="object-cover w-full h-full rounded-full"
-                                  width={24}
-                                  height={24}
-                                />
-                              </ExternalLink>
-                            </span>
-                          );
-                        })}
+                        {player.tormented.length > 0 ? (
+                          <>
+                            <span>|</span>
+                            {player.tormented.map((id, index) => {
+                              const power = tormentedPowers[id];
+
+                              return (
+                                <span
+                                  className="w-6 h-6"
+                                  // eslint-disable-next-line react/no-array-index-key
+                                  key={`${id}-${index}}`}
+                                >
+                                  <ExternalLink
+                                    href={createWowheadUrl({
+                                      category: "spell",
+                                      id,
+                                    })}
+                                  >
+                                    <AbilityIcon
+                                      icon={power.icon}
+                                      alt={power.name ?? "Skipped"}
+                                      className="object-cover w-full h-full rounded-full"
+                                      width={24}
+                                      height={24}
+                                    />
+                                  </ExternalLink>
+                                </span>
+                              );
+                            })}
+                          </>
+                        ) : null}
                       </div>
                     </td>
                     <td>
