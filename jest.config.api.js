@@ -1,11 +1,15 @@
 // @ts-check
-const baseConfig = require("../../jest.config.base");
+const baseConfig = require("./jest.config.base");
 
 const ignored = [
-  "<rootDir>/jest",
-  "<rootDir>/testUtils",
-  "<rootDir>/functions/delete",
-  "<rootDir>/functions/deleteAll",
+  "<rootDir>/src/pages",
+  "<rootDir>/src/wcl",
+  "<rootDir>/src/db",
+  "<rootDir>/src/web",
+  "<rootDir>/src/api/jest",
+  "<rootDir>/src/api/testUtils",
+  "<rootDir>/src/api/functions/delete",
+  "<rootDir>/src/api/functions/deleteAll",
 ];
 
 /**
@@ -14,7 +18,7 @@ const ignored = [
 const config = {
   ...baseConfig,
   displayName: "api",
-  setupFilesAfterEnv: ["<rootDir>/jest/setupTests.ts"],
+  setupFilesAfterEnv: ["<rootDir>/src/api/jest/setupTests.ts"],
   coverageThreshold: {
     global: {
       statements: 43,

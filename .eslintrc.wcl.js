@@ -5,15 +5,8 @@ const {
 const {
   createTSOverride,
 } = require("eslint-config-galex/src/overrides/typescript");
-const { resolve } = require("path");
 
-const baseCwd = process.cwd();
-const isVSCodeLinterProcess = baseCwd[0].toLowerCase() === baseCwd[0];
-const cwd = isVSCodeLinterProcess ? resolve(baseCwd, "../../") : baseCwd;
-
-const deps = getDependencies({
-  cwd,
-});
+const deps = getDependencies();
 
 const mockOverride = createTSOverride({
   ...deps,
@@ -36,7 +29,6 @@ const generatedTypesOverride = createTSOverride({
 });
 
 module.exports = createConfig({
-  cwd,
   rules: {
     "new-cap": "off",
   },
