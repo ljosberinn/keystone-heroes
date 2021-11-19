@@ -28,9 +28,8 @@ async function loadNPCNames() {
     name: dataset.name_enus,
   }));
 
-  const targetPath = resolve("../db/raw/all-npcs.json");
   writeFileSync(
-    targetPath,
+    resolve("src/db/raw/all-npcs.json"),
     format(JSON.stringify(extracted), {
       parser: "json",
     })
@@ -63,9 +62,8 @@ async function loadSpellNames() {
     icon: dataset.icon,
   }));
 
-  const targetPath = resolve("../db/raw/all-spells.json");
   writeFileSync(
-    targetPath,
+    resolve("src/db/raw/all-spells.json"),
     format(JSON.stringify(extracted), {
       parser: "json",
     })
