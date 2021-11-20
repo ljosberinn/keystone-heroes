@@ -5,14 +5,11 @@ import {
   startTransaction,
 } from "@sentry/node";
 import type { Transaction } from "@sentry/types";
+import type { NextApiRequest } from "next";
 
 import { isValidReportId } from "../../wcl/utils";
 import { BAD_REQUEST } from "../utils/statusCodes";
-import type {
-  Middleware,
-  NextApiRequestWithoutIncomingMessage,
-  RequestHandler,
-} from "../utils/types";
+import type { Middleware, RequestHandler } from "../utils/types";
 
 export const createValidReportIDMiddleware =
   (key: string): Middleware =>
@@ -39,10 +36,7 @@ export const validFightIDMiddleware: Middleware = (req, res, next) => {
 };
 
 export const withSentry = <
-  Req extends Partial<NextApiRequestWithoutIncomingMessage> = Record<
-    string,
-    unknown
-  >,
+  Req extends Partial<NextApiRequest> = Record<string, unknown>,
   Res = undefined
 >(
   handler: RequestHandler<Req, Res>
@@ -68,7 +62,7 @@ export const withSentry = <
 
   return (req, res, next) => {
     try {
-      console.log("before handler");
+      console.log("before handler", req.url);
       return handler(req, res, next);
     } catch (error) {
       console.log("in catch", error);

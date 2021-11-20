@@ -274,7 +274,6 @@ export const getStaticProps: GetStaticProps<FightIDProps, StaticPathParams> =
       props: {
         cache,
       },
-      revalidate: 24 * 60 * 60,
     };
   };
 

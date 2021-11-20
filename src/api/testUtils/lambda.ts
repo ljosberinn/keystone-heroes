@@ -2,10 +2,7 @@ import { mockDeep } from "jest-mock-extended";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { apiResolver } from "next/dist/server/api-utils";
 
-import type {
-  NextApiRequestWithoutIncomingMessage,
-  RequestHandler,
-} from "../utils/types";
+import type { RequestHandler } from "../utils/types";
 
 type LambdaTestParameters = {
   query?: Record<string, string>;
@@ -18,7 +15,7 @@ type LambdaResponse<Response> = {
 };
 
 export async function testLambda<
-  Request extends Partial<NextApiRequestWithoutIncomingMessage>,
+  Request extends Partial<NextApiRequest>,
   Response
 >(
   handler: RequestHandler<Request, Response>,

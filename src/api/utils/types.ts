@@ -5,14 +5,8 @@ import type {
   Middleware as NextConnectMiddleware,
 } from "next-connect";
 
-export type NextApiRequestWithoutIncomingMessage = {
-  [Key in keyof NextApiRequest as Key extends keyof IncomingMessage
-    ? never
-    : Key]: NextApiRequest[Key];
-};
-
 export type Middleware<
-  ExtendedApiRequest extends Partial<NextApiRequestWithoutIncomingMessage> = NextApiRequest,
+  ExtendedApiRequest extends Partial<NextApiRequest> = NextApiRequest,
   ReturnType = undefined
 > = NextConnectMiddleware<
   Omit<NextApiRequest, keyof ExtendedApiRequest> &
@@ -23,10 +17,7 @@ export type Middleware<
 >;
 
 export type RequestHandler<
-  ExtendedApiRequest extends Partial<NextApiRequestWithoutIncomingMessage> = Record<
-    string,
-    unknown
-  >,
+  ExtendedApiRequest extends Partial<NextApiRequest> = Record<string, unknown>,
   ReturnType = undefined
 > = NextConnectRequestHandler<
   // allows overwriting e.g. query and body
