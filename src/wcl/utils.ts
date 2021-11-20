@@ -9,7 +9,7 @@ export const isValidReportId = (id?: string | string[]): id is string => {
 export const ONGOING_REPORT_THRESHOLD = 18 * 60 * 60 * 1000;
 
 /**
- * assume a report may still be ongoing if its less than one day old
+ * assume a report may still be ongoing if its less than 18 hours old
  */
 export const maybeOngoingReport = (endTime: number): boolean =>
   ONGOING_REPORT_THRESHOLD > Date.now() - endTime;

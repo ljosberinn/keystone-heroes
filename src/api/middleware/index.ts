@@ -1,18 +1,17 @@
-// import {
-//   init,
-//   configureScope,
-//   captureException,
-//   startTransaction,
-// } from "@sentry/node";
+import {
+  init,
+  configureScope,
+  captureException,
+  // startTransaction,
+} from "@sentry/node";
 // import type { Transaction } from "@sentry/types";
-// import nc from "next-connect";
 
 import { isValidReportId } from "../../wcl/utils";
 import { BAD_REQUEST } from "../utils/statusCodes";
 import type {
   Middleware,
-  // NextApiRequestWithoutIncomingMessage,
-  // RequestHandler,
+  NextApiRequestWithoutIncomingMessage,
+  RequestHandler,
 } from "../utils/types";
 
 export const createValidReportIDMiddleware =
@@ -39,47 +38,52 @@ export const validFightIDMiddleware: Middleware = (req, res, next) => {
   next();
 };
 
-// export const withSentry = <
-//   Req extends Partial<NextApiRequestWithoutIncomingMessage> = Record<
-//     string,
-//     unknown
-//   >,
-//   Res = undefined
-// >(
-//   handler: RequestHandler<Req, Res>
-// ): Middleware => {
-//   init({
-//     dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
-//   });
+export const withSentry = <
+  Req extends Partial<NextApiRequestWithoutIncomingMessage> = Record<
+    string,
+    unknown
+  >,
+  Res = undefined
+>(
+  handler: RequestHandler<Req, Res>
+): Middleware<Req, Res> => {
+  init({
+    dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
+  });
 
-//   configureScope((scope) => {
-//     scope.setTag("runtime", "node");
+  configureScope((scope) => {
+    scope.setTag("runtime", "node");
 
-//     if (process.env.VERCEL) {
-//       scope.setTag("vercel", true);
-//     }
+    if (process.env.VERCEL) {
+      scope.setTag("vercel", true);
+    }
 
-//     scope.addEventProcessor((event) =>
-//       event.type === "transaction" && event.transaction === "/404"
-//         ? null
-//         : event
-//     );
-//   });
+    scope.addEventProcessor((event) =>
+      event.type === "transaction" && event.transaction === "/404"
+        ? null
+        : event
+    );
+  });
 
-//   const middleware: Middleware<Req, Res> = (req, res, next) => {
-//     try {
-//       return handler(req, res, next);
-//     } catch (error) {
-//       if (error instanceof Error) {
-//         captureException(error);
-//       }
+  const middleware: Middleware<Req, Res> = (req, res, next) => {
+    try {
+      console.log("before handler");
+      return handler(req, res, next);
+    } catch (error) {
+      console.log("in catch");
+      console.error(error);
+      if (error instanceof Error) {
+        captureException(error);
+      }
 
-//       throw error;
-//     }
-//   };
+      console.log("after captureEx report");
 
-//   return nc().use(middleware);
-// };
+      throw error;
+    }
+  };
+
+  return middleware;
+};
 
 // export const createTransaction = (
 //   name: string,

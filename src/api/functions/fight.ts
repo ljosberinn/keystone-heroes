@@ -607,6 +607,8 @@ const abilitiesWithCDR = new Set([
   31_850, // Ardent Defender
   304_971, // Divine Toll
   498, // Divine Protection
+  // Priest
+  325_013, // Boon of the Ascended
 ]);
 
 type CalcAbilityReadyEventsReturn = Omit<
