@@ -53,10 +53,10 @@ import type {
 import { processEvents } from "../../wcl/transform";
 import type { PersistedDungeonPull } from "../../wcl/transform/utils";
 import {
-  //   createTransaction,
+  createTransaction,
   createValidReportIDMiddleware,
   validFightIDMiddleware,
-  //   withSentry,
+  withSentry,
 } from "../middleware";
 import { sortByRole } from "../utils";
 import {
@@ -66,7 +66,6 @@ import {
   UNPROCESSABLE_ENTITY,
   OK,
 } from "../utils/statusCodes";
-import type { RequestHandler } from "../utils/types";
 import { reportHandlerError } from "./report";
 
 type Request = {
@@ -1311,22 +1310,23 @@ const getResponseOrRetrieveAndCreateFight = async (
   };
 };
 
-const handler: RequestHandler<Request, FightResponse> = async (req, res) => {
+const handler = withSentry<Request, FightResponse>(async (req, res) => {
   const { reportID } = req.query;
   const fightID = Number.parseInt(req.query.fightID);
 
-  // const transaction = createTransaction(
-  //   `api/fight?reportID=${reportID}&fightID=${fightID}`,
-  //   {
-  //     reportID,
-  //     fightID,
-  //   }
-  // );
+  const transaction = createTransaction(
+    `api/fight?reportID=${reportID}&fightID=${fightID}`,
+    {
+      reportID,
+      fightID,
+    }
+  );
 
   const maybeStoredFight = await loadExistingFight(reportID, fightID);
 
   if (!maybeStoredFight) {
-    // transaction.finish();
+    transaction.setHttpStatus(NOT_FOUND);
+    transaction.finish();
 
     res.status(NOT_FOUND).json({ error: fightHandlerError.UNKNOWN_REPORT });
     return;
@@ -1338,10 +1338,11 @@ const handler: RequestHandler<Request, FightResponse> = async (req, res) => {
     fightID
   );
 
-  // transaction.finish();
+  transaction.setHttpStatus(status);
+  transaction.finish();
 
   res.status(status).json(json);
-};
+});
 
 const ensureCorrectDungeonID = (
   storedDungeon: { id: number } | null,

@@ -2,9 +2,9 @@ import {
   init,
   configureScope,
   captureException,
-  // startTransaction,
+  startTransaction,
 } from "@sentry/node";
-// import type { Transaction } from "@sentry/types";
+import type { Transaction } from "@sentry/types";
 
 import { isValidReportId } from "../../wcl/utils";
 import { BAD_REQUEST } from "../utils/statusCodes";
@@ -46,9 +46,10 @@ export const withSentry = <
   Res = undefined
 >(
   handler: RequestHandler<Req, Res>
-): Middleware<Req, Res> => {
+): RequestHandler<Req, Res> => {
   init({
     dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
+    enabled: process.env.NODE_ENV === "production",
   });
 
   configureScope((scope) => {
@@ -65,13 +66,12 @@ export const withSentry = <
     );
   });
 
-  const middleware: Middleware<Req, Res> = (req, res, next) => {
+  return (req, res, next) => {
     try {
       console.log("before handler");
       return handler(req, res, next);
     } catch (error) {
-      console.log("in catch");
-      console.error(error);
+      console.log("in catch", error);
       if (error instanceof Error) {
         captureException(error);
       }
@@ -81,23 +81,21 @@ export const withSentry = <
       throw error;
     }
   };
-
-  return middleware;
 };
 
-// export const createTransaction = (
-//   name: string,
-//   metadata?: Record<string, unknown>
-// ): Transaction => {
-//   const transaction = startTransaction({
-//     op: "transaction",
-//     name,
-//     data: metadata,
-//   });
+export const createTransaction = (
+  name: string,
+  metadata?: Record<string, unknown>
+): Transaction => {
+  const transaction = startTransaction({
+    op: "transaction",
+    name,
+    data: metadata,
+  });
 
-//   configureScope((scope) => {
-//     scope.setSpan(transaction);
-//   });
+  configureScope((scope) => {
+    scope.setSpan(transaction);
+  });
 
-//   return transaction;
-// };
+  return transaction;
+};

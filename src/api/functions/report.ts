@@ -30,7 +30,7 @@ import {
 import type { GameZone } from "../../wcl/types";
 import { isValidReportId, maybeOngoingReport } from "../../wcl/utils";
 import { MIN_KEYSTONE_LEVEL } from "../../web/env";
-import { withSentry } from "../middleware";
+import { createTransaction, withSentry } from "../middleware";
 import { sortByRole } from "../utils";
 import {
   SERVICE_UNAVAILABLE,
@@ -704,19 +704,19 @@ export const reportHandler = withSentry<Request, ReportResponse>(
     }
 
     const { reportID } = req.query;
-    // const transaction = createTransaction(`/api/report?reportID=${reportID}`, {
-    //   reportID,
-    // });
+    const transaction = createTransaction(`/api/report?reportID=${reportID}`, {
+      reportID,
+    });
 
     const existingReport = await loadExistingReport(reportID);
-    const ongoing = existingReport
-      ? maybeOngoingReport(existingReport.endTime.getTime())
-      : false;
 
-    console.log({ existingReport: !!existingReport, ongoing });
+    if (
+      existingReport &&
+      !maybeOngoingReport(existingReport.endTime.getTime())
+    ) {
+      transaction.setHttpStatus(200);
+      transaction.finish();
 
-    if (existingReport && !ongoing) {
-      // transaction.finish();
       res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
       res.json(createResponseFromDB(existingReport));
       return;
@@ -744,7 +744,9 @@ export const reportHandler = withSentry<Request, ReportResponse>(
       report.reportData.report.fights.length === 0 ||
       report.reportData.report.startTime === report.reportData.report.endTime
     ) {
-      // transaction.finish();
+      transaction.setHttpStatus(UNPROCESSABLE_ENTITY);
+      transaction.finish();
+
       res.status(UNPROCESSABLE_ENTITY).json({
         error: reportHandlerError.EMPTY_LOG,
       });
@@ -803,12 +805,16 @@ export const reportHandler = withSentry<Request, ReportResponse>(
     if (fights.length === 0) {
       // maybeOngoingFight === true
       if (existingReport && persistedFightIDs.length > 0) {
-        // transaction.finish();
+        transaction.setHttpStatus(200);
+        transaction.finish();
+
         res.json(createResponseFromDB(existingReport));
         return;
       }
 
-      // transaction.finish();
+      transaction.setHttpStatus(BAD_REQUEST);
+      transaction.finish();
+
       res.status(BAD_REQUEST).json({
         error: reportHandlerError.NO_TIMED_KEYS,
       });
@@ -962,7 +968,9 @@ export const reportHandler = withSentry<Request, ReportResponse>(
     );
 
     if (fightsWithMeta.length === 0) {
-      // transaction.finish();
+      transaction.setHttpStatus(SERVICE_UNAVAILABLE);
+      transaction.finish();
+
       res.status(SERVICE_UNAVAILABLE).json({
         error: reportHandlerError.SECONDARY_REQUEST_FAILED,
       });
@@ -1190,7 +1198,8 @@ export const reportHandler = withSentry<Request, ReportResponse>(
       )
     );
 
-    // transaction.finish();
+    transaction.setHttpStatus(200);
+    transaction.finish();
 
     res.json(
       createResponseFromRawData({
