@@ -31,6 +31,22 @@ function MissingPercentWarning({ percent }: { percent: number }) {
   );
 }
 
+function LoadingFailed({ error }: { error: string }) {
+  return (
+    <>
+      <span className="font-semibold">
+        Something went horribly wrong here and we're sorry.
+      </span>
+      <p>At this point, this lousy error message is all we have:</p>
+      <p className="py-4 italic">{error}</p>
+      <p>
+        Please attach a link to the current URL should you file an issue on
+        GitHub or Discord. Thanks!
+      </p>
+    </>
+  );
+}
+
 // eslint-disable-next-line import/no-default-export
 export default function GenericError(
   props: GenericErrorProps
@@ -46,6 +62,8 @@ export default function GenericError(
         <div className="p-4">
           {props.type === "missing-percent" ? (
             <MissingPercentWarning percent={props.percent} />
+          ) : props.type === "loading-failed" ? (
+            <LoadingFailed error={props.error} />
           ) : null}
         </div>
       </div>

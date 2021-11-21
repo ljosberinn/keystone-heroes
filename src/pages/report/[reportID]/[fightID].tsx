@@ -138,8 +138,30 @@ export default function FightID({ cache }: FightIDProps): JSX.Element | null {
     );
   }
 
+  const breadcrumbs = (
+    <Breadcrumbs
+      className="mt-6"
+      paths={[
+        {
+          href: `/report/${reportID}`,
+          children: `Report ${reportID}`,
+        },
+        {
+          children: `Fight ${fightID}`,
+        },
+      ]}
+    />
+  );
+
   if ("error" in fight) {
-    return <h1>{fight.error}</h1>;
+    return (
+      <>
+        {breadcrumbs}
+        <Suspense fallback={null}>
+          <GenericError type="loading-failed" error={fight.error} />
+        </Suspense>
+      </>
+    );
   }
 
   // eslint-disable-next-line react/jsx-no-constructed-context-values
@@ -154,18 +176,7 @@ export default function FightID({ cache }: FightIDProps): JSX.Element | null {
     <FightContext.Provider value={value}>
       <FightIDHead />
 
-      <Breadcrumbs
-        className="mt-6"
-        paths={[
-          {
-            href: `/report/${reportID}`,
-            children: `Report ${reportID}`,
-          },
-          {
-            children: `Fight ${fightID}`,
-          },
-        ]}
-      />
+      {breadcrumbs}
 
       {fight.meta.percent < 100 && (
         <Suspense fallback={null}>
