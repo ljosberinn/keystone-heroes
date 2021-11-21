@@ -105,10 +105,10 @@ export type FightSuccessResponse = {
   > & {
     class: Class["id"];
     spec: Spec["id"];
-    legendary: Pick<
+    legendaries: Pick<
       Legendary,
       "effectIcon" | "effectName" | "id" | "itemID"
-    > | null;
+    >[];
     conduits: (Pick<Conduit, "icon" | "name"> & {
       itemLevel: PlayerConduit["itemLevel"];
     })[];
@@ -206,10 +206,14 @@ type RawFight =
           "id" | "actorID" | "deaths" | "dps" | "hps" | "itemLevel"
         > & {
           spec: Pick<Spec, "id" | "role">;
-          legendary: Pick<
-            Legendary,
-            "effectIcon" | "effectName" | "id" | "itemID"
-          > | null;
+          PlayerLegendary: {
+            legendary: {
+              id: number;
+              effectIcon: string;
+              effectName: string;
+              itemID: number;
+            } | null;
+          }[];
           PlayerConduit: (Pick<PlayerConduit, "itemLevel"> & {
             conduit: Pick<Conduit, "icon" | "name">;
           })[];
@@ -313,12 +317,16 @@ export const loadExistingFight = async (
                   role: true,
                 },
               },
-              legendary: {
+              PlayerLegendary: {
                 select: {
-                  effectIcon: true,
-                  effectName: true,
-                  id: true,
-                  itemID: true,
+                  legendary: {
+                    select: {
+                      effectIcon: true,
+                      effectName: true,
+                      id: true,
+                      itemID: true,
+                    },
+                  },
                 },
               },
               PlayerConduit: {
@@ -1011,7 +1019,13 @@ export const createResponseFromStoredFight = (
 
           itemLevel: playerFight.player.itemLevel,
           spec: playerFight.player.spec.id,
-          legendary: playerFight.player.legendary,
+          legendaries: playerFight.player.PlayerLegendary.reduce<
+            FightSuccessResponse["player"][number]["legendaries"]
+          >((acc, playerLegendary) => {
+            return playerLegendary.legendary
+              ? [...acc, playerLegendary.legendary]
+              : acc;
+          }, []),
           conduits: playerFight.player.PlayerConduit.map((playerConduit) => {
             return {
               itemLevel: playerConduit.itemLevel,

@@ -90,6 +90,16 @@ export const deleteAllHandler: RequestHandler<Request> = async (
   });
   console.timeEnd("playerCovenantTrait.deleteMany");
 
+  console.time("playerLegendary.deleteMany");
+  await prisma.playerLegendary.deleteMany({
+    where: {
+      fightID: {
+        in: allFightIDs,
+      },
+    },
+  });
+  console.timeEnd("playerLegendary.deleteMany");
+
   console.time("pull.findMany");
   const allPulls = (
     await prisma.pull.findMany({

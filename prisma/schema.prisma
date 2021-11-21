@@ -173,6 +173,7 @@ model Fight {
   PlayerCovenantTrait PlayerCovenantTrait[]
   Pull                Pull[]
   PlayerFight         PlayerFight[]
+  PlayerLegendary     PlayerLegendary[]
 
   @@unique([fightID, reportID])
 }
@@ -217,14 +218,12 @@ model Player {
   itemLevel   Int
   covenantID  Int?
   soulbindID  Int?
-  legendaryID Int?
 
-  character Character  @relation(fields: [characterID], references: [id])
-  covenant  Covenant?  @relation(fields: [covenantID], references: [id])
-  legendary Legendary? @relation(fields: [legendaryID], references: [id])
-  report    Report     @relation(fields: [reportID], references: [id])
-  soulbind  Soulbind?  @relation(fields: [soulbindID], references: [id])
-  spec      Spec       @relation(fields: [specID], references: [id])
+  character Character @relation(fields: [characterID], references: [id])
+  covenant  Covenant? @relation(fields: [covenantID], references: [id])
+  report    Report    @relation(fields: [reportID], references: [id])
+  soulbind  Soulbind? @relation(fields: [soulbindID], references: [id])
+  spec      Spec      @relation(fields: [specID], references: [id])
 
   sourcePlayer Event[] @relation("sourcePlayer")
   targetPlayer Event[] @relation("targetPlayer")
@@ -233,6 +232,19 @@ model Player {
   PlayerCovenantTrait PlayerCovenantTrait[]
   PlayerTalent        PlayerTalent[]
   PlayerFight         PlayerFight[]
+  PlayerLegendary     PlayerLegendary[]
+}
+
+model PlayerLegendary {
+  id Int @id @default(autoincrement())
+
+  playerID    Int
+  legendaryID Int
+  fightID     Int
+
+  player    Player    @relation(fields: [playerID], references: [id])
+  fight     Fight     @relation(fields: [fightID], references: [id])
+  legendary Legendary @relation(fields: [legendaryID], references: [id])
 }
 
 model Covenant {
@@ -284,7 +296,7 @@ model Legendary {
   effectIcon String
   effectName String
 
-  Player Player[]
+  PlayerLegendary PlayerLegendary[]
 }
 
 model Conduit {

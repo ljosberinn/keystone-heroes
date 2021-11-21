@@ -56,7 +56,7 @@ export type ReportSuccessResponse = Pick<Report, "title"> & {
     player: (Pick<Player, "soulbindID" | "covenantID"> & {
       class: string;
       spec: string;
-      legendary: Pick<LegendaryItem, "id" | "effectIcon" | "effectName"> | null;
+      legendaries: Pick<LegendaryItem, "id" | "effectIcon" | "effectName">[];
     })[];
   })[];
   affixes: Omit<Affix, "id" | "seasonal">[];
@@ -116,7 +116,7 @@ type Player = {
   itemLevel: number;
   server: string;
   actorID: number;
-  legendary: LegendaryItem | null;
+  legendaries: LegendaryItem[];
   talents: Talent[];
   soulbindID: number | null;
   covenantID: number | null;
@@ -178,6 +178,8 @@ export const fightIsTimedKeystone = (fight: Fight): fight is Fight => {
 
 export const fightHasFivePlayers = (fight: Fight): boolean =>
   fight.friendlyPlayers.length === 5;
+
+const isCraftableShadowlandsLegendary = (id: number) => id !== 186_414;
 
 export const createFightIsUnknownFilter = (
   persistedFightIDs: number[]
@@ -266,6 +268,7 @@ type CreateManyPlayerReturn = {
   playerCovenantTraitCreateMany: Prisma.PlayerCovenantTraitCreateManyFightInput[];
   playerTalentCreateMany: Prisma.PlayerTalentCreateManyFightInput[];
   playerConduitCreateMany: Prisma.PlayerConduitCreateManyFightInput[];
+  playerLegendaryCreateMany: Prisma.PlayerLegendaryCreateManyFightInput[];
 };
 
 const createManyPlayer = async (
@@ -305,7 +308,6 @@ const createManyPlayer = async (
           specID: dataset.specID,
           covenantID: dataset.covenantID ? dataset.covenantID : null,
           soulbindID: dataset.soulbindID ? dataset.soulbindID : null,
-          legendaryID: dataset.legendary ? dataset.legendary.effectID : null,
         },
       ];
     },
@@ -399,11 +401,23 @@ const createManyPlayer = async (
     return [];
   });
 
+  const playerLegendaryCreateMany = dataWithPlayerID.flatMap((player) => {
+    return player.legendaries
+      .filter((legendary) => isCraftableShadowlandsLegendary(legendary.id))
+      .map<Prisma.PlayerLegendaryCreateManyFightInput>((legendary) => {
+        return {
+          playerID: player.playerID,
+          legendaryID: legendary.effectID,
+        };
+      });
+  });
+
   return {
     playerIDs,
     playerTalentCreateMany,
     playerConduitCreateMany,
     playerCovenantTraitCreateMany,
+    playerLegendaryCreateMany,
   };
 };
 
@@ -444,10 +458,12 @@ type RawReport = {
             name: PlayableClass;
           };
         };
-        legendary: Pick<
-          LegendaryItem,
-          "id" | "effectIcon" | "effectName"
-        > | null;
+        PlayerLegendary: {
+          legendary: Pick<
+            LegendaryItem,
+            "id" | "effectIcon" | "effectName"
+          > | null;
+        }[];
       };
     }[];
   })[];
@@ -490,7 +506,13 @@ export const createResponseFromDB = (
           .sort((a, b) => sortByRole(a.player.spec.role, b.player.spec.role))
           .map(({ player }) => {
             return {
-              legendary: player.legendary ? player.legendary : null,
+              legendaries: player.PlayerLegendary.reduce<
+                ReportSuccessResponse["fights"][number]["player"][number]["legendaries"]
+              >((acc, playerLegendary) => {
+                return playerLegendary.legendary
+                  ? [...acc, playerLegendary.legendary]
+                  : acc;
+              }, []),
               class: player.character.class.name,
               spec: player.spec.name,
               covenantID: player.covenant ? player.covenant.id : null,
@@ -527,7 +549,7 @@ const createResponseFromRawData = ({
   region,
   fightsWithMeta,
   affixes,
-}: RawData): ReportResponse => {
+}: RawData): ReportSuccessResponse => {
   return {
     endTime,
     startTime,
@@ -562,13 +584,11 @@ const createResponseFromRawData = ({
                 spec: player.spec,
                 soulbindID: player.soulbindID,
                 covenantID: player.covenantID,
-                legendary: player.legendary
-                  ? {
-                      id: player.legendary.id,
-                      effectIcon: player.legendary.effectIcon,
-                      effectName: player.legendary.effectName,
-                    }
-                  : null,
+                legendaries: player.legendaries.map((legendary) => ({
+                  id: legendary.id,
+                  effectIcon: legendary.effectIcon,
+                  effectName: legendary.effectName,
+                })),
               };
             }),
         };
@@ -640,11 +660,15 @@ export const loadExistingReport = async (
                       },
                     },
                   },
-                  legendary: {
+                  PlayerLegendary: {
                     select: {
-                      id: true,
-                      effectIcon: true,
-                      effectName: true,
+                      legendary: {
+                        select: {
+                          id: true,
+                          effectIcon: true,
+                          effectName: true,
+                        },
+                      },
                     },
                   },
                   soulbind: {
@@ -899,6 +923,7 @@ export const reportHandler = withSentry<Request, ReportResponse>(
             deaths: deaths.length,
             itemLevel: maxItemLevel,
             actorID: id,
+            legendaries: [],
           };
 
           if (Array.isArray(combatantInfo)) {
@@ -916,8 +941,8 @@ export const reportHandler = withSentry<Request, ReportResponse>(
             ];
           }
 
-          const legendary =
-            combatantInfo.gear.find(
+          const legendaries =
+            combatantInfo.gear.filter(
               (item): item is LegendaryItem =>
                 item.quality === ItemQuality.LEGENDARY
             ) ?? null;
@@ -937,7 +962,7 @@ export const reportHandler = withSentry<Request, ReportResponse>(
               conduits:
                 combatantInfo.heartOfAzeroth ??
                 combatantInfo.secondaryCustomPowerSet,
-              legendary,
+              legendaries,
               soulbindID,
               covenantID,
               covenantTraits,
@@ -1057,22 +1082,20 @@ export const reportHandler = withSentry<Request, ReportResponse>(
           });
         });
 
-    const legendariesCreateMany: Prisma.LegendaryCreateManyInput[] = allPlayer
-      .filter(
-        (
-          dataset
-        ): dataset is Omit<Player, "legendary"> & {
-          legendary: LegendaryItem;
-        } => dataset.legendary !== null
-      )
-      .map((dataset) => {
-        return {
-          id: dataset.legendary.effectID,
-          effectIcon: removeImageFormat(dataset.legendary.effectIcon),
-          itemID: dataset.legendary.id,
-          effectName: dataset.legendary.effectName ?? "Unknown Legendary",
-        };
-      });
+    const legendariesCreateMany: Prisma.LegendaryCreateManyInput[] =
+      allPlayer.flatMap((player) =>
+        player.legendaries
+          // ignore sylvanas bow
+          .filter((legendary) => isCraftableShadowlandsLegendary(legendary.id))
+          .map((legendary) => {
+            return {
+              id: legendary.effectID,
+              effectIcon: removeImageFormat(legendary.effectIcon),
+              itemID: legendary.id,
+              effectName: legendary.effectName ?? "Unknown Legendary",
+            };
+          })
+      );
 
     await prisma.conduit.createMany({
       skipDuplicates: true,
@@ -1129,6 +1152,7 @@ export const reportHandler = withSentry<Request, ReportResponse>(
           playerConduitCreateMany,
           playerCovenantTraitCreateMany,
           playerTalentCreateMany,
+          playerLegendaryCreateMany,
         } = await createManyPlayer(fight.player, {
           reportID: createdReport.id,
           serverMap,
@@ -1184,6 +1208,11 @@ export const reportHandler = withSentry<Request, ReportResponse>(
           PlayerCovenantTrait: {
             createMany: {
               data: playerCovenantTraitCreateMany,
+            },
+          },
+          PlayerLegendary: {
+            createMany: {
+              data: playerLegendaryCreateMany,
             },
           },
         };

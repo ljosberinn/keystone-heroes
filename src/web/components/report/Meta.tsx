@@ -221,23 +221,28 @@ export function Meta(): JSX.Element {
                         <div
                           className={`${classColor} relative w-4 h-4 mr-4 border-b-2 dark:border-opacity-50 border-l-2 border-solid left-4`}
                         />
-                        {player.legendary ? (
-                          <ExternalLink
-                            href={createWowheadUrl({
-                              category: "spell",
-                              id: player.legendary.id,
-                            })}
-                            className="w-6 h-6"
-                          >
-                            <AbilityIcon
-                              icon={player.legendary.effectIcon}
-                              alt={player.legendary.effectName}
-                              className="object-cover w-full h-full rounded-full"
-                              width={24}
-                              height={24}
-                            />
-                          </ExternalLink>
-                        ) : null}
+                        {player.legendaries.length > 0
+                          ? player.legendaries.map((legendary) => {
+                              return (
+                                <ExternalLink
+                                  href={createWowheadUrl({
+                                    category: "spell",
+                                    id: legendary.id,
+                                  })}
+                                  className="w-6 h-6"
+                                  key={legendary.id}
+                                >
+                                  <AbilityIcon
+                                    icon={legendary.effectIcon}
+                                    alt={legendary.effectName}
+                                    className="object-cover w-full h-full rounded-full"
+                                    width={24}
+                                    height={24}
+                                  />
+                                </ExternalLink>
+                              );
+                            })
+                          : null}
 
                         {player.soulbind ? (
                           <>
