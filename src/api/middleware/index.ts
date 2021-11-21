@@ -8,6 +8,7 @@ import type { Transaction } from "@sentry/types";
 import type { NextApiRequest } from "next";
 
 import { isValidReportId } from "../../wcl/utils";
+import { sentrySettings } from "../utils/sentrySettings";
 import { BAD_REQUEST } from "../utils/statusCodes";
 import type { Middleware, RequestHandler } from "../utils/types";
 
@@ -41,10 +42,7 @@ export const withSentry = <
 >(
   handler: RequestHandler<Req, Res>
 ): RequestHandler<Req, Res> => {
-  init({
-    dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
-    enabled: process.env.NODE_ENV === "production",
-  });
+  init(sentrySettings);
 
   configureScope((scope) => {
     scope.setTag("runtime", "node");

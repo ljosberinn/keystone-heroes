@@ -288,29 +288,50 @@ describe("/api/report", () => {
         query: { reportID: validReportID },
       });
 
+      expect({
+        // @ts-expect-error mock typing issue
+        regionUpsert: prisma.region.upsert.mock.calls,
+      }).toMatchSnapshot();
+      expect({
+        // @ts-expect-error mock typing issue
+        conduitCreateMany: prisma.conduit.createMany.mock.calls,
+      }).toMatchSnapshot();
+      expect({
+        // @ts-expect-error mock typing issue
+        talentCreateMany: prisma.talent.createMany.mock.calls,
+      }).toMatchSnapshot();
+      expect({
+        // @ts-expect-error mock typing issue
+        covenantTraitCreateMany: prisma.covenantTrait.createMany.mock.calls,
+      }).toMatchSnapshot();
+      expect({
+        // @ts-expect-error mock typing issue
+        legendaryCreateMany: prisma.legendary.createMany.mock.calls,
+      }).toMatchSnapshot();
+      // shouldn't be called since the report was previously created
       // @ts-expect-error mock typing issue
-      expect(prisma.region.upsert.mock.calls).toMatchSnapshot();
-      // @ts-expect-error mock typing issue
-      expect(prisma.conduit.createMany.mock.calls).toMatchSnapshot();
-      // @ts-expect-error mock typing issue
-      expect(prisma.talent.createMany.mock.calls).toMatchSnapshot();
-      // @ts-expect-error mock typing issue
-      expect(prisma.covenantTrait.createMany.mock.calls).toMatchSnapshot();
-      // @ts-expect-error mock typing issue
-      expect(prisma.legendary.createMany.mock.calls).toMatchSnapshot();
-      // @ts-expect-error mock typing issue
-      expect(prisma.report.create.mock.calls).toMatchSnapshot();
-      // @ts-expect-error mock typing issue
-      expect(prisma.server.findMany.mock.calls).toMatchSnapshot();
-      // @ts-expect-error mock typing issue
-      expect(prisma.character.findMany.mock.calls).toMatchSnapshot();
-      // @ts-expect-error mock typing issue
-      expect(prisma.player.findMany.mock.calls).toMatchSnapshot();
+      expect(prisma.report.create.mock.calls).toHaveLength(0);
+      expect({
+        // @ts-expect-error mock typing issue
+        reportCreate: prisma.report.create.mock.calls,
+      }).toMatchSnapshot();
+      expect({
+        // @ts-expect-error mock typing issue
+        serverFindMany: prisma.server.findMany.mock.calls,
+      }).toMatchSnapshot();
+      expect({
+        // @ts-expect-error mock typing issue
+        characterFindMany: prisma.character.findMany.mock.calls,
+      }).toMatchSnapshot();
+      expect({
+        // @ts-expect-error mock typing issue
+        playerFindMany: prisma.player.findMany.mock.calls,
+      }).toMatchSnapshot();
       // only one fight was added, ensure we have only 1 call
       // @ts-expect-error mock typing issue
       expect(prisma.fight.create.mock.calls).toHaveLength(1);
       // @ts-expect-error mock typing issue
-      expect(prisma.fight.create.mock.calls).toMatchSnapshot();
+      expect({ fightCreate: prisma.fight.create.mock.calls }).toMatchSnapshot();
 
       expect(res.statusCode).toBe(OK);
       expect(json).toMatchSnapshot();

@@ -50,6 +50,14 @@ export const deleteHandler: RequestHandler<Request> = async (
     })
   ).map((fight) => fight.id);
 
+  await prisma.playerLegendary.deleteMany({
+    where: {
+      fightID: {
+        in: allFightIDs,
+      },
+    },
+  });
+
   await prisma.playerFight.deleteMany({
     where: {
       fightID: {

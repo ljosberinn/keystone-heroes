@@ -1,4 +1,3 @@
-import type { GetStaticPaths, GetStaticProps } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
@@ -7,11 +6,6 @@ import type {
   ReportResponse,
   ReportSuccessResponse,
 } from "../../../api/functions/report";
-import {
-  loadExistingReport,
-  createResponseFromDB,
-} from "../../../api/functions/report";
-import { prisma } from "../../../db/prisma";
 import { isValidReportId } from "../../../wcl/utils";
 import { LinkBox, LinkOverlay } from "../../../web/components/LinkBox";
 import { SpecIcon } from "../../../web/components/SpecIcon";
@@ -313,67 +307,3 @@ function TimeInformation({
     </p>
   );
 }
-
-type StaticPathParams = {
-  reportID: string;
-};
-
-export const getStaticPaths: GetStaticPaths<StaticPathParams> = async () => {
-  const paths = await prisma.report.findMany({
-    select: {
-      report: true,
-    },
-  });
-
-  return {
-    fallback: true,
-    paths: paths.map((path) => ({
-      params: {
-        reportID: path.report,
-      },
-    })),
-  };
-};
-
-export const getStaticProps: GetStaticProps<ReportProps, StaticPathParams> =
-  async (ctx) => {
-    if (!ctx.params?.reportID) {
-      return {
-        props: {
-          cache: {
-            report: null,
-            reportID: null,
-            fightID: null,
-          },
-        },
-      };
-    }
-
-    const reportSuccessResponse = await loadExistingReport(ctx.params.reportID);
-
-    if (!reportSuccessResponse) {
-      return {
-        props: {
-          cache: {
-            report: null,
-            reportID: null,
-            fightID: null,
-          },
-        },
-        revalidate: 24 * 60 * 60,
-      };
-    }
-
-    const cache: ReportProps["cache"] = {
-      reportID: ctx.params.reportID,
-      fightID: null,
-      report: createResponseFromDB(reportSuccessResponse),
-    };
-
-    return {
-      props: {
-        cache,
-      },
-      revalidate: 24 * 60 * 60,
-    };
-  };

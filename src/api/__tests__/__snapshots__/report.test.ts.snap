@@ -578,1175 +578,1166 @@ Object {
 `;
 
 exports[`/api/report existing report ongoing report - new fights 3`] = `
-Array [
-  Array [
-    Object {
-      "create": Object {
-        "slug": "EU",
+Object {
+  "regionUpsert": Array [
+    Array [
+      Object {
+        "create": Object {
+          "slug": "EU",
+        },
+        "select": Object {
+          "id": true,
+        },
+        "update": Object {},
+        "where": Object {
+          "slug": "EU",
+        },
       },
-      "select": Object {
-        "id": true,
-      },
-      "update": Object {},
-      "where": Object {
-        "slug": "EU",
-      },
-    },
+    ],
   ],
-]
+}
 `;
 
 exports[`/api/report existing report ongoing report - new fights 4`] = `
-Array [
-  Array [
-    Object {
-      "data": Array [
-        Object {
-          "icon": "spell_deathknight_subversion",
-          "id": 337972,
-          "name": "Hardened Bones",
-        },
-        Object {
-          "icon": "ability_mage_deepfreeze",
-          "id": 337988,
-          "name": "Everfrost",
-        },
-        Object {
-          "icon": "ability_deathknight_frozencenter",
-          "id": 337822,
-          "name": "Accelerated Cold",
-        },
-        Object {
-          "icon": "spell_deathknight_mindfreeze",
-          "id": 337705,
-          "name": "Spirit Drain",
-        },
-        Object {
-          "icon": "ability_mount_goatmountwhite",
-          "id": 339895,
-          "name": "Repeat Decree",
-        },
-        Object {
-          "icon": "spell_fel_incinerate",
-          "id": 339231,
-          "name": "Growing Inferno",
-        },
-        Object {
-          "icon": "inv_armor_shield_naxxramas_d_01",
-          "id": 338671,
-          "name": "Fel Defender",
-        },
-        Object {
-          "icon": "inv_archaeology_orcclans_tattooknife",
-          "id": 338682,
-          "name": "Viscous Ink",
-        },
-        Object {
-          "icon": "ability_warrior_shieldmastery",
-          "id": 334993,
-          "name": "Stalwart Guardian",
-        },
-        Object {
-          "icon": "warrior_talent_icon_skirmisher",
-          "id": 335232,
-          "name": "Ashen Juggernaut",
-        },
-        Object {
-          "icon": "ability_toughness",
-          "id": 335034,
-          "name": "Inspiring Presence",
-        },
-        Object {
-          "icon": "spell_shadow_summonimp",
-          "id": 337162,
-          "name": "Depths of Insanity",
-        },
-        Object {
-          "icon": "spell_animarevendreth_groundstate",
-          "id": 340212,
-          "name": "Hallowed Discernment",
-        },
-        Object {
-          "icon": "achievement_dungeon_heroic_gloryoftheraider",
-          "id": 339316,
-          "name": "Echoing Blessings",
-        },
-        Object {
-          "icon": "inv_lightforgedmatrixability_lightsjudgment",
-          "id": 339268,
-          "name": "Light's Barding",
-        },
-        Object {
-          "icon": "item_holyspark",
-          "id": 339984,
-          "name": "Focused Light",
-        },
-        Object {
-          "icon": "ability_vehicle_sonicshockwave",
-          "id": 338787,
-          "name": "Shielding Words",
-        },
-        Object {
-          "icon": "inv_axe_02",
-          "id": 0,
-          "name": "Unknown Ability",
-        },
-        Object {
-          "icon": "spell_frost_frostblast",
-          "id": 336569,
-          "name": "Ice Bite",
-        },
-        Object {
-          "icon": "rogue_burstofspeed",
-          "id": 337275,
-          "name": "Incantation of Swiftness",
-        },
-        Object {
-          "icon": "spell_frost_coldhearted",
-          "id": 336522,
-          "name": "Icy Propulsion",
-        },
-      ],
-      "skipDuplicates": true,
-    },
+Object {
+  "conduitCreateMany": Array [
+    Array [
+      Object {
+        "data": Array [
+          Object {
+            "icon": "spell_deathknight_subversion",
+            "id": 337972,
+            "name": "Hardened Bones",
+          },
+          Object {
+            "icon": "ability_mage_deepfreeze",
+            "id": 337988,
+            "name": "Everfrost",
+          },
+          Object {
+            "icon": "ability_deathknight_frozencenter",
+            "id": 337822,
+            "name": "Accelerated Cold",
+          },
+          Object {
+            "icon": "spell_deathknight_mindfreeze",
+            "id": 337705,
+            "name": "Spirit Drain",
+          },
+          Object {
+            "icon": "ability_mount_goatmountwhite",
+            "id": 339895,
+            "name": "Repeat Decree",
+          },
+          Object {
+            "icon": "spell_fel_incinerate",
+            "id": 339231,
+            "name": "Growing Inferno",
+          },
+          Object {
+            "icon": "inv_armor_shield_naxxramas_d_01",
+            "id": 338671,
+            "name": "Fel Defender",
+          },
+          Object {
+            "icon": "inv_archaeology_orcclans_tattooknife",
+            "id": 338682,
+            "name": "Viscous Ink",
+          },
+          Object {
+            "icon": "ability_warrior_shieldmastery",
+            "id": 334993,
+            "name": "Stalwart Guardian",
+          },
+          Object {
+            "icon": "warrior_talent_icon_skirmisher",
+            "id": 335232,
+            "name": "Ashen Juggernaut",
+          },
+          Object {
+            "icon": "ability_toughness",
+            "id": 335034,
+            "name": "Inspiring Presence",
+          },
+          Object {
+            "icon": "spell_shadow_summonimp",
+            "id": 337162,
+            "name": "Depths of Insanity",
+          },
+          Object {
+            "icon": "spell_animarevendreth_groundstate",
+            "id": 340212,
+            "name": "Hallowed Discernment",
+          },
+          Object {
+            "icon": "achievement_dungeon_heroic_gloryoftheraider",
+            "id": 339316,
+            "name": "Echoing Blessings",
+          },
+          Object {
+            "icon": "inv_lightforgedmatrixability_lightsjudgment",
+            "id": 339268,
+            "name": "Light's Barding",
+          },
+          Object {
+            "icon": "item_holyspark",
+            "id": 339984,
+            "name": "Focused Light",
+          },
+          Object {
+            "icon": "ability_vehicle_sonicshockwave",
+            "id": 338787,
+            "name": "Shielding Words",
+          },
+          Object {
+            "icon": "inv_axe_02",
+            "id": 0,
+            "name": "Unknown Ability",
+          },
+          Object {
+            "icon": "spell_frost_frostblast",
+            "id": 336569,
+            "name": "Ice Bite",
+          },
+          Object {
+            "icon": "rogue_burstofspeed",
+            "id": 337275,
+            "name": "Incantation of Swiftness",
+          },
+          Object {
+            "icon": "spell_frost_coldhearted",
+            "id": 336522,
+            "name": "Icy Propulsion",
+          },
+        ],
+        "skipDuplicates": true,
+      },
+    ],
   ],
-]
+}
 `;
 
 exports[`/api/report existing report ongoing report - new fights 5`] = `
-Array [
-  Array [
-    Object {
-      "data": Array [
-        Object {
-          "classID": 12,
-          "icon": "spell_frost_frozencore",
-          "id": 281208,
-          "name": "Cold Heart",
-          "specID": 36,
-        },
-        Object {
-          "classID": 12,
-          "icon": "boss_odunrunes_blue",
-          "id": 207104,
-          "name": "Runic Attenuation",
-          "specID": 36,
-        },
-        Object {
-          "classID": 12,
-          "icon": "spell_frost_chillingblast",
-          "id": 207167,
-          "name": "Blinding Sleet",
-          "specID": 36,
-        },
-        Object {
-          "classID": 12,
-          "icon": "spell_frost_icestorm",
-          "id": 207142,
-          "name": "Avalanche",
-          "specID": 36,
-        },
-        Object {
-          "classID": 12,
-          "icon": "inv_helm_plate_raiddeathknight_p_01",
-          "id": 212552,
-          "name": "Wraith Walk",
-          "specID": 36,
-        },
-        Object {
-          "classID": 12,
-          "icon": "spell_frost_ice-shards",
-          "id": 194912,
-          "name": "Gathering Storm",
-          "specID": 36,
-        },
-        Object {
-          "classID": 12,
-          "icon": "spell_deathknight_breathofsindragosa",
-          "id": 152279,
-          "name": "Breath of Sindragosa",
-          "specID": 36,
-        },
-        Object {
-          "classID": 9,
-          "icon": "achievment_raid_houroftwilight",
-          "id": 207548,
-          "name": "Agonizing Flames",
-          "specID": 26,
-        },
-        Object {
-          "classID": 9,
-          "icon": "spell_fire_elementaldevastation",
-          "id": 207739,
-          "name": "Burning Alive",
-          "specID": 26,
-        },
-        Object {
-          "classID": 9,
-          "icon": "ability_warlock_backdraft",
-          "id": 336639,
-          "name": "Charred Flesh",
-          "specID": 26,
-        },
-        Object {
-          "classID": 9,
-          "icon": "ability_creature_felsunder",
-          "id": 263642,
-          "name": "Fracture",
-          "specID": 26,
-        },
-        Object {
-          "classID": 9,
-          "icon": "ability_demonhunter_sigilofchains",
-          "id": 202138,
-          "name": "Sigil of Chains",
-          "specID": 26,
-        },
-        Object {
-          "classID": 9,
-          "icon": "spell_shadow_demonform",
-          "id": 321453,
-          "name": "Demonic",
-          "specID": 26,
-        },
-        Object {
-          "classID": 9,
-          "icon": "inv_glaive_1h_artifactaldorchi_d_06",
-          "id": 209258,
-          "name": "Last Resort",
-          "specID": 26,
-        },
-        Object {
-          "classID": 1,
-          "icon": "ability_warrior_improveddisciplines",
-          "id": 280721,
-          "name": "Sudden Death",
-          "specID": 2,
-        },
-        Object {
-          "classID": 1,
-          "icon": "spell_impending_victory",
-          "id": 202168,
-          "name": "Impending Victory",
-          "specID": 2,
-        },
-        Object {
-          "classID": 1,
-          "icon": "inv_sword_48",
-          "id": 206315,
-          "name": "Massacre",
-          "specID": 2,
-        },
-        Object {
-          "classID": 1,
-          "icon": "ability_rogue_preparation",
-          "id": 208154,
-          "name": "Warpaint",
-          "specID": 2,
-        },
-        Object {
-          "classID": 1,
-          "icon": "spell_nature_focusedmind",
-          "id": 335070,
-          "name": "Cruelty",
-          "specID": 2,
-        },
-        Object {
-          "classID": 1,
-          "icon": "ability_warrior_bladestorm",
-          "id": 46924,
-          "name": "Bladestorm",
-          "specID": 2,
-        },
-        Object {
-          "classID": 1,
-          "icon": "warrior_talent_icon_angermanagement",
-          "id": 152278,
-          "name": "Anger Management",
-          "specID": 2,
-        },
-        Object {
-          "classID": 10,
-          "icon": "ability_paladin_swiftretribution",
-          "id": 196926,
-          "name": "Crusader's Might",
-          "specID": 29,
-        },
-        Object {
-          "classID": 10,
-          "icon": "spell_holy_divineprovidence",
-          "id": 183778,
-          "name": "Judgment of Light",
-          "specID": 29,
-        },
-        Object {
-          "classID": 10,
-          "icon": "ability_paladin_blindinglight",
-          "id": 115750,
-          "name": "Blinding Light",
-          "specID": 29,
-        },
-        Object {
-          "classID": 10,
-          "icon": "spell_holy_holyguidance",
-          "id": 114154,
-          "name": "Unbreakable Spirit",
-          "specID": 29,
-        },
-        Object {
-          "classID": 10,
-          "icon": "ability_paladin_holyavenger",
-          "id": 105809,
-          "name": "Holy Avenger",
-          "specID": 29,
-        },
-        Object {
-          "classID": 10,
-          "icon": "inv_helm_plate_raidpaladin_n_01",
-          "id": 248033,
-          "name": "Awakening",
-          "specID": 29,
-        },
-        Object {
-          "classID": 10,
-          "icon": "ability_paladin_beaconsoflight",
-          "id": 156910,
-          "name": "Beacon of Faith",
-          "specID": 29,
-        },
-        Object {
-          "classID": 2,
-          "icon": "achievement_dungeon_frozenthrone",
-          "id": 205024,
-          "name": "Lonely Winter",
-          "specID": 5,
-        },
-        Object {
-          "classID": 2,
-          "icon": "spell_arcane_massdispel",
-          "id": 212653,
-          "name": "Shimmer",
-          "specID": 5,
-        },
-        Object {
-          "classID": 2,
-          "icon": "spell_mage_runeofpower",
-          "id": 116011,
-          "name": "Rune of Power",
-          "specID": 5,
-        },
-        Object {
-          "classID": 2,
-          "icon": "spell_frost_frostblast",
-          "id": 278309,
-          "name": "Chain Reaction",
-          "specID": 5,
-        },
-        Object {
-          "classID": 2,
-          "icon": "spell_frost_ring-of-frost",
-          "id": 113724,
-          "name": "Ring of Frost",
-          "specID": 5,
-        },
-        Object {
-          "classID": 2,
-          "icon": "spell_frost_ice-shards",
-          "id": 56377,
-          "name": "Splitting Ice",
-          "specID": 5,
-        },
-        Object {
-          "classID": 2,
-          "icon": "spell_mage_thermalvoid",
-          "id": 155149,
-          "name": "Thermal Void",
-          "specID": 5,
-        },
-      ],
-      "skipDuplicates": true,
-    },
-  ],
-]
-`;
-
-exports[`/api/report existing report ongoing report - new fights 6`] = `
-Array [
-  Array [
-    Object {
-      "data": Array [
-        Object {
-          "covenantID": 4,
-          "icon": "inv_helm_crown_c_01_black",
-          "id": 323921,
-          "name": "Emeni's Magnificent Skin",
-        },
-        Object {
-          "covenantID": 4,
-          "icon": "trade_archaeology_vrykul_runestick",
-          "id": 342156,
-          "name": "Lead by Example",
-        },
-        Object {
-          "covenantID": 4,
-          "icon": "spell_nzinsanity_leadenfoot",
-          "id": 323918,
-          "name": "Gristled Toes",
-        },
-        Object {
-          "covenantID": 4,
-          "icon": "item_alchemiststonec",
-          "id": 324441,
-          "name": "Hearth Kidneystone",
-        },
-        Object {
-          "covenantID": 1,
-          "icon": "spell_arcane_focusedpower",
-          "id": 328261,
-          "name": "Focusing Mantra",
-        },
-        Object {
-          "covenantID": 1,
-          "icon": "inv_misc_bag_14",
-          "id": 328263,
-          "name": "Cleansed Vestments",
-        },
-        Object {
-          "covenantID": 1,
-          "icon": "ability_hunter_readiness",
-          "id": 328257,
-          "name": "Let Go of the Past",
-        },
-        Object {
-          "covenantID": 1,
-          "icon": "spell_animabastion_buff",
-          "id": 328266,
-          "name": "Combat Meditation",
-        },
-        Object {
-          "covenantID": 2,
-          "icon": "ability_rogue_bloodsplatter",
-          "id": 331586,
-          "name": "Thrill Seeker",
-        },
-        Object {
-          "covenantID": 2,
-          "icon": "sha_ability_rogue_bloodyeye_nightmare",
-          "id": 331582,
-          "name": "Familiar Predicaments",
-        },
-        Object {
-          "covenantID": 2,
-          "icon": "spell_shadow_deathsembrace",
-          "id": 331576,
-          "name": "Agent of Chaos",
-        },
-        Object {
-          "covenantID": 2,
-          "icon": "ability_rogue_dirtydeeds",
-          "id": 331579,
-          "name": "Friends in Low Places",
-        },
-        Object {
-          "covenantID": 2,
-          "icon": "spell_lifegivingspeed",
-          "id": 336147,
-          "name": "Leisurely Gait",
-        },
-        Object {
-          "covenantID": 2,
-          "icon": "archaeology_5_0_umbrellaofchiji",
-          "id": 336239,
-          "name": "Soothing Shade",
-        },
-        Object {
-          "covenantID": 2,
-          "icon": "inv_drink_23",
-          "id": 319983,
-          "name": "Wasteland Propriety",
-        },
-        Object {
-          "covenantID": 2,
-          "icon": "achievement_guildperk_bountifulbags",
-          "id": 336184,
-          "name": "Exquisite Ingredients",
-        },
-        Object {
-          "covenantID": 2,
-          "icon": "ability_rogue_bloodsplatter",
-          "id": 331586,
-          "name": "Thrill Seeker",
-        },
-        Object {
-          "covenantID": 2,
-          "icon": "sha_ability_rogue_bloodyeye_nightmare",
-          "id": 331582,
-          "name": "Familiar Predicaments",
-        },
-        Object {
-          "covenantID": 2,
-          "icon": "spell_shadow_deathsembrace",
-          "id": 331576,
-          "name": "Agent of Chaos",
-        },
-        Object {
-          "covenantID": 2,
-          "icon": "ability_rogue_dirtydeeds",
-          "id": 331579,
-          "name": "Friends in Low Places",
-        },
-      ],
-      "skipDuplicates": true,
-    },
-  ],
-]
-`;
-
-exports[`/api/report existing report ongoing report - new fights 7`] = `
-Array [
-  Array [
-    Object {
-      "data": Array [
-        Object {
-          "effectIcon": "spell_shadow_focusedpower",
-          "effectName": "Koltira's Favor",
-          "id": 334583,
-          "itemID": 171417,
-        },
-        Object {
-          "effectIcon": "inv__felbarrage",
-          "effectName": "Fiery Soul",
-          "id": 337547,
-          "itemID": 172321,
-        },
-        Object {
-          "effectIcon": "inv_60crafted_ring4b",
-          "effectName": "Signet of Tormented Kings",
-          "id": 335266,
-          "itemID": 178926,
-        },
-        Object {
-          "effectIcon": "ability_paladin_conviction",
-          "effectName": "The Mad Paragon",
-          "id": 337594,
-          "itemID": 171413,
-        },
-        Object {
-          "effectIcon": "spell_shadow_soulleech_2",
-          "effectName": "Freezing Winds",
-          "id": 327364,
-          "itemID": 173244,
-        },
-      ],
-      "skipDuplicates": true,
-    },
-  ],
-]
-`;
-
-exports[`/api/report existing report ongoing report - new fights 8`] = `
-Array [
-  Array [
-    Object {
-      "data": Object {
-        "endTime": 2021-07-03T20:40:42.249Z,
-        "region": Object {
-          "connectOrCreate": Object {
-            "create": Object {
-              "slug": "EU",
-            },
-            "where": Object {
-              "slug": "EU",
-            },
-          },
-        },
-        "report": "THJWBAXcn2j9Nvkt",
-        "startTime": 2021-07-03T13:19:23.957Z,
-        "title": "Mythic+ Dungeons",
-        "week": Object {
-          "connect": Object {
-            "id": 10,
-          },
-        },
-      },
-      "select": Object {
-        "id": true,
-      },
-    },
-  ],
-]
-`;
-
-exports[`/api/report existing report ongoing report - new fights 9`] = `
-Array [
-  Array [
-    Object {
-      "select": Object {
-        "id": true,
-        "name": true,
-      },
-      "where": Object {
-        "OR": Array [
-          Object {
-            "name": "Hyjal",
-            "regionID": 1,
-          },
-          Object {
-            "name": "Blackmoore",
-            "regionID": 1,
-          },
-          Object {
-            "name": "Ysondre",
-            "regionID": 1,
-          },
-          Object {
-            "name": "Kazzak",
-            "regionID": 1,
-          },
-        ],
-      },
-    },
-  ],
-]
-`;
-
-exports[`/api/report existing report ongoing report - new fights 10`] = `
-Array [
-  Array [
-    Object {
-      "select": Object {
-        "id": true,
-        "name": true,
-        "serverID": true,
-      },
-      "where": Object {
-        "OR": Array [
+Object {
+  "talentCreateMany": Array [
+    Array [
+      Object {
+        "data": Array [
           Object {
             "classID": 12,
-            "name": "Wânheda",
-            "serverID": 1,
-          },
-          Object {
-            "classID": 9,
-            "name": "Xepheris",
-            "serverID": 2,
-          },
-          Object {
-            "classID": 1,
-            "name": "Steffen",
-            "serverID": 3,
-          },
-          Object {
-            "classID": 10,
-            "name": "Afkdin",
-            "serverID": 3,
-          },
-          Object {
-            "classID": 2,
-            "name": "Lorioa",
-            "serverID": 4,
-          },
-        ],
-      },
-    },
-  ],
-]
-`;
-
-exports[`/api/report existing report ongoing report - new fights 11`] = `
-Array [
-  Array [
-    Object {
-      "select": Object {
-        "characterID": true,
-        "id": true,
-      },
-      "where": Object {
-        "OR": Array [
-          Object {
-            "actorID": 10,
-            "characterID": 1,
-            "covenantID": 4,
-            "deaths": 1,
-            "dps": 4139,
-            "hps": 320,
-            "itemLevel": 225,
-            "reportID": 1,
-            "soulbindID": 5,
+            "icon": "spell_frost_frozencore",
+            "id": 281208,
+            "name": "Cold Heart",
             "specID": 36,
           },
           Object {
-            "actorID": 1,
-            "characterID": 2,
-            "covenantID": 1,
-            "deaths": 1,
-            "dps": 2775,
-            "hps": 1788,
-            "itemLevel": 223,
-            "reportID": 1,
-            "soulbindID": 7,
+            "classID": 12,
+            "icon": "boss_odunrunes_blue",
+            "id": 207104,
+            "name": "Runic Attenuation",
+            "specID": 36,
+          },
+          Object {
+            "classID": 12,
+            "icon": "spell_frost_chillingblast",
+            "id": 207167,
+            "name": "Blinding Sleet",
+            "specID": 36,
+          },
+          Object {
+            "classID": 12,
+            "icon": "spell_frost_icestorm",
+            "id": 207142,
+            "name": "Avalanche",
+            "specID": 36,
+          },
+          Object {
+            "classID": 12,
+            "icon": "inv_helm_plate_raiddeathknight_p_01",
+            "id": 212552,
+            "name": "Wraith Walk",
+            "specID": 36,
+          },
+          Object {
+            "classID": 12,
+            "icon": "spell_frost_ice-shards",
+            "id": 194912,
+            "name": "Gathering Storm",
+            "specID": 36,
+          },
+          Object {
+            "classID": 12,
+            "icon": "spell_deathknight_breathofsindragosa",
+            "id": 152279,
+            "name": "Breath of Sindragosa",
+            "specID": 36,
+          },
+          Object {
+            "classID": 9,
+            "icon": "achievment_raid_houroftwilight",
+            "id": 207548,
+            "name": "Agonizing Flames",
             "specID": 26,
           },
           Object {
-            "actorID": 11,
-            "characterID": 3,
-            "covenantID": 2,
-            "deaths": 2,
-            "dps": 4353,
-            "hps": 320,
-            "itemLevel": 225,
-            "reportID": 1,
-            "soulbindID": 8,
+            "classID": 9,
+            "icon": "spell_fire_elementaldevastation",
+            "id": 207739,
+            "name": "Burning Alive",
+            "specID": 26,
+          },
+          Object {
+            "classID": 9,
+            "icon": "ability_warlock_backdraft",
+            "id": 336639,
+            "name": "Charred Flesh",
+            "specID": 26,
+          },
+          Object {
+            "classID": 9,
+            "icon": "ability_creature_felsunder",
+            "id": 263642,
+            "name": "Fracture",
+            "specID": 26,
+          },
+          Object {
+            "classID": 9,
+            "icon": "ability_demonhunter_sigilofchains",
+            "id": 202138,
+            "name": "Sigil of Chains",
+            "specID": 26,
+          },
+          Object {
+            "classID": 9,
+            "icon": "spell_shadow_demonform",
+            "id": 321453,
+            "name": "Demonic",
+            "specID": 26,
+          },
+          Object {
+            "classID": 9,
+            "icon": "inv_glaive_1h_artifactaldorchi_d_06",
+            "id": 209258,
+            "name": "Last Resort",
+            "specID": 26,
+          },
+          Object {
+            "classID": 1,
+            "icon": "ability_warrior_improveddisciplines",
+            "id": 280721,
+            "name": "Sudden Death",
             "specID": 2,
           },
           Object {
-            "actorID": 6,
-            "characterID": 4,
-            "covenantID": 2,
-            "deaths": 3,
-            "dps": 1624,
-            "hps": 2754,
-            "itemLevel": 224,
-            "reportID": 1,
-            "soulbindID": 9,
+            "classID": 1,
+            "icon": "spell_impending_victory",
+            "id": 202168,
+            "name": "Impending Victory",
+            "specID": 2,
+          },
+          Object {
+            "classID": 1,
+            "icon": "inv_sword_48",
+            "id": 206315,
+            "name": "Massacre",
+            "specID": 2,
+          },
+          Object {
+            "classID": 1,
+            "icon": "ability_rogue_preparation",
+            "id": 208154,
+            "name": "Warpaint",
+            "specID": 2,
+          },
+          Object {
+            "classID": 1,
+            "icon": "spell_nature_focusedmind",
+            "id": 335070,
+            "name": "Cruelty",
+            "specID": 2,
+          },
+          Object {
+            "classID": 1,
+            "icon": "ability_warrior_bladestorm",
+            "id": 46924,
+            "name": "Bladestorm",
+            "specID": 2,
+          },
+          Object {
+            "classID": 1,
+            "icon": "warrior_talent_icon_angermanagement",
+            "id": 152278,
+            "name": "Anger Management",
+            "specID": 2,
+          },
+          Object {
+            "classID": 10,
+            "icon": "ability_paladin_swiftretribution",
+            "id": 196926,
+            "name": "Crusader's Might",
             "specID": 29,
           },
           Object {
-            "actorID": 2,
-            "characterID": 5,
-            "covenantID": 2,
-            "deaths": 2,
-            "dps": 4036,
-            "hps": 219,
-            "itemLevel": 220,
-            "reportID": 1,
-            "soulbindID": 8,
+            "classID": 10,
+            "icon": "spell_holy_divineprovidence",
+            "id": 183778,
+            "name": "Judgment of Light",
+            "specID": 29,
+          },
+          Object {
+            "classID": 10,
+            "icon": "ability_paladin_blindinglight",
+            "id": 115750,
+            "name": "Blinding Light",
+            "specID": 29,
+          },
+          Object {
+            "classID": 10,
+            "icon": "spell_holy_holyguidance",
+            "id": 114154,
+            "name": "Unbreakable Spirit",
+            "specID": 29,
+          },
+          Object {
+            "classID": 10,
+            "icon": "ability_paladin_holyavenger",
+            "id": 105809,
+            "name": "Holy Avenger",
+            "specID": 29,
+          },
+          Object {
+            "classID": 10,
+            "icon": "inv_helm_plate_raidpaladin_n_01",
+            "id": 248033,
+            "name": "Awakening",
+            "specID": 29,
+          },
+          Object {
+            "classID": 10,
+            "icon": "ability_paladin_beaconsoflight",
+            "id": 156910,
+            "name": "Beacon of Faith",
+            "specID": 29,
+          },
+          Object {
+            "classID": 2,
+            "icon": "achievement_dungeon_frozenthrone",
+            "id": 205024,
+            "name": "Lonely Winter",
+            "specID": 5,
+          },
+          Object {
+            "classID": 2,
+            "icon": "spell_arcane_massdispel",
+            "id": 212653,
+            "name": "Shimmer",
+            "specID": 5,
+          },
+          Object {
+            "classID": 2,
+            "icon": "spell_mage_runeofpower",
+            "id": 116011,
+            "name": "Rune of Power",
+            "specID": 5,
+          },
+          Object {
+            "classID": 2,
+            "icon": "spell_frost_frostblast",
+            "id": 278309,
+            "name": "Chain Reaction",
+            "specID": 5,
+          },
+          Object {
+            "classID": 2,
+            "icon": "spell_frost_ring-of-frost",
+            "id": 113724,
+            "name": "Ring of Frost",
+            "specID": 5,
+          },
+          Object {
+            "classID": 2,
+            "icon": "spell_frost_ice-shards",
+            "id": 56377,
+            "name": "Splitting Ice",
+            "specID": 5,
+          },
+          Object {
+            "classID": 2,
+            "icon": "spell_mage_thermalvoid",
+            "id": 155149,
+            "name": "Thermal Void",
             "specID": 5,
           },
         ],
+        "skipDuplicates": true,
       },
-    },
+    ],
   ],
-]
+}
+`;
+
+exports[`/api/report existing report ongoing report - new fights 6`] = `
+Object {
+  "covenantTraitCreateMany": Array [
+    Array [
+      Object {
+        "data": Array [
+          Object {
+            "covenantID": 4,
+            "icon": "inv_helm_crown_c_01_black",
+            "id": 323921,
+            "name": "Emeni's Magnificent Skin",
+          },
+          Object {
+            "covenantID": 4,
+            "icon": "trade_archaeology_vrykul_runestick",
+            "id": 342156,
+            "name": "Lead by Example",
+          },
+          Object {
+            "covenantID": 4,
+            "icon": "spell_nzinsanity_leadenfoot",
+            "id": 323918,
+            "name": "Gristled Toes",
+          },
+          Object {
+            "covenantID": 4,
+            "icon": "item_alchemiststonec",
+            "id": 324441,
+            "name": "Hearth Kidneystone",
+          },
+          Object {
+            "covenantID": 1,
+            "icon": "spell_arcane_focusedpower",
+            "id": 328261,
+            "name": "Focusing Mantra",
+          },
+          Object {
+            "covenantID": 1,
+            "icon": "inv_misc_bag_14",
+            "id": 328263,
+            "name": "Cleansed Vestments",
+          },
+          Object {
+            "covenantID": 1,
+            "icon": "ability_hunter_readiness",
+            "id": 328257,
+            "name": "Let Go of the Past",
+          },
+          Object {
+            "covenantID": 1,
+            "icon": "spell_animabastion_buff",
+            "id": 328266,
+            "name": "Combat Meditation",
+          },
+          Object {
+            "covenantID": 2,
+            "icon": "ability_rogue_bloodsplatter",
+            "id": 331586,
+            "name": "Thrill Seeker",
+          },
+          Object {
+            "covenantID": 2,
+            "icon": "sha_ability_rogue_bloodyeye_nightmare",
+            "id": 331582,
+            "name": "Familiar Predicaments",
+          },
+          Object {
+            "covenantID": 2,
+            "icon": "spell_shadow_deathsembrace",
+            "id": 331576,
+            "name": "Agent of Chaos",
+          },
+          Object {
+            "covenantID": 2,
+            "icon": "ability_rogue_dirtydeeds",
+            "id": 331579,
+            "name": "Friends in Low Places",
+          },
+          Object {
+            "covenantID": 2,
+            "icon": "spell_lifegivingspeed",
+            "id": 336147,
+            "name": "Leisurely Gait",
+          },
+          Object {
+            "covenantID": 2,
+            "icon": "archaeology_5_0_umbrellaofchiji",
+            "id": 336239,
+            "name": "Soothing Shade",
+          },
+          Object {
+            "covenantID": 2,
+            "icon": "inv_drink_23",
+            "id": 319983,
+            "name": "Wasteland Propriety",
+          },
+          Object {
+            "covenantID": 2,
+            "icon": "achievement_guildperk_bountifulbags",
+            "id": 336184,
+            "name": "Exquisite Ingredients",
+          },
+          Object {
+            "covenantID": 2,
+            "icon": "ability_rogue_bloodsplatter",
+            "id": 331586,
+            "name": "Thrill Seeker",
+          },
+          Object {
+            "covenantID": 2,
+            "icon": "sha_ability_rogue_bloodyeye_nightmare",
+            "id": 331582,
+            "name": "Familiar Predicaments",
+          },
+          Object {
+            "covenantID": 2,
+            "icon": "spell_shadow_deathsembrace",
+            "id": 331576,
+            "name": "Agent of Chaos",
+          },
+          Object {
+            "covenantID": 2,
+            "icon": "ability_rogue_dirtydeeds",
+            "id": 331579,
+            "name": "Friends in Low Places",
+          },
+        ],
+        "skipDuplicates": true,
+      },
+    ],
+  ],
+}
+`;
+
+exports[`/api/report existing report ongoing report - new fights 7`] = `
+Object {
+  "legendaryCreateMany": Array [
+    Array [
+      Object {
+        "data": Array [
+          Object {
+            "effectIcon": "spell_shadow_focusedpower",
+            "effectName": "Koltira's Favor",
+            "id": 334583,
+            "itemID": 171417,
+          },
+          Object {
+            "effectIcon": "inv__felbarrage",
+            "effectName": "Fiery Soul",
+            "id": 337547,
+            "itemID": 172321,
+          },
+          Object {
+            "effectIcon": "inv_60crafted_ring4b",
+            "effectName": "Signet of Tormented Kings",
+            "id": 335266,
+            "itemID": 178926,
+          },
+          Object {
+            "effectIcon": "ability_paladin_conviction",
+            "effectName": "The Mad Paragon",
+            "id": 337594,
+            "itemID": 171413,
+          },
+          Object {
+            "effectIcon": "spell_shadow_soulleech_2",
+            "effectName": "Freezing Winds",
+            "id": 327364,
+            "itemID": 173244,
+          },
+        ],
+        "skipDuplicates": true,
+      },
+    ],
+  ],
+}
+`;
+
+exports[`/api/report existing report ongoing report - new fights 8`] = `
+Object {
+  "reportCreate": Array [],
+}
+`;
+
+exports[`/api/report existing report ongoing report - new fights 9`] = `
+Object {
+  "serverFindMany": Array [
+    Array [
+      Object {
+        "select": Object {
+          "id": true,
+          "name": true,
+        },
+        "where": Object {
+          "OR": Array [
+            Object {
+              "name": "Hyjal",
+              "regionID": 1,
+            },
+            Object {
+              "name": "Blackmoore",
+              "regionID": 1,
+            },
+            Object {
+              "name": "Ysondre",
+              "regionID": 1,
+            },
+            Object {
+              "name": "Kazzak",
+              "regionID": 1,
+            },
+          ],
+        },
+      },
+    ],
+  ],
+}
+`;
+
+exports[`/api/report existing report ongoing report - new fights 10`] = `
+Object {
+  "characterFindMany": Array [
+    Array [
+      Object {
+        "select": Object {
+          "id": true,
+          "name": true,
+          "serverID": true,
+        },
+        "where": Object {
+          "OR": Array [
+            Object {
+              "classID": 12,
+              "name": "Wânheda",
+              "serverID": 1,
+            },
+            Object {
+              "classID": 9,
+              "name": "Xepheris",
+              "serverID": 2,
+            },
+            Object {
+              "classID": 1,
+              "name": "Steffen",
+              "serverID": 3,
+            },
+            Object {
+              "classID": 10,
+              "name": "Afkdin",
+              "serverID": 3,
+            },
+            Object {
+              "classID": 2,
+              "name": "Lorioa",
+              "serverID": 4,
+            },
+          ],
+        },
+      },
+    ],
+  ],
+}
+`;
+
+exports[`/api/report existing report ongoing report - new fights 11`] = `
+Object {
+  "playerFindMany": Array [
+    Array [
+      Object {
+        "select": Object {
+          "characterID": true,
+          "id": true,
+        },
+        "where": Object {
+          "OR": Array [
+            Object {
+              "actorID": 10,
+              "characterID": 1,
+              "covenantID": 4,
+              "deaths": 1,
+              "dps": 4139,
+              "hps": 320,
+              "itemLevel": 225,
+              "reportID": 1,
+              "soulbindID": 5,
+              "specID": 36,
+            },
+            Object {
+              "actorID": 1,
+              "characterID": 2,
+              "covenantID": 1,
+              "deaths": 1,
+              "dps": 2775,
+              "hps": 1788,
+              "itemLevel": 223,
+              "reportID": 1,
+              "soulbindID": 7,
+              "specID": 26,
+            },
+            Object {
+              "actorID": 11,
+              "characterID": 3,
+              "covenantID": 2,
+              "deaths": 2,
+              "dps": 4353,
+              "hps": 320,
+              "itemLevel": 225,
+              "reportID": 1,
+              "soulbindID": 8,
+              "specID": 2,
+            },
+            Object {
+              "actorID": 6,
+              "characterID": 4,
+              "covenantID": 2,
+              "deaths": 3,
+              "dps": 1624,
+              "hps": 2754,
+              "itemLevel": 224,
+              "reportID": 1,
+              "soulbindID": 9,
+              "specID": 29,
+            },
+            Object {
+              "actorID": 2,
+              "characterID": 5,
+              "covenantID": 2,
+              "deaths": 2,
+              "dps": 4036,
+              "hps": 219,
+              "itemLevel": 220,
+              "reportID": 1,
+              "soulbindID": 8,
+              "specID": 5,
+            },
+          ],
+        },
+      },
+    ],
+  ],
+}
 `;
 
 exports[`/api/report existing report ongoing report - new fights 12`] = `
-Array [
-  Array [
-    Object {
-      "data": Object {
-        "PlayerConduit": Object {
-          "createMany": Object {
-            "data": Array [
-              Object {
-                "conduitID": 337972,
-                "itemLevel": 226,
-                "playerID": 1,
-              },
-              Object {
-                "conduitID": 337988,
-                "itemLevel": 226,
-                "playerID": 1,
-              },
-              Object {
-                "conduitID": 337822,
-                "itemLevel": 200,
-                "playerID": 1,
-              },
-              Object {
-                "conduitID": 337705,
-                "itemLevel": 213,
-                "playerID": 1,
-              },
-              Object {
-                "conduitID": 339895,
-                "itemLevel": 226,
-                "playerID": 2,
-              },
-              Object {
-                "conduitID": 339231,
-                "itemLevel": 226,
-                "playerID": 2,
-              },
-              Object {
-                "conduitID": 338671,
-                "itemLevel": 226,
-                "playerID": 2,
-              },
-              Object {
-                "conduitID": 338682,
-                "itemLevel": 226,
-                "playerID": 2,
-              },
-              Object {
-                "conduitID": 334993,
-                "itemLevel": 226,
-                "playerID": 3,
-              },
-              Object {
-                "conduitID": 335232,
-                "itemLevel": 226,
-                "playerID": 3,
-              },
-              Object {
-                "conduitID": 335034,
-                "itemLevel": 226,
-                "playerID": 3,
-              },
-              Object {
-                "conduitID": 337162,
-                "itemLevel": 213,
-                "playerID": 3,
-              },
-              Object {
-                "conduitID": 340212,
-                "itemLevel": 200,
-                "playerID": 4,
-              },
-              Object {
-                "conduitID": 339316,
-                "itemLevel": 200,
-                "playerID": 4,
-              },
-              Object {
-                "conduitID": 339268,
-                "itemLevel": 200,
-                "playerID": 4,
-              },
-              Object {
-                "conduitID": 339984,
-                "itemLevel": 200,
-                "playerID": 4,
-              },
-              Object {
-                "conduitID": 338787,
-                "itemLevel": 213,
-                "playerID": 4,
-              },
-              Object {
-                "conduitID": 0,
-                "itemLevel": 200,
-                "playerID": 5,
-              },
-              Object {
-                "conduitID": 336569,
-                "itemLevel": 200,
-                "playerID": 5,
-              },
-              Object {
-                "conduitID": 337275,
-                "itemLevel": 213,
-                "playerID": 5,
-              },
-              Object {
-                "conduitID": 336522,
-                "itemLevel": 200,
-                "playerID": 5,
-              },
-            ],
+Object {
+  "fightCreate": Array [
+    Array [
+      Object {
+        "data": Object {
+          "PlayerConduit": Object {
+            "createMany": Object {
+              "data": Array [
+                Object {
+                  "conduitID": 337972,
+                  "itemLevel": 226,
+                  "playerID": 1,
+                },
+                Object {
+                  "conduitID": 337988,
+                  "itemLevel": 226,
+                  "playerID": 1,
+                },
+                Object {
+                  "conduitID": 337822,
+                  "itemLevel": 200,
+                  "playerID": 1,
+                },
+                Object {
+                  "conduitID": 337705,
+                  "itemLevel": 213,
+                  "playerID": 1,
+                },
+                Object {
+                  "conduitID": 339895,
+                  "itemLevel": 226,
+                  "playerID": 2,
+                },
+                Object {
+                  "conduitID": 339231,
+                  "itemLevel": 226,
+                  "playerID": 2,
+                },
+                Object {
+                  "conduitID": 338671,
+                  "itemLevel": 226,
+                  "playerID": 2,
+                },
+                Object {
+                  "conduitID": 338682,
+                  "itemLevel": 226,
+                  "playerID": 2,
+                },
+                Object {
+                  "conduitID": 334993,
+                  "itemLevel": 226,
+                  "playerID": 3,
+                },
+                Object {
+                  "conduitID": 335232,
+                  "itemLevel": 226,
+                  "playerID": 3,
+                },
+                Object {
+                  "conduitID": 335034,
+                  "itemLevel": 226,
+                  "playerID": 3,
+                },
+                Object {
+                  "conduitID": 337162,
+                  "itemLevel": 213,
+                  "playerID": 3,
+                },
+                Object {
+                  "conduitID": 340212,
+                  "itemLevel": 200,
+                  "playerID": 4,
+                },
+                Object {
+                  "conduitID": 339316,
+                  "itemLevel": 200,
+                  "playerID": 4,
+                },
+                Object {
+                  "conduitID": 339268,
+                  "itemLevel": 200,
+                  "playerID": 4,
+                },
+                Object {
+                  "conduitID": 339984,
+                  "itemLevel": 200,
+                  "playerID": 4,
+                },
+                Object {
+                  "conduitID": 338787,
+                  "itemLevel": 213,
+                  "playerID": 4,
+                },
+                Object {
+                  "conduitID": 0,
+                  "itemLevel": 200,
+                  "playerID": 5,
+                },
+                Object {
+                  "conduitID": 336569,
+                  "itemLevel": 200,
+                  "playerID": 5,
+                },
+                Object {
+                  "conduitID": 337275,
+                  "itemLevel": 213,
+                  "playerID": 5,
+                },
+                Object {
+                  "conduitID": 336522,
+                  "itemLevel": 200,
+                  "playerID": 5,
+                },
+              ],
+            },
           },
-        },
-        "PlayerCovenantTrait": Object {
-          "createMany": Object {
-            "data": Array [
-              Object {
-                "covenantTraitID": 323921,
-                "playerID": 1,
-              },
-              Object {
-                "covenantTraitID": 342156,
-                "playerID": 1,
-              },
-              Object {
-                "covenantTraitID": 323918,
-                "playerID": 1,
-              },
-              Object {
-                "covenantTraitID": 324441,
-                "playerID": 1,
-              },
-              Object {
-                "covenantTraitID": 328261,
-                "playerID": 2,
-              },
-              Object {
-                "covenantTraitID": 328263,
-                "playerID": 2,
-              },
-              Object {
-                "covenantTraitID": 328257,
-                "playerID": 2,
-              },
-              Object {
-                "covenantTraitID": 328266,
-                "playerID": 2,
-              },
-              Object {
-                "covenantTraitID": 331586,
-                "playerID": 3,
-              },
-              Object {
-                "covenantTraitID": 331582,
-                "playerID": 3,
-              },
-              Object {
-                "covenantTraitID": 331576,
-                "playerID": 3,
-              },
-              Object {
-                "covenantTraitID": 331579,
-                "playerID": 3,
-              },
-              Object {
-                "covenantTraitID": 336147,
-                "playerID": 4,
-              },
-              Object {
-                "covenantTraitID": 336239,
-                "playerID": 4,
-              },
-              Object {
-                "covenantTraitID": 319983,
-                "playerID": 4,
-              },
-              Object {
-                "covenantTraitID": 336184,
-                "playerID": 4,
-              },
-              Object {
-                "covenantTraitID": 331586,
-                "playerID": 5,
-              },
-              Object {
-                "covenantTraitID": 331582,
-                "playerID": 5,
-              },
-              Object {
-                "covenantTraitID": 331576,
-                "playerID": 5,
-              },
-              Object {
-                "covenantTraitID": 331579,
-                "playerID": 5,
-              },
-            ],
+          "PlayerCovenantTrait": Object {
+            "createMany": Object {
+              "data": Array [
+                Object {
+                  "covenantTraitID": 323921,
+                  "playerID": 1,
+                },
+                Object {
+                  "covenantTraitID": 342156,
+                  "playerID": 1,
+                },
+                Object {
+                  "covenantTraitID": 323918,
+                  "playerID": 1,
+                },
+                Object {
+                  "covenantTraitID": 324441,
+                  "playerID": 1,
+                },
+                Object {
+                  "covenantTraitID": 328261,
+                  "playerID": 2,
+                },
+                Object {
+                  "covenantTraitID": 328263,
+                  "playerID": 2,
+                },
+                Object {
+                  "covenantTraitID": 328257,
+                  "playerID": 2,
+                },
+                Object {
+                  "covenantTraitID": 328266,
+                  "playerID": 2,
+                },
+                Object {
+                  "covenantTraitID": 331586,
+                  "playerID": 3,
+                },
+                Object {
+                  "covenantTraitID": 331582,
+                  "playerID": 3,
+                },
+                Object {
+                  "covenantTraitID": 331576,
+                  "playerID": 3,
+                },
+                Object {
+                  "covenantTraitID": 331579,
+                  "playerID": 3,
+                },
+                Object {
+                  "covenantTraitID": 336147,
+                  "playerID": 4,
+                },
+                Object {
+                  "covenantTraitID": 336239,
+                  "playerID": 4,
+                },
+                Object {
+                  "covenantTraitID": 319983,
+                  "playerID": 4,
+                },
+                Object {
+                  "covenantTraitID": 336184,
+                  "playerID": 4,
+                },
+                Object {
+                  "covenantTraitID": 331586,
+                  "playerID": 5,
+                },
+                Object {
+                  "covenantTraitID": 331582,
+                  "playerID": 5,
+                },
+                Object {
+                  "covenantTraitID": 331576,
+                  "playerID": 5,
+                },
+                Object {
+                  "covenantTraitID": 331579,
+                  "playerID": 5,
+                },
+              ],
+            },
           },
-        },
-        "PlayerFight": Object {
-          "createMany": Object {
-            "data": Array [
-              Object {
-                "playerID": 1,
-              },
-              Object {
-                "playerID": 2,
-              },
-              Object {
-                "playerID": 3,
-              },
-              Object {
-                "playerID": 4,
-              },
-              Object {
-                "playerID": 5,
-              },
-            ],
+          "PlayerFight": Object {
+            "createMany": Object {
+              "data": Array [
+                Object {
+                  "playerID": 1,
+                },
+                Object {
+                  "playerID": 2,
+                },
+                Object {
+                  "playerID": 3,
+                },
+                Object {
+                  "playerID": 4,
+                },
+                Object {
+                  "playerID": 5,
+                },
+              ],
+            },
           },
-        },
-        "PlayerLegendary": Object {
-          "createMany": Object {
-            "data": Array [
-              Object {
-                "legendaryID": 334583,
-                "playerID": 1,
-              },
-              Object {
-                "legendaryID": 337547,
-                "playerID": 2,
-              },
-              Object {
-                "legendaryID": 335266,
-                "playerID": 3,
-              },
-              Object {
-                "legendaryID": 337594,
-                "playerID": 4,
-              },
-              Object {
-                "legendaryID": 327364,
-                "playerID": 5,
-              },
-            ],
+          "PlayerLegendary": Object {
+            "createMany": Object {
+              "data": Array [
+                Object {
+                  "legendaryID": 334583,
+                  "playerID": 1,
+                },
+                Object {
+                  "legendaryID": 337547,
+                  "playerID": 2,
+                },
+                Object {
+                  "legendaryID": 335266,
+                  "playerID": 3,
+                },
+                Object {
+                  "legendaryID": 337594,
+                  "playerID": 4,
+                },
+                Object {
+                  "legendaryID": 327364,
+                  "playerID": 5,
+                },
+              ],
+            },
           },
-        },
-        "PlayerTalent": Object {
-          "createMany": Object {
-            "data": Array [
-              Object {
-                "playerID": 1,
-                "talentID": 281208,
-              },
-              Object {
-                "playerID": 1,
-                "talentID": 207104,
-              },
-              Object {
-                "playerID": 1,
-                "talentID": 207167,
-              },
-              Object {
-                "playerID": 1,
-                "talentID": 207142,
-              },
-              Object {
-                "playerID": 1,
-                "talentID": 212552,
-              },
-              Object {
-                "playerID": 1,
-                "talentID": 194912,
-              },
-              Object {
-                "playerID": 1,
-                "talentID": 152279,
-              },
-              Object {
-                "playerID": 2,
-                "talentID": 207548,
-              },
-              Object {
-                "playerID": 2,
-                "talentID": 207739,
-              },
-              Object {
-                "playerID": 2,
-                "talentID": 336639,
-              },
-              Object {
-                "playerID": 2,
-                "talentID": 263642,
-              },
-              Object {
-                "playerID": 2,
-                "talentID": 202138,
-              },
-              Object {
-                "playerID": 2,
-                "talentID": 321453,
-              },
-              Object {
-                "playerID": 2,
-                "talentID": 209258,
-              },
-              Object {
-                "playerID": 3,
-                "talentID": 280721,
-              },
-              Object {
-                "playerID": 3,
-                "talentID": 202168,
-              },
-              Object {
-                "playerID": 3,
-                "talentID": 206315,
-              },
-              Object {
-                "playerID": 3,
-                "talentID": 208154,
-              },
-              Object {
-                "playerID": 3,
-                "talentID": 335070,
-              },
-              Object {
-                "playerID": 3,
-                "talentID": 46924,
-              },
-              Object {
-                "playerID": 3,
-                "talentID": 152278,
-              },
-              Object {
-                "playerID": 4,
-                "talentID": 196926,
-              },
-              Object {
-                "playerID": 4,
-                "talentID": 183778,
-              },
-              Object {
-                "playerID": 4,
-                "talentID": 115750,
-              },
-              Object {
-                "playerID": 4,
-                "talentID": 114154,
-              },
-              Object {
-                "playerID": 4,
-                "talentID": 105809,
-              },
-              Object {
-                "playerID": 4,
-                "talentID": 248033,
-              },
-              Object {
-                "playerID": 4,
-                "talentID": 156910,
-              },
-              Object {
-                "playerID": 5,
-                "talentID": 205024,
-              },
-              Object {
-                "playerID": 5,
-                "talentID": 212653,
-              },
-              Object {
-                "playerID": 5,
-                "talentID": 116011,
-              },
-              Object {
-                "playerID": 5,
-                "talentID": 278309,
-              },
-              Object {
-                "playerID": 5,
-                "talentID": 113724,
-              },
-              Object {
-                "playerID": 5,
-                "talentID": 56377,
-              },
-              Object {
-                "playerID": 5,
-                "talentID": 155149,
-              },
-            ],
+          "PlayerTalent": Object {
+            "createMany": Object {
+              "data": Array [
+                Object {
+                  "playerID": 1,
+                  "talentID": 281208,
+                },
+                Object {
+                  "playerID": 1,
+                  "talentID": 207104,
+                },
+                Object {
+                  "playerID": 1,
+                  "talentID": 207167,
+                },
+                Object {
+                  "playerID": 1,
+                  "talentID": 207142,
+                },
+                Object {
+                  "playerID": 1,
+                  "talentID": 212552,
+                },
+                Object {
+                  "playerID": 1,
+                  "talentID": 194912,
+                },
+                Object {
+                  "playerID": 1,
+                  "talentID": 152279,
+                },
+                Object {
+                  "playerID": 2,
+                  "talentID": 207548,
+                },
+                Object {
+                  "playerID": 2,
+                  "talentID": 207739,
+                },
+                Object {
+                  "playerID": 2,
+                  "talentID": 336639,
+                },
+                Object {
+                  "playerID": 2,
+                  "talentID": 263642,
+                },
+                Object {
+                  "playerID": 2,
+                  "talentID": 202138,
+                },
+                Object {
+                  "playerID": 2,
+                  "talentID": 321453,
+                },
+                Object {
+                  "playerID": 2,
+                  "talentID": 209258,
+                },
+                Object {
+                  "playerID": 3,
+                  "talentID": 280721,
+                },
+                Object {
+                  "playerID": 3,
+                  "talentID": 202168,
+                },
+                Object {
+                  "playerID": 3,
+                  "talentID": 206315,
+                },
+                Object {
+                  "playerID": 3,
+                  "talentID": 208154,
+                },
+                Object {
+                  "playerID": 3,
+                  "talentID": 335070,
+                },
+                Object {
+                  "playerID": 3,
+                  "talentID": 46924,
+                },
+                Object {
+                  "playerID": 3,
+                  "talentID": 152278,
+                },
+                Object {
+                  "playerID": 4,
+                  "talentID": 196926,
+                },
+                Object {
+                  "playerID": 4,
+                  "talentID": 183778,
+                },
+                Object {
+                  "playerID": 4,
+                  "talentID": 115750,
+                },
+                Object {
+                  "playerID": 4,
+                  "talentID": 114154,
+                },
+                Object {
+                  "playerID": 4,
+                  "talentID": 105809,
+                },
+                Object {
+                  "playerID": 4,
+                  "talentID": 248033,
+                },
+                Object {
+                  "playerID": 4,
+                  "talentID": 156910,
+                },
+                Object {
+                  "playerID": 5,
+                  "talentID": 205024,
+                },
+                Object {
+                  "playerID": 5,
+                  "talentID": 212653,
+                },
+                Object {
+                  "playerID": 5,
+                  "talentID": 116011,
+                },
+                Object {
+                  "playerID": 5,
+                  "talentID": 278309,
+                },
+                Object {
+                  "playerID": 5,
+                  "talentID": 113724,
+                },
+                Object {
+                  "playerID": 5,
+                  "talentID": 56377,
+                },
+                Object {
+                  "playerID": 5,
+                  "talentID": 155149,
+                },
+              ],
+            },
           },
-        },
-        "Report": Object {
-          "connect": Object {
-            "id": 1,
+          "Report": Object {
+            "connect": Object {
+              "id": 1,
+            },
           },
+          "averageItemLevel": 223.4,
+          "chests": 1,
+          "dps": 16927,
+          "dungeon": Object {},
+          "endTime": 1910367,
+          "fightID": 99,
+          "hps": 5401,
+          "keystoneLevel": 17,
+          "keystoneTime": 1896314,
+          "percent": 0,
+          "rating": 137,
+          "startTime": 50329,
+          "totalDeaths": 9,
         },
-        "averageItemLevel": 223.4,
-        "chests": 1,
-        "dps": 16927,
-        "dungeon": Object {},
-        "endTime": 1910367,
-        "fightID": 99,
-        "hps": 5401,
-        "keystoneLevel": 17,
-        "keystoneTime": 1896314,
-        "percent": 0,
-        "rating": 137,
-        "startTime": 50329,
-        "totalDeaths": 9,
       },
-    },
+    ],
   ],
-]
+}
 `;
 
 exports[`/api/report existing report ongoing report - new fights 13`] = `
@@ -1771,6 +1762,504 @@ Object {
   ],
   "endTime": 1625344842249,
   "fights": Array [
+    Object {
+      "averageItemLevel": 223.4,
+      "dps": 16927,
+      "dungeon": Object {
+        "id": 2289,
+        "name": "Plaguefall",
+        "time": 2280000,
+      },
+      "hps": 5401,
+      "id": 1,
+      "keystoneBonus": 1,
+      "keystoneLevel": 17,
+      "keystoneTime": 1896314,
+      "player": Array [
+        Object {
+          "class": "DemonHunter",
+          "covenantID": 1,
+          "legendaries": Array [
+            Object {
+              "effectIcon": "inv__felbarrage.jpg",
+              "effectName": "Fiery Soul",
+              "id": 337547,
+            },
+          ],
+          "soulbindID": 7,
+          "spec": "Vengeance",
+        },
+        Object {
+          "class": "Paladin",
+          "covenantID": 2,
+          "legendaries": Array [
+            Object {
+              "effectIcon": "ability_paladin_conviction.jpg",
+              "effectName": "The Mad Paragon",
+              "id": 337594,
+            },
+          ],
+          "soulbindID": 9,
+          "spec": "Holy",
+        },
+        Object {
+          "class": "DeathKnight",
+          "covenantID": 4,
+          "legendaries": Array [
+            Object {
+              "effectIcon": "spell_shadow_focusedpower.jpg",
+              "effectName": "Koltira's Favor",
+              "id": 334583,
+            },
+          ],
+          "soulbindID": 5,
+          "spec": "Frost",
+        },
+        Object {
+          "class": "Warrior",
+          "covenantID": 2,
+          "legendaries": Array [
+            Object {
+              "effectIcon": "inv_60crafted_ring4b.jpg",
+              "effectName": "Signet of Tormented Kings",
+              "id": 335266,
+            },
+          ],
+          "soulbindID": 8,
+          "spec": "Fury",
+        },
+        Object {
+          "class": "Mage",
+          "covenantID": 2,
+          "legendaries": Array [
+            Object {
+              "effectIcon": "spell_shadow_soulleech_2.jpg",
+              "effectName": "Freezing Winds",
+              "id": 327364,
+            },
+          ],
+          "soulbindID": 8,
+          "spec": "Frost",
+        },
+      ],
+      "rating": 137,
+      "totalDeaths": 9,
+    },
+    Object {
+      "averageItemLevel": 223.2,
+      "dps": 18616,
+      "dungeon": Object {
+        "id": 2289,
+        "name": "Plaguefall",
+        "time": 2280000,
+      },
+      "hps": 5970,
+      "id": 2,
+      "keystoneBonus": 1,
+      "keystoneLevel": 20,
+      "keystoneTime": 2189941,
+      "player": Array [
+        Object {
+          "class": "DemonHunter",
+          "covenantID": 1,
+          "legendaries": Array [
+            Object {
+              "effectIcon": "inv__felbarrage.jpg",
+              "effectName": "Fiery Soul",
+              "id": 337547,
+            },
+          ],
+          "soulbindID": 7,
+          "spec": "Vengeance",
+        },
+        Object {
+          "class": "Shaman",
+          "covenantID": 2,
+          "legendaries": Array [
+            Object {
+              "effectIcon": "spell_nature_earthelemental_totem.jpg",
+              "effectName": "Deeptremor Stone",
+              "id": 336739,
+            },
+          ],
+          "soulbindID": 8,
+          "spec": "Restoration",
+        },
+        Object {
+          "class": "Druid",
+          "covenantID": 3,
+          "legendaries": Array [
+            Object {
+              "effectIcon": "ability_druid_balanceofpower.jpg",
+              "effectName": "Balance of All Things",
+              "id": 339942,
+            },
+          ],
+          "soulbindID": 1,
+          "spec": "Balance",
+        },
+        Object {
+          "class": "Monk",
+          "covenantID": 1,
+          "legendaries": Array [
+            Object {
+              "effectIcon": "inv_inscription_80_warscroll_battleshout.jpg",
+              "effectName": "Invoker's Delight",
+              "id": 337298,
+            },
+          ],
+          "soulbindID": 7,
+          "spec": "Windwalker",
+        },
+        Object {
+          "class": "Rogue",
+          "covenantID": 4,
+          "legendaries": Array [
+            Object {
+              "effectIcon": "ability_rogue_slicedice.jpg",
+              "effectName": "Celerity",
+              "id": 340087,
+            },
+          ],
+          "soulbindID": 10,
+          "spec": "Outlaw",
+        },
+      ],
+      "rating": 150,
+      "totalDeaths": 13,
+    },
+    Object {
+      "averageItemLevel": 223.8,
+      "dps": 25559,
+      "dungeon": Object {
+        "id": 2290,
+        "name": "Mists of Tirna Scithe",
+        "time": 1800000,
+      },
+      "hps": 8735,
+      "id": 3,
+      "keystoneBonus": 1,
+      "keystoneLevel": 21,
+      "keystoneTime": 1702019,
+      "player": Array [
+        Object {
+          "class": "DemonHunter",
+          "covenantID": 1,
+          "legendaries": Array [
+            Object {
+              "effectIcon": "inv__felbarrage.jpg",
+              "effectName": "Fiery Soul",
+              "id": 337547,
+            },
+          ],
+          "soulbindID": 7,
+          "spec": "Vengeance",
+        },
+        Object {
+          "class": "Shaman",
+          "covenantID": 2,
+          "legendaries": Array [
+            Object {
+              "effectIcon": "spell_nature_earthelemental_totem.jpg",
+              "effectName": "Deeptremor Stone",
+              "id": 336739,
+            },
+          ],
+          "soulbindID": 8,
+          "spec": "Restoration",
+        },
+        Object {
+          "class": "Warlock",
+          "covenantID": 3,
+          "legendaries": Array [
+            Object {
+              "effectIcon": "spell_warlock_demonicportal_purple.jpg",
+              "effectName": "Wilfred's Sigil of Superior Summoning",
+              "id": 337020,
+            },
+          ],
+          "soulbindID": 1,
+          "spec": "Demonology",
+        },
+        Object {
+          "class": "Mage",
+          "covenantID": 3,
+          "legendaries": Array [
+            Object {
+              "effectIcon": "inv_misc_enchantedpearld.jpg",
+              "effectName": "Fevered Incantation",
+              "id": 333030,
+            },
+          ],
+          "soulbindID": 6,
+          "spec": "Fire",
+        },
+        Object {
+          "class": "Priest",
+          "covenantID": 3,
+          "legendaries": Array [
+            Object {
+              "effectIcon": "inv_jewelcrafting_shadowsongamethyst_02.jpg",
+              "effectName": "Shadowflame Prism",
+              "id": 336143,
+            },
+          ],
+          "soulbindID": 6,
+          "spec": "Shadow",
+        },
+      ],
+      "rating": 156,
+      "totalDeaths": 5,
+    },
+    Object {
+      "averageItemLevel": 224,
+      "dps": 20347,
+      "dungeon": Object {
+        "id": 2293,
+        "name": "Theater of Pain",
+        "time": 2220000,
+      },
+      "hps": 6805,
+      "id": 8,
+      "keystoneBonus": 1,
+      "keystoneLevel": 21,
+      "keystoneTime": 2101258,
+      "player": Array [
+        Object {
+          "class": "DemonHunter",
+          "covenantID": 1,
+          "legendaries": Array [
+            Object {
+              "effectIcon": "inv__felbarrage.jpg",
+              "effectName": "Fiery Soul",
+              "id": 337547,
+            },
+          ],
+          "soulbindID": 7,
+          "spec": "Vengeance",
+        },
+        Object {
+          "class": "Paladin",
+          "covenantID": 2,
+          "legendaries": Array [
+            Object {
+              "effectIcon": "ability_paladin_conviction.jpg",
+              "effectName": "The Mad Paragon",
+              "id": 337594,
+            },
+          ],
+          "soulbindID": 9,
+          "spec": "Holy",
+        },
+        Object {
+          "class": "Rogue",
+          "covenantID": 4,
+          "legendaries": Array [
+            Object {
+              "effectIcon": "spell_nzinsanity_chasedbyshadows.jpg",
+              "effectName": "Deathly Shadows",
+              "id": 340092,
+            },
+          ],
+          "soulbindID": 10,
+          "spec": "Outlaw",
+        },
+        Object {
+          "class": "Mage",
+          "covenantID": 3,
+          "legendaries": Array [
+            Object {
+              "effectIcon": "inv_misc_enchantedpearld.jpg",
+              "effectName": "Fevered Incantation",
+              "id": 333030,
+            },
+          ],
+          "soulbindID": 6,
+          "spec": "Fire",
+        },
+        Object {
+          "class": "Druid",
+          "covenantID": 3,
+          "legendaries": Array [
+            Object {
+              "effectIcon": "ability_druid_balanceofpower.jpg",
+              "effectName": "Balance of All Things",
+              "id": 339942,
+            },
+          ],
+          "soulbindID": 1,
+          "spec": "Balance",
+        },
+      ],
+      "rating": 156,
+      "totalDeaths": 4,
+    },
+    Object {
+      "averageItemLevel": 223.6,
+      "dps": 25437,
+      "dungeon": Object {
+        "id": 2293,
+        "name": "Theater of Pain",
+        "time": 2220000,
+      },
+      "hps": 7166,
+      "id": 10,
+      "keystoneBonus": 1,
+      "keystoneLevel": 19,
+      "keystoneTime": 1511926,
+      "player": Array [
+        Object {
+          "class": "DemonHunter",
+          "covenantID": 1,
+          "legendaries": Array [
+            Object {
+              "effectIcon": "inv__felbarrage.jpg",
+              "effectName": "Fiery Soul",
+              "id": 337547,
+            },
+          ],
+          "soulbindID": 7,
+          "spec": "Vengeance",
+        },
+        Object {
+          "class": "Paladin",
+          "covenantID": 2,
+          "legendaries": Array [
+            Object {
+              "effectIcon": "ability_paladin_conviction.jpg",
+              "effectName": "The Mad Paragon",
+              "id": 337594,
+            },
+          ],
+          "soulbindID": 9,
+          "spec": "Holy",
+        },
+        Object {
+          "class": "Druid",
+          "covenantID": 3,
+          "legendaries": Array [
+            Object {
+              "effectIcon": "spell_arcane_arcane03.jpg",
+              "effectName": "Primordial Arcanic Pulsar",
+              "id": 338668,
+            },
+          ],
+          "soulbindID": 1,
+          "spec": "Balance",
+        },
+        Object {
+          "class": "Priest",
+          "covenantID": 3,
+          "legendaries": Array [
+            Object {
+              "effectIcon": "inv_jewelcrafting_shadowsongamethyst_02.jpg",
+              "effectName": "Shadowflame Prism",
+              "id": 336143,
+            },
+          ],
+          "soulbindID": 6,
+          "spec": "Shadow",
+        },
+        Object {
+          "class": "Shaman",
+          "covenantID": 3,
+          "legendaries": Array [
+            Object {
+              "effectIcon": "spell_shaman_earthquake.jpg",
+              "effectName": "Echoes of Great Sundering",
+              "id": 336215,
+            },
+          ],
+          "soulbindID": 6,
+          "spec": "Elemental",
+        },
+      ],
+      "rating": 147,
+      "totalDeaths": 2,
+    },
+    Object {
+      "averageItemLevel": 223.8,
+      "dps": 25767,
+      "dungeon": Object {
+        "id": 2286,
+        "name": "The Necrotic Wake",
+        "time": 2160000,
+      },
+      "hps": 7018,
+      "id": 11,
+      "keystoneBonus": 2,
+      "keystoneLevel": 21,
+      "keystoneTime": 1653316,
+      "player": Array [
+        Object {
+          "class": "DemonHunter",
+          "covenantID": 1,
+          "legendaries": Array [
+            Object {
+              "effectIcon": "inv__felbarrage.jpg",
+              "effectName": "Fiery Soul",
+              "id": 337547,
+            },
+          ],
+          "soulbindID": 7,
+          "spec": "Vengeance",
+        },
+        Object {
+          "class": "Paladin",
+          "covenantID": 2,
+          "legendaries": Array [
+            Object {
+              "effectIcon": "ability_paladin_conviction.jpg",
+              "effectName": "The Mad Paragon",
+              "id": 337594,
+            },
+          ],
+          "soulbindID": 9,
+          "spec": "Holy",
+        },
+        Object {
+          "class": "Druid",
+          "covenantID": 3,
+          "legendaries": Array [
+            Object {
+              "effectIcon": "spell_arcane_arcane03.jpg",
+              "effectName": "Primordial Arcanic Pulsar",
+              "id": 338668,
+            },
+          ],
+          "soulbindID": 1,
+          "spec": "Balance",
+        },
+        Object {
+          "class": "Rogue",
+          "covenantID": 2,
+          "legendaries": Array [
+            Object {
+              "effectIcon": "ability_rogue_slicedice.jpg",
+              "effectName": "Celerity",
+              "id": 340087,
+            },
+          ],
+          "soulbindID": 9,
+          "spec": "Outlaw",
+        },
+        Object {
+          "class": "Shaman",
+          "covenantID": 3,
+          "legendaries": Array [
+            Object {
+              "effectIcon": "spell_shaman_earthquake.jpg",
+              "effectName": "Echoes of Great Sundering",
+              "id": 336215,
+            },
+          ],
+          "soulbindID": 6,
+          "spec": "Elemental",
+        },
+      ],
+      "rating": 158,
+      "totalDeaths": 2,
+    },
     Object {
       "averageItemLevel": 223.4,
       "dps": 16927,

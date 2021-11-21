@@ -422,6 +422,7 @@ const createManyPlayer = async (
 };
 
 type RawReport = {
+  id: number;
   startTime: Date;
   endTime: Date;
   title: string;
@@ -618,6 +619,7 @@ export const loadExistingReport = async (
           slug: true,
         },
       },
+      id: true,
       Fight: {
         orderBy: { fightID: "asc" },
         select: {
@@ -756,7 +758,9 @@ export const reportHandler = withSentry<Request, ReportResponse>(
       !report.reportData.report.region?.slug ||
       !report.reportData.report.fights
     ) {
-      // transaction.finish();
+      transaction.setHttpStatus(SERVICE_UNAVAILABLE);
+      transaction.finish();
+
       res.status(SERVICE_UNAVAILABLE).json({
         error: reportHandlerError.BROKEN_LOG_OR_WCL_UNAVAILABLE,
       });
@@ -1002,34 +1006,17 @@ export const reportHandler = withSentry<Request, ReportResponse>(
       return;
     }
 
-    const weekID = await findWeekByAffixes(fights[0].keystoneAffixes);
-
-    const reportCreateInput: Prisma.ReportCreateInput = {
-      startTime: new Date(startTime),
-      endTime: new Date(endTime),
-      report: reportID,
-      title,
-      region: {
-        connectOrCreate: {
-          create: {
-            slug: region,
-          },
-          where: {
-            slug: region,
-          },
-        },
-      },
-      week: {
-        connect: {
-          id: weekID,
-        },
-      },
-    };
-
-    const createdReport = await prisma.report.create({
-      data: reportCreateInput,
-      select: { id: true },
-    });
+    const internalReportID = await determineReportID(
+      existingReport,
+      fights[0],
+      {
+        endTime: new Date(endTime),
+        startTime: new Date(startTime),
+        title,
+        report: reportID,
+        region,
+      }
+    );
 
     const allPlayer = fightsWithMeta.flatMap((fight) => fight.player);
 
@@ -1085,7 +1072,6 @@ export const reportHandler = withSentry<Request, ReportResponse>(
     const legendariesCreateMany: Prisma.LegendaryCreateManyInput[] =
       allPlayer.flatMap((player) =>
         player.legendaries
-          // ignore sylvanas bow
           .filter((legendary) => isCraftableShadowlandsLegendary(legendary.id))
           .map((legendary) => {
             return {
@@ -1154,7 +1140,7 @@ export const reportHandler = withSentry<Request, ReportResponse>(
           playerTalentCreateMany,
           playerLegendaryCreateMany,
         } = await createManyPlayer(fight.player, {
-          reportID: createdReport.id,
+          reportID: internalReportID,
           serverMap,
           characterMap,
         });
@@ -1186,7 +1172,7 @@ export const reportHandler = withSentry<Request, ReportResponse>(
           percent: 0,
           Report: {
             connect: {
-              id: createdReport.id,
+              id: internalReportID,
             },
           },
           dungeon,
@@ -1227,21 +1213,77 @@ export const reportHandler = withSentry<Request, ReportResponse>(
       )
     );
 
+    const previouslyStoredReports = existingReport
+      ? createResponseFromDB(existingReport).fights
+      : [];
+    const response = createResponseFromRawData({
+      endTime,
+      startTime,
+      title,
+      region,
+      fightsWithMeta,
+      affixes: fights[0].keystoneAffixes,
+    });
+
     transaction.setHttpStatus(200);
     transaction.finish();
 
-    res.json(
-      createResponseFromRawData({
-        endTime,
-        startTime,
-        title,
-        region,
-        fightsWithMeta,
-        affixes: fights[0].keystoneAffixes,
-      })
-    );
+    res.json({
+      ...response,
+      fights: [...previouslyStoredReports, ...response.fights],
+    });
   }
 );
+
+const determineReportID = async (
+  existingReport: RawReport,
+  { keystoneAffixes }: Fight,
+  {
+    endTime,
+    region,
+    report,
+    startTime,
+    title,
+  }: Pick<
+    Prisma.ReportCreateInput,
+    "startTime" | "endTime" | "report" | "title"
+  > & { region: string }
+) => {
+  if (existingReport) {
+    return Promise.resolve(existingReport.id);
+  }
+
+  const weekID = await findWeekByAffixes(keystoneAffixes);
+
+  const reportCreateInput: Prisma.ReportCreateInput = {
+    startTime: new Date(startTime),
+    endTime: new Date(endTime),
+    report,
+    title,
+    region: {
+      connectOrCreate: {
+        create: {
+          slug: region,
+        },
+        where: {
+          slug: region,
+        },
+      },
+    },
+    week: {
+      connect: {
+        id: weekID,
+      },
+    },
+  };
+
+  const createdReport = await prisma.report.create({
+    data: reportCreateInput,
+    select: { id: true },
+  });
+
+  return createdReport.id;
+};
 
 const findWeekByAffixes = async ([
   affix1ID,

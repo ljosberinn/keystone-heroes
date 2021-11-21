@@ -1,6 +1,8 @@
 import type { ErrorInfo } from "react";
 import { Component } from "react";
 
+import { sentrySettings } from "../../api/utils/sentrySettings";
+
 let Sentry: typeof import("@sentry/react") | null = null;
 
 export type ErrorBoundaryProps = {
@@ -39,11 +41,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, State> {
       );
       Sentry = Sentry ?? lazySentry;
 
-      Sentry.init({
-        dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
-        environment: process.env.NODE_ENV,
-        enabled: process.env.NODE_ENV === "production",
-      });
+      Sentry.init(sentrySettings);
 
       /**
        * @see https://github.com/getsentry/sentry-javascript/blob/b99ee25b16/packages/nextjs/src/index.client.ts#L31

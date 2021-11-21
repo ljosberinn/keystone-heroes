@@ -712,6 +712,28 @@ export const THEATER_OF_PAIN: DungeonMeta = {
   count: 271,
 };
 
+export const TAZAVESH_LOWER: DungeonMeta = {
+  bossIDs: [],
+  count: 0,
+  expansionID: ExpansionEnum.SHADOWLANDS,
+  name: "Tazavesh Lower",
+  slug: "TVL",
+  timer: createDungeonTimer(0),
+  unitCountMap: {},
+  zones: [],
+};
+
+export const TAZAVESH_UPPER: DungeonMeta = {
+  bossIDs: [],
+  count: 0,
+  expansionID: ExpansionEnum.SHADOWLANDS,
+  name: "Tazavesh Upper",
+  slug: "TVU",
+  timer: createDungeonTimer(0),
+  unitCountMap: {},
+  zones: [],
+};
+
 export const dungeonMap: Record<Dungeon["id"], DungeonMeta> = {
   [DungeonIDs.SANGUINE_DEPTHS]: SANGUINE_DEPTHS,
   [DungeonIDs.SPIRES_OF_ASCENSION]: SPIRES_OF_ASCENSION,
