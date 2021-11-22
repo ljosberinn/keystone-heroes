@@ -29,6 +29,8 @@ import {
 import { ErrorBoundary } from "../ErrorBoundary";
 import { ExternalLink } from "../ExternalLink";
 import { PullDetailsSettingsProvider } from "./PullDetailsSettings";
+import { SidebarNPC } from "./SidebarNPC";
+import { usePullNPCs } from "./hooks";
 import type { DefaultEvent } from "./utils";
 import {
   isAbilityReadyEventWithAbilityAndSourcePlayer,
@@ -185,13 +187,9 @@ function PullSelection() {
         type="button"
         disabled={isFirst}
         className="flex items-center w-1/3 space-x-2 focus:outline-none focus:ring"
-        onClick={
-          isFirst
-            ? undefined
-            : () => {
-                setSelectedPull(selectedPullID - 1);
-              }
-        }
+        onClick={() => {
+          setSelectedPull(selectedPullID - 1);
+        }}
       >
         <AbilityIcon
           icon="misc_arrowleft"
@@ -275,13 +273,9 @@ function PullSelection() {
         type="button"
         disabled={isLast}
         className="flex items-center justify-end w-1/3 space-x-2 focus:outline-none focus:ring"
-        onClick={
-          isLast
-            ? undefined
-            : () => {
-                setSelectedPull(selectedPullID + 1);
-              }
-        }
+        onClick={() => {
+          setSelectedPull(selectedPullID + 1);
+        }}
       >
         {mostRelevantNPCsByPull.next ? (
           <span>{mostRelevantNPCsByPull.next.name}</span>
@@ -304,108 +298,42 @@ function PullSelection() {
 
 function Sidebar() {
   const { fight } = useFight();
-  const pulls = fight ? fight.pulls : [];
+  const pullNPCs = usePullNPCs();
 
-  const selectedPullID = useReportStore((state) => state.selectedPull);
-  // const player = fight ? fight.player : [];
-
-  const selectedPull = pulls.find((pull) => pull.id === selectedPullID);
-  const dungeon = fight ? dungeons[fight.dungeon] : null;
-
-  if (!fight || !selectedPull || !dungeon) {
+  if (!pullNPCs || !fight) {
     return null;
   }
-
-  const npcs = selectedPull.npcs
-    .filter((npc) => npc.id !== EXPLOSIVE.unit)
-    .map((npc) => {
-      const countPerNPC =
-        npc.id in dungeon.unitCountMap ? dungeon.unitCountMap[npc.id] : 0;
-      const percentPerNPC =
-        countPerNPC === 0 ? 0 : (countPerNPC / dungeon.count) * 100;
-      const totalPercent = percentPerNPC === 0 ? 0 : npc.count * percentPerNPC;
-
-      return {
-        ...npc,
-        totalPercent,
-        percentPerNPC,
-        countPerNPC,
-        isBoss: isBoss(npc.id),
-        isTormentedLieutenant: isTormentedLieutenant(npc.id),
-      };
-    })
-    .sort((a, b) => {
-      if (a.isBoss || a.isTormentedLieutenant) {
-        return -1;
-      }
-
-      if (b.isBoss || b.isTormentedLieutenant) {
-        return 1;
-      }
-
-      if (a.totalPercent === b.totalPercent) {
-        if (a.totalPercent === 0) {
-          return -1;
-        }
-
-        const nameA = a.name.toUpperCase();
-        const nameB = b.name.toUpperCase();
-
-        if (nameB > nameA) {
-          return -1;
-        }
-
-        if (nameA > nameB) {
-          return 1;
-        }
-
-        return 0;
-      }
-
-      return a.totalPercent > b.totalPercent ? -1 : 1;
-    });
-
-  const explosives = new Set(
-    selectedPull.events
-      .filter(
-        (event) =>
-          isExplosivesDamageEvent(event) ||
-          (event.type === "DamageTaken" &&
-            event.ability?.id === EXPLOSIVE.ability)
-      )
-      .map((event) => event.timestamp)
-  );
 
   return (
     <div className="flex flex-col w-full bg-white rounded-lg lg:w-3/12 dark:bg-coolgray-700">
       <div className="flex w-full p-2 justify-evenly">
         <span>
           {timeDurationToString(
-            selectedPull.startTime - fight.meta.startTime,
+            pullNPCs.pull.startTime - fight.meta.startTime,
             true
           )}{" "}
           -{" "}
           {timeDurationToString(
-            selectedPull.endTime - fight.meta.startTime,
+            pullNPCs.pull.endTime - fight.meta.startTime,
             true
           )}{" "}
           (+
           {timeDurationToString(
-            selectedPull.endTime - selectedPull.startTime,
+            pullNPCs.pull.endTime - pullNPCs.pull.startTime,
             true
           )}
           )
         </span>
       </div>
 
-      {npcs.map((npc) => {
+      {pullNPCs.npcs.map((npc) => {
         return <SidebarNPC npc={npc} key={npc.id} />;
       })}
 
-      {explosives.size > 0 && (
+      {pullNPCs.explosives.size > 0 && (
         <SidebarNPC
           npc={{
-            count: explosives.size,
+            count: pullNPCs.explosives.size,
             countPerNPC: 0,
             id: EXPLOSIVE.unit,
             name: "Explosives",
@@ -416,79 +344,12 @@ function Sidebar() {
       )}
 
       <div className="flex w-full px-4 py-2 border-t-2 place-content-end border-coolgray-600">
-        this pull {selectedPull.percent.toFixed(2)}%
+        this pull {pullNPCs.pull.percent.toFixed(2)}%
       </div>
 
       <div className="flex w-full px-4 py-2 place-content-end">
-        total{" "}
-        {pulls
-          .reduce(
-            (acc, pull) =>
-              pull.id <= selectedPull.id ? acc + pull.percent : acc,
-            0
-          )
-          .toFixed(2)}
-        %
+        total {pullNPCs.percentAfterThisPull.toFixed(2)}%
       </div>
-    </div>
-  );
-}
-
-type SidebarNPCProps = {
-  npc: {
-    count: number;
-    id: number;
-    name: string;
-    totalPercent: number | null;
-    percentPerNPC: number | null;
-    countPerNPC: number;
-  };
-};
-
-function SidebarNPC({ npc }: SidebarNPCProps) {
-  return (
-    <div className="flex items-center justify-between w-full px-4 py-2">
-      <span>{npc.count}x</span>
-
-      <ExternalLink
-        href={createWowheadUrl({
-          category: "npc",
-          id: npc.id,
-        })}
-        className="flex items-center flex-1 px-2 truncate"
-      >
-        {npc.id === EXPLOSIVE.unit ? (
-          <AbilityIcon
-            icon={spells[EXPLOSIVE.ability].icon}
-            width={32}
-            height={32}
-            className="object-cover w-8 h-8 rounded-full"
-            alt={spells[EXPLOSIVE.ability].name}
-          />
-        ) : (
-          <img
-            src={`/static/npcs/${npc.id}.png`}
-            alt={npc.name}
-            className="object-cover w-8 h-8 rounded-full"
-            width={32}
-            height={32}
-            loading="lazy"
-          />
-        )}
-
-        <span className="pl-2 truncate">{npc.name}</span>
-      </ExternalLink>
-
-      {npc.totalPercent && npc.percentPerNPC ? (
-        <span
-          title={`${npc.percentPerNPC.toFixed(2)}% or ${
-            npc.countPerNPC
-          } count per NPC`}
-          className="justify-self-end"
-        >
-          {npc.totalPercent.toFixed(2)}%
-        </span>
-      ) : null}
     </div>
   );
 }

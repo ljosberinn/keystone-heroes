@@ -18,6 +18,7 @@ import { useFight } from "../../../pages/report/[reportID]/[fightID]";
 import { usePrevious } from "../../hooks/usePrevious";
 import {
   dungeons,
+  EXPLOSIVE,
   isBoss,
   isTormentedLieutenant,
   spells,
@@ -33,6 +34,7 @@ import { bgPrimary, bgSecondary } from "../../styles/tokens";
 import { timeDurationToString } from "../../utils";
 import { classnames } from "../../utils/classnames";
 import {
+  AbilityIcon,
   INVIS_POTION_ICON,
   QUESTIONMARK_ICON,
   SHROUD_ICON,
@@ -40,6 +42,8 @@ import {
   ZOOM_ICON,
 } from "../AbilityIcon";
 import { TabList, TabButton, TabPanel } from "../Tabs";
+import { SidebarNPC } from "./SidebarNPC";
+import { usePullNPCs } from "./hooks";
 import { usePointsOfInterest, PointsOfInterestProvider } from "./poi/context";
 import { findBloodlust, detectInvisibilityUsage } from "./utils";
 
@@ -54,6 +58,22 @@ const createRafCleanup = <K extends keyof WindowEventMap>(
     }
 
     window.removeEventListener(eventType, listener);
+  };
+};
+
+const createRafListener = (
+  rafRef: MutableRefObject<null | number>,
+  listener: () => void
+) => {
+  return () => {
+    if (rafRef.current) {
+      return;
+    }
+
+    rafRef.current = requestAnimationFrame(() => {
+      rafRef.current = null;
+      listener();
+    });
   };
 };
 
@@ -89,16 +109,7 @@ function useImageDimensions() {
   }, []);
 
   useEffect(() => {
-    const listener = () => {
-      if (rafRef.current) {
-        return;
-      }
-
-      rafRef.current = requestAnimationFrame(() => {
-        rafRef.current = null;
-        handleResize();
-      });
-    };
+    const listener = createRafListener(rafRef, handleResize);
 
     window.addEventListener("resize", listener);
 
@@ -385,6 +396,13 @@ export function Map(): JSX.Element {
                         }}
                       />
 
+                      {fullscreen ? (
+                        <>
+                          <FullscreenNavigation />
+                          <FullscreenPullNPCs />
+                        </>
+                      ) : null}
+
                       <KillIndicator fullscreen={fullscreen} type="boss" />
                       <KillIndicator
                         fullscreen={fullscreen}
@@ -423,6 +441,108 @@ export function Map(): JSX.Element {
   );
 }
 
+function FullscreenPullNPCs() {
+  const pullNPCs = usePullNPCs();
+
+  if (!pullNPCs) {
+    return null;
+  }
+
+  return (
+    <details
+      draggable
+      className={classnames(
+        bgSecondary,
+        "absolute left-1/4 top-1/3 rounded-lg opacity-75 hover:opacity-100 transition"
+      )}
+    >
+      <summary className="p-2 cursor-pointer">Trash</summary>
+
+      {pullNPCs.npcs.map((npc) => {
+        return <SidebarNPC npc={npc} key={npc.id} />;
+      })}
+
+      {pullNPCs.explosives.size > 0 && (
+        <SidebarNPC
+          npc={{
+            count: pullNPCs.explosives.size,
+            countPerNPC: 0,
+            id: EXPLOSIVE.unit,
+            name: "Explosives",
+            percentPerNPC: null,
+            totalPercent: null,
+          }}
+        />
+      )}
+
+      <div className="flex w-full px-4 py-2 border-t-2 place-content-end border-coolgray-600">
+        this pull {pullNPCs.pull.percent.toFixed(2)}%
+      </div>
+
+      <div className="flex w-full px-4 py-2 place-content-end">
+        total {pullNPCs.percentAfterThisPull.toFixed(2)}%
+      </div>
+    </details>
+  );
+}
+
+function FullscreenNavigation() {
+  const { selectedPull, setSelectedPull } = useReportStore();
+  const pulls = useFight().fight?.pulls;
+
+  if (!pulls) {
+    return null;
+  }
+
+  const isFirst = pulls[0].id === selectedPull;
+  const isLast = pulls[pulls.length - 1].id === selectedPull;
+
+  return (
+    <div className="absolute flex content-center justify-between w-1/3 w-full p-2 rounded-lg top-8 left-1/3">
+      <button
+        type="button"
+        className={`${bgSecondary} p-2 rounded-full`}
+        disabled={isFirst}
+        onClick={() => {
+          setSelectedPull(selectedPull - 1);
+        }}
+        aria-label="Last pull"
+      >
+        <AbilityIcon
+          icon="misc_arrowleft"
+          alt="Last pull"
+          className={classnames(
+            "rounded-full w-8 h-8 xl:w-16 xl:h-16",
+            isFirst && "filter grayscale"
+          )}
+          width={32}
+          height={32}
+        />
+      </button>
+      <button
+        type="button"
+        className={`${bgSecondary} p-2 rounded-full`}
+        disabled={isLast}
+        onClick={() => {
+          setSelectedPull(selectedPull + 1);
+        }}
+        aria-label="Next pull"
+      >
+        <AbilityIcon
+          icon="misc_arrowright"
+          alt="Next pull"
+          className={classnames(
+            "rounded-full w-8 h-8 xl:w-16 xl:h-16",
+            isLast && "filter grayscale"
+          )}
+          width={32}
+          height={32}
+        />
+      </button>
+    </div>
+  );
+}
+
 type KillIndicatorProps = {
   type: "boss" | "tormentedLieutenant";
   fullscreen: boolean;
@@ -434,21 +554,38 @@ function KillIndicator({ type, fullscreen }: KillIndicatorProps) {
   const { fight } = useFight();
   const pulls = fight ? fight.pulls : [];
   const startTime = fight ? fight.meta.startTime : 0;
+  const rafRef = useRef<number | null>(null);
 
   const [left, setLeft] = useState("32px");
 
   const isBossType = type === "boss";
 
   useEffect(() => {
-    setLeft(() => {
-      if (fullscreen && containerRef.current) {
-        const offset = isBossType ? "40" : "60";
+    const recalculate = () => {
+      setLeft(() => {
+        if (fullscreen && containerRef.current) {
+          const usesLargerGaps =
+            window.innerWidth < 1900 || window.innerHeight < 1160;
 
-        return `calc(${offset}% - ${containerRef.current.clientWidth / 2}px)`;
-      }
+          const left = 40 - (usesLargerGaps ? 10 : 0);
+          const right = 60 + (usesLargerGaps ? 10 : 0);
 
-      return "32px";
-    });
+          const offset = isBossType ? left : right;
+
+          return `calc(${offset}% - ${containerRef.current.clientWidth / 2}px)`;
+        }
+
+        return "32px";
+      });
+    };
+
+    recalculate();
+
+    const listener = createRafListener(rafRef, recalculate);
+
+    window.addEventListener("resize", listener);
+
+    return createRafCleanup(rafRef, "resize", listener);
   }, [fullscreen, isBossType]);
 
   const filteredPulls = pulls.filter((pull) => {
@@ -473,7 +610,7 @@ function KillIndicator({ type, fullscreen }: KillIndicatorProps) {
       <div
         className={classnames(
           bgSecondary,
-          "absolute rounded-lg p-2 hidden sm:block opacity-75",
+          "absolute rounded-lg p-2 hidden sm:block opacity-75 hover:opacity-100 transition",
           fullscreen ? "killIndicator bottom-8" : `${position} bottom-2`
         )}
         ref={containerRef}
@@ -699,16 +836,7 @@ function FullScreenToggle({
 
       recalculate();
 
-      const listener = () => {
-        if (rafRef.current) {
-          return;
-        }
-
-        rafRef.current = requestAnimationFrame(() => {
-          rafRef.current = null;
-          recalculate();
-        });
-      };
+      const listener = createRafListener(rafRef, recalculate);
 
       window.addEventListener("resize", listener);
 
