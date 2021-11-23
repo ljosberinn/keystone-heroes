@@ -1770,8 +1770,8 @@ export type EventDataQueryVariables = Exact<{
   reportID: Scalars["String"];
   startTime: Scalars["Float"];
   endTime: Scalars["Float"];
-  limit?: Maybe<Scalars["Int"]>;
-  filterExpression?: Maybe<Scalars["String"]>;
+  limit?: InputMaybe<Scalars["Int"]>;
+  filterExpression?: InputMaybe<Scalars["String"]>;
 }>;
 
 export type EventDataQuery = {
@@ -1839,7 +1839,7 @@ export type PetActorsQuery = {
 
 export type EnemyNpcIdsQueryVariables = Exact<{
   reportID: Scalars["String"];
-  fightIDs: Maybe<Scalars["Int"]>[] | Maybe<Scalars["Int"]>;
+  fightIDs: InputMaybe<Scalars["Int"]>[] | InputMaybe<Scalars["Int"]>;
 }>;
 
 export type EnemyNpcIdsQuery = {
@@ -1882,7 +1882,7 @@ export type EnemyNpcIdsQuery = {
 
 export type TableQueryVariables = Exact<{
   reportID: Scalars["String"];
-  fightIDs: Maybe<Scalars["Int"]>[] | Maybe<Scalars["Int"]>;
+  fightIDs: InputMaybe<Scalars["Int"]>[] | InputMaybe<Scalars["Int"]>;
   startTime: Scalars["Float"];
   endTime: Scalars["Float"];
 }>;
@@ -1903,7 +1903,7 @@ export type TableQuery = {
 
 export type FightPullsQueryVariables = Exact<{
   reportID: Scalars["String"];
-  fightIDs: Maybe<Scalars["Int"]>[] | Maybe<Scalars["Int"]>;
+  fightIDs: InputMaybe<Scalars["Int"]>[] | InputMaybe<Scalars["Int"]>;
 }>;
 
 export type FightPullsQuery = {

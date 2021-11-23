@@ -551,7 +551,7 @@ Object {
 
 exports[`/api/report existing report ongoing report - new fights - table request failing for new report 3`] = `
 Object {
-  "error": "Warcraftlogs could not be reached or the API request limit has been reached. Please try again at a later time.",
+  "error": "SECONDARY_REQUEST_FAILED",
 }
 `;
 
@@ -2352,18 +2352,18 @@ Object {
 
 exports[`/api/report warcraftlogs failure empty fights 1`] = `
 Object {
-  "error": "This report is either broken or the request to Warcraftlogs failed. Please try again at a later time.",
+  "error": "BROKEN_LOG_OR_WCL_UNAVAILABLE",
 }
 `;
 
 exports[`/api/report warcraftlogs failure entirely empty response 1`] = `
 Object {
-  "error": "This report is either broken or the request to Warcraftlogs failed. Please try again at a later time.",
+  "error": "BROKEN_LOG_OR_WCL_UNAVAILABLE",
 }
 `;
 
 exports[`/api/report warcraftlogs failure report endTime identical to startTime 1`] = `
 Object {
-  "error": "This report does not contain any fights.",
+  "error": "EMPTY_LOG",
 }
 `;
