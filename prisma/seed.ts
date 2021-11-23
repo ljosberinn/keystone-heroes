@@ -247,25 +247,23 @@ async function seedAbilities() {
 
 async function seedCooldowns() {
   await Promise.all(
-    cooldowns
-      .filter((cd) => cd.classID === 12)
-      .map((cd) => {
-        return prisma.cooldown.upsert({
-          create: {
-            cd: cd.cd,
-            abilityID: cd.abilityID,
-            classID: cd.classID,
-            specID: cd.specID,
-            id: cd.id,
-          },
-          where: {
-            id: cd.id,
-          },
-          update: {
-            cd: cd.cd,
-          },
-        });
-      })
+    cooldowns.map((cd) => {
+      return prisma.cooldown.upsert({
+        create: {
+          cd: cd.cd,
+          abilityID: cd.abilityID,
+          classID: cd.classID,
+          specID: cd.specID,
+          id: cd.id,
+        },
+        where: {
+          id: cd.id,
+        },
+        update: {
+          cd: cd.cd,
+        },
+      });
+    })
   );
 }
 

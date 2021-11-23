@@ -3,6 +3,13 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useIsMounted } from "./useIsMounted";
 import { usePrevious } from "./usePrevious";
 
+type State<T> = {
+  data: T | null;
+  loading: boolean;
+};
+
+const threshold = 750;
+
 export function useAbortableFetch<T>({
   url,
   options,
@@ -12,10 +19,7 @@ export function useAbortableFetch<T>({
   options?: Omit<RequestInit, "signal">;
   initialState: T | null;
 }): [T | null, boolean, () => void] {
-  const [{ data, loading }, setState] = useState<{
-    data: T | null;
-    loading: boolean;
-  }>({
+  const [{ data, loading }, setState] = useState<State<T>>({
     data: initialState,
     loading: false,
   });
@@ -31,7 +35,11 @@ export function useAbortableFetch<T>({
 
     const controller = new AbortController();
 
+    let timeout: NodeJS.Timeout | null = null;
+
     async function load(url: RequestInfo) {
+      const start = Date.now();
+
       try {
         const response = await fetch(url, {
           ...options,
@@ -45,6 +53,19 @@ export function useAbortableFetch<T>({
         const json: T = await response.json();
 
         if (!isMounted.current) {
+          return;
+        }
+
+        const end = Date.now();
+        const elapsed = end - start;
+        const diff = threshold - elapsed;
+
+        // delay setting state to a min elapsed time of threshold
+        // but only if the request wasn't cached
+        if (diff > 0 && elapsed > 100) {
+          timeout = setTimeout(() => {
+            setState({ data: json, loading: false });
+          }, diff);
           return;
         }
 
@@ -63,21 +84,17 @@ export function useAbortableFetch<T>({
 
     return () => {
       controller.abort();
+
+      if (timeout) {
+        clearTimeout(timeout);
+      }
     };
   }, [loading, url, options, isMounted]);
 
-  // required for getStaticProps in dev
-  // server side props won't be present in initial render
-  useEffect(() => {
-    if (!data && initialState) {
-      setState((prev) => ({ ...prev, data: initialState, loading: false }));
-    }
-  }, [initialState, data]);
-
   useEffect(() => {
     // run when initially executed or whenever the url changes
+
     if (firstRenderRef.current || url !== previousUrl) {
-      firstRenderRef.current = false;
       setState({ data: null, loading: true });
     }
   }, [url, previousUrl]);

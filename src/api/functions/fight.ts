@@ -60,13 +60,18 @@ import {
 } from "../middleware";
 import { sortByRole } from "../utils";
 import {
+  cacheControlKey,
+  PUBLIC_ONE_YEAR_IMMUTABLE,
+  STALE_WHILE_REVALIDATE_ONE_MINUTE,
+} from "../utils/cache";
+import type { FightHandlerErrorType } from "../utils/errors";
+import {
   BAD_REQUEST,
   INTERNAL_SERVER_ERROR,
   NOT_FOUND,
   UNPROCESSABLE_ENTITY,
   OK,
 } from "../utils/statusCodes";
-import { reportHandlerError } from "./report";
 
 type Request = {
   query: {
@@ -76,7 +81,7 @@ type Request = {
 };
 
 export type FightErrorResponse = {
-  error: typeof fightHandlerError[keyof typeof fightHandlerError];
+  error: FightHandlerErrorType;
 };
 
 export type FightSuccessResponse = {
@@ -159,16 +164,6 @@ export type FightSuccessResponse = {
 };
 
 export type FightResponse = FightErrorResponse | FightSuccessResponse;
-
-export const fightHandlerError = {
-  UNKNOWN_REPORT: "Unknown report.",
-  BROKEN_LOG_OR_WCL_UNAVAILABLE:
-    reportHandlerError.BROKEN_LOG_OR_WCL_UNAVAILABLE,
-  MISSING_DUNGEON:
-    "This fight appears to be broken and could not successfully be linked to a specific dungeon.",
-  BROKEN_FIGHT: "This fight could not be matched to any dungeon.",
-  FATAL_ERROR: "Something went wrong.",
-} as const;
 
 export const fightHasDungeon = (
   fight: RawFight
@@ -1061,7 +1056,15 @@ const getResponseOrRetrieveAndCreateFight = async (
   maybeStoredFight: NonNullable<RawFight>,
   reportID: string,
   fightID: number
-): Promise<{ status: number; json: FightResponse }> => {
+): Promise<{
+  status:
+    | typeof OK
+    | typeof BAD_REQUEST
+    | typeof INTERNAL_SERVER_ERROR
+    | typeof UNPROCESSABLE_ENTITY;
+  json: FightResponse;
+  cache: boolean;
+}> => {
   if (
     maybeStoredFight.Pull.length > 0 &&
     maybeStoredFight.percent > 0 &&
@@ -1069,6 +1072,7 @@ const getResponseOrRetrieveAndCreateFight = async (
   ) {
     return {
       status: OK,
+      cache: true,
       json: createResponseFromStoredFight(maybeStoredFight),
     };
   }
@@ -1081,8 +1085,9 @@ const getResponseOrRetrieveAndCreateFight = async (
   if (!maybeFightPulls.reportData?.report?.fights?.[0]?.dungeonPulls) {
     return {
       status: BAD_REQUEST,
+      cache: false,
       json: {
-        error: fightHandlerError.BROKEN_LOG_OR_WCL_UNAVAILABLE,
+        error: "BROKEN_LOG_OR_WCL_UNAVAILABLE",
       },
     };
   }
@@ -1143,8 +1148,9 @@ const getResponseOrRetrieveAndCreateFight = async (
   if (!dungeonID) {
     return {
       status: UNPROCESSABLE_ENTITY,
+      cache: false,
       json: {
-        error: fightHandlerError.MISSING_DUNGEON,
+        error: "MISSING_DUNGEON",
       },
     };
   }
@@ -1312,14 +1318,16 @@ const getResponseOrRetrieveAndCreateFight = async (
   if (!fightHasDungeon(rawFight)) {
     return {
       status: INTERNAL_SERVER_ERROR,
+      cache: false,
       json: {
-        error: fightHandlerError.FATAL_ERROR,
+        error: "FATAL_ERROR",
       },
     };
   }
 
   return {
     status: OK,
+    cache: true,
     json: createResponseFromStoredFight(rawFight),
   };
 };
@@ -1342,11 +1350,12 @@ const handler = withSentry<Request, FightResponse>(async (req, res) => {
     transaction.setHttpStatus(NOT_FOUND);
     transaction.finish();
 
-    res.status(NOT_FOUND).json({ error: fightHandlerError.UNKNOWN_REPORT });
+    res.setHeader(cacheControlKey, STALE_WHILE_REVALIDATE_ONE_MINUTE);
+    res.status(NOT_FOUND).json({ error: "UNKNOWN_REPORT" });
     return;
   }
 
-  const { status, json } = await getResponseOrRetrieveAndCreateFight(
+  const { status, json, cache } = await getResponseOrRetrieveAndCreateFight(
     maybeStoredFight,
     reportID,
     fightID
@@ -1354,6 +1363,10 @@ const handler = withSentry<Request, FightResponse>(async (req, res) => {
 
   transaction.setHttpStatus(status);
   transaction.finish();
+
+  if (cache) {
+    res.setHeader(cacheControlKey, PUBLIC_ONE_YEAR_IMMUTABLE);
+  }
 
   res.status(status).json(json);
 });

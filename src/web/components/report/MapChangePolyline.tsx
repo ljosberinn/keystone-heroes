@@ -19,7 +19,7 @@ export default function MapChangePolyline({
   doors,
   zoneID,
 }: MapChangePolylineProps): JSX.Element | null {
-  const pulls = useFight().fight?.pulls ?? [];
+  const { pulls } = useFight().fight;
 
   return (
     <>

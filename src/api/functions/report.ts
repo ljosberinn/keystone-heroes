@@ -33,6 +33,14 @@ import { MIN_KEYSTONE_LEVEL } from "../../web/env";
 import { createTransaction, withSentry } from "../middleware";
 import { sortByRole } from "../utils";
 import {
+  cacheControlKey,
+  PUBLIC_FIVE_MINUTES,
+  PUBLIC_ONE_YEAR_IMMUTABLE,
+  PUBLIC_THIRTY_MINUTES,
+  PUBLIC_TWO_MINUTES,
+} from "../utils/cache";
+import type { ReportHandlerErrorType } from "../utils/errors";
+import {
   SERVICE_UNAVAILABLE,
   BAD_REQUEST,
   UNPROCESSABLE_ENTITY,
@@ -63,19 +71,10 @@ export type ReportSuccessResponse = Pick<Report, "title"> & {
 };
 
 export type ReportErrorResponse = {
-  error: typeof reportHandlerError[keyof typeof reportHandlerError];
+  error: ReportHandlerErrorType;
 };
 
 export type ReportResponse = ReportSuccessResponse | ReportErrorResponse;
-
-export const reportHandlerError = {
-  NO_TIMED_KEYS: `This report does not appear to contain any timed keys above or matching the key level requirement (${MIN_KEYSTONE_LEVEL}).`,
-  BROKEN_LOG_OR_WCL_UNAVAILABLE:
-    "This report is either broken or the request to Warcraftlogs failed. Please try again at a later time.",
-  SECONDARY_REQUEST_FAILED:
-    "Warcraftlogs could not be reached or the API request limit has been reached. Please try again at a later time.",
-  EMPTY_LOG: "This report does not contain any fights.",
-} as const;
 
 type DeepNullablePath<T, P> = P extends []
   ? T
@@ -743,7 +742,7 @@ export const reportHandler = withSentry<Request, ReportResponse>(
       transaction.setHttpStatus(200);
       transaction.finish();
 
-      res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
+      res.setHeader(cacheControlKey, PUBLIC_ONE_YEAR_IMMUTABLE);
       res.json(createResponseFromDB(existingReport));
       return;
     }
@@ -761,8 +760,9 @@ export const reportHandler = withSentry<Request, ReportResponse>(
       transaction.setHttpStatus(SERVICE_UNAVAILABLE);
       transaction.finish();
 
+      res.setHeader(cacheControlKey, PUBLIC_FIVE_MINUTES);
       res.status(SERVICE_UNAVAILABLE).json({
-        error: reportHandlerError.BROKEN_LOG_OR_WCL_UNAVAILABLE,
+        error: "BROKEN_LOG_OR_WCL_UNAVAILABLE",
       });
       return;
     }
@@ -775,8 +775,10 @@ export const reportHandler = withSentry<Request, ReportResponse>(
       transaction.setHttpStatus(UNPROCESSABLE_ENTITY);
       transaction.finish();
 
+      res.setHeader(cacheControlKey, PUBLIC_TWO_MINUTES);
+
       res.status(UNPROCESSABLE_ENTITY).json({
-        error: reportHandlerError.EMPTY_LOG,
+        error: "EMPTY_LOG",
       });
       return;
     }
@@ -836,6 +838,7 @@ export const reportHandler = withSentry<Request, ReportResponse>(
         transaction.setHttpStatus(200);
         transaction.finish();
 
+        res.setHeader(cacheControlKey, PUBLIC_TWO_MINUTES);
         res.json(createResponseFromDB(existingReport));
         return;
       }
@@ -843,8 +846,9 @@ export const reportHandler = withSentry<Request, ReportResponse>(
       transaction.setHttpStatus(BAD_REQUEST);
       transaction.finish();
 
+      res.setHeader(cacheControlKey, PUBLIC_TWO_MINUTES);
       res.status(BAD_REQUEST).json({
-        error: reportHandlerError.NO_TIMED_KEYS,
+        error: "NO_TIMED_KEYS",
       });
       return;
     }
@@ -1000,8 +1004,9 @@ export const reportHandler = withSentry<Request, ReportResponse>(
       transaction.setHttpStatus(SERVICE_UNAVAILABLE);
       transaction.finish();
 
+      res.setHeader(cacheControlKey, PUBLIC_FIVE_MINUTES);
       res.status(SERVICE_UNAVAILABLE).json({
-        error: reportHandlerError.SECONDARY_REQUEST_FAILED,
+        error: "SECONDARY_REQUEST_FAILED",
       });
       return;
     }
@@ -1227,6 +1232,8 @@ export const reportHandler = withSentry<Request, ReportResponse>(
 
     transaction.setHttpStatus(200);
     transaction.finish();
+
+    res.setHeader(cacheControlKey, PUBLIC_THIRTY_MINUTES);
 
     res.json({
       ...response,

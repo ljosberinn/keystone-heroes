@@ -63,7 +63,7 @@ export const TabButton = forwardRef<HTMLButtonElement, TabButtonProps>(
         ref={ref}
         role="tab"
         className={classnames(
-          "p-2 truncate focus:outline-none focus:ring",
+          "p-2 truncate focus:outline-none focus:ring transition",
           hoverBg,
           selected && bgPrimary,
           isFirst && "rounded-tl-lg",

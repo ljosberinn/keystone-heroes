@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
 
+import { bgSecondary } from "../styles/tokens";
 import { classnames } from "../utils/classnames";
 
 export type DialogProps = {
@@ -43,6 +44,18 @@ export function Dialog({
     };
   }, [open]);
 
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+
+    document.documentElement.classList.add("overflow-hidden");
+
+    return () => {
+      document.documentElement.classList.remove("overflow-hidden");
+    };
+  }, [open]);
+
   if (!open) {
     return null;
   }
@@ -53,12 +66,14 @@ export function Dialog({
       role="dialog"
       aria-modal="true"
     >
+      <div className="absolute top-0 left-0 w-full h-full bg-gray-600 opacity-50" />
       <div className="min-h-screen px-4 text-center">
         <div className="fixed inset-0 h-screen bg-blackAlpha-600" aria-hidden />
         <As
           className={classnames(
             "inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-lg rounded-lg",
-            className
+            className,
+            bgSecondary
           )}
         >
           {children}

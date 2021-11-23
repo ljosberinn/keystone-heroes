@@ -61,14 +61,6 @@ const useMostRelevantNPCByPull = (
 ): MostRelevantNPCReturn => {
   const { fight } = useFight();
 
-  if (!fight) {
-    return {
-      last: null,
-      current: null,
-      next: null,
-    };
-  }
-
   const dungeon = dungeons[fight.dungeon];
 
   if (!dungeon) {
@@ -160,7 +152,7 @@ function PullSelection() {
   const setSelectedPull = useReportStore((state) => state.setSelectedPull);
   const mostRelevantNPCsByPull = useMostRelevantNPCByPull(selectedPullID);
 
-  if (!fight || !mostRelevantNPCsByPull.current) {
+  if (!mostRelevantNPCsByPull.current) {
     return null;
   }
 
@@ -300,7 +292,7 @@ function Sidebar() {
   const { fight } = useFight();
   const pullNPCs = usePullNPCs();
 
-  if (!pullNPCs || !fight) {
+  if (!pullNPCs) {
     return null;
   }
 
@@ -357,9 +349,7 @@ function Sidebar() {
 type EventCategory = "before" | "during" | "after";
 
 function Events() {
-  const { fight } = useFight();
-  const pulls = fight ? fight.pulls : [];
-  const player = fight ? fight.player : [];
+  const { pulls, player } = useFight().fight;
 
   const selectedPullID = useReportStore((state) => state.selectedPull);
   const selectedPull = pulls.find((pull) => pull.id === selectedPullID);

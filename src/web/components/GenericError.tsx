@@ -1,3 +1,10 @@
+import { useRouter } from "next/router";
+import { useEffect } from "react";
+
+import type {
+  ReportHandlerErrorType,
+  FightHandlerErrorType,
+} from "../../api/utils/errors";
 import { warning } from "../icons";
 import { widthConstraint } from "../styles/tokens";
 
@@ -8,7 +15,7 @@ type GenericErrorProps =
     }
   | {
       type: "loading-failed";
-      error: string;
+      error: ReportHandlerErrorType | FightHandlerErrorType;
     };
 
 function MissingPercentWarning({ percent }: { percent: number }) {
@@ -31,20 +38,49 @@ function MissingPercentWarning({ percent }: { percent: number }) {
   );
 }
 
-function LoadingFailed({ error }: { error: string }) {
-  return (
-    <>
-      <span className="font-semibold">
-        Something went horribly wrong here and we're sorry.
-      </span>
-      <p>At this point, this lousy error message is all we have:</p>
-      <p className="py-4 italic">{error}</p>
-      <p>
-        Please attach a link to the current URL should you file an issue on
-        GitHub or Discord. Thanks!
-      </p>
-    </>
-  );
+function LoadingFailed({
+  error,
+}: {
+  error: ReportHandlerErrorType | FightHandlerErrorType;
+}) {
+  const { asPath, push } = useRouter();
+  const [, reportID, fightID] = asPath.split("/").slice(1);
+
+  useEffect(() => {
+    if (error === "UNKNOWN_REPORT" && reportID && fightID) {
+      // eslint-disable-next-line no-void
+      void push({
+        pathname: "/report/[reportID]",
+        query: {
+          reportID,
+          fightID: fightID ? fightID : undefined,
+        },
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [error, fightID, reportID]);
+
+  switch (error) {
+    case "UNKNOWN_REPORT": {
+      return null;
+    }
+
+    default: {
+      return (
+        <>
+          <p className="font-semibold">
+            Something went horribly wrong here and we're sorry.
+          </p>
+          <p>At this point, this lousy error message is all we have:</p>
+          <p className="py-4 italic">{error}</p>
+          <p>
+            Please attach a link to the current URL should you file an issue on
+            GitHub or Discord. Thanks!
+          </p>
+        </>
+      );
+    }
+  }
 }
 
 // eslint-disable-next-line import/no-default-export

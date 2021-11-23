@@ -4,7 +4,6 @@ import type {
   MutableRefObject,
 } from "react";
 import {
-  useMemo,
   Fragment,
   useState,
   useRef,
@@ -24,6 +23,7 @@ import {
   spells,
   tormentedLieutenants,
 } from "../../staticData";
+import type { MapOptionsStore } from "../../store";
 import {
   useLegend,
   useMapOptions,
@@ -166,23 +166,20 @@ function Triangle() {
 }
 
 export function Map(): JSX.Element {
-  const { loading, fight } = useFight();
+  const { fight } = useFight();
   const { imageRef, imageSize, handleResize } = useImageDimensions();
   const tabPanelRef = useRef<HTMLDivElement | null>(null);
   const [fullscreen, setFullscreen] = useState(false);
   const selectedPull = useReportStore((state) => state.selectedPull);
   const previouslySelectedPull = usePrevious(selectedPull);
-  const zones = useMemo(
-    () => (fight ? dungeons[fight.dungeon].zones : []),
-    [fight]
-  );
-  const pulls = useMemo(() => (fight ? fight.pulls : []), [fight]);
+  const { zones } = dungeons[fight.dungeon];
+  const { pulls } = fight;
 
   const [selectedTab, setSelectedTab] = useState(() => {
-    if (fight?.pulls && fight.pulls.length > 0) {
+    if (pulls.length > 0) {
       const dungeon = dungeons[fight.dungeon];
 
-      const zoneToSelect = fight.pulls[0].zone;
+      const zoneToSelect = pulls[0].zone;
       const tab = dungeon.zones.findIndex((zone) => zone.id === zoneToSelect);
 
       return tab > -1 ? tab : 0;
@@ -328,115 +325,104 @@ export function Map(): JSX.Element {
         </div>
       </div>
       <div className={`p-2 rounded-b-lg shadow-sm ${bgPrimary}`}>
-        {loading ? (
-          <img
-            src="/static/maps/ph.jpg"
-            width="100%"
-            height="100%"
-            alt="Map Placeholder"
-          />
-        ) : (
-          <>
-            {zones.map((zone, index) => {
-              const hidden = index !== selectedTab;
+        {zones.map((zone, index) => {
+          const hidden = index !== selectedTab;
 
-              return (
-                <TabPanel
-                  id={zone.id}
-                  ref={tabPanelRef}
-                  key={zone.id}
-                  hidden={hidden}
-                  className={
-                    fullscreen
-                      ? "absolute w-max top-0 left-0 p-4 z-10"
-                      : "relative"
-                  }
-                  data-map-container={zone.id}
-                >
-                  <picture>
-                    {imageTuples.map(([w, prefix]) => {
-                      const url = `/static/maps/${prefix}-${w * 16}/${
-                        zone.id
-                      }.png`;
+          return (
+            <TabPanel
+              id={zone.id}
+              ref={tabPanelRef}
+              key={zone.id}
+              hidden={hidden}
+              className={
+                fullscreen ? "absolute w-max top-0 left-0 p-4 z-10" : "relative"
+              }
+              data-map-container={zone.id}
+            >
+              <picture>
+                {imageTuples.map(([w, prefix]) => {
+                  const url = `/static/maps/${prefix}-${w * 16}/${zone.id}.png`;
 
-                      return (
-                        <source
-                          key={w}
-                          srcSet={url}
-                          media={`(min-width: ${w * 16}px)`}
-                        />
-                      );
-                    })}
-
-                    {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
-                    <img
-                      src={`/static/maps/sm-640/${zone.id}.png`}
-                      alt={zone.name}
-                      ref={hidden ? undefined : imageRef}
-                      className="w-full h-full rounded-md"
-                      onLoad={handleResize}
-                      width="1280"
-                      height="853"
+                  return (
+                    <source
+                      key={w}
+                      srcSet={url}
+                      media={`(min-width: ${w * 16}px)`}
                     />
-                  </picture>
+                  );
+                })}
 
-                  {hidden ? null : (
+                {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
+                <img
+                  src={`/static/maps/sm-640/${zone.id}.png`}
+                  alt={zone.name}
+                  ref={hidden ? undefined : imageRef}
+                  className="w-full h-full rounded-md"
+                  onLoad={handleResize}
+                  width="1280"
+                  height="853"
+                />
+              </picture>
+
+              {hidden ? null : (
+                <>
+                  <Svg
+                    imageSize={imageSize}
+                    zoneID={zone.id}
+                    onDoorClick={(zoneID: number) => {
+                      const nextZoneIndex = zones.findIndex(
+                        (zone) => zone.id === zoneID
+                      );
+
+                      if (nextZoneIndex > -1) {
+                        onTabButtonClick(nextZoneIndex);
+                      }
+                    }}
+                  />
+
+                  {fullscreen ? (
                     <>
-                      <Svg
-                        imageSize={imageSize}
-                        zoneID={zone.id}
-                        onDoorClick={(zoneID: number) => {
-                          const nextZoneIndex = zones.findIndex(
-                            (zone) => zone.id === zoneID
-                          );
-
-                          if (nextZoneIndex > -1) {
-                            onTabButtonClick(nextZoneIndex);
-                          }
-                        }}
-                      />
-
-                      {fullscreen ? (
-                        <>
-                          <FullscreenNavigation />
-                          <FullscreenPullNPCs />
-                        </>
-                      ) : null}
-
-                      <KillIndicator fullscreen={fullscreen} type="boss" />
-                      <KillIndicator
-                        fullscreen={fullscreen}
-                        type="tormentedLieutenant"
-                      />
-
-                      <div
-                        className={classnames(
-                          "flex flex-col space-y-2 z-20",
-                          fullscreen
-                            ? "fixed right-6 top-6"
-                            : "absolute right-2 top-2"
-                        )}
-                      >
-                        <MapOptionsToggle />
-                        <LegendToggle />
-
-                        <FullScreenToggle
-                          active={fullscreen}
-                          toggle={toggleFullscreen}
-                          tabPanelRef={tabPanelRef}
-                        />
-                      </div>
-
-                      <MapOptionsWrapper />
-                      <LegendWrapper />
+                      <FullscreenNavigation />
+                      <FullscreenPullNPCs />
                     </>
-                  )}
-                </TabPanel>
-              );
-            })}
-          </>
-        )}
+                  ) : null}
+
+                  <KillIndicator fullscreen={fullscreen} type="boss" />
+                  <KillIndicator
+                    fullscreen={fullscreen}
+                    type="tormentedLieutenant"
+                  />
+
+                  <div
+                    className={classnames(
+                      "flex flex-col space-y-2 z-20",
+                      fullscreen
+                        ? "fixed right-6 top-6"
+                        : "absolute right-2 top-2"
+                    )}
+                  >
+                    <MapOptionsToggle />
+                    <LegendToggle />
+
+                    <FullScreenToggle
+                      active={fullscreen}
+                      toggle={toggleFullscreen}
+                      tabPanelRef={tabPanelRef}
+                    />
+                  </div>
+
+                  <MapOptionsWrapper />
+                  <LegendWrapper />
+                </>
+              )}
+            </TabPanel>
+          );
+        })}
       </div>
+      <div
+        className="absolute top-0 left-0 w-screen h-screen bg-gray-600 opacity-50"
+        hidden={!fullscreen}
+      />
     </section>
   );
 }
@@ -488,11 +474,7 @@ function FullscreenPullNPCs() {
 
 function FullscreenNavigation() {
   const { selectedPull, setSelectedPull } = useReportStore();
-  const pulls = useFight().fight?.pulls;
-
-  if (!pulls) {
-    return null;
-  }
+  const { pulls } = useFight().fight;
 
   const isFirst = pulls[0].id === selectedPull;
   const isLast = pulls[pulls.length - 1].id === selectedPull;
@@ -548,12 +530,21 @@ type KillIndicatorProps = {
   fullscreen: boolean;
 };
 
+const killIndicatorSelector = ({
+  renderBossKillIndicator,
+  renderTormentedKillIndicator,
+}: MapOptionsStore) => ({
+  renderBossKillIndicator,
+  renderTormentedKillIndicator,
+});
+
 function KillIndicator({ type, fullscreen }: KillIndicatorProps) {
   const setSelectedPull = useReportStore((state) => state.setSelectedPull);
+  const { renderBossKillIndicator, renderTormentedKillIndicator } =
+    useMapOptions(killIndicatorSelector);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const { fight } = useFight();
-  const pulls = fight ? fight.pulls : [];
-  const startTime = fight ? fight.meta.startTime : 0;
+  const { pulls, meta } = fight;
   const rafRef = useRef<number | null>(null);
 
   const [left, setLeft] = useState("32px");
@@ -563,19 +554,19 @@ function KillIndicator({ type, fullscreen }: KillIndicatorProps) {
   useEffect(() => {
     const recalculate = () => {
       setLeft(() => {
-        if (fullscreen && containerRef.current) {
-          const usesLargerGaps =
-            window.innerWidth < 1900 || window.innerHeight < 1160;
-
-          const left = 40 - (usesLargerGaps ? 10 : 0);
-          const right = 60 + (usesLargerGaps ? 10 : 0);
-
-          const offset = isBossType ? left : right;
-
-          return `calc(${offset}% - ${containerRef.current.clientWidth / 2}px)`;
+        if (!fullscreen || !containerRef.current) {
+          return "32px";
         }
 
-        return "32px";
+        const usesLargerGaps =
+          window.innerWidth < 1900 || window.innerHeight < 1160;
+
+        const left = 35 - (usesLargerGaps ? 10 : 0);
+        const right = 65 + (usesLargerGaps ? 10 : 0);
+
+        const offset = isBossType ? left : right;
+
+        return `calc(${offset}% - ${containerRef.current.clientWidth / 2}px)`;
       });
     };
 
@@ -587,6 +578,13 @@ function KillIndicator({ type, fullscreen }: KillIndicatorProps) {
 
     return createRafCleanup(rafRef, "resize", listener);
   }, [fullscreen, isBossType]);
+
+  if (
+    (isBossType && !renderBossKillIndicator) ||
+    (!isBossType && !renderTormentedKillIndicator)
+  ) {
+    return null;
+  }
 
   const filteredPulls = pulls.filter((pull) => {
     if (isBossType) {
@@ -630,12 +628,12 @@ function KillIndicator({ type, fullscreen }: KillIndicatorProps) {
           }
 
           const fightStart = timeDurationToString(
-            pull.startTime - startTime,
+            pull.startTime - meta.startTime,
             true
           ).padStart(5, "0");
 
           const fightEnd = timeDurationToString(
-            pull.endTime - startTime,
+            pull.endTime - meta.startTime,
             true
           ).padStart(5, "0");
 
@@ -877,7 +875,7 @@ type SvgProps = {
 
 function Svg({ imageSize, zoneID, onDoorClick }: SvgProps) {
   const { fight } = useFight();
-  const pulls = fight ? fight.pulls : [];
+  const { pulls, dungeon } = fight;
   const thisZonesPulls = pulls.filter((pull) => pull.zone === zoneID);
 
   if (imageSize.clientWidth === 0 || imageSize.clientHeight === 0) {
@@ -895,7 +893,7 @@ function Svg({ imageSize, zoneID, onDoorClick }: SvgProps) {
         `}
       </style>
       <svg className="absolute w-full h-full svg focus:outline-none">
-        <PointsOfInterestProvider dungeonID={fight?.dungeon}>
+        <PointsOfInterestProvider dungeonID={dungeon}>
           <DoorIndicatorsWrapper
             xFactor={imageSize.clientWidth}
             yFactor={imageSize.clientHeight}

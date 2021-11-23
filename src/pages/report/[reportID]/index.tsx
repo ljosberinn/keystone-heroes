@@ -19,34 +19,8 @@ import {
 import { timeDurationToString } from "../../../web/utils";
 import { classnames } from "../../../web/utils/classnames";
 
-type ReportProps = {
-  cache?: {
-    report: ReportResponse | null;
-    reportID: string | null;
-    fightID: string | null;
-  };
-};
-
-const useReportURL = (cache: ReportProps["cache"]) => {
-  const { query, isFallback } = useRouter();
-
-  if (cache?.report) {
-    return {
-      url: null,
-      reportID: cache.reportID,
-      fightID:
-        query.fightID && !Array.isArray(query.fightID) ? query.fightID : null,
-    };
-  }
-
-  if (isFallback) {
-    return {
-      url: null,
-      reportID: null,
-      fightID:
-        query.fightID && !Array.isArray(query.fightID) ? query.fightID : null,
-    };
-  }
+const useReportURL = () => {
+  const { query } = useRouter();
 
   const { reportID, fightID = null } = query;
 
@@ -69,46 +43,68 @@ const useReportURL = (cache: ReportProps["cache"]) => {
   };
 };
 
-function useSeamlessFightRedirect(
+const findFightIDToRedirecTo = (
   report: ReportResponse | null,
   reportID: string | null,
   fightID: string | null
-) {
-  const { push } = useRouter();
+) => {
+  if (!report || "error" in report || !reportID || !fightID) {
+    return { reportID: null, fightID: null };
+  }
 
-  useEffect(() => {
-    if (!report || "error" in report || !reportID || !fightID) {
-      return;
-    }
-
-    const safeFightID =
-      // if "last" is selected, ensure its a valid fight to select
+  return {
+    reportID,
+    // if "last" is selected, ensure its a valid fight to select
+    fightID:
       fightID === "last" && report.fights.length > 0
         ? report.fights[report.fights.length - 1].id
         : // ensure this fightID actually exists
         report.fights.some((fight) => `${fight.id}` === fightID)
         ? fightID
-        : null;
+        : null,
+  };
+};
 
-    if (safeFightID) {
+function useSeamlessFightRedirect(
+  report: ReportResponse | null,
+  maybeReportID: string | null,
+  maybeFightID: string | null
+) {
+  const { push } = useRouter();
+  const { fightID, reportID } = findFightIDToRedirecTo(
+    report,
+    maybeReportID,
+    maybeFightID
+  );
+
+  useEffect(() => {
+    if (reportID && fightID) {
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      push(`/report/${reportID}/${safeFightID}`);
+      push(`/report/${reportID}/${fightID}`);
     }
-  }, [report, fightID, push, reportID]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [reportID, fightID]);
+
+  return !!fightID;
 }
 
-export default function Report({ cache }: ReportProps): JSX.Element | null {
-  const { url, reportID, fightID } = useReportURL(cache);
+export default function Report(): JSX.Element | null {
+  const { url, reportID, fightID } = useReportURL();
 
   const [report, loading] = useAbortableFetch<ReportResponse>({
-    initialState: cache?.report ?? null,
+    initialState: null,
     url,
   });
 
-  useSeamlessFightRedirect(report, reportID, fightID);
+  const willRedirect = useSeamlessFightRedirect(report, reportID, fightID);
 
   if (report && "error" in report) {
     return <h1>error: {report.error}</h1>;
+  }
+
+  if (willRedirect) {
+    //  TODO: show spinner
+    return null;
   }
 
   const fights: ReportSuccessResponse["fights"] = report

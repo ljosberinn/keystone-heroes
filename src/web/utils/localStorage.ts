@@ -33,7 +33,7 @@ export const ls = (() => {
     },
     remove: (key: string) => {
       if (!isSupported) {
-        return null;
+        return;
       }
 
       localStorage.removeItem(key);

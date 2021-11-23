@@ -28,16 +28,17 @@ type PullNPCs = {
 
 export function usePullNPCs(): PullNPCs {
   const { fight } = useFight();
-  const pulls = fight ? fight.pulls : [];
+  const { pulls, dungeon: dungeonID } = fight;
 
   const { selectedPull: selectedPullID } = useReportStore();
 
   const pull = pulls.find((pull) => pull.id === selectedPullID);
-  const dungeon = fight ? dungeons[fight.dungeon] : null;
 
-  if (!fight || !pull || !dungeon) {
+  if (!pull) {
     return null;
   }
+
+  const dungeon = dungeons[dungeonID];
 
   const npcs = pull.npcs
     .filter((npc) => npc.id !== EXPLOSIVE.unit)

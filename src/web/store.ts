@@ -30,7 +30,11 @@ export type MapOptionsStore = {
   renderPOIs: boolean;
   pullConnectionLineColor: string;
   invisPullConnectionLineColor: string;
+  renderBossKillIndicator: boolean;
+  renderTormentedKillIndicator: boolean;
 
+  toggleBossKillIndicator: () => void;
+  toggleTormentedKillIndicator: () => void;
   toggleMapOptions: () => void;
   togglePullConnectionLines: () => void;
   toggleMapChangeLines: () => void;
@@ -49,6 +53,33 @@ export const useMapOptions = create<MapOptionsStore>((set) => {
     renderPullConnectionLines: true,
     renderMapChangeLines: true,
     renderPOIs: true,
+    renderBossKillIndicator: true,
+    renderTormentedKillIndicator: true,
+
+    toggleBossKillIndicator: () => {
+      set((state) => {
+        persistMapOptions(
+          "renderBossKillIndicator",
+          state.renderBossKillIndicator ? "0" : true
+        );
+
+        return {
+          renderBossKillIndicator: !state.renderBossKillIndicator,
+        };
+      });
+    },
+    toggleTormentedKillIndicator: () => {
+      set((state) => {
+        persistMapOptions(
+          "renderTormentedKillIndicator",
+          state.renderTormentedKillIndicator ? "0" : true
+        );
+
+        return {
+          renderTormentedKillIndicator: !state.renderTormentedKillIndicator,
+        };
+      });
+    },
 
     toggleMapChangeLines: () => {
       set((state) => {

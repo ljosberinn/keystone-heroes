@@ -32,7 +32,7 @@ export function MaybeWastedCooldownCell({
 
   const ability = spells[event.ability.id];
 
-  if (!fight || !ability) {
+  if (!ability) {
     return <td />;
   }
 
@@ -87,8 +87,20 @@ export function MaybeWastedCooldownCell({
     // annotating that it could have been used in between would be wrong
     const wastedCastUpcoming = event.type !== "BeginCast" && couldUseNTimes > 1;
 
+    const nextCastIsUnderCD =
+      event.type === "Cast" &&
+      (event.ability.nextUse - event.timestamp) / 1000 <= ability.cd;
+
     return (
-      <td className={wastedCastUpcoming ? "bg-red-500" : undefined}>
+      <td
+        className={
+          wastedCastUpcoming
+            ? "bg-red-500"
+            : nextCastIsUnderCD
+            ? "text-green-500"
+            : undefined
+        }
+      >
         in {timeDurationToString(event.ability.nextUse - event.timestamp, true)}{" "}
         {wastedCastUpcoming && <>(missing {Math.floor(couldUseNTimes)}x)</>}
       </td>

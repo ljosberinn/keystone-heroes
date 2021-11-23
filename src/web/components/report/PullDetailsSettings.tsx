@@ -28,13 +28,9 @@ type PullDetailsSettingsProviderProps = {
 
 export function PullDetailsSettingsProvider({
   children,
-}: PullDetailsSettingsProviderProps): JSX.Element | null {
+}: PullDetailsSettingsProviderProps): JSX.Element {
   const [useAbsoluteTimestamps, setUseAbsoluteTimestamps] = useState(false);
   const { fight } = useFight();
-
-  if (!fight) {
-    return null;
-  }
 
   // eslint-disable-next-line react/jsx-no-constructed-context-values
   const value = {

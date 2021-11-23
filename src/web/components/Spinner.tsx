@@ -1,5 +1,23 @@
+import { useEffect, useState } from "react";
+
 // graciously reverse engineered from the WoW Armory
-export function Spinner(): JSX.Element {
+export function Spinner(): JSX.Element | null {
+  const [render, setRender] = useState(false);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setRender(true);
+    }, 750);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, []);
+
+  if (!render) {
+    return null;
+  }
+
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

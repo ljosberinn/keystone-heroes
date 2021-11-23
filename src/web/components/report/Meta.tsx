@@ -30,11 +30,6 @@ import { SpecIcon } from "../SpecIcon";
 
 export function Meta(): JSX.Element {
   const { reportID, fightID, fight } = useFight();
-
-  if (!fight) {
-    return <h1>loading</h1>;
-  }
-
   const dungeon = dungeons[fight.dungeon];
 
   return (

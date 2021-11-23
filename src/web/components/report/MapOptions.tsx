@@ -1,3 +1,4 @@
+import type { MapOptionsStore } from "../../store";
 import { useMapOptions } from "../../store";
 import { Dialog } from "../Dialog";
 
@@ -19,6 +20,8 @@ export default function MapOptions(): JSX.Element {
         <MapChangeLines />
         <PullConnectionLines />
         <PointsOfInterest />
+        <BossKillIndicatorToggle />
+        <TormentedKillIndicatorToggle />
       </div>
 
       <h2 className="pt-4 pb-2 text-lg font-bold">Colors</h2>
@@ -30,12 +33,76 @@ export default function MapOptions(): JSX.Element {
   );
 }
 
-function MapChangeLines() {
-  const toggleMapChangeLines = useMapOptions(
-    (state) => state.toggleMapChangeLines
+const bossKillIndicatorSelector = ({
+  toggleBossKillIndicator,
+  renderBossKillIndicator,
+}: MapOptionsStore) => ({
+  toggleBossKillIndicator,
+  renderBossKillIndicator,
+});
+
+function BossKillIndicatorToggle() {
+  const { renderBossKillIndicator, toggleBossKillIndicator } = useMapOptions(
+    bossKillIndicatorSelector
   );
-  const renderMapChangeLines = useMapOptions(
-    (state) => state.renderMapChangeLines
+
+  return (
+    <div className="space-x-2">
+      <input
+        className="cursor-pointer"
+        type="checkbox"
+        checked={renderBossKillIndicator}
+        onChange={toggleBossKillIndicator}
+        id="toggleBossKillIndicator"
+        aria-labelledby="toggleBossKillIndicator"
+      />
+      <label htmlFor="toggleBossKillIndicator" className="cursor-pointer">
+        toggle boss kill indicator
+      </label>
+    </div>
+  );
+}
+
+const tormentedKillIndicatorSelector = ({
+  toggleTormentedKillIndicator,
+  renderTormentedKillIndicator,
+}: MapOptionsStore) => ({
+  toggleTormentedKillIndicator,
+  renderTormentedKillIndicator,
+});
+
+function TormentedKillIndicatorToggle() {
+  const { renderTormentedKillIndicator, toggleTormentedKillIndicator } =
+    useMapOptions(tormentedKillIndicatorSelector);
+
+  return (
+    <div className="space-x-2">
+      <input
+        className="cursor-pointer"
+        type="checkbox"
+        checked={renderTormentedKillIndicator}
+        onChange={toggleTormentedKillIndicator}
+        id="toggleTormentedKillIndicator"
+        aria-labelledby="toggleTormentedKillIndicator"
+      />
+      <label htmlFor="toggleTormentedKillIndicator" className="cursor-pointer">
+        toggle tormented kill indicator
+      </label>
+    </div>
+  );
+}
+
+const mapChangeLinesSelector = ({
+  toggleMapChangeLines,
+  renderMapChangeLines,
+}: MapOptionsStore) => ({
+  toggleMapChangeLines,
+  renderMapChangeLines,
+});
+
+function MapChangeLines() {
+  const { toggleMapChangeLines, renderMapChangeLines } = useMapOptions(
+    mapChangeLinesSelector
   );
 
   return (
@@ -55,14 +122,17 @@ function MapChangeLines() {
   );
 }
 
-function PullConnectionLines() {
-  const togglePullConnectionLines = useMapOptions(
-    (state) => state.togglePullConnectionLines
-  );
+const pullConnectionLineSelector = ({
+  togglePullConnectionLines,
+  renderPullConnectionLines,
+}: MapOptionsStore) => ({
+  togglePullConnectionLines,
+  renderPullConnectionLines,
+});
 
-  const renderPullConnectionLines = useMapOptions(
-    (state) => state.renderPullConnectionLines
-  );
+function PullConnectionLines() {
+  const { togglePullConnectionLines, renderPullConnectionLines } =
+    useMapOptions(pullConnectionLineSelector);
 
   return (
     <div className="space-x-2">
@@ -82,9 +152,16 @@ function PullConnectionLines() {
   );
 }
 
+const pointsOfInterestSelector = ({
+  togglePOIs,
+  renderPOIs,
+}: MapOptionsStore) => ({
+  togglePOIs,
+  renderPOIs,
+});
+
 function PointsOfInterest() {
-  const togglePOIs = useMapOptions((state) => state.togglePOIs);
-  const renderPOIs = useMapOptions((state) => state.renderPOIs);
+  const { togglePOIs, renderPOIs } = useMapOptions(pointsOfInterestSelector);
 
   return (
     <div className="space-x-2">
@@ -103,16 +180,22 @@ function PointsOfInterest() {
   );
 }
 
+const pullConnectionLineColorSelector = ({
+  setPullConnectionLineColor,
+  resetPullConnectionLineColor,
+  pullConnectionLineColor,
+}: MapOptionsStore) => ({
+  setPullConnectionLineColor,
+  resetPullConnectionLineColor,
+  pullConnectionLineColor,
+});
+
 function PullConnectionLineColor() {
-  const setPullConnectionLineColor = useMapOptions(
-    (state) => state.setPullConnectionLineColor
-  );
-  const resetPullConnectionLineColor = useMapOptions(
-    (state) => state.resetPullConnectionLineColor
-  );
-  const pullConnectionLineColor = useMapOptions(
-    (state) => state.pullConnectionLineColor
-  );
+  const {
+    setPullConnectionLineColor,
+    resetPullConnectionLineColor,
+    pullConnectionLineColor,
+  } = useMapOptions(pullConnectionLineColorSelector);
 
   return (
     <div className="space-x-2">
@@ -136,16 +219,22 @@ function PullConnectionLineColor() {
   );
 }
 
+const invisPullConnectionLineColorSelector = ({
+  setInvisPullConnectionLineColor,
+  resetInvisPullConnectionLineColor,
+  invisPullConnectionLineColor,
+}: MapOptionsStore) => ({
+  setInvisPullConnectionLineColor,
+  resetInvisPullConnectionLineColor,
+  invisPullConnectionLineColor,
+});
+
 function InvisPullConnectionLineColor() {
-  const setInvisPullConnectionLineColor = useMapOptions(
-    (state) => state.setInvisPullConnectionLineColor
-  );
-  const resetInvisPullConnectionLineColor = useMapOptions(
-    (state) => state.resetInvisPullConnectionLineColor
-  );
-  const invisPullConnectionLineColor = useMapOptions(
-    (state) => state.invisPullConnectionLineColor
-  );
+  const {
+    setInvisPullConnectionLineColor,
+    resetInvisPullConnectionLineColor,
+    invisPullConnectionLineColor,
+  } = useMapOptions(invisPullConnectionLineColorSelector);
 
   return (
     <div className="space-x-2">
