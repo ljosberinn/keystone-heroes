@@ -34,8 +34,10 @@ export default function InterruptRow({
   const ability = determineAbility(event.ability.id);
   const interruptedAbility = determineAbility(event.interruptedAbility);
 
+  const isQuaking = event.sourcePlayerID === event.targetPlayerID;
+
   return (
-    <tr className="text-center bg-red-500">
+    <tr className={`text-center ${isQuaking ? "bg-red-500" : "bg-green-500"}`}>
       <TimestampCell event={event} msSinceLastEvent={msSinceLastEvent} />
 
       <TypeCell type="Interrupt" />
@@ -43,11 +45,11 @@ export default function InterruptRow({
       <SourceOrTargetPlayerCell
         playerIdTextColorMap={playerIdTextColorMap}
         playerIdPlayerNameMap={playerIdPlayerNameMap}
-        targetPlayerID={event.targetPlayerID}
+        targetPlayerID={isQuaking ? event.targetPlayerID : event.sourcePlayerID}
         transparent
       />
 
-      <td className="bg-red-500" colSpan={3}>
+      <td className={isQuaking ? "bg-red-500" : undefined} colSpan={3}>
         {ability && (
           <>
             <span>interrupted </span>
@@ -72,7 +74,7 @@ export default function InterruptRow({
                 "Untracked Ability"
               )}
             </ExternalLink>
-            <span> by </span>
+            <span> {isQuaking ? "by" : "with"} </span>
             <ExternalLink
               href={createWowheadUrl({
                 category: "spell",
@@ -94,7 +96,7 @@ export default function InterruptRow({
                 for <b>{event.damage.toLocaleString("en-US")}</b> damage
               </span>
             )}
-            {event.sourcePlayerID && (
+            {isQuaking && event.sourcePlayerID && (
               <>
                 <span> via </span>
                 <span

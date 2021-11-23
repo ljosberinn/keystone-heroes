@@ -218,6 +218,40 @@ async function create() {
 
   log(`found ${rawConduits.length} conduits`);
 
+  const interruptedAbilitiyIDs = await prisma.event.findMany({
+    where: {
+      interruptedAbilityID: {
+        not: null,
+      },
+    },
+    select: {
+      interruptedAbilityID: true,
+    },
+  });
+
+  const uniqueInterruptedAbilities = [
+    ...new Set(
+      interruptedAbilitiyIDs
+        .map((interruptedAbility) => interruptedAbility.interruptedAbilityID)
+        .filter((maybeNumber): maybeNumber is number => maybeNumber !== null)
+    ),
+  ];
+
+  const interruptedAbilities = await prisma.ability.findMany({
+    where: {
+      id: {
+        in: uniqueInterruptedAbilities,
+      },
+    },
+    select: {
+      id: true,
+      name: true,
+      icon: true,
+    },
+  });
+
+  log(`found ${interruptedAbilities.length} interrupted abilities`);
+
   await prisma.$disconnect();
   log(`db disconnected`);
 
@@ -413,6 +447,16 @@ async function create() {
         {
           name: power.name,
           icon: power.icon,
+          cd: 0,
+        },
+      ])
+    ),
+    ...Object.fromEntries(
+      interruptedAbilities.map((ability) => [
+        ability.id,
+        {
+          name: ability.name,
+          icon: ability.icon,
           cd: 0,
         },
       ])

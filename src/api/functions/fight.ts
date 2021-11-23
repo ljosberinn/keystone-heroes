@@ -249,7 +249,7 @@ type RawFight =
         > & {
           sourceNPC: NPC | null;
           targetNPC: NPC | null;
-          ability: Pick<Ability, "id" | "name" | "icon"> | null;
+          ability: Ability | null;
           interruptedAbility: Pick<Ability, "id"> | null;
         })[];
       })[];
@@ -535,7 +535,7 @@ type EventWithAbilityAndSourcePlayerID = Omit<
   sourcePlayerID: number;
 };
 
-const eventHasRelevantAbilityAndSourcePlayerID = (
+const eventHasRelevantAbilityAndSourcePlayerIDAndIsNotInterruptEvent = (
   event: Omit<
     FightSuccessResponse["pulls"][number]["events"][number],
     "category" | "relTimestamp"
@@ -545,7 +545,10 @@ const eventHasRelevantAbilityAndSourcePlayerID = (
     "ability" in event &&
     event.ability !== null &&
     event.ability.id in spells &&
-    event.sourcePlayerID !== null
+    event.sourcePlayerID !== null &&
+    // required to prevent duplicates due to Cast event
+    // interrupt rows would add a second AbilityReady event
+    event.type !== "Interrupt"
   );
 };
 
@@ -625,7 +628,9 @@ const calculateAbilityReadyEvents = (
   >[]
 ): CalcAbilityReadyEventsReturn => {
   return allEvents.reduce<CalcAbilityReadyEventsReturn>((acc, event) => {
-    if (!eventHasRelevantAbilityAndSourcePlayerID(event)) {
+    if (
+      !eventHasRelevantAbilityAndSourcePlayerIDAndIsNotInterruptEvent(event)
+    ) {
       return acc;
     }
 
@@ -634,7 +639,9 @@ const calculateAbilityReadyEvents = (
     const nextCast = allEvents.find(
       (dataset) =>
         dataset.timestamp > event.timestamp &&
-        eventHasRelevantAbilityAndSourcePlayerID(dataset) &&
+        eventHasRelevantAbilityAndSourcePlayerIDAndIsNotInterruptEvent(
+          dataset
+        ) &&
         dataset.sourcePlayerID === event.sourcePlayerID &&
         dataset.ability.id === event.ability.id
     );

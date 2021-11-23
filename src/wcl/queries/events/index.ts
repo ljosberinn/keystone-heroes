@@ -10,6 +10,8 @@ import {
   remarkableSpellFilterExpression,
   engineeringBattleRezExpression,
   invisibilityFilterExpression,
+  interruptFilterExpression,
+  filterPlayerInterruptEvents,
 } from "../events/other";
 import type {
   AllTrackedEventTypes,
@@ -40,6 +42,7 @@ const generateFilterExpression = ({
     remarkableSpellFilterExpression,
     engineeringBattleRezExpression,
     invisibilityFilterExpression,
+    interruptFilterExpression,
     ...getDungeonExpression(dungeonID),
     ...getAffixExpression(affixes),
   ]
@@ -85,6 +88,7 @@ export const getEvents = async (
     actorIDSet
     // remarkableSpellEvents
   );
+  const interruptEvents = filterPlayerInterruptEvents(allEvents);
   const enemyDeathEvents = filterEnemyDeathEvents(
     allEvents,
     actorIDSet,
@@ -100,6 +104,7 @@ export const getEvents = async (
       ...affixEvents,
       ...remarkableSpellEvents,
       ...playerDeathEvents,
+      ...interruptEvents,
     ].sort((a, b) => a.timestamp - b.timestamp),
     playerDeathEvents,
     enemyDeathEvents,

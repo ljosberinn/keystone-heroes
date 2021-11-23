@@ -5,6 +5,9 @@ type Ability = {
   name: string;
   id: number;
   cd:
+    | 12
+    | 15
+    | 24
     | 25
     | 30
     | 40
@@ -73,6 +76,18 @@ export const classes: Class[] = [
         id: 18_499,
         cd: 60,
         icon: "spell_nature_ancestralguardian",
+      },
+      {
+        name: "Pummel",
+        id: 6552,
+        cd: 15,
+        icon: "inv_gauntlets_04",
+      },
+      {
+        name: "Spell Reflection",
+        id: 23_920,
+        cd: 25,
+        icon: "ability_warrior_shieldreflection",
       },
     ],
     covenantAbilities: [
@@ -187,6 +202,12 @@ export const classes: Class[] = [
         id: 55_342,
         cd: 120,
         icon: "spell_magic_lesserinvisibilty",
+      },
+      {
+        name: "Counterspell",
+        id: 2139,
+        cd: 24,
+        icon: "spell_frost_iceshock",
       },
     ],
     covenantAbilities: [
@@ -316,6 +337,12 @@ export const classes: Class[] = [
         cd: 60,
         icon: "achievement_bg_killingblow_berserker",
       },
+      {
+        name: "Kick",
+        id: 1766,
+        cd: 15,
+        icon: "ability_kick",
+      },
     ],
     covenantAbilities: [
       {
@@ -424,6 +451,12 @@ export const classes: Class[] = [
         id: 8143,
         cd: 60,
         icon: "spell_nature_tremortotem",
+      },
+      {
+        name: "Wind Shear",
+        id: 57_994,
+        cd: 12,
+        icon: "spell_nature_cyclone",
       },
     ],
     covenantAbilities: [
@@ -678,6 +711,12 @@ export const classes: Class[] = [
             cd: 90,
             icon: "spell_priest_void-blast",
           },
+          {
+            name: "Silence",
+            id: 15_487,
+            cd: 45,
+            icon: "ability_priest_silence",
+          },
         ],
       },
       {
@@ -864,6 +903,12 @@ export const classes: Class[] = [
             icon: "ability_hunter_bestialdiscipline",
           },
           { name: "Intimidation", id: 19_577, cd: 60, icon: "ability_devour" },
+          {
+            name: "Counter Shot",
+            id: 147_362,
+            cd: 24,
+            icon: "inv_ammo_arrow_03",
+          },
         ],
       },
       {
@@ -883,6 +928,12 @@ export const classes: Class[] = [
             cd: 120,
             icon: "inv_coordinatedassault",
           },
+          {
+            name: "Muzzle",
+            id: 187_707,
+            cd: 15,
+            icon: "ability_hunter_negate",
+          },
         ],
       },
       {
@@ -896,6 +947,12 @@ export const classes: Class[] = [
             icon: "ability_hunter_crossfire",
           },
           { name: "Trueshot", id: 288_613, cd: 120, icon: "ability_trueshot" },
+          {
+            name: "Counter Shot",
+            id: 147_362,
+            cd: 24,
+            icon: "inv_ammo_arrow_03",
+          },
         ],
       },
     ],
@@ -1028,6 +1085,12 @@ export const classes: Class[] = [
             cd: 360,
             icon: "ability_monk_fortifyingale_new",
           },
+          {
+            name: "Spear Hand Strike",
+            id: 116_705,
+            cd: 15,
+            icon: "ability_monk_spearhand",
+          },
         ],
       },
       {
@@ -1075,6 +1138,12 @@ export const classes: Class[] = [
             id: 115_288,
             cd: 60,
             icon: "ability_monk_energizingwine",
+          },
+          {
+            name: "Spear Hand Strike",
+            id: 116_705,
+            cd: 15,
+            icon: "ability_monk_spearhand",
           },
         ],
       },
@@ -1220,6 +1289,12 @@ export const classes: Class[] = [
             cd: 180,
             icon: "ability_druid_berserk",
           },
+          {
+            name: "Skull Bash",
+            id: 106_839,
+            cd: 15,
+            icon: "inv_bone_skull_04",
+          },
         ],
       },
       {
@@ -1246,7 +1321,7 @@ export const classes: Class[] = [
           },
           {
             name: "Solar Beam",
-            id: 78_675,
+            id: 97_547, // technically 78_675
             cd: 60,
             icon: "ability_vehicle_sonicshockwave",
           },
@@ -1286,6 +1361,12 @@ export const classes: Class[] = [
             cd: 180,
             icon: "ability_druid_tigersroar",
           },
+          {
+            name: "Skull Bash",
+            id: 106_839,
+            cd: 15,
+            icon: "inv_bone_skull_04",
+          },
         ],
       },
     ],
@@ -1299,6 +1380,12 @@ export const classes: Class[] = [
         id: 188_501,
         cd: 60,
         icon: "ability_demonhunter_spectralsight",
+      },
+      {
+        name: "Disrupt",
+        id: 183_752,
+        cd: 15,
+        icon: "ability_demonhunter_consumemagic",
       },
     ],
     covenantAbilities: [
@@ -1537,6 +1624,18 @@ export const classes: Class[] = [
             cd: 90,
             icon: "ability_paladin_veneration",
           },
+          {
+            name: "Avenger's Shield",
+            id: 31_935,
+            cd: 15,
+            icon: "spell_holy_avengersshield",
+          },
+          {
+            name: "Rebuke",
+            id: 96_231,
+            cd: 15,
+            icon: "spell_holy_rebuke",
+          },
         ],
       },
       {
@@ -1602,6 +1701,12 @@ export const classes: Class[] = [
             id: 205_191,
             cd: 60,
             icon: "spell_holy_weaponmastery",
+          },
+          {
+            name: "Rebuke",
+            id: 96_231,
+            cd: 15,
+            icon: "spell_holy_rebuke",
           },
         ],
       },
@@ -1674,6 +1779,12 @@ export const classes: Class[] = [
         cd: 45,
         icon: "ability_maldraxxus_warlock",
       },
+      {
+        name: "Spell Lock",
+        id: 19_647,
+        cd: 24,
+        icon: "spell_shadow_mindrot",
+      },
     ],
     specs: [
       {
@@ -1721,6 +1832,12 @@ export const classes: Class[] = [
             id: 267_171,
             cd: 60,
             icon: "ability_warlock_demonicempowerment",
+          },
+          {
+            name: "Axe Toss",
+            id: 89_766,
+            cd: 30,
+            icon: "ability_warrior_titansgrip",
           },
         ],
       },
@@ -1796,6 +1913,12 @@ export const classes: Class[] = [
         id: 48_743,
         cd: 120,
         icon: "spell_shadow_deathpact",
+      },
+      {
+        name: "Mind Freeze",
+        id: 47_528,
+        cd: 15,
+        icon: "spell_deathknight_mindfreeze",
       },
     ],
     covenantAbilities: [

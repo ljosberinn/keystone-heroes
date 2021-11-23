@@ -6,7 +6,7 @@ import type { Processor } from "../utils";
 
 export const interruptProcessor: Processor<InterruptEvent> = (
   event,
-  { sourcePlayerID, targetPlayerID }
+  { sourcePlayerID, targetPlayerID, targetNPCID }
 ) => {
   if (sourcePlayerID && targetPlayerID && event.abilityGameID === QUAKING) {
     return {
@@ -16,6 +16,17 @@ export const interruptProcessor: Processor<InterruptEvent> = (
       sourcePlayerID,
       targetPlayerID,
       abilityID: QUAKING,
+    };
+  }
+
+  if (sourcePlayerID) {
+    return {
+      timestamp: event.timestamp,
+      eventType: EventType.Interrupt,
+      interruptedAbilityID: event.extraAbilityGameID,
+      sourcePlayerID,
+      targetNPCID: targetNPCID ? targetNPCID : null,
+      abilityID: event.abilityGameID,
     };
   }
 

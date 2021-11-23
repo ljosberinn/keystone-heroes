@@ -55,6 +55,7 @@ async function loadSpellNames() {
   const extracted = [
     ...json,
     { id: 350_163, name: "Melee", icon: "ability_meleedamage" },
+    { id: 358_967, name: "Inferno", icon: "ability_foundryraid_blastwave" },
     ...tormentedSpells,
   ].map((dataset) => ({
     id: dataset.id,

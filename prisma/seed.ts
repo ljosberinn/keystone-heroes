@@ -342,6 +342,23 @@ async function seed2(): Promise<void> {
     console.time("seedAbilities");
     await seedAbilities();
     console.timeEnd("seedAbilities");
+  } catch (error) {
+    console.log(error);
+  } finally {
+    console.log("seed2 done; disconnecting");
+    await prisma.$disconnect();
+    console.log("disconnected");
+  }
+
+  console.timeEnd("seed2");
+}
+
+async function seed3(): Promise<void> {
+  console.log("seed3 begin");
+  console.time("seed3");
+
+  try {
+    prisma = new PrismaClient();
 
     console.time("seedCooldowns");
     await seedCooldowns();
@@ -354,11 +371,12 @@ async function seed2(): Promise<void> {
     console.log("disconnected");
   }
 
-  console.timeEnd("seed2");
+  console.timeEnd("seed3");
 }
 
 seed1()
   .then(() => seed2())
+  .then(() => seed3())
   .catch(console.log)
   .finally(() => {
     // eslint-disable-next-line unicorn/no-process-exit

@@ -435,7 +435,7 @@ model Event {
   abilityID Int?
   ability   Ability?  @relation("ability", fields: [abilityID], references: [id])
 
-  // interrupted by quaking
+  // player interrupts or getting interrupted by quaking
   interruptedAbilityID Int?
   interruptedAbility   Ability? @relation("interruptedAbility", fields: [interruptedAbilityID], references: [id])
 
