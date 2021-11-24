@@ -1351,6 +1351,16 @@ type Report {
     limit: Int = 300
 
     """
+    A comma-separated list of auras that must be absent on the source for the event to be included.
+    """
+    sourceAurasAbsent: String = ""
+
+    """
+    A comma-separated list of auras that must be present on the source for the event to be included.
+    """
+    sourceAurasPresent: String = ""
+
+    """
     Optional. Whether or not to filter the fights to a specific source class. The argument here is the class slug, obtainable from game data.
     """
     sourceClass: String = "Any"
@@ -1369,6 +1379,16 @@ type Report {
     Optional. The start time of the events range to fetch.
     """
     startTime: Float = 0
+
+    """
+    A comma-separated list of auras that must be absent on the target for the event to be included.
+    """
+    targetAurasAbsent: String = ""
+
+    """
+    A comma-separated list of auras that must be present on the target for the event to be included.
+    """
+    targetAurasPresent: String = ""
 
     """
     Optional. Whether or not to filter the fights to a specific target class. The argument here is the class slug, obtainable from game data.
@@ -1501,6 +1521,16 @@ type Report {
     killType: KillType = All
 
     """
+    A comma-separated list of auras that must be absent on the source for the event to be included.
+    """
+    sourceAurasAbsent: String = ""
+
+    """
+    A comma-separated list of auras that must be present on the source for the event to be included.
+    """
+    sourceAurasPresent: String = ""
+
+    """
     Optional. Whether or not to filter the fights to a specific source class. The argument here is the class slug, obtainable from game data.
     """
     sourceClass: String = "Any"
@@ -1519,6 +1549,16 @@ type Report {
     Optional. The start time of the events range to fetch.
     """
     startTime: Float = 0
+
+    """
+    A comma-separated list of auras that must be absent on the target for the event to be included.
+    """
+    targetAurasAbsent: String = ""
+
+    """
+    A comma-separated list of auras that must be present on the target for the event to be included.
+    """
+    targetAurasPresent: String = ""
 
     """
     Optional. Whether or not to filter the fights to a specific target class. The argument here is the class slug, obtainable from game data.
@@ -1736,6 +1776,16 @@ type Report {
     killType: KillType = All
 
     """
+    A comma-separated list of auras that must be absent on the source for the event to be included.
+    """
+    sourceAurasAbsent: String = ""
+
+    """
+    A comma-separated list of auras that must be present on the source for the event to be included.
+    """
+    sourceAurasPresent: String = ""
+
+    """
     Optional. Whether or not to filter the fights to a specific source class. The argument here is the class slug, obtainable from game data.
     """
     sourceClass: String = "Any"
@@ -1754,6 +1804,16 @@ type Report {
     Optional. The start time of the events range to fetch.
     """
     startTime: Float = 0
+
+    """
+    A comma-separated list of auras that must be absent on the target for the event to be included.
+    """
+    targetAurasAbsent: String = ""
+
+    """
+    A comma-separated list of auras that must be present on the target for the event to be included.
+    """
+    targetAurasPresent: String = ""
 
     """
     Optional. Whether or not to filter the fights to a specific target class. The argument here is the class slug, obtainable from game data.

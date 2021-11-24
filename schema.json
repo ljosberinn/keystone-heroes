@@ -5359,6 +5359,30 @@
                 "deprecationReason": null
               },
               {
+                "name": "sourceAurasAbsent",
+                "description": "A comma-separated list of auras that must be absent on the source for the event to be included.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": "\"\"",
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "sourceAurasPresent",
+                "description": "A comma-separated list of auras that must be present on the source for the event to be included.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": "\"\"",
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
                 "name": "sourceClass",
                 "description": "Optional. Whether or not to filter the fights to a specific source class. The argument here is the class slug, obtainable from game data.",
                 "type": {
@@ -5403,6 +5427,30 @@
                   "ofType": null
                 },
                 "defaultValue": "0",
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "targetAurasAbsent",
+                "description": "A comma-separated list of auras that must be absent on the target for the event to be included.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": "\"\"",
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "targetAurasPresent",
+                "description": "A comma-separated list of auras that must be present on the target for the event to be included.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": "\"\"",
                 "isDeprecated": false,
                 "deprecationReason": null
               },
@@ -5737,6 +5785,30 @@
                 "deprecationReason": null
               },
               {
+                "name": "sourceAurasAbsent",
+                "description": "A comma-separated list of auras that must be absent on the source for the event to be included.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": "\"\"",
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "sourceAurasPresent",
+                "description": "A comma-separated list of auras that must be present on the source for the event to be included.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": "\"\"",
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
                 "name": "sourceClass",
                 "description": "Optional. Whether or not to filter the fights to a specific source class. The argument here is the class slug, obtainable from game data.",
                 "type": {
@@ -5781,6 +5853,30 @@
                   "ofType": null
                 },
                 "defaultValue": "0",
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "targetAurasAbsent",
+                "description": "A comma-separated list of auras that must be absent on the target for the event to be included.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": "\"\"",
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "targetAurasPresent",
+                "description": "A comma-separated list of auras that must be present on the target for the event to be included.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": "\"\"",
                 "isDeprecated": false,
                 "deprecationReason": null
               },
@@ -6333,6 +6429,30 @@
                 "deprecationReason": null
               },
               {
+                "name": "sourceAurasAbsent",
+                "description": "A comma-separated list of auras that must be absent on the source for the event to be included.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": "\"\"",
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "sourceAurasPresent",
+                "description": "A comma-separated list of auras that must be present on the source for the event to be included.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": "\"\"",
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
                 "name": "sourceClass",
                 "description": "Optional. Whether or not to filter the fights to a specific source class. The argument here is the class slug, obtainable from game data.",
                 "type": {
@@ -6377,6 +6497,30 @@
                   "ofType": null
                 },
                 "defaultValue": "0",
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "targetAurasAbsent",
+                "description": "A comma-separated list of auras that must be absent on the target for the event to be included.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": "\"\"",
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "targetAurasPresent",
+                "description": "A comma-separated list of auras that must be present on the target for the event to be included.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": "\"\"",
                 "isDeprecated": false,
                 "deprecationReason": null
               },
