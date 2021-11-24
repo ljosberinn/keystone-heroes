@@ -128,6 +128,7 @@ export function Footer(): JSX.Element {
           <ExternalLink
             className="flex items-center justify-center space-x-2 "
             href="https://vercel.com/"
+            aria-label="Vercel"
           >
             <Vercel />
           </ExternalLink>
@@ -135,6 +136,7 @@ export function Footer(): JSX.Element {
           <ExternalLink
             className="flex items-center justify-center space-x-2"
             href="https://nextjs.org/"
+            aria-label="Next.js"
           >
             <Next />
           </ExternalLink>
@@ -146,15 +148,16 @@ export function Footer(): JSX.Element {
                 : version
             }`}
             className="flex"
+            aria-label={`React ${version.split("-")[0]}`}
           >
             <React /> {version.split("-")[0]}
           </ExternalLink>
 
-          <ExternalLink href="https://tailwindcss.com/">
+          <ExternalLink href="https://tailwindcss.com/" aria-label="Tailwind">
             <Tailwind />
           </ExternalLink>
 
-          <ExternalLink href="https://supabase.io/">
+          <ExternalLink href="https://supabase.io/" aria-label="Supabase">
             <Supabase />
           </ExternalLink>
         </small>

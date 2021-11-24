@@ -709,14 +709,16 @@ export function Pulls(): JSX.Element | null {
   );
 }
 
+const dynamicConfig = {
+  suspense: true,
+};
+
 const SanguineTimeLossRow = dynamic(
   () =>
     import(
       /* webpackChunkName: "SanguineTimeLossRow" */ "./rows/SanguineTimeLossRow"
     ),
-  {
-    suspense: true,
-  }
+  dynamicConfig
 );
 
 const ExplosivesSummaryRow = dynamic(
@@ -724,9 +726,7 @@ const ExplosivesSummaryRow = dynamic(
     import(
       /* webpackChunkName: "ExplosivesSummaryRow" */ "./rows/ExplosivesSummaryRow"
     ),
-  {
-    suspense: true,
-  }
+  dynamicConfig
 );
 
 const PlagueBombDamageRow = dynamic(
@@ -734,9 +734,7 @@ const PlagueBombDamageRow = dynamic(
     import(
       /* webpackChunkName: "PlagueBombDamageRow" */ "./rows/PlagueBombDamageRow"
     ),
-  {
-    suspense: true,
-  }
+  dynamicConfig
 );
 
 const ViolentDetonationDamageRow = dynamic(
@@ -744,76 +742,56 @@ const ViolentDetonationDamageRow = dynamic(
     import(
       /* webpackChunkName: "ViolentDetonationDamageRow" */ "./rows/ViolentDetonationDamageRow"
     ),
-  {
-    suspense: true,
-  }
+  dynamicConfig
 );
 
 const CastRow = dynamic(
   () => import(/* webpackChunkName: "CastRow" */ "./rows/CastRow"),
-  {
-    suspense: true,
-  }
+  dynamicConfig
 );
 
 const DamageTakenRow = dynamic(
   () =>
     import(/* webpackChunkName: "DamageTakenRow" */ "./rows/DamageTakenRow"),
-  {
-    suspense: true,
-  }
+  dynamicConfig
 );
 
 const AbilityReadyRow = dynamic(
   () =>
     import(/* webpackChunkName: "AbilityReadyRow" */ "./rows/AbilityReadyRow"),
-  {
-    suspense: true,
-  }
+  dynamicConfig
 );
 
 const DeathRow = dynamic(
   () => import(/* webpackChunkName: "DeathRow" */ "./rows/DeathRow"),
-  {
-    suspense: true,
-  }
+  dynamicConfig
 );
 
 const InterruptRow = dynamic(
   () => import(/* webpackChunkName: "InterruptRow" */ "./rows/InterruptRow"),
-  {
-    suspense: true,
-  }
+  dynamicConfig
 );
 
 const DamageDoneRow = dynamic(
   () => import(/* webpackChunkName: "DamageDoneRow" */ "./rows/DamageDoneRow"),
-  {
-    suspense: true,
-  }
+  dynamicConfig
 );
 
 const HealingDoneRow = dynamic(
   () =>
     import(/* webpackChunkName: "HealingDoneRow" */ "./rows/HealingDoneRow"),
-  {
-    suspense: true,
-  }
+  dynamicConfig
 );
 
 const ApplyBuffRow = dynamic(
   () => import(/* webpackChunkName: "ApplyBuffRow" */ "./rows/ApplyBuffRow"),
-  {
-    suspense: true,
-  }
+  dynamicConfig
 );
 
 const ApplyDebuffRow = dynamic(
   () =>
     import(/* webpackChunkName: "ApplyDebuffRow" */ "./rows/ApplyDebuffRow"),
-  {
-    suspense: true,
-  }
+  dynamicConfig
 );
 
 const createRowKey = (event: DefaultEvent, index: number) =>
