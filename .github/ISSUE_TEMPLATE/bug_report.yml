@@ -1,0 +1,37 @@
+name: 🐛 Bug Report
+description: Something is wrong with Keystone Heroes.
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for contributing!
+
+        Do you need some help?
+        ======================
+        The issue tracker is meant for feature requests and bug reports only. This isn't the best place for
+        support or usage questions. Questions here don't have as much visibility as they do elsewhere. Before
+        you ask a question, here are some resources to get help first:
+
+        - Ask in GitHub Discussions: https://github.com/ljosberinn/keystone-heroes/discussions
+        - Ask in chat: TODO
+
+  - type: checkboxes
+    id: packages
+    attributes:
+      label: Which route is the error occuring on?
+      options:
+        - label: "`/`"
+        - label: "`/routes/discover`"
+        - label: "`/privacy`"
+        - label: "`/[code]/[fightID]`"
+        - label: "`other`"
+
+  - type: textarea
+    attributes:
+      label: Steps to Reproduce
+      description: Steps to reproduce the behavior. Please include an URL if possible.
+    validations:
+      required: true
