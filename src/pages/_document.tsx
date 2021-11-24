@@ -27,8 +27,6 @@ export default function CustomDocument(/* props: DocumentProps*/): JSX.Element {
           href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap"
         />
 
-        <script async src="https://wow.zamimg.com/widgets/power.js" />
-
         <meta name="description" content={description} />
         <link rel="canonical" href={url} />
 

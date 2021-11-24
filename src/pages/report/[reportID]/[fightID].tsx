@@ -1,6 +1,7 @@
 import dynamic from "next/dynamic";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import Script from "next/script";
 import { createContext, useContext, Suspense } from "react";
 
 import type {
@@ -140,6 +141,11 @@ export default function FightID(): JSX.Element | null {
 
   return (
     <FightContext.Provider value={value}>
+      <Script
+        src="https://wow.zamimg.com/widgets/power.js"
+        strategy="lazyOnload"
+      />
+
       <FightIDHead fight={fight} />
 
       {breadcrumbs}
