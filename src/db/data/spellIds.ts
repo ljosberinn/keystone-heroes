@@ -12,6 +12,7 @@ export const spells = Object.fromEntries(
         icon: cd.icon,
         name: cd.name,
         cd: cd.cd,
+        type: cd.type,
       },
     ]);
   })

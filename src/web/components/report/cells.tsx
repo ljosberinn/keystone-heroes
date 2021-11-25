@@ -132,7 +132,8 @@ type TypeCellProps = {
     | "RemoveBuff"
     | "BeginCast"
     | "ApplyDebuff"
-    | "ApplyDebuffStack";
+    | "ApplyDebuffStack"
+    | "MissedInterrupt";
 };
 
 export function TypeCell({ type }: TypeCellProps): JSX.Element {

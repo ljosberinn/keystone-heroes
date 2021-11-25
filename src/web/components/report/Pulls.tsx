@@ -20,6 +20,7 @@ import {
   classTextColorMap,
 } from "../../utils";
 import { classnames } from "../../utils/classnames";
+import { dynamicConfig } from "../../utils/dynamicConfig";
 import {
   AbilityIcon,
   INVIS_POTION_ICON,
@@ -48,6 +49,7 @@ import {
   findBloodlust,
   isPlagueBombDamageEvent,
   isExplosivesDamageEvent,
+  isMissingInterruptEventWithAbility,
 } from "./utils";
 
 type MostRelevantNPCReturn = {
@@ -709,10 +711,6 @@ export function Pulls(): JSX.Element | null {
   );
 }
 
-const dynamicConfig = {
-  suspense: true,
-};
-
 const SanguineTimeLossRow = dynamic(
   () =>
     import(
@@ -753,6 +751,14 @@ const CastRow = dynamic(
 const DamageTakenRow = dynamic(
   () =>
     import(/* webpackChunkName: "DamageTakenRow" */ "./rows/DamageTakenRow"),
+  dynamicConfig
+);
+
+const MissedInterruptRow = dynamic(
+  () =>
+    import(
+      /* webpackChunkName: "MissedInterruptRow" */ "./rows/MissedInterruptRow"
+    ),
   dynamicConfig
 );
 
@@ -858,6 +864,10 @@ function TableRow({
 
   if (isApplyDebuffEventWithAbility(event)) {
     return <ApplyDebuffRow event={event} {...sharedProps} />;
+  }
+
+  if (isMissingInterruptEventWithAbility(event)) {
+    return <MissedInterruptRow event={event} {...sharedProps} />;
   }
 
   if (typeof window !== "undefined") {

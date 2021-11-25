@@ -15,6 +15,7 @@ import type { DeathRowProps } from "./rows/DeathRow";
 import type { ExplosiveSummaryRowProps } from "./rows/ExplosivesSummaryRow";
 import type { HealingDoneRowProps } from "./rows/HealingDoneRow";
 import type { InterruptRowProps } from "./rows/InterruptRow";
+import type { MissedInterruptRowProps } from "./rows/MissedInterruptRow";
 import type { PlagueBombDamageRowProps } from "./rows/PlagueBombDamageRow";
 import type { SanguineTimeLossRowProps } from "./rows/SanguineTimeLossRow";
 import type { ViolentDetonationDamageRowProps } from "./rows/ViolentDetonationDamageRow";
@@ -201,3 +202,8 @@ export const isExplosivesDamageEvent = (
   event: DefaultEvent
 ): event is ExplosiveSummaryRowProps["events"][number] =>
   event.type === "DamageDone" && event.targetNPC?.id === EXPLOSIVE.unit;
+
+export const isMissingInterruptEventWithAbility = (
+  event: DefaultEvent
+): event is MissedInterruptRowProps["event"] =>
+  event.type === "MissedInterrupt" && event.ability !== null;
