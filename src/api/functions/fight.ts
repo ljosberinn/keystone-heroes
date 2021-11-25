@@ -62,7 +62,7 @@ import { sortByRole } from "../utils";
 import {
   cacheControlKey,
   PUBLIC_ONE_YEAR_IMMUTABLE,
-  STALE_WHILE_REVALIDATE_ONE_MINUTE,
+  NO_CACHE,
 } from "../utils/cache";
 import type { FightHandlerErrorType } from "../utils/errors";
 import {
@@ -1357,7 +1357,7 @@ const handler = withSentry<Request, FightResponse>(async (req, res) => {
     transaction.setHttpStatus(NOT_FOUND);
     transaction.finish();
 
-    res.setHeader(cacheControlKey, STALE_WHILE_REVALIDATE_ONE_MINUTE);
+    res.setHeader(cacheControlKey, NO_CACHE);
     res.status(NOT_FOUND).json({ error: "UNKNOWN_REPORT" });
     return;
   }
