@@ -1061,8 +1061,6 @@ export const createResponseFromStoredFight = (
         }
       );
 
-      console.log(thisPullMissedInterruptEvents.length);
-
       const events: FightSuccessResponse["pulls"][number]["events"] = [
         ...before,
         ...during,

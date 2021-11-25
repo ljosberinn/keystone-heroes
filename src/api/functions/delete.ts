@@ -39,16 +39,16 @@ export const deleteHandler: RequestHandler<Request> = async (
     return;
   }
 
-  const allFightIDs = (
-    await prisma.fight.findMany({
-      where: {
-        reportID: internalReport.id,
-      },
-      select: {
-        id: true,
-      },
-    })
-  ).map((fight) => fight.id);
+  const allPrismaFightIDs = await prisma.fight.findMany({
+    where: {
+      reportID: internalReport.id,
+    },
+    select: {
+      id: true,
+    },
+  });
+
+  const allFightIDs = allPrismaFightIDs.map((fight) => fight.id);
 
   await prisma.playerLegendary.deleteMany({
     where: {
@@ -90,18 +90,18 @@ export const deleteHandler: RequestHandler<Request> = async (
     },
   });
 
-  const allPulls = (
-    await prisma.pull.findMany({
-      where: {
-        fightID: {
-          in: allFightIDs,
-        },
+  const allPrismaPulls = await prisma.pull.findMany({
+    where: {
+      fightID: {
+        in: allFightIDs,
       },
-      select: {
-        id: true,
-      },
-    })
-  ).map((pull) => pull.id);
+    },
+    select: {
+      id: true,
+    },
+  });
+
+  const allPulls = allPrismaPulls.map((pull) => pull.id);
 
   await prisma.pullZone.deleteMany({
     where: {

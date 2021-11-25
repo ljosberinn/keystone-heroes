@@ -22,31 +22,31 @@ export const deleteAllHandler: RequestHandler<Request> = async (
   }
 
   console.time("report.findMany");
-  const allReports = (
-    await prisma.report.findMany({
-      select: {
-        id: true,
-      },
-    })
-  ).map((report) => report.id);
+  const allPrismaReports = await prisma.report.findMany({
+    select: {
+      id: true,
+    },
+  });
   console.timeEnd("report.findMany");
+
+  const allReports = allPrismaReports.map((report) => report.id);
 
   console.log(`found ${allReports.length} reports`);
 
   console.time("fight.findMany");
-  const allFightIDs = (
-    await prisma.fight.findMany({
-      where: {
-        reportID: {
-          in: allReports,
-        },
+  const allPrismaFightIDs = await prisma.fight.findMany({
+    where: {
+      reportID: {
+        in: allReports,
       },
-      select: {
-        id: true,
-      },
-    })
-  ).map((fight) => fight.id);
+    },
+    select: {
+      id: true,
+    },
+  });
   console.timeEnd("fight.findMany");
+
+  const allFightIDs = allPrismaFightIDs.map((fight) => fight.id);
 
   console.log(`found ${allFightIDs.length} fights`);
 
@@ -101,19 +101,19 @@ export const deleteAllHandler: RequestHandler<Request> = async (
   console.timeEnd("playerLegendary.deleteMany");
 
   console.time("pull.findMany");
-  const allPulls = (
-    await prisma.pull.findMany({
-      where: {
-        fightID: {
-          in: allFightIDs,
-        },
+  const allPrismaPulls = await prisma.pull.findMany({
+    where: {
+      fightID: {
+        in: allFightIDs,
       },
-      select: {
-        id: true,
-      },
-    })
-  ).map((pull) => pull.id);
+    },
+    select: {
+      id: true,
+    },
+  });
   console.timeEnd("pull.findMany");
+
+  const allPulls = allPrismaPulls.map((pull) => pull.id);
 
   console.log(`found ${allPulls.length} pulls`);
 
