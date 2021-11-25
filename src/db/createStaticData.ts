@@ -242,6 +242,8 @@ async function create() {
     where: {
       id: {
         in: uniqueInterruptedAbilities,
+        // ignore abilities interrupted by Quaking for.. obvious reasons
+        notIn: Object.keys(spells).map((key) => Number.parseInt(key)),
       },
     },
     select: {
