@@ -19,8 +19,8 @@
     "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
     "types": [
-      "react/next",
-      "react-dom/next",
+      "react/experimental",
+      "react-dom/experimental",
       "@testing-library/jest-dom",
       "node"
     ],
