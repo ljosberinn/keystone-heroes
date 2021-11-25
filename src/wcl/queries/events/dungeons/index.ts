@@ -1,16 +1,5 @@
 import { DungeonIDs } from "../../../../db/data/dungeons";
-import type {
-  AllTrackedEventTypes,
-  ApplyBuffEvent,
-  ApplyBuffStackEvent,
-  ApplyDebuffEvent,
-  BeginCastEvent,
-  CastEvent,
-  DamageEvent,
-  DeathEvent,
-  HealEvent,
-  RemoveBuffEvent,
-} from "../../events/types";
+import type { AllTrackedEventTypes } from "../../events/types";
 import { filterExpression as dosFilterExpression, getDOSEvents } from "./dos";
 import { filterExpression as hoaFilterExpression, getHOAEvents } from "./hoa";
 import {
@@ -41,12 +30,16 @@ export const filterDungeonEvents = (
   allEvents: AllTrackedEventTypes[],
   dungeonID: DungeonIDs,
   actorIDSet: Set<number>
-):
-  | ApplyDebuffEvent[]
-  | CastEvent[]
-  | (DeathEvent | DamageEvent | ApplyBuffEvent)[]
-  | (BeginCastEvent | ApplyBuffEvent | RemoveBuffEvent | ApplyBuffStackEvent)[]
-  | (DamageEvent | HealEvent | BeginCastEvent | CastEvent)[] => {
+): ReturnType<
+  | typeof getDOSEvents
+  | typeof getHOAEvents
+  | typeof getPFEvents
+  | typeof getSDEvents
+  | typeof getSOAEvents
+  | typeof getTOPEvents
+  | typeof getNWEvents
+  | typeof getMOTSEvents
+> => {
   switch (dungeonID) {
     case DungeonIDs.DE_OTHER_SIDE:
       return getDOSEvents(allEvents);

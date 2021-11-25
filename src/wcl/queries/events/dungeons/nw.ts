@@ -1,5 +1,6 @@
 import type {
   AllTrackedEventTypes,
+  ApplyBuffEvent,
   BeginCastEvent,
   CastEvent,
   DamageEvent,
@@ -36,6 +37,7 @@ export const NW = {
  * ```
  */
 export const filterExpression = [
+  `type = "applybuff" and ability.id = ${NW.KYRIAN_ORB_BUFF}`,
   `type = "heal" and source.type = "player" and ability.id = ${NW.KYRIAN_ORB_HEAL}`,
   `type = "damage" and source.type = "player" and ability.id in (${[
     NW.HAMMER,
@@ -99,9 +101,20 @@ const isNwKyrianOrbHealEvent = createIsSpecificEvent<HealEvent>({
   abilityGameID: NW.KYRIAN_ORB_HEAL,
 });
 
+const isNwKyrianOrbApplyBuffEvent = createIsSpecificEvent<ApplyBuffEvent>({
+  type: "applybuff",
+  abilityGameID: NW.KYRIAN_ORB_BUFF,
+});
+
 export const getNWEvents = (
   allEvents: AllTrackedEventTypes[]
-): (DamageEvent | HealEvent | BeginCastEvent | CastEvent)[] => {
+): (
+  | ApplyBuffEvent
+  | DamageEvent
+  | HealEvent
+  | BeginCastEvent
+  | CastEvent
+)[] => {
   const spearDamageEvents = allEvents.filter(isNwSpearEvent);
 
   const spearBeginCastEvents = allEvents.filter(isNwSpearBeginCastEvent);
@@ -114,6 +127,9 @@ export const getNWEvents = (
   const orbCastEvents = allEvents.filter(isNwOrbCastEvent);
   const orbDamageEvents = allEvents.filter(isNwOrbEvent);
 
+  const kyrianOrbApplyBuffEvents = allEvents.filter(
+    isNwKyrianOrbApplyBuffEvent
+  );
   const kyrianOrbDamageEvents = allEvents.filter(isNwKyrianOrbDamageEvent);
   const kyrianOrbHealEvents = allEvents.filter(isNwKyrianOrbHealEvent);
 
@@ -129,6 +145,7 @@ export const getNWEvents = (
     ...orbCastEvents,
     ...orbDamageEvents,
 
+    ...kyrianOrbApplyBuffEvents,
     ...kyrianOrbDamageEvents,
     ...kyrianOrbHealEvents,
   ];

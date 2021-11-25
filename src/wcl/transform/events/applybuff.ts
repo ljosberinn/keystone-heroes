@@ -2,6 +2,7 @@ import { EventType } from "@prisma/client";
 
 import { BOLSTERING } from "../../queries/events/affixes/bolstering";
 import { tormentedAbilityGameIDSet } from "../../queries/events/affixes/tormented";
+import { NW } from "../../queries/events/dungeons/nw";
 import { PF } from "../../queries/events/dungeons/pf";
 import { SD_LANTERN_BUFF } from "../../queries/events/dungeons/sd";
 import { TOP_BANNER_AURA } from "../../queries/events/dungeons/top";
@@ -62,7 +63,11 @@ export const applyBuffProcessor: Processor<CustomApplyBuffEvent> = (
     };
   }
 
-  if (event.abilityGameID === SD_LANTERN_BUFF && targetPlayerID) {
+  if (
+    targetPlayerID &&
+    (event.abilityGameID === SD_LANTERN_BUFF ||
+      event.abilityGameID === NW.KYRIAN_ORB_BUFF)
+  ) {
     return {
       timestamp: event.timestamp,
       eventType: EventType.ApplyBuff,

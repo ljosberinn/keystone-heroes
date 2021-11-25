@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/no-duplicate-string */
 import { config } from "dotenv";
 import { writeFileSync, existsSync, createWriteStream, unlinkSync } from "fs";
 import { get } from "https";
@@ -362,6 +363,11 @@ async function create() {
       cd: DUMMY_CD,
     },
     [NW.KYRIAN_ORB_HEAL]: {
+      name: "Anima Exhaust",
+      icon: "spell_animabastion_orb",
+      cd: DUMMY_CD,
+    },
+    [NW.KYRIAN_ORB_BUFF]: {
       name: "Anima Exhaust",
       icon: "spell_animabastion_orb",
       cd: DUMMY_CD,
