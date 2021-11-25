@@ -253,7 +253,7 @@ export function AffixImpact(): JSX.Element {
                           source: player.actorID,
                         })}
                         key={player.actorID}
-                        className="inline-flex space-x-2"
+                        className="inline-flex space-x-2 first-of-type:pt-2 md:first-of-type:pt-0"
                       >
                         <span className="w-6 h-6">
                           <SpecIcon
@@ -647,6 +647,7 @@ export function AffixImpact(): JSX.Element {
                       type: "healing",
                       hostility: 1,
                     })}
+                    className="pt-2 md:pt-0"
                   >
                     {sanguine.healing.toLocaleString("en-US")} total healing
                   </ExternalLink>{" "}

@@ -34,10 +34,10 @@ import { createTransaction, withSentry } from "../middleware";
 import { sortByRole } from "../utils";
 import {
   cacheControlKey,
-  PUBLIC_FIVE_MINUTES,
-  PUBLIC_ONE_YEAR_IMMUTABLE,
-  PUBLIC_THIRTY_MINUTES,
-  PUBLIC_TWO_MINUTES,
+  STALE_WHILE_REVALIDATE_FIVE_MINUTES,
+  STALE_WHILE_REVALIDATE_SEVEN_DAYS,
+  STALE_WHILE_REVALIDATE_THIRTY_MINUTES,
+  STALE_WHILE_REVALIDATE_TWO_MINUTES,
 } from "../utils/cache";
 import type { ReportHandlerErrorType } from "../utils/errors";
 import {
@@ -742,7 +742,7 @@ export const reportHandler = withSentry<Request, ReportResponse>(
       transaction.setHttpStatus(200);
       transaction.finish();
 
-      res.setHeader(cacheControlKey, PUBLIC_ONE_YEAR_IMMUTABLE);
+      res.setHeader(cacheControlKey, STALE_WHILE_REVALIDATE_SEVEN_DAYS);
       res.json(createResponseFromDB(existingReport));
       return;
     }
@@ -760,7 +760,7 @@ export const reportHandler = withSentry<Request, ReportResponse>(
       transaction.setHttpStatus(SERVICE_UNAVAILABLE);
       transaction.finish();
 
-      res.setHeader(cacheControlKey, PUBLIC_FIVE_MINUTES);
+      res.setHeader(cacheControlKey, STALE_WHILE_REVALIDATE_FIVE_MINUTES);
       res.status(SERVICE_UNAVAILABLE).json({
         error: "BROKEN_LOG_OR_WCL_UNAVAILABLE",
       });
@@ -775,7 +775,7 @@ export const reportHandler = withSentry<Request, ReportResponse>(
       transaction.setHttpStatus(UNPROCESSABLE_ENTITY);
       transaction.finish();
 
-      res.setHeader(cacheControlKey, PUBLIC_TWO_MINUTES);
+      res.setHeader(cacheControlKey, STALE_WHILE_REVALIDATE_TWO_MINUTES);
 
       res.status(UNPROCESSABLE_ENTITY).json({
         error: "EMPTY_LOG",
@@ -838,7 +838,7 @@ export const reportHandler = withSentry<Request, ReportResponse>(
         transaction.setHttpStatus(200);
         transaction.finish();
 
-        res.setHeader(cacheControlKey, PUBLIC_TWO_MINUTES);
+        res.setHeader(cacheControlKey, STALE_WHILE_REVALIDATE_TWO_MINUTES);
         res.json(createResponseFromDB(existingReport));
         return;
       }
@@ -846,7 +846,7 @@ export const reportHandler = withSentry<Request, ReportResponse>(
       transaction.setHttpStatus(BAD_REQUEST);
       transaction.finish();
 
-      res.setHeader(cacheControlKey, PUBLIC_TWO_MINUTES);
+      res.setHeader(cacheControlKey, STALE_WHILE_REVALIDATE_TWO_MINUTES);
       res.status(BAD_REQUEST).json({
         error: "NO_TIMED_KEYS",
       });
@@ -1004,7 +1004,7 @@ export const reportHandler = withSentry<Request, ReportResponse>(
       transaction.setHttpStatus(SERVICE_UNAVAILABLE);
       transaction.finish();
 
-      res.setHeader(cacheControlKey, PUBLIC_FIVE_MINUTES);
+      res.setHeader(cacheControlKey, STALE_WHILE_REVALIDATE_FIVE_MINUTES);
       res.status(SERVICE_UNAVAILABLE).json({
         error: "SECONDARY_REQUEST_FAILED",
       });
@@ -1233,7 +1233,7 @@ export const reportHandler = withSentry<Request, ReportResponse>(
     transaction.setHttpStatus(200);
     transaction.finish();
 
-    res.setHeader(cacheControlKey, PUBLIC_THIRTY_MINUTES);
+    res.setHeader(cacheControlKey, STALE_WHILE_REVALIDATE_THIRTY_MINUTES);
 
     res.json({
       ...response,

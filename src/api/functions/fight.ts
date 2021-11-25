@@ -61,7 +61,7 @@ import {
 import { sortByRole } from "../utils";
 import {
   cacheControlKey,
-  PUBLIC_ONE_YEAR_IMMUTABLE,
+  STALE_WHILE_REVALIDATE_SEVEN_DAYS,
   NO_CACHE,
 } from "../utils/cache";
 import type { FightHandlerErrorType } from "../utils/errors";
@@ -1489,7 +1489,7 @@ const handler = withSentry<Request, FightResponse>(async (req, res) => {
   transaction.finish();
 
   if (cache) {
-    res.setHeader(cacheControlKey, PUBLIC_ONE_YEAR_IMMUTABLE);
+    res.setHeader(cacheControlKey, STALE_WHILE_REVALIDATE_SEVEN_DAYS);
   }
 
   res.status(status).json(json);

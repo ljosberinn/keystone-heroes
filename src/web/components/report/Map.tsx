@@ -437,7 +437,7 @@ function FullscreenPullNPCs() {
       draggable
       className={classnames(
         bgSecondary,
-        "absolute left-1/4 top-1/3 rounded-lg opacity-75 hover:opacity-100 transition"
+        "absolute left-1/4 top-1/3 rounded-lg opacity-75 hover:opacity-100 transition-opacity"
       )}
     >
       <summary className="p-2 cursor-pointer">Trash</summary>
@@ -550,6 +550,8 @@ function KillIndicator({ type, fullscreen }: KillIndicatorProps) {
   const isBossType = type === "boss";
 
   useEffect(() => {
+    console.log(window.innerWidth, window.innerHeight);
+
     const recalculate = () => {
       setLeft(() => {
         if (!fullscreen || !containerRef.current) {
@@ -606,7 +608,7 @@ function KillIndicator({ type, fullscreen }: KillIndicatorProps) {
       <div
         className={classnames(
           bgSecondary,
-          "absolute rounded-lg p-2 hidden sm:block opacity-75 hover:opacity-100 transition",
+          "absolute rounded-lg p-2 hidden sm:block opacity-75 hover:opacity-100 transition-opacity",
           fullscreen ? "killIndicator bottom-8" : `${position} bottom-2`
         )}
         ref={containerRef}
@@ -655,7 +657,7 @@ function KillIndicator({ type, fullscreen }: KillIndicatorProps) {
             >
               <button
                 type="button"
-                className="cursor-pointer md:truncate md:max-w-1/2 hover:underline"
+                className="cursor-pointer md:truncate md:max-w-1/2 lg:max-w-full xl:max-w-1/2 hover:underline"
                 onClick={() => {
                   setSelectedPull(pull.id);
                 }}
@@ -671,7 +673,7 @@ function KillIndicator({ type, fullscreen }: KillIndicatorProps) {
                   />
                 )}
               </button>{" "}
-              <span className="hidden pl-2 md:block">
+              <span className="hidden pl-2 md:block lg:hidden xl:block">
                 <span>{percentUpToThisPull.toFixed(2)}%</span>{" "}
                 <span title={`killed in ${fightDuration}`}>
                   {fightStart}-{fightEnd}
