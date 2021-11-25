@@ -13,7 +13,15 @@ export type POIContextDefinition = {
       to: number;
     }[]
   >;
-  poi: never[];
+  poi: Record<
+    number,
+    {
+      icon: string;
+      x: number;
+      y: number;
+      label: string;
+    }[]
+  >;
 };
 
 const PointsOfInterestContext = createContext<POIContextDefinition | null>(

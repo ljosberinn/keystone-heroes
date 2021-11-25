@@ -7,6 +7,13 @@ type DoorIndicatorsProps = {
   onDoorClick: (zoneID: number) => void;
 };
 
+// door width / 2 / svg width
+export const doorXOffset = 0.012_830_793_905_372_895;
+export const doorYOffset = 0.014_440_433_212_996_39;
+
+const width = 32;
+const height = 24;
+
 // eslint-disable-next-line import/no-default-export
 export default function DoorIndicators({
   xFactor,
@@ -20,14 +27,14 @@ export default function DoorIndicators({
         <image
           href={`/static/icons/door_${door.type}.png`}
           key={door.x}
-          x={door.x * xFactor}
-          y={door.y * yFactor}
-          className="w-8 h-6 cursor-pointer"
+          x={(door.x + doorXOffset) * xFactor - width / 2}
+          y={(door.y + doorYOffset) * yFactor - height / 2}
+          className="cursor-pointer"
           onClick={() => {
             onDoorClick(door.to);
           }}
-          width={32}
-          height={24}
+          width={width}
+          height={height}
         />
       ))}
     </g>

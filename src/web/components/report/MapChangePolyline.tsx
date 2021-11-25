@@ -1,16 +1,27 @@
+import type { FightSuccessResponse } from "../../../api/functions/fight";
 import { useFight } from "../../../pages/report/[reportID]/[fightID]";
+import { doorXOffset, doorYOffset } from "./DoorIndicators";
 import type { POIContextDefinition } from "./poi/context";
 
-type MapChangePolylineProps = {
+export type MapChangePolylineProps = {
   doors: POIContextDefinition["doors"][number];
   xFactor: number;
   yFactor: number;
   zoneID: number;
 };
 
-// door width / 2 / svg width
-const doorXOffset = 0.012_830_793_905_372_895;
-const doorYOffset = 0.014_440_433_212_996_39;
+const calcMiddle = (
+  pull: FightSuccessResponse["pulls"][number],
+  door: MapChangePolylineProps["doors"][number],
+  type: "x" | "y"
+) => {
+  const isX = type === "x";
+  const pullCoordinate = isX ? pull.x : pull.y;
+  const foo = isX ? door.x : door.y;
+  const offset = isX ? doorXOffset : doorYOffset;
+
+  return pullCoordinate + (foo + offset - pullCoordinate) / 2;
+};
 
 // eslint-disable-next-line import/no-default-export
 export default function MapChangePolyline({
@@ -21,6 +32,8 @@ export default function MapChangePolyline({
 }: MapChangePolylineProps): JSX.Element | null {
   const { pulls } = useFight().fight;
 
+  // looks huge but isnt worth memoizing
+  // in dev, this takes around 0.1s...
   return (
     <>
       {pulls
@@ -51,8 +64,8 @@ export default function MapChangePolyline({
               return acc;
             }
 
-            const middleX = pull.x + (originDoor.x + doorXOffset - pull.x) / 2;
-            const middleY = pull.y + (originDoor.y + doorYOffset - pull.y) / 2;
+            const middleX = calcMiddle(pull, originDoor, "x");
+            const middleY = calcMiddle(pull, originDoor, "y");
 
             return [
               ...acc,
@@ -77,10 +90,8 @@ export default function MapChangePolyline({
               return acc;
             }
 
-            const middleX =
-              lastPull.x + (targetDoor.x + doorXOffset - lastPull.x) / 2;
-            const middleY =
-              lastPull.y + (targetDoor.y + doorYOffset - lastPull.y) / 2;
+            const middleX = calcMiddle(lastPull, targetDoor, "x");
+            const middleY = calcMiddle(lastPull, targetDoor, "y");
 
             return [
               ...acc,

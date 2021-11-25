@@ -367,6 +367,7 @@ export function Map(): JSX.Element {
               {hidden ? null : (
                 <>
                   <Svg
+                    fullscreen={fullscreen}
                     imageSize={imageSize}
                     zoneID={zone.id}
                     onDoorClick={(zoneID: number) => {
@@ -871,9 +872,10 @@ type SvgProps = {
   >;
   zoneID: number;
   onDoorClick: (zoneID: number) => void;
+  fullscreen: boolean;
 };
 
-function Svg({ imageSize, zoneID, onDoorClick }: SvgProps) {
+function Svg({ imageSize, zoneID, onDoorClick, fullscreen }: SvgProps) {
   const { fight } = useFight();
   const { pulls, dungeon } = fight;
   const thisZonesPulls = pulls.filter((pull) => pull.zone === zoneID);
@@ -889,6 +891,13 @@ function Svg({ imageSize, zoneID, onDoorClick }: SvgProps) {
           .svg {
             left: ${imageSize.offsetLeft}px;
             top: ${imageSize.offsetTop}px;
+            /* account for padding on fullscreen */
+            ${fullscreen
+              ? `
+            height: calc(100% - 2rem);
+            width: calc(100% - 2rem);
+            `
+              : ""}
           }
         `}
       </style>
@@ -901,6 +910,11 @@ function Svg({ imageSize, zoneID, onDoorClick }: SvgProps) {
             zoneID={zoneID}
           />
           <MapChangePolylineWrapper
+            xFactor={imageSize.clientWidth}
+            yFactor={imageSize.clientHeight}
+            zoneID={zoneID}
+          />
+          <PointsOfInterestWrapper
             xFactor={imageSize.clientWidth}
             yFactor={imageSize.clientHeight}
             zoneID={zoneID}
@@ -1192,6 +1206,13 @@ const DoorIndicators = dynamic(
   }
 );
 
+const PointsOfInterest = dynamic(
+  () => import(/* webpackChunkName: "PointsOfInterest" */ "./PointsOfInterest"),
+  {
+    suspense: true,
+  }
+);
+
 type DoorIndicatorsWrapperProps = Pick<SvgProps, "onDoorClick"> & {
   xFactor: number;
   yFactor: number;
@@ -1251,6 +1272,36 @@ function MapChangePolylineWrapper({
         xFactor={xFactor}
         yFactor={yFactor}
         zoneID={zoneID}
+      />
+    </Suspense>
+  );
+}
+
+type PointsOfInterestWrapperProps = {
+  zoneID: number;
+  xFactor: number;
+  yFactor: number;
+};
+
+function PointsOfInterestWrapper({
+  zoneID,
+  xFactor,
+  yFactor,
+}: PointsOfInterestWrapperProps): JSX.Element | null {
+  const renderPOIs = useMapOptions((state) => state.renderPOIs);
+  const { poi } = usePointsOfInterest();
+  const thisZonesPOIs = poi[zoneID];
+
+  if (!renderPOIs || !thisZonesPOIs) {
+    return null;
+  }
+
+  return (
+    <Suspense fallback={null}>
+      <PointsOfInterest
+        poi={thisZonesPOIs}
+        xFactor={xFactor}
+        yFactor={yFactor}
       />
     </Suspense>
   );

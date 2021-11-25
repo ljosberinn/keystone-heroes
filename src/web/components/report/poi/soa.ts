@@ -47,4 +47,33 @@ export const doors: POIContextDefinition["doors"] = {
   ],
 };
 
-export const poi: POIContextDefinition["poi"] = [];
+const SOA_SPEAR_ICON = "inv_polearm_2h_bastionquest_b_01";
+const spearLabel = "Spear of Destiny";
+
+export const poi: POIContextDefinition["poi"] = {
+  1693: [
+    {
+      // Garden of Repose, left
+      icon: SOA_SPEAR_ICON,
+      x: 0.360_360_360_360_360_34,
+      y: 0.204_633_204_633_204_64,
+      label: spearLabel,
+    },
+    {
+      // Garden of Repose, right
+      icon: SOA_SPEAR_ICON,
+      x: 0.561_132_561_132_561_2,
+      y: 0.891_891_891_891_891_9,
+      label: spearLabel,
+    },
+  ],
+  1694: [
+    {
+      // Font of Fealty
+      icon: SOA_SPEAR_ICON,
+      x: 0.411_840_411_840_411_8,
+      y: 0.772_200_772_200_772_2,
+      label: spearLabel,
+    },
+  ],
+};

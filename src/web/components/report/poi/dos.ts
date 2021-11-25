@@ -47,4 +47,35 @@ export const doors: POIContextDefinition["doors"] = {
   ],
 };
 
-export const poi: POIContextDefinition["poi"] = [];
+const HAUNTED_URN_ICON = "inv_misc_urn_01";
+const urnLabel = "Haunted Urn";
+
+export const poi: POIContextDefinition["poi"] = {
+  // De Other Side
+  1680: [
+    {
+      icon: HAUNTED_URN_ICON,
+      x: 0,
+      y: 0,
+      label: urnLabel,
+    },
+  ],
+  // Ardenweald
+  1677: [
+    {
+      icon: HAUNTED_URN_ICON,
+      x: 0,
+      y: 0,
+      label: urnLabel,
+    },
+  ],
+  // Zul'Gurub
+  1679: [
+    {
+      icon: HAUNTED_URN_ICON,
+      x: 0,
+      y: 0,
+      label: urnLabel,
+    },
+  ],
+};
