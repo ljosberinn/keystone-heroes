@@ -627,78 +627,41 @@ const calculateAbilityReadyEvents = (
     "category" | "relTimestamp"
   >[]
 ): CalcAbilityReadyEventsReturn => {
+  const response: CalcAbilityReadyEventsReturn = [];
+
   const generallyRelevantEvents = allEvents.filter(
     eventHasRelevantAbilityAndSourcePlayerIDAndIsNotInterruptEvent
   );
 
-  return generallyRelevantEvents.reduce<CalcAbilityReadyEventsReturn>(
-    (acc, event) => {
-      const { cd } = spells[event.ability.id];
+  // for const ... is around 2x faster than a reduce here
+  for (const event of generallyRelevantEvents) {
+    const index = generallyRelevantEvents.indexOf(event);
+    const { cd } = spells[event.ability.id];
 
-      const nextCast = generallyRelevantEvents.find(
+    const nextCast = generallyRelevantEvents
+      .slice(index)
+      .find(
         (dataset) =>
           dataset.timestamp > event.timestamp &&
           dataset.sourcePlayerID === event.sourcePlayerID &&
           dataset.ability.id === event.ability.id
       );
 
-      if (nextCast) {
-        const diff = (nextCast.timestamp - event.timestamp) / 1000;
+    if (nextCast) {
+      const diff = (nextCast.timestamp - event.timestamp) / 1000;
 
-        if (diff >= cd) {
-          const wasted = diff >= 2 * cd;
+      if (diff >= cd) {
+        const wasted = diff >= 2 * cd;
 
-          return [
-            ...acc,
-            {
-              type: "AbilityReady",
-              timestamp: event.timestamp + cd * 1000,
-              sourcePlayerID: event.sourcePlayerID,
-              ability: {
-                id: event.ability.id,
-                lastUse: event.timestamp,
-                nextUse: nextCast.timestamp,
-                wasted,
-              },
-              damage: null,
-              healingDone: null,
-              stacks: null,
-              interruptedAbility: null,
-              sourceNPC: null,
-              sourceNPCInstance: null,
-              targetNPC: null,
-              targetNPCInstance: null,
-              targetPlayerID: null,
-            },
-          ];
-        }
-
-        // ability used before technically ready
-        // hints on any kind of cooldown reduction or a wrong stored cd
-        // button smashing apparently lets you cast an ability a bit under cd
-        if (diff < cd - 0.1) {
-          if (!abilitiesWithCDR.has(event.ability.id)) {
-            console.log(
-              `detected cdr on ${event.ability.id} - expected cd of ${cd}, saw ${diff}`
-            );
-            abilitiesWithCDR.add(event.ability.id);
-          }
-
-          return acc;
-        }
-      }
-
-      return [
-        ...acc,
-        {
+        response.push({
           type: "AbilityReady",
           timestamp: event.timestamp + cd * 1000,
           sourcePlayerID: event.sourcePlayerID,
           ability: {
             id: event.ability.id,
             lastUse: event.timestamp,
-            nextUse: null,
-            wasted: false,
+            nextUse: nextCast.timestamp,
+            wasted,
           },
           damage: null,
           healingDone: null,
@@ -709,11 +672,33 @@ const calculateAbilityReadyEvents = (
           targetNPC: null,
           targetNPCInstance: null,
           targetPlayerID: null,
+        });
+      }
+    } else {
+      response.push({
+        type: "AbilityReady",
+        timestamp: event.timestamp + cd * 1000,
+        sourcePlayerID: event.sourcePlayerID,
+        ability: {
+          id: event.ability.id,
+          lastUse: event.timestamp,
+          nextUse: null,
+          wasted: false,
         },
-      ];
-    },
-    []
-  );
+        damage: null,
+        healingDone: null,
+        stacks: null,
+        interruptedAbility: null,
+        sourceNPC: null,
+        sourceNPCInstance: null,
+        targetNPC: null,
+        targetNPCInstance: null,
+        targetPlayerID: null,
+      });
+    }
+  }
+
+  return response;
 };
 
 type CalcMissedInterruptEventsReturn = CalcAbilityReadyEventsReturn;
@@ -800,6 +785,23 @@ const calculateMissedInterruptEvents = (
   );
 };
 
+type CalcEventsBeforeDuringAfterPullReturn = {
+  before: Omit<
+    FightSuccessResponse["pulls"][number]["events"][number],
+    "relTimestamp"
+  >[];
+  during: Omit<
+    FightSuccessResponse["pulls"][number]["events"][number],
+    "relTimestamp"
+  >[];
+  after: Omit<
+    FightSuccessResponse["pulls"][number]["events"][number],
+    "relTimestamp"
+  >[];
+  middleAfterLastPull: number | null;
+  middleAfterThisPull: number | null;
+};
+
 const calculateEventsBeforeDuringAfterPull = ({
   allEvents,
   lastPullEnd,
@@ -815,7 +817,7 @@ const calculateEventsBeforeDuringAfterPull = ({
   nextPullStart: number;
   pullStart: number;
   pullEnd: number;
-}) => {
+}): CalcEventsBeforeDuringAfterPullReturn => {
   // events that occured later than 50% of the time between two pulls count
   // towards this pull
   const middleAfterLastPull = lastPullEnd
@@ -840,7 +842,6 @@ const calculateEventsBeforeDuringAfterPull = ({
           .map((event) => ({
             ...event,
             category: EventCategory.BEFORE,
-            relTimestamp: event.timestamp - pullStart,
           }))
       : [];
 
@@ -949,39 +950,18 @@ export const createResponseFromStoredFight = (
       ? rest.interruptedAbility.id
       : null;
 
-    if (ability) {
-      // player actor
-      if (sourcePlayerID) {
-        const key = `${sourcePlayerID}-${ability.id}`;
-        const lastUse = lastAbilityUsageMap.get(key) ?? null;
-        lastAbilityUsageMap.set(key, timestamp);
+    if (!ability) {
+      return {
+        ...rest,
+        sourcePlayerID,
+        timestamp,
+        interruptedAbility,
+        type: eventType,
+        ability: null,
+      };
+    }
 
-        const nextUsageEvent = flatEvents.find(
-          (event) =>
-            event.timestamp > timestamp &&
-            event.ability &&
-            event.ability.id === ability.id &&
-            event.sourcePlayerID &&
-            event.sourcePlayerID === sourcePlayerID
-        );
-
-        const nextUse = nextUsageEvent ? nextUsageEvent.timestamp : null;
-
-        return {
-          ...rest,
-          sourcePlayerID,
-          timestamp,
-          interruptedAbility,
-          type: eventType,
-          ability: {
-            id: ability.id,
-            lastUse,
-            nextUse,
-            wasted: false,
-          },
-        };
-      }
-
+    if (!sourcePlayerID) {
       // other actors, e.g. environment or npcs
       return {
         ...rest,
@@ -998,22 +978,39 @@ export const createResponseFromStoredFight = (
       };
     }
 
+    // player actor
+    const key = `${sourcePlayerID}-${ability.id}`;
+    const lastUse = lastAbilityUsageMap.get(key) ?? null;
+    lastAbilityUsageMap.set(key, timestamp);
+
+    const nextUsageEvent = flatEvents.find(
+      (event) =>
+        event.timestamp > timestamp &&
+        event.ability &&
+        event.ability.id === ability.id &&
+        event.sourcePlayerID &&
+        event.sourcePlayerID === sourcePlayerID
+    );
+
+    const nextUse = nextUsageEvent ? nextUsageEvent.timestamp : null;
+
     return {
       ...rest,
       sourcePlayerID,
       timestamp,
       interruptedAbility,
       type: eventType,
-      ability: null,
+      ability: {
+        id: ability.id,
+        lastUse,
+        nextUse,
+        wasted: false,
+      },
     };
   });
 
-  console.time("abilityReadyEvents");
   const abilityReadyEvents = calculateAbilityReadyEvents(allEvents);
-  console.timeEnd("abilityReadyEvents");
-  console.time("missedInterruptEvents");
   const missedInterruptEvents = calculateMissedInterruptEvents(allEvents);
-  console.timeEnd("missedInterruptEvents");
 
   const pulls = dataset.Pull.map<FightSuccessResponse["pulls"][number]>(
     (pull, index) => {
