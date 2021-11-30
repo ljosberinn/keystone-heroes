@@ -552,70 +552,6 @@ const eventHasRelevantAbilityAndSourcePlayerIDAndIsNotInterruptEvent = (
   );
 };
 
-const abilitiesWithCDR = new Set([
-  324_386,
-  306_830,
-  204_021,
-  1719,
-  212_084,
-  // DH
-  207_684, // Sigil of Misery
-  79_206,
-  325_886,
-  12_472,
-  84_714,
-  1122,
-  20_707,
-  202_137,
-  307_865,
-  307_443,
-  20_484,
-  137_639,
-  325_216,
-  265_187,
-  308_491,
-  198_589,
-  12_042,
-
-  // Druid
-  323_764, // Convoke the Spirits
-  // DK
-  221_699, // Blood Tap
-  31_884,
-  // Rogue
-  137_619, // Marked for Death
-  1856, // Vanish
-  328_547, // Serrated Bone Spike
-  2983, // Sprint
-  13_750, // Adrenaline Rush
-  323_654, // Flagellation
-  185_313, // Shadow Dance
-  121_471, // Shadow Blades
-  // Shaman
-  192_058, // Capacitor Totem
-  // Warrior
-  184_364, // Enraged Regeneration
-  // Warlock
-  333_889, // Fel Domination
-  // Monk,
-  322_507, // Celestial Brew
-  310_454, // Weapons of Order
-  132_578, // Invoke Niuzao, the Black Ox
-  // Mage
-  108_978, // Alter Time
-  55_342, // Mirror Image
-  190_319, // Combustion
-  45_438, // Ice Block
-  // Paladin
-  642, // Divine Shield
-  633, // Lay on Hands
-  31_850, // Ardent Defender
-  304_971, // Divine Toll
-  498, // Divine Protection
-  // Priest
-  325_013, // Boon of the Ascended
-]);
-
 type CalcAbilityReadyEventsReturn = Omit<
   FightSuccessResponse["pulls"][number]["events"][number],
   "category" | "relTimestamp"
@@ -722,11 +658,13 @@ const calculateMissedInterruptEvents = (
         return acc;
       }
 
-      const { type } = spells[event.ability.id];
+      const { type, cd } = spells[event.ability.id];
 
       if (!type || !type.includes("interrupt")) {
         return acc;
       }
+
+      const threshold = event.timestamp + cd * 1000;
 
       let isMissed = true;
 
@@ -735,7 +673,12 @@ const calculateMissedInterruptEvents = (
       for (let i = 1; i <= 10; i++) {
         const nextEvent = allEvents[index + i];
 
-        if (!nextEvent || !nextEvent.ability) {
+        if (
+          !nextEvent ||
+          !nextEvent.ability ||
+          // interrupt must follow before its off cd again
+          nextEvent.timestamp >= threshold
+        ) {
           continue;
         }
 

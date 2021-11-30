@@ -550,8 +550,6 @@ function KillIndicator({ type, fullscreen }: KillIndicatorProps) {
   const isBossType = type === "boss";
 
   useEffect(() => {
-    console.log(window.innerWidth, window.innerHeight);
-
     const recalculate = () => {
       setLeft(() => {
         if (!fullscreen || !containerRef.current) {

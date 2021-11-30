@@ -3,6 +3,7 @@ import { Component } from "react";
 
 import { sentrySettings } from "../../api/utils/sentrySettings";
 
+// eslint-disable-next-line @typescript-eslint/consistent-type-imports
 let Sentry: typeof import("@sentry/react") | null = null;
 
 export type ErrorBoundaryProps = {
@@ -12,22 +13,39 @@ export type ErrorBoundaryProps = {
 
 type State = {
   error: null | Error;
-  componentStack: null | ErrorInfo["componentStack"];
-  eventId: null | string;
 };
+
+function flush(
+  error: Error & { cause?: Error },
+  componentStack: ErrorInfo["componentStack"]
+) {
+  if (!Sentry) {
+    return;
+  }
+
+  const { withScope, captureException } = Sentry;
+
+  withScope(() => {
+    const customError = new Error(error.message);
+    customError.name = `React ErrorBoundary ${customError.name}`;
+    customError.stack = componentStack;
+
+    error.cause = customError;
+
+    captureException(error, {
+      contexts: { react: { componentStack } },
+    });
+  });
+}
 
 export class ErrorBoundary extends Component<ErrorBoundaryProps, State> {
   public state: State = {
     error: null,
-    componentStack: null,
-    eventId: null,
   };
 
   public static getDerivedStateFromError(error: Error): Partial<State> {
     return {
       error,
-      componentStack: null,
-      eventId: null,
     };
   }
 
@@ -56,32 +74,14 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, State> {
       });
     }
 
-    const { withScope, captureException } = Sentry;
-
-    withScope(() => {
-      const customError = new Error(error.message);
-      customError.name = `React ErrorBoundary ${customError.name}`;
-      customError.stack = componentStack;
-
-      error.cause = customError;
-
-      const eventId = captureException(error, {
-        contexts: { react: { componentStack } },
-      });
-
-      this.setState({
-        componentStack,
-        eventId,
-      });
-    });
+    flush(error, componentStack);
   }
 
   public render(): JSX.Element {
     const { children, fallback } = this.props;
-    const { error, componentStack, eventId } = this.state;
+    const { error } = this.state;
 
     if (error) {
-      console.log({ componentStack, eventId });
       return fallback ?? <h1>welp</h1>;
     }
 

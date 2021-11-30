@@ -1608,10 +1608,10 @@ const druid: Class = {
         },
         {
           name: "Skull Bash",
-          id: 106_839,
+          id: 93_985, // this is the actual interrupt. the charge part is 106839
           cd: 15,
           icon: "inv_bone_skull_04",
-          type: [],
+          type: ["interrupt"],
         },
       ],
     },
@@ -1690,7 +1690,7 @@ const druid: Class = {
         },
         {
           name: "Skull Bash",
-          id: 106_839,
+          id: 93_985, // this is the actual interrupt. the charge part is 106839
           cd: 15,
           icon: "inv_bone_skull_04",
           type: ["interrupt"],
