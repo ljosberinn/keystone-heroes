@@ -1,8 +1,6 @@
 import { AiOutlineQuestionCircle, AiOutlineWarning } from "react-icons/ai";
 import { BsPaypal, BsMap } from "react-icons/bs";
 import { FaTwitter, FaSun, FaMoon, FaStar, FaDiscord } from "react-icons/fa";
-import { MdTimeline } from "react-icons/md";
-import { RiTableLine } from "react-icons/ri";
 import { SiBuymeacoffee } from "react-icons/si";
 
 export const sun = {
@@ -17,17 +15,9 @@ export const star = {
   id: "fa-star",
   component: FaStar,
 };
-export const tableLine = {
-  id: "table-line",
-  component: RiTableLine,
-};
 export const outlineQuestionCircle = {
   id: "outline-question-circle",
   component: AiOutlineQuestionCircle,
-};
-export const timeline = {
-  id: "timeline",
-  component: MdTimeline,
 };
 export const paypal = {
   id: "paypal",

@@ -1,4 +1,5 @@
 import type { Dungeon, Zone } from "@prisma/client";
+import { Covenants } from "@prisma/client";
 
 import { ExpansionEnum } from "./expansions";
 
@@ -94,6 +95,12 @@ type DungeonMeta = Omit<Dungeon, "id" | "time"> & {
    * required count in total for this dungeon
    */
   count: number;
+  /**
+   * the covenant granting advantages for this dungeon
+   *
+   * shadowlands only
+   */
+  covenant: Covenants | null;
 };
 
 /**
@@ -216,6 +223,7 @@ export const SANGUINE_DEPTHS: DungeonMeta = {
     171_376: 10, // Head Custodian Javlin
   },
   count: 364,
+  covenant: Covenants.Venthyr,
 };
 
 export const SPIRES_OF_ASCENSION: DungeonMeta = {
@@ -289,6 +297,7 @@ export const SPIRES_OF_ASCENSION: DungeonMeta = {
     168_843: 12, // Klotos
   },
   count: 285,
+  covenant: Covenants.Kyrian,
 };
 
 export const THE_NECROTIC_WAKE: DungeonMeta = {
@@ -361,6 +370,7 @@ export const THE_NECROTIC_WAKE: DungeonMeta = {
     163_620: 6, // Rotspew
   },
   count: 283,
+  covenant: Covenants.Kyrian,
 };
 
 export const HALLS_OF_ATONEMENT: DungeonMeta = {
@@ -420,6 +430,7 @@ export const HALLS_OF_ATONEMENT: DungeonMeta = {
     167_876: 20, // Inquisitor Sigar
   },
   count: 273,
+  covenant: Covenants.Venthyr,
 };
 
 export const PLAGUEFALL: DungeonMeta = {
@@ -493,6 +504,7 @@ export const PLAGUEFALL: DungeonMeta = {
     163_891: 6, // Rotmarrow Slime
   },
   count: 600,
+  covenant: Covenants.Necrolord,
 };
 
 export const MISTS_OF_TIRNA_SCITHE: DungeonMeta = {
@@ -540,6 +552,7 @@ export const MISTS_OF_TIRNA_SCITHE: DungeonMeta = {
     173_655: 16, // Mistveil Matriarch
   },
   count: 260,
+  covenant: Covenants.NightFae,
 };
 
 export const DE_OTHER_SIDE: DungeonMeta = {
@@ -621,6 +634,7 @@ export const DE_OTHER_SIDE: DungeonMeta = {
     171_184: 12, // Mythresh, Sky's Talons
   },
   count: 384,
+  covenant: Covenants.NightFae,
 };
 
 export const THEATER_OF_PAIN: DungeonMeta = {
@@ -710,6 +724,7 @@ export const THEATER_OF_PAIN: DungeonMeta = {
     163_086: 8, // Rancid Gasbag
   },
   count: 271,
+  covenant: Covenants.Necrolord,
 };
 
 export const TAZAVESH_LOWER: DungeonMeta = {
@@ -721,6 +736,7 @@ export const TAZAVESH_LOWER: DungeonMeta = {
   timer: createDungeonTimer(0),
   unitCountMap: {},
   zones: [],
+  covenant: null,
 };
 
 export const TAZAVESH_UPPER: DungeonMeta = {
@@ -732,6 +748,7 @@ export const TAZAVESH_UPPER: DungeonMeta = {
   timer: createDungeonTimer(0),
   unitCountMap: {},
   zones: [],
+  covenant: null,
 };
 
 export const dungeonMap: Record<Dungeon["id"], DungeonMeta> = {

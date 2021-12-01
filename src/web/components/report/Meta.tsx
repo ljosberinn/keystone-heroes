@@ -24,7 +24,7 @@ import {
   classBorderColorMap,
 } from "../../utils";
 import { classnames } from "../../utils/classnames";
-import { AbilityIcon } from "../AbilityIcon";
+import { AbilityIcon, STATIC_ICON_PREFIX } from "../AbilityIcon";
 import { ExternalLink } from "../ExternalLink";
 import { SpecIcon } from "../SpecIcon";
 
@@ -88,19 +88,26 @@ export function Meta(): JSX.Element {
 
         <TimeInformation meta={fight.meta} dungeon={dungeon} />
 
-        <div className="p-4 pt-0">
-          <span
-            className={
-              fight.meta.percent < 101
-                ? greenText
-                : fight.meta.percent < 103
-                ? "text-yellow-600"
-                : redText
-            }
-          >
-            {fight.meta.percent.toFixed(2)}%
-          </span>{" "}
-          trash cleared
+        <div className="flex justify-between w-full p-4 pt-0">
+          <span className="flex self-end space-x-1">
+            <span
+              className={
+                fight.meta.percent < 101
+                  ? greenText
+                  : fight.meta.percent < 103
+                  ? "text-yellow-600"
+                  : redText
+              }
+            >
+              {fight.meta.percent.toFixed(2)}%
+            </span>
+            <span>trash cleared</span>
+          </span>
+
+          <DungeonCovenantRequirementIndicator
+            dungeon={dungeon}
+            player={fight.player}
+          />
         </div>
       </div>
 
@@ -422,5 +429,44 @@ function TimeInformation({ meta, dungeon }: TimeInformationProps) {
         </span>
       )}
     </div>
+  );
+}
+
+type DungeonCovenantRequirementIndicatorProps = {
+  dungeon: typeof dungeons[keyof typeof dungeons];
+  player: FightSuccessResponse["player"];
+};
+
+function DungeonCovenantRequirementIndicator({
+  dungeon,
+  player,
+}: DungeonCovenantRequirementIndicatorProps) {
+  if (!dungeon.covenant || !(dungeon.covenant in covenants)) {
+    return null;
+  }
+
+  const covenant = covenants[dungeon.covenant];
+
+  const fulfillsRequirement = player.some(
+    (player) => player.covenant === dungeon.covenant
+  );
+
+  return (
+    <span>
+      <img
+        src={`${STATIC_ICON_PREFIX + covenant.icon}.jpg`}
+        alt={covenant.name}
+        loading="lazy"
+        className={classnames(
+          "w-8 h-8 rounded-full",
+          !fulfillsRequirement && "grayscale opacity-60"
+        )}
+        title={
+          fulfillsRequirement
+            ? "dungeon covenant requirement fulfilled"
+            : `missing a player affiliated with the ${covenant.name}`
+        }
+      />
+    </span>
   );
 }

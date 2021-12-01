@@ -26,7 +26,7 @@ body:
         - label: "`/`"
         - label: "`/routes/discover`"
         - label: "`/privacy`"
-        - label: "`/[code]/[fightID]`"
+        - label: "`/[reportID]/[fightID]`"
         - label: "`other`"
 
   - type: textarea

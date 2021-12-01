@@ -3,7 +3,7 @@ import { Suspense, useState, SuspenseList } from "react";
 
 import type { FightSuccessResponse } from "../../../api/functions/fight";
 import { useFight } from "../../../pages/report/[reportID]/[fightID]";
-import { outlineQuestionCircle, tableLine, timeline } from "../../icons";
+import { outlineQuestionCircle } from "../../icons";
 import {
   classes,
   dungeons,
@@ -357,15 +357,10 @@ function Events() {
   const selectedPull = pulls.find((pull) => pull.id === selectedPullID);
 
   const [trackedPlayer, setTrackedPlayer] = useState(player.map((p) => p.id));
-  const [mode, setMode] = useState<"table" | "timeline">("table");
 
   if (!selectedPull) {
     return null;
   }
-
-  // const allEvents = pulls.flatMap((pull) => pull.events);
-
-  const isTable = mode === "table";
 
   const playerIdPlayerNameMap = Object.fromEntries<string>(
     player.map((p) => [p.id, p.name])
@@ -478,124 +473,134 @@ function Events() {
               </label>
             </span> */}
           </div>
-
-          <div className="hidden md:items-center md:flex">
-            <button
-              type="button"
-              className={classnames(
-                "p-2 rounded-tl-lg rounded-bl-lg",
-                isTable ? "bg-coolgray-400 dark:bg-coolgray-900" : bgSecondary
-              )}
-              onClick={() => {
-                setMode("table");
-              }}
-              disabled={isTable}
-              title="View as Table"
-            >
-              <svg className="w-4 h-4">
-                <use href={`#${tableLine.id}`} />
-              </svg>
-            </button>
-            <button
-              type="button"
-              className={classnames(
-                "p-2 rounded-tr-lg rounded-br-lg",
-                isTable ? bgSecondary : "bg-coolgray-400 dark:bg-coolgray-900"
-              )}
-              onClick={() => {
-                setMode("timeline");
-              }}
-              disabled={!isTable}
-              title="View as Timeline"
-            >
-              <svg className="w-4 h-4">
-                <use href={`#${timeline.id}`} />
-              </svg>
-            </button>
-          </div>
         </div>
 
-        {isTable ? (
-          <table className="w-full">
-            <thead>
-              <tr>
-                <th>Rel. Timestamp</th>
-                <th>Type</th>
-                <th>Player</th>
-                <th>Ability</th>
-                <th>Last Use</th>
-                <th>Next Use</th>
-              </tr>
-            </thead>
-            {before.length > 0 && (
-              <ErrorBoundary>
-                <tbody>
-                  <tr>
-                    <td colSpan={6} className="text-center">
-                      <span
-                        className="font-semibold"
-                        title="Events that happend closer to this pull than the last can be found here."
-                      >
-                        Before Pull
-                        <sup>
-                          <svg className="inline w-4 h-4 ml-2 text-black dark:text-white">
-                            <use href={`#${outlineQuestionCircle.id}`} />
-                          </svg>
-                        </sup>
-                      </span>
-                    </td>
-                  </tr>
-                  <SuspenseList revealOrder="forwards">
-                    {before.map((event, index) => {
-                      const msSinceLastEvent = before[index - 1]
-                        ? timeDurationToString(
-                            event.timestamp - before[index - 1].timestamp
-                          )
-                        : timeDurationToString(0);
-
-                      return (
-                        <Suspense
-                          fallback={null}
-                          key={createRowKey(event, index)}
-                        >
-                          <TableRow
-                            event={event}
-                            msSinceLastEvent={msSinceLastEvent}
-                            playerIdPlayerNameMap={playerIdPlayerNameMap}
-                            playerIdTextColorMap={playerIdTextColorMap}
-                          />
-                        </Suspense>
-                      );
-                    })}
-                  </SuspenseList>
-                </tbody>
-              </ErrorBoundary>
-            )}
-
+        <table className="w-full">
+          <thead>
+            <tr>
+              <th>Rel. Timestamp</th>
+              <th>Type</th>
+              <th>Player</th>
+              <th>Ability</th>
+              <th>Last Use</th>
+              <th>Next Use</th>
+            </tr>
+          </thead>
+          {before.length > 0 && (
             <ErrorBoundary>
-              <tbody
-                className={
-                  before.length > 0
-                    ? "border-t-2 border-coolgray-900 text-center"
-                    : undefined
-                }
-              >
+              <tbody>
                 <tr>
                   <td colSpan={6} className="text-center">
-                    <span className="font-semibold">During Pull</span>
+                    <span
+                      className="font-semibold"
+                      title="Events that happend closer to this pull than the last can be found here."
+                    >
+                      Before Pull
+                      <sup>
+                        <svg className="inline w-4 h-4 ml-2 text-black dark:text-white">
+                          <use href={`#${outlineQuestionCircle.id}`} />
+                        </svg>
+                      </sup>
+                    </span>
                   </td>
                 </tr>
                 <SuspenseList revealOrder="forwards">
-                  {during.map((event, index) => {
-                    const msSinceLastEvent = during[index - 1]
+                  {before.map((event, index) => {
+                    const msSinceLastEvent = before[index - 1]
                       ? timeDurationToString(
-                          event.timestamp - during[index - 1].timestamp
+                          event.timestamp - before[index - 1].timestamp
+                        )
+                      : timeDurationToString(0);
+
+                    return (
+                      <Suspense
+                        fallback={null}
+                        key={createRowKey(event, index)}
+                      >
+                        <TableRow
+                          event={event}
+                          msSinceLastEvent={msSinceLastEvent}
+                          playerIdPlayerNameMap={playerIdPlayerNameMap}
+                          playerIdTextColorMap={playerIdTextColorMap}
+                        />
+                      </Suspense>
+                    );
+                  })}
+                </SuspenseList>
+              </tbody>
+            </ErrorBoundary>
+          )}
+
+          <ErrorBoundary>
+            <tbody
+              className={
+                before.length > 0
+                  ? "border-t-2 border-coolgray-900 text-center"
+                  : undefined
+              }
+            >
+              <tr>
+                <td colSpan={6} className="text-center">
+                  <span className="font-semibold">During Pull</span>
+                </td>
+              </tr>
+              <SuspenseList revealOrder="forwards">
+                {during.map((event, index) => {
+                  const msSinceLastEvent = during[index - 1]
+                    ? timeDurationToString(
+                        event.timestamp - during[index - 1].timestamp
+                      )
+                    : timeDurationToString(
+                        before.length > 0
+                          ? event.timestamp -
+                              before[before.length - 1].timestamp
+                          : 0
+                      );
+
+                  return (
+                    <Suspense fallback={null} key={createRowKey(event, index)}>
+                      <TableRow
+                        event={event}
+                        msSinceLastEvent={msSinceLastEvent}
+                        playerIdPlayerNameMap={playerIdPlayerNameMap}
+                        playerIdTextColorMap={playerIdTextColorMap}
+                      />
+                    </Suspense>
+                  );
+                })}
+              </SuspenseList>
+            </tbody>
+          </ErrorBoundary>
+
+          {after.length > 0 && (
+            <ErrorBoundary>
+              <tbody className="border-t-2 border-coolgray-900">
+                <tr>
+                  <td colSpan={6} className="text-center">
+                    <span
+                      className="font-semibold"
+                      title="Events that happend closer to this pull than the next can be found here."
+                    >
+                      After Pull
+                      <sup>
+                        <svg className="inline w-4 h-4 ml-2 text-black dark:text-white">
+                          <use href={`#${outlineQuestionCircle.id}`} />
+                        </svg>
+                      </sup>
+                    </span>
+                  </td>
+                </tr>
+                <SuspenseList revealOrder="forwards">
+                  {after.map((event, index) => {
+                    const msSinceLastEvent = after[index - 1]
+                      ? timeDurationToString(
+                          event.timestamp - after[index - 1].timestamp
                         )
                       : timeDurationToString(
-                          before.length > 0
-                            ? event.timestamp -
-                                before[before.length - 1].timestamp
-                            : 0
+                          event.timestamp -
+                            (during[during.length - 1]?.timestamp ??
+                              before[before.length - 1]?.timestamp ??
+                              0)
                         );
 
                     return (
@@ -615,81 +620,31 @@ function Events() {
                 </SuspenseList>
               </tbody>
             </ErrorBoundary>
+          )}
 
-            {after.length > 0 && (
-              <ErrorBoundary>
-                <tbody className="border-t-2 border-coolgray-900">
-                  <tr>
-                    <td colSpan={6} className="text-center">
-                      <span
-                        className="font-semibold"
-                        title="Events that happend closer to this pull than the next can be found here."
-                      >
-                        After Pull
-                        <sup>
-                          <svg className="inline w-4 h-4 ml-2 text-black dark:text-white">
-                            <use href={`#${outlineQuestionCircle.id}`} />
-                          </svg>
-                        </sup>
-                      </span>
-                    </td>
-                  </tr>
-                  <SuspenseList revealOrder="forwards">
-                    {after.map((event, index) => {
-                      const msSinceLastEvent = after[index - 1]
-                        ? timeDurationToString(
-                            event.timestamp - after[index - 1].timestamp
-                          )
-                        : timeDurationToString(
-                            event.timestamp -
-                              (during[during.length - 1]?.timestamp ??
-                                before[before.length - 1]?.timestamp ??
-                                0)
-                          );
-
-                      return (
-                        <Suspense
-                          fallback={null}
-                          key={createRowKey(event, index)}
-                        >
-                          <TableRow
-                            event={event}
-                            msSinceLastEvent={msSinceLastEvent}
-                            playerIdPlayerNameMap={playerIdPlayerNameMap}
-                            playerIdTextColorMap={playerIdTextColorMap}
-                          />
-                        </Suspense>
-                      );
-                    })}
-                  </SuspenseList>
-                </tbody>
-              </ErrorBoundary>
-            )}
-
-            <tfoot>
-              <Suspense fallback={null}>
-                {sanguineHealEvents.length > 0 ? (
-                  <SanguineTimeLossRow events={sanguineHealEvents} />
-                ) : null}
-                {plagueBombDamageEvents.length > 0 ? (
-                  <PlagueBombDamageRow events={plagueBombDamageEvents} />
-                ) : null}
-                {violentDetonationDamageEvents.length > 0 ? (
-                  <ViolentDetonationDamageRow
-                    events={violentDetonationDamageEvents}
-                  />
-                ) : null}
-                {explosivesEvents.length > 0 ? (
-                  <ExplosivesSummaryRow
-                    events={explosivesEvents}
-                    playerIdPlayerNameMap={playerIdPlayerNameMap}
-                    playerIdTextColorMap={playerIdTextColorMap}
-                  />
-                ) : null}
-              </Suspense>
-            </tfoot>
-          </table>
-        ) : null}
+          <tfoot>
+            <Suspense fallback={null}>
+              {sanguineHealEvents.length > 0 ? (
+                <SanguineTimeLossRow events={sanguineHealEvents} />
+              ) : null}
+              {plagueBombDamageEvents.length > 0 ? (
+                <PlagueBombDamageRow events={plagueBombDamageEvents} />
+              ) : null}
+              {violentDetonationDamageEvents.length > 0 ? (
+                <ViolentDetonationDamageRow
+                  events={violentDetonationDamageEvents}
+                />
+              ) : null}
+              {explosivesEvents.length > 0 ? (
+                <ExplosivesSummaryRow
+                  events={explosivesEvents}
+                  playerIdPlayerNameMap={playerIdPlayerNameMap}
+                  playerIdTextColorMap={playerIdTextColorMap}
+                />
+              ) : null}
+            </Suspense>
+          </tfoot>
+        </table>
       </div>
     </PullDetailsSettingsProvider>
   );

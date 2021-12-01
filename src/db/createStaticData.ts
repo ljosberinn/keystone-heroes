@@ -85,6 +85,10 @@ async function create() {
 
   const dungeons = Object.fromEntries(
     rawDungeons.map((dungeon) => {
+      const covenant = rawCovenants.find(
+        (covenant) => covenant.name === dungeon.covenant
+      );
+
       return [
         dungeon.id,
         {
@@ -97,6 +101,7 @@ async function create() {
           })),
           unitCountMap: dungeon.unitCountMap,
           count: dungeon.count,
+          covenant: covenant ? covenant.id : null,
         },
       ];
     })
@@ -526,7 +531,7 @@ export const isTormentedLieutenant = (id: number): boolean => tormentedLieutenan
 export const classes: Record<number, { name: string; cooldowns: number[]; specs: { id: number; name: string; cooldowns: number[]; }[]}> = JSON.parse(\`${JSON.stringify(
     classes
   )}\`);
-export const dungeons: Record<number, { name: string; slug: string; time: number; zones: {id: number; name: string; }[]; unitCountMap: Record<number, number>; count: number; }> = JSON.parse(\`${JSON.stringify(
+export const dungeons: Record<number, { name: string; slug: string; time: number; zones: {id: number; name: string; }[]; unitCountMap: Record<number, number>; count: number; covenant: number }> = JSON.parse(\`${JSON.stringify(
     dungeons
   )}\`);
 export const affixes: Record<number, { name: string; icon: string;}> = JSON.parse(\`${JSON.stringify(
@@ -571,6 +576,7 @@ export const conduits: Record<number, { name: string; icon: string }> = JSON.par
     ...rawLegendaries.map((legendary) => legendary.effectIcon),
     ...rawTalents.map((talent) => talent.icon),
     ...rawConduits.map((conduit) => conduit.icon),
+    ...rawCovenants.map((covenant) => covenant.icon),
     "inv_alchemy_80_potion02orange",
     "inv_misc_questionmark",
     "inv_misc_spyglass_03",

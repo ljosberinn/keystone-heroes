@@ -2,10 +2,10 @@ import { useTheme } from "next-themes";
 import Link from "next/link";
 import { version } from "react";
 
-import { defaultQueryParams, url } from "../../pages/routes/discover";
-import { buymeacoffee, map, paypal, twitter, discord } from "../icons";
+// import { defaultQueryParams, url } from "../../pages/routes/discover";
+import { buymeacoffee, paypal, twitter, discord /* map */ } from "../icons";
 import { internalLinKClasses } from "../styles/tokens";
-import { createInternalUrl } from "../utils";
+// import { createInternalUrl } from "../utils";
 import { ColorModeToggle } from "./ColorModeToggle";
 import { ExternalLink } from "./ExternalLink";
 import { Logo } from "./Logo";
@@ -43,7 +43,7 @@ export function Footer(): JSX.Element {
 
           <div className="grid items-center w-full grid-cols-1 text-center md:grid-cols-2 lg:pr-8 md:gap-10 md:text-left md:items-start md:w-auto">
             <ul>
-              <FooterNavLink
+              {/* <FooterNavLink
                 internal
                 href={createInternalUrl(url, defaultQueryParams)}
               >
@@ -53,7 +53,7 @@ export function Footer(): JSX.Element {
                   </svg>
                   Discover Routes
                 </span>
-              </FooterNavLink>
+              </FooterNavLink> */}
             </ul>
             <ul className="md:text-right">
               <FooterNavLink href="https://buymeacoffee.com/rOSn8DF">
