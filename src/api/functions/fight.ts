@@ -773,20 +773,28 @@ const calculateEventsBeforeDuringAfterPull = ({
     ? pullEnd + (nextPullStart - pullEnd) / 2
     : null;
 
-  const before =
-    lastPullEnd && middleAfterLastPull
-      ? allEvents
-          .filter((event) => {
-            return (
-              event.timestamp >= middleAfterLastPull &&
-              event.timestamp < pullStart
-            );
-          })
-          .map((event) => ({
-            ...event,
-            category: EventCategory.BEFORE,
-          }))
-      : [];
+  const before = allEvents
+    .filter((event) => {
+      if (event.timestamp >= pullStart) {
+        return false;
+      }
+
+      // first pull has no lastPull (duh) so events before this are automatically relevant
+      if (lastPullEnd === 0) {
+        return true;
+      }
+
+      // required for ts; can be null here but it's logically impossible
+      if (!middleAfterLastPull) {
+        return false;
+      }
+
+      return event.timestamp >= middleAfterLastPull;
+    })
+    .map((event) => ({
+      ...event,
+      category: EventCategory.BEFORE,
+    }));
 
   const during = allEvents
     .filter((event) => {
@@ -1315,9 +1323,15 @@ const getResponseOrRetrieveAndCreateFight = async (
   const persistablePullEvents = persistedPulls.flatMap((pull, index) => {
     const lastPull = persistedPulls[index - 1];
 
+    const isFirstPull = index === 0;
+
     const thisPullsEvents = allEvents.filter(({ timestamp }) => {
+      const isBeforePull = timestamp < pull.startTime;
+      const isAfterPullStart = timestamp >= pull.startTime;
+      const isBeforePullEnd = timestamp <= pull.endTime;
       const isDuringThisPull =
-        timestamp >= pull.startTime && timestamp <= pull.endTime;
+        // very first pull - include events that happened before this pull
+        ((isFirstPull && isBeforePull) || isAfterPullStart) && isBeforePullEnd;
       // some CDs may be used outside of a pull in preparation to set it up
       // e.g. Sigil of Silence/Chains/Imprison right before pulling.
       // Because of that, any event past the last pull and before this will be
