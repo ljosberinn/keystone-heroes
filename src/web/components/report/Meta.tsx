@@ -291,22 +291,24 @@ export function Meta(): JSX.Element {
                       </div>
                     </td>
                     <td>
-                      <div className="flex justify-end h-10 space-x-1">
-                        <span className="lg:hidden xl:inline">
-                          <WarcraftLogsProfileLink
-                            name={player.name}
-                            server={player.server}
-                            region={player.region}
-                          />
-                        </span>
-                        <span className="lg:hidden xl:inline">
-                          <RaiderIOLink
-                            name={player.name}
-                            server={player.server}
-                            region={player.region}
-                          />
-                        </span>
-                      </div>
+                      {player.server === "Anonymous" ? null : (
+                        <div className="flex justify-end h-10 space-x-1">
+                          <span className="lg:hidden xl:inline">
+                            <WarcraftLogsProfileLink
+                              name={player.name}
+                              server={player.server}
+                              region={player.region}
+                            />
+                          </span>
+                          <span className="lg:hidden xl:inline">
+                            <RaiderIOLink
+                              name={player.name}
+                              server={player.server}
+                              region={player.region}
+                            />
+                          </span>
+                        </div>
+                      )}
                     </td>
                   </tr>
                 </Fragment>
