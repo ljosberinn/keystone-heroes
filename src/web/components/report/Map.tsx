@@ -26,6 +26,7 @@ import {
 import type { MapOptionsStore } from "../../store";
 import {
   useLegend,
+  reportStoreSelector,
   useMapOptions,
   useReportStore,
   useRestoreMapOptions,
@@ -471,7 +472,7 @@ function FullscreenPullNPCs() {
 }
 
 function FullscreenNavigation() {
-  const { selectedPull, setSelectedPull } = useReportStore();
+  const { selectedPull, setSelectedPull } = useReportStore(reportStoreSelector);
   const { pulls } = useFight().fight;
 
   const isFirst = pulls[0].id === selectedPull;
@@ -1004,8 +1005,7 @@ type PullIndicatorIconProps = {
 };
 
 function PullIndicatorIcon({ pull, x, y }: PullIndicatorIconProps) {
-  const selectedPull = useReportStore((state) => state.selectedPull);
-  const setSelectedPull = useReportStore((state) => state.setSelectedPull);
+  const { selectedPull, setSelectedPull } = useReportStore(reportStoreSelector);
 
   const selected = selectedPull === pull.id;
 

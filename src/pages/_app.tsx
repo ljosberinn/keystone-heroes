@@ -9,6 +9,7 @@ import { useEffect } from "react";
 import { Footer } from "../web/components/Footer";
 import { Header } from "../web/components/Header";
 import { RouteChangeIndicator } from "../web/components/RouteChangeIndicator";
+import { useReportStore } from "../web/store";
 import { parseWCLUrl } from "../web/utils";
 
 export type AppRenderProps = {
@@ -53,6 +54,7 @@ export default function App({
 
 function useWCLURLPaste() {
   const { push } = useRouter();
+  const setSelectedPull = useReportStore((state) => state.setSelectedPull);
 
   useEffect(() => {
     const listener = (event: ClipboardEvent) => {
@@ -67,6 +69,8 @@ function useWCLURLPaste() {
         const nextPath = `/report/${reportID}${
           fightID ? `?fightID=${fightID}` : ""
         }`;
+        // always reset to first pull
+        setSelectedPull(1);
         // eslint-disable-next-line @typescript-eslint/no-floating-promises
         push(nextPath);
       }
@@ -77,5 +81,5 @@ function useWCLURLPaste() {
     return () => {
       document.removeEventListener("paste", listener);
     };
-  }, [push]);
+  }, [push, setSelectedPull]);
 }

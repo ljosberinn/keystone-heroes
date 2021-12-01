@@ -8,6 +8,14 @@ export type ReportStore = {
   setSelectedPull: (id: number) => void;
 };
 
+export const reportStoreSelector = ({
+  selectedPull,
+  setSelectedPull,
+}: ReportStore): ReportStore => ({
+  selectedPull,
+  setSelectedPull,
+});
+
 export const useReportStore = create<ReportStore>((set) => {
   return {
     selectedPull: 1,
