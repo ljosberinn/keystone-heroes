@@ -403,8 +403,22 @@ function TimeInformation({ meta, dungeon }: TimeInformationProps) {
         )}
       </span>
       {meta.totalDeaths > 0 && (
-        <span className={`italic ${redText}`}>
-          -{timeDurationToString(meta.totalDeaths * 5 * 1000, true)}
+        <span
+          className={`flex ${redText}`}
+          title={`lost ${timeDurationToString(
+            meta.totalDeaths * 5 * 1000,
+            true
+          )} due to deaths`}
+        >
+          {meta.totalDeaths}{" "}
+          <img
+            src="/static/skull.png"
+            height={32}
+            width={32}
+            loading="lazy"
+            className="w-8 h-8"
+            alt="deaths"
+          />
         </span>
       )}
     </div>
