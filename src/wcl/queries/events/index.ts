@@ -12,6 +12,8 @@ import {
   invisibilityFilterExpression,
   interruptFilterExpression,
   filterPlayerInterruptEvents,
+  generalCovenantExpression,
+  filterCovenantCastEvents,
 } from "../events/other";
 import type {
   AllTrackedEventTypes,
@@ -43,6 +45,7 @@ const generateFilterExpression = ({
     engineeringBattleRezExpression,
     invisibilityFilterExpression,
     interruptFilterExpression,
+    generalCovenantExpression,
     ...getDungeonExpression(dungeonID),
     ...getAffixExpression(affixes),
   ]
@@ -96,6 +99,7 @@ export const getEvents = async (
       ? findExplosiveTargetID(allEvents)
       : null
   );
+  const sharedCovenantAbilitiesEvents = filterCovenantCastEvents(allEvents);
 
   return {
     allEvents: [
@@ -105,6 +109,7 @@ export const getEvents = async (
       ...remarkableSpellEvents,
       ...playerDeathEvents,
       ...interruptEvents,
+      ...sharedCovenantAbilitiesEvents,
     ].sort((a, b) => a.timestamp - b.timestamp),
     playerDeathEvents,
     enemyDeathEvents,

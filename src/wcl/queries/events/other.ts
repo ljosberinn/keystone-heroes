@@ -11,6 +11,13 @@ import type {
 } from "./types";
 import { createIsSpecificEvent } from "./utils";
 
+export const SHARED_COVENANT_ABILITIES = {
+  FLESHCRAFT: 324_631,
+  SOULSHAPE: 310_143,
+  SUMMON_STEWARD: 324_739,
+  DOOR_OF_SHADOWS: 300_728,
+} as const;
+
 export const INVISIBILITY = {
   DIMENSIONAL_SHIFTER: 321_422,
   POTION_OF_THE_HIDDEN_SPIRIT: 307_195,
@@ -59,17 +66,32 @@ export const engineeringBattleRezExpression = `type = "cast" and ability.id = ${
  */
 export const leatherworkingDrumsExpression = `type = "cast" and ability.id = ${LEATHERWORKING_DRUMS.SHADOWLANDS}`;
 
+export const generalCovenantExpression = `type = "cast" and ability.id in (${Object.values(
+  SHARED_COVENANT_ABILITIES
+).join(", ")})`;
+
+const isSharedCovenantAbility = createIsSpecificEvent<CastEvent>({
+  abilityGameID: Object.values(SHARED_COVENANT_ABILITIES),
+  type: "cast",
+});
+
+export const filterCovenantCastEvents = (
+  allEvents: AllTrackedEventTypes[]
+): CastEvent[] => {
+  return allEvents.filter(isSharedCovenantAbility);
+};
+
 const RENEWING_MIST = 300_155;
 /**
  * @description filters for
  * - _any_ death event
  * - the `Renewing Mist` cast Tirnenn Villagers do upon their "death"
  */
-export const deathFilterExpression = `type ="death" or (ability.id = ${RENEWING_MIST} and type = "begincast")`;
+export const deathFilterExpression = `type = "death" or (ability.id = ${RENEWING_MIST} and type = "begincast")`;
 // TODO: feign false doesnt work?
 // export const friendliesDeathFilterExpression =
 //   'target.type = "player" and type = "death"'; //  and feign = false
-export const remarkableSpellFilterExpression = `source.type = "player" and type = "cast" and ability.id IN (${[
+export const remarkableSpellFilterExpression = `source.type = "player" and type = "cast" and ability.id in (${[
   ...remarkableSpellIDs,
 ].join(", ")})`;
 

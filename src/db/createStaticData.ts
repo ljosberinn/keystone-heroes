@@ -31,6 +31,7 @@ import {
 } from "../wcl/queries/events/dungeons/sd";
 import { SOA_SPEAR } from "../wcl/queries/events/dungeons/soa";
 import { TOP_BANNER_AURA } from "../wcl/queries/events/dungeons/top";
+import { SHARED_COVENANT_ABILITIES } from "../wcl/queries/events/other";
 import { allBossIDs, dungeons as rawDungeons } from "./data/dungeons";
 import { spells } from "./data/spellIds";
 import { prisma } from "./prisma";
@@ -304,6 +305,26 @@ async function create() {
 
   const extendedSpells = {
     ...spells,
+    [SHARED_COVENANT_ABILITIES.DOOR_OF_SHADOWS]: {
+      name: "Door of Shadows",
+      icon: "ability_venthyr_doorofshadows",
+      cd: 60,
+    },
+    [SHARED_COVENANT_ABILITIES.SOULSHAPE]: {
+      name: "Soulshape",
+      icon: "ability_nightfae_flicker",
+      cd: 90,
+    },
+    [SHARED_COVENANT_ABILITIES.SUMMON_STEWARD]: {
+      name: "Summon Steward",
+      icon: "ability_kyrian_summonsteward",
+      cd: 300,
+    },
+    [SHARED_COVENANT_ABILITIES.FLESHCRAFT]: {
+      name: "Fleshcraft",
+      icon: "ability_necrolord_fleshcraft",
+      cd: 180,
+    },
     [SANGUINE_ICHOR_DAMAGE]: {
       name: "Sanguine Ichor",
       icon: "spell_shadow_bloodboil",
