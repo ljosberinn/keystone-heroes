@@ -176,12 +176,26 @@ type FightIDHeadProps = {
 function FightIDHead({ fight }: FightIDHeadProps) {
   const dungeon = dungeons[fight.dungeon];
 
+  const time = timeDurationToString(fight.meta.time);
+  const timeLeft = timeDurationToString(dungeon.time - fight.meta.time);
+
+  const title = `${dungeon.slug} +${fight.meta.level} in ${time}`;
+  const extendedTitle = `${dungeon.name} +${fight.meta.level} in ${time} | +${timeLeft} left | ${fight.meta.totalDeaths} deaths`;
+
   return (
     <Head>
-      <title>
-        {dungeon.slug} +{fight.meta.level} in{" "}
-        {timeDurationToString(fight.meta.time)}
-      </title>
+      <title>{title}</title>
+
+      <meta
+        key="og-description"
+        property="og:description"
+        content={extendedTitle}
+      />
+      <meta
+        key="og-image"
+        property="og:image"
+        content={`/static/dungeons/${dungeon.slug.toLowerCase()}.jpg`}
+      />
     </Head>
   );
 }

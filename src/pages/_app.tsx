@@ -11,6 +11,7 @@ import { Header } from "../web/components/Header";
 import { RouteChangeIndicator } from "../web/components/RouteChangeIndicator";
 import { useReportStore } from "../web/store";
 import { parseWCLUrl } from "../web/utils";
+import { description, logo, extendedTitle } from "./_document";
 
 export type AppRenderProps = {
   pageProps: Record<string, unknown>;
@@ -37,6 +38,17 @@ export default function App({
           content="minimum-scale=1, initial-scale=1, width=device-width"
         />
         <title>Keystone Heroes</title>
+        <meta
+          key="og-description"
+          property="og:description"
+          content={description}
+        />
+        <meta key="og-image" property="og:image" content={logo} />
+        <meta
+          key="og-image-alt"
+          property="og:image:alt"
+          content={extendedTitle}
+        />
       </Head>
       <RouteChangeIndicator />
       <ThemeProvider attribute="class" defaultTheme="dark">

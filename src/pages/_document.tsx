@@ -4,10 +4,10 @@ import { Html, Head, Main, NextScript } from "next/document";
 import * as icons from "../web/icons";
 
 const title = "Keystone Heroes";
-const extendedTitle = `${title} - Mythic+ Log Analysis`;
-const description =
+export const extendedTitle = `${title} - Mythic+ Log Analysis`;
+export const description =
   "In-depth analysis for Mythic+ runs based on WarcraftLogs including routes, cooldown usage and other improvement vectors.";
-const logo = "/summary_large_image.png";
+export const logo = "/summary_large_image.png";
 const url = "https://keystone-heroes.com/";
 const twitterHandle = "@gerrit_alex";
 
@@ -38,9 +38,7 @@ export default function CustomDocument(/* props: DocumentProps*/): JSX.Element {
         <meta property="og:url" content={url} />
         <meta property="og:type" content="website" />
         <meta property="og:title" content={title} />
-        <meta property="og:image" content={logo} />
-        <meta property="og:image:alt" content={extendedTitle} />
-        <meta property="og:description" content={description} />
+
         <meta property="og:site_name" content={title} />
         <meta property="og:locale" content="en_US" />
 
