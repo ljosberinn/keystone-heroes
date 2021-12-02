@@ -34,6 +34,7 @@ import {
   DungeonIDs,
   SOA_FINAL_BOSS_ANGELS,
   Boss,
+  isMultiTargetBossFight,
 } from "../../db/data/dungeons";
 import { spells } from "../../db/data/spellIds";
 import { prisma } from "../../db/prisma";
@@ -1295,12 +1296,9 @@ const getResponseOrRetrieveAndCreateFight = async (
         // units but didn't die, e.g. for some reason Dealer in DoS,
         // slime minigame in DoS as well as invisible units
 
-        // first boss in top  ends based on a _second_ death of Dessia
-        // which leads to a false positive of Dessia appearing twice
-        const deathCountOfThisNPC =
-          npc.gameID === Boss.DESSIA_THE_DECAPITATOR
-            ? 1
-            : npcDeathCountMap[npc.id] ?? 1;
+        const deathCountOfThisNPC = isMultiTargetBossFight(npc.gameID)
+          ? 1
+          : npcDeathCountMap[npc.id] ?? 1;
 
         return {
           npcID: npc.gameID,

@@ -59,6 +59,26 @@ export enum Boss {
   MARGRAVE_STRADAMA = 164_267,
 }
 
+const multiTargetBossFights = new Set([
+  Boss.KIN_TARA,
+  Boss.AZULES,
+  Boss.PACERAN_THE_VIRULENT,
+  Boss.DESSIA_THE_DECAPITATOR,
+  Boss.SATHEL_THE_ACCURSED,
+]);
+
+/**
+ *
+ * first boss in top  ends based on a _second_ death of Dessia
+ * which leads to a false positive of Dessia appearing twice
+ * same with Kin-Tara and her pet, so presumably all multi-target fights
+ *
+ * @see https://www.warcraftlogs.com/reports/YBgWNfR9qr7mA8Lz#fight=1&translate=true
+ */
+export const isMultiTargetBossFight = (id: number): boolean => {
+  return multiTargetBossFights.has(id);
+};
+
 export enum DungeonIDs {
   SANGUINE_DEPTHS = 2284,
   SPIRES_OF_ASCENSION = 2285,
