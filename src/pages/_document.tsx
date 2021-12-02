@@ -2,14 +2,14 @@ import { Html, Head, Main, NextScript } from "next/document";
 
 // eslint-disable-next-line import/no-namespace
 import * as icons from "../web/icons";
-
-const title = "Keystone Heroes";
-export const extendedTitle = `${title} - Mythic+ Log Analysis`;
-export const description =
-  "In-depth analysis for Mythic+ runs based on WarcraftLogs including routes, cooldown usage and other improvement vectors.";
-export const logo = "/summary_large_image.png";
-const url = "https://keystone-heroes.com/";
-const twitterHandle = "@gerrit_alex";
+import {
+  description,
+  title,
+  logo,
+  twitterHandle,
+  extendedTitle,
+  url,
+} from "../web/seo";
 
 export default function CustomDocument(/* props: DocumentProps*/): JSX.Element {
   return (

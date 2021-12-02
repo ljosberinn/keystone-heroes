@@ -9,9 +9,9 @@ import { useEffect } from "react";
 import { Footer } from "../web/components/Footer";
 import { Header } from "../web/components/Header";
 import { RouteChangeIndicator } from "../web/components/RouteChangeIndicator";
+import { description, logo, extendedTitle } from "../web/seo";
 import { useReportStore } from "../web/store";
 import { parseWCLUrl } from "../web/utils";
-import { description, logo, extendedTitle } from "./_document";
 
 export type AppRenderProps = {
   pageProps: Record<string, unknown>;
