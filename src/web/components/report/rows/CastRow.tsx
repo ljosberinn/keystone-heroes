@@ -10,6 +10,7 @@ import {
   TypeCell,
   SourceOrTargetPlayerCell,
   MaybeWastedCooldownCell,
+  ResponsiveAbilityCell,
 } from "../cells";
 import { determineAbility } from "../utils";
 import type { DefaultEvent } from "../utils";
@@ -73,6 +74,7 @@ export default function CastRow({
         playerIdTextColorMap={playerIdTextColorMap}
         playerIdPlayerNameMap={playerIdPlayerNameMap}
         sourcePlayerID={event.sourcePlayerID}
+        transparent
       />
 
       <td colSpan={ability.cd === DUMMY_CD ? 3 : 1}>
@@ -89,7 +91,8 @@ export default function CastRow({
             width={16}
             height={16}
           />
-          <span className="pl-2">{abilityName}</span>
+
+          <ResponsiveAbilityCell name={abilityName} />
         </ExternalLink>
       </td>
 
@@ -109,18 +112,25 @@ export default function CastRow({
           }
         >
           {event.ability.lastUse ? (
-            <span>
-              {timeDurationToString(
-                event.timestamp - event.ability.lastUse,
-                true
-              )}{" "}
-              ago
-            </span>
+            <>
+              <span className="md:hidden">-</span>
+              <span>
+                {timeDurationToString(
+                  event.timestamp - event.ability.lastUse,
+                  true
+                )}{" "}
+              </span>
+
+              <span className="hidden md:inline"> ago</span>
+            </>
           ) : (
-            "first use"
+            <>
+              <span className="hidden md:inline">first use</span>
+              <span className="md:hidden">1st</span>
+            </>
           )}
           {delayedTooHard && (
-            <sup>
+            <sup className="hidden lg:inline">
               <svg className="inline w-4 h-4 ml-2 text-black dark:text-white">
                 <use href={`#${outlineQuestionCircle.id}`} />
               </svg>

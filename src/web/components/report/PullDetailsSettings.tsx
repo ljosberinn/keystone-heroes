@@ -1,18 +1,16 @@
-import { useContext, createContext, useState } from "react";
+import type { ReactNode } from "react";
+import { useContext, createContext } from "react";
 
-import { useFight } from "../../../pages/report/[reportID]/[fightID]";
-
-type PullDetailsSettingsDefinition = {
-  useAbsoluteTimestamps: boolean;
+type PullMetaDefinition = {
   fightStartTime: number;
-  groupDPS: number;
-  toggleAbsoluteTimestamps: () => void;
+  pullEndTime: number;
 };
 
-const PullDetailsSettingsContext =
-  createContext<PullDetailsSettingsDefinition | null>(null);
+const PullDetailsSettingsContext = createContext<PullMetaDefinition | null>(
+  null
+);
 
-export const usePullDetailsSettings = (): PullDetailsSettingsDefinition => {
+export const usePullMeta = (): PullMetaDefinition => {
   const ctx = useContext(PullDetailsSettingsContext);
 
   if (!ctx) {
@@ -22,24 +20,21 @@ export const usePullDetailsSettings = (): PullDetailsSettingsDefinition => {
   return ctx;
 };
 
-type PullDetailsSettingsProviderProps = {
-  children: JSX.Element | null;
+type PullRowMetaProviderProps = {
+  children: ReactNode[] | null;
+  fightStartTime: number;
+  pullEndTime: number;
 };
 
-export function PullDetailsSettingsProvider({
+export function PullMetaProvider({
   children,
-}: PullDetailsSettingsProviderProps): JSX.Element {
-  const [useAbsoluteTimestamps, setUseAbsoluteTimestamps] = useState(false);
-  const { fight } = useFight();
-
+  fightStartTime,
+  pullEndTime,
+}: PullRowMetaProviderProps): JSX.Element {
   // eslint-disable-next-line react/jsx-no-constructed-context-values
   const value = {
-    useAbsoluteTimestamps,
-    fightStartTime: fight.meta.startTime,
-    groupDPS: fight.meta.dps,
-    toggleAbsoluteTimestamps: () => {
-      setUseAbsoluteTimestamps((prev) => !prev);
-    },
+    fightStartTime,
+    pullEndTime,
   };
 
   return (

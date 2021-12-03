@@ -12,8 +12,8 @@ import {
   isTormentedLieutenant,
   EXPLOSIVE,
 } from "../../staticData";
-import { useReportStore } from "../../store";
-import { bgSecondary } from "../../styles/tokens";
+import { usePullSettings, useReportStore } from "../../store";
+import { bgPrimary, bgSecondary } from "../../styles/tokens";
 import {
   createWowheadUrl,
   timeDurationToString,
@@ -29,7 +29,7 @@ import {
 } from "../AbilityIcon";
 import { ErrorBoundary } from "../ErrorBoundary";
 import { ExternalLink } from "../ExternalLink";
-import { PullDetailsSettingsProvider } from "./PullDetailsSettings";
+import { PullMetaProvider } from "./PullDetailsSettings";
 import { SidebarNPC } from "./SidebarNPC";
 import { usePullNPCs } from "./hooks";
 import type { DefaultEvent } from "./utils";
@@ -158,11 +158,7 @@ function PullSelection() {
     return null;
   }
 
-  const selectedPull = fight.pulls.find((pull) => pull.id === selectedPullID);
-
-  if (!selectedPull) {
-    return null;
-  }
+  const selectedPull = fight.pulls[selectedPullID - 1];
 
   const isFirst = selectedPullID === 1;
   const isLast = fight.pulls[fight.pulls.length - 1].id === selectedPullID;
@@ -351,16 +347,14 @@ function Sidebar() {
 type EventCategory = "before" | "during" | "after";
 
 function Events() {
-  const { pulls, player } = useFight().fight;
+  const { pulls, player, meta } = useFight().fight;
 
   const selectedPullID = useReportStore((state) => state.selectedPull);
-  const selectedPull = pulls.find((pull) => pull.id === selectedPullID);
+  const selectedPull = pulls[selectedPullID - 1];
 
   const [trackedPlayer, setTrackedPlayer] = useState(player.map((p) => p.id));
 
-  if (!selectedPull) {
-    return null;
-  }
+  console.time("metastuff");
 
   const playerIdPlayerNameMap = Object.fromEntries<string>(
     player.map((p) => [p.id, p.name])
@@ -423,69 +417,51 @@ function Events() {
     isViolentDetonationDamageEvent
   );
   const explosivesEvents = selectedPull.events.filter(isExplosivesDamageEvent);
+  console.timeEnd("metastuff");
 
   return (
-    <PullDetailsSettingsProvider>
-      <div className="w-full min-h-screen px-4 py-2 bg-white rounded-lg lg:w-9/23 dark:bg-coolgray-700">
-        <div className="flex justify-between w-full">
-          <div className="flex">
-            {player.map((p) => {
-              const checked = trackedPlayer.includes(p.id);
+    <div className="w-full min-h-screen px-4 py-2 bg-white rounded-lg lg:w-9/23 dark:bg-coolgray-700">
+      <div className="flex justify-between w-full">
+        <div className="flex">
+          {player.map((p) => {
+            const checked = trackedPlayer.includes(p.id);
 
-              return (
-                <span className="p-2" key={p.id}>
-                  <input
-                    type="checkbox"
-                    aria-labelledby={`player-${p.id}`}
-                    id={`player-${p.id}`}
-                    checked={checked}
-                    disabled={checked && trackedPlayer.length === 1}
-                    onChange={() => {
-                      setTrackedPlayer((prev) =>
-                        prev.includes(p.id)
-                          ? prev.filter((id) => id !== p.id)
-                          : [...prev, p.id]
-                      );
-                    }}
-                  />
-                  <label
-                    htmlFor={`player-${p.id}`}
-                    className={`pl-2 ${playerIdTextColorMap[p.id]}`}
-                  >
-                    {p.name}
-                  </label>
-                </span>
-              );
-            })}
-
-            {/* <span className="p-2">
-              <input
-                type="checkbox"
-                aria-labelledby="rel-abs-timestamps"
-                id="rel-abs-timestamps"
-                checked={useAbsoluteTimestamps}
-                onChange={() => {
-                  setUseAbsoluteTimestamps(!useAbsoluteTimestamps);
-                }}
-              />
-              <label htmlFor="rel-abs-timestamps" className="pl-2">
-                use rel. timestamps
-              </label>
-            </span> */}
-          </div>
+            return (
+              <span className="p-2" key={p.id}>
+                <input
+                  type="checkbox"
+                  aria-labelledby={`player-${p.id}`}
+                  id={`player-${p.id}`}
+                  checked={checked}
+                  disabled={checked && trackedPlayer.length === 1}
+                  onChange={() => {
+                    setTrackedPlayer((prev) =>
+                      prev.includes(p.id)
+                        ? prev.filter((id) => id !== p.id)
+                        : [...prev, p.id]
+                    );
+                  }}
+                />
+                <label
+                  htmlFor={`player-${p.id}`}
+                  className={`pl-2 ${playerIdTextColorMap[p.id]}`}
+                >
+                  {p.name}
+                </label>
+              </span>
+            );
+          })}
         </div>
+      </div>
 
-        <table className="w-full">
-          <thead>
-            <tr>
-              <th>Rel. Timestamp</th>
-              <th>Type</th>
-              <th>Player</th>
-              <th>Ability</th>
-              <th>Last Use</th>
-              <th>Next Use</th>
-            </tr>
-          </thead>
+      <table className="w-full">
+        <TableSettings />
+        <TableHead />
+
+        <PullMetaProvider
+          fightStartTime={meta.startTime}
+          pullEndTime={selectedPull.endTime}
+        >
           {before.length > 0 && (
             <ErrorBoundary>
               <tbody>
@@ -496,7 +472,7 @@ function Events() {
                       title="Events that happend closer to this pull than the last can be found here."
                     >
                       Before Pull
-                      <sup>
+                      <sup className="hidden lg:inline">
                         <svg className="inline w-4 h-4 ml-2 text-black dark:text-white">
                           <use href={`#${outlineQuestionCircle.id}`} />
                         </svg>
@@ -576,13 +552,13 @@ function Events() {
             <ErrorBoundary>
               <tbody className="border-t-2 border-coolgray-900">
                 <tr>
-                  <td colSpan={6} className="text-center">
+                  <td colSpan={6} className="text-center ">
                     <span
                       className="font-semibold"
                       title="Events that happend closer to this pull than the next can be found here."
                     >
                       After Pull
-                      <sup>
+                      <sup className="hidden lg:inline">
                         <svg className="inline w-4 h-4 ml-2 text-black dark:text-white">
                           <use href={`#${outlineQuestionCircle.id}`} />
                         </svg>
@@ -644,9 +620,88 @@ function Events() {
               ) : null}
             </Suspense>
           </tfoot>
-        </table>
-      </div>
-    </PullDetailsSettingsProvider>
+        </PullMetaProvider>
+      </table>
+    </div>
+  );
+}
+
+function TableSettings() {
+  const { toggleAbsoluteTimestamps, useAbsoluteTimestamps, toggle, open } =
+    usePullSettings();
+
+  return (
+    <>
+      <thead>
+        <tr>
+          <th colSpan={6} className={`sticky top-0 z-10 ${bgPrimary}`}>
+            <button
+              type="button"
+              className="flex items-center justify-center w-full py-2 space-x-2"
+              onClick={toggle}
+            >
+              <img
+                src="/static/icons/trade_engineering.jpg"
+                className="object-cover w-8 h-8 rounded-full"
+                alt="Map Options"
+                width="32"
+                height="32"
+              />
+              <span>Settings</span>
+            </button>
+          </th>
+        </tr>
+      </thead>
+      {open ? (
+        <tbody>
+          <tr>
+            <td colSpan={6} className={`sticky top-12 z-10 ${bgPrimary} pb-2`}>
+              <div className="flex items-center space-x-2">
+                <input
+                  className="cursor-pointer"
+                  type="checkbox"
+                  checked={useAbsoluteTimestamps}
+                  onChange={toggleAbsoluteTimestamps}
+                  id="useAbsoluteTimestamps"
+                  aria-labelledby="useAbsoluteTimestamps"
+                />
+                <label
+                  htmlFor="useAbsoluteTimestamps"
+                  className="cursor-pointer"
+                >
+                  use absolute timestamps
+                </label>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      ) : null}
+    </>
+  );
+}
+
+function TableHead() {
+  const usesAbsoluteTimestamps = usePullSettings(
+    (state) => state.useAbsoluteTimestamps
+  );
+  const settingsOpen = usePullSettings((state) => state.open);
+
+  const zIndex = settingsOpen ? "top-20" : "top-12";
+  const className = `sticky z-10 ${bgPrimary} ${zIndex}`;
+
+  return (
+    <thead>
+      <tr>
+        <th className={className}>
+          {usesAbsoluteTimestamps ? "Abs." : "Rel."} Timestamp
+        </th>
+        <th className={className}>Type</th>
+        <th className={className}>Player</th>
+        <th className={className}>Ability</th>
+        <th className={className}>Last Use</th>
+        <th className={className}>Next Use</th>
+      </tr>
+    </thead>
   );
 }
 

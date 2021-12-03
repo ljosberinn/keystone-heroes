@@ -1,8 +1,9 @@
 import { useFight } from "../../../pages/report/[reportID]/[fightID]";
 import { spells, DUMMY_CD } from "../../staticData";
+import { usePullSettings } from "../../store";
 import { timeDurationToString } from "../../utils";
 import { classnames } from "../../utils/classnames";
-import { usePullDetailsSettings } from "./PullDetailsSettings";
+import { usePullMeta } from "./PullDetailsSettings";
 import type { AbilityReadyRowProps } from "./rows/AbilityReadyRow";
 import type { CastRowProps } from "./rows/CastRow";
 import { findBloodlust } from "./utils";
@@ -45,7 +46,7 @@ export function MaybeWastedCooldownCell({
   });
 
   if (isBloodlustIsh) {
-    return <td>irrelevant</td>;
+    return <td>-</td>;
   }
 
   const keyEnd = fight.meta.time + fight.meta.startTime;
@@ -60,9 +61,15 @@ export function MaybeWastedCooldownCell({
 
       return (
         <td className="bg-red-500">
-          in{" "}
-          {timeDurationToString(event.ability.nextUse - event.timestamp, true)}{" "}
-          (missing {couldUseNTimes}x)
+          <span className="hidden md:inline">in </span>
+          <span className="md:hidden">+</span>
+          <span>
+            {timeDurationToString(
+              event.ability.nextUse - event.timestamp,
+              true
+            )}{" "}
+          </span>
+          <span className="hidden xl:inline">(missing {couldUseNTimes}x)</span>
         </td>
       );
     }
@@ -71,7 +78,12 @@ export function MaybeWastedCooldownCell({
       (keyEnd - event.timestamp) / 1000 / ability.cd
     );
 
-    return <td className="bg-red-500">never (missing {couldUseNTimes}x)</td>;
+    return (
+      <td className="bg-red-500">
+        <span>never</span>
+        <span className="hidden xl:inline"> (missing {couldUseNTimes}x)</span>
+      </td>
+    );
   }
 
   const couldUseNTimes = calcMissedUsageCount({
@@ -101,8 +113,16 @@ export function MaybeWastedCooldownCell({
             : undefined
         }
       >
-        in {timeDurationToString(event.ability.nextUse - event.timestamp, true)}{" "}
-        {wastedCastUpcoming && <>(missing {Math.floor(couldUseNTimes)}x)</>}
+        <span className="hidden md:inline">in </span>
+        <span className="md:hidden">+</span>
+        <span>
+          {timeDurationToString(event.ability.nextUse - event.timestamp, true)}{" "}
+        </span>
+        {wastedCastUpcoming && (
+          <span className="hidden xl:inline">
+            (missing {Math.floor(couldUseNTimes)}x)
+          </span>
+        )}
       </td>
     );
   }
@@ -113,7 +133,10 @@ export function MaybeWastedCooldownCell({
 
   return (
     <td className="bg-red-500">
-      never (missing {Math.floor(couldUseNTimes)}x)
+      <span>never </span>
+      <span className="hidden xl:inline">
+        (missing {Math.floor(couldUseNTimes)}x)
+      </span>
     </td>
   );
 }
@@ -149,7 +172,17 @@ export function TimestampCell({
   msSinceLastEvent,
   event,
 }: TimestampCellProps): JSX.Element {
-  const { useAbsoluteTimestamps, fightStartTime } = usePullDetailsSettings();
+  const useAbsoluteTimestamps = usePullSettings(
+    (state) => state.useAbsoluteTimestamps
+  );
+  const { fight } = useFight();
+  const { pullEndTime } = usePullMeta();
+
+  const timestamp = useAbsoluteTimestamps
+    ? event.timestamp - fight.meta.startTime
+    : event.timestamp > pullEndTime
+    ? event.timestamp - pullEndTime
+    : event.relTimestamp;
 
   return (
     <td>
@@ -158,11 +191,7 @@ export function TimestampCell({
           msSinceLastEvent ? `${msSinceLastEvent} after last event` : undefined
         }
       >
-        {timeDurationToString(
-          useAbsoluteTimestamps
-            ? event.timestamp - fightStartTime
-            : event.relTimestamp
-        )}
+        {timeDurationToString(timestamp)}
       </span>
     </td>
   );
@@ -213,8 +242,42 @@ export function SourceOrTargetPlayerCell(
   }
 
   return (
-    <td className={classnames(props.playerIdTextColorMap[id])}>
+    <td className={props.playerIdTextColorMap[id]}>
       <span className={transparency}>{props.playerIdPlayerNameMap[id]}</span>
     </td>
+  );
+}
+
+type ResponsiveAbilityCellProps = {
+  name: string;
+  bold?: boolean;
+  paddingless?: boolean;
+  stacks?: number | null;
+};
+
+export function ResponsiveAbilityCell({
+  name,
+  bold,
+  paddingless,
+  stacks,
+}: ResponsiveAbilityCellProps): JSX.Element {
+  const Tag = bold ? "b" : "span";
+
+  return (
+    <>
+      <Tag
+        className={classnames(
+          "hidden md:inline xl:hidden",
+          !paddingless && "pl-2"
+        )}
+      >
+        {stacks ? `${stacks}x ` : null}
+        {name.split(" ").slice(-1)}
+      </Tag>
+      <Tag className={classnames("hidden xl:inline", !paddingless && "pl-2")}>
+        {stacks ? `${stacks}x ` : null}
+        {name}
+      </Tag>
+    </>
   );
 }

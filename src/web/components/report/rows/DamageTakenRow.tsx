@@ -3,7 +3,12 @@ import { classnames } from "../../../utils/classnames";
 import { AbilityIcon } from "../../AbilityIcon";
 import { ExternalLink } from "../../ExternalLink";
 import type { TableRowProps } from "../Pulls";
-import { TimestampCell, TypeCell, SourceOrTargetPlayerCell } from "../cells";
+import {
+  TimestampCell,
+  TypeCell,
+  SourceOrTargetPlayerCell,
+  ResponsiveAbilityCell,
+} from "../cells";
 import type { DefaultEvent } from "../utils";
 import { determineAbility } from "../utils";
 
@@ -41,10 +46,11 @@ export default function DamageTakenRow({
         transparent
       />
 
-      <td colSpan={3}>
+      <td colSpan={3} className="text-left">
         {ability ? (
           <>
-            <span>hit by</span>{" "}
+            <span className="hidden xl:inline"> hit by </span>
+
             <ExternalLink
               href={createWowheadUrl({
                 category: "spell",
@@ -58,14 +64,27 @@ export default function DamageTakenRow({
                 width={16}
                 height={16}
               />
-              <b className="pl-2">{ability.name}</b>
+              <ResponsiveAbilityCell bold name={ability.name} />
             </ExternalLink>
+
             {event.damage && (
-              <span>
-                {" "}
-                for <b>{event.damage.toLocaleString("en-US")}</b> damage
-              </span>
+              <>
+                <span className="hidden xl:inline"> for</span>
+                <span> </span>
+                <span className="lg:hidden"> -</span>
+                <b className="hidden md:inline">
+                  {event.damage.toLocaleString("en-US")}
+                </b>
+                <b className="md:hidden">
+                  {Number.parseFloat(
+                    (event.damage / 1000).toFixed(2)
+                  ).toLocaleString("en-US")}
+                  k
+                </b>
+                <span className="hidden xl:inline"> damage</span>
+              </>
             )}
+
             {event.sourcePlayerID && (
               <>
                 <span> via </span>

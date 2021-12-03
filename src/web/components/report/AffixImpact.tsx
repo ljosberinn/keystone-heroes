@@ -61,12 +61,11 @@ const useAffixSpecificStats = (): Stats => {
   const { fight, fightID, reportID } = useFight();
   const allEvents = fight.pulls.flatMap((pull) => pull.events);
   const { player, affixes, meta } = fight;
-  const groupDPS = meta.dps;
 
   const params = {
     affixes,
     events: allEvents,
-    groupDPS,
+    groupDPS: meta.dps,
   };
 
   return {

@@ -1,9 +1,9 @@
+import { useFight } from "../../../../pages/report/[reportID]/[fightID]";
 import { SANGUINE_ICHOR_HEALING, spells } from "../../../staticData";
 import { createWowheadUrl, timeDurationToString } from "../../../utils";
 import { calculateSanguineMetrics } from "../../../utils/affixes";
 import { AbilityIcon } from "../../AbilityIcon";
 import { ExternalLink } from "../../ExternalLink";
-import { usePullDetailsSettings } from "../PullDetailsSettings";
 import type { DefaultEvent } from "../utils";
 
 export type SanguineTimeLossRowProps = {
@@ -20,12 +20,12 @@ const ability = spells[SANGUINE_ICHOR_HEALING];
 export default function SanguineTimeLossRow({
   events,
 }: SanguineTimeLossRowProps): JSX.Element {
-  const { groupDPS } = usePullDetailsSettings();
+  const { fight } = useFight();
 
   const { estTimeLoss, healing } = calculateSanguineMetrics({
     affixes: [8],
     events,
-    groupDPS,
+    groupDPS: fight.meta.dps,
   });
 
   return (

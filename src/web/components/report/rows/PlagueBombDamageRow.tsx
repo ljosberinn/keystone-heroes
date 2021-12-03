@@ -1,8 +1,8 @@
+import { useFight } from "../../../../pages/report/[reportID]/[fightID]";
 import { PF, spells } from "../../../staticData";
 import { createWowheadUrl, timeDurationToString } from "../../../utils";
 import { AbilityIcon } from "../../AbilityIcon";
 import { ExternalLink } from "../../ExternalLink";
-import { usePullDetailsSettings } from "../PullDetailsSettings";
 import type { DefaultEvent } from "../utils";
 
 export type PlagueBombDamageRowProps = {
@@ -19,7 +19,7 @@ const ability = spells[PF.PLAGUE_BOMB];
 export default function PlagueBombDamageRow({
   events,
 }: PlagueBombDamageRowProps): JSX.Element {
-  const { groupDPS } = usePullDetailsSettings();
+  const { fight } = useFight();
 
   const totalDamageDone = events.reduce((acc, event) => acc + event.damage, 0);
 
@@ -45,7 +45,12 @@ export default function PlagueBombDamageRow({
         <span> Damage: </span>
         <b>{totalDamageDone.toLocaleString("en-US")}</b>
         <span> - Estimated Time Save: </span>
-        <b>{timeDurationToString((totalDamageDone / groupDPS) * 1000, true)}</b>
+        <b>
+          {timeDurationToString(
+            (totalDamageDone / fight.meta.dps) * 1000,
+            true
+          )}
+        </b>
       </td>
     </tr>
   );

@@ -244,3 +244,37 @@ export const useLegend = create<Legend>((set) => {
     },
   };
 });
+
+type PullSettings = {
+  useAbsoluteTimestamps: boolean;
+  toggleAbsoluteTimestamps: () => void;
+
+  trackedPlayers: number[];
+  toggleTrackedPlayer: (id: number) => void;
+
+  open: boolean;
+  toggle: () => void;
+};
+
+export const usePullSettings = create<PullSettings>((set) => {
+  return {
+    open: false,
+    toggle: () => {
+      set((state) => ({ open: !state.open }));
+    },
+    useAbsoluteTimestamps: false,
+    toggleAbsoluteTimestamps: () => {
+      set((state) => ({ useAbsoluteTimestamps: !state.useAbsoluteTimestamps }));
+    },
+    trackedPlayers: [],
+    toggleTrackedPlayer: (id) => {
+      set((state) => {
+        return {
+          trackedPlayers: state.trackedPlayers.includes(id)
+            ? state.trackedPlayers.filter((player) => player !== id)
+            : [...state.trackedPlayers, id],
+        };
+      });
+    },
+  };
+});

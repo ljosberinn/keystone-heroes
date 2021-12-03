@@ -1,8 +1,10 @@
+import { bgPrimary } from "../../../styles/tokens";
 import { createWowheadUrl } from "../../../utils";
+import { classnames } from "../../../utils/classnames";
 import { AbilityIcon } from "../../AbilityIcon";
 import { ExternalLink } from "../../ExternalLink";
 import type { TableRowProps } from "../Pulls";
-import { TimestampCell, TypeCell } from "../cells";
+import { ResponsiveAbilityCell, TimestampCell, TypeCell } from "../cells";
 import type { DefaultEvent } from "../utils";
 import { determineAbility } from "../utils";
 import type { CastRowProps } from "./CastRow";
@@ -39,7 +41,7 @@ export default function ApplyDebuffRow({
 
       <TypeCell type={event.type} />
 
-      <td colSpan={4}>
+      <td colSpan={4} className="text-left md:text-center">
         <ExternalLink
           href={createWowheadUrl({
             category: "spell",
@@ -53,15 +55,19 @@ export default function ApplyDebuffRow({
             width={16}
             height={16}
           />
-          <b className="pl-2">
-            {ability.name}
-            {event.stacks ? <> ({event.stacks})</> : null}
-          </b>
+          <ResponsiveAbilityCell name={ability.name} />
+          {event.stacks ? <> ({event.stacks})</> : null}
         </ExternalLink>
         {event.targetPlayerID && (
           <>
             <span> on </span>
-            <span className={playerIdTextColorMap[event.targetPlayerID]}>
+            <span
+              className={classnames(
+                "px-2",
+                bgPrimary,
+                playerIdTextColorMap[event.targetPlayerID]
+              )}
+            >
               {playerIdPlayerNameMap[event.targetPlayerID]}
             </span>
           </>

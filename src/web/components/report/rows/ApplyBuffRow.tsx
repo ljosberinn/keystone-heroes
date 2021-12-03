@@ -3,7 +3,12 @@ import { classnames } from "../../../utils/classnames";
 import { AbilityIcon } from "../../AbilityIcon";
 import { ExternalLink } from "../../ExternalLink";
 import type { TableRowProps } from "../Pulls";
-import { TimestampCell, TypeCell, SourceOrTargetPlayerCell } from "../cells";
+import {
+  TimestampCell,
+  TypeCell,
+  SourceOrTargetPlayerCell,
+  ResponsiveAbilityCell,
+} from "../cells";
 import type { DefaultEvent } from "../utils";
 import { determineAbility } from "../utils";
 import type { CastRowProps } from "./CastRow";
@@ -62,8 +67,10 @@ export default function ApplyBuffRow({
       />
 
       <td colSpan={3}>
-        {event.stacks && "re"}
-        {event.type === "RemoveBuff" ? "removed" : "applied"}{" "}
+        <span className="hidden md:inline">
+          {" "}
+          {event.type === "RemoveBuff" ? "lost" : "gained"}{" "}
+        </span>
         <ExternalLink
           href={createWowheadUrl({
             category: "spell",
@@ -77,9 +84,11 @@ export default function ApplyBuffRow({
             width={16}
             height={16}
           />
-          <b className="pl-2">
-            {event.stacks && <>{event.stacks}x</>} {ability.name}
-          </b>
+          <ResponsiveAbilityCell
+            bold
+            name={ability.name}
+            stacks={event.stacks}
+          />
         </ExternalLink>
       </td>
     </tr>

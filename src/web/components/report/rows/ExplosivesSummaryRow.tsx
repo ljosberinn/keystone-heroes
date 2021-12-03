@@ -1,8 +1,10 @@
 import { Fragment } from "react";
 
 import { EXPLOSIVE } from "../../../staticData";
+import { bgPrimary } from "../../../styles/tokens";
 import { createWowheadUrl } from "../../../utils";
 import { calculateExplosiveMetrics } from "../../../utils/affixes";
+import { classnames } from "../../../utils/classnames";
 import { ExternalLink } from "../../ExternalLink";
 import type { TableRowProps } from "../Pulls";
 import type { DefaultEvent } from "../utils";
@@ -51,7 +53,13 @@ export default function ExplosivesSummaryRow({
 
           return (
             <Fragment key={id}>
-              <span className={playerIdTextColorMap[idAsNumber]}>
+              <span
+                className={classnames(
+                  playerIdTextColorMap[idAsNumber],
+                  bgPrimary,
+                  "px-2"
+                )}
+              >
                 {playerIdPlayerNameMap[idAsNumber]}
               </span>
               <span className={index === kills.length - 1 ? undefined : "pr-2"}>

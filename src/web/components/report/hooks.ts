@@ -32,11 +32,7 @@ export function usePullNPCs(): PullNPCs {
 
   const { selectedPull: selectedPullID } = useReportStore();
 
-  const pull = pulls.find((pull) => pull.id === selectedPullID);
-
-  if (!pull) {
-    return null;
-  }
+  const pull = pulls[selectedPullID - 1];
 
   const dungeon = dungeons[dungeonID];
 

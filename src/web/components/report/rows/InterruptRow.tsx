@@ -3,7 +3,12 @@ import { classnames } from "../../../utils/classnames";
 import { AbilityIcon } from "../../AbilityIcon";
 import { ExternalLink } from "../../ExternalLink";
 import type { TableRowProps } from "../Pulls";
-import { TimestampCell, TypeCell, SourceOrTargetPlayerCell } from "../cells";
+import {
+  TimestampCell,
+  TypeCell,
+  SourceOrTargetPlayerCell,
+  ResponsiveAbilityCell,
+} from "../cells";
 import type { DefaultEvent } from "../utils";
 import { determineAbility } from "../utils";
 import type { CastRowProps } from "./CastRow";
@@ -49,10 +54,13 @@ export default function InterruptRow({
         transparent
       />
 
-      <td className={isQuaking ? "bg-red-500" : undefined} colSpan={3}>
+      <td
+        colSpan={3}
+        className={classnames("text-center", isQuaking && "bg-red-500")}
+      >
         {ability && (
           <>
-            <span>interrupted </span>
+            <span className="hidden lg:inline">interrupted </span>
             <ExternalLink
               href={createWowheadUrl({
                 category: "spell",
@@ -68,13 +76,20 @@ export default function InterruptRow({
                     width={16}
                     height={16}
                   />
-                  <span className="pl-2">{interruptedAbility.name}</span>
+                  <ResponsiveAbilityCell name={interruptedAbility.name} />
                 </>
               ) : (
                 "Untracked Ability"
               )}
             </ExternalLink>
-            <span> {isQuaking ? "by" : "with"} </span>
+
+            <span className="hidden lg:inline">
+              {" "}
+              {isQuaking ? "by" : "with"}{" "}
+            </span>
+
+            <span className="lg:hidden"> {"<"} </span>
+
             <ExternalLink
               href={createWowheadUrl({
                 category: "spell",
@@ -88,14 +103,16 @@ export default function InterruptRow({
                 width={16}
                 height={16}
               />
-              <span className="pl-2">{ability.name}</span>
+              <ResponsiveAbilityCell name={ability.name} />
             </ExternalLink>
+
             {event.damage && (
               <span>
                 {" "}
                 for <b>{event.damage.toLocaleString("en-US")}</b> damage
               </span>
             )}
+
             {isQuaking && event.sourcePlayerID && (
               <>
                 <span> via </span>

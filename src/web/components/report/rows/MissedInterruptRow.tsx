@@ -2,7 +2,12 @@ import { createWowheadUrl } from "../../../utils";
 import { AbilityIcon } from "../../AbilityIcon";
 import { ExternalLink } from "../../ExternalLink";
 import type { TableRowProps } from "../Pulls";
-import { TimestampCell, TypeCell, SourceOrTargetPlayerCell } from "../cells";
+import {
+  TimestampCell,
+  TypeCell,
+  SourceOrTargetPlayerCell,
+  ResponsiveAbilityCell,
+} from "../cells";
 import type { DefaultEvent } from "../utils";
 import { determineAbility } from "../utils";
 
@@ -55,10 +60,13 @@ export default function MissedInterruptRow({
                 width={16}
                 height={16}
               />
-              <b className="pl-2">{ability.name}</b>
+              <ResponsiveAbilityCell bold name={ability.name} />
             </ExternalLink>
 
-            <span> didn't quite hit anything there </span>
+            <span className="hidden lg:inline">
+              {" "}
+              didn't quite hit anything there{" "}
+            </span>
           </>
         ) : null}
       </td>

@@ -1,11 +1,16 @@
+import { useFight } from "../../../../pages/report/[reportID]/[fightID]";
 import { outlineQuestionCircle } from "../../../icons";
 import { createWowheadUrl } from "../../../utils";
 import { classnames } from "../../../utils/classnames";
 import { AbilityIcon } from "../../AbilityIcon";
 import { ExternalLink } from "../../ExternalLink";
-import { usePullDetailsSettings } from "../PullDetailsSettings";
 import type { TableRowProps } from "../Pulls";
-import { TimestampCell, TypeCell, SourceOrTargetPlayerCell } from "../cells";
+import {
+  TimestampCell,
+  TypeCell,
+  SourceOrTargetPlayerCell,
+  ResponsiveAbilityCell,
+} from "../cells";
 import type { DefaultEvent } from "../utils";
 import { determineAbility } from "../utils";
 import type { CastRowProps } from "./CastRow";
@@ -41,7 +46,7 @@ export default function HealingDoneRow({
   playerIdTextColorMap,
 }: HealingDoneRowProps): JSX.Element | null {
   const ability = determineAbility(event.ability.id);
-  const { groupDPS } = usePullDetailsSettings();
+  const { fight } = useFight();
 
   if (!ability) {
     if (typeof window !== "undefined") {
@@ -70,7 +75,7 @@ export default function HealingDoneRow({
         />
       )}
 
-      <td colSpan={event.targetNPC ? 4 : 3}>
+      <td colSpan={event.targetNPC ? 4 : 3} className="text-left">
         <ExternalLink
           href={createWowheadUrl({
             category: "spell",
@@ -84,33 +89,42 @@ export default function HealingDoneRow({
             width={16}
             height={16}
           />
-          <b className="pl-2">{ability.name}</b>
+          <ResponsiveAbilityCell bold name={ability.name} />
         </ExternalLink>
-        <span> healed </span>
+
+        <span className="hidden lg:inline"> healed </span>
+        <span className="hidden md:inline lg:hidden"> {">"} </span>
+
         {event.targetNPC && (
           <ExternalLink
             href={createWowheadUrl({
               category: "npc",
               id: event.targetNPC.id,
             })}
-            className="font-bold"
           >
-            {event.targetNPC.name}
+            <ResponsiveAbilityCell
+              bold
+              paddingless
+              name={event.targetNPC.name}
+            />
           </ExternalLink>
         )}
-        <span> for </span>
+
+        <span className="hidden lg:inline"> for </span>
+
+        <b className="lg:hidden"> +</b>
         <b>{event.healingDone.toLocaleString("en-US")} </b>
+
         {event.targetNPC && (
           <span title="This time loss is estimated based on your overall average group DPS.">
-            (+{(event.healingDone / groupDPS).toFixed(2)}s)
-            <sup>
-              <svg className="inline w-4 h-4 ml-2 text-black dark:text-white">
+            (+{(event.healingDone / fight.meta.dps).toFixed(2)}s).
+            <sup className="hidden lg:inline">
+              <svg className="inline w-4 h-4 ml-1 text-black dark:text-white">
                 <use href={`#${outlineQuestionCircle.id}`} />
               </svg>
             </sup>
           </span>
         )}
-        .
       </td>
     </tr>
   );

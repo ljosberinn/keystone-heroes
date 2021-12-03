@@ -7,6 +7,7 @@ import {
   TypeCell,
   SourceOrTargetPlayerCell,
   MaybeWastedCooldownCell,
+  ResponsiveAbilityCell,
 } from "../cells";
 import { determineAbility } from "../utils";
 import type { CastRowProps } from "./CastRow";
@@ -48,6 +49,7 @@ export default function AbilityReadyRow({
         playerIdTextColorMap={playerIdTextColorMap}
         playerIdPlayerNameMap={playerIdPlayerNameMap}
         sourcePlayerID={event.sourcePlayerID}
+        transparent
       />
 
       <td>
@@ -64,24 +66,27 @@ export default function AbilityReadyRow({
             width={16}
             height={16}
           />
-          <span className="pl-2">{abilityName}</span>
+          <ResponsiveAbilityCell name={abilityName} />
         </ExternalLink>
       </td>
 
       <td
         className={classnames(
           usedUnderCooldown && "text-green-500",
-          event.ability.lastUse ? null : "text-yellow-500"
+          !event.ability.lastUse && "text-yellow-500"
         )}
       >
         {event.ability.lastUse ? (
-          <span>
-            {timeDurationToString(
-              event.timestamp - event.ability.lastUse,
-              true
-            )}{" "}
-            ago
-          </span>
+          <>
+            <span className="md:hidden">-</span>
+            <span>
+              {timeDurationToString(
+                event.timestamp - event.ability.lastUse,
+                true
+              )}
+            </span>
+            <span className="hidden md:inline"> ago</span>
+          </>
         ) : (
           "first use"
         )}
