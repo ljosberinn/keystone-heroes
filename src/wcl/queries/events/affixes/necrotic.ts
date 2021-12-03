@@ -11,7 +11,7 @@ import { createIsSpecificEvent } from "../utils";
 export const NECROTIC = 209_858;
 
 /**
- * @see https://www.warcraftlogs.com/reports/DmVgxdj3WTYBApQt/#fight=1&type=summary&view=events&pins=2%24Off%24%23244F4B%24expression%24ability.id%20%3D%20209858%20and%20type%20%3D%20%22applydebuffstack%22%20and%20stack%20%3E%2010%5E2%24Off%24%23909049%24expression%24type%20%3D%20%22damage%22%20and%20target.type%20%3D%20%22player%22%20and%20ability.id%20%3D%20209858%20and%20rawDamage%20%3E%200
+ * @see https://www.warcraftlogs.com/reports/DmVgxdj3WTYBApQt/#fight=1&type=summary&view=events&pins=2%24Off%24%23909049%24expression%24type%20in%20(%22applydebuff%22,%20%22damage%22,%20%22applydebuffstack%22)%20and%20ability.id%20%3D%20209858%20and%20target.type%20%3D%20%22player%22
  * @example
  * ```gql
  * {
@@ -31,7 +31,7 @@ export const NECROTIC = 209_858;
  */
 
 export const filterExpression = [
-  `type in ("applydebuff", "damage", "applydebuffstack") and ability.id = ${NECROTIC}`,
+  `type in ("applydebuff", "damage", "applydebuffstack") and ability.id = ${NECROTIC} and target.type = "player"`,
 ];
 
 const isNecroticDamageEvent = createIsSpecificEvent<DamageEvent>({
