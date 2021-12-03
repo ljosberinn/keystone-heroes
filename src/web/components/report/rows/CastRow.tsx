@@ -1,5 +1,5 @@
 import { outlineQuestionCircle } from "../../../icons";
-import { DUMMY_CD } from "../../../staticData";
+import { DUMMY_CD, SD_LANTERN_OPENING } from "../../../staticData";
 import { createWowheadUrl, timeDurationToString } from "../../../utils";
 import { classnames } from "../../../utils/classnames";
 import { AbilityIcon } from "../../AbilityIcon";
@@ -61,7 +61,7 @@ export default function CastRow({
     <tr
       className={classnames(
         "text-center",
-        event.type === "BeginCast"
+        event.type === "BeginCast" || event.ability.id === SD_LANTERN_OPENING
           ? "bg-yellow-700 hover:bg-yellow-900"
           : "bg-coolgray-200 hover:bg-white dark:bg-coolgray-600 dark:hover:bg-coolgray-700"
       )}

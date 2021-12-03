@@ -3,6 +3,7 @@ import type {
   ApplyBuffEvent,
   ApplyBuffStackEvent,
   BeginCastEvent,
+  CastEvent,
   RemoveBuffEvent,
 } from "../types";
 import { createIsSpecificEvent } from "../utils";
@@ -65,19 +66,36 @@ export const getSDEvents = (
   | ApplyBuffEvent
   | RemoveBuffEvent
   | ApplyBuffStackEvent
+  | CastEvent
 )[] => {
-  return allEvents.reduce<
-    (BeginCastEvent | ApplyBuffEvent | RemoveBuffEvent | ApplyBuffStackEvent)[]
-  >((acc, event) => {
-    if (
-      isSdLanternBuffEvent(event) ||
-      isSdLanternOpeningEvent(event) ||
-      isSdLanternRemoveBuffEvent(event) ||
-      isSdLanternApplyBuffStackEvent(event)
-    ) {
-      return [...acc, event];
-    }
+  const partial = [
+    ...allEvents.filter(isSdLanternOpeningEvent),
+    ...allEvents.filter(isSdLanternBuffEvent),
+    ...allEvents.filter(isSdLanternApplyBuffStackEvent),
+  ];
 
-    return acc;
-  }, []);
+  // experimental detection
+  const castEvents = partial
+    .sort((a, b) => a.timestamp - b.timestamp)
+    .reduce<CastEvent[]>((acc, event, index, arr) => {
+      // find the last begincast event before a different type occurs
+      if (event.type === "begincast" && arr[index + 1]?.type !== "begincast") {
+        return [
+          ...acc,
+          {
+            ...event,
+            type: "cast",
+            timestamp: event.timestamp + 3200,
+          },
+        ];
+      }
+
+      return acc;
+    }, []);
+
+  return [
+    ...allEvents.filter(isSdLanternRemoveBuffEvent),
+    ...partial,
+    ...castEvents,
+  ];
 };
