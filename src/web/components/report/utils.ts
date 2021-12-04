@@ -208,7 +208,7 @@ export const isMissingInterruptEventWithAbility = (
 ): event is MissedInterruptRowProps["event"] =>
   event.type === "MissedInterrupt" && event.ability !== null;
 
-export const formatNumber = (value: number) => {
+export const formatNumber = (value: number): string => {
   if (value > 1000000) {
     return `${Number.parseFloat((value / 1000000).toFixed(2)).toLocaleString(
       "en-US"

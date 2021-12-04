@@ -1824,7 +1824,14 @@ const calculatePullsWithWipesAndPercent = (
             npc.id
           );
 
-          if (nextPull.enemyNPCs.length === 1 && getsKilledDuringNextPull) {
+          // e.g. in case of connecting tormented LT with amarth in NW through spear
+          // without filtering the boss adds would be included
+          // see /KLqfvBh9CHz2dMpm#fight=3
+          const relevantNPCsOfNextPull = nextPull.enemyNPCs.filter(
+            (npc) => !EXCLUDED_NPCS.has(npc.gameID)
+          );
+
+          if (relevantNPCsOfNextPull.length === 1 && getsKilledDuringNextPull) {
             // merge fight duration
             pull.endTime = nextPull.endTime;
             skipNextPull = true;
