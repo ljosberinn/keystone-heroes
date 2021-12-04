@@ -115,11 +115,11 @@ export type FightSuccessResponse = {
       Legendary,
       "effectIcon" | "effectName" | "id" | "itemID"
     >[];
-    conduits: (Pick<Conduit, "icon" | "name"> & {
+    conduits: (Conduit & {
       itemLevel: PlayerConduit["itemLevel"];
     })[];
     covenantTraits: Pick<CovenantTrait, "icon" | "name">[];
-    talents: Pick<Talent, "icon" | "name">[];
+    talents: Pick<Talent, "icon" | "name" | "id">[];
     covenant: Covenant["id"] | null;
     soulbind: Soulbind["id"] | null;
     name: Character["name"];
@@ -211,7 +211,7 @@ type RawFight =
             } | null;
           }[];
           PlayerConduit: (Pick<PlayerConduit, "itemLevel"> & {
-            conduit: Pick<Conduit, "icon" | "name">;
+            conduit: Conduit;
           })[];
           PlayerCovenantTrait: {
             covenantTrait: Pick<CovenantTrait, "icon" | "name">;
@@ -332,6 +332,7 @@ export const loadExistingFight = async (
                     select: {
                       icon: true,
                       name: true,
+                      id: true,
                     },
                   },
                 },
@@ -1080,6 +1081,32 @@ export const createResponseFromStoredFight = (
           (playerFight.player.hps * dataset.keystoneTime) / inCombatTime
         );
 
+        const conduits: FightSuccessResponse["player"][number]["conduits"] =
+          playerFight.player.PlayerConduit.map((playerConduit) => {
+            return {
+              itemLevel: playerConduit.itemLevel,
+              ...playerConduit.conduit,
+            };
+          });
+
+        const legendaries = playerFight.player.PlayerLegendary.reduce<
+          FightSuccessResponse["player"][number]["legendaries"]
+        >((acc, playerLegendary) => {
+          return playerLegendary.legendary
+            ? [...acc, playerLegendary.legendary]
+            : acc;
+        }, []);
+
+        const covenantTraits: FightSuccessResponse["player"][number]["covenantTraits"] =
+          playerFight.player.PlayerCovenantTrait.map(
+            (playerCovenantTrait) => playerCovenantTrait.covenantTrait
+          );
+
+        const talents: FightSuccessResponse["player"][number]["talents"] =
+          playerFight.player.PlayerTalent.map(
+            (playerTalent) => playerTalent.talent
+          );
+
         return {
           id: playerFight.player.id,
           actorID: playerFight.player.actorID,
@@ -1087,25 +1114,10 @@ export const createResponseFromStoredFight = (
 
           itemLevel: playerFight.player.itemLevel,
           spec: playerFight.player.spec.id,
-          legendaries: playerFight.player.PlayerLegendary.reduce<
-            FightSuccessResponse["player"][number]["legendaries"]
-          >((acc, playerLegendary) => {
-            return playerLegendary.legendary
-              ? [...acc, playerLegendary.legendary]
-              : acc;
-          }, []),
-          conduits: playerFight.player.PlayerConduit.map((playerConduit) => {
-            return {
-              itemLevel: playerConduit.itemLevel,
-              ...playerConduit.conduit,
-            };
-          }),
-          covenantTraits: playerFight.player.PlayerCovenantTrait.map(
-            (playerCovenantTrait) => playerCovenantTrait.covenantTrait
-          ),
-          talents: playerFight.player.PlayerTalent.map(
-            (playerTalent) => playerTalent.talent
-          ),
+          legendaries,
+          conduits,
+          covenantTraits,
+          talents,
           name: playerFight.player.character.name,
           class: playerFight.player.character.class.id,
           server: playerFight.player.character.server.name,

@@ -24,7 +24,7 @@ const config = {
       statements: 43,
       branches: 25,
       functions: 41,
-      lines: 44,
+      lines: 43,
     },
   },
   testPathIgnorePatterns: ignored,
