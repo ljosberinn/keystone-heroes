@@ -25,7 +25,10 @@ export type DamageDoneRowProps = {
   };
 } & Pick<
   TableRowProps,
-  "msSinceLastEvent" | "playerIdPlayerNameMap" | "playerIdTextColorMap"
+  | "msSinceLastEvent"
+  | "playerIdPlayerNameMap"
+  | "playerIdTextColorMap"
+  | "playerIdIconMap"
 >;
 
 // eslint-disable-next-line import/no-default-export
@@ -34,6 +37,7 @@ export default function DamageDoneRow({
   msSinceLastEvent,
   playerIdTextColorMap,
   playerIdPlayerNameMap,
+  playerIdIconMap,
 }: DamageDoneRowProps): JSX.Element | null {
   if (event.targetNPC && event.targetNPC.id === EXPLOSIVE.unit) {
     return (
@@ -46,6 +50,7 @@ export default function DamageDoneRow({
           playerIdTextColorMap={playerIdTextColorMap}
           playerIdPlayerNameMap={playerIdPlayerNameMap}
           sourcePlayerID={event.sourcePlayerID}
+          playerIdIconMap={playerIdIconMap}
           transparent
         />
 
@@ -82,6 +87,7 @@ export default function DamageDoneRow({
         playerIdTextColorMap={playerIdTextColorMap}
         playerIdPlayerNameMap={playerIdPlayerNameMap}
         sourcePlayerID={event.sourcePlayerID}
+        playerIdIconMap={playerIdIconMap}
         transparent
       />
 

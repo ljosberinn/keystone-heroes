@@ -28,8 +28,10 @@ import {
 } from "../AbilityIcon";
 import { ErrorBoundary } from "../ErrorBoundary";
 import { ExternalLink } from "../ExternalLink";
+import { SpecIcon } from "../SpecIcon";
 import { PullMetaProvider } from "./PullDetailsSettings";
 import { SidebarNPC } from "./SidebarNPC";
+import type { SourceOrTargetPlayerCellProps } from "./cells";
 import { usePullNPCs } from "./hooks";
 import type { DefaultEvent } from "./utils";
 import {
@@ -364,6 +366,21 @@ function Events() {
     ])
   );
 
+  const playerIdIconMap = Object.fromEntries(
+    player.map((player) => {
+      const { name, specs } = classes[player.class];
+      const spec = specs.find((spec) => spec.id === player.spec);
+
+      return [
+        player.id,
+
+        <span className="block w-4 h-4" key={player.actorID}>
+          {spec ? <SpecIcon size={4} class={name} spec={spec.name} /> : null}
+        </span>,
+      ];
+    })
+  );
+
   const { before, during, after } = selectedPull.events.reduce<
     Record<EventCategory, DefaultEvent[]>
   >(
@@ -494,6 +511,7 @@ function Events() {
                           msSinceLastEvent={msSinceLastEvent}
                           playerIdPlayerNameMap={playerIdPlayerNameMap}
                           playerIdTextColorMap={playerIdTextColorMap}
+                          playerIdIconMap={playerIdIconMap}
                         />
                       </Suspense>
                     );
@@ -534,6 +552,7 @@ function Events() {
                         msSinceLastEvent={msSinceLastEvent}
                         playerIdPlayerNameMap={playerIdPlayerNameMap}
                         playerIdTextColorMap={playerIdTextColorMap}
+                        playerIdIconMap={playerIdIconMap}
                       />
                     </Suspense>
                   );
@@ -583,6 +602,7 @@ function Events() {
                           msSinceLastEvent={msSinceLastEvent}
                           playerIdPlayerNameMap={playerIdPlayerNameMap}
                           playerIdTextColorMap={playerIdTextColorMap}
+                          playerIdIconMap={playerIdIconMap}
                         />
                       </Suspense>
                     );
@@ -686,7 +706,7 @@ function TableHead() {
   return (
     <thead>
       <tr className="text-left">
-        <th className={classnames(className, "hidden md:table-cell w-8")}>
+        <th className={classnames(className, "hidden md:table-cell")}>
           {usesAbsoluteTimestamps ? "Abs." : "Rel."} Time
         </th>
         <th className={className}>Type</th>
@@ -818,20 +838,20 @@ const createRowKey = (event: DefaultEvent, index: number) =>
 export type TableRowProps = {
   event: DefaultEvent;
   msSinceLastEvent: string;
-  playerIdPlayerNameMap: Record<number, string>;
-  playerIdTextColorMap: Record<number, string>;
-};
+} & Omit<SourceOrTargetPlayerCellProps, "transparent">;
 
 function TableRow({
   event,
   playerIdPlayerNameMap,
   playerIdTextColorMap,
   msSinceLastEvent,
+  playerIdIconMap,
 }: TableRowProps) {
   const sharedProps = {
     msSinceLastEvent,
     playerIdPlayerNameMap,
     playerIdTextColorMap,
+    playerIdIconMap,
   };
 
   if (isCastEventWithAbilityAndSourcePlayer(event)) {

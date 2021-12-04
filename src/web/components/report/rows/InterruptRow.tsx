@@ -26,7 +26,10 @@ export type InterruptRowProps = {
   };
 } & Pick<
   TableRowProps,
-  "msSinceLastEvent" | "playerIdPlayerNameMap" | "playerIdTextColorMap"
+  | "msSinceLastEvent"
+  | "playerIdPlayerNameMap"
+  | "playerIdTextColorMap"
+  | "playerIdIconMap"
 >;
 
 // eslint-disable-next-line import/no-default-export
@@ -35,6 +38,7 @@ export default function InterruptRow({
   msSinceLastEvent,
   playerIdTextColorMap,
   playerIdPlayerNameMap,
+  playerIdIconMap,
 }: InterruptRowProps): JSX.Element {
   const ability = determineAbility(event.ability.id);
   const interruptedAbility = determineAbility(event.interruptedAbility);
@@ -56,6 +60,7 @@ export default function InterruptRow({
         playerIdTextColorMap={playerIdTextColorMap}
         playerIdPlayerNameMap={playerIdPlayerNameMap}
         targetPlayerID={isQuaking ? event.targetPlayerID : event.sourcePlayerID}
+        playerIdIconMap={playerIdIconMap}
         transparent
       />
 

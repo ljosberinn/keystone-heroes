@@ -19,7 +19,10 @@ export type MissedInterruptRowProps = {
   };
 } & Pick<
   TableRowProps,
-  "msSinceLastEvent" | "playerIdPlayerNameMap" | "playerIdTextColorMap"
+  | "msSinceLastEvent"
+  | "playerIdPlayerNameMap"
+  | "playerIdTextColorMap"
+  | "playerIdIconMap"
 >;
 
 // eslint-disable-next-line import/no-default-export
@@ -28,6 +31,7 @@ export default function MissedInterruptRow({
   playerIdTextColorMap,
   playerIdPlayerNameMap,
   msSinceLastEvent,
+  playerIdIconMap,
 }: MissedInterruptRowProps): JSX.Element {
   const ability = event.ability ? determineAbility(event.ability.id) : null;
 
@@ -41,6 +45,7 @@ export default function MissedInterruptRow({
         playerIdTextColorMap={playerIdTextColorMap}
         playerIdPlayerNameMap={playerIdPlayerNameMap}
         sourcePlayerID={event.sourcePlayerID}
+        playerIdIconMap={playerIdIconMap}
         transparent
       />
 

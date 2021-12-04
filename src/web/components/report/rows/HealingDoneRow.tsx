@@ -35,7 +35,10 @@ export type HealingDoneRowProps = {
     );
 } & Pick<
   TableRowProps,
-  "msSinceLastEvent" | "playerIdPlayerNameMap" | "playerIdTextColorMap"
+  | "msSinceLastEvent"
+  | "playerIdPlayerNameMap"
+  | "playerIdTextColorMap"
+  | "playerIdIconMap"
 >;
 
 // eslint-disable-next-line import/no-default-export
@@ -44,6 +47,7 @@ export default function HealingDoneRow({
   msSinceLastEvent,
   playerIdPlayerNameMap,
   playerIdTextColorMap,
+  playerIdIconMap,
 }: HealingDoneRowProps): JSX.Element | null {
   const ability = determineAbility(event.ability.id);
   const { fight } = useFight();
@@ -71,6 +75,7 @@ export default function HealingDoneRow({
           playerIdTextColorMap={playerIdTextColorMap}
           playerIdPlayerNameMap={playerIdPlayerNameMap}
           sourcePlayerID={event.sourcePlayerID}
+          playerIdIconMap={playerIdIconMap}
           transparent
         />
       )}

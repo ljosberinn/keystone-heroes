@@ -19,7 +19,10 @@ export type ApplyDebuffRowProps = {
   };
 } & Pick<
   TableRowProps,
-  "msSinceLastEvent" | "playerIdPlayerNameMap" | "playerIdTextColorMap"
+  | "msSinceLastEvent"
+  | "playerIdPlayerNameMap"
+  | "playerIdTextColorMap"
+  | "playerIdIconMap"
 >;
 
 // eslint-disable-next-line import/no-default-export
@@ -28,6 +31,7 @@ export default function ApplyDebuffRow({
   msSinceLastEvent,
   playerIdPlayerNameMap,
   playerIdTextColorMap,
+  playerIdIconMap,
 }: ApplyDebuffRowProps): JSX.Element | null {
   const ability = determineAbility(event.ability.id);
 
@@ -49,6 +53,7 @@ export default function ApplyDebuffRow({
           playerIdTextColorMap={playerIdTextColorMap}
           playerIdPlayerNameMap={playerIdPlayerNameMap}
           targetPlayerID={event.targetPlayerID}
+          playerIdIconMap={playerIdIconMap}
           transparent
         />
       )}

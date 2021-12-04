@@ -2,6 +2,7 @@ import { createWowheadUrl, timeDurationToString } from "../../../utils";
 import { classnames } from "../../../utils/classnames";
 import { AbilityIcon } from "../../AbilityIcon";
 import { ExternalLink } from "../../ExternalLink";
+import type { TableRowProps } from "../Pulls";
 import {
   TimestampCell,
   TypeCell,
@@ -14,10 +15,13 @@ import type { CastRowProps } from "./CastRow";
 
 export type AbilityReadyRowProps = {
   event: Omit<CastRowProps["event"], "type"> & { type: "AbilityReady" };
-  playerIdPlayerNameMap: Record<string, string>;
-  playerIdTextColorMap: Record<string, string>;
-  msSinceLastEvent: string | null;
-};
+} & Pick<
+  TableRowProps,
+  | "msSinceLastEvent"
+  | "playerIdPlayerNameMap"
+  | "playerIdTextColorMap"
+  | "playerIdIconMap"
+>;
 
 // eslint-disable-next-line import/no-default-export
 export default function AbilityReadyRow({
@@ -25,6 +29,7 @@ export default function AbilityReadyRow({
   msSinceLastEvent,
   playerIdTextColorMap,
   playerIdPlayerNameMap,
+  playerIdIconMap,
 }: AbilityReadyRowProps): JSX.Element | null {
   const ability = determineAbility(event.ability.id);
 
@@ -49,6 +54,7 @@ export default function AbilityReadyRow({
         playerIdTextColorMap={playerIdTextColorMap}
         playerIdPlayerNameMap={playerIdPlayerNameMap}
         sourcePlayerID={event.sourcePlayerID}
+        playerIdIconMap={playerIdIconMap}
         transparent
       />
 

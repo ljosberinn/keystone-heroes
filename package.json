@@ -15,7 +15,7 @@
     "format": "prettier --write src",
     "gql:generate": "graphql-codegen --config codegen.yml && eslint src/wcl/types.ts -c .eslintrc.wcl.js --fix && prettier --write src/wcl/types.ts && prettier --write schema.json && prettier --write src/wcl/gql/schema.graphql",
     "gql:introspection": "ts-node src/wcl/queries/introspection.ts",
-    "postinstall": "yarn-deduplicate -l && yarn db:generate && yarn db:static-data && yarn db:sync-dbs && node fix-react-package-json",
+    "postinstall": "yarn-deduplicate -l && yarn db:static-data && yarn db:sync-dbs && node fix-react-package-json",
     "install:clean": "rimraf yarn.lock node_modules && yarn",
     "lint": "set TIMING=1 && yarn lint:web && yarn lint:wcl && yarn lint:db && yarn lint:api",
     "lint:api": "eslint src/api --cache -c .eslintrc.api.js",

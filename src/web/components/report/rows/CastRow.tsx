@@ -23,7 +23,10 @@ export type CastRowProps = {
   };
 } & Pick<
   TableRowProps,
-  "msSinceLastEvent" | "playerIdPlayerNameMap" | "playerIdTextColorMap"
+  | "msSinceLastEvent"
+  | "playerIdPlayerNameMap"
+  | "playerIdTextColorMap"
+  | "playerIdIconMap"
 >;
 
 // eslint-disable-next-line import/no-default-export
@@ -32,6 +35,7 @@ export default function CastRow({
   playerIdPlayerNameMap,
   msSinceLastEvent,
   playerIdTextColorMap,
+  playerIdIconMap,
 }: CastRowProps): JSX.Element | null {
   const ability = determineAbility(event.ability.id);
 
@@ -73,6 +77,7 @@ export default function CastRow({
         playerIdTextColorMap={playerIdTextColorMap}
         playerIdPlayerNameMap={playerIdPlayerNameMap}
         sourcePlayerID={event.sourcePlayerID}
+        playerIdIconMap={playerIdIconMap}
         transparent
       />
 

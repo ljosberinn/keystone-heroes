@@ -198,9 +198,10 @@ export function TimestampCell({
   );
 }
 
-type SourceOrTargetPlayerCellProps = {
+export type SourceOrTargetPlayerCellProps = {
   playerIdTextColorMap: Record<number, string>;
   playerIdPlayerNameMap: Record<number, string>;
+  playerIdIconMap: Record<number, JSX.Element>;
   transparent?: boolean;
 } & (
   | {
@@ -220,7 +221,7 @@ export function SourceOrTargetPlayerCell(
   props: SourceOrTargetPlayerCellProps
 ): JSX.Element | null {
   const transparency = props.transparent
-    ? "bg-white dark:bg-coolgray-700 px-2"
+    ? "hidden md:inline bg-white dark:bg-coolgray-700 px-2"
     : undefined;
 
   if ("environment" in props && props.environment) {
@@ -244,6 +245,7 @@ export function SourceOrTargetPlayerCell(
 
   return (
     <td className={props.playerIdTextColorMap[id]}>
+      <span className="md:hidden">{props.playerIdIconMap[id]}</span>
       <span className={transparency}>{props.playerIdPlayerNameMap[id]}</span>
     </td>
   );

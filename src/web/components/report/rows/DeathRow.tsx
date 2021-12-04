@@ -8,7 +8,10 @@ export type DeathRowProps = {
   event: PlayerDeathEvent | NPCDeathEvent;
 } & Pick<
   TableRowProps,
-  "msSinceLastEvent" | "playerIdPlayerNameMap" | "playerIdTextColorMap"
+  | "msSinceLastEvent"
+  | "playerIdPlayerNameMap"
+  | "playerIdTextColorMap"
+  | "playerIdIconMap"
 >;
 
 // eslint-disable-next-line import/no-default-export
@@ -17,6 +20,7 @@ export default function DeathRow({
   msSinceLastEvent,
   playerIdTextColorMap,
   playerIdPlayerNameMap,
+  playerIdIconMap,
 }: DeathRowProps): JSX.Element {
   return (
     <tr
@@ -36,6 +40,7 @@ export default function DeathRow({
           playerIdPlayerNameMap={playerIdPlayerNameMap}
           targetPlayerID={event.targetPlayerID}
           transparent
+          playerIdIconMap={playerIdIconMap}
         />
       )}
 

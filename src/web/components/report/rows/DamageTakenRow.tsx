@@ -21,7 +21,10 @@ export type DamageTakenRowProps = {
   };
 } & Pick<
   TableRowProps,
-  "msSinceLastEvent" | "playerIdPlayerNameMap" | "playerIdTextColorMap"
+  | "msSinceLastEvent"
+  | "playerIdPlayerNameMap"
+  | "playerIdTextColorMap"
+  | "playerIdIconMap"
 >;
 
 // eslint-disable-next-line import/no-default-export
@@ -30,6 +33,7 @@ export default function DamageTakenRow({
   playerIdTextColorMap,
   playerIdPlayerNameMap,
   msSinceLastEvent,
+  playerIdIconMap,
 }: DamageTakenRowProps): JSX.Element {
   const ability = event.ability ? determineAbility(event.ability.id) : null;
 
@@ -43,6 +47,7 @@ export default function DamageTakenRow({
         playerIdTextColorMap={playerIdTextColorMap}
         playerIdPlayerNameMap={playerIdPlayerNameMap}
         sourcePlayerID={event.targetPlayerID}
+        playerIdIconMap={playerIdIconMap}
         transparent
       />
 
