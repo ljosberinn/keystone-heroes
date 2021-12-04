@@ -1,5 +1,4 @@
 import { createWowheadUrl } from "../../../utils";
-import { classnames } from "../../../utils/classnames";
 import { ExternalLink } from "../../ExternalLink";
 import type { TableRowProps } from "../Pulls";
 import { TimestampCell, TypeCell, SourceOrTargetPlayerCell } from "../cells";
@@ -21,12 +20,11 @@ export default function DeathRow({
 }: DeathRowProps): JSX.Element {
   return (
     <tr
-      className={classnames(
-        "text-center",
+      className={
         event.targetPlayerID
           ? "bg-red-500 hover:bg-red-700"
           : "bg-green-600 hover:bg-green-800"
-      )}
+      }
     >
       <TimestampCell event={event} msSinceLastEvent={msSinceLastEvent} />
 

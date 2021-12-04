@@ -60,7 +60,7 @@ export function MaybeWastedCooldownCell({
         );
 
       return (
-        <td className="bg-red-500">
+        <td className="pl-2 bg-red-500">
           <span className="hidden md:inline">in </span>
           <span className="md:hidden">+</span>
           <span>
@@ -79,7 +79,7 @@ export function MaybeWastedCooldownCell({
     );
 
     return (
-      <td className="bg-red-500">
+      <td className="pl-2 bg-red-500">
         <span>never</span>
         <span className="hidden xl:inline"> (missing {couldUseNTimes}x)</span>
       </td>
@@ -105,13 +105,14 @@ export function MaybeWastedCooldownCell({
 
     return (
       <td
-        className={
+        className={classnames(
+          "pl-2",
           wastedCastUpcoming
             ? "bg-red-500"
             : nextCastIsUnderCD
             ? "text-green-500"
             : undefined
-        }
+        )}
       >
         <span className="hidden md:inline">in </span>
         <span className="md:hidden">+</span>
@@ -128,11 +129,11 @@ export function MaybeWastedCooldownCell({
   }
 
   if (couldUseNTimes <= 1) {
-    return <td>impossible</td>;
+    return <td className="pl-2">impossible</td>;
   }
 
   return (
-    <td className="bg-red-500">
+    <td className="pl-2 bg-red-500">
       <span>never </span>
       <span className="hidden xl:inline">
         (missing {Math.floor(couldUseNTimes)}x)
@@ -160,7 +161,7 @@ type TypeCellProps = {
 };
 
 export function TypeCell({ type }: TypeCellProps): JSX.Element {
-  return <td>{type}</td>;
+  return <td className="pl-2 md:pl-0">{type}</td>;
 }
 
 type TimestampCellProps<Event = { timestamp: number; relTimestamp: number }> = {
@@ -185,7 +186,7 @@ export function TimestampCell({
     : event.relTimestamp;
 
   return (
-    <td>
+    <td className="hidden pl-2 md:table-cell">
       <span
         title={
           msSinceLastEvent ? `${msSinceLastEvent} after last event` : undefined

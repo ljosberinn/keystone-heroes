@@ -9,7 +9,7 @@ import {
   SourceOrTargetPlayerCell,
   ResponsiveAbilityCell,
 } from "../cells";
-import type { DefaultEvent } from "../utils";
+import { DefaultEvent, formatNumber } from "../utils";
 import { determineAbility } from "../utils";
 import type { CastRowProps } from "./CastRow";
 
@@ -37,7 +37,7 @@ export default function DamageDoneRow({
 }: DamageDoneRowProps): JSX.Element | null {
   if (event.targetNPC && event.targetNPC.id === EXPLOSIVE.unit) {
     return (
-      <tr className="text-center text-white bg-green-600">
+      <tr className="text-white bg-green-600 ">
         <TimestampCell event={event} msSinceLastEvent={msSinceLastEvent} />
 
         <TypeCell type="DamageDone" />
@@ -73,7 +73,7 @@ export default function DamageDoneRow({
   }
 
   return (
-    <tr className="text-center text-white bg-green-600">
+    <tr className="text-white bg-green-600">
       <TimestampCell event={event} msSinceLastEvent={msSinceLastEvent} />
 
       <TypeCell type="DamageDone" />
@@ -85,7 +85,7 @@ export default function DamageDoneRow({
         transparent
       />
 
-      <td colSpan={4} className="text-white">
+      <td colSpan={4} className="space-x-2">
         <ExternalLink
           href={createWowheadUrl({
             category: "spell",
@@ -99,11 +99,11 @@ export default function DamageDoneRow({
             width={16}
             height={16}
           />
-          <ResponsiveAbilityCell name={ability.name} />
+          <ResponsiveAbilityCell bold name={ability.name} />
         </ExternalLink>
         {event.sourceNPC && (
           <>
-            <span> of </span>
+            <span>of</span>
             <ExternalLink
               href={createWowheadUrl({
                 category: "npc",
@@ -116,7 +116,7 @@ export default function DamageDoneRow({
         )}
         {event.targetNPC && (
           <>
-            <span> hits </span>
+            <span>-</span>
             <ExternalLink
               href={createWowheadUrl({
                 category: "npc",
@@ -127,8 +127,7 @@ export default function DamageDoneRow({
             </ExternalLink>
           </>
         )}
-        <span> for </span>
-        <b>{event.damage.toLocaleString("en-US")}</b>.
+        <b>{formatNumber(event.damage)}</b>
       </td>
     </tr>
   );

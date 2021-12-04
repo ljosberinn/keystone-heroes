@@ -11,7 +11,7 @@ import {
   SourceOrTargetPlayerCell,
   ResponsiveAbilityCell,
 } from "../cells";
-import type { DefaultEvent } from "../utils";
+import { DefaultEvent, formatNumber } from "../utils";
 import { determineAbility } from "../utils";
 import type { CastRowProps } from "./CastRow";
 
@@ -58,7 +58,7 @@ export default function HealingDoneRow({
   return (
     <tr
       className={classnames(
-        "text-center text-coolgray-200",
+        "text-white",
         event.sourcePlayerID && "bg-green-600 hover:bg-green-800",
         event.targetNPC && "bg-red-700 hover:bg-red-900"
       )}
@@ -75,7 +75,7 @@ export default function HealingDoneRow({
         />
       )}
 
-      <td colSpan={event.targetNPC ? 4 : 3} className="text-left">
+      <td colSpan={event.targetNPC ? 4 : 3} className="space-x-2">
         <ExternalLink
           href={createWowheadUrl({
             category: "spell",
@@ -92,9 +92,6 @@ export default function HealingDoneRow({
           <ResponsiveAbilityCell bold name={ability.name} />
         </ExternalLink>
 
-        <span className="hidden lg:inline"> healed </span>
-        <span className="hidden md:inline lg:hidden"> {">"} </span>
-
         {event.targetNPC && (
           <ExternalLink
             href={createWowheadUrl({
@@ -110,10 +107,7 @@ export default function HealingDoneRow({
           </ExternalLink>
         )}
 
-        <span className="hidden lg:inline"> for </span>
-
-        <b className="lg:hidden"> +</b>
-        <b>{event.healingDone.toLocaleString("en-US")} </b>
+        <b>{formatNumber(event.healingDone)}</b>
 
         {event.targetNPC && (
           <span title="This time loss is estimated based on your overall average group DPS.">

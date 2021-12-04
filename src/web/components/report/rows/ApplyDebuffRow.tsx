@@ -1,10 +1,13 @@
-import { bgPrimary } from "../../../styles/tokens";
 import { createWowheadUrl } from "../../../utils";
-import { classnames } from "../../../utils/classnames";
 import { AbilityIcon } from "../../AbilityIcon";
 import { ExternalLink } from "../../ExternalLink";
 import type { TableRowProps } from "../Pulls";
-import { ResponsiveAbilityCell, TimestampCell, TypeCell } from "../cells";
+import {
+  ResponsiveAbilityCell,
+  SourceOrTargetPlayerCell,
+  TimestampCell,
+  TypeCell,
+} from "../cells";
 import type { DefaultEvent } from "../utils";
 import { determineAbility } from "../utils";
 import type { CastRowProps } from "./CastRow";
@@ -36,12 +39,21 @@ export default function ApplyDebuffRow({
   }
 
   return (
-    <tr className="text-center text-white bg-yellow-700 hover:bg-yellow-900">
+    <tr className="text-white bg-yellow-700 hover:bg-yellow-900">
       <TimestampCell event={event} msSinceLastEvent={msSinceLastEvent} />
 
       <TypeCell type={event.type} />
 
-      <td colSpan={4} className="text-left md:text-center">
+      {event.targetPlayerID && (
+        <SourceOrTargetPlayerCell
+          playerIdTextColorMap={playerIdTextColorMap}
+          playerIdPlayerNameMap={playerIdPlayerNameMap}
+          targetPlayerID={event.targetPlayerID}
+          transparent
+        />
+      )}
+
+      <td colSpan={event.targetPlayerID ? 3 : 4}>
         <ExternalLink
           href={createWowheadUrl({
             category: "spell",
@@ -58,20 +70,6 @@ export default function ApplyDebuffRow({
           <ResponsiveAbilityCell name={ability.name} />
           {event.stacks ? <> ({event.stacks})</> : null}
         </ExternalLink>
-        {event.targetPlayerID && (
-          <>
-            <span> on </span>
-            <span
-              className={classnames(
-                "px-2",
-                bgPrimary,
-                playerIdTextColorMap[event.targetPlayerID]
-              )}
-            >
-              {playerIdPlayerNameMap[event.targetPlayerID]}
-            </span>
-          </>
-        )}
       </td>
     </tr>
   );

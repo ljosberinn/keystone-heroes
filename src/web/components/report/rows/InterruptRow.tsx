@@ -9,7 +9,7 @@ import {
   SourceOrTargetPlayerCell,
   ResponsiveAbilityCell,
 } from "../cells";
-import type { DefaultEvent } from "../utils";
+import { DefaultEvent, formatNumber } from "../utils";
 import { determineAbility } from "../utils";
 import type { CastRowProps } from "./CastRow";
 
@@ -42,7 +42,12 @@ export default function InterruptRow({
   const isQuaking = event.sourcePlayerID === event.targetPlayerID;
 
   return (
-    <tr className={`text-center ${isQuaking ? "bg-red-500" : "bg-green-500"}`}>
+    <tr
+      className={classnames(
+        "text-white",
+        isQuaking ? "bg-red-500" : "bg-green-500"
+      )}
+    >
       <TimestampCell event={event} msSinceLastEvent={msSinceLastEvent} />
 
       <TypeCell type="Interrupt" />
@@ -54,13 +59,27 @@ export default function InterruptRow({
         transparent
       />
 
-      <td
-        colSpan={3}
-        className={classnames("text-center", isQuaking && "bg-red-500")}
-      >
+      <td colSpan={3} className={isQuaking ? "bg-red-500" : undefined}>
         {ability && (
-          <>
-            <span className="hidden lg:inline">interrupted </span>
+          <span className="space-x-2">
+            <ExternalLink
+              href={createWowheadUrl({
+                category: "spell",
+                id: event.ability.id,
+              })}
+            >
+              <AbilityIcon
+                icon={ability.icon}
+                alt={ability.name}
+                className="inline object-cover w-4 h-4 rounded-lg"
+                width={16}
+                height={16}
+              />
+              <ResponsiveAbilityCell name={ability.name} />
+            </ExternalLink>
+
+            <span>{isQuaking ? "by" : ">"}</span>
+
             <ExternalLink
               href={createWowheadUrl({
                 category: "spell",
@@ -83,39 +102,15 @@ export default function InterruptRow({
               )}
             </ExternalLink>
 
-            <span className="hidden lg:inline">
-              {" "}
-              {isQuaking ? "by" : "with"}{" "}
-            </span>
-
-            <span className="lg:hidden"> {"<"} </span>
-
-            <ExternalLink
-              href={createWowheadUrl({
-                category: "spell",
-                id: event.ability.id,
-              })}
-            >
-              <AbilityIcon
-                icon={ability.icon}
-                alt={ability.name}
-                className="inline object-cover w-4 h-4 rounded-lg"
-                width={16}
-                height={16}
-              />
-              <ResponsiveAbilityCell name={ability.name} />
-            </ExternalLink>
-
             {event.damage && (
               <span>
-                {" "}
-                for <b>{event.damage.toLocaleString("en-US")}</b> damage
+                for <b>{formatNumber(event.damage)}</b>
               </span>
             )}
 
             {isQuaking && event.sourcePlayerID && (
               <>
-                <span> via </span>
+                <span>via</span>
                 <span
                   className={classnames(
                     playerIdTextColorMap[event.sourcePlayerID],
@@ -126,7 +121,7 @@ export default function InterruptRow({
                 </span>
               </>
             )}
-          </>
+          </span>
         )}
       </td>
     </tr>

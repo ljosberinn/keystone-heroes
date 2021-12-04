@@ -506,9 +506,7 @@ function Events() {
           <ErrorBoundary>
             <tbody
               className={
-                before.length > 0
-                  ? "border-t-2 border-coolgray-900 text-center"
-                  : undefined
+                before.length > 0 ? "border-t-2 border-coolgray-900" : undefined
               }
             >
               <tr>
@@ -548,7 +546,7 @@ function Events() {
             <ErrorBoundary>
               <tbody className="border-t-2 border-coolgray-900">
                 <tr>
-                  <td colSpan={6} className="text-center ">
+                  <td colSpan={6} className="text-center">
                     <span
                       className="font-semibold"
                       title="Events that happend closer to this pull than the next can be found here."
@@ -652,7 +650,7 @@ function TableSettings() {
         <tbody>
           <tr>
             <td colSpan={6} className={`sticky top-12 z-10 ${bgPrimary} pb-2`}>
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center hidden space-x-2 md:block">
                 <input
                   className="cursor-pointer"
                   type="checkbox"
@@ -687,9 +685,9 @@ function TableHead() {
 
   return (
     <thead>
-      <tr>
-        <th className={className}>
-          {usesAbsoluteTimestamps ? "Abs." : "Rel."} Timestamp
+      <tr className="text-left">
+        <th className={classnames(className, "hidden md:table-cell w-8")}>
+          {usesAbsoluteTimestamps ? "Abs." : "Rel."} Time
         </th>
         <th className={className}>Type</th>
         <th className={className}>Player</th>

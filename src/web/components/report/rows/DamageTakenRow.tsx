@@ -9,7 +9,7 @@ import {
   SourceOrTargetPlayerCell,
   ResponsiveAbilityCell,
 } from "../cells";
-import type { DefaultEvent } from "../utils";
+import { DefaultEvent, formatNumber } from "../utils";
 import { determineAbility } from "../utils";
 
 export type DamageTakenRowProps = {
@@ -34,7 +34,7 @@ export default function DamageTakenRow({
   const ability = event.ability ? determineAbility(event.ability.id) : null;
 
   return (
-    <tr className="text-center text-white bg-red-500 hover:bg-red-700">
+    <tr className="text-white bg-red-500 hover:bg-red-700">
       <TimestampCell event={event} msSinceLastEvent={msSinceLastEvent} />
 
       <TypeCell type="DamageTaken" />
@@ -46,11 +46,9 @@ export default function DamageTakenRow({
         transparent
       />
 
-      <td colSpan={3} className="text-left">
+      <td colSpan={3} className="space-x-2">
         {ability ? (
           <>
-            <span className="hidden xl:inline"> hit by </span>
-
             <ExternalLink
               href={createWowheadUrl({
                 category: "spell",
@@ -67,27 +65,11 @@ export default function DamageTakenRow({
               <ResponsiveAbilityCell bold name={ability.name} />
             </ExternalLink>
 
-            {event.damage && (
-              <>
-                <span className="hidden xl:inline"> for</span>
-                <span> </span>
-                <span className="lg:hidden"> -</span>
-                <b className="hidden md:inline">
-                  {event.damage.toLocaleString("en-US")}
-                </b>
-                <b className="md:hidden">
-                  {Number.parseFloat(
-                    (event.damage / 1000).toFixed(2)
-                  ).toLocaleString("en-US")}
-                  k
-                </b>
-                <span className="hidden xl:inline"> damage</span>
-              </>
-            )}
+            {event.damage && <b>{formatNumber(event.damage)}</b>}
 
             {event.sourcePlayerID && (
               <>
-                <span> via </span>
+                <span>via</span>
                 <span
                   className={classnames(
                     playerIdTextColorMap[event.sourcePlayerID],

@@ -32,7 +32,7 @@ export default function MissedInterruptRow({
   const ability = event.ability ? determineAbility(event.ability.id) : null;
 
   return (
-    <tr className="text-center text-white bg-red-500 hover:bg-red-700">
+    <tr className="text-white bg-red-500 hover:bg-red-700">
       <TimestampCell event={event} msSinceLastEvent={msSinceLastEvent} />
 
       <TypeCell type="MissedInterrupt" />
@@ -60,13 +60,8 @@ export default function MissedInterruptRow({
                 width={16}
                 height={16}
               />
-              <ResponsiveAbilityCell bold name={ability.name} />
+              <ResponsiveAbilityCell name={ability.name} />
             </ExternalLink>
-
-            <span className="hidden lg:inline">
-              {" "}
-              didn't quite hit anything there{" "}
-            </span>
           </>
         ) : null}
       </td>

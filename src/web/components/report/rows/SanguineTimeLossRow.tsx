@@ -4,7 +4,7 @@ import { createWowheadUrl, timeDurationToString } from "../../../utils";
 import { calculateSanguineMetrics } from "../../../utils/affixes";
 import { AbilityIcon } from "../../AbilityIcon";
 import { ExternalLink } from "../../ExternalLink";
-import type { DefaultEvent } from "../utils";
+import { DefaultEvent, formatNumber } from "../utils";
 
 export type SanguineTimeLossRowProps = {
   events: (Omit<DefaultEvent, "healingDone" | "ability" | "type"> & {
@@ -48,7 +48,7 @@ export default function SanguineTimeLossRow({
           <b className="pl-2">{ability.name}</b>
         </ExternalLink>
         <span> Healing: </span>
-        <b>{healing.toLocaleString("en-US")}</b>
+        <b>{formatNumber(healing)}</b>
         <span> - Estimated Time Loss: </span>
         <b>{timeDurationToString(estTimeLoss * 1000, true)}</b>
       </td>

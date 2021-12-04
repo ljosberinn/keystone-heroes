@@ -1,5 +1,4 @@
 import { createWowheadUrl } from "../../../utils";
-import { classnames } from "../../../utils/classnames";
 import { AbilityIcon } from "../../AbilityIcon";
 import { ExternalLink } from "../../ExternalLink";
 import type { TableRowProps } from "../Pulls";
@@ -12,6 +11,7 @@ import {
 import type { DefaultEvent } from "../utils";
 import { determineAbility } from "../utils";
 import type { CastRowProps } from "./CastRow";
+import { classnames } from "../../../utils/classnames";
 
 export type ApplyBuffRowProps = {
   event: Omit<DefaultEvent, "ability" | "type"> & {
@@ -42,9 +42,9 @@ export default function ApplyBuffRow({
   return (
     <tr
       className={classnames(
-        "text-center",
+        "text-white",
         event.type === "RemoveBuff"
-          ? "bg-yellow-700 text-white hover:bg-yellow-900"
+          ? "bg-yellow-700 hover:bg-yellow-900"
           : "bg-green-600 hover:bg-green-800"
       )}
     >
