@@ -34,7 +34,6 @@ import {
 import { bgPrimary, bgSecondary } from "../../styles/tokens";
 import { timeDurationToString } from "../../utils";
 import { classnames } from "../../utils/classnames";
-import { dynamicConfig } from "../../utils/dynamicConfig";
 import {
   AbilityIcon,
   INVIS_POTION_ICON,
@@ -127,12 +126,12 @@ function useImageDimensions() {
 
 const MapOptions = dynamic(
   () => import(/* webpackChunkName: "MapOptions" */ "./MapOptions"),
-  dynamicConfig
+  { suspense: true }
 );
 
 const Legend = dynamic(
   () => import(/* webpackChunkName: "Legend" */ "./Legend"),
-  dynamicConfig
+  { suspense: true }
 );
 
 const imageTuples = [
@@ -1191,17 +1190,17 @@ function PullConnectionPolyline({
 const MapChangePolyline = dynamic(
   () =>
     import(/* webpackChunkName: "MapChangePolyline" */ "./MapChangePolyline"),
-  dynamicConfig
+  { suspense: true }
 );
 
 const DoorIndicators = dynamic(
   () => import(/* webpackChunkName: "DoorIndicators" */ "./DoorIndicators"),
-  dynamicConfig
+  { suspense: true }
 );
 
 const PointsOfInterest = dynamic(
   () => import(/* webpackChunkName: "PointsOfInterest" */ "./PointsOfInterest"),
-  dynamicConfig
+  { suspense: true }
 );
 
 type DoorIndicatorsWrapperProps = Pick<SvgProps, "onDoorClick"> & {

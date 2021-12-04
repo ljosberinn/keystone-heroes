@@ -19,14 +19,15 @@ import { useAbortableFetch } from "../../../web/hooks/useAbortableFetch";
 import { dungeons } from "../../../web/staticData";
 import { widthConstraint } from "../../../web/styles/tokens";
 import { timeDurationToString } from "../../../web/utils";
-import { dynamicConfig } from "../../../web/utils/dynamicConfig";
 
 const GenericError = dynamic(
   () =>
     import(
       /* webpackChunkName: "GenericError" */ "../../../web/components/GenericError"
     ),
-  dynamicConfig
+  {
+    suspense: true,
+  }
 );
 
 const useFightURL = () => {

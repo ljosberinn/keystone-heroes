@@ -20,7 +20,6 @@ import {
   classTextColorMap,
 } from "../../utils";
 import { classnames } from "../../utils/classnames";
-import { dynamicConfig } from "../../utils/dynamicConfig";
 import {
   AbilityIcon,
   INVIS_POTION_ICON,
@@ -354,8 +353,6 @@ function Events() {
 
   const [trackedPlayer, setTrackedPlayer] = useState(player.map((p) => p.id));
 
-  console.time("metastuff");
-
   const playerIdPlayerNameMap = Object.fromEntries<string>(
     player.map((p) => [p.id, p.name])
   );
@@ -417,7 +414,6 @@ function Events() {
     isViolentDetonationDamageEvent
   );
   const explosivesEvents = selectedPull.events.filter(isExplosivesDamageEvent);
-  console.timeEnd("metastuff");
 
   return (
     <div className="w-full min-h-screen px-4 py-2 bg-white rounded-lg lg:w-9/23 dark:bg-coolgray-700">
@@ -726,7 +722,7 @@ const SanguineTimeLossRow = dynamic(
     import(
       /* webpackChunkName: "SanguineTimeLossRow" */ "./rows/SanguineTimeLossRow"
     ),
-  dynamicConfig
+  { suspense: true }
 );
 
 const ExplosivesSummaryRow = dynamic(
@@ -734,7 +730,7 @@ const ExplosivesSummaryRow = dynamic(
     import(
       /* webpackChunkName: "ExplosivesSummaryRow" */ "./rows/ExplosivesSummaryRow"
     ),
-  dynamicConfig
+  { suspense: true }
 );
 
 const PlagueBombDamageRow = dynamic(
@@ -742,7 +738,7 @@ const PlagueBombDamageRow = dynamic(
     import(
       /* webpackChunkName: "PlagueBombDamageRow" */ "./rows/PlagueBombDamageRow"
     ),
-  dynamicConfig
+  { suspense: true }
 );
 
 const ViolentDetonationDamageRow = dynamic(
@@ -750,18 +746,18 @@ const ViolentDetonationDamageRow = dynamic(
     import(
       /* webpackChunkName: "ViolentDetonationDamageRow" */ "./rows/ViolentDetonationDamageRow"
     ),
-  dynamicConfig
+  { suspense: true }
 );
 
 const CastRow = dynamic(
   () => import(/* webpackChunkName: "CastRow" */ "./rows/CastRow"),
-  dynamicConfig
+  { suspense: true }
 );
 
 const DamageTakenRow = dynamic(
   () =>
     import(/* webpackChunkName: "DamageTakenRow" */ "./rows/DamageTakenRow"),
-  dynamicConfig
+  { suspense: true }
 );
 
 const MissedInterruptRow = dynamic(
@@ -769,45 +765,45 @@ const MissedInterruptRow = dynamic(
     import(
       /* webpackChunkName: "MissedInterruptRow" */ "./rows/MissedInterruptRow"
     ),
-  dynamicConfig
+  { suspense: true }
 );
 
 const AbilityReadyRow = dynamic(
   () =>
     import(/* webpackChunkName: "AbilityReadyRow" */ "./rows/AbilityReadyRow"),
-  dynamicConfig
+  { suspense: true }
 );
 
 const DeathRow = dynamic(
   () => import(/* webpackChunkName: "DeathRow" */ "./rows/DeathRow"),
-  dynamicConfig
+  { suspense: true }
 );
 
 const InterruptRow = dynamic(
   () => import(/* webpackChunkName: "InterruptRow" */ "./rows/InterruptRow"),
-  dynamicConfig
+  { suspense: true }
 );
 
 const DamageDoneRow = dynamic(
   () => import(/* webpackChunkName: "DamageDoneRow" */ "./rows/DamageDoneRow"),
-  dynamicConfig
+  { suspense: true }
 );
 
 const HealingDoneRow = dynamic(
   () =>
     import(/* webpackChunkName: "HealingDoneRow" */ "./rows/HealingDoneRow"),
-  dynamicConfig
+  { suspense: true }
 );
 
 const ApplyBuffRow = dynamic(
   () => import(/* webpackChunkName: "ApplyBuffRow" */ "./rows/ApplyBuffRow"),
-  dynamicConfig
+  { suspense: true }
 );
 
 const ApplyDebuffRow = dynamic(
   () =>
     import(/* webpackChunkName: "ApplyDebuffRow" */ "./rows/ApplyDebuffRow"),
-  dynamicConfig
+  { suspense: true }
 );
 
 const createRowKey = (event: DefaultEvent, index: number) =>
