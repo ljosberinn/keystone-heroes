@@ -209,8 +209,8 @@ export const isMissingInterruptEventWithAbility = (
   event.type === "MissedInterrupt" && event.ability !== null;
 
 export const formatNumber = (value: number): string => {
-  if (value > 1000000) {
-    return `${Number.parseFloat((value / 1000000).toFixed(2)).toLocaleString(
+  if (value > 1_000_000) {
+    return `${Number.parseFloat((value / 1_000_000).toFixed(2)).toLocaleString(
       "en-US"
     )}m`;
   }

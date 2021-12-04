@@ -9,8 +9,8 @@ import {
   SourceOrTargetPlayerCell,
   ResponsiveAbilityCell,
 } from "../cells";
-import { DefaultEvent, formatNumber } from "../utils";
-import { determineAbility } from "../utils";
+import type { DefaultEvent } from "../utils";
+import { determineAbility, formatNumber } from "../utils";
 import type { CastRowProps } from "./CastRow";
 
 export type DamageDoneRowProps = {

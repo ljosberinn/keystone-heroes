@@ -4,7 +4,8 @@ import { createWowheadUrl, timeDurationToString } from "../../../utils";
 import { calculateSanguineMetrics } from "../../../utils/affixes";
 import { AbilityIcon } from "../../AbilityIcon";
 import { ExternalLink } from "../../ExternalLink";
-import { DefaultEvent, formatNumber } from "../utils";
+import type { DefaultEvent } from "../utils";
+import { formatNumber } from "../utils";
 
 export type SanguineTimeLossRowProps = {
   events: (Omit<DefaultEvent, "healingDone" | "ability" | "type"> & {

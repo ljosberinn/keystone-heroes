@@ -1,4 +1,5 @@
 import { createWowheadUrl } from "../../../utils";
+import { classnames } from "../../../utils/classnames";
 import { AbilityIcon } from "../../AbilityIcon";
 import { ExternalLink } from "../../ExternalLink";
 import type { TableRowProps } from "../Pulls";
@@ -11,7 +12,6 @@ import {
 import type { DefaultEvent } from "../utils";
 import { determineAbility } from "../utils";
 import type { CastRowProps } from "./CastRow";
-import { classnames } from "../../../utils/classnames";
 
 export type ApplyBuffRowProps = {
   event: Omit<DefaultEvent, "ability" | "type"> & {

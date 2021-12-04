@@ -9,8 +9,8 @@ import {
   SourceOrTargetPlayerCell,
   ResponsiveAbilityCell,
 } from "../cells";
-import { DefaultEvent, formatNumber } from "../utils";
-import { determineAbility } from "../utils";
+import type { DefaultEvent } from "../utils";
+import { determineAbility, formatNumber } from "../utils";
 
 export type DamageTakenRowProps = {
   event: Omit<DefaultEvent, "ability" | "type" | "targetPlayerID"> & {
