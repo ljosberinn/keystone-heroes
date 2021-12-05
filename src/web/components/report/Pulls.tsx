@@ -710,10 +710,16 @@ function TableHead() {
           {usesAbsoluteTimestamps ? "Abs." : "Rel."} Time
         </th>
         <th className={className}>Type</th>
-        <th className={className}>Player</th>
-        <th className={className}>Ability</th>
-        <th className={className}>Last Use</th>
-        <th className={className}>Next Use</th>
+        <th className={className}>Actor</th>
+        <th className={className}>Spell</th>
+        <th className={`${className} space-x-1`}>
+          <span>Last</span>
+          <span className="hidden md:inline">Cast</span>
+        </th>
+        <th className={`${className} space-x-1`}>
+          <span>Next</span>
+          <span className="hidden md:inline">Cast</span>
+        </th>
       </tr>
     </thead>
   );

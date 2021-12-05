@@ -67,49 +67,62 @@ export const createWowheadUrl = ({ category, id }: WowheadParams): string => {
 export const parseWCLUrl = (
   maybeURL: string
 ): { reportID: null | string; fightID: null | string } => {
-  const isReportID = isValidReportId(maybeURL);
-
-  if (isReportID) {
+  if (isValidReportId(maybeURL)) {
     return {
       reportID: maybeURL,
       fightID: null,
     };
   }
+
   try {
     const { pathname, host, hash } = new URL(maybeURL);
 
-    if (host === "www.warcraftlogs.com" && pathname.startsWith("/reports/")) {
-      const maybeReportID = pathname.replace("/reports/", "").replace("/", "");
+    // not a WCL url
+    if (host !== "www.warcraftlogs.com" || !pathname.startsWith("/reports/")) {
+      return {
+        reportID: null,
+        fightID: null,
+      };
+    }
 
-      if (!isValidReportId(maybeReportID)) {
-        return {
-          reportID: null,
-          fightID: null,
-        };
-      }
+    const maybeReportID = pathname.replace("/reports/", "").replace("/", "");
 
-      if (hash) {
-        const maybeFightID = new URLSearchParams(hash.slice(1)).get("fight");
+    // WCL url, but doesnt point to reports
+    if (!isValidReportId(maybeReportID)) {
+      return {
+        reportID: null,
+        fightID: null,
+      };
+    }
 
-        if (
-          maybeFightID &&
-          (maybeFightID === "last" || Number.parseInt(maybeFightID) > 0)
-        ) {
-          return {
-            reportID: maybeReportID,
-            fightID: maybeFightID,
-          };
-        }
-      }
-
+    // WCL url, points to reports, but no fight selected
+    if (!hash) {
       return {
         reportID: maybeReportID,
         fightID: null,
       };
     }
 
+    const maybeFightID = new URLSearchParams(hash.slice(1)).get("fight");
+
+    // no fightID at all
+    if (!maybeFightID) {
+      return {
+        reportID: maybeReportID,
+        fightID: null,
+      };
+    }
+
+    // fightID may be `last` or numeric
+    if (maybeFightID === "last" || Number.parseInt(maybeFightID) > 0) {
+      return {
+        reportID: maybeReportID,
+        fightID: maybeFightID,
+      };
+    }
+
     return {
-      reportID: null,
+      reportID: maybeReportID,
       fightID: null,
     };
   } catch {

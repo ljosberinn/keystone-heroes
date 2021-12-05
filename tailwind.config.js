@@ -39,6 +39,7 @@ module.exports = {
       colors: classColors,
       maxWidth: {
         "1/2": "50%",
+        "[8ch]": "8ch",
       },
     },
   },

@@ -161,7 +161,13 @@ type TypeCellProps = {
 };
 
 export function TypeCell({ type }: TypeCellProps): JSX.Element {
-  return <td className="pl-2 md:pl-0">{type}</td>;
+  return (
+    <td className="pl-2 md:pl-0">
+      <span className="block truncate max-w-[8ch] md:inline" title={type}>
+        {type}
+      </span>
+    </td>
+  );
 }
 
 type TimestampCellProps<Event = { timestamp: number; relTimestamp: number }> = {
