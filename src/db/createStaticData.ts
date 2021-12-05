@@ -20,17 +20,23 @@ import {
   tormentedSpells,
 } from "../wcl/queries/events/affixes/tormented";
 import { VOLCANIC } from "../wcl/queries/events/affixes/volcanic";
-import { DOS_URN } from "../wcl/queries/events/dungeons/dos";
+import { DOS_URN, DOS_URN_OPENING } from "../wcl/queries/events/dungeons/dos";
 import { HOA_GARGOYLE } from "../wcl/queries/events/dungeons/hoa";
-import { ENVELOPMENT_OF_MISTS } from "../wcl/queries/events/dungeons/mots";
+import {
+  ENVELOPMENT_OF_MISTS,
+  MOTS_OPENING,
+} from "../wcl/queries/events/dungeons/mots";
 import { NW } from "../wcl/queries/events/dungeons/nw";
 import { PF } from "../wcl/queries/events/dungeons/pf";
 import {
   SD_LANTERN_OPENING,
   SD_LANTERN_BUFF,
 } from "../wcl/queries/events/dungeons/sd";
-import { SOA_SPEAR } from "../wcl/queries/events/dungeons/soa";
-import { TOP_BANNER_AURA } from "../wcl/queries/events/dungeons/top";
+import { SOA_SPEAR, SOA_OPENING } from "../wcl/queries/events/dungeons/soa";
+import {
+  TOP_BANNER_AURA,
+  TOP_OPENING,
+} from "../wcl/queries/events/dungeons/top";
 import { SHARED_COVENANT_ABILITIES } from "../wcl/queries/events/other";
 import { allBossIDs, dungeons as rawDungeons } from "./data/dungeons";
 import { spells } from "./data/spellIds";
@@ -425,6 +431,11 @@ async function create() {
       icon: "ui_sigil_necrolord",
       cd: DUMMY_CD,
     },
+    [TOP_OPENING]: {
+      name: "Opening",
+      icon: "spell_animamaldraxxus_orb",
+      cd: DUMMY_CD,
+    },
     [SD_LANTERN_BUFF]: {
       name: "Sinfall Boon",
       icon: "spell_animarevendreth_buff",
@@ -440,14 +451,29 @@ async function create() {
       icon: "ability_monk_renewingmists",
       cd: DUMMY_CD,
     },
+    [MOTS_OPENING]: {
+      name: "Opening",
+      icon: "spell_animaardenweald_orb",
+      cd: DUMMY_CD,
+    },
     [SOA_SPEAR]: {
       name: "Spear of Destiny",
       icon: "inv_polearm_2h_bastionquest_b_01",
       cd: DUMMY_CD,
     },
+    [SOA_OPENING]: {
+      name: "Opening",
+      icon: "spell_animabastion_orb",
+      cd: DUMMY_CD,
+    },
     [DOS_URN]: {
       name: "Haunted Urn",
       icon: "inv_misc_urn_01",
+      cd: DUMMY_CD,
+    },
+    [DOS_URN_OPENING]: {
+      name: "Opening",
+      icon: "spell_animaardenweald_orb",
       cd: DUMMY_CD,
     },
     [PF.PLAGUE_BOMB]: {

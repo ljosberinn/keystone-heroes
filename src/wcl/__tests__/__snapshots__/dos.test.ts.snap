@@ -73,5 +73,12 @@ Array [
     "timestamp": 1286270,
     "type": "applydebuff",
   },
+  Object {
+    "abilityGameID": 340004,
+    "sourceID": 104,
+    "targetID": -1,
+    "timestamp": 2364699,
+    "type": "begincast",
+  },
 ]
 `;
