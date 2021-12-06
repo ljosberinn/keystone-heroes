@@ -309,19 +309,20 @@ const championsBrand: TormentedSpell = {
   ],
 };
 
-const championsMastery: TormentedDeBuff = {
-  id: 357_582,
-  name: "Champion's Mastery",
-  icon: "spell_holy_weaponmastery",
-  type: ["applybuff"],
-};
+// tracking these is very noisy
+// const championsMastery: TormentedDeBuff = {
+//   id: 357_582,
+//   name: "Champion's Mastery",
+//   icon: "spell_holy_weaponmastery",
+//   type: ["applybuff"],
+// };
 
-const championsBrutality: TormentedDeBuff = {
-  id: 357_584,
-  name: "Champion's Brutality",
-  icon: "ability_warrior_deepcuts",
-  type: ["applybuff"],
-};
+// const championsBrutality: TormentedDeBuff = {
+//   id: 357_584,
+//   name: "Champion's Brutality",
+//   icon: "ability_warrior_deepcuts",
+//   type: ["applybuff"],
+// };
 
 export const tormentedSpells = [
   theStoneWard,
@@ -361,8 +362,8 @@ export const tormentedBuffsAndDebuffs = [
   huntmansHornBuff,
   gavelOfJudgementDebuff,
   siegebreakersStandBuff,
-  championsBrutality,
-  championsMastery,
+  // championsBrutality,
+  // championsMastery,
 ];
 
 export const TORMENTED = tormentedSpells.map((spell) => spell.id);

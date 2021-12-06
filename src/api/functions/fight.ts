@@ -548,9 +548,7 @@ const eventHasRelevantAbilityAndSourcePlayerIDAndIsNotInterruptEvent = (
     event.ability !== null &&
     event.ability.id in spells &&
     event.sourcePlayerID !== null &&
-    // required to prevent duplicates due to Cast event
-    // interrupt rows would add a second AbilityReady event
-    event.type !== "Interrupt"
+    event.type === "Cast"
   );
 };
 
@@ -932,7 +930,7 @@ export const createResponseFromStoredFight = (
     }
 
     // player actor
-    const key = `${sourcePlayerID}-${ability.id}`;
+    const key = `${sourcePlayerID}-${ability.id}-${eventType}`;
     const lastUse = lastAbilityUsageMap.get(key) ?? null;
     lastAbilityUsageMap.set(key, timestamp);
 

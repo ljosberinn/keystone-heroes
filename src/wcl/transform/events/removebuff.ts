@@ -7,7 +7,7 @@ import {
   SD_ZRALI_SHIELD_BUFF,
 } from "../../queries/events/dungeons/sd";
 import { TOP_BANNER_AURA } from "../../queries/events/dungeons/top";
-import { CHEAT_DEATHS } from "../../queries/events/other";
+import { CHEAT_DEATHS, TRINKETS } from "../../queries/events/other";
 import type { RemoveBuffEvent } from "../../queries/events/types";
 import type { Processor } from "../utils";
 
@@ -20,6 +20,9 @@ const relevantBuffs = new Set<number>([
     .filter((deBuff) => deBuff.type.includes("removebuff"))
     .map((buff) => buff.id),
   ...Object.values(CHEAT_DEATHS)
+    .filter((ability) => ability.type.includes("removebuff"))
+    .map((ability) => ability.id),
+  ...Object.values(TRINKETS)
     .filter((ability) => ability.type.includes("removebuff"))
     .map((ability) => ability.id),
 ]);

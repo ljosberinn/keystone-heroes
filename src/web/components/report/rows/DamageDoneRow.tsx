@@ -61,7 +61,7 @@ export default function DamageDoneRow({
               id: event.targetNPC.id,
             })}
           >
-            <b className="pl-2">{event.targetNPC.name}</b>
+            <b>{event.targetNPC.name}</b>
           </ExternalLink>
         </td>
       </tr>
@@ -91,7 +91,7 @@ export default function DamageDoneRow({
         transparent
       />
 
-      <td colSpan={4} className="space-x-2">
+      <td colSpan={4}>
         <ExternalLink
           href={createWowheadUrl({
             category: "spell",
@@ -107,33 +107,36 @@ export default function DamageDoneRow({
           />
           <ResponsiveAbilityCell bold name={ability.name} />
         </ExternalLink>
+
         {event.sourceNPC && (
           <>
-            <span>of</span>
+            <span className="hidden md:inline md:pl-2">of</span>
             <ExternalLink
               href={createWowheadUrl({
                 category: "npc",
                 id: event.sourceNPC.id,
               })}
             >
-              <b>{event.sourceNPC.name}</b>
+              <ResponsiveAbilityCell bold name={event.sourceNPC.name} />
             </ExternalLink>
           </>
         )}
+
         {event.targetNPC && (
           <>
-            <span>-</span>
+            <span className="hidden md:inline md:pl-2">-</span>
             <ExternalLink
               href={createWowheadUrl({
                 category: "npc",
                 id: event.targetNPC.id,
               })}
+              className="pl-2 md:pl-0"
             >
-              <b>{event.targetNPC.name}</b>
+              <ResponsiveAbilityCell bold name={event.targetNPC.name} />
             </ExternalLink>
           </>
         )}
-        <b>{formatNumber(event.damage)}</b>
+        <b className="md:pl-2">{formatNumber(event.damage)}</b>
       </td>
     </tr>
   );

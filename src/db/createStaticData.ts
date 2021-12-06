@@ -44,6 +44,7 @@ import {
 import {
   CHEAT_DEATHS,
   SHARED_COVENANT_ABILITIES,
+  TRINKETS,
 } from "../wcl/queries/events/other";
 import { allBossIDs, dungeons as rawDungeons } from "./data/dungeons";
 import { spells } from "./data/spellIds";
@@ -343,26 +344,27 @@ async function create() {
       icon: "ability_necrolord_fleshcraft",
       cd: 180,
     },
-    [CHEAT_DEATHS.PODTENDER.id]: {
-      name: CHEAT_DEATHS.PODTENDER.name,
-      icon: CHEAT_DEATHS.PODTENDER.icon,
-      cd: CHEAT_DEATHS.PODTENDER.cd,
-    },
-    [CHEAT_DEATHS.CHEAT_DEATH.id]: {
-      name: CHEAT_DEATHS.CHEAT_DEATH.name,
-      icon: CHEAT_DEATHS.CHEAT_DEATH.icon,
-      cd: CHEAT_DEATHS.CHEAT_DEATH.cd,
-    },
-    [CHEAT_DEATHS.CHEATING_DEATH.id]: {
-      name: CHEAT_DEATHS.CHEATING_DEATH.name,
-      icon: CHEAT_DEATHS.CHEATING_DEATH.icon,
-      cd: CHEAT_DEATHS.CHEATING_DEATH.cd,
-    },
-    [CHEAT_DEATHS.DEPLETED_SHELL.id]: {
-      name: CHEAT_DEATHS.DEPLETED_SHELL.name,
-      icon: CHEAT_DEATHS.DEPLETED_SHELL.icon,
-      cd: CHEAT_DEATHS.DEPLETED_SHELL.cd,
-    },
+
+    ...Object.fromEntries(
+      Object.values(CHEAT_DEATHS).map((cheat) => [
+        cheat.id,
+        {
+          name: cheat.name,
+          icon: cheat.icon,
+          cd: cheat.cd,
+        },
+      ])
+    ),
+    ...Object.fromEntries(
+      Object.values(TRINKETS).map((trinket) => [
+        trinket.id,
+        {
+          name: trinket.name,
+          icon: trinket.icon,
+          cd: trinket.cd,
+        },
+      ])
+    ),
     [SANGUINE_ICHOR_DAMAGE]: {
       name: "Sanguine Ichor",
       icon: "spell_shadow_bloodboil",

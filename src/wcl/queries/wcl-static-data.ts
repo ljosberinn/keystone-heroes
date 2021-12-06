@@ -7,6 +7,7 @@ import {
   tormentedSpells,
   tormentedBuffsAndDebuffs,
 } from "./events/affixes/tormented";
+import { TRINKETS } from "./events/other";
 
 type NPCName = {
   id: number;
@@ -65,6 +66,7 @@ async function loadSpellNames() {
     { id: 358_967, name: "Inferno", icon: "ability_foundryraid_blastwave" },
     ...tormentedSpells,
     ...tormentedBuffsAndDebuffs,
+    ...Object.values(TRINKETS),
   ]
     .map((dataset) => ({
       id: dataset.id,

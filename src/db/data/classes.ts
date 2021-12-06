@@ -1797,13 +1797,6 @@ const demonhunter: Class = {
           icon: "ability_demonhunter_sigilofmisery",
           type: ["cc"],
         },
-        {
-          name: "Last Resort",
-          id: 209_258,
-          cd: 480,
-          icon: "inv_glaive_1h_artifactaldorchi_d_06",
-          type: ["defensive", "major"],
-        },
       ],
     },
     {

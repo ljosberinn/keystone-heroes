@@ -16,6 +16,8 @@ import {
   filterCovenantCastEvents,
   cheatDeathFilterExpression,
   filterCheatDeathEvents,
+  trinketsFilterExpression,
+  filterTrinkets,
 } from "../events/other";
 import type {
   AllTrackedEventTypes,
@@ -49,6 +51,7 @@ const generateFilterExpression = ({
     interruptFilterExpression,
     generalCovenantExpression,
     cheatDeathFilterExpression,
+    trinketsFilterExpression,
     ...getDungeonExpression(dungeonID),
     ...getAffixExpression(affixes),
   ]
@@ -104,6 +107,7 @@ export const getEvents = async (
   );
   const sharedCovenantAbilitiesEvents = filterCovenantCastEvents(allEvents);
   const cheatDeathEvents = filterCheatDeathEvents(allEvents);
+  const trinketEvents = filterTrinkets(allEvents);
 
   return {
     allEvents: [
@@ -115,6 +119,7 @@ export const getEvents = async (
       ...interruptEvents,
       ...sharedCovenantAbilitiesEvents,
       ...cheatDeathEvents,
+      ...trinketEvents,
     ].sort((a, b) => a.timestamp - b.timestamp),
     playerDeathEvents,
     enemyDeathEvents,

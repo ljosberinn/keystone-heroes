@@ -73,7 +73,7 @@ export default function ApplyBuffRow({
         transparent
       />
 
-      <td colSpan={3} className="space-x-2">
+      <td colSpan={3}>
         <span className="hidden md:inline">
           {event.type === "RemoveBuff" ? "lost" : "gained"}
         </span>
@@ -82,11 +82,12 @@ export default function ApplyBuffRow({
             category: "spell",
             id: event.ability.id,
           })}
+          className="md:pl-2"
         >
           <AbilityIcon
             icon={ability.icon}
             alt={ability.name}
-            className="inline object-cover w-4 h-4 rounded-lg"
+            className="inline object-cover w-4 h-4 rounded-lg "
             width={16}
             height={16}
           />

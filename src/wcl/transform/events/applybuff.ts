@@ -13,7 +13,11 @@ import {
   SD_ZRALI_SHIELD_BUFF,
 } from "../../queries/events/dungeons/sd";
 import { TOP_BANNER_AURA } from "../../queries/events/dungeons/top";
-import { CHEAT_DEATHS, INVISIBILITY } from "../../queries/events/other";
+import {
+  CHEAT_DEATHS,
+  INVISIBILITY,
+  TRINKETS,
+} from "../../queries/events/other";
 import type { ApplyBuffEvent } from "../../queries/events/types";
 import type { Processor } from "../utils";
 
@@ -34,6 +38,9 @@ const noteworthyBuffs = new Set<number>([
     .filter((deBuff) => deBuff.type.includes("applybuff"))
     .map((buff) => buff.id),
   ...Object.values(CHEAT_DEATHS)
+    .filter((ability) => ability.type.includes("applybuff"))
+    .map((ability) => ability.id),
+  ...Object.values(TRINKETS)
     .filter((ability) => ability.type.includes("applybuff"))
     .map((ability) => ability.id),
 ]);
@@ -91,7 +98,11 @@ export const applyBuffProcessor: Processor<CustomApplyBuffEvent> = (
     };
   }
 
-  if (tormentedAbilityGameIDSet.has(event.abilityGameID)) {
+  // buffs applied from environment on player
+  if (
+    tormentedAbilityGameIDSet.has(event.abilityGameID) ||
+    noteworthyBuffs.has(event.abilityGameID)
+  ) {
     return {
       timestamp: event.timestamp,
       eventType: EventType.ApplyBuff,
