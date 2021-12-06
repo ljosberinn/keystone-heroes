@@ -227,4 +227,5 @@ export type AllTrackedEventTypes =
   | HealEvent
   | ApplyBuffStackEvent
   | InterruptEvent
-  | DeathEvent;
+  | DeathEvent
+  | RemoveDebuffEvent;

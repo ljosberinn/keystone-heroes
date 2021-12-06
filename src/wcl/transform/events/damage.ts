@@ -29,7 +29,7 @@ export const damageProcessor: Processor<DamageEvent> = (
   event,
   { targetPlayerID, sourcePlayerID, sourceNPCID, targetNPCID }
 ) => {
-  if (event.amount === 0) {
+  if (event.unmitigatedAmount === 0) {
     return null;
   }
 
@@ -37,8 +37,7 @@ export const damageProcessor: Processor<DamageEvent> = (
   if (targetPlayerID) {
     if (
       environmentalDamageAffixAbilities.has(event.abilityGameID) &&
-      event.unmitigatedAmount &&
-      event.mitigated
+      event.unmitigatedAmount
     ) {
       return {
         timestamp: event.timestamp,
@@ -46,7 +45,7 @@ export const damageProcessor: Processor<DamageEvent> = (
         eventType: EventType.DamageTaken,
         targetPlayerID,
         sourcePlayerID,
-        damage: event.unmitigatedAmount - event.mitigated,
+        damage: event.unmitigatedAmount - (event.mitigated ?? 0),
       };
     }
 
@@ -55,7 +54,7 @@ export const damageProcessor: Processor<DamageEvent> = (
       return {
         timestamp: event.timestamp,
         eventType: EventType.DamageTaken,
-        damage: event.amount,
+        damage: event.unmitigatedAmount,
         targetPlayerID,
         sourceNPCID,
         // only relevant on plagueborer
@@ -75,7 +74,7 @@ export const damageProcessor: Processor<DamageEvent> = (
         targetPlayerID,
         sourceNPCID: SPITEFUL.unit,
         abilityID: SPITEFUL.ability,
-        damage: event.unmitigatedAmount - event.mitigated,
+        damage: event.unmitigatedAmount,
       };
     }
   }

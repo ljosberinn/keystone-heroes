@@ -3,7 +3,10 @@ import fetch from "node-fetch";
 import { resolve } from "path";
 import { format } from "prettier";
 
-import { tormentedSpells } from "./events/affixes/tormented";
+import {
+  tormentedSpells,
+  tormentedBuffsAndDebuffs,
+} from "./events/affixes/tormented";
 
 type NPCName = {
   id: number;
@@ -23,10 +26,14 @@ async function loadNPCNames() {
     "https://assets.rpglogs.com/json/warcraft/npc-names.json"
   );
   const json: NPCName[] = await response.json();
-  const extracted = json.map((dataset) => ({
-    id: dataset.id,
-    name: dataset.name_enus,
-  }));
+  const extracted = json
+    .map((dataset) => ({
+      id: dataset.id,
+      name: dataset.name_enus,
+    }))
+    .sort((a, b) => {
+      return a.id - b.id;
+    });
 
   writeFileSync(
     resolve("src/db/raw/all-npcs.json"),
@@ -57,11 +64,16 @@ async function loadSpellNames() {
     { id: 350_163, name: "Melee", icon: "ability_meleedamage" },
     { id: 358_967, name: "Inferno", icon: "ability_foundryraid_blastwave" },
     ...tormentedSpells,
-  ].map((dataset) => ({
-    id: dataset.id,
-    name: dataset.name,
-    icon: dataset.icon,
-  }));
+    ...tormentedBuffsAndDebuffs,
+  ]
+    .map((dataset) => ({
+      id: dataset.id,
+      name: dataset.name,
+      icon: dataset.icon,
+    }))
+    .sort((a, b) => {
+      return a.id - b.id;
+    });
 
   writeFileSync(
     resolve("src/db/raw/all-spells.json"),

@@ -911,11 +911,7 @@ function Svg({ imageSize, zoneID, onDoorClick, fullscreen }: SvgProps) {
             yFactor={imageSize.clientHeight}
             zoneID={zoneID}
           />
-          <PointsOfInterestWrapper
-            xFactor={imageSize.clientWidth}
-            yFactor={imageSize.clientHeight}
-            zoneID={zoneID}
-          />
+          <PointsOfInterestWrapper zoneID={zoneID} />
         </PointsOfInterestProvider>
         {thisZonesPulls.map((pull, index) => {
           const x = pull.x * imageSize.clientWidth;
@@ -1160,7 +1156,7 @@ function PullConnectionPolyline({
   }
 
   return (
-    <g>
+    <>
       <polyline
         markerMid="url(#triangle)"
         className={classnames(
@@ -1183,7 +1179,7 @@ function PullConnectionPolyline({
           type={invisibilityUsage}
         />
       )}
-    </g>
+    </>
   );
 }
 
@@ -1269,14 +1265,10 @@ function MapChangePolylineWrapper({
 
 type PointsOfInterestWrapperProps = {
   zoneID: number;
-  xFactor: number;
-  yFactor: number;
 };
 
 function PointsOfInterestWrapper({
   zoneID,
-  xFactor,
-  yFactor,
 }: PointsOfInterestWrapperProps): JSX.Element | null {
   const renderPOIs = useMapOptions((state) => state.renderPOIs);
   const { poi } = usePointsOfInterest();
@@ -1288,11 +1280,7 @@ function PointsOfInterestWrapper({
 
   return (
     <Suspense fallback={null}>
-      <PointsOfInterest
-        poi={thisZonesPOIs}
-        xFactor={xFactor}
-        yFactor={yFactor}
-      />
+      <PointsOfInterest poi={thisZonesPOIs} />
     </Suspense>
   );
 }

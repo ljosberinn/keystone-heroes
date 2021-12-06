@@ -1,12 +1,19 @@
 import { EventType } from "@prisma/client";
 
 import { BOLSTERING } from "../../queries/events/affixes/bolstering";
-import { tormentedAbilityGameIDSet } from "../../queries/events/affixes/tormented";
+import {
+  tormentedBuffsAndDebuffs,
+  tormentedAbilityGameIDSet,
+} from "../../queries/events/affixes/tormented";
 import { NW } from "../../queries/events/dungeons/nw";
 import { PF } from "../../queries/events/dungeons/pf";
-import { SD_LANTERN_BUFF } from "../../queries/events/dungeons/sd";
+import {
+  SD_LANTERN_BUFF,
+  SD_ZRALI_SHIELD,
+  SD_ZRALI_SHIELD_BUFF,
+} from "../../queries/events/dungeons/sd";
 import { TOP_BANNER_AURA } from "../../queries/events/dungeons/top";
-import { INVISIBILITY } from "../../queries/events/other";
+import { CHEAT_DEATHS, INVISIBILITY } from "../../queries/events/other";
 import type { ApplyBuffEvent } from "../../queries/events/types";
 import type { Processor } from "../utils";
 
@@ -17,11 +24,18 @@ const invisibilityIDs = new Set<number>([
   INVISIBILITY.DIMENSIONAL_SHIFTER,
 ]);
 
-const dungeonBuffIDs = new Set<number>([
+const noteworthyBuffs = new Set<number>([
   TOP_BANNER_AURA,
   PF.GREEN_BUFF.aura,
   PF.RED_BUFF.aura,
   PF.PURPLE_BUFF.aura,
+  SD_ZRALI_SHIELD,
+  ...tormentedBuffsAndDebuffs
+    .filter((deBuff) => deBuff.type.includes("applybuff"))
+    .map((buff) => buff.id),
+  ...Object.values(CHEAT_DEATHS)
+    .filter((ability) => ability.type.includes("applybuff"))
+    .map((ability) => ability.id),
 ]);
 
 export const applyBuffProcessor: Processor<CustomApplyBuffEvent> = (
@@ -41,7 +55,7 @@ export const applyBuffProcessor: Processor<CustomApplyBuffEvent> = (
       };
     }
 
-    if (dungeonBuffIDs.has(event.abilityGameID)) {
+    if (noteworthyBuffs.has(event.abilityGameID)) {
       return {
         timestamp: event.timestamp,
         eventType: EventType.ApplyBuff,
@@ -66,7 +80,8 @@ export const applyBuffProcessor: Processor<CustomApplyBuffEvent> = (
   if (
     targetPlayerID &&
     (event.abilityGameID === SD_LANTERN_BUFF ||
-      event.abilityGameID === NW.KYRIAN_ORB_BUFF)
+      event.abilityGameID === NW.KYRIAN_ORB_BUFF ||
+      event.abilityGameID === SD_ZRALI_SHIELD_BUFF)
   ) {
     return {
       timestamp: event.timestamp,

@@ -502,6 +502,7 @@ enum EventType {
   ApplyDebuffStack
   RemoveBuff
   Interrupt
+  RemoveDebuff
 }
 
 enum Role {

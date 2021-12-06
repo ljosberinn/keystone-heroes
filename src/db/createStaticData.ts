@@ -18,6 +18,7 @@ import { STORMING } from "../wcl/queries/events/affixes/storming";
 import {
   tormentedLieutenants,
   tormentedSpells,
+  tormentedBuffsAndDebuffs,
 } from "../wcl/queries/events/affixes/tormented";
 import { VOLCANIC } from "../wcl/queries/events/affixes/volcanic";
 import { DOS_URN, DOS_URN_OPENING } from "../wcl/queries/events/dungeons/dos";
@@ -31,13 +32,19 @@ import { PF } from "../wcl/queries/events/dungeons/pf";
 import {
   SD_LANTERN_OPENING,
   SD_LANTERN_BUFF,
+  SD_ZRALI_SHIELD,
+  SD_ZRALI_SHIELD_BUFF,
+  SD_ZRALI_SHIELD_CAST,
 } from "../wcl/queries/events/dungeons/sd";
 import { SOA_SPEAR, SOA_OPENING } from "../wcl/queries/events/dungeons/soa";
 import {
   TOP_BANNER_AURA,
   TOP_OPENING,
 } from "../wcl/queries/events/dungeons/top";
-import { SHARED_COVENANT_ABILITIES } from "../wcl/queries/events/other";
+import {
+  CHEAT_DEATHS,
+  SHARED_COVENANT_ABILITIES,
+} from "../wcl/queries/events/other";
 import { allBossIDs, dungeons as rawDungeons } from "./data/dungeons";
 import { spells } from "./data/spellIds";
 import { prisma } from "./prisma";
@@ -336,6 +343,26 @@ async function create() {
       icon: "ability_necrolord_fleshcraft",
       cd: 180,
     },
+    [CHEAT_DEATHS.PODTENDER.id]: {
+      name: CHEAT_DEATHS.PODTENDER.name,
+      icon: CHEAT_DEATHS.PODTENDER.icon,
+      cd: CHEAT_DEATHS.PODTENDER.cd,
+    },
+    [CHEAT_DEATHS.CHEAT_DEATH.id]: {
+      name: CHEAT_DEATHS.CHEAT_DEATH.name,
+      icon: CHEAT_DEATHS.CHEAT_DEATH.icon,
+      cd: CHEAT_DEATHS.CHEAT_DEATH.cd,
+    },
+    [CHEAT_DEATHS.CHEATING_DEATH.id]: {
+      name: CHEAT_DEATHS.CHEATING_DEATH.name,
+      icon: CHEAT_DEATHS.CHEATING_DEATH.icon,
+      cd: CHEAT_DEATHS.CHEATING_DEATH.cd,
+    },
+    [CHEAT_DEATHS.DEPLETED_SHELL.id]: {
+      name: CHEAT_DEATHS.DEPLETED_SHELL.name,
+      icon: CHEAT_DEATHS.DEPLETED_SHELL.icon,
+      cd: CHEAT_DEATHS.DEPLETED_SHELL.cd,
+    },
     [SANGUINE_ICHOR_DAMAGE]: {
       name: "Sanguine Ichor",
       icon: "spell_shadow_bloodboil",
@@ -446,6 +473,21 @@ async function create() {
       icon: "spell_animarevendreth_orb",
       cd: DUMMY_CD,
     },
+    [SD_ZRALI_SHIELD]: {
+      name: "Z'rali's Essence",
+      icon: "inv_pet_naaru_yellow",
+      cd: DUMMY_CD,
+    },
+    [SD_ZRALI_SHIELD_BUFF]: {
+      name: "Shining Radiance",
+      icon: "spell_holy_powerwordbarrier",
+      cd: DUMMY_CD,
+    },
+    [SD_ZRALI_SHIELD_CAST]: {
+      name: "Shining Radiance",
+      icon: "spell_holy_powerwordbarrier",
+      cd: 35,
+    },
     [ENVELOPMENT_OF_MISTS]: {
       name: "Envelopment of Mists",
       icon: "ability_monk_renewingmists",
@@ -521,6 +563,16 @@ async function create() {
         },
       ])
     ),
+    ...Object.fromEntries(
+      tormentedBuffsAndDebuffs.map((deBuff) => [
+        deBuff.id,
+        {
+          name: deBuff.name,
+          icon: deBuff.icon,
+          cd: 0,
+        },
+      ])
+    ),
   };
 
   const targetPath = resolve("src/web/staticData.ts");
@@ -542,15 +594,11 @@ export const STORMING = ${STORMING};
 export const SANGUINE_ICHOR_DAMAGE = ${SANGUINE_ICHOR_DAMAGE};
 export const SANGUINE_ICHOR_HEALING = ${SANGUINE_ICHOR_HEALING};
 export const DUMMY_CD = ${DUMMY_CD};
-export const DOS_URN = ${DOS_URN};
 export const HOA_GARGOYLE = ${HOA_GARGOYLE};
 export const ENVELOPMENT_OF_MISTS = ${ENVELOPMENT_OF_MISTS};
 export const SOA_SPEAR = ${SOA_SPEAR};
-export const SD_LANTERN_BUFF = ${SD_LANTERN_BUFF};
 export const SD_LANTERN_OPENING = ${SD_LANTERN_OPENING};
-export const NW = JSON.parse(\`${JSON.stringify(NW)}\`);
 export const PF = JSON.parse(\`${JSON.stringify(PF)}\`);
-export const TOP_BANNER_AURA = ${TOP_BANNER_AURA};
 
 export const isBoss = (id: number): boolean => allBossIDs.has(id);
 export const isTormentedLieutenant = (id: number): boolean => tormentedLieutenantIDs.has(id);

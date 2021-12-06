@@ -41,6 +41,7 @@ import {
 import { AbilityIcon } from "../AbilityIcon";
 import { ExternalLink } from "../ExternalLink";
 import { SpecIcon } from "../SpecIcon";
+import { formatNumber } from "./utils";
 
 type Stats = {
   fightID: string;
@@ -138,7 +139,7 @@ export function AffixImpact(): JSX.Element {
                           explosives.spawned) *
                         100
                       ).toFixed(2)}
-                      % )
+                      %)
                     </span>
                   }
                 />
@@ -197,8 +198,6 @@ export function AffixImpact(): JSX.Element {
 
                     const damageTaken = quaking.damage[player.id] ?? 0;
 
-                    const damageTakenInK = (damageTaken / 1000).toFixed(1);
-
                     return (
                       <ExternalLink
                         href={createWCLUrl({
@@ -224,7 +223,7 @@ export function AffixImpact(): JSX.Element {
                         <span
                           className={damageTaken === 0 ? greenText : redText}
                         >
-                          {damageTakenInK}k
+                          {formatNumber(damageTaken)}
                         </span>
                       </ExternalLink>
                     );
@@ -293,7 +292,6 @@ export function AffixImpact(): JSX.Element {
                     }
 
                     const damageTaken = volcanic.damage[player.id] ?? 0;
-                    const damageTakenInK = (damageTaken / 1000).toFixed(1);
                     const hits = volcanic.hits[player.id] ?? 0;
 
                     return (
@@ -320,7 +318,7 @@ export function AffixImpact(): JSX.Element {
                         <span
                           className={damageTaken === 0 ? greenText : redText}
                         >
-                          {damageTakenInK}k
+                          {formatNumber(damageTaken)}
                         </span>
                         <span>({hits})</span>
                       </ExternalLink>
@@ -347,7 +345,6 @@ export function AffixImpact(): JSX.Element {
                     }
 
                     const damageTaken = storming.damage[player.id] ?? 0;
-                    const damageTakenInK = (damageTaken / 1000).toFixed(1);
                     const hits = storming.hits[player.id] ?? 0;
 
                     return (
@@ -374,7 +371,7 @@ export function AffixImpact(): JSX.Element {
                         <span
                           className={damageTaken === 0 ? greenText : redText}
                         >
-                          {damageTakenInK}k
+                          {formatNumber(damageTaken)}
                         </span>
                         <span>({hits})</span>{" "}
                       </ExternalLink>
@@ -401,7 +398,6 @@ export function AffixImpact(): JSX.Element {
                     }
 
                     const damageTaken = spiteful.damage[player.id] ?? 0;
-                    const damageTakenInK = (damageTaken / 1000).toFixed(1);
                     const hits = spiteful.hits[player.id] ?? 0;
 
                     return (
@@ -428,7 +424,7 @@ export function AffixImpact(): JSX.Element {
                         <span
                           className={damageTaken === 0 ? greenText : redText}
                         >
-                          {damageTakenInK}k
+                          {formatNumber(damageTaken)}
                         </span>
                         <span>({hits})</span>{" "}
                       </ExternalLink>
@@ -455,7 +451,6 @@ export function AffixImpact(): JSX.Element {
                     }
 
                     const damageTaken = grievous.damage[player.id] ?? 0;
-                    const damageTakenInK = (damageTaken / 1000).toFixed(1);
 
                     return (
                       <ExternalLink
@@ -478,7 +473,7 @@ export function AffixImpact(): JSX.Element {
                           />
                         </span>
                         <span className="md:hidden">{player.name}</span>
-                        <span>{damageTakenInK}k</span>
+                        <span>{formatNumber(damageTaken)}</span>
                       </ExternalLink>
                     );
                   })}
@@ -503,7 +498,6 @@ export function AffixImpact(): JSX.Element {
                     }
 
                     const damageTaken = necrotic.damage[player.id] ?? 0;
-                    const damageTakenInK = (damageTaken / 1000).toFixed(1);
 
                     return (
                       <ExternalLink
@@ -529,7 +523,7 @@ export function AffixImpact(): JSX.Element {
                         <span
                           className={damageTaken === 0 ? greenText : undefined}
                         >
-                          {damageTakenInK}k
+                          {formatNumber(damageTaken)}
                         </span>
                       </ExternalLink>
                     );
@@ -555,7 +549,6 @@ export function AffixImpact(): JSX.Element {
                     }
 
                     const damageTaken = bursting.damage[player.id] ?? 0;
-                    const damageTakenInK = (damageTaken / 1000).toFixed(1);
 
                     return (
                       <ExternalLink
@@ -578,7 +571,7 @@ export function AffixImpact(): JSX.Element {
                           />
                         </span>
                         <span className="md:hidden">{player.name}</span>
-                        <span>{damageTakenInK}k</span>
+                        <span>{formatNumber(damageTaken)}</span>
                       </ExternalLink>
                     );
                   })}
@@ -603,7 +596,6 @@ export function AffixImpact(): JSX.Element {
                     }
 
                     const damageTaken = sanguine.damage[player.id] ?? 0;
-                    const damageTakenInK = (damageTaken / 1000).toFixed(1);
                     const hits = sanguine.hits[player.id] ?? 0;
 
                     return (
@@ -630,7 +622,7 @@ export function AffixImpact(): JSX.Element {
                         <span
                           className={damageTaken === 0 ? greenText : redText}
                         >
-                          {damageTakenInK}k
+                          {formatNumber(damageTaken)}
                         </span>
                         <span>({hits})</span>{" "}
                       </ExternalLink>

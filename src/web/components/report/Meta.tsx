@@ -48,7 +48,12 @@ export function Meta(): JSX.Element {
 
         {/* <-------> */}
 
-        <TimeInformation meta={fight.meta} dungeon={dungeon} />
+        <TimeInformation
+          meta={fight.meta}
+          dungeon={dungeon}
+          fightID={fightID}
+          reportID={reportID}
+        />
 
         <div className="flex justify-between w-full p-4 pt-0">
           <span className="flex self-end space-x-1">
@@ -139,15 +144,22 @@ function WarcraftLogsProfileLink({
 type TimeInformationProps = {
   meta: FightSuccessResponse["meta"];
   dungeon: typeof dungeons[number];
+  reportID: string;
+  fightID: string;
 };
 
-function TimeInformation({ meta, dungeon }: TimeInformationProps) {
+function TimeInformation({
+  meta,
+  dungeon,
+  fightID,
+  reportID,
+}: TimeInformationProps) {
   // threshold of +750 due to API <-> ingame inconsistencies
   const isTimed = meta.time - 750 <= dungeon.time;
 
   return (
-    <div className="flex justify-between p-4 pt-0 space-x-2 text-2xl">
-      <span>
+    <div className="flex justify-between p-4 pt-0 text-2xl">
+      <span className="space-x-2">
         <span>{timeDurationToString(meta.time)}</span>
         <span
           className={`italic ${isTimed ? greenText : redText}`}
@@ -160,14 +172,19 @@ function TimeInformation({ meta, dungeon }: TimeInformationProps) {
         </span>
       </span>
       {meta.totalDeaths > 0 && (
-        <span
-          className={`flex ${redText}`}
+        <ExternalLink
+          className={`flex space-x-1 ${redText}`}
+          href={createWCLUrl({
+            reportID,
+            fightID,
+            type: "deaths",
+          })}
           title={`lost ${timeDurationToString(
             meta.totalDeaths * 5 * 1000,
             true
           )} due to deaths`}
         >
-          {meta.totalDeaths}{" "}
+          <span>{meta.totalDeaths}</span>
           <img
             src="/static/skull.png"
             height={32}
@@ -176,7 +193,7 @@ function TimeInformation({ meta, dungeon }: TimeInformationProps) {
             className="w-8 h-8"
             alt="deaths"
           />
-        </span>
+        </ExternalLink>
       )}
     </div>
   );
@@ -241,7 +258,7 @@ function PlayerRow({ player, fightID, reportID }: PlayerRowProps) {
   return (
     <Fragment key={player.actorID}>
       <tr>
-        <td className="flex h-10 space-x-2">
+        <td className="flex h-10 px-0 space-x-2">
           <span className="flex items-center w-full space-x-2">
             <span className="inline-flex items-center w-full">
               <span className="w-8 h-8">
@@ -285,14 +302,14 @@ function PlayerRow({ player, fightID, reportID }: PlayerRowProps) {
           </span>
         </td>
 
-        <td className="text-right">
+        <td className="px-0 text-right">
           <span
             className={`${classColor} border-b-2 dark:border-opacity-50 text-right flex flex-grow justify-end`}
           >
             {player.itemLevel}
           </span>
         </td>
-        <td className="text-right">
+        <td className="px-0 text-right">
           <ExternalLink
             href={createWCLUrl({
               reportID,
@@ -305,7 +322,7 @@ function PlayerRow({ player, fightID, reportID }: PlayerRowProps) {
             {player.dps.toLocaleString("en-US")}
           </ExternalLink>
         </td>
-        <td>
+        <td className="px-0">
           <ExternalLink
             href={createWCLUrl({
               reportID,
@@ -320,7 +337,7 @@ function PlayerRow({ player, fightID, reportID }: PlayerRowProps) {
         </td>
       </tr>
       <tr>
-        <td colSpan={3}>
+        <td colSpan={3} className="px-0">
           <div className="flex h-10 space-x-1">
             <div
               className={`${classColor} relative w-4 h-4 mr-4 border-b-2 dark:border-opacity-50 border-l-2 border-solid left-4`}
@@ -550,113 +567,102 @@ function PlayerTable({
   }
 
   return (
-    <>
-      <style jsx>
-        {`
-          .paddingLessTable th,
-          td {
-            padding-left: 0;
-            padding-right: 0;
-          }
-        `}
-      </style>
-      <table className="w-full paddingLessTable">
-        <thead>
-          <tr>
-            <th className="text-left">
-              <button
-                type="button"
-                className="flex w-full pb-4 space-x-2 text-xl font-semibold"
-                onClick={createSortHandler("role")}
-              >
-                <span>Composition</span>
-                <sup className="flex self-center" title="reset sorting">
-                  <svg
-                    className={`w-2 h-2 ${
-                      sortBy === "role" ? isSortedColor : "dark:text-white"
-                    }`}
-                  >
-                    <use href={`#${reset.id}`} />
-                  </svg>
-                </sup>
-              </button>
-            </th>
-            <th>
-              <button
-                type="button"
-                className="flex justify-end w-full pb-4 font-semibold"
-                onClick={createSortHandler("ilvl")}
-              >
-                <span>
-                  <span className="hidden xl:inline">Itemlevel</span>
-                  <span className="inline xl:hidden">ILVL</span>
-                </span>
-                <span className="flex self-center">
-                  <SortIndicator
-                    sortBy={sortBy}
-                    sortOrder={sortOrder}
-                    type="ilvl"
-                  />
-                </span>
-              </button>
-            </th>
-            <th>
-              <button
-                type="button"
-                className="flex justify-end w-full pb-4 font-semibold"
-                onClick={createSortHandler("dps")}
-              >
-                <span>DPS</span>
-                <span className="flex self-center">
-                  <SortIndicator
-                    sortBy={sortBy}
-                    sortOrder={sortOrder}
-                    type="dps"
-                  />
-                </span>
-              </button>
-            </th>
-            <th>
-              <button
-                type="button"
-                className="flex justify-end w-full pb-4 font-semibold"
-                onClick={createSortHandler("hps")}
-              >
-                <span>HPS</span>
-                <span className="flex self-center">
-                  <SortIndicator
-                    sortBy={sortBy}
-                    sortOrder={sortOrder}
-                    type="hps"
-                  />
-                </span>
-              </button>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {orderedPlayer.map((player) => {
-            return (
-              <PlayerRow
-                key={player.actorID}
-                player={player}
-                reportID={reportID}
-                fightID={fightID}
-              />
-            );
-          })}
-        </tbody>
-        <tfoot>
-          <tr>
-            <td colSpan={2} className="text-right">
-              Ø {averageItemLevel}
-            </td>
-            <td className="text-right">{dps.toLocaleString("en-US")}</td>
-            <td className="text-right">{hps.toLocaleString("en-US")}</td>
-          </tr>
-        </tfoot>
-      </table>
-    </>
+    <table className="w-full">
+      <thead>
+        <tr>
+          <th className="px-0 text-left">
+            <button
+              type="button"
+              className="flex w-full pb-4 space-x-2 text-xl font-semibold"
+              onClick={createSortHandler("role")}
+            >
+              <span>Composition</span>
+              <sup className="flex self-center" title="reset sorting">
+                <svg
+                  className={`w-2 h-2 ${
+                    sortBy === "role" ? isSortedColor : "dark:text-white"
+                  }`}
+                >
+                  <use href={`#${reset.id}`} />
+                </svg>
+              </sup>
+            </button>
+          </th>
+          <th className="px-0">
+            <button
+              type="button"
+              className="flex justify-end w-full pb-4 font-semibold"
+              onClick={createSortHandler("ilvl")}
+            >
+              <span>
+                <span className="hidden xl:inline">Itemlevel</span>
+                <span className="inline xl:hidden">ILVL</span>
+              </span>
+              <span className="flex self-center">
+                <SortIndicator
+                  sortBy={sortBy}
+                  sortOrder={sortOrder}
+                  type="ilvl"
+                />
+              </span>
+            </button>
+          </th>
+          <th className="px-0">
+            <button
+              type="button"
+              className="flex justify-end w-full pb-4 font-semibold"
+              onClick={createSortHandler("dps")}
+            >
+              <span>DPS</span>
+              <span className="flex self-center">
+                <SortIndicator
+                  sortBy={sortBy}
+                  sortOrder={sortOrder}
+                  type="dps"
+                />
+              </span>
+            </button>
+          </th>
+          <th className="px-0">
+            <button
+              type="button"
+              className="flex justify-end w-full pb-4 font-semibold"
+              onClick={createSortHandler("hps")}
+            >
+              <span>HPS</span>
+              <span className="flex self-center">
+                <SortIndicator
+                  sortBy={sortBy}
+                  sortOrder={sortOrder}
+                  type="hps"
+                />
+              </span>
+            </button>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {orderedPlayer.map((player) => {
+          return (
+            <PlayerRow
+              key={player.actorID}
+              player={player}
+              reportID={reportID}
+              fightID={fightID}
+            />
+          );
+        })}
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colSpan={2} className="text-right">
+            Ø {averageItemLevel}
+          </td>
+          <td className="text-right">{dps.toLocaleString("en-US")}</td>
+          <td className="text-right">{hps.toLocaleString("en-US")}</td>
+        </tr>
+      </tfoot>
+    </table>
   );
 }
 

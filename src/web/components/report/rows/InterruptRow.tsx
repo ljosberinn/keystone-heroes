@@ -83,7 +83,7 @@ export default function InterruptRow({
               <ResponsiveAbilityCell name={ability.name} />
             </ExternalLink>
 
-            <span>{isQuaking ? "by" : ">"}</span>
+            <span>{">"}</span>
 
             <ExternalLink
               href={createWowheadUrl({

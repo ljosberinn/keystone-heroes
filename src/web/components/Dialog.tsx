@@ -8,6 +8,7 @@ export type DialogProps = {
   defaultOpen?: boolean;
   children: ReactNode | ReactNode[];
   className?: string;
+  onClose?: () => void;
 } & (
   | {
       as: "section";
@@ -23,6 +24,7 @@ export function Dialog({
   children,
   as: As = "div",
   className,
+  onClose,
 }: DialogProps): JSX.Element | null {
   const [open, setOpen] = useState(defaultOpen);
 
@@ -34,6 +36,9 @@ export function Dialog({
     const listener = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setOpen(false);
+        if (onClose) {
+          onClose();
+        }
       }
     };
 
@@ -42,7 +47,7 @@ export function Dialog({
     return () => {
       document.removeEventListener("keydown", listener);
     };
-  }, [open]);
+  }, [open, onClose]);
 
   useEffect(() => {
     if (!open) {

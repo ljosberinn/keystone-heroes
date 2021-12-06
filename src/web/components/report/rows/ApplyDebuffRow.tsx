@@ -48,15 +48,26 @@ export default function ApplyDebuffRow({
 
       <TypeCell type={event.type} />
 
-      {event.targetPlayerID && (
+      {event.sourcePlayerID && (
         <SourceOrTargetPlayerCell
           playerIdTextColorMap={playerIdTextColorMap}
           playerIdPlayerNameMap={playerIdPlayerNameMap}
-          targetPlayerID={event.targetPlayerID}
           playerIdIconMap={playerIdIconMap}
+          sourcePlayerID={event.sourcePlayerID}
           transparent
         />
       )}
+
+      {event.targetPlayerID &&
+        event.sourcePlayerID !== event.targetPlayerID && (
+          <SourceOrTargetPlayerCell
+            playerIdTextColorMap={playerIdTextColorMap}
+            playerIdPlayerNameMap={playerIdPlayerNameMap}
+            playerIdIconMap={playerIdIconMap}
+            targetPlayerID={event.targetPlayerID}
+            transparent
+          />
+        )}
 
       <td colSpan={event.targetPlayerID ? 3 : 4}>
         <ExternalLink
@@ -75,6 +86,28 @@ export default function ApplyDebuffRow({
           <ResponsiveAbilityCell name={ability.name} />
           {event.stacks ? <> ({event.stacks})</> : null}
         </ExternalLink>
+
+        {event.targetNPC && (
+          <span className="space-x-2">
+            <span className="pl-2">{">"}</span>
+            <ExternalLink
+              href={createWowheadUrl({
+                category: "npc",
+                id: event.targetNPC.id,
+              })}
+            >
+              <img
+                src={`/static/npcs/${event.targetNPC.id}.png`}
+                alt={event.targetNPC.name}
+                className="inline object-cover w-4 h-4 rounded-full"
+                width={16}
+                height={16}
+                loading="lazy"
+              />
+              <ResponsiveAbilityCell name={event.targetNPC.name} />
+            </ExternalLink>
+          </span>
+        )}
       </td>
     </tr>
   );

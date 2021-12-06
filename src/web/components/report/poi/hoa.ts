@@ -33,5 +33,60 @@ export const doors: POIContextDefinition["doors"] = {
   ],
 };
 
-export const poi: POIContextDefinition["poi"] = [];
-// gargoyles?
+const label = "Loyal Stoneborn";
+const icon = "npcs/174175.png";
+
+export const poi: POIContextDefinition["poi"] = {
+  1663: [
+    {
+      icon,
+      label,
+      x: 0.717_213_114_754_098_3,
+      y: 0.384_225_248_209_510_4,
+    },
+    {
+      icon,
+      label,
+      x: 0.614_754_098_360_655_8,
+      y: 0.522_546_337_564_934_1,
+    },
+    {
+      icon,
+      label,
+      x: 0.568_647_540_983_606_6,
+      y: 0.353_487_228_352_749_54,
+    },
+    {
+      icon,
+      label,
+      x: 0.594_262_295_081_967_3,
+      y: 0.668_551_931_884_548,
+    },
+    {
+      icon,
+      label,
+      x: 0.461_065_573_770_491_8,
+      y: 0.607_075_892_171_026_4,
+    },
+    {
+      icon,
+      label,
+      x: 0.358_606_557_377_049_16,
+      y: 0.391_909_753_173_700_6,
+    },
+  ],
+  1664: [
+    {
+      icon,
+      label,
+      x: 0.435_450_819_672_131_2,
+      y: 0.345_802_723_388_559_33,
+    },
+    {
+      icon,
+      label,
+      x: 0.435_450_819_672_131_2,
+      y: 0.630_769_230_769_230_7,
+    },
+  ],
+};

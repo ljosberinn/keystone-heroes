@@ -55,8 +55,14 @@ export const poi: POIContextDefinition["poi"] = {
   1680: [
     {
       icon: HAUNTED_URN_ICON,
-      x: 0,
-      y: 0,
+      x: 0.398_794_552_828_948_9,
+      y: 0.768_446_106_766_405_9,
+      label: urnLabel,
+    },
+    {
+      icon: HAUNTED_URN_ICON,
+      x: 0.650_614_754_098_360_7,
+      y: 0.514_861_832_600_743_9,
       label: urnLabel,
     },
   ],
@@ -64,8 +70,8 @@ export const poi: POIContextDefinition["poi"] = {
   1677: [
     {
       icon: HAUNTED_URN_ICON,
-      x: 0,
-      y: 0,
+      x: 0.495_901_639_344_262_3,
+      y: 0.364_245_535_302_615_83,
       label: urnLabel,
     },
   ],
@@ -73,8 +79,8 @@ export const poi: POIContextDefinition["poi"] = {
   1679: [
     {
       icon: HAUNTED_URN_ICON,
-      x: 0,
-      y: 0,
+      x: 0.578_893_442_622_950_8,
+      y: 0.430_332_277_994_651_6,
       label: urnLabel,
     },
   ],

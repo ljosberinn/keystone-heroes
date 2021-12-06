@@ -59,7 +59,9 @@ export default function ApplyBuffRow({
       <SourceOrTargetPlayerCell
         playerIdTextColorMap={playerIdTextColorMap}
         playerIdPlayerNameMap={playerIdPlayerNameMap}
-        environment={!!event.sourcePlayerID && !!event.targetPlayerID}
+        environment={
+          event.sourcePlayerID === null && event.targetPlayerID === null
+        }
         sourcePlayerID={
           event.sourcePlayerID
             ? event.sourcePlayerID
@@ -71,10 +73,9 @@ export default function ApplyBuffRow({
         transparent
       />
 
-      <td colSpan={3}>
+      <td colSpan={3} className="space-x-2">
         <span className="hidden md:inline">
-          {" "}
-          {event.type === "RemoveBuff" ? "lost" : "gained"}{" "}
+          {event.type === "RemoveBuff" ? "lost" : "gained"}
         </span>
         <ExternalLink
           href={createWowheadUrl({

@@ -12,6 +12,7 @@ import { deathProcessor } from "./events/death";
 import { healProcessor } from "./events/heal";
 import { interruptProcessor } from "./events/interrupt";
 import { removeBuffProcessor } from "./events/removebuff";
+import { removeDebuffProcessor } from "./events/removedebuff";
 import type { PersistedDungeonPull, Processor } from "./utils";
 
 const getProcessorParams = (
@@ -80,6 +81,8 @@ export const processEvents = (
           return interruptProcessor(event, params);
         case "removebuff":
           return removeBuffProcessor(event, params);
+        case "removedebuff":
+          return removeDebuffProcessor(event, params);
         default:
           return null;
       }

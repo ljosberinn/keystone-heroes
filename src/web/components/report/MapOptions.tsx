@@ -4,12 +4,15 @@ import { Dialog } from "../Dialog";
 
 // eslint-disable-next-line import/no-default-export
 export default function MapOptions(): JSX.Element {
+  const toggleMapOptions = useMapOptions((state) => state.toggleMapOptions);
+
   return (
     <Dialog
       defaultOpen
       as="section"
       // className="absolute top-0 left-0 w-full h-full p-4 text-white bg-gray-500 dark:bg-coolgray-500 dark:bg-opacity-70 bg-opacity-70"
       aria-labelledby="map-options-heading"
+      onClose={toggleMapOptions}
     >
       <h1 id="map-options-heading" className="text-xl font-bold">
         Map Options

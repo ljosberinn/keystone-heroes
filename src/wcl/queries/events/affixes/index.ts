@@ -12,6 +12,8 @@ import type {
   DamageEvent,
   HealEvent,
   InterruptEvent,
+  RemoveBuffEvent,
+  RemoveDebuffEvent,
 } from "../types";
 import {
   filterExpression as bolsteringFilterExpression,
@@ -105,35 +107,24 @@ export const filterAffixEvents = (
   | BeginCastEvent
   | CastEvent
   | ApplyDebuffEvent
+  | RemoveBuffEvent
+  | RemoveDebuffEvent
 )[] => {
   const affixSet = new Set(affixes);
 
-  // seasonal
-  const tormentedEvents = getTormentedEvents(allEvents, affixSet);
-
-  // common affixes
-  const storming = getStormingEvents(allEvents, affixSet);
-  const spiteful = getSpitefulEvents(allEvents, affixSet);
-  const sanguine = getSanguineEvents(allEvents, affixSet);
-  const volcanic = getVolcanicEvents(allEvents, affixSet);
-  const quaking = getQuakingEvents(allEvents, affixSet);
-  const bolstering = getBolsteringEvents(allEvents, affixSet);
-  const bursting = getBurstingEvents(allEvents, affixSet);
-  const explosive = getExplosiveEvents(allEvents, affixSet);
-  const grievous = getGrievousEvents(allEvents, affixSet);
-  const necrotic = getNecroticEvents(allEvents, affixSet);
-
   return [
-    ...tormentedEvents,
-    ...storming,
-    ...spiteful,
-    ...sanguine,
-    ...volcanic,
-    ...quaking,
-    ...bolstering,
-    ...bursting,
-    ...explosive,
-    ...grievous,
-    ...necrotic,
+    // seasonal
+    ...getTormentedEvents(allEvents, affixSet),
+    // common affixes
+    ...getStormingEvents(allEvents, affixSet),
+    ...getSpitefulEvents(allEvents, affixSet),
+    ...getSanguineEvents(allEvents, affixSet),
+    ...getVolcanicEvents(allEvents, affixSet),
+    ...getQuakingEvents(allEvents, affixSet),
+    ...getBolsteringEvents(allEvents, affixSet),
+    ...getBurstingEvents(allEvents, affixSet),
+    ...getExplosiveEvents(allEvents, affixSet),
+    ...getGrievousEvents(allEvents, affixSet),
+    ...getNecroticEvents(allEvents, affixSet),
   ];
 };

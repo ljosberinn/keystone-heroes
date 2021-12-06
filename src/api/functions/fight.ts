@@ -1605,8 +1605,8 @@ const calculatePullCoordinates = (
     tormentedLieutenantIDSet.has(npcs[0].gameID)
   ) {
     return {
-      x: 0.702_702_702_702_702_7,
-      y: 0.248_366_013_071_895_43,
+      x: 0.676_229_508_196_721_3,
+      y: 0.261_273_168_782_467_04,
     };
   }
 

@@ -21,10 +21,10 @@ const config = {
   displayName: "wcl",
   coverageThreshold: {
     global: {
-      statements: 92,
-      branches: 87,
-      functions: 87,
-      lines: 92,
+      statements: 94,
+      branches: 83,
+      functions: 96,
+      lines: 94,
     },
   },
   testPathIgnorePatterns: ignored,

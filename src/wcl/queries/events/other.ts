@@ -8,6 +8,7 @@ import type {
   DamageEvent,
   DeathEvent,
   InterruptEvent,
+  ApplyDebuffEvent,
 } from "./types";
 import { createIsSpecificEvent } from "./utils";
 
@@ -17,6 +18,39 @@ export const SHARED_COVENANT_ABILITIES = {
   SUMMON_STEWARD: 324_739,
   DOOR_OF_SHADOWS: 300_728,
 } as const;
+
+export const CHEAT_DEATHS = {
+  PODTENDER: {
+    name: "Podtender",
+    type: ["applybuff", "removebuff"],
+    id: 320_224,
+    cd: 360,
+    icon: "inv_farm_herbseed",
+  },
+  CHEATING_DEATH: {
+    name: "Cheating Death",
+    id: 45_182,
+    cd: 600,
+    icon: "ability_rogue_cheatdeath",
+    type: ["applybuff", "removebuff"],
+  },
+  CHEAT_DEATH: {
+    name: "Cheated Death",
+    id: 45_181,
+    cd: 600,
+    icon: "ability_rogue_cheatdeath",
+    type: ["applydebuff", "removedebuff"],
+  },
+  DEPLETED_SHELL: {
+    name: "DepletedShell",
+    type: ["applydebuff", "removedebuff"],
+    cd: 600,
+    id: 320_227,
+    icon: "inv_farm_herbseed",
+  },
+  // cauterize
+  // vdh cheat death
+};
 
 export const INVISIBILITY = {
   DIMENSIONAL_SHIFTER: 321_422,
@@ -51,6 +85,30 @@ const isEngineeringBattleRezEvent = createIsSpecificEvent<CastEvent>({
   abilityGameID: ENGINEERING_BATTLE_REZ.SHADOWLANDS,
 });
 
+export const cheatDeathFilterExpression = `type in ("applydebuff", "applybuff", "removebuff", "removedebuff") and ability.id in (${Object.values(
+  CHEAT_DEATHS
+)
+  .map((ability) => ability.id)
+  .join(", ")})`;
+
+const isCheatDeathEvent = (() => {
+  const abilities = Object.values(CHEAT_DEATHS);
+
+  return (
+    event: AllTrackedEventTypes
+  ): event is ApplyDebuffEvent | ApplyBuffEvent => {
+    return abilities.some(
+      (ability) =>
+        ability.type.includes(event.type) && ability.id === event.abilityGameID
+    );
+  };
+})();
+
+export const filterCheatDeathEvents = (
+  allEvents: AllTrackedEventTypes[]
+): (ApplyDebuffEvent | ApplyBuffEvent)[] => {
+  return allEvents.filter(isCheatDeathEvent);
+};
 /**
  * @see https://www.warcraftlogs.com/reports/LafTw4CxyAjkVHv6#fight=8&type=auras&pins=2%24Off%24%23244F4B%24expression%24type%20%3D%20%22applybuff%22%20and%20ability.id%20in%20(321422,%20307195)&view=events
  */
@@ -66,7 +124,7 @@ export const engineeringBattleRezExpression = `type = "cast" and ability.id = ${
  */
 export const leatherworkingDrumsExpression = `type = "cast" and ability.id = ${LEATHERWORKING_DRUMS.SHADOWLANDS}`;
 
-export const generalCovenantExpression = `type = "cast" and ability.id in (${Object.values(
+export const generalCovenantExpression = `type in ("cast", "applydebuff") and ability.id in (${Object.values(
   SHARED_COVENANT_ABILITIES
 ).join(", ")})`;
 
