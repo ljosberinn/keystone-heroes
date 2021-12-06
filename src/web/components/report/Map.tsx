@@ -434,13 +434,13 @@ function FullscreenPullNPCs() {
 
   return (
     <details
-      draggable
+      open
       className={classnames(
         bgSecondary,
         "absolute left-1/4 top-1/3 rounded-lg opacity-75 hover:opacity-100 transition-opacity"
       )}
     >
-      <summary className="p-2 cursor-pointer">Trash</summary>
+      <summary className="p-2 cursor-pointer">Enemies</summary>
 
       {pullNPCs.npcs.map((npc) => {
         return <SidebarNPC npc={npc} key={npc.id} />;

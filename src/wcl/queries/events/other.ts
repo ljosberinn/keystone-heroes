@@ -152,7 +152,7 @@ const RENEWING_MIST = 300_155;
  * - _any_ death event
  * - the `Renewing Mist` cast Tirnenn Villagers do upon their "death"
  */
-export const deathFilterExpression = `type = "death" or (ability.id = ${RENEWING_MIST} and type = "begincast")`;
+export const deathFilterExpression = `(type = "death" and target.type != "pet") or (ability.id = ${RENEWING_MIST} and type = "begincast")`;
 // TODO: feign false doesnt work?
 // export const friendliesDeathFilterExpression =
 //   'target.type = "player" and type = "death"'; //  and feign = false

@@ -103,6 +103,39 @@ export type CastEvent = BaseEvent<{
   type: "cast";
 }>;
 
+export type DungeonEncounterEnd = {
+  timestamp: number;
+  type: "dungeonencounterend";
+  kill: boolean;
+  encounterID: number;
+  size: number;
+  difficulty: number;
+  name: string;
+};
+
+export type DungeonEnd = {
+  /**
+   * time
+   */
+  completion: number;
+  difficulty: number;
+  /**
+   * dungeonID prefixed with 1
+   */
+  encounterID: number;
+  kill: boolean;
+  loggerTotalRating: number;
+  /**
+   * key level
+   */
+  medal: number;
+  name: "";
+  rating: number;
+  size: number;
+  timestamp: number;
+  type: "dungeonend";
+};
+
 export type DamageEvent = BaseEvent<{
   type: "damage";
   hitType: number;
@@ -214,8 +247,9 @@ export type AnyEvent =
   | ApplyDebuffStackEvent
   | ApplyDebuffEvent
   | CombatantInfoEvent
-  | EncounterStartEvent;
-
+  | EncounterStartEvent
+  | DungeonEncounterEnd
+  | DungeonEnd;
 export type AllTrackedEventTypes =
   | CastEvent
   | ApplyDebuffStackEvent

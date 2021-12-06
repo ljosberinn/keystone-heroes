@@ -1762,12 +1762,17 @@ const calculatePullsWithWipesAndPercent = (
         return acc;
       }
 
+      const isLastPull = pulls.length === index + 1;
+
       // TODO: ensure that in deathEventMap pets are not included
-      const killedNPCTargetIDsOfThisPull = new Set(
-        deathEventMap[pull.startTime].map((event) =>
+      const killedNPCTargetIDsOfThisPull = new Set([
+        ...deathEventMap[pull.startTime].map((event) =>
           event.type === "begincast" ? event.sourceID : event.targetID
-        )
-      );
+        ),
+        // in 648wL1X7D9fNATMv648wL1X7D9fNATMv/#fight=2 Kaal as last boss does
+        // not appear as death event
+        ...(isLastPull ? pull.enemyNPCs.map((npc) => npc.id) : []),
+      ]);
 
       /**
        * EXPERIMENTAL
@@ -1908,7 +1913,14 @@ const calculatePullsWithWipesAndPercent = (
   );
 };
 
-// map of { [startTime]: enemyDeathEvents }
+//
+/**
+ * map of { [startTime]: enemyDeathEvents }
+ *
+ * @todo for bosses: should migrade to dungeonencounterend but this requires
+ * a mapping of encounterid (currently unused in KSH) to log internal unit id
+ * so we can ideally fake a death event based on dungeonencounterend
+ */
 const createPullNPCDeathEventMap = (
   pulls: Omit<PersistedDungeonPull, "id" | "percent" | "isWipe">[],
   enemyDeathEvents: (BeginCastEvent | DeathEvent | DamageEvent)[]
@@ -1917,9 +1929,12 @@ const createPullNPCDeathEventMap = (
     pulls.map(({ startTime, endTime }) => {
       return [
         startTime,
-        enemyDeathEvents.filter(
-          ({ timestamp }) => timestamp >= startTime && timestamp <= endTime
-        ),
+        enemyDeathEvents.filter(({ timestamp }) => {
+          // allow a threshold of a 100ms for the game to send the death event
+          // although the pull logically ends with the death of a unit, the
+          // death event itself usually is delayed by some ms
+          return timestamp >= startTime && timestamp <= endTime + 100;
+        }),
       ];
     })
   );
