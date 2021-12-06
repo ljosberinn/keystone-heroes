@@ -1833,7 +1833,7 @@ const demonhunter: Class = {
         },
         {
           name: "Metamorphosis",
-          id: 191_427,
+          id: 200_166,
           cd: 240,
           icon: "ability_demonhunter_metamorphasisdps",
           type: ["damage", "major"],
