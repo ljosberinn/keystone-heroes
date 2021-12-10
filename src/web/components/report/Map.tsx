@@ -655,12 +655,27 @@ function KillIndicator({ type, fullscreen }: KillIndicatorProps) {
             >
               <button
                 type="button"
-                className="cursor-pointer md:truncate md:max-w-1/2 lg:max-w-full xl:max-w-1/2 hover:underline"
+                className={classnames(
+                  `space-x-1 cursor-pointer md:truncate md:max-w-1/2 lg:max-w-full xl:max-w-1/2`,
+                  pull.isWipe
+                    ? "line-through hover:line-through hover:underline"
+                    : "hover:underline"
+                )}
                 onClick={() => {
                   setSelectedPull(pull.id);
                 }}
               >
-                {maybeRelevantNpcName}{" "}
+                {pull.isWipe && (
+                  <img
+                    className="inline w-4 h-4 rounded-full"
+                    src="/static/skull.png"
+                    alt="The group wiped."
+                    title="The group wiped."
+                    width={16}
+                    height={16}
+                  />
+                )}
+                <span>{maybeRelevantNpcName}</span>
                 {usedLust && lustAbility && (
                   <img
                     className="inline w-6 h-6 rounded-full"
@@ -913,28 +928,30 @@ function Svg({ imageSize, zoneID, onDoorClick, fullscreen }: SvgProps) {
           />
           <PointsOfInterestWrapper zoneID={zoneID} />
         </PointsOfInterestProvider>
-        {thisZonesPulls.map((pull, index) => {
-          const x = pull.x * imageSize.clientWidth;
-          const y = pull.y * imageSize.clientHeight;
-          const nextPull =
-            thisZonesPulls[index + 1]?.id === pull.id + 1
-              ? thisZonesPulls[index + 1]
-              : null;
+        {thisZonesPulls
+          .filter((pull) => !pull.isWipe)
+          .map((pull, index) => {
+            const x = pull.x * imageSize.clientWidth;
+            const y = pull.y * imageSize.clientHeight;
+            const nextPull =
+              thisZonesPulls[index + 1]?.id === pull.id + 1
+                ? thisZonesPulls[index + 1]
+                : null;
 
-          return (
-            <Fragment key={pull.startTime}>
-              <PullIndicatorIcon pull={pull} x={x} y={y} />
+            return (
+              <Fragment key={pull.startTime}>
+                <PullIndicatorIcon pull={pull} x={x} y={y} />
 
-              <PullConnectionPolyline
-                x={x}
-                y={y}
-                pull={pull}
-                nextPull={nextPull}
-                imageSize={imageSize}
-              />
-            </Fragment>
-          );
-        })}
+                <PullConnectionPolyline
+                  x={x}
+                  y={y}
+                  pull={pull}
+                  nextPull={nextPull}
+                  imageSize={imageSize}
+                />
+              </Fragment>
+            );
+          })}
       </svg>
     </>
   );

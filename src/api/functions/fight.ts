@@ -1763,6 +1763,7 @@ const calculatePullsWithWipesAndPercent = (
       }
 
       const isLastPull = pulls.length === index + 1;
+      const isWipe = hasNoWipes ? false : isPullWipe(playerDeathEvents, pull);
 
       // TODO: ensure that in deathEventMap pets are not included
       const killedNPCTargetIDsOfThisPull = new Set([
@@ -1823,7 +1824,7 @@ const calculatePullsWithWipesAndPercent = (
           const killedNPCTargetIDsOfNextPull = new Set(
             deathEventMap[nextPull.startTime].map((event) => event.targetID)
           );
-          const getsKilledDuringNextPull = killedNPCTargetIDsOfNextPull.has(
+          const isKilledDuringNextPull = killedNPCTargetIDsOfNextPull.has(
             npc.id
           );
 
@@ -1834,7 +1835,17 @@ const calculatePullsWithWipesAndPercent = (
             (npc) => !EXCLUDED_NPCS.has(npc.gameID)
           );
 
-          if (relevantNPCsOfNextPull.length === 1 && getsKilledDuringNextPull) {
+          if (
+            /**
+             * only merge if its a not wipe, see e.g.
+             * https://www.warcraftlogs.com/reports/1MGH6BRTCwNdprkf#fight=3
+             * where 2 attempts are made on 3rd boss, the first being a wipe
+             * which merges both pulls unintentionally
+             */
+            !isWipe &&
+            relevantNPCsOfNextPull.length === 1 &&
+            isKilledDuringNextPull
+          ) {
             // merge fight duration
             pull.endTime = nextPull.endTime;
             skipNextPull = true;
@@ -1868,7 +1879,6 @@ const calculatePullsWithWipesAndPercent = (
       );
 
       const percent = (totalCount / dungeon.count) * 100;
-      const isWipe = hasNoWipes ? false : isPullWipe(playerDeathEvents, pull);
 
       // skip pulls that
       if (

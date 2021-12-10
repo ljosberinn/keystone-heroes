@@ -242,7 +242,9 @@ function PullSelection() {
             loading="lazy"
           />
 
-          <span>{mostRelevantNPCsByPull.current.name}</span>
+          <span>{`${mostRelevantNPCsByPull.current.name} ${
+            selectedPull.isWipe ? "(Wipe)" : ""
+          }`}</span>
         </ExternalLink>
 
         <span>
