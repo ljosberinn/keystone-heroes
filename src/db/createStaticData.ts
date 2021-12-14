@@ -323,6 +323,17 @@ async function create() {
   );
 
   const extendedSpells = {
+    // should come first so they can be overridden by class/covenant spels below
+    ...Object.fromEntries(
+      interruptedAbilities.map((ability) => [
+        ability.id,
+        {
+          name: ability.name,
+          icon: ability.icon,
+          cd: 0,
+        },
+      ])
+    ),
     ...spells,
     [SHARED_COVENANT_ABILITIES.DOOR_OF_SHADOWS]: {
       name: "Door of Shadows",
@@ -342,7 +353,7 @@ async function create() {
     [SHARED_COVENANT_ABILITIES.FLESHCRAFT]: {
       name: "Fleshcraft",
       icon: "ability_necrolord_fleshcraft",
-      cd: 180,
+      cd: 120,
     },
 
     ...Object.fromEntries(
@@ -555,16 +566,7 @@ async function create() {
         },
       ])
     ),
-    ...Object.fromEntries(
-      interruptedAbilities.map((ability) => [
-        ability.id,
-        {
-          name: ability.name,
-          icon: ability.icon,
-          cd: 0,
-        },
-      ])
-    ),
+
     ...Object.fromEntries(
       tormentedBuffsAndDebuffs.map((deBuff) => [
         deBuff.id,
