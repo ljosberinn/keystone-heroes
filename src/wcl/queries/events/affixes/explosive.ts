@@ -6,7 +6,7 @@ import { createIsSpecificEvent } from "../utils";
 export const EXPLOSIVE = {
   unit: 120_651,
   ability: 240_446,
-};
+} as const;
 
 export const EXPLOSIVE_HEALTH = 224 as const;
 
@@ -30,7 +30,7 @@ export const EXPLOSIVE_HEALTH = 224 as const;
  */
 export const filterExpression = [
   `target.type = "player" and rawDamage > 0 and ability.id = ${EXPLOSIVE.ability}`,
-  `target.id = ${EXPLOSIVE.unit} AND type = "damage" AND overkill > 0`,
+  `target.id = ${EXPLOSIVE.unit} and overkill > 0`,
 ];
 
 const isExplosiveDamageEvent = createIsSpecificEvent<DamageEvent>({
@@ -45,10 +45,17 @@ const createIsExplosiveDeathEvent =
       event.type === "damage" &&
       "targetInstance" in event &&
       event.sourceID !== -1 &&
-      event.targetID === targetID
+      event.targetID === targetID &&
+      typeof event.overkill !== "undefined" &&
+      event.overkill > 0
     );
   };
 
+/**
+ * explosives detection is solely based on the hope that it's the unit that
+ * occured the most over the course of a logging session, and thus has the highest
+ * `targetInstance` property
+ */
 export const findExplosiveTargetID = (
   allEvents: AllTrackedEventTypes[]
 ): number | null => {
@@ -87,15 +94,15 @@ export const findExplosiveTargetID = (
 export const getExplosiveEvents = (
   allEvents: AllTrackedEventTypes[],
   affixSet: Set<Affixes>
-): DamageEvent[] => {
+): { explosiveTargetID: null | number; events: DamageEvent[] } => {
   if (!affixSet.has(Affixes.Explosive)) {
-    return [];
+    return { explosiveTargetID: null, events: [] };
   }
 
   const explosiveTargetID = findExplosiveTargetID(allEvents);
 
   if (!explosiveTargetID) {
-    return [];
+    return { explosiveTargetID: null, events: [] };
   }
 
   const explosiveKills = allEvents.filter(
@@ -103,5 +110,8 @@ export const getExplosiveEvents = (
   );
   const explosiveDamage = allEvents.filter(isExplosiveDamageEvent);
 
-  return [...explosiveDamage, ...explosiveKills];
+  return {
+    explosiveTargetID,
+    events: [...explosiveDamage, ...explosiveKills],
+  };
 };

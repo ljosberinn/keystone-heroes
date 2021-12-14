@@ -1016,6 +1016,9 @@ type PullIndicatorIconProps = {
   y: number;
 };
 
+const selectedOutlineClasses =
+  "opacity-100 outline-white outline-2 outline-dotted outline-offset-2";
+
 function PullIndicatorIcon({ pull, x, y }: PullIndicatorIconProps) {
   const { selectedPull, setSelectedPull } = useReportStore(reportStoreSelector);
 
@@ -1036,7 +1039,7 @@ function PullIndicatorIcon({ pull, x, y }: PullIndicatorIconProps) {
   const sharedProps = {
     className: classnames(
       "fill-current text-black rounded-full",
-      selected ? "opacity-100 outline-white" : "opacity-50"
+      selected ? selectedOutlineClasses : "opacity-50"
     ),
     width: size,
     height: size,
@@ -1103,7 +1106,7 @@ function PullIndicatorIcon({ pull, x, y }: PullIndicatorIconProps) {
           aria-label={bossNPC.name}
           href={`/static/npcs/${bossNPC.id}.png`}
           className={classnames(
-            selected ? "outline-white opacity-100" : "opacity-70"
+            selected ? selectedOutlineClasses : "opacity-70"
           )}
           width={32}
           height={32}

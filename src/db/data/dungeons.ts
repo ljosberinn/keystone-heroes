@@ -1,6 +1,7 @@
 import type { Dungeon, Zone } from "@prisma/client";
 import { Covenants } from "@prisma/client";
 
+import { SPITEFUL } from "../../wcl/queries/events/affixes/spiteful";
 import { ExpansionEnum } from "./expansions";
 
 export const createDungeonTimer = (
@@ -80,6 +81,7 @@ export const isMultiTargetBossFight = (id: number): boolean => {
 };
 
 export enum DungeonIDs {
+  // Shadowlands
   SANGUINE_DEPTHS = 2284,
   SPIRES_OF_ASCENSION = 2285,
   THE_NECROTIC_WAKE = 2286,
@@ -88,6 +90,8 @@ export enum DungeonIDs {
   MISTS_OF_TIRNA_SCITHE = 2290,
   DE_OTHER_SIDE = 2291,
   THEATER_OF_PAIN = 2293,
+  // Battle for Azeroth
+  // Legion
 }
 
 type DungeonMeta = Omit<Dungeon, "id" | "time"> & {
@@ -129,7 +133,7 @@ type DungeonMeta = Omit<Dungeon, "id" | "time"> & {
  * - boss add
  */
 export const EXCLUDED_NPCS = new Set([
-  174_773, // Spiteful Shade
+  SPITEFUL.unit,
   // MOTS
   168_988, // Overgrowth, stun cast from Tirnenn Villager
   165_251, // Illusionary Vuplinvia Mistcaller

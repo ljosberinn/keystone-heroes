@@ -97,34 +97,45 @@ export const getAffixExpression = (affixes: Affixes[]): string[] => {
 export const filterAffixEvents = (
   allEvents: AllTrackedEventTypes[],
   affixes: EventParams["affixes"]
-): (
-  | ApplyBuffEvent
-  | ApplyBuffStackEvent
-  | DamageEvent
-  | HealEvent
-  | InterruptEvent
-  | ApplyDebuffStackEvent
-  | BeginCastEvent
-  | CastEvent
-  | ApplyDebuffEvent
-  | RemoveBuffEvent
-  | RemoveDebuffEvent
-)[] => {
+): {
+  explosiveTargetID: number | null;
+  events: (
+    | ApplyBuffEvent
+    | ApplyBuffStackEvent
+    | DamageEvent
+    | HealEvent
+    | InterruptEvent
+    | ApplyDebuffStackEvent
+    | BeginCastEvent
+    | CastEvent
+    | ApplyDebuffEvent
+    | RemoveBuffEvent
+    | RemoveDebuffEvent
+  )[];
+} => {
   const affixSet = new Set(affixes);
 
-  return [
-    // seasonal
-    ...getTormentedEvents(allEvents, affixSet),
-    // common affixes
-    ...getStormingEvents(allEvents, affixSet),
-    ...getSpitefulEvents(allEvents, affixSet),
-    ...getSanguineEvents(allEvents, affixSet),
-    ...getVolcanicEvents(allEvents, affixSet),
-    ...getQuakingEvents(allEvents, affixSet),
-    ...getBolsteringEvents(allEvents, affixSet),
-    ...getBurstingEvents(allEvents, affixSet),
-    ...getExplosiveEvents(allEvents, affixSet),
-    ...getGrievousEvents(allEvents, affixSet),
-    ...getNecroticEvents(allEvents, affixSet),
-  ];
+  const { explosiveTargetID, events: explosiveEvents } = getExplosiveEvents(
+    allEvents,
+    affixSet
+  );
+
+  return {
+    explosiveTargetID,
+    events: [
+      // seasonal
+      ...getTormentedEvents(allEvents, affixSet),
+      // common affixes
+      ...getStormingEvents(allEvents, affixSet),
+      ...getSpitefulEvents(allEvents, affixSet),
+      ...getSanguineEvents(allEvents, affixSet),
+      ...getVolcanicEvents(allEvents, affixSet),
+      ...getQuakingEvents(allEvents, affixSet),
+      ...getBolsteringEvents(allEvents, affixSet),
+      ...getBurstingEvents(allEvents, affixSet),
+      ...explosiveEvents,
+      ...getGrievousEvents(allEvents, affixSet),
+      ...getNecroticEvents(allEvents, affixSet),
+    ],
+  };
 };

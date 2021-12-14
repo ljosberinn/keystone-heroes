@@ -19,7 +19,7 @@ const getProcessorParams = (
   event: AllTrackedEventTypes,
   pull: PersistedDungeonPull,
   actorPlayerMap: Map<number, number>,
-  allEnemyNPCs: PersistedDungeonPull["enemyNPCs"]
+  allPulledNPCsMap: Record<number, number>
 ): Parameters<Processor<AllTrackedEventTypes>>[1] => {
   const params: Parameters<Processor<AllTrackedEventTypes>>[1] = {
     sourceNPCID: null,
@@ -37,7 +37,9 @@ const getProcessorParams = (
   if ("targetID" in event) {
     params.targetPlayerID = actorPlayerMap.get(event.targetID) ?? null;
     params.targetNPCID =
-      allEnemyNPCs.find((npc) => npc.id === event.targetID)?.gameID ?? null;
+      event.targetID in allPulledNPCsMap
+        ? allPulledNPCsMap[event.targetID]
+        : null;
   }
 
   return params;
@@ -47,7 +49,7 @@ export const processEvents = (
   pull: PersistedDungeonPull,
   events: AllTrackedEventTypes[],
   actorPlayerMap: Map<number, number>,
-  allEnemyNPCs: PersistedDungeonPull["enemyNPCs"]
+  allPulledNPCsMap: Record<number, number>
 ): Omit<Prisma.EventCreateManyInput, "pullID">[] => {
   return events
     .map<Omit<Prisma.EventCreateManyInput, "pullID"> | null>((event) => {
@@ -55,7 +57,7 @@ export const processEvents = (
         event,
         pull,
         actorPlayerMap,
-        allEnemyNPCs
+        allPulledNPCsMap
       );
 
       switch (event.type) {

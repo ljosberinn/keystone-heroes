@@ -4314,6 +4314,7 @@ Array [
         "type": "death",
       },
     ],
+    "explosiveTargetID": null,
     "playerDeathEvents": Array [
       Object {
         "abilityGameID": 0,
@@ -7068,6 +7069,7 @@ Array [
         "type": "death",
       },
     ],
+    "explosiveTargetID": null,
     "playerDeathEvents": Array [
       Object {
         "abilityGameID": 0,
@@ -13320,6 +13322,7 @@ Array [
         "type": "death",
       },
     ],
+    "explosiveTargetID": null,
     "playerDeathEvents": Array [
       Object {
         "abilityGameID": 0,
@@ -16042,6 +16045,7 @@ Array [
         "type": "death",
       },
     ],
+    "explosiveTargetID": null,
     "playerDeathEvents": Array [
       Object {
         "abilityGameID": 0,
@@ -22256,6 +22260,7 @@ Array [
         "type": "death",
       },
     ],
+    "explosiveTargetID": null,
     "playerDeathEvents": Array [
       Object {
         "abilityGameID": 0,
@@ -24936,6 +24941,7 @@ Array [
         "type": "death",
       },
     ],
+    "explosiveTargetID": null,
     "playerDeathEvents": Array [
       Object {
         "abilityGameID": 0,
@@ -27679,6 +27685,7 @@ Array [
         "type": "death",
       },
     ],
+    "explosiveTargetID": null,
     "playerDeathEvents": Array [
       Object {
         "abilityGameID": 0,
@@ -30368,6 +30375,7 @@ Array [
         "type": "death",
       },
     ],
+    "explosiveTargetID": null,
     "playerDeathEvents": Array [
       Object {
         "abilityGameID": 0,

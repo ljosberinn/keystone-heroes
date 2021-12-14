@@ -11,6 +11,12 @@ describe("getExplosiveEvents", () => {
   });
 
   test("does nothing if affix is absent", () => {
-    expect(getExplosiveEvents(allEvents, new Set())).toHaveLength(0);
+    const { events, explosiveTargetID } = getExplosiveEvents(
+      allEvents,
+      new Set()
+    );
+
+    expect(events).toHaveLength(0);
+    expect(explosiveTargetID).toBeNull();
   });
 });

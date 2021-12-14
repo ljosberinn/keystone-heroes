@@ -67,6 +67,7 @@ export const getEvents = async (
   allEvents: AllTrackedEventTypes[];
   playerDeathEvents: DeathEvent[];
   enemyDeathEvents: (DeathEvent | BeginCastEvent | DamageEvent)[];
+  explosiveTargetID: number | null;
 }> => {
   const filterExpression = generateFilterExpression({
     dungeonID: params.dungeonID,
@@ -89,7 +90,10 @@ export const getEvents = async (
     params.dungeonID,
     actorIDSet
   );
-  const affixEvents = filterAffixEvents(allEvents, params.affixes);
+  const { explosiveTargetID, events: affixEvents } = filterAffixEvents(
+    allEvents,
+    params.affixes
+  );
   const professionEvents = filterProfessionEvents(allEvents);
   const remarkableSpellEvents = filterRemarkableSpellEvents(allEvents);
   const playerDeathEvents = filterPlayerDeathEvents(
@@ -123,5 +127,6 @@ export const getEvents = async (
     ].sort((a, b) => a.timestamp - b.timestamp),
     playerDeathEvents,
     enemyDeathEvents,
+    explosiveTargetID,
   };
 };
