@@ -11,31 +11,31 @@ a [title] {
 }
 
 .bg-sd {
-  background-image: url(/static/dungeons/sd.jpg);
+  background-image: url(/static/dungeons/sd-700.jpg);
 }
 .bg-soa {
-  background-image: url(/static/dungeons/soa.jpg);
+  background-image: url(/static/dungeons/soa-700.jpg);
 }
 .bg-nw {
-  background-image: url(/static/dungeons/nw.jpg);
+  background-image: url(/static/dungeons/nw-700.jpg);
 }
 .bg-hoa {
-  background-image: url(/static/dungeons/hoa.jpg);
+  background-image: url(/static/dungeons/hoa-700.jpg);
 }
 .bg-pf {
-  background-image: url(/static/dungeons/pf.jpg);
+  background-image: url(/static/dungeons/pf-700.jpg);
 }
 .bg-mots {
-  background-image: url(/static/dungeons/mots.jpg);
+  background-image: url(/static/dungeons/mots-700.jpg);
 }
 .bg-dos {
-  background-image: url(/static/dungeons/dos.jpg);
+  background-image: url(/static/dungeons/dos-700.jpg);
 }
 .bg-top {
-  background-image: url(/static/dungeons/top.jpg);
+  background-image: url(/static/dungeons/top-700.jpg);
 }
 .bg-fallback {
-  background-image: url(/static/dungeons/fallback.jpg);
+  background-image: url(/static/dungeons/fallback-700.jpg);
 }
 
 .bg-pog {
