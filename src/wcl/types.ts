@@ -1607,6 +1607,7 @@ export type ViewModels = {
   game?: Maybe<Scalars["JSON"]>;
   googleAnalytics?: Maybe<Scalars["JSON"]>;
   headerTitle?: Maybe<Scalars["JSON"]>;
+  snippets?: Maybe<Scalars["JSON"]>;
 };
 
 export type ViewModelsArticleArgs = {
@@ -1618,6 +1619,10 @@ export type ViewModelsArticleArgs = {
 export type ViewModelsArticleSlugsArgs = {
   articleCategorySlug?: InputMaybe<Scalars["String"]>;
   siteName?: InputMaybe<Scalars["String"]>;
+};
+
+export type ViewModelsSnippetsArgs = {
+  snippetSlugs?: InputMaybe<InputMaybe<Scalars["String"]>[]>;
 };
 
 /** Whether the view is by source, target, or ability. */

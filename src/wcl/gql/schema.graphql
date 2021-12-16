@@ -3742,4 +3742,5 @@ type ViewModels {
     articleCategorySlug: String
     siteName: String
   ): JSON
+  snippets(snippetSlugs: [String]): JSON
 }
