@@ -180,7 +180,6 @@ export const fightHasFivePlayers = (fight: Fight): boolean =>
   fight.friendlyPlayers.length === 5;
 
 export const fightHasSupportedAffixes = (fight: Fight): boolean => {
-  console.log(fight);
   if (
     fight.keystoneAffixes.includes(getAffixByName("Encrypted")) ||
     fight.keystoneAffixes.includes(getAffixByName("Infernal"))

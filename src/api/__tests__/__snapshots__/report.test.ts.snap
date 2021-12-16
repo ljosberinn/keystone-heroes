@@ -3,531 +3,240 @@
 exports[`/api/report existing report finished report 1`] = `
 Object {
   "affixes": Array [
-    Object {
-      "icon": "ability_toughness.jpg",
-      "name": "Fortified",
-    },
-    Object {
-      "icon": "ability_ironmaidens_whirlofblood.jpg",
-      "name": "Bursting",
-    },
-    Object {
-      "icon": "spell_nature_cyclone.jpg",
-      "name": "Storming",
-    },
-    Object {
-      "icon": "spell_animarevendreth_buff.jpg",
-      "name": "Prideful",
-    },
+    9,
+    7,
+    13,
+    128,
   ],
-  "endTime": 1625344842249,
+  "endTime": 1639499706988,
   "fights": Array [
     Object {
-      "averageItemLevel": 223.4,
-      "dps": 16927,
-      "dungeon": Object {
-        "id": 2289,
-        "name": "Plaguefall",
-        "time": 2280000,
-      },
-      "hps": 5401,
+      "averageItemLevel": 249.4,
+      "dungeon": 2285,
       "id": 1,
       "keystoneBonus": 1,
-      "keystoneLevel": 17,
-      "keystoneTime": 1896314,
+      "keystoneLevel": 23,
+      "keystoneTime": 2035534,
       "player": Array [
         Object {
-          "class": "DemonHunter",
-          "covenantID": 1,
-          "legendaries": Array [
-            Object {
-              "effectIcon": "inv__felbarrage.jpg",
-              "effectName": "Fiery Soul",
-              "id": 337547,
-            },
-          ],
-          "soulbindID": 7,
-          "spec": "Vengeance",
+          "class": 9,
+          "spec": 26,
         },
         Object {
-          "class": "Paladin",
-          "covenantID": 2,
-          "legendaries": Array [
-            Object {
-              "effectIcon": "ability_paladin_conviction.jpg",
-              "effectName": "The Mad Paragon",
-              "id": 337594,
-            },
-          ],
-          "soulbindID": 9,
-          "spec": "Holy",
+          "class": 10,
+          "spec": 29,
         },
         Object {
-          "class": "DeathKnight",
-          "covenantID": 4,
-          "legendaries": Array [
-            Object {
-              "effectIcon": "spell_shadow_focusedpower.jpg",
-              "effectName": "Koltira's Favor",
-              "id": 334583,
-            },
-          ],
-          "soulbindID": 5,
-          "spec": "Frost",
+          "class": 7,
+          "spec": 21,
         },
         Object {
-          "class": "Warrior",
-          "covenantID": 2,
-          "legendaries": Array [
-            Object {
-              "effectIcon": "inv_60crafted_ring4b.jpg",
-              "effectName": "Signet of Tormented Kings",
-              "id": 335266,
-            },
-          ],
-          "soulbindID": 8,
-          "spec": "Fury",
+          "class": 3,
+          "spec": 8,
         },
         Object {
-          "class": "Mage",
-          "covenantID": 2,
-          "legendaries": Array [
-            Object {
-              "effectIcon": "spell_shadow_soulleech_2.jpg",
-              "effectName": "Freezing Winds",
-              "id": 327364,
-            },
-          ],
-          "soulbindID": 8,
-          "spec": "Frost",
+          "class": 2,
+          "spec": 5,
         },
       ],
-      "rating": 137,
-      "totalDeaths": 9,
+      "rating": 166,
     },
     Object {
-      "averageItemLevel": 223.2,
-      "dps": 18616,
-      "dungeon": Object {
-        "id": 2289,
-        "name": "Plaguefall",
-        "time": 2280000,
-      },
-      "hps": 5970,
+      "averageItemLevel": 249.4,
+      "dungeon": 2286,
       "id": 2,
-      "keystoneBonus": 1,
-      "keystoneLevel": 20,
-      "keystoneTime": 2189941,
+      "keystoneBonus": 2,
+      "keystoneLevel": 23,
+      "keystoneTime": 1700172,
       "player": Array [
         Object {
-          "class": "DemonHunter",
-          "covenantID": 1,
-          "legendaries": Array [
-            Object {
-              "effectIcon": "inv__felbarrage.jpg",
-              "effectName": "Fiery Soul",
-              "id": 337547,
-            },
-          ],
-          "soulbindID": 7,
-          "spec": "Vengeance",
+          "class": 9,
+          "spec": 26,
         },
         Object {
-          "class": "Shaman",
-          "covenantID": 2,
-          "legendaries": Array [
-            Object {
-              "effectIcon": "spell_nature_earthelemental_totem.jpg",
-              "effectName": "Deeptremor Stone",
-              "id": 336739,
-            },
-          ],
-          "soulbindID": 8,
-          "spec": "Restoration",
+          "class": 10,
+          "spec": 29,
         },
         Object {
-          "class": "Druid",
-          "covenantID": 3,
-          "legendaries": Array [
-            Object {
-              "effectIcon": "ability_druid_balanceofpower.jpg",
-              "effectName": "Balance of All Things",
-              "id": 339942,
-            },
-          ],
-          "soulbindID": 1,
-          "spec": "Balance",
+          "class": 7,
+          "spec": 21,
         },
         Object {
-          "class": "Monk",
-          "covenantID": 1,
-          "legendaries": Array [
-            Object {
-              "effectIcon": "inv_inscription_80_warscroll_battleshout.jpg",
-              "effectName": "Invoker's Delight",
-              "id": 337298,
-            },
-          ],
-          "soulbindID": 7,
-          "spec": "Windwalker",
+          "class": 3,
+          "spec": 8,
         },
         Object {
-          "class": "Rogue",
-          "covenantID": 4,
-          "legendaries": Array [
-            Object {
-              "effectIcon": "ability_rogue_slicedice.jpg",
-              "effectName": "Celerity",
-              "id": 340087,
-            },
-          ],
-          "soulbindID": 10,
-          "spec": "Outlaw",
+          "class": 2,
+          "spec": 5,
         },
       ],
-      "rating": 150,
-      "totalDeaths": 13,
+      "rating": 167,
     },
     Object {
-      "averageItemLevel": 223.8,
-      "dps": 25559,
-      "dungeon": Object {
-        "id": 2290,
-        "name": "Mists of Tirna Scithe",
-        "time": 1800000,
-      },
-      "hps": 8735,
+      "averageItemLevel": 249.4,
+      "dungeon": 2289,
       "id": 3,
       "keystoneBonus": 1,
-      "keystoneLevel": 21,
-      "keystoneTime": 1702019,
+      "keystoneLevel": 24,
+      "keystoneTime": 2126854,
       "player": Array [
         Object {
-          "class": "DemonHunter",
-          "covenantID": 1,
-          "legendaries": Array [
-            Object {
-              "effectIcon": "inv__felbarrage.jpg",
-              "effectName": "Fiery Soul",
-              "id": 337547,
-            },
-          ],
-          "soulbindID": 7,
-          "spec": "Vengeance",
+          "class": 9,
+          "spec": 26,
         },
         Object {
-          "class": "Shaman",
-          "covenantID": 2,
-          "legendaries": Array [
-            Object {
-              "effectIcon": "spell_nature_earthelemental_totem.jpg",
-              "effectName": "Deeptremor Stone",
-              "id": 336739,
-            },
-          ],
-          "soulbindID": 8,
-          "spec": "Restoration",
+          "class": 10,
+          "spec": 29,
         },
         Object {
-          "class": "Warlock",
-          "covenantID": 3,
-          "legendaries": Array [
-            Object {
-              "effectIcon": "spell_warlock_demonicportal_purple.jpg",
-              "effectName": "Wilfred's Sigil of Superior Summoning",
-              "id": 337020,
-            },
-          ],
-          "soulbindID": 1,
-          "spec": "Demonology",
+          "class": 7,
+          "spec": 21,
         },
         Object {
-          "class": "Mage",
-          "covenantID": 3,
-          "legendaries": Array [
-            Object {
-              "effectIcon": "inv_misc_enchantedpearld.jpg",
-              "effectName": "Fevered Incantation",
-              "id": 333030,
-            },
-          ],
-          "soulbindID": 6,
-          "spec": "Fire",
+          "class": 3,
+          "spec": 8,
         },
         Object {
-          "class": "Priest",
-          "covenantID": 3,
-          "legendaries": Array [
-            Object {
-              "effectIcon": "inv_jewelcrafting_shadowsongamethyst_02.jpg",
-              "effectName": "Shadowflame Prism",
-              "id": 336143,
-            },
-          ],
-          "soulbindID": 6,
-          "spec": "Shadow",
+          "class": 2,
+          "spec": 5,
         },
       ],
-      "rating": 156,
-      "totalDeaths": 5,
+      "rating": 170,
     },
     Object {
-      "averageItemLevel": 224,
-      "dps": 20347,
-      "dungeon": Object {
-        "id": 2293,
-        "name": "Theater of Pain",
-        "time": 2220000,
-      },
-      "hps": 6805,
-      "id": 8,
+      "averageItemLevel": 249.4,
+      "dungeon": 2286,
+      "id": 4,
       "keystoneBonus": 1,
-      "keystoneLevel": 21,
-      "keystoneTime": 2101258,
+      "keystoneLevel": 25,
+      "keystoneTime": 1917470,
       "player": Array [
         Object {
-          "class": "DemonHunter",
-          "covenantID": 1,
-          "legendaries": Array [
-            Object {
-              "effectIcon": "inv__felbarrage.jpg",
-              "effectName": "Fiery Soul",
-              "id": 337547,
-            },
-          ],
-          "soulbindID": 7,
-          "spec": "Vengeance",
+          "class": 9,
+          "spec": 26,
         },
         Object {
-          "class": "Paladin",
-          "covenantID": 2,
-          "legendaries": Array [
-            Object {
-              "effectIcon": "ability_paladin_conviction.jpg",
-              "effectName": "The Mad Paragon",
-              "id": 337594,
-            },
-          ],
-          "soulbindID": 9,
-          "spec": "Holy",
+          "class": 10,
+          "spec": 29,
         },
         Object {
-          "class": "Rogue",
-          "covenantID": 4,
-          "legendaries": Array [
-            Object {
-              "effectIcon": "spell_nzinsanity_chasedbyshadows.jpg",
-              "effectName": "Deathly Shadows",
-              "id": 340092,
-            },
-          ],
-          "soulbindID": 10,
-          "spec": "Outlaw",
+          "class": 7,
+          "spec": 21,
         },
         Object {
-          "class": "Mage",
-          "covenantID": 3,
-          "legendaries": Array [
-            Object {
-              "effectIcon": "inv_misc_enchantedpearld.jpg",
-              "effectName": "Fevered Incantation",
-              "id": 333030,
-            },
-          ],
-          "soulbindID": 6,
-          "spec": "Fire",
+          "class": 3,
+          "spec": 8,
         },
         Object {
-          "class": "Druid",
-          "covenantID": 3,
-          "legendaries": Array [
-            Object {
-              "effectIcon": "ability_druid_balanceofpower.jpg",
-              "effectName": "Balance of All Things",
-              "id": 339942,
-            },
-          ],
-          "soulbindID": 1,
-          "spec": "Balance",
+          "class": 2,
+          "spec": 5,
         },
       ],
-      "rating": 156,
-      "totalDeaths": 4,
+      "rating": 176,
     },
     Object {
-      "averageItemLevel": 223.6,
-      "dps": 25437,
-      "dungeon": Object {
-        "id": 2293,
-        "name": "Theater of Pain",
-        "time": 2220000,
-      },
-      "hps": 7166,
-      "id": 10,
+      "averageItemLevel": 249.4,
+      "dungeon": 2285,
+      "id": 5,
       "keystoneBonus": 1,
-      "keystoneLevel": 19,
-      "keystoneTime": 1511926,
+      "keystoneLevel": 25,
+      "keystoneTime": 2339707,
       "player": Array [
         Object {
-          "class": "DemonHunter",
-          "covenantID": 1,
-          "legendaries": Array [
-            Object {
-              "effectIcon": "inv__felbarrage.jpg",
-              "effectName": "Fiery Soul",
-              "id": 337547,
-            },
-          ],
-          "soulbindID": 7,
-          "spec": "Vengeance",
+          "class": 9,
+          "spec": 26,
         },
         Object {
-          "class": "Paladin",
-          "covenantID": 2,
-          "legendaries": Array [
-            Object {
-              "effectIcon": "ability_paladin_conviction.jpg",
-              "effectName": "The Mad Paragon",
-              "id": 337594,
-            },
-          ],
-          "soulbindID": 9,
-          "spec": "Holy",
+          "class": 10,
+          "spec": 29,
         },
         Object {
-          "class": "Druid",
-          "covenantID": 3,
-          "legendaries": Array [
-            Object {
-              "effectIcon": "spell_arcane_arcane03.jpg",
-              "effectName": "Primordial Arcanic Pulsar",
-              "id": 338668,
-            },
-          ],
-          "soulbindID": 1,
-          "spec": "Balance",
+          "class": 7,
+          "spec": 21,
         },
         Object {
-          "class": "Priest",
-          "covenantID": 3,
-          "legendaries": Array [
-            Object {
-              "effectIcon": "inv_jewelcrafting_shadowsongamethyst_02.jpg",
-              "effectName": "Shadowflame Prism",
-              "id": 336143,
-            },
-          ],
-          "soulbindID": 6,
-          "spec": "Shadow",
+          "class": 3,
+          "spec": 8,
         },
         Object {
-          "class": "Shaman",
-          "covenantID": 3,
-          "legendaries": Array [
-            Object {
-              "effectIcon": "spell_shaman_earthquake.jpg",
-              "effectName": "Echoes of Great Sundering",
-              "id": 336215,
-            },
-          ],
-          "soulbindID": 6,
-          "spec": "Elemental",
+          "class": 2,
+          "spec": 5,
         },
       ],
-      "rating": 147,
-      "totalDeaths": 2,
+      "rating": 175,
     },
     Object {
-      "averageItemLevel": 223.8,
-      "dps": 25767,
-      "dungeon": Object {
-        "id": 2286,
-        "name": "The Necrotic Wake",
-        "time": 2160000,
-      },
-      "hps": 7018,
-      "id": 11,
-      "keystoneBonus": 2,
-      "keystoneLevel": 21,
-      "keystoneTime": 1653316,
+      "averageItemLevel": 249.4,
+      "dungeon": 2286,
+      "id": 6,
+      "keystoneBonus": 1,
+      "keystoneLevel": 26,
+      "keystoneTime": 2093779,
       "player": Array [
         Object {
-          "class": "DemonHunter",
-          "covenantID": 1,
-          "legendaries": Array [
-            Object {
-              "effectIcon": "inv__felbarrage.jpg",
-              "effectName": "Fiery Soul",
-              "id": 337547,
-            },
-          ],
-          "soulbindID": 7,
-          "spec": "Vengeance",
+          "class": 9,
+          "spec": 26,
         },
         Object {
-          "class": "Paladin",
-          "covenantID": 2,
-          "legendaries": Array [
-            Object {
-              "effectIcon": "ability_paladin_conviction.jpg",
-              "effectName": "The Mad Paragon",
-              "id": 337594,
-            },
-          ],
-          "soulbindID": 9,
-          "spec": "Holy",
+          "class": 10,
+          "spec": 29,
         },
         Object {
-          "class": "Druid",
-          "covenantID": 3,
-          "legendaries": Array [
-            Object {
-              "effectIcon": "spell_arcane_arcane03.jpg",
-              "effectName": "Primordial Arcanic Pulsar",
-              "id": 338668,
-            },
-          ],
-          "soulbindID": 1,
-          "spec": "Balance",
+          "class": 7,
+          "spec": 21,
         },
         Object {
-          "class": "Rogue",
-          "covenantID": 2,
-          "legendaries": Array [
-            Object {
-              "effectIcon": "ability_rogue_slicedice.jpg",
-              "effectName": "Celerity",
-              "id": 340087,
-            },
-          ],
-          "soulbindID": 9,
-          "spec": "Outlaw",
+          "class": 3,
+          "spec": 8,
         },
         Object {
-          "class": "Shaman",
-          "covenantID": 3,
-          "legendaries": Array [
-            Object {
-              "effectIcon": "spell_shaman_earthquake.jpg",
-              "effectName": "Echoes of Great Sundering",
-              "id": 336215,
-            },
-          ],
-          "soulbindID": 6,
-          "spec": "Elemental",
+          "class": 2,
+          "spec": 5,
         },
       ],
-      "rating": 158,
-      "totalDeaths": 2,
+      "rating": 180,
     },
   ],
   "region": "EU",
-  "startTime": 1625318363957,
-  "title": "Mythic+ Dungeons",
+  "startTime": 1639484205713,
+  "title": "Mythic+",
 }
 `;
 
 exports[`/api/report existing report ongoing report - new fights - table request failing for new report 1`] = `
+Object {
+  "endTime": 10361293,
+  "fightIDs": Array [
+    8,
+  ],
+  "reportID": "THJWBAXcn2j9Nvkt",
+  "startTime": 8271380,
+}
+`;
+
+exports[`/api/report existing report ongoing report - new fights - table request failing for new report 2`] = `
+Object {
+  "endTime": 19400839,
+  "fightIDs": Array [
+    10,
+  ],
+  "reportID": "THJWBAXcn2j9Nvkt",
+  "startTime": 17890007,
+}
+`;
+
+exports[`/api/report existing report ongoing report - new fights - table request failing for new report 3`] = `
+Object {
+  "endTime": 21815165,
+  "fightIDs": Array [
+    11,
+  ],
+  "reportID": "THJWBAXcn2j9Nvkt",
+  "startTime": 20163668,
+}
+`;
+
+exports[`/api/report existing report ongoing report - new fights - table request failing for new report 4`] = `
 Object {
   "endTime": 24455197,
   "fightIDs": Array [
@@ -538,7 +247,7 @@ Object {
 }
 `;
 
-exports[`/api/report existing report ongoing report - new fights - table request failing for new report 2`] = `
+exports[`/api/report existing report ongoing report - new fights - table request failing for new report 5`] = `
 Object {
   "endTime": 1910367,
   "fightIDs": Array [
@@ -549,7 +258,7 @@ Object {
 }
 `;
 
-exports[`/api/report existing report ongoing report - new fights - table request failing for new report 3`] = `
+exports[`/api/report existing report ongoing report - new fights - table request failing for new report 6`] = `
 Object {
   "error": "SECONDARY_REQUEST_FAILED",
 }
@@ -557,6 +266,39 @@ Object {
 
 exports[`/api/report existing report ongoing report - new fights 1`] = `
 Object {
+  "endTime": 10361293,
+  "fightIDs": Array [
+    8,
+  ],
+  "reportID": "THJWBAXcn2j9Nvkt",
+  "startTime": 8271380,
+}
+`;
+
+exports[`/api/report existing report ongoing report - new fights 2`] = `
+Object {
+  "endTime": 19400839,
+  "fightIDs": Array [
+    10,
+  ],
+  "reportID": "THJWBAXcn2j9Nvkt",
+  "startTime": 17890007,
+}
+`;
+
+exports[`/api/report existing report ongoing report - new fights 3`] = `
+Object {
+  "endTime": 21815165,
+  "fightIDs": Array [
+    11,
+  ],
+  "reportID": "THJWBAXcn2j9Nvkt",
+  "startTime": 20163668,
+}
+`;
+
+exports[`/api/report existing report ongoing report - new fights 4`] = `
+Object {
   "endTime": 24455197,
   "fightIDs": Array [
     12,
@@ -566,7 +308,7 @@ Object {
 }
 `;
 
-exports[`/api/report existing report ongoing report - new fights 2`] = `
+exports[`/api/report existing report ongoing report - new fights 5`] = `
 Object {
   "endTime": 1910367,
   "fightIDs": Array [
@@ -577,7 +319,7 @@ Object {
 }
 `;
 
-exports[`/api/report existing report ongoing report - new fights 3`] = `
+exports[`/api/report existing report ongoing report - new fights 6`] = `
 Object {
   "regionUpsert": Array [
     Array [
@@ -598,7 +340,7 @@ Object {
 }
 `;
 
-exports[`/api/report existing report ongoing report - new fights 4`] = `
+exports[`/api/report existing report ongoing report - new fights 7`] = `
 Object {
   "conduitCreateMany": Array [
     Array [
@@ -717,7 +459,7 @@ Object {
 }
 `;
 
-exports[`/api/report existing report ongoing report - new fights 5`] = `
+exports[`/api/report existing report ongoing report - new fights 8`] = `
 Object {
   "talentCreateMany": Array [
     Array [
@@ -976,7 +718,7 @@ Object {
 }
 `;
 
-exports[`/api/report existing report ongoing report - new fights 6`] = `
+exports[`/api/report existing report ongoing report - new fights 9`] = `
 Object {
   "covenantTraitCreateMany": Array [
     Array [
@@ -1110,7 +852,7 @@ Object {
 }
 `;
 
-exports[`/api/report existing report ongoing report - new fights 7`] = `
+exports[`/api/report existing report ongoing report - new fights 10`] = `
 Object {
   "legendaryCreateMany": Array [
     Array [
@@ -1154,13 +896,13 @@ Object {
 }
 `;
 
-exports[`/api/report existing report ongoing report - new fights 8`] = `
+exports[`/api/report existing report ongoing report - new fights 11`] = `
 Object {
   "reportCreate": Array [],
 }
 `;
 
-exports[`/api/report existing report ongoing report - new fights 9`] = `
+exports[`/api/report existing report ongoing report - new fights 12`] = `
 Object {
   "serverFindMany": Array [
     Array [
@@ -1195,7 +937,7 @@ Object {
 }
 `;
 
-exports[`/api/report existing report ongoing report - new fights 10`] = `
+exports[`/api/report existing report ongoing report - new fights 13`] = `
 Object {
   "characterFindMany": Array [
     Array [
@@ -1240,7 +982,7 @@ Object {
 }
 `;
 
-exports[`/api/report existing report ongoing report - new fights 11`] = `
+exports[`/api/report existing report ongoing report - new fights 14`] = `
 Object {
   "playerFindMany": Array [
     Array [
@@ -1319,7 +1061,7 @@ Object {
 }
 `;
 
-exports[`/api/report existing report ongoing report - new fights 12`] = `
+exports[`/api/report existing report ongoing report - new fights 15`] = `
 Object {
   "fightCreate": Array [
     Array [
@@ -1740,525 +1482,201 @@ Object {
 }
 `;
 
-exports[`/api/report existing report ongoing report - new fights 13`] = `
+exports[`/api/report existing report ongoing report - new fights 16`] = `
 Object {
   "affixes": Array [
-    Object {
-      "icon": "ability_toughness",
-      "name": "Fortified",
-    },
-    Object {
-      "icon": "ability_ironmaidens_whirlofblood",
-      "name": "Bursting",
-    },
-    Object {
-      "icon": "spell_nature_cyclone",
-      "name": "Storming",
-    },
-    Object {
-      "icon": "spell_animarevendreth_buff",
-      "name": "Prideful",
-    },
+    10,
+    11,
+    124,
+    121,
   ],
   "endTime": 1625344842249,
   "fights": Array [
     Object {
-      "averageItemLevel": 223.4,
-      "dps": 16927,
-      "dungeon": Object {
-        "id": 2289,
-        "name": "Plaguefall",
-        "time": 2280000,
-      },
-      "hps": 5401,
+      "averageItemLevel": 249.4,
+      "dungeon": 2285,
       "id": 1,
       "keystoneBonus": 1,
-      "keystoneLevel": 17,
-      "keystoneTime": 1896314,
+      "keystoneLevel": 23,
+      "keystoneTime": 2035534,
       "player": Array [
         Object {
-          "class": "DemonHunter",
-          "covenantID": 1,
-          "legendaries": Array [
-            Object {
-              "effectIcon": "inv__felbarrage.jpg",
-              "effectName": "Fiery Soul",
-              "id": 337547,
-            },
-          ],
-          "soulbindID": 7,
-          "spec": "Vengeance",
+          "class": 9,
+          "spec": 26,
         },
         Object {
-          "class": "Paladin",
-          "covenantID": 2,
-          "legendaries": Array [
-            Object {
-              "effectIcon": "ability_paladin_conviction.jpg",
-              "effectName": "The Mad Paragon",
-              "id": 337594,
-            },
-          ],
-          "soulbindID": 9,
-          "spec": "Holy",
+          "class": 10,
+          "spec": 29,
         },
         Object {
-          "class": "DeathKnight",
-          "covenantID": 4,
-          "legendaries": Array [
-            Object {
-              "effectIcon": "spell_shadow_focusedpower.jpg",
-              "effectName": "Koltira's Favor",
-              "id": 334583,
-            },
-          ],
-          "soulbindID": 5,
-          "spec": "Frost",
+          "class": 7,
+          "spec": 21,
         },
         Object {
-          "class": "Warrior",
-          "covenantID": 2,
-          "legendaries": Array [
-            Object {
-              "effectIcon": "inv_60crafted_ring4b.jpg",
-              "effectName": "Signet of Tormented Kings",
-              "id": 335266,
-            },
-          ],
-          "soulbindID": 8,
-          "spec": "Fury",
+          "class": 3,
+          "spec": 8,
         },
         Object {
-          "class": "Mage",
-          "covenantID": 2,
-          "legendaries": Array [
-            Object {
-              "effectIcon": "spell_shadow_soulleech_2.jpg",
-              "effectName": "Freezing Winds",
-              "id": 327364,
-            },
-          ],
-          "soulbindID": 8,
-          "spec": "Frost",
+          "class": 2,
+          "spec": 5,
         },
       ],
-      "rating": 137,
-      "totalDeaths": 9,
+      "rating": 166,
     },
     Object {
-      "averageItemLevel": 223.2,
-      "dps": 18616,
-      "dungeon": Object {
-        "id": 2289,
-        "name": "Plaguefall",
-        "time": 2280000,
-      },
-      "hps": 5970,
+      "averageItemLevel": 249.4,
+      "dungeon": 2286,
       "id": 2,
-      "keystoneBonus": 1,
-      "keystoneLevel": 20,
-      "keystoneTime": 2189941,
+      "keystoneBonus": 2,
+      "keystoneLevel": 23,
+      "keystoneTime": 1700172,
       "player": Array [
         Object {
-          "class": "DemonHunter",
-          "covenantID": 1,
-          "legendaries": Array [
-            Object {
-              "effectIcon": "inv__felbarrage.jpg",
-              "effectName": "Fiery Soul",
-              "id": 337547,
-            },
-          ],
-          "soulbindID": 7,
-          "spec": "Vengeance",
+          "class": 9,
+          "spec": 26,
         },
         Object {
-          "class": "Shaman",
-          "covenantID": 2,
-          "legendaries": Array [
-            Object {
-              "effectIcon": "spell_nature_earthelemental_totem.jpg",
-              "effectName": "Deeptremor Stone",
-              "id": 336739,
-            },
-          ],
-          "soulbindID": 8,
-          "spec": "Restoration",
+          "class": 10,
+          "spec": 29,
         },
         Object {
-          "class": "Druid",
-          "covenantID": 3,
-          "legendaries": Array [
-            Object {
-              "effectIcon": "ability_druid_balanceofpower.jpg",
-              "effectName": "Balance of All Things",
-              "id": 339942,
-            },
-          ],
-          "soulbindID": 1,
-          "spec": "Balance",
+          "class": 7,
+          "spec": 21,
         },
         Object {
-          "class": "Monk",
-          "covenantID": 1,
-          "legendaries": Array [
-            Object {
-              "effectIcon": "inv_inscription_80_warscroll_battleshout.jpg",
-              "effectName": "Invoker's Delight",
-              "id": 337298,
-            },
-          ],
-          "soulbindID": 7,
-          "spec": "Windwalker",
+          "class": 3,
+          "spec": 8,
         },
         Object {
-          "class": "Rogue",
-          "covenantID": 4,
-          "legendaries": Array [
-            Object {
-              "effectIcon": "ability_rogue_slicedice.jpg",
-              "effectName": "Celerity",
-              "id": 340087,
-            },
-          ],
-          "soulbindID": 10,
-          "spec": "Outlaw",
+          "class": 2,
+          "spec": 5,
         },
       ],
-      "rating": 150,
-      "totalDeaths": 13,
+      "rating": 167,
     },
     Object {
-      "averageItemLevel": 223.8,
-      "dps": 25559,
-      "dungeon": Object {
-        "id": 2290,
-        "name": "Mists of Tirna Scithe",
-        "time": 1800000,
-      },
-      "hps": 8735,
+      "averageItemLevel": 249.4,
+      "dungeon": 2289,
       "id": 3,
       "keystoneBonus": 1,
-      "keystoneLevel": 21,
-      "keystoneTime": 1702019,
+      "keystoneLevel": 24,
+      "keystoneTime": 2126854,
       "player": Array [
         Object {
-          "class": "DemonHunter",
-          "covenantID": 1,
-          "legendaries": Array [
-            Object {
-              "effectIcon": "inv__felbarrage.jpg",
-              "effectName": "Fiery Soul",
-              "id": 337547,
-            },
-          ],
-          "soulbindID": 7,
-          "spec": "Vengeance",
+          "class": 9,
+          "spec": 26,
         },
         Object {
-          "class": "Shaman",
-          "covenantID": 2,
-          "legendaries": Array [
-            Object {
-              "effectIcon": "spell_nature_earthelemental_totem.jpg",
-              "effectName": "Deeptremor Stone",
-              "id": 336739,
-            },
-          ],
-          "soulbindID": 8,
-          "spec": "Restoration",
+          "class": 10,
+          "spec": 29,
         },
         Object {
-          "class": "Warlock",
-          "covenantID": 3,
-          "legendaries": Array [
-            Object {
-              "effectIcon": "spell_warlock_demonicportal_purple.jpg",
-              "effectName": "Wilfred's Sigil of Superior Summoning",
-              "id": 337020,
-            },
-          ],
-          "soulbindID": 1,
-          "spec": "Demonology",
+          "class": 7,
+          "spec": 21,
         },
         Object {
-          "class": "Mage",
-          "covenantID": 3,
-          "legendaries": Array [
-            Object {
-              "effectIcon": "inv_misc_enchantedpearld.jpg",
-              "effectName": "Fevered Incantation",
-              "id": 333030,
-            },
-          ],
-          "soulbindID": 6,
-          "spec": "Fire",
+          "class": 3,
+          "spec": 8,
         },
         Object {
-          "class": "Priest",
-          "covenantID": 3,
-          "legendaries": Array [
-            Object {
-              "effectIcon": "inv_jewelcrafting_shadowsongamethyst_02.jpg",
-              "effectName": "Shadowflame Prism",
-              "id": 336143,
-            },
-          ],
-          "soulbindID": 6,
-          "spec": "Shadow",
+          "class": 2,
+          "spec": 5,
         },
       ],
-      "rating": 156,
-      "totalDeaths": 5,
+      "rating": 170,
     },
     Object {
-      "averageItemLevel": 224,
-      "dps": 20347,
-      "dungeon": Object {
-        "id": 2293,
-        "name": "Theater of Pain",
-        "time": 2220000,
-      },
-      "hps": 6805,
-      "id": 8,
+      "averageItemLevel": 249.4,
+      "dungeon": 2286,
+      "id": 4,
       "keystoneBonus": 1,
-      "keystoneLevel": 21,
-      "keystoneTime": 2101258,
+      "keystoneLevel": 25,
+      "keystoneTime": 1917470,
       "player": Array [
         Object {
-          "class": "DemonHunter",
-          "covenantID": 1,
-          "legendaries": Array [
-            Object {
-              "effectIcon": "inv__felbarrage.jpg",
-              "effectName": "Fiery Soul",
-              "id": 337547,
-            },
-          ],
-          "soulbindID": 7,
-          "spec": "Vengeance",
+          "class": 9,
+          "spec": 26,
         },
         Object {
-          "class": "Paladin",
-          "covenantID": 2,
-          "legendaries": Array [
-            Object {
-              "effectIcon": "ability_paladin_conviction.jpg",
-              "effectName": "The Mad Paragon",
-              "id": 337594,
-            },
-          ],
-          "soulbindID": 9,
-          "spec": "Holy",
+          "class": 10,
+          "spec": 29,
         },
         Object {
-          "class": "Rogue",
-          "covenantID": 4,
-          "legendaries": Array [
-            Object {
-              "effectIcon": "spell_nzinsanity_chasedbyshadows.jpg",
-              "effectName": "Deathly Shadows",
-              "id": 340092,
-            },
-          ],
-          "soulbindID": 10,
-          "spec": "Outlaw",
+          "class": 7,
+          "spec": 21,
         },
         Object {
-          "class": "Mage",
-          "covenantID": 3,
-          "legendaries": Array [
-            Object {
-              "effectIcon": "inv_misc_enchantedpearld.jpg",
-              "effectName": "Fevered Incantation",
-              "id": 333030,
-            },
-          ],
-          "soulbindID": 6,
-          "spec": "Fire",
+          "class": 3,
+          "spec": 8,
         },
         Object {
-          "class": "Druid",
-          "covenantID": 3,
-          "legendaries": Array [
-            Object {
-              "effectIcon": "ability_druid_balanceofpower.jpg",
-              "effectName": "Balance of All Things",
-              "id": 339942,
-            },
-          ],
-          "soulbindID": 1,
-          "spec": "Balance",
+          "class": 2,
+          "spec": 5,
         },
       ],
-      "rating": 156,
-      "totalDeaths": 4,
+      "rating": 176,
     },
     Object {
-      "averageItemLevel": 223.6,
-      "dps": 25437,
-      "dungeon": Object {
-        "id": 2293,
-        "name": "Theater of Pain",
-        "time": 2220000,
-      },
-      "hps": 7166,
-      "id": 10,
+      "averageItemLevel": 249.4,
+      "dungeon": 2285,
+      "id": 5,
       "keystoneBonus": 1,
-      "keystoneLevel": 19,
-      "keystoneTime": 1511926,
+      "keystoneLevel": 25,
+      "keystoneTime": 2339707,
       "player": Array [
         Object {
-          "class": "DemonHunter",
-          "covenantID": 1,
-          "legendaries": Array [
-            Object {
-              "effectIcon": "inv__felbarrage.jpg",
-              "effectName": "Fiery Soul",
-              "id": 337547,
-            },
-          ],
-          "soulbindID": 7,
-          "spec": "Vengeance",
+          "class": 9,
+          "spec": 26,
         },
         Object {
-          "class": "Paladin",
-          "covenantID": 2,
-          "legendaries": Array [
-            Object {
-              "effectIcon": "ability_paladin_conviction.jpg",
-              "effectName": "The Mad Paragon",
-              "id": 337594,
-            },
-          ],
-          "soulbindID": 9,
-          "spec": "Holy",
+          "class": 10,
+          "spec": 29,
         },
         Object {
-          "class": "Druid",
-          "covenantID": 3,
-          "legendaries": Array [
-            Object {
-              "effectIcon": "spell_arcane_arcane03.jpg",
-              "effectName": "Primordial Arcanic Pulsar",
-              "id": 338668,
-            },
-          ],
-          "soulbindID": 1,
-          "spec": "Balance",
+          "class": 7,
+          "spec": 21,
         },
         Object {
-          "class": "Priest",
-          "covenantID": 3,
-          "legendaries": Array [
-            Object {
-              "effectIcon": "inv_jewelcrafting_shadowsongamethyst_02.jpg",
-              "effectName": "Shadowflame Prism",
-              "id": 336143,
-            },
-          ],
-          "soulbindID": 6,
-          "spec": "Shadow",
+          "class": 3,
+          "spec": 8,
         },
         Object {
-          "class": "Shaman",
-          "covenantID": 3,
-          "legendaries": Array [
-            Object {
-              "effectIcon": "spell_shaman_earthquake.jpg",
-              "effectName": "Echoes of Great Sundering",
-              "id": 336215,
-            },
-          ],
-          "soulbindID": 6,
-          "spec": "Elemental",
+          "class": 2,
+          "spec": 5,
         },
       ],
-      "rating": 147,
-      "totalDeaths": 2,
+      "rating": 175,
     },
     Object {
-      "averageItemLevel": 223.8,
-      "dps": 25767,
-      "dungeon": Object {
-        "id": 2286,
-        "name": "The Necrotic Wake",
-        "time": 2160000,
-      },
-      "hps": 7018,
-      "id": 11,
-      "keystoneBonus": 2,
-      "keystoneLevel": 21,
-      "keystoneTime": 1653316,
+      "averageItemLevel": 249.4,
+      "dungeon": 2286,
+      "id": 6,
+      "keystoneBonus": 1,
+      "keystoneLevel": 26,
+      "keystoneTime": 2093779,
       "player": Array [
         Object {
-          "class": "DemonHunter",
-          "covenantID": 1,
-          "legendaries": Array [
-            Object {
-              "effectIcon": "inv__felbarrage.jpg",
-              "effectName": "Fiery Soul",
-              "id": 337547,
-            },
-          ],
-          "soulbindID": 7,
-          "spec": "Vengeance",
+          "class": 9,
+          "spec": 26,
         },
         Object {
-          "class": "Paladin",
-          "covenantID": 2,
-          "legendaries": Array [
-            Object {
-              "effectIcon": "ability_paladin_conviction.jpg",
-              "effectName": "The Mad Paragon",
-              "id": 337594,
-            },
-          ],
-          "soulbindID": 9,
-          "spec": "Holy",
+          "class": 10,
+          "spec": 29,
         },
         Object {
-          "class": "Druid",
-          "covenantID": 3,
-          "legendaries": Array [
-            Object {
-              "effectIcon": "spell_arcane_arcane03.jpg",
-              "effectName": "Primordial Arcanic Pulsar",
-              "id": 338668,
-            },
-          ],
-          "soulbindID": 1,
-          "spec": "Balance",
+          "class": 7,
+          "spec": 21,
         },
         Object {
-          "class": "Rogue",
-          "covenantID": 2,
-          "legendaries": Array [
-            Object {
-              "effectIcon": "ability_rogue_slicedice.jpg",
-              "effectName": "Celerity",
-              "id": 340087,
-            },
-          ],
-          "soulbindID": 9,
-          "spec": "Outlaw",
+          "class": 3,
+          "spec": 8,
         },
         Object {
-          "class": "Shaman",
-          "covenantID": 3,
-          "legendaries": Array [
-            Object {
-              "effectIcon": "spell_shaman_earthquake.jpg",
-              "effectName": "Echoes of Great Sundering",
-              "id": 336215,
-            },
-          ],
-          "soulbindID": 6,
-          "spec": "Elemental",
+          "class": 2,
+          "spec": 5,
         },
       ],
-      "rating": 158,
-      "totalDeaths": 2,
+      "rating": 180,
     },
     Object {
       "averageItemLevel": 223.4,
@@ -2275,7 +1693,7 @@ Object {
       ],
       "player": Array [
         Object {
-          "class": "DemonHunter",
+          "class": 9,
           "covenantID": 1,
           "legendaries": Array [
             Object {
@@ -2285,10 +1703,10 @@ Object {
             },
           ],
           "soulbindID": 7,
-          "spec": "Vengeance",
+          "spec": 26,
         },
         Object {
-          "class": "Paladin",
+          "class": 10,
           "covenantID": 2,
           "legendaries": Array [
             Object {
@@ -2298,10 +1716,10 @@ Object {
             },
           ],
           "soulbindID": 9,
-          "spec": "Holy",
+          "spec": 29,
         },
         Object {
-          "class": "DeathKnight",
+          "class": 12,
           "covenantID": 4,
           "legendaries": Array [
             Object {
@@ -2311,10 +1729,10 @@ Object {
             },
           ],
           "soulbindID": 5,
-          "spec": "Frost",
+          "spec": 36,
         },
         Object {
-          "class": "Warrior",
+          "class": 1,
           "covenantID": 2,
           "legendaries": Array [
             Object {
@@ -2324,10 +1742,10 @@ Object {
             },
           ],
           "soulbindID": 8,
-          "spec": "Fury",
+          "spec": 2,
         },
         Object {
-          "class": "Mage",
+          "class": 2,
           "covenantID": 2,
           "legendaries": Array [
             Object {
@@ -2337,7 +1755,7 @@ Object {
             },
           ],
           "soulbindID": 8,
-          "spec": "Frost",
+          "spec": 5,
         },
       ],
       "rating": 137,

@@ -1,618 +1,261 @@
 {
-  "id": 1,
-  "startTime": "2021-07-03T13:19:23.957Z",
-  "endTime": "2021-07-03T20:40:42.249Z",
-  "title": "Mythic+ Dungeons",
+  "startTime": "2021-12-14T12:16:45.713Z",
+  "endTime": "2021-12-14T16:35:06.988Z",
+  "title": "Mythic+",
   "region": { "slug": "EU" },
+  "id": 1,
   "Fight": [
     {
       "fightID": 1,
-      "averageItemLevel": 223.4,
+      "averageItemLevel": 249.4,
       "chests": 1,
-      "keystoneTime": 1896314,
-      "keystoneLevel": 17,
-      "dps": 16927,
-      "hps": 5401,
-      "totalDeaths": 9,
-      "rating": 137,
-      "dungeon": { "name": "Plaguefall", "time": 2280000, "id": 2289 },
+      "keystoneTime": 2035534,
+      "keystoneLevel": 23,
+      "rating": 166,
+      "dungeon": { "id": 2285 },
       "PlayerFight": [
         {
           "player": {
-            "spec": { "name": "Frost", "role": "dps" },
-            "covenant": { "id": 4 },
-            "character": { "class": { "name": "DeathKnight" } },
-            "PlayerLegendary": [
-              {
-                "legendary": {
-                  "id": 334583,
-                  "effectIcon": "spell_shadow_focusedpower.jpg",
-                  "effectName": "Koltira's Favor"
-                }
-              }
-            ],
-            "soulbind": { "id": 5 }
+            "spec": { "id": 21, "role": "dps" },
+            "character": { "class": { "id": 7 } }
           }
         },
         {
           "player": {
-            "spec": { "name": "Vengeance", "role": "tank" },
-            "covenant": { "id": 1 },
-            "character": { "class": { "name": "DemonHunter" } },
-            "PlayerLegendary": [
-              {
-                "legendary": {
-                  "id": 337547,
-                  "effectIcon": "inv__felbarrage.jpg",
-                  "effectName": "Fiery Soul"
-                }
-              }
-            ],
-            "soulbind": { "id": 7 }
+            "spec": { "id": 26, "role": "tank" },
+            "character": { "class": { "id": 9 } }
           }
         },
         {
           "player": {
-            "spec": { "name": "Fury", "role": "dps" },
-            "covenant": { "id": 2 },
-            "character": { "class": { "name": "Warrior" } },
-            "PlayerLegendary": [
-              {
-                "legendary": {
-                  "id": 335266,
-                  "effectIcon": "inv_60crafted_ring4b.jpg",
-                  "effectName": "Signet of Tormented Kings"
-                }
-              }
-            ],
-            "soulbind": { "id": 8 }
+            "spec": { "id": 29, "role": "healer" },
+            "character": { "class": { "id": 10 } }
           }
         },
         {
           "player": {
-            "spec": { "name": "Holy", "role": "healer" },
-            "covenant": { "id": 2 },
-            "character": { "class": { "name": "Paladin" } },
-            "PlayerLegendary": [
-              {
-                "legendary": {
-                  "id": 337594,
-                  "effectIcon": "ability_paladin_conviction.jpg",
-                  "effectName": "The Mad Paragon"
-                }
-              }
-            ],
-            "soulbind": { "id": 9 }
+            "spec": { "id": 8, "role": "dps" },
+            "character": { "class": { "id": 3 } }
           }
         },
         {
           "player": {
-            "spec": { "name": "Frost", "role": "dps" },
-            "covenant": { "id": 2 },
-            "character": { "class": { "name": "Mage" } },
-            "PlayerLegendary": [
-              {
-                "legendary": {
-                  "id": 327364,
-                  "effectIcon": "spell_shadow_soulleech_2.jpg",
-                  "effectName": "Freezing Winds"
-                }
-              }
-            ],
-            "soulbind": { "id": 8 }
+            "spec": { "id": 5, "role": "dps" },
+            "character": { "class": { "id": 2 } }
           }
         }
       ]
     },
     {
       "fightID": 2,
-      "averageItemLevel": 223.2,
-      "chests": 1,
-      "keystoneTime": 2189941,
-      "keystoneLevel": 20,
-      "dps": 18616,
-      "hps": 5970,
-      "totalDeaths": 13,
-      "rating": 150,
-      "dungeon": { "name": "Plaguefall", "time": 2280000, "id": 2289 },
+      "averageItemLevel": 249.4,
+      "chests": 2,
+      "keystoneTime": 1700172,
+      "keystoneLevel": 23,
+      "rating": 167,
+      "dungeon": { "id": 2286 },
       "PlayerFight": [
         {
           "player": {
-            "spec": { "name": "Vengeance", "role": "tank" },
-            "covenant": { "id": 1 },
-            "character": { "class": { "name": "DemonHunter" } },
-            "PlayerLegendary": [
-              {
-                "legendary": {
-                  "id": 337547,
-                  "effectIcon": "inv__felbarrage.jpg",
-                  "effectName": "Fiery Soul"
-                }
-              }
-            ],
-            "soulbind": { "id": 7 }
+            "spec": { "id": 21, "role": "dps" },
+            "character": { "class": { "id": 7 } }
           }
         },
         {
           "player": {
-            "spec": { "name": "Balance", "role": "dps" },
-            "covenant": { "id": 3 },
-            "character": { "class": { "name": "Druid" } },
-            "PlayerLegendary": [
-              {
-                "legendary": {
-                  "id": 339942,
-                  "effectIcon": "ability_druid_balanceofpower.jpg",
-                  "effectName": "Balance of All Things"
-                }
-              }
-            ],
-            "soulbind": { "id": 1 }
+            "spec": { "id": 29, "role": "healer" },
+            "character": { "class": { "id": 10 } }
           }
         },
         {
           "player": {
-            "spec": { "name": "Windwalker", "role": "dps" },
-            "covenant": { "id": 1 },
-            "character": { "class": { "name": "Monk" } },
-            "PlayerLegendary": [
-              {
-                "legendary": {
-                  "id": 337298,
-                  "effectIcon": "inv_inscription_80_warscroll_battleshout.jpg",
-                  "effectName": "Invoker's Delight"
-                }
-              }
-            ],
-            "soulbind": { "id": 7 }
+            "spec": { "id": 26, "role": "tank" },
+            "character": { "class": { "id": 9 } }
           }
         },
         {
           "player": {
-            "spec": { "name": "Outlaw", "role": "dps" },
-            "covenant": { "id": 4 },
-            "character": { "class": { "name": "Rogue" } },
-            "PlayerLegendary": [
-              {
-                "legendary": {
-                  "id": 340087,
-                  "effectIcon": "ability_rogue_slicedice.jpg",
-                  "effectName": "Celerity"
-                }
-              }
-            ],
-            "soulbind": { "id": 10 }
+            "spec": { "id": 8, "role": "dps" },
+            "character": { "class": { "id": 3 } }
           }
         },
         {
           "player": {
-            "spec": { "name": "Restoration", "role": "healer" },
-            "covenant": { "id": 2 },
-            "character": { "class": { "name": "Shaman" } },
-            "PlayerLegendary": [
-              {
-                "legendary": {
-                  "id": 336739,
-                  "effectIcon": "spell_nature_earthelemental_totem.jpg",
-                  "effectName": "Deeptremor Stone"
-                }
-              }
-            ],
-            "soulbind": { "id": 8 }
+            "spec": { "id": 5, "role": "dps" },
+            "character": { "class": { "id": 2 } }
           }
         }
       ]
     },
     {
       "fightID": 3,
-      "averageItemLevel": 223.8,
+      "averageItemLevel": 249.4,
       "chests": 1,
-      "keystoneTime": 1702019,
-      "keystoneLevel": 21,
-      "dps": 25559,
-      "hps": 8735,
-      "totalDeaths": 5,
-      "rating": 156,
-      "dungeon": {
-        "name": "Mists of Tirna Scithe",
-        "time": 1800000,
-        "id": 2290
-      },
+      "keystoneTime": 2126854,
+      "keystoneLevel": 24,
+      "rating": 170,
+      "dungeon": { "id": 2289 },
       "PlayerFight": [
         {
           "player": {
-            "spec": { "name": "Demonology", "role": "dps" },
-            "covenant": { "id": 3 },
-            "character": { "class": { "name": "Warlock" } },
-            "PlayerLegendary": [
-              {
-                "legendary": {
-                  "id": 337020,
-                  "effectIcon": "spell_warlock_demonicportal_purple.jpg",
-                  "effectName": "Wilfred's Sigil of Superior Summoning"
-                }
-              }
-            ],
-            "soulbind": { "id": 1 }
+            "spec": { "id": 21, "role": "dps" },
+            "character": { "class": { "id": 7 } }
           }
         },
         {
           "player": {
-            "spec": { "name": "Vengeance", "role": "tank" },
-            "covenant": { "id": 1 },
-            "character": { "class": { "name": "DemonHunter" } },
-            "PlayerLegendary": [
-              {
-                "legendary": {
-                  "id": 337547,
-                  "effectIcon": "inv__felbarrage.jpg",
-                  "effectName": "Fiery Soul"
-                }
-              }
-            ],
-            "soulbind": { "id": 7 }
+            "spec": { "id": 26, "role": "tank" },
+            "character": { "class": { "id": 9 } }
           }
         },
         {
           "player": {
-            "spec": { "name": "Fire", "role": "dps" },
-            "covenant": { "id": 3 },
-            "character": { "class": { "name": "Mage" } },
-            "PlayerLegendary": [
-              {
-                "legendary": {
-                  "id": 333030,
-                  "effectIcon": "inv_misc_enchantedpearld.jpg",
-                  "effectName": "Fevered Incantation"
-                }
-              }
-            ],
-            "soulbind": { "id": 6 }
+            "spec": { "id": 29, "role": "healer" },
+            "character": { "class": { "id": 10 } }
           }
         },
         {
           "player": {
-            "spec": { "name": "Shadow", "role": "dps" },
-            "covenant": { "id": 3 },
-            "character": { "class": { "name": "Priest" } },
-            "PlayerLegendary": [
-              {
-                "legendary": {
-                  "id": 336143,
-                  "effectIcon": "inv_jewelcrafting_shadowsongamethyst_02.jpg",
-                  "effectName": "Shadowflame Prism"
-                }
-              }
-            ],
-            "soulbind": { "id": 6 }
+            "spec": { "id": 8, "role": "dps" },
+            "character": { "class": { "id": 3 } }
           }
         },
         {
           "player": {
-            "spec": { "name": "Restoration", "role": "healer" },
-            "covenant": { "id": 2 },
-            "character": { "class": { "name": "Shaman" } },
-            "PlayerLegendary": [
-              {
-                "legendary": {
-                  "id": 336739,
-                  "effectIcon": "spell_nature_earthelemental_totem.jpg",
-                  "effectName": "Deeptremor Stone"
-                }
-              }
-            ],
-            "soulbind": { "id": 8 }
+            "spec": { "id": 5, "role": "dps" },
+            "character": { "class": { "id": 2 } }
           }
         }
       ]
     },
     {
-      "fightID": 8,
-      "averageItemLevel": 224,
+      "fightID": 4,
+      "averageItemLevel": 249.4,
       "chests": 1,
-      "keystoneTime": 2101258,
-      "keystoneLevel": 21,
-      "dps": 20347,
-      "hps": 6805,
-      "totalDeaths": 4,
-      "rating": 156,
-      "dungeon": { "name": "Theater of Pain", "time": 2220000, "id": 2293 },
+      "keystoneTime": 1917470,
+      "keystoneLevel": 25,
+      "rating": 176,
+      "dungeon": { "id": 2286 },
       "PlayerFight": [
         {
           "player": {
-            "spec": { "name": "Vengeance", "role": "tank" },
-            "covenant": { "id": 1 },
-            "character": { "class": { "name": "DemonHunter" } },
-            "PlayerLegendary": [
-              {
-                "legendary": {
-                  "id": 337547,
-                  "effectIcon": "inv__felbarrage.jpg",
-                  "effectName": "Fiery Soul"
-                }
-              }
-            ],
-            "soulbind": { "id": 7 }
+            "spec": { "id": 21, "role": "dps" },
+            "character": { "class": { "id": 7 } }
           }
         },
         {
           "player": {
-            "spec": { "name": "Outlaw", "role": "dps" },
-            "covenant": { "id": 4 },
-            "character": { "class": { "name": "Rogue" } },
-            "PlayerLegendary": [
-              {
-                "legendary": {
-                  "id": 340092,
-                  "effectIcon": "spell_nzinsanity_chasedbyshadows.jpg",
-                  "effectName": "Deathly Shadows"
-                }
-              }
-            ],
-            "soulbind": { "id": 10 }
+            "spec": { "id": 26, "role": "tank" },
+            "character": { "class": { "id": 9 } }
           }
         },
         {
           "player": {
-            "spec": { "name": "Holy", "role": "healer" },
-            "covenant": { "id": 2 },
-            "character": { "class": { "name": "Paladin" } },
-            "PlayerLegendary": [
-              {
-                "legendary": {
-                  "id": 337594,
-                  "effectIcon": "ability_paladin_conviction.jpg",
-                  "effectName": "The Mad Paragon"
-                }
-              }
-            ],
-            "soulbind": { "id": 9 }
+            "spec": { "id": 29, "role": "healer" },
+            "character": { "class": { "id": 10 } }
           }
         },
         {
           "player": {
-            "spec": { "name": "Fire", "role": "dps" },
-            "covenant": { "id": 3 },
-            "character": { "class": { "name": "Mage" } },
-            "PlayerLegendary": [
-              {
-                "legendary": {
-                  "id": 333030,
-                  "effectIcon": "inv_misc_enchantedpearld.jpg",
-                  "effectName": "Fevered Incantation"
-                }
-              }
-            ],
-            "soulbind": { "id": 6 }
+            "spec": { "id": 8, "role": "dps" },
+            "character": { "class": { "id": 3 } }
           }
         },
         {
           "player": {
-            "spec": { "name": "Balance", "role": "dps" },
-            "covenant": { "id": 3 },
-            "character": { "class": { "name": "Druid" } },
-            "PlayerLegendary": [
-              {
-                "legendary": {
-                  "id": 339942,
-                  "effectIcon": "ability_druid_balanceofpower.jpg",
-                  "effectName": "Balance of All Things"
-                }
-              }
-            ],
-            "soulbind": { "id": 1 }
+            "spec": { "id": 5, "role": "dps" },
+            "character": { "class": { "id": 2 } }
           }
         }
       ]
     },
     {
-      "fightID": 10,
-      "averageItemLevel": 223.6,
+      "fightID": 5,
+      "averageItemLevel": 249.4,
       "chests": 1,
-      "keystoneTime": 1511926,
-      "keystoneLevel": 19,
-      "dps": 25437,
-      "hps": 7166,
-      "totalDeaths": 2,
-      "rating": 147,
-      "dungeon": { "name": "Theater of Pain", "time": 2220000, "id": 2293 },
+      "keystoneTime": 2339707,
+      "keystoneLevel": 25,
+      "rating": 175,
+      "dungeon": { "id": 2285 },
       "PlayerFight": [
         {
           "player": {
-            "spec": { "name": "Balance", "role": "dps" },
-            "covenant": { "id": 3 },
-            "character": { "class": { "name": "Druid" } },
-            "PlayerLegendary": [
-              {
-                "legendary": {
-                  "id": 338668,
-                  "effectIcon": "spell_arcane_arcane03.jpg",
-                  "effectName": "Primordial Arcanic Pulsar"
-                }
-              }
-            ],
-            "soulbind": { "id": 1 }
+            "spec": { "id": 21, "role": "dps" },
+            "character": { "class": { "id": 7 } }
           }
         },
         {
           "player": {
-            "spec": { "name": "Vengeance", "role": "tank" },
-            "covenant": { "id": 1 },
-            "character": { "class": { "name": "DemonHunter" } },
-            "PlayerLegendary": [
-              {
-                "legendary": {
-                  "id": 337547,
-                  "effectIcon": "inv__felbarrage.jpg",
-                  "effectName": "Fiery Soul"
-                }
-              }
-            ],
-            "soulbind": { "id": 7 }
+            "spec": { "id": 26, "role": "tank" },
+            "character": { "class": { "id": 9 } }
           }
         },
         {
           "player": {
-            "spec": { "name": "Holy", "role": "healer" },
-            "covenant": { "id": 2 },
-            "character": { "class": { "name": "Paladin" } },
-            "PlayerLegendary": [
-              {
-                "legendary": {
-                  "id": 337594,
-                  "effectIcon": "ability_paladin_conviction.jpg",
-                  "effectName": "The Mad Paragon"
-                }
-              }
-            ],
-            "soulbind": { "id": 9 }
+            "spec": { "id": 29, "role": "healer" },
+            "character": { "class": { "id": 10 } }
           }
         },
         {
           "player": {
-            "spec": { "name": "Shadow", "role": "dps" },
-            "covenant": { "id": 3 },
-            "character": { "class": { "name": "Priest" } },
-            "PlayerLegendary": [
-              {
-                "legendary": {
-                  "id": 336143,
-                  "effectIcon": "inv_jewelcrafting_shadowsongamethyst_02.jpg",
-                  "effectName": "Shadowflame Prism"
-                }
-              }
-            ],
-            "soulbind": { "id": 6 }
+            "spec": { "id": 8, "role": "dps" },
+            "character": { "class": { "id": 3 } }
           }
         },
         {
           "player": {
-            "spec": { "name": "Elemental", "role": "dps" },
-            "covenant": { "id": 3 },
-            "character": { "class": { "name": "Shaman" } },
-            "PlayerLegendary": [
-              {
-                "legendary": {
-                  "id": 336215,
-                  "effectIcon": "spell_shaman_earthquake.jpg",
-                  "effectName": "Echoes of Great Sundering"
-                }
-              }
-            ],
-            "soulbind": { "id": 6 }
+            "spec": { "id": 5, "role": "dps" },
+            "character": { "class": { "id": 2 } }
           }
         }
       ]
     },
     {
-      "fightID": 11,
-      "averageItemLevel": 223.8,
-      "chests": 2,
-      "keystoneTime": 1653316,
-      "keystoneLevel": 21,
-      "dps": 25767,
-      "hps": 7018,
-      "totalDeaths": 2,
-      "rating": 158,
-      "dungeon": { "name": "The Necrotic Wake", "time": 2160000, "id": 2286 },
+      "fightID": 6,
+      "averageItemLevel": 249.4,
+      "chests": 1,
+      "keystoneTime": 2093779,
+      "keystoneLevel": 26,
+      "rating": 180,
+      "dungeon": { "id": 2286 },
       "PlayerFight": [
         {
           "player": {
-            "spec": { "name": "Balance", "role": "dps" },
-            "covenant": { "id": 3 },
-            "character": { "class": { "name": "Druid" } },
-            "PlayerLegendary": [
-              {
-                "legendary": {
-                  "id": 338668,
-                  "effectIcon": "spell_arcane_arcane03.jpg",
-                  "effectName": "Primordial Arcanic Pulsar"
-                }
-              }
-            ],
-            "soulbind": { "id": 1 }
+            "spec": { "id": 21, "role": "dps" },
+            "character": { "class": { "id": 7 } }
           }
         },
         {
           "player": {
-            "spec": { "name": "Vengeance", "role": "tank" },
-            "covenant": { "id": 1 },
-            "character": { "class": { "name": "DemonHunter" } },
-            "PlayerLegendary": [
-              {
-                "legendary": {
-                  "id": 337547,
-                  "effectIcon": "inv__felbarrage.jpg",
-                  "effectName": "Fiery Soul"
-                }
-              }
-            ],
-            "soulbind": { "id": 7 }
+            "spec": { "id": 29, "role": "healer" },
+            "character": { "class": { "id": 10 } }
           }
         },
         {
           "player": {
-            "spec": { "name": "Holy", "role": "healer" },
-            "covenant": { "id": 2 },
-            "character": { "class": { "name": "Paladin" } },
-            "PlayerLegendary": [
-              {
-                "legendary": {
-                  "id": 337594,
-                  "effectIcon": "ability_paladin_conviction.jpg",
-                  "effectName": "The Mad Paragon"
-                }
-              }
-            ],
-            "soulbind": { "id": 9 }
+            "spec": { "id": 26, "role": "tank" },
+            "character": { "class": { "id": 9 } }
           }
         },
         {
           "player": {
-            "spec": { "name": "Outlaw", "role": "dps" },
-            "covenant": { "id": 2 },
-            "character": { "class": { "name": "Rogue" } },
-            "PlayerLegendary": [
-              {
-                "legendary": {
-                  "id": 340087,
-                  "effectIcon": "ability_rogue_slicedice.jpg",
-                  "effectName": "Celerity"
-                }
-              }
-            ],
-            "soulbind": { "id": 9 }
+            "spec": { "id": 8, "role": "dps" },
+            "character": { "class": { "id": 3 } }
           }
         },
         {
           "player": {
-            "spec": { "name": "Elemental", "role": "dps" },
-            "covenant": { "id": 3 },
-            "character": { "class": { "name": "Shaman" } },
-            "PlayerLegendary": [
-              {
-                "legendary": {
-                  "id": 336215,
-                  "effectIcon": "spell_shaman_earthquake.jpg",
-                  "effectName": "Echoes of Great Sundering"
-                }
-              }
-            ],
-            "soulbind": { "id": 6 }
+            "spec": { "id": 5, "role": "dps" },
+            "character": { "class": { "id": 2 } }
           }
         }
       ]
     }
   ],
   "week": {
-    "season": {
-      "affix": { "name": "Prideful", "icon": "spell_animarevendreth_buff.jpg" }
-    },
-    "affix1": { "name": "Fortified", "icon": "ability_toughness.jpg" },
-    "affix2": {
-      "name": "Bursting",
-      "icon": "ability_ironmaidens_whirlofblood.jpg"
-    },
-    "affix3": { "name": "Storming", "icon": "spell_nature_cyclone.jpg" }
+    "season": { "affix": { "id": 128 } },
+    "affix1": { "id": 9 },
+    "affix2": { "id": 7 },
+    "affix3": { "id": 13 }
   }
 }
