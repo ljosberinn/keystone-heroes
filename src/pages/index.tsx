@@ -27,7 +27,7 @@ export default function Home(): JSX.Element | null {
           actual insight for once
         </h2>
         <Form />
-        <p className="max-w-sm pt-10 text-xs text-center text-gray-800 dark:text-gray-200 sm:text-sm">
+        <p className="max-w-sm pt-10 text-xs text-center text-stone-800 dark:text-stone-200 sm:text-sm">
           Enter any Warcraft Logs report link that includes Mythic+ runs on
           level {MIN_KEYSTONE_LEVEL} or higher. You can paste an URL anywhere!
         </p>
@@ -48,12 +48,12 @@ export default function Home(): JSX.Element | null {
           {/* </Link> */}
         </div>
 
-        <p className="max-w-sm pt-10 text-xs text-center text-gray-800 dark:text-gray-200 sm:text-sm">
+        <p className="max-w-sm pt-10 text-xs text-center text-stone-800 dark:text-stone-200 sm:text-sm">
           Explore previously imported routes and filter by dungeon, key level,
           legendary, spec, group composition and more!
         </p>
 
-        <p className="max-w-sm pt-20 text-xs text-center text-gray-800 sm:pt-60 dark:text-gray-200 sm:text-sm">
+        <p className="max-w-sm pt-20 text-xs text-center text-stone-800 sm:pt-60 dark:text-stone-200 sm:text-sm">
           Wondering how to start logging yourself?
           <br />
           <ExternalLink
@@ -139,7 +139,7 @@ function Form() {
   return (
     <form className="w-full max-w-xl" onSubmit={handleSubmit}>
       <div className="flex flex-col sm:flex-row">
-        <div className="relative flex items-center w-full text-gray-400 dark:text-white">
+        <div className="relative flex items-center w-full text-stone-400 dark:text-white">
           <img
             src="/static/icons/wcl.png"
             className="absolute w-5 h-5 left-3"
@@ -152,7 +152,7 @@ function Form() {
             type="text"
             name="report"
             placeholder="Warcraft Logs Report URL"
-            className="block w-full py-3 pl-10 text-black placeholder-gray-500 bg-transparent border-2 border-gray-500 rounded-lg shadow-sm outline-none dark:placeholder-gray-400 sm:border-r-0 dark:border-coolgray-700 sm:rounded-r-none dark:text-white focus:outline-none focus:ring-0 dark:focus:border-blue-500 focus:border-blue-500"
+            className="block w-full py-3 pl-10 text-black placeholder-stone-500 bg-transparent border-2 border-stone-500 rounded-lg shadow-sm outline-none dark:placeholder-stone-400 sm:border-r-0 dark:border-gray-700 sm:rounded-r-none dark:text-white focus:outline-none focus:ring-0 dark:focus:border-blue-500 focus:border-blue-500"
             required
             aria-labelledby="report-label"
             onChange={(event: ChangeEvent<HTMLInputElement>) => {

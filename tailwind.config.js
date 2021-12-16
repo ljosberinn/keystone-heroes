@@ -16,24 +16,14 @@ const classColors = {
 };
 
 module.exports = {
-  mode: "jit",
-  purge: ["./src/web/**/*.{js,ts,jsx,tsx}", "./src/pages/**/*.{js,ts,jsx,tsx}"],
+  content: [
+    "./src/web/**/*.{js,ts,jsx,tsx}",
+    "./src/pages/**/*.{js,ts,jsx,tsx}",
+  ],
   theme: {
     fontFamily: {
       sans: ["Rubik"],
       mono: ["IBM Plex Mono", "ui-monospace", "SFMono-Regular", "monospace"],
-    },
-    colors: {
-      black: colors.black,
-      blue: colors.blue,
-      coolgray: colors.coolGray,
-      current: "currentColor",
-      gray: colors.warmGray,
-      green: colors.emerald,
-      red: colors.red,
-      transparent: "transparent",
-      white: colors.white,
-      yellow: colors.yellow,
     },
     extend: {
       colors: classColors,

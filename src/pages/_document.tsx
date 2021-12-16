@@ -81,7 +81,7 @@ export default function CustomDocument(/* props: DocumentProps*/): JSX.Element {
         <meta name="msapplication-TileColor" content="#111827" />
         <meta name="theme-color" content="#111827" />
       </Head>
-      <body className="bg-white dark:bg-coolgray-900 dark:text-coolgray-200">
+      <body className="bg-white dark:bg-gray-900 dark:text-gray-200">
         <Main />
         <NextScript />
         <svg className="hidden">

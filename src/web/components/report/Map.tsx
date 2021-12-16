@@ -418,7 +418,7 @@ export function Map(): JSX.Element {
         })}
       </div>
       <div
-        className="absolute top-0 left-0 w-screen h-screen bg-gray-600 opacity-50"
+        className="absolute top-0 left-0 w-screen h-screen bg-stone-600 opacity-50"
         hidden={!fullscreen}
       />
     </section>
@@ -459,7 +459,7 @@ function FullscreenPullNPCs() {
         />
       )}
 
-      <div className="flex w-full px-4 py-2 border-t-2 place-content-end border-coolgray-600">
+      <div className="flex w-full px-4 py-2 border-t-2 place-content-end border-gray-600">
         this pull {pullNPCs.pull.percent.toFixed(2)}%
       </div>
 
@@ -738,7 +738,7 @@ function MapOptionsToggle() {
       type="button"
       onClick={toggleMapOptions}
       title="Map Options"
-      className="flex p-1 bg-white rounded-full focus:outline-none focus:ring dark:bg-coolgray-600 dark:focus:bg-transparent"
+      className="flex p-1 bg-white rounded-full focus:outline-none focus:ring dark:bg-gray-600 dark:focus:bg-transparent"
     >
       <img
         src="/static/icons/trade_engineering.jpg"
@@ -759,7 +759,7 @@ function LegendToggle() {
       onClick={toggle}
       type="button"
       title="Legend"
-      className="flex p-1 bg-white rounded-full focus:outline-none focus:ring dark:bg-coolgray-600 dark:focus:bg-transparent"
+      className="flex p-1 bg-white rounded-full focus:outline-none focus:ring dark:bg-gray-600 dark:focus:bg-transparent"
     >
       <img
         src={`${STATIC_ICON_PREFIX}${QUESTIONMARK_ICON}.jpg`}
@@ -864,7 +864,7 @@ function FullScreenToggle({
         toggle();
       }}
       title="Toggle Fullscreen"
-      className="flex hidden p-1 bg-white rounded-full focus:outline-none focus:ring dark:bg-coolgray-600 dark:focus:bg-transparent lg:block"
+      className="flex hidden p-1 bg-white rounded-full focus:outline-none focus:ring dark:bg-gray-600 dark:focus:bg-transparent lg:block"
     >
       <img
         src={ZOOM_ICON}

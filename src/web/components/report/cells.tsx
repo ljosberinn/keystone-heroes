@@ -227,7 +227,7 @@ export function SourceOrTargetPlayerCell(
   props: SourceOrTargetPlayerCellProps
 ): JSX.Element | null {
   const transparency = props.transparent
-    ? "hidden md:inline bg-white dark:bg-coolgray-700 px-2"
+    ? "hidden md:inline bg-white dark:bg-gray-700 px-2"
     : undefined;
 
   if ("environment" in props && props.environment) {

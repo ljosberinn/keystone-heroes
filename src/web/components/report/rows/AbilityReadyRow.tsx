@@ -45,7 +45,7 @@ export default function AbilityReadyRow({
     : false;
 
   return (
-    <tr className="hover:bg-coolgray-200 dark:hover:bg-coolgray-600">
+    <tr className="hover:bg-gray-200 dark:hover:bg-gray-600">
       <TimestampCell event={event} msSinceLastEvent={msSinceLastEvent} />
 
       <TypeCell type="AbilityReady" />

@@ -78,7 +78,7 @@ export default function DamageTakenRow({
                 <span
                   className={classnames(
                     playerIdTextColorMap[event.sourcePlayerID],
-                    "dark:bg-coolgray-700 px-2"
+                    "dark:bg-gray-700 px-2"
                   )}
                 >
                   {playerIdPlayerNameMap[event.sourcePlayerID]}

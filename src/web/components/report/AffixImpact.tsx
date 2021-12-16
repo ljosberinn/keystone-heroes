@@ -103,7 +103,7 @@ export function AffixImpact(): JSX.Element {
 
   return (
     <section className="py-6">
-      <div className="px-6 py-6 bg-white lg:px-0 dark:bg-coolgray-900">
+      <div className="px-6 py-6 bg-white lg:px-0 dark:bg-gray-900">
         <style jsx>
           {`
             .paddingLessTable th,

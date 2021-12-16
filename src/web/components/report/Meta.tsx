@@ -512,7 +512,7 @@ type PlayerTableProps = {
   fightID: string;
 } & Pick<FightSuccessResponse["meta"], "averageItemLevel" | "dps" | "hps">;
 
-const isSortedColor = "text-gray-400 dark:text-gray-500";
+const isSortedColor = "text-stone-400 dark:text-stone-500";
 
 function PlayerTable({
   fightID,

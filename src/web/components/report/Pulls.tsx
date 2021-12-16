@@ -298,7 +298,7 @@ function Sidebar() {
   }
 
   return (
-    <div className="flex flex-col w-full bg-white rounded-lg lg:w-3/12 dark:bg-coolgray-700">
+    <div className="flex flex-col w-full bg-white rounded-lg lg:w-3/12 dark:bg-gray-700">
       <div className="flex w-full p-2 justify-evenly">
         <span>
           {timeDurationToString(
@@ -336,7 +336,7 @@ function Sidebar() {
         />
       )}
 
-      <div className="flex w-full px-4 py-2 border-t-2 place-content-end border-coolgray-600">
+      <div className="flex w-full px-4 py-2 border-t-2 place-content-end border-gray-600">
         this pull {pullNPCs.pull.percent.toFixed(2)}%
       </div>
 
@@ -435,7 +435,7 @@ function Events() {
   const explosivesEvents = selectedPull.events.filter(isExplosivesDamageEvent);
 
   return (
-    <div className="w-full min-h-screen px-4 py-2 bg-white rounded-lg lg:w-9/23 dark:bg-coolgray-700">
+    <div className="w-full min-h-screen px-4 py-2 bg-white rounded-lg lg:w-9/23 dark:bg-gray-700">
       <div className="flex justify-between w-full">
         <div className="flex">
           {player.map((p) => {
@@ -526,7 +526,7 @@ function Events() {
           <ErrorBoundary>
             <tbody
               className={
-                before.length > 0 ? "border-t-2 border-coolgray-900" : undefined
+                before.length > 0 ? "border-t-2 border-gray-900" : undefined
               }
             >
               <tr>
@@ -565,7 +565,7 @@ function Events() {
 
           {after.length > 0 && (
             <ErrorBoundary>
-              <tbody className="border-t-2 border-coolgray-900">
+              <tbody className="border-t-2 border-gray-900">
                 <tr>
                   <td colSpan={6} className="text-center">
                     <span

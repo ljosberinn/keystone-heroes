@@ -71,7 +71,7 @@ export function Dialog({
       role="dialog"
       aria-modal="true"
     >
-      <div className="absolute top-0 left-0 w-full h-full bg-gray-600 opacity-50" />
+      <div className="absolute top-0 left-0 w-full h-full bg-stone-600 opacity-50" />
       <div className="min-h-screen px-4 text-center">
         <div className="fixed inset-0 h-screen bg-blackAlpha-600" aria-hidden />
         <As

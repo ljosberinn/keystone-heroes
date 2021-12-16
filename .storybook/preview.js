@@ -16,7 +16,7 @@ import { ThemeProvider } from "next-themes";
 export const decorators = [
   (Story) => (
     <ThemeProvider attribute="class" defaultTheme="dark">
-      <div className="bg-white dark:bg-coolgray-900 dark:text-coolgray-200">
+      <div className="bg-white dark:bg-stone-900 dark:text-stone-200">
         <div>
           <ColorModeToggle />
         </div>

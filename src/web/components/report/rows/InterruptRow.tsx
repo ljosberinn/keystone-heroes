@@ -119,7 +119,7 @@ export default function InterruptRow({
                 <span
                   className={classnames(
                     playerIdTextColorMap[event.sourcePlayerID],
-                    "bg-coolgray-700 px-2"
+                    "bg-gray-700 px-2"
                   )}
                 >
                   {playerIdPlayerNameMap[event.sourcePlayerID]}

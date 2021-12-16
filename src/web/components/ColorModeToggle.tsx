@@ -43,15 +43,15 @@ export function ColorModeToggle(): JSX.Element | null {
       onClick={handleThemeChange}
     >
       <span className="mr-3">{isDark ? "Dark" : "Light"} Mode</span>
-      <span className="flex-shrink-0 w-16 h-10 p-1 bg-gray-100 rounded-full dark:bg-coolgray-800">
+      <span className="flex-shrink-0 w-16 h-10 p-1 bg-stone-100 rounded-full dark:bg-gray-800">
         <span
           className={classnames(
-            "bg-white w-8 h-8 rounded-full shadow-md duration-300 ease-in-out flex items-center justify-center dark:bg-coolgray-900",
+            "bg-white w-8 h-8 rounded-full shadow-md duration-300 ease-in-out flex items-center justify-center dark:bg-gray-900",
             isDark && "translate-x-6"
           )}
         >
           {isMounted && (
-            <svg className="w-4 h-4 text-gray-800 dark:text-gray-300">
+            <svg className="w-4 h-4 text-stone-800 dark:text-stone-300">
               <use href={`#${icon.id}`} />
             </svg>
           )}

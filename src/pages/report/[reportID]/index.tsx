@@ -330,7 +330,7 @@ function FightCard({ fight, reportID }: FightCardProps) {
         {
           <LinkOverlay
             href={`/report/${reportID}/${fight.id}`}
-            className="p-4 bg-white rounded-lg dark:bg-coolgray-900"
+            className="p-4 bg-white rounded-lg dark:bg-gray-900"
           >
             <h2 id={`fight-${fight.id}`} className="font-extrabold text-center">
               {dungeon ? dungeon.name : "Unknown Dungeon"} +

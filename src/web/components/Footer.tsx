@@ -34,7 +34,7 @@ function FooterNavLink({ href, children, internal }: FooterNavLinkProps) {
 
 export function Footer(): JSX.Element {
   return (
-    <div className="px-6 print:hidden dark:text-gray-200">
+    <div className="px-6 print:hidden dark:text-stone-200">
       <footer className="w-full mx-auto max-w-screen-2xl">
         <nav className="flex flex-col items-center justify-between w-full py-16 space-y-16 md:space-y-8 md:space-y-0 md:flex-row md:items-start">
           <div className="flex flex-col items-center h-full space-y-6 md:items-start w-72">
@@ -92,14 +92,14 @@ export function Footer(): JSX.Element {
           </div>
         </nav>
 
-        <small className="flex items-center justify-center w-full py-6 space-x-6 text-xs text-gray-500 md:justify-end dark:text-gray-300">
+        <small className="flex items-center justify-center w-full py-6 space-x-6 text-xs text-stone-500 md:justify-end dark:text-stone-300">
           <Link href="/privacy" prefetch={false}>
             <a className={internalLinkClasses}>Privacy</a>
           </Link>
           <ColorModeToggle />
         </small>
 
-        <small className="flex flex-col items-center justify-center w-full py-2 space-x-0 space-y-1 text-xs text-gray-500 md:space-x-2 md:space-y-0 md:flex-row md:justify-end dark:text-gray-300">
+        <small className="flex flex-col items-center justify-center w-full py-2 space-x-0 space-y-1 text-xs text-stone-500 md:space-x-2 md:space-y-0 md:flex-row md:justify-end dark:text-stone-300">
           <span>
             All data is retrieved from{" "}
             <ExternalLink className="underline" href="https://warcraftlogs.com">
@@ -116,7 +116,7 @@ export function Footer(): JSX.Element {
           </span>
         </small>
 
-        <small className="flex flex-col justify-center w-full py-2 space-x-0 space-y-1 text-xs text-center text-gray-500 md:text-right md:space-x-2 md:space-y-0 md:flex-row md:justify-end dark:text-gray-300">
+        <small className="flex flex-col justify-center w-full py-2 space-x-0 space-y-1 text-xs text-center text-stone-500 md:text-right md:space-x-2 md:space-y-0 md:flex-row md:justify-end dark:text-stone-300">
           <span>
             World of Warcraft and related artwork is copyright of Blizzard
             Entertainment, Inc.
@@ -124,7 +124,7 @@ export function Footer(): JSX.Element {
           <span>This is a fan site and we are not affiliated.</span>
         </small>
 
-        <small className="flex items-center justify-center w-full py-2 space-x-2 space-y-1 text-xs text-gray-500 md:space-x-2 md:space-y-0 md:justify-end dark:text-gray-300">
+        <small className="flex items-center justify-center w-full py-2 space-x-2 space-y-1 text-xs text-stone-500 md:space-x-2 md:space-y-0 md:justify-end dark:text-stone-300">
           <ExternalLink
             className="flex items-center justify-center space-x-2 "
             href="https://vercel.com/"
@@ -162,7 +162,7 @@ export function Footer(): JSX.Element {
           </ExternalLink>
         </small>
 
-        <small className="flex items-center justify-center w-full pt-2 pb-6 space-x-1 space-y-1 text-xs text-gray-500 md:space-x-2 md:space-y-0 md:justify-end dark:text-gray-300">
+        <small className="flex items-center justify-center w-full pt-2 pb-6 space-x-1 space-y-1 text-xs text-stone-500 md:space-x-2 md:space-y-0 md:justify-end dark:text-stone-300">
           <ExternalLink
             href={`https://github.com/ljosberinn/wcl-to-mdt/tree/${
               process.env.NEXT_PUBLIC_COMMIT_SHA ?? "master"
