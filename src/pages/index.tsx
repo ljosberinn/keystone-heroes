@@ -5,7 +5,13 @@ import { useState } from "react";
 
 import { ExternalLink } from "../web/components/ExternalLink";
 import { MIN_KEYSTONE_LEVEL } from "../web/env";
-import { /* createInternalUrl,*/ parseWCLUrl } from "../web/utils";
+import {
+  ReportParseError,
+  reportParseErrorMap,
+  reportParseErrorIconMap,
+  parseWCLUrl,
+} from "../web/utils";
+import { classnames } from "../web/utils/classnames";
 // import { defaultQueryParams, url as discoverUrl } from "./routes/discover";
 
 export default function Home(): JSX.Element | null {
@@ -104,13 +110,21 @@ function BackgroundImage() {
 
 function Form() {
   const { push } = useRouter();
-  const [url, setUrl] = useState("");
+  const [{ url, error }, setState] = useState<{
+    error: ReportParseError | null;
+    url: string;
+  }>({
+    url: "",
+    error: null,
+  });
 
   // only present for the case the window paste event in _app doesn't work
   function handleSubmit(event: FormEvent) {
     event.preventDefault();
 
-    const { reportID, fightID } = parseWCLUrl(url);
+    const { reportID, fightID, error } = parseWCLUrl(url);
+
+    setState((prev) => ({ ...prev, error }));
 
     if (reportID) {
       const nextPath = `/report/${reportID}${
@@ -142,7 +156,8 @@ function Form() {
             required
             aria-labelledby="report-label"
             onChange={(event: ChangeEvent<HTMLInputElement>) => {
-              setUrl(event.target.value.trim());
+              const url = event.target.value.trim();
+              setState((prev) => ({ ...prev, error: null, url }));
             }}
           />
         </div>
@@ -154,6 +169,26 @@ function Form() {
           Start Improving
         </button>
       </div>
+
+      {error ? (
+        <div className="flex items-center justify-center pt-2 space-x-4">
+          <img
+            src={reportParseErrorIconMap[error]}
+            loading="lazy"
+            width="48"
+            height="48"
+            className={classnames(
+              "w-12 h-12",
+              error === ReportParseError.INVALID_HOST && "-scale-x-100"
+            )}
+            alt="An error occured:"
+          />
+
+          <p className="text-center text-red-500 dark:text-red-400">
+            {reportParseErrorMap[error]}
+          </p>
+        </div>
+      ) : null}
     </form>
   );
 }

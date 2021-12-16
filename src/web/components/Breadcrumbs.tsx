@@ -3,7 +3,7 @@ import { Fragment } from "react";
 
 import {
   bgPrimary,
-  internalLinKClasses,
+  internalLinkClasses,
   widthConstraint,
 } from "../styles/tokens";
 import { classnames } from "../utils/classnames";
@@ -28,7 +28,7 @@ export function Breadcrumbs({
               <li>
                 {path.href ? (
                   <Link href={path.href}>
-                    <a className={internalLinKClasses}>{path.children}</a>
+                    <a className={internalLinkClasses}>{path.children}</a>
                   </Link>
                 ) : (
                   path.children

@@ -8,10 +8,12 @@ import type {
   Dungeon,
   Fight as PrismaFight,
   Role,
+  Spec,
+  Class,
 } from "@prisma/client";
 import type { Awaited, DeepRequired, DeepNonNullable } from "ts-essentials";
 
-import { getAffixByID } from "../../db/data/affixes";
+import { getAffixByName } from "../../db/data/affixes";
 import { classMapByName } from "../../db/data/classes";
 import { dungeonMap } from "../../db/data/dungeons";
 import { specs as allSpecs } from "../../db/data/specs";
@@ -58,16 +60,15 @@ export type ReportSuccessResponse = Pick<Report, "title"> & {
   region: Region["slug"];
   fights: (Omit<
     FightWithMeta,
-    "gameZone" | "player" | "startTime" | "endTime"
+    "gameZone" | "player" | "startTime" | "endTime" | "dps" | "hps"
   > & {
-    dungeon: Dungeon | null;
-    player: (Pick<Player, "soulbindID" | "covenantID"> & {
-      class: string;
-      spec: string;
-      legendaries: Pick<LegendaryItem, "id" | "effectIcon" | "effectName">[];
-    })[];
+    dungeon: Dungeon["id"] | null;
+    player: {
+      class: number;
+      spec: number;
+    }[];
   })[];
-  affixes: Omit<Affix, "id" | "seasonal">[];
+  affixes: Affix["id"][];
 };
 
 export type ReportErrorResponse = {
@@ -177,6 +178,18 @@ export const fightIsTimedKeystone = (fight: Fight): fight is Fight => {
 
 export const fightHasFivePlayers = (fight: Fight): boolean =>
   fight.friendlyPlayers.length === 5;
+
+export const fightHasSupportedAffixes = (fight: Fight): boolean => {
+  console.log(fight);
+  if (
+    fight.keystoneAffixes.includes(getAffixByName("Encrypted")) ||
+    fight.keystoneAffixes.includes(getAffixByName("Infernal"))
+  ) {
+    return false;
+  }
+
+  return true;
+};
 
 const isCraftableShadowlandsLegendary = (id: number) => id !== 186_414;
 
@@ -435,45 +448,25 @@ type RawReport = {
     | "chests"
     | "keystoneLevel"
     | "keystoneTime"
-    | "dps"
-    | "hps"
-    | "totalDeaths"
     | "rating"
   > & {
-    dungeon: Dungeon | null;
+    dungeon: Pick<Dungeon, "id"> | null;
     PlayerFight: {
       player: {
-        covenant: {
-          id: number;
-        } | null;
-        soulbind: {
-          id: number;
-        } | null;
-        spec: {
-          name: SpecName;
-          role: Role;
-        };
+        spec: Pick<Spec, "id" | "role">;
         character: {
-          class: {
-            name: PlayableClass;
-          };
+          class: Pick<Class, "id">;
         };
-        PlayerLegendary: {
-          legendary: Pick<
-            LegendaryItem,
-            "id" | "effectIcon" | "effectName"
-          > | null;
-        }[];
       };
     }[];
   })[];
   week: {
     season: {
-      affix: Omit<Affix, "id" | "seasonal">;
+      affix: Pick<Affix, "id">;
     };
-    affix1: Omit<Affix, "id" | "seasonal">;
-    affix2: Omit<Affix, "id" | "seasonal">;
-    affix3: Omit<Affix, "id" | "seasonal">;
+    affix1: Pick<Affix, "id">;
+    affix2: Pick<Affix, "id">;
+    affix3: Pick<Affix, "id">;
   };
 } | null;
 
@@ -490,10 +483,10 @@ export const createResponseFromDB = (
 ): ReportSuccessResponse => {
   return {
     affixes: [
-      existingReport.week.affix1,
-      existingReport.week.affix2,
-      existingReport.week.affix3,
-      existingReport.week.season.affix,
+      existingReport.week.affix1.id,
+      existingReport.week.affix2.id,
+      existingReport.week.affix3.id,
+      existingReport.week.season.affix.id,
     ],
     endTime: existingReport.endTime.getTime(),
     region: existingReport.region.slug,
@@ -506,27 +499,15 @@ export const createResponseFromDB = (
           .sort((a, b) => sortByRole(a.player.spec.role, b.player.spec.role))
           .map(({ player }) => {
             return {
-              legendaries: player.PlayerLegendary.reduce<
-                ReportSuccessResponse["fights"][number]["player"][number]["legendaries"]
-              >((acc, playerLegendary) => {
-                return playerLegendary.legendary
-                  ? [...acc, playerLegendary.legendary]
-                  : acc;
-              }, []),
-              class: player.character.class.name,
-              spec: player.spec.name,
-              covenantID: player.covenant ? player.covenant.id : null,
-              soulbindID: player.soulbind ? player.soulbind.id : null,
+              class: player.character.class.id,
+              spec: player.spec.id,
             };
           }),
         averageItemLevel: fight.averageItemLevel,
-        hps: fight.hps,
-        dps: fight.dps,
         keystoneLevel: fight.keystoneLevel,
         keystoneTime: fight.keystoneTime,
-        totalDeaths: fight.totalDeaths,
         keystoneBonus: fight.chests,
-        dungeon: fight.dungeon,
+        dungeon: fight.dungeon ? fight.dungeon.id : null,
         rating: fight.rating ?? 0,
       };
     }),
@@ -567,21 +548,13 @@ const createResponseFromRawData = ({
           dps: player.reduce((acc, player) => acc + player.dps, 0),
           hps: player.reduce((acc, player) => acc + player.hps, 0),
           totalDeaths: player.reduce((acc, player) => acc + player.deaths, 0),
-          dungeon:
-            dungeon && gameZone
-              ? {
-                  name: dungeon.name,
-                  time: dungeon.timer[0],
-                  id: gameZone.id,
-                  slug: dungeon.slug,
-                }
-              : null,
+          dungeon: dungeon && gameZone ? gameZone.id : null,
           player: [...player]
             .sort((a, b) => sortByRole(a.role, b.role))
             .map((player) => {
               return {
-                class: player.class,
-                spec: player.spec,
+                class: player.classID,
+                spec: player.specID,
                 soulbindID: player.soulbindID,
                 covenantID: player.covenantID,
                 legendaries: player.legendaries.map((legendary) => ({
@@ -594,11 +567,7 @@ const createResponseFromRawData = ({
         };
       })
       .sort((a, b) => a.id - b.id),
-    affixes: affixes.map((affix) => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { id, seasonal, ...data } = getAffixByID(affix);
-      return data;
-    }),
+    affixes,
   };
 };
 
@@ -627,16 +596,10 @@ export const loadExistingReport = async (
           chests: true,
           keystoneTime: true,
           keystoneLevel: true,
-          dps: true,
-          hps: true,
-          totalDeaths: true,
           rating: true,
           dungeon: {
             select: {
-              name: true,
-              time: true,
               id: true,
-              slug: true,
             },
           },
           PlayerFight: {
@@ -645,35 +608,18 @@ export const loadExistingReport = async (
                 select: {
                   spec: {
                     select: {
-                      name: true,
+                      id: true,
                       role: true,
                     },
-                  },
-                  covenant: {
-                    select: { id: true },
                   },
                   character: {
                     select: {
                       class: {
                         select: {
-                          name: true,
-                        },
-                      },
-                    },
-                  },
-                  PlayerLegendary: {
-                    select: {
-                      legendary: {
-                        select: {
                           id: true,
-                          effectIcon: true,
-                          effectName: true,
                         },
                       },
                     },
-                  },
-                  soulbind: {
-                    select: { id: true },
                   },
                 },
               },
@@ -687,28 +633,24 @@ export const loadExistingReport = async (
             select: {
               affix: {
                 select: {
-                  name: true,
-                  icon: true,
+                  id: true,
                 },
               },
             },
           },
           affix1: {
             select: {
-              name: true,
-              icon: true,
+              id: true,
             },
           },
           affix2: {
             select: {
-              name: true,
-              icon: true,
+              id: true,
             },
           },
           affix3: {
             select: {
-              name: true,
-              icon: true,
+              id: true,
             },
           },
         },
@@ -798,7 +740,8 @@ export const reportHandler = withSentry<Request, ReportResponse>(
           fightIsFight(fight) &&
           fightHasFivePlayers(fight) &&
           fightFulfillsKeystoneLevelRequirement(fight) &&
-          fightIsUnknown(fight)
+          fightIsUnknown(fight) &&
+          fightHasSupportedAffixes(fight)
         ) {
           if (!fight.gameZone || fight.gameZone.id in dungeonMap) {
             return [...acc, fight];
@@ -848,7 +791,7 @@ export const reportHandler = withSentry<Request, ReportResponse>(
 
       res.setHeader(cacheControlKey, STALE_WHILE_REVALIDATE_TWO_MINUTES);
       res.status(BAD_REQUEST).json({
-        error: "NO_TIMED_KEYS",
+        error: "NO_ELIGIBLE_KEYS",
       });
       return;
     }

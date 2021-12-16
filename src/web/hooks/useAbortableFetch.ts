@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { useIsMounted } from "./useIsMounted";
 import { usePrevious } from "./usePrevious";
@@ -18,7 +18,7 @@ export function useAbortableFetch<T>({
   url: RequestInfo | null;
   options?: Omit<RequestInit, "signal">;
   initialState: T | null;
-}): [T | null, boolean, () => void] {
+}): [T | null, boolean] {
   const [{ data, loading }, setState] = useState<State<T>>({
     data: initialState,
     loading: false,
@@ -64,14 +64,14 @@ export function useAbortableFetch<T>({
         // but only if the request wasn't cached
         if (diff > 0 && elapsed > 100) {
           timeout = setTimeout(() => {
-            setState({ data: json, loading: false });
+            setState((prev) => ({ ...prev, data: json, loading: false }));
           }, diff);
           return;
         }
 
-        setState({ data: json, loading: false });
+        setState((prev) => ({ ...prev, data: json, loading: false }));
       } catch (error) {
-        setState({ data: null, loading: false });
+        setState((prev) => ({ ...prev, data: null, loading: false }));
 
         if (!(error instanceof DOMException)) {
           throw error;
@@ -93,15 +93,20 @@ export function useAbortableFetch<T>({
 
   useEffect(() => {
     // run when initially executed or whenever the url changes
-
     if (firstRenderRef.current || url !== previousUrl) {
-      setState({ data: null, loading: true });
+      setState((prev) => {
+        if (prev.loading) {
+          return prev;
+        }
+
+        return {
+          ...prev,
+          data: null,
+          loading: true,
+        };
+      });
     }
   }, [url, previousUrl]);
 
-  const trigger = useCallback(() => {
-    setState((prev) => ({ ...prev, loading: true }));
-  }, []);
-
-  return useMemo(() => [data, loading, trigger], [data, loading, trigger]);
+  return useMemo(() => [data, loading], [data, loading]);
 }

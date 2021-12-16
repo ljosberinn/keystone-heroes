@@ -1,15 +1,19 @@
 {
-  "name": "Keystone Heroes",
-  "short_name": "Keystone Heroes",
-  "icons": [
-    {
-      "src": "/android-chrome-96x96.png",
-      "sizes": "96x96",
-      "type": "image/png",
-      "purpose": "any"
-    }
-  ],
-  "theme_color": "#111827",
-  "background_color": "#111827",
-  "display": "standalone"
+    "name": "Keystone Heroes",
+    "short_name": "Keystone Heroes",
+    "icons": [
+        {
+            "src": "/android-chrome-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/android-chrome-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "theme_color": "#111827",
+    "background_color": "#111827",
+    "display": "standalone"
 }

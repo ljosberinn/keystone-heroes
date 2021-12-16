@@ -37,3 +37,46 @@ a [title] {
 .bg-fallback {
   background-image: url(/static/dungeons/fallback.jpg);
 }
+
+.bg-pog {
+  background-image: url(/static/bear/pog-256.png);
+  background-position: right;
+}
+.bg-heart {
+  background-image: url(/static/bear/heart-256.png);
+  background-position: center;
+}
+.bg-mplus {
+  background-image: url(/static/bear/mplus-256.png);
+  background-position: center;
+}
+.bg-hands {
+  background-image: url(/static/bear/hands-256.png);
+  background-position: right;
+}
+.bg-cry {
+  background-image: url(/static/bear/cry-256.png);
+  background-position: right;
+}
+.bg-ahegao {
+  background-image: url(/static/bear/ahegao-256.png);
+  background-position: center;
+}
+.bg-laugh {
+  background-image: url(/static/bear/laugh-256.png);
+  background-position: right;
+}
+.bg-uwu {
+  background-image: url(/static/bear/uwu-256.png);
+  background-position: center;
+}
+.bg-pray {
+  background-image: url(/static/bear/pray-256.png);
+  background-position: right;
+}
+.bg-taunt {
+  background-image: url(/static/bear/taunt-256.png);
+}
+.bg-concern {
+  background-image: url(/static/bear/concern-256.png);
+}

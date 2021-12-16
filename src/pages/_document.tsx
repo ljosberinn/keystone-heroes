@@ -9,6 +9,7 @@ import {
   twitterHandle,
   extendedTitle,
   url,
+  logoVersion,
 } from "../web/seo";
 
 export default function CustomDocument(/* props: DocumentProps*/): JSX.Element {
@@ -57,22 +58,26 @@ export default function CustomDocument(/* props: DocumentProps*/): JSX.Element {
         <link
           rel="apple-touch-icon"
           sizes="76x76"
-          href="/apple-touch-icon.png"
+          href={`/apple-touch-icon.png${logoVersion}`}
         />
         <link
           rel="icon"
           type="image/png"
           sizes="32x32"
-          href="/favicon-32x32.png"
+          href={`/favicon-32x32.png${logoVersion}`}
         />
         <link
           rel="icon"
           type="image/png"
           sizes="16x16"
-          href="/favicon-16x16.png"
+          href={`/favicon-16x16.png${logoVersion}`}
         />
-        <link rel="manifest" href="/site.webmanifest" />
-        <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#111827" />
+        <link rel="manifest" href={`/site.webmanifest${logoVersion}`} />
+        <link
+          rel="mask-icon"
+          href={`/safari-pinned-tab.svg${logoVersion}`}
+          color="#111827"
+        />
         <meta name="msapplication-TileColor" content="#111827" />
         <meta name="theme-color" content="#111827" />
       </Head>

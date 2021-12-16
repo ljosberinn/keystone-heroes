@@ -72,6 +72,7 @@ type AffixWithEvents = Exclude<
   | "Inspiring"
   | "Reaping"
   | "Skittish"
+  | "Infernal"
 >;
 
 const affixExpressionMap: Record<AffixWithEvents, string[]> = {
@@ -86,6 +87,7 @@ const affixExpressionMap: Record<AffixWithEvents, string[]> = {
   [Affixes.Storming]: stormingFilterExpression,
   [Affixes.Bolstering]: bolsteringFilterExpression,
   [Affixes.Tormented]: tormentedFilterExpression,
+  [Affixes.Encrypted]: [],
 };
 
 export const getAffixExpression = (affixes: Affixes[]): string[] => {

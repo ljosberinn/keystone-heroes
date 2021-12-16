@@ -107,6 +107,16 @@ export const affixMap: Record<Affix["id"], Omit<Affix, "id">> = {
     icon: "spell_animamaw_orb",
     seasonal: true,
   },
+  130: {
+    name: Affixes.Encrypted,
+    icon: "inv_misc_questionmark",
+    seasonal: true,
+  },
+  129: {
+    name: Affixes.Infernal,
+    icon: "inv_infernalbrimstone",
+    seasonal: true,
+  },
 };
 
 export const affixes = Object.entries(affixMap).map(([key, dataset]) => ({
@@ -123,7 +133,7 @@ export const getAffixByName = (name: Affixes): number => {
     return Number.parseInt(match[0]);
   }
 
-  throw new Error("impossible");
+  throw new Error(`getAffixByName - missmig match for '${name}'`);
 };
 
 export const getAffixByID = (id: Affix["id"] | null): Affix => {
@@ -133,5 +143,5 @@ export const getAffixByID = (id: Affix["id"] | null): Affix => {
     return match;
   }
 
-  throw new Error("impossible");
+  throw new Error(`getAffixByID - missimg match for affix id '${id}'`);
 };

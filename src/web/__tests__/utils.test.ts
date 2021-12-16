@@ -4,6 +4,7 @@ describe("parseWCLUrl", () => {
   test("fails given no url", () => {
     expect(parseWCLUrl("")).toMatchInlineSnapshot(`
       Object {
+        "error": "INVALID_URL",
         "fightID": null,
         "reportID": null,
       }
@@ -13,6 +14,7 @@ describe("parseWCLUrl", () => {
   test("fails given random url", () => {
     expect(parseWCLUrl("https://keystone-heroes.com")).toMatchInlineSnapshot(`
       Object {
+        "error": "INVALID_HOST",
         "fightID": null,
         "reportID": null,
       }
@@ -22,6 +24,7 @@ describe("parseWCLUrl", () => {
   test("fails given incomplete url", () => {
     expect(parseWCLUrl("https://keystone-heroes")).toMatchInlineSnapshot(`
       Object {
+        "error": "INVALID_HOST",
         "fightID": null,
         "reportID": null,
       }
@@ -35,6 +38,7 @@ describe("parseWCLUrl", () => {
       )
     ).toMatchInlineSnapshot(`
       Object {
+        "error": null,
         "fightID": null,
         "reportID": "aZ9y3jMctCqRvhKA",
       }
@@ -45,6 +49,7 @@ describe("parseWCLUrl", () => {
     expect(parseWCLUrl("https://www.warcraftlogs.com/reports/aZ9y3jMctCqRvhKA"))
       .toMatchInlineSnapshot(`
       Object {
+        "error": null,
         "fightID": null,
         "reportID": "aZ9y3jMctCqRvhKA",
       }
@@ -57,11 +62,12 @@ describe("parseWCLUrl", () => {
         "https://www.warcraftlogs.com/reports/aZ9y3jMctCqRvhKA#fight=3"
       )
     ).toMatchInlineSnapshot(`
-          Object {
-            "fightID": "3",
-            "reportID": "aZ9y3jMctCqRvhKA",
-          }
-      `);
+      Object {
+        "error": null,
+        "fightID": "3",
+        "reportID": "aZ9y3jMctCqRvhKA",
+      }
+    `);
   });
 
   test("passes given report url with fight id === last", () => {
@@ -71,6 +77,7 @@ describe("parseWCLUrl", () => {
       )
     ).toMatchInlineSnapshot(`
       Object {
+        "error": null,
         "fightID": "last",
         "reportID": "aZ9y3jMctCqRvhKA",
       }
@@ -84,6 +91,7 @@ describe("parseWCLUrl", () => {
       )
     ).toMatchInlineSnapshot(`
       Object {
+        "error": null,
         "fightID": "last",
         "reportID": "aZ9y3jMctCqRvhKA",
       }

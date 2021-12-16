@@ -28,7 +28,7 @@ export const timeDurationToString = (time: number, omitMs = false): string => {
 
 type WCLUrlParams = {
   reportID: string;
-  fightID: string;
+  fightID?: string;
   type?: "deaths" | "damage-done" | "healing" | "damage-taken" | "interrupts";
   start?: number;
   end?: number;
@@ -50,7 +50,9 @@ export const createWCLUrl = ({
     translate: "true",
   }).toString();
 
-  const url = `https://www.warcraftlogs.com/reports/${report}#fight=${fight}`;
+  const url = `https://www.warcraftlogs.com/reports/${report}${
+    fight ? `#fight=${fight}` : ""
+  }`;
 
   return `${url}&${params}`;
 };
@@ -64,13 +66,36 @@ export const createWowheadUrl = ({ category, id }: WowheadParams): string => {
   return `https://wowhead.com/${category}=${id}`;
 };
 
+export enum ReportParseError {
+  INVALID_HOST = "INVALID_HOST",
+  INVALID_REPORT_ID = "INVALID_REPORT_ID",
+  INVALID_URL = "INVALID_URL",
+}
+
+export const reportParseErrorMap: Record<ReportParseError, string> = {
+  INVALID_HOST: "This doesn't seem to be a WarcraftLogs link.",
+  INVALID_REPORT_ID: "The report ID seems to be malformed.",
+  INVALID_URL: "This doesn't seem to be a valid URL.",
+};
+
+export const reportParseErrorIconMap: Record<ReportParseError, string> = {
+  INVALID_HOST: "/static/bear/cry-48.png",
+  INVALID_REPORT_ID: "/static/bear/concern-48.png",
+  INVALID_URL: "/static/bear/bonk-48.png",
+};
+
 export const parseWCLUrl = (
   maybeURL: string
-): { reportID: null | string; fightID: null | string } => {
+): {
+  reportID: null | string;
+  fightID: null | string;
+  error: null | ReportParseError;
+} => {
   if (isValidReportId(maybeURL)) {
     return {
       reportID: maybeURL,
       fightID: null,
+      error: null,
     };
   }
 
@@ -82,6 +107,7 @@ export const parseWCLUrl = (
       return {
         reportID: null,
         fightID: null,
+        error: ReportParseError.INVALID_HOST,
       };
     }
 
@@ -92,6 +118,7 @@ export const parseWCLUrl = (
       return {
         reportID: null,
         fightID: null,
+        error: ReportParseError.INVALID_REPORT_ID,
       };
     }
 
@@ -100,6 +127,7 @@ export const parseWCLUrl = (
       return {
         reportID: maybeReportID,
         fightID: null,
+        error: null,
       };
     }
 
@@ -110,6 +138,7 @@ export const parseWCLUrl = (
       return {
         reportID: maybeReportID,
         fightID: null,
+        error: null,
       };
     }
 
@@ -118,17 +147,20 @@ export const parseWCLUrl = (
       return {
         reportID: maybeReportID,
         fightID: maybeFightID,
+        error: null,
       };
     }
 
     return {
       reportID: maybeReportID,
       fightID: null,
+      error: null,
     };
   } catch {
     return {
       reportID: null,
       fightID: null,
+      error: ReportParseError.INVALID_URL,
     };
   }
 };

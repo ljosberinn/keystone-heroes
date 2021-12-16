@@ -4,7 +4,7 @@ import { version } from "react";
 
 // import { defaultQueryParams, url } from "../../pages/routes/discover";
 import { buymeacoffee, paypal, twitter, discord /* map */ } from "../icons";
-import { internalLinKClasses } from "../styles/tokens";
+import { internalLinkClasses } from "../styles/tokens";
 // import { createInternalUrl } from "../utils";
 import { ColorModeToggle } from "./ColorModeToggle";
 import { ExternalLink } from "./ExternalLink";
@@ -21,10 +21,10 @@ function FooterNavLink({ href, children, internal }: FooterNavLinkProps) {
     <li className="py-1 text-base leading-relaxed md:text-sm">
       {internal ? (
         <Link href={href} prefetch={false}>
-          <a className={internalLinKClasses}>{children}</a>
+          <a className={internalLinkClasses}>{children}</a>
         </Link>
       ) : (
-        <ExternalLink className={internalLinKClasses} href={href}>
+        <ExternalLink className={internalLinkClasses} href={href}>
           {children}
         </ExternalLink>
       )}
@@ -94,7 +94,7 @@ export function Footer(): JSX.Element {
 
         <small className="flex items-center justify-center w-full py-6 space-x-6 text-xs text-gray-500 md:justify-end dark:text-gray-300">
           <Link href="/privacy" prefetch={false}>
-            <a className={internalLinKClasses}>Privacy</a>
+            <a className={internalLinkClasses}>Privacy</a>
           </Link>
           <ColorModeToggle />
         </small>

@@ -5,12 +5,13 @@ import Script from "next/script";
 import { createContext, useContext, Suspense } from "react";
 
 import type {
+  FightErrorResponse,
   FightResponse,
   FightSuccessResponse,
 } from "../../../api/functions/fight";
+import { fightHandlerError } from "../../../api/utils/errors";
 import { isValidReportId } from "../../../wcl/utils";
 import { Breadcrumbs } from "../../../web/components/Breadcrumbs";
-import { Spinner } from "../../../web/components/Spinner";
 import { AffixImpact } from "../../../web/components/report/AffixImpact";
 import { Data } from "../../../web/components/report/Data";
 import { Map } from "../../../web/components/report/Map";
@@ -72,6 +73,13 @@ const useFightURL = () => {
   };
 };
 
+const imageMap: Record<FightErrorResponse["error"], string> = {
+  MISSING_DUNGEON: "/static/bear/hands-256.png",
+  BROKEN_LOG_OR_WCL_UNAVAILABLE: "/static/bear/hands-256.png",
+  FATAL_ERROR: "/static/bear/concern-256.png",
+  UNKNOWN_REPORT: "/static/bear/concern-256.png",
+};
+
 type FightContextDefinition = {
   reportID: string;
   fightID: string;
@@ -99,9 +107,18 @@ export default function FightID(): JSX.Element | null {
   });
 
   if (!fightID || !reportID || !fight || loading) {
+    // TODO: extract as component since its identical to /[reportID]/index
     return (
-      <div className="self-center w-1/4 h-1/4">
-        <Spinner />
+      <div className="flex flex-col items-center justify-center w-full px-16 py-8 m-auto xl:px-64 xl:py-32 lg:flex-row max-w-screen-2xl">
+        <img
+          src="/static/bear/dance.gif"
+          height="256"
+          width="256"
+          alt="Loading"
+          loading="lazy"
+        />
+
+        <p className="pt-8 lg:pl-24 lg:pt-0">Bear busy. Please stand by.</p>
       </div>
     );
   }
@@ -122,12 +139,26 @@ export default function FightID(): JSX.Element | null {
   );
 
   if ("error" in fight) {
+    const image = imageMap[fight.error];
+
     return (
       <>
         {breadcrumbs}
-        <Suspense fallback={null}>
-          <GenericError type="loading-failed" error={fight.error} />
-        </Suspense>
+        {/** TODO: extract as component as its basically identical to /[reportID]/index */}
+        <div className="flex flex-col items-center justify-center w-full px-16 py-8 m-auto xl:px-64 xl:py-32 lg:flex-row max-w-screen-2xl">
+          <img
+            src={image}
+            height="256"
+            width="256"
+            alt="An error occured!"
+            loading="lazy"
+            className={image.includes("cry") ? "-scale-x-100" : undefined}
+          />
+          <div className="pt-8 lg:pl-24 lg:pt-0">
+            <h1 className="font-semibold ">{fight.error}</h1>
+            <p className="pt-8">{fightHandlerError[fight.error]}</p>
+          </div>
+        </div>
       </>
     );
   }

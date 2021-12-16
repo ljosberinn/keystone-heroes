@@ -5,5 +5,5 @@ export const redText = "text-red-600 dark:text-red-400";
 
 export const hoverBg = "hover:bg-coolgray-300 dark:hover:bg-coolgray-500";
 export const widthConstraint = "mx-auto max-w-screen-2xl px-6 w-full";
-export const internalLinKClasses =
+export const internalLinkClasses =
   "transition-colors duration-150 ease-in-out hover:text-yellow-600";

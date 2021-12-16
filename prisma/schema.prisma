@@ -583,6 +583,8 @@ enum Affixes {
   Spiteful
   Storming
   Tormented
+  Encrypted
+  Infernal
 }
 
 enum Covenants {

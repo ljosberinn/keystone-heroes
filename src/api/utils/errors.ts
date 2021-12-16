@@ -1,7 +1,7 @@
 import { MIN_KEYSTONE_LEVEL } from "../../web/env";
 
 export const reportHandlerError = {
-  NO_TIMED_KEYS: `This report does not appear to contain any timed keys above or matching the key level requirement (${MIN_KEYSTONE_LEVEL}).`,
+  NO_ELIGIBLE_KEYS: `This report does not appear to contain any keys matching the minimum key level requirement (${MIN_KEYSTONE_LEVEL}) or includes unsupported dungeons/affixes.`,
   BROKEN_LOG_OR_WCL_UNAVAILABLE:
     "This report is either broken or the request to Warcraftlogs failed. Please try again at a later time.",
   SECONDARY_REQUEST_FAILED:
@@ -10,12 +10,11 @@ export const reportHandlerError = {
 } as const;
 
 export const fightHandlerError = {
-  UNKNOWN_REPORT: "Unknown report.",
+  UNKNOWN_REPORT: "Unknown report. Consider importing it before, maybe?",
   BROKEN_LOG_OR_WCL_UNAVAILABLE:
     reportHandlerError.BROKEN_LOG_OR_WCL_UNAVAILABLE,
   MISSING_DUNGEON:
     "This fight appears to be broken and could not successfully be linked to a specific dungeon.",
-  BROKEN_FIGHT: "This fight could not be matched to any dungeon.",
   FATAL_ERROR: "Something went wrong.",
 } as const;
 
