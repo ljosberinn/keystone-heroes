@@ -8,16 +8,23 @@ export const deathProcessor: Processor<
   DeathEvent,
   { pull: PersistedDungeonPull }
 > = (event, { targetNPCID, targetPlayerID, pull }) => {
+  const {
+    timestamp,
+    killerInstance: sourceNPCInstance = null,
+    killerID,
+    targetInstance: targetNPCInstance = null,
+  } = event;
+
   // player death
   if (targetPlayerID) {
-    const sourceNPCID = event.killerID
-      ? pull.enemyNPCs.find((npc) => npc.id === event.killerID)?.gameID ?? null
+    const sourceNPCID = killerID
+      ? pull.enemyNPCs.find((npc) => npc.id === killerID)?.gameID ?? null
       : null;
 
     return {
-      timestamp: event.timestamp,
+      timestamp,
       eventType: EventType.Death,
-      sourceNPCInstance: event.killerInstance ?? null,
+      sourceNPCInstance,
       targetPlayerID,
       sourceNPCID,
     };
@@ -29,9 +36,9 @@ export const deathProcessor: Processor<
     PF.PURPLE_BUFF.unit === targetNPCID
   ) {
     return {
-      timestamp: event.timestamp,
+      timestamp,
       eventType: EventType.Death,
-      targetNPCInstance: event.targetInstance ?? null,
+      targetNPCInstance,
       targetNPCID,
     };
   }

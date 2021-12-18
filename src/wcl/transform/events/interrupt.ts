@@ -8,11 +8,17 @@ export const interruptProcessor: Processor<InterruptEvent> = (
   event,
   { sourcePlayerID, targetPlayerID, targetNPCID }
 ) => {
-  if (sourcePlayerID && targetPlayerID && event.abilityGameID === QUAKING) {
+  const {
+    timestamp,
+    extraAbilityGameID: interruptedAbilityID,
+    abilityGameID,
+  } = event;
+
+  if (sourcePlayerID && targetPlayerID && abilityGameID === QUAKING) {
     return {
-      timestamp: event.timestamp,
+      timestamp,
       eventType: EventType.Interrupt,
-      interruptedAbilityID: event.extraAbilityGameID,
+      interruptedAbilityID,
       sourcePlayerID,
       targetPlayerID,
       abilityID: QUAKING,
@@ -21,12 +27,12 @@ export const interruptProcessor: Processor<InterruptEvent> = (
 
   if (sourcePlayerID) {
     return {
-      timestamp: event.timestamp,
+      timestamp,
       eventType: EventType.Interrupt,
-      interruptedAbilityID: event.extraAbilityGameID,
+      interruptedAbilityID,
       sourcePlayerID,
       targetNPCID: targetNPCID ? targetNPCID : null,
-      abilityID: event.abilityGameID,
+      abilityID: abilityGameID,
     };
   }
 

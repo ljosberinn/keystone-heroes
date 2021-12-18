@@ -29,67 +29,62 @@ export const damageProcessor: Processor<DamageEvent> = (
   event,
   { targetPlayerID, sourcePlayerID, sourceNPCID, targetNPCID }
 ) => {
-  if (event.unmitigatedAmount === 0) {
+  if (event.amount === 0) {
     return null;
   }
 
+  const { amount: damage, timestamp, abilityGameID: abilityID } = event;
+
   // player taking damage
   if (targetPlayerID) {
-    if (
-      environmentalDamageAffixAbilities.has(event.abilityGameID) &&
-      event.unmitigatedAmount
-    ) {
+    if (environmentalDamageAffixAbilities.has(abilityID)) {
       return {
-        timestamp: event.timestamp,
-        abilityID: event.abilityGameID,
+        timestamp,
+        abilityID,
         eventType: EventType.DamageTaken,
         targetPlayerID,
         sourcePlayerID,
-        damage: event.unmitigatedAmount - (event.mitigated ?? 0),
+        damage,
       };
     }
 
     // NPC damaging player
     if (sourceNPCID) {
       return {
-        timestamp: event.timestamp,
+        timestamp,
         eventType: EventType.DamageTaken,
-        damage: event.unmitigatedAmount,
+        damage,
         targetPlayerID,
         sourceNPCID,
         // only relevant on plagueborer or throw cleaver
-        abilityID: event.abilityGameID,
+        abilityID,
       };
     }
 
     // Spiteful Shades do not necessarily have a resolvable sourceNPCID
-    if (
-      event.abilityGameID === SPITEFUL.ability &&
-      event.unmitigatedAmount &&
-      event.mitigated
-    ) {
+    if (abilityID === SPITEFUL.ability) {
       return {
-        timestamp: event.timestamp,
+        timestamp,
         eventType: EventType.DamageTaken,
         targetPlayerID,
         sourceNPCID: SPITEFUL.unit,
         abilityID: SPITEFUL.ability,
-        damage: event.unmitigatedAmount,
+        damage,
       };
     }
   }
 
   // Player damaging NPC
   if (sourcePlayerID && targetNPCID) {
-    const ignoreTargetNPCID = event.abilityGameID === NW.KYRIAN_ORB_DAMAGE;
+    const ignoreTargetNPCID = abilityID === NW.KYRIAN_ORB_DAMAGE;
 
     return {
-      timestamp: event.timestamp,
+      timestamp,
       eventType: EventType.DamageDone,
-      damage: event.amount + (event.absorbed ?? 0),
+      damage,
       targetNPCID: ignoreTargetNPCID ? null : targetNPCID,
       sourcePlayerID,
-      abilityID: event.abilityGameID,
+      abilityID,
     };
   }
 
@@ -99,25 +94,25 @@ export const damageProcessor: Processor<DamageEvent> = (
       THROW_CLEAVER_CASTER_IDS.has(sourceNPCID))
   ) {
     return {
-      timestamp: event.timestamp,
+      timestamp,
       eventType: EventType.DamageDone,
       sourceNPCID,
-      damage: event.amount,
-      abilityID: event.abilityGameID,
+      damage,
+      abilityID,
       targetNPCID,
     };
   }
 
   // canisters overkill themselves, adding +1 damage...
   if (
-    event.abilityGameID === PF.CANISTER_VIOLENT_DETONATION &&
+    abilityID === PF.CANISTER_VIOLENT_DETONATION &&
     sourceNPCID !== targetNPCID
   ) {
     return {
-      timestamp: event.timestamp,
+      timestamp,
       eventType: EventType.DamageDone,
-      damage: event.amount,
-      abilityID: event.abilityGameID,
+      damage,
+      abilityID,
       targetNPCID,
     };
   }

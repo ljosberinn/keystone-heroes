@@ -1,3 +1,5 @@
+import { useRouter } from "next/router";
+
 type DeleteUtilProps = {
   reportID: string;
   fightID: string;
@@ -8,6 +10,8 @@ export default function DeleteUtil({
   reportID,
   fightID,
 }: DeleteUtilProps): JSX.Element | null {
+  const { push } = useRouter();
+
   if (process.env.NODE_ENV !== "development") {
     return null;
   }
@@ -15,7 +19,12 @@ export default function DeleteUtil({
   async function handleDelete() {
     await fetch(`/api/dev/delete?reportID=${reportID}`);
 
-    window.location.href = `/report/${reportID}?fightID=${fightID}`;
+    void push({
+      pathname: `/report/${reportID}`,
+      query: {
+        fightID,
+      },
+    });
   }
 
   return (

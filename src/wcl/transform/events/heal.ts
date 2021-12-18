@@ -13,27 +13,25 @@ export const healProcessor: Processor<HealEvent> = (
     return null;
   }
 
-  if (
-    event.abilityGameID === NW.KYRIAN_ORB_HEAL &&
-    sourcePlayerID &&
-    targetPlayerID
-  ) {
+  const { timestamp, amount, abilityGameID: abilityID } = event;
+
+  if (abilityID === NW.KYRIAN_ORB_HEAL && sourcePlayerID && targetPlayerID) {
     return {
-      timestamp: event.timestamp,
+      timestamp,
       eventType: EventType.HealingDone,
       abilityID: NW.KYRIAN_ORB_HEAL,
-      healingDone: event.amount,
+      healingDone: amount,
       sourcePlayerID,
       targetPlayerID,
     };
   }
 
-  if (event.abilityGameID === SANGUINE_ICHOR_HEALING && targetNPCID) {
+  if (abilityID === SANGUINE_ICHOR_HEALING && targetNPCID) {
     return {
-      timestamp: event.timestamp,
+      timestamp,
       eventType: EventType.HealingDone,
       abilityID: SANGUINE_ICHOR_HEALING,
-      healingDone: event.amount,
+      healingDone: amount,
       targetNPCID,
     };
   }

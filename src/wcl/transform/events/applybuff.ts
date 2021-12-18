@@ -51,65 +51,69 @@ export const applyBuffProcessor: Processor<CustomApplyBuffEvent> = (
   event,
   { sourcePlayerID, targetPlayerID, targetNPCID }
 ) => {
+  const {
+    timestamp,
+    abilityGameID: abilityID,
+    stacks = null,
+    targetInstance: targetNPCInstance = null,
+  } = event;
+
   if (sourcePlayerID && targetPlayerID) {
-    if (
-      sourcePlayerID === targetPlayerID &&
-      invisibilityIDs.has(event.abilityGameID)
-    ) {
+    if (sourcePlayerID === targetPlayerID && invisibilityIDs.has(abilityID)) {
       return {
-        timestamp: event.timestamp,
+        timestamp,
         sourcePlayerID,
-        abilityID: event.abilityGameID,
+        abilityID,
         eventType: EventType.ApplyBuff,
       };
     }
 
-    if (noteworthyBuffs.has(event.abilityGameID)) {
+    if (noteworthyBuffs.has(abilityID)) {
       return {
-        timestamp: event.timestamp,
+        timestamp,
         eventType: EventType.ApplyBuff,
-        abilityID: event.abilityGameID,
+        abilityID,
         sourcePlayerID,
         targetPlayerID,
       };
     }
   }
 
-  if (event.abilityGameID === BOLSTERING && targetNPCID) {
+  if (abilityID === BOLSTERING && targetNPCID) {
     return {
-      timestamp: event.timestamp,
+      timestamp,
       eventType: EventType.ApplyBuff,
-      stacks: event.stacks ?? null,
+      stacks,
       abilityID: BOLSTERING,
       targetNPCID,
-      targetNPCInstance: event.targetInstance ?? null,
+      targetNPCInstance,
     };
   }
 
   // if (
   //   targetPlayerID &&
-  //   (event.abilityGameID === SD_LANTERN_BUFF ||
-  //     event.abilityGameID === NW.KYRIAN_ORB_BUFF ||
-  //     event.abilityGameID === SD_ZRALI_SHIELD_BUFF)
+  //   (abilityID === SD_LANTERN_BUFF ||
+  //     abilityID === NW.KYRIAN_ORB_BUFF ||
+  //     abilityID === SD_ZRALI_SHIELD_BUFF)
   // ) {
   //   return {
-  //     timestamp: event.timestamp,
+  //     timestamp: timestamp,
   //     eventType: EventType.ApplyBuff,
   //     targetPlayerID,
-  //     abilityID: event.abilityGameID,
+  //     abilityID: abilityID,
   //   };
   // }
 
   // buffs applied from environment on player
   if (
-    tormentedAbilityGameIDSet.has(event.abilityGameID) ||
-    noteworthyBuffs.has(event.abilityGameID)
+    tormentedAbilityGameIDSet.has(abilityID) ||
+    noteworthyBuffs.has(abilityID)
   ) {
     return {
-      timestamp: event.timestamp,
+      timestamp,
       eventType: EventType.ApplyBuff,
       targetPlayerID,
-      abilityID: event.abilityGameID,
+      abilityID,
     };
   }
 

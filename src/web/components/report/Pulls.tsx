@@ -19,6 +19,7 @@ import {
   createWowheadUrl,
   timeDurationToString,
   classTextColorMap,
+  createWCLUrl,
 } from "../../utils";
 import { classnames } from "../../utils/classnames";
 import {
@@ -292,7 +293,7 @@ function PullSelection() {
 }
 
 function Sidebar() {
-  const { fight } = useFight();
+  const { fight, fightID, reportID } = useFight();
   const pullNPCs = usePullNPCs();
 
   if (!pullNPCs) {
@@ -302,23 +303,37 @@ function Sidebar() {
   return (
     <div className="flex flex-col w-full bg-white rounded-lg lg:w-3/12 dark:bg-gray-700">
       <div className="flex w-full p-2 justify-evenly">
-        <span>
-          {timeDurationToString(
-            pullNPCs.pull.startTime - fight.meta.startTime,
-            true
-          )}{" "}
-          -{" "}
-          {timeDurationToString(
-            pullNPCs.pull.endTime - fight.meta.startTime,
-            true
-          )}{" "}
-          (+
-          {timeDurationToString(
-            pullNPCs.pull.endTime - pullNPCs.pull.startTime,
-            true
-          )}
-          )
-        </span>
+        <ExternalLink
+          href={createWCLUrl({
+            reportID,
+            fightID,
+            start: pullNPCs.pull.startTime,
+            end: pullNPCs.pull.endTime,
+          })}
+        >
+          <span>
+            {timeDurationToString(
+              pullNPCs.pull.startTime - fight.meta.startTime,
+              true
+            )}
+          </span>
+          <span> - </span>
+          <span>
+            {timeDurationToString(
+              pullNPCs.pull.endTime - fight.meta.startTime,
+              true
+            )}
+          </span>
+          <span>
+            {" "}
+            (+
+            {timeDurationToString(
+              pullNPCs.pull.endTime - pullNPCs.pull.startTime,
+              true
+            )}
+            )
+          </span>
+        </ExternalLink>
       </div>
 
       {pullNPCs.npcs.map((npc) => {
