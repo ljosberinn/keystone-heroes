@@ -17,6 +17,7 @@ export function ExternalLink({
   title,
 }: ExternalLinkProps): JSX.Element {
   return (
+    // eslint-disable-next-line react/jsx-no-target-blank
     <a
       href={href}
       target="_blank"

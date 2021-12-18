@@ -48,7 +48,6 @@ function LoadingFailed({
 
   useEffect(() => {
     if (error === "UNKNOWN_REPORT" && reportID && fightID) {
-      // eslint-disable-next-line no-void
       void push({
         pathname: "/report/[reportID]",
         query: {

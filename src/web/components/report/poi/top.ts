@@ -80,14 +80,16 @@ export const doors: POIContextDefinition["doors"] = {
   ],
 };
 
+const { name: label, icon } = spells[TOP_BANNER_AURA];
+
 export const poi: POIContextDefinition["poi"] = {
   // Champer of Conquest
   1684: [
     {
       x: 0.481_557_377_049_180_34,
       y: 0.676_236_436_848_738_2,
-      label: spells[TOP_BANNER_AURA].name,
-      icon: spells[TOP_BANNER_AURA].icon,
+      label,
+      icon,
     },
   ],
   // Altars of Agony
@@ -95,8 +97,8 @@ export const poi: POIContextDefinition["poi"] = {
     {
       x: 0.696_721_311_475_409_8,
       y: 0.837_611_041_096_732_6,
-      label: spells[TOP_BANNER_AURA].name,
-      icon: spells[TOP_BANNER_AURA].icon,
+      label,
+      icon,
     },
   ],
   // Upper Barrows of Carnage
@@ -104,8 +106,8 @@ export const poi: POIContextDefinition["poi"] = {
     {
       x: 0.614_754_098_360_655_8,
       y: 0.530_230_842_529_124_3,
-      label: spells[TOP_BANNER_AURA].name,
-      icon: spells[TOP_BANNER_AURA].icon,
+      label,
+      icon,
     },
   ],
 };

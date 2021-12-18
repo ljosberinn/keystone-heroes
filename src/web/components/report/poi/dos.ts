@@ -48,38 +48,40 @@ export const doors: POIContextDefinition["doors"] = {
   ],
 };
 
+const { icon, name: label } = spells[DOS_URN];
+
 export const poi: POIContextDefinition["poi"] = {
   // De Other Side
   1680: [
     {
-      icon: spells[DOS_URN].icon,
+      icon,
       x: 0.398_794_552_828_948_9,
       y: 0.768_446_106_766_405_9,
-      label: spells[DOS_URN].name,
+      label,
     },
     {
-      icon: spells[DOS_URN].icon,
+      icon,
       x: 0.650_614_754_098_360_7,
       y: 0.514_861_832_600_743_9,
-      label: spells[DOS_URN].name,
+      label,
     },
   ],
   // Ardenweald
   1677: [
     {
-      icon: spells[DOS_URN].icon,
+      icon,
       x: 0.495_901_639_344_262_3,
       y: 0.364_245_535_302_615_83,
-      label: spells[DOS_URN].name,
+      label,
     },
   ],
   // Zul'Gurub
   1679: [
     {
-      icon: spells[DOS_URN].icon,
+      icon,
       x: 0.578_893_442_622_950_8,
       y: 0.430_332_277_994_651_6,
-      label: spells[DOS_URN].name,
+      label,
     },
   ],
 };

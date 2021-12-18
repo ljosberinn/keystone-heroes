@@ -143,5 +143,7 @@ export const getAffixByID = (id: Affix["id"] | null): Affix => {
     return match;
   }
 
-  throw new Error(`getAffixByID - missimg match for affix id '${id}'`);
+  throw new Error(
+    `getAffixByID - missimg match for affix id '${id ?? "no id given"}'`
+  );
 };

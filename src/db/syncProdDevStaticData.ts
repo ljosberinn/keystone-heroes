@@ -25,7 +25,6 @@ try {
     },
   });
 
-  // eslint-disable-next-line no-void
   void (async () => {
     console.log("loading prod data");
     const prodLegendaries = await prodDb.legendary.findMany();

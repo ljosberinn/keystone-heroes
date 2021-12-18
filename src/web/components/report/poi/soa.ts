@@ -48,30 +48,32 @@ export const doors: POIContextDefinition["doors"] = {
   ],
 };
 
+const { icon, name: label } = spells[SOA_SPEAR];
+
 export const poi: POIContextDefinition["poi"] = {
   1693: [
     {
       // Garden of Repose, left
-      icon: spells[SOA_SPEAR].icon,
+      icon,
       x: 0.360_360_360_360_360_34,
       y: 0.204_633_204_633_204_64,
-      label: spells[SOA_SPEAR].name,
+      label,
     },
     {
       // Garden of Repose, right
-      icon: spells[SOA_SPEAR].icon,
+      icon,
       x: 0.561_132_561_132_561_2,
       y: 0.891_891_891_891_891_9,
-      label: spells[SOA_SPEAR].name,
+      label,
     },
   ],
   1694: [
     {
       // Font of Fealty
-      icon: spells[SOA_SPEAR].icon,
+      icon,
       x: 0.411_840_411_840_411_8,
       y: 0.772_200_772_200_772_2,
-      label: spells[SOA_SPEAR].name,
+      label,
     },
   ],
 };

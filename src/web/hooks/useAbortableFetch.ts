@@ -94,6 +94,8 @@ export function useAbortableFetch<T>({
   useEffect(() => {
     // run when initially executed or whenever the url changes
     if (firstRenderRef.current || url !== previousUrl) {
+      firstRenderRef.current = false;
+
       setState((prev) => {
         if (prev.loading) {
           return prev;
