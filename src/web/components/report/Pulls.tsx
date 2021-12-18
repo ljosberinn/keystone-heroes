@@ -731,6 +731,21 @@ function TableSettings() {
                   use absolute timestamps
                 </label>
               </div>
+
+              <div className="flex items-center hidden space-x-2 md:block">
+                <input
+                  className="cursor-pointer"
+                  type="checkbox"
+                  checked={false}
+                  // onChange={toggleAbsoluteTimestamps}
+                  id="groupSimilarEvents"
+                  aria-labelledby="groupSimilarEvents"
+                  disabled
+                />
+                <label htmlFor="groupSimilarEvents" className="cursor-pointer">
+                  group similar events (e.g. Bursting)
+                </label>
+              </div>
             </td>
           </tr>
         </tbody>
