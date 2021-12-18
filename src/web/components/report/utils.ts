@@ -1,10 +1,10 @@
 import type { FightSuccessResponse } from "../../../api/functions/fight";
-import { NW } from "../../../wcl/queries/events/dungeons/nw";
 import {
   SANGUINE_ICHOR_HEALING,
   spells,
   PF,
   EXPLOSIVE,
+  NW,
 } from "../../staticData";
 import type { AbilityReadyRowProps } from "./rows/AbilityReadyRow";
 import type { ApplyBuffRowProps } from "./rows/ApplyBuffRow";

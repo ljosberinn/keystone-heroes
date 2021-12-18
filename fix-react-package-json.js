@@ -1,3 +1,4 @@
+// @ts-check
 const { writeFileSync, readFileSync } = require("fs");
 const { resolve } = require("path");
 

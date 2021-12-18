@@ -23,8 +23,14 @@ export const HOA_GARGOYLE = 342_171;
 export const ENVELOPMENT_OF_MISTS = 323_881;
 export const SOA_SPEAR = 339_917;
 export const SD_LANTERN_OPENING = 340_013;
+export const SD_LANTERN_BUFF = 340_433;
 export const PF = JSON.parse(
   `{"PLAGUE_BOMB":328501,"RIGGED_PLAGUEBORER":168891,"GREEN_BUFF":{"unit":163891,"aura":340210},"RED_BUFF":{"unit":164705,"aura":340225},"PURPLE_BUFF":{"unit":164707,"aura":340271},"CANISTER_VIOLENT_DETONATION":328986}`
+);
+export const DOS_URN = 228_626;
+export const TOP_BANNER_AURA = 340_378;
+export const NW = JSON.parse(
+  `{"ORB":328406,"HAMMER":328128,"SPEAR":328351,"SHIELD":328050,"KYRIAN_ORB_BUFF":335161,"KYRIAN_ORB_HEAL":344422,"KYRIAN_ORB_DAMAGE":344421,"THROW_CLEAVER":323489}`
 );
 
 export const isBoss = (id: number): boolean => allBossIDs.has(id);
@@ -58,6 +64,9 @@ export const affixes: Record<number, { name: string; icon: string }> =
   JSON.parse(
     `{"2":{"name":"Skittish","icon":"spell_magic_lesserinvisibilty"},"3":{"name":"Volcanic","icon":"spell_shaman_lavasurge"},"4":{"name":"Necrotic","icon":"spell_deathknight_necroticplague"},"6":{"name":"Raging","icon":"ability_warrior_focusedrage"},"7":{"name":"Bolstering","icon":"ability_warrior_battleshout"},"8":{"name":"Sanguine","icon":"spell_shadow_bloodboil"},"9":{"name":"Tyrannical","icon":"achievement_boss_archaedas"},"10":{"name":"Fortified","icon":"ability_toughness"},"11":{"name":"Bursting","icon":"ability_ironmaidens_whirlofblood"},"12":{"name":"Grievous","icon":"ability_backstab"},"13":{"name":"Explosive","icon":"spell_fire_felflamering_red"},"14":{"name":"Quaking","icon":"spell_nature_earthquake"},"16":{"name":"Infested","icon":"achievement_nazmir_boss_ghuun"},"117":{"name":"Reaping","icon":"ability_racial_embraceoftheloa_bwonsomdi"},"119":{"name":"Beguiling","icon":"spell_shadow_mindshear"},"120":{"name":"Awakened","icon":"trade_archaeology_nerubian_obelisk"},"121":{"name":"Prideful","icon":"spell_animarevendreth_buff"},"122":{"name":"Inspiring","icon":"spell_holy_prayerofspirit"},"123":{"name":"Spiteful","icon":"spell_holy_prayerofshadowprotection"},"124":{"name":"Storming","icon":"spell_nature_cyclone"},"128":{"name":"Tormented","icon":"spell_animamaw_orb"},"129":{"name":"Infernal","icon":"inv_infernalbrimstone"},"130":{"name":"Encrypted","icon":"inv_misc_questionmark"}}`
   );
+export const affixNameIdMap = JSON.parse(
+  `{"quaking":14,"necrotic":4,"infested":16,"volcanic":3,"tyrannical":9,"bursting":11,"reaping":117,"beguiling":119,"raging":6,"bolstering":7,"skittish":2,"fortified":10,"tormented":128,"awakened":120,"sanguine":8,"grievous":12,"prideful":121,"inspiring":122,"explosive":13,"spiteful":123,"storming":124,"infernal":129,"encrypted":130}`
+);
 export const soulbinds: Record<number, { name: string; covenantID: number }> =
   JSON.parse(
     `{"1":{"name":"Niya","covenantID":3},"2":{"name":"Dreamweaver","covenantID":3},"3":{"name":"Draven","covenantID":2},"4":{"name":"Marileth","covenantID":4},"5":{"name":"Emeni","covenantID":4},"6":{"name":"Korayn","covenantID":3},"7":{"name":"Pelagos","covenantID":1},"8":{"name":"Nadjia","covenantID":2},"9":{"name":"Theotar","covenantID":2},"10":{"name":"Bonesmith Heirmir","covenantID":4},"13":{"name":"Kleia","covenantID":1},"18":{"name":"Mikanikos","covenantID":1}}`

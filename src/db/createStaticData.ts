@@ -139,6 +139,10 @@ async function create() {
     })
   );
 
+  const affixNameIdMap = Object.fromEntries(
+    rawAffixes.map((affix) => [affix.name.toLowerCase(), affix.id])
+  );
+
   const rawClasses = await prisma.class.findMany({
     select: {
       id: true,
@@ -610,7 +614,11 @@ export const HOA_GARGOYLE = ${HOA_GARGOYLE};
 export const ENVELOPMENT_OF_MISTS = ${ENVELOPMENT_OF_MISTS};
 export const SOA_SPEAR = ${SOA_SPEAR};
 export const SD_LANTERN_OPENING = ${SD_LANTERN_OPENING};
+export const SD_LANTERN_BUFF = ${SD_LANTERN_BUFF};
 export const PF = JSON.parse(\`${JSON.stringify(PF)}\`);
+export const DOS_URN = ${DOS_URN};
+export const TOP_BANNER_AURA = ${TOP_BANNER_AURA};
+export const NW = JSON.parse(\`${JSON.stringify(NW)}\`);
 
 export const isBoss = (id: number): boolean => allBossIDs.has(id);
 export const isTormentedLieutenant = (id: number): boolean => tormentedLieutenantIDs.has(id);
@@ -623,6 +631,7 @@ export const dungeons: Record<number, { name: string; slug: string; time: number
 export const affixes: Record<number, { name: string; icon: string;}> = JSON.parse(\`${JSON.stringify(
     affixes
   )}\`);
+export const affixNameIdMap = JSON.parse(\`${JSON.stringify(affixNameIdMap)}\`);
 export const soulbinds: Record<number, { name: string; covenantID: number}> = JSON.parse(\`${JSON.stringify(
     soulbinds
   )}\`);

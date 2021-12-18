@@ -1,3 +1,5 @@
+// @ts-check
+
 const date = new Date();
 
 /**
@@ -27,9 +29,6 @@ const config = {
   },
   experimental: {
     reactRoot: true,
-  },
-  future: {
-    strictPostcssConfiguration: true,
   },
   webpack: (config, options) => {
     // disables transpiling all `__tests__` files, speeding up build process

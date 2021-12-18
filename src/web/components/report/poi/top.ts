@@ -1,5 +1,4 @@
-import { TOP_BANNER_AURA } from "../../../../wcl/queries/events/dungeons/top";
-import { spells } from "../../../staticData";
+import { spells, TOP_BANNER_AURA } from "../../../staticData";
 import type { POIContextDefinition } from "./context";
 
 export const doors: POIContextDefinition["doors"] = {

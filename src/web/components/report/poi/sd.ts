@@ -1,8 +1,8 @@
 import {
+  spells,
   SD_LANTERN_BUFF,
   SD_LANTERN_OPENING,
-} from "../../../../wcl/queries/events/dungeons/sd";
-import { spells } from "../../../staticData";
+} from "../../../staticData";
 import type { POIContextDefinition } from "./context";
 
 export const doors: POIContextDefinition["doors"] = {

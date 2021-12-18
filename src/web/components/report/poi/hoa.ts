@@ -1,5 +1,4 @@
-import { HOA_GARGOYLE } from "../../../../wcl/queries/events/dungeons/hoa";
-import { spells } from "../../../staticData";
+import { spells, HOA_GARGOYLE } from "../../../staticData";
 import type { POIContextDefinition } from "./context";
 
 export const doors: POIContextDefinition["doors"] = {

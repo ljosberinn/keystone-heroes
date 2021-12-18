@@ -11,6 +11,7 @@ import {
   isBoss,
   isTormentedLieutenant,
   EXPLOSIVE,
+  affixNameIdMap,
 } from "../../staticData";
 import { usePullSettings, useReportStore } from "../../store";
 import { bgPrimary, bgSecondary } from "../../styles/tokens";
@@ -357,7 +358,7 @@ function usePullSummaryRows(
   const isNecroticWake = dungeons[dungeon].slug === "NW";
 
   return {
-    sanguineHealEvents: affixes.includes(8)
+    sanguineHealEvents: affixes.includes(affixNameIdMap.sanguine)
       ? selectedPull.events.filter(isSanguineHealEvent)
       : [],
     plagueBombDamageEvents: isPlaguefall
@@ -366,7 +367,7 @@ function usePullSummaryRows(
     violentDetonationDamageEvents: isPlaguefall
       ? selectedPull.events.filter(isViolentDetonationDamageEvent)
       : [],
-    explosivesEvents: affixes.includes(13)
+    explosivesEvents: affixes.includes(affixNameIdMap.explosive)
       ? selectedPull.events.filter(isExplosivesDamageEvent)
       : [],
     throwCleaverDamageEvents: isNecroticWake

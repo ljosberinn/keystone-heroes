@@ -1,5 +1,4 @@
-import { NW } from "../../../../wcl/queries/events/dungeons/nw";
-import { spells } from "../../../staticData";
+import { spells, NW } from "../../../staticData";
 import type { POIContextDefinition } from "./context";
 
 export const doors: POIContextDefinition["doors"] = {

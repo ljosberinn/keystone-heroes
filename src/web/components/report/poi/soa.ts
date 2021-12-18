@@ -1,5 +1,4 @@
-import { SOA_SPEAR } from "../../../../wcl/queries/events/dungeons/soa";
-import { spells } from "../../../staticData";
+import { spells, SOA_SPEAR } from "../../../staticData";
 import type { POIContextDefinition } from "./context";
 
 export const doors: POIContextDefinition["doors"] = {

@@ -1,5 +1,4 @@
-import { DOS_URN } from "../../../../wcl/queries/events/dungeons/dos";
-import { spells } from "../../../staticData";
+import { spells, DOS_URN } from "../../../staticData";
 import type { POIContextDefinition } from "./context";
 
 export const doors: POIContextDefinition["doors"] = {
