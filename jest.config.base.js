@@ -21,6 +21,9 @@ const config = {
     "src/**/*.{js,jsx,ts,tsx}",
     "!src/**/*.stories.{js,jsx,ts,tsx}",
   ],
+  snapshotFormat: {
+    printBasicPrototype: false,
+  },
 };
 
 module.exports = config;

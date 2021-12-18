@@ -1,578 +1,578 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`death tracks PF Slime Death events 1`] = `
-Array [
-  Object {
+[
+  {
     "eventType": "Death",
     "targetNPCID": 163891,
     "targetNPCInstance": null,
     "timestamp": 3186763,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 163891,
     "targetNPCInstance": null,
     "timestamp": 3331087,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 163891,
     "targetNPCInstance": null,
     "timestamp": 3424154,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 163891,
     "targetNPCInstance": null,
     "timestamp": 3436647,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 163891,
     "targetNPCInstance": null,
     "timestamp": 3489087,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 163891,
     "targetNPCInstance": null,
     "timestamp": 3506311,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 163891,
     "targetNPCInstance": null,
     "timestamp": 3512625,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 163891,
     "targetNPCInstance": null,
     "timestamp": 3514282,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 163891,
     "targetNPCInstance": null,
     "timestamp": 3517463,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 163891,
     "targetNPCInstance": null,
     "timestamp": 3534137,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 163891,
     "targetNPCInstance": null,
     "timestamp": 3559079,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 163891,
     "targetNPCInstance": null,
     "timestamp": 3560518,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 163891,
     "targetNPCInstance": null,
     "timestamp": 3563937,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 163891,
     "targetNPCInstance": null,
     "timestamp": 3566890,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 163891,
     "targetNPCInstance": null,
     "timestamp": 3568140,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 163891,
     "targetNPCInstance": null,
     "timestamp": 3573319,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 163891,
     "targetNPCInstance": null,
     "timestamp": 3576106,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 163891,
     "targetNPCInstance": null,
     "timestamp": 3793055,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 163891,
     "targetNPCInstance": null,
     "timestamp": 3889770,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 163891,
     "targetNPCInstance": null,
     "timestamp": 3910966,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 163891,
     "targetNPCInstance": null,
     "timestamp": 4036935,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 163891,
     "targetNPCInstance": null,
     "timestamp": 4273729,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 163891,
     "targetNPCInstance": null,
     "timestamp": 4634252,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 163891,
     "targetNPCInstance": 4,
     "timestamp": 9399646,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 163891,
     "targetNPCInstance": 5,
     "timestamp": 9400225,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 163891,
     "targetNPCInstance": 1,
     "timestamp": 9400225,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 163891,
     "targetNPCInstance": 6,
     "timestamp": 9430006,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 163891,
     "targetNPCInstance": 1,
     "timestamp": 9486481,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 163891,
     "targetNPCInstance": 2,
     "timestamp": 9769975,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 163891,
     "targetNPCInstance": 2,
     "timestamp": 9770061,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 163891,
     "targetNPCInstance": 3,
     "timestamp": 11090607,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 163891,
     "targetNPCInstance": 7,
     "timestamp": 11099140,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164707,
     "targetNPCInstance": null,
     "timestamp": 3186763,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164707,
     "targetNPCInstance": null,
     "timestamp": 3331087,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164707,
     "targetNPCInstance": null,
     "timestamp": 3424154,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164707,
     "targetNPCInstance": null,
     "timestamp": 3436647,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164707,
     "targetNPCInstance": null,
     "timestamp": 3489087,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164707,
     "targetNPCInstance": null,
     "timestamp": 3506311,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164707,
     "targetNPCInstance": null,
     "timestamp": 3512625,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164707,
     "targetNPCInstance": null,
     "timestamp": 3514282,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164707,
     "targetNPCInstance": null,
     "timestamp": 3517463,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164707,
     "targetNPCInstance": null,
     "timestamp": 3534137,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164707,
     "targetNPCInstance": null,
     "timestamp": 3559079,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164707,
     "targetNPCInstance": null,
     "timestamp": 3560518,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164707,
     "targetNPCInstance": null,
     "timestamp": 3563937,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164707,
     "targetNPCInstance": null,
     "timestamp": 3566890,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164707,
     "targetNPCInstance": null,
     "timestamp": 3568140,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164707,
     "targetNPCInstance": null,
     "timestamp": 3573319,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164707,
     "targetNPCInstance": null,
     "timestamp": 3576106,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164707,
     "targetNPCInstance": null,
     "timestamp": 3793055,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164707,
     "targetNPCInstance": null,
     "timestamp": 3889770,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164707,
     "targetNPCInstance": null,
     "timestamp": 3910966,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164707,
     "targetNPCInstance": null,
     "timestamp": 4036935,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164707,
     "targetNPCInstance": null,
     "timestamp": 4273729,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164707,
     "targetNPCInstance": null,
     "timestamp": 4634252,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164707,
     "targetNPCInstance": 4,
     "timestamp": 9399646,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164707,
     "targetNPCInstance": 5,
     "timestamp": 9400225,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164707,
     "targetNPCInstance": 1,
     "timestamp": 9400225,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164707,
     "targetNPCInstance": 6,
     "timestamp": 9430006,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164707,
     "targetNPCInstance": 1,
     "timestamp": 9486481,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164707,
     "targetNPCInstance": 2,
     "timestamp": 9769975,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164707,
     "targetNPCInstance": 2,
     "timestamp": 9770061,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164707,
     "targetNPCInstance": 3,
     "timestamp": 11090607,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164707,
     "targetNPCInstance": 7,
     "timestamp": 11099140,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164705,
     "targetNPCInstance": null,
     "timestamp": 3186763,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164705,
     "targetNPCInstance": null,
     "timestamp": 3331087,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164705,
     "targetNPCInstance": null,
     "timestamp": 3424154,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164705,
     "targetNPCInstance": null,
     "timestamp": 3436647,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164705,
     "targetNPCInstance": null,
     "timestamp": 3489087,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164705,
     "targetNPCInstance": null,
     "timestamp": 3506311,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164705,
     "targetNPCInstance": null,
     "timestamp": 3512625,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164705,
     "targetNPCInstance": null,
     "timestamp": 3514282,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164705,
     "targetNPCInstance": null,
     "timestamp": 3517463,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164705,
     "targetNPCInstance": null,
     "timestamp": 3534137,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164705,
     "targetNPCInstance": null,
     "timestamp": 3559079,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164705,
     "targetNPCInstance": null,
     "timestamp": 3560518,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164705,
     "targetNPCInstance": null,
     "timestamp": 3563937,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164705,
     "targetNPCInstance": null,
     "timestamp": 3566890,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164705,
     "targetNPCInstance": null,
     "timestamp": 3568140,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164705,
     "targetNPCInstance": null,
     "timestamp": 3573319,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164705,
     "targetNPCInstance": null,
     "timestamp": 3576106,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164705,
     "targetNPCInstance": null,
     "timestamp": 3793055,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164705,
     "targetNPCInstance": null,
     "timestamp": 3889770,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164705,
     "targetNPCInstance": null,
     "timestamp": 3910966,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164705,
     "targetNPCInstance": null,
     "timestamp": 4036935,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164705,
     "targetNPCInstance": null,
     "timestamp": 4273729,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164705,
     "targetNPCInstance": null,
     "timestamp": 4634252,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164705,
     "targetNPCInstance": 4,
     "timestamp": 9399646,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164705,
     "targetNPCInstance": 5,
     "timestamp": 9400225,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164705,
     "targetNPCInstance": 1,
     "timestamp": 9400225,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164705,
     "targetNPCInstance": 6,
     "timestamp": 9430006,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164705,
     "targetNPCInstance": 1,
     "timestamp": 9486481,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164705,
     "targetNPCInstance": 2,
     "timestamp": 9769975,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164705,
     "targetNPCInstance": 2,
     "timestamp": 9770061,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164705,
     "targetNPCInstance": 3,
     "timestamp": 11090607,
   },
-  Object {
+  {
     "eventType": "Death",
     "targetNPCID": 164705,
     "targetNPCInstance": 7,
@@ -582,225 +582,225 @@ Array [
 `;
 
 exports[`death tracks player death events 1`] = `
-Array [
-  Object {
+[
+  {
     "eventType": "Death",
     "sourceNPCID": null,
     "sourceNPCInstance": null,
     "targetPlayerID": 1,
     "timestamp": 3186763,
   },
-  Object {
+  {
     "eventType": "Death",
     "sourceNPCID": null,
     "sourceNPCInstance": null,
     "targetPlayerID": 1,
     "timestamp": 3331087,
   },
-  Object {
+  {
     "eventType": "Death",
     "sourceNPCID": null,
     "sourceNPCInstance": null,
     "targetPlayerID": 1,
     "timestamp": 3424154,
   },
-  Object {
+  {
     "eventType": "Death",
     "sourceNPCID": null,
     "sourceNPCInstance": null,
     "targetPlayerID": 1,
     "timestamp": 3436647,
   },
-  Object {
+  {
     "eventType": "Death",
     "sourceNPCID": null,
     "sourceNPCInstance": null,
     "targetPlayerID": 1,
     "timestamp": 3489087,
   },
-  Object {
+  {
     "eventType": "Death",
     "sourceNPCID": null,
     "sourceNPCInstance": null,
     "targetPlayerID": 1,
     "timestamp": 3506311,
   },
-  Object {
+  {
     "eventType": "Death",
     "sourceNPCID": null,
     "sourceNPCInstance": null,
     "targetPlayerID": 1,
     "timestamp": 3512625,
   },
-  Object {
+  {
     "eventType": "Death",
     "sourceNPCID": null,
     "sourceNPCInstance": null,
     "targetPlayerID": 1,
     "timestamp": 3514282,
   },
-  Object {
+  {
     "eventType": "Death",
     "sourceNPCID": null,
     "sourceNPCInstance": null,
     "targetPlayerID": 1,
     "timestamp": 3517463,
   },
-  Object {
+  {
     "eventType": "Death",
     "sourceNPCID": null,
     "sourceNPCInstance": null,
     "targetPlayerID": 1,
     "timestamp": 3534137,
   },
-  Object {
+  {
     "eventType": "Death",
     "sourceNPCID": null,
     "sourceNPCInstance": null,
     "targetPlayerID": 1,
     "timestamp": 3559079,
   },
-  Object {
+  {
     "eventType": "Death",
     "sourceNPCID": null,
     "sourceNPCInstance": null,
     "targetPlayerID": 1,
     "timestamp": 3560518,
   },
-  Object {
+  {
     "eventType": "Death",
     "sourceNPCID": null,
     "sourceNPCInstance": null,
     "targetPlayerID": 1,
     "timestamp": 3563937,
   },
-  Object {
+  {
     "eventType": "Death",
     "sourceNPCID": null,
     "sourceNPCInstance": null,
     "targetPlayerID": 1,
     "timestamp": 3566890,
   },
-  Object {
+  {
     "eventType": "Death",
     "sourceNPCID": null,
     "sourceNPCInstance": null,
     "targetPlayerID": 1,
     "timestamp": 3568140,
   },
-  Object {
+  {
     "eventType": "Death",
     "sourceNPCID": null,
     "sourceNPCInstance": null,
     "targetPlayerID": 1,
     "timestamp": 3573319,
   },
-  Object {
+  {
     "eventType": "Death",
     "sourceNPCID": null,
     "sourceNPCInstance": null,
     "targetPlayerID": 1,
     "timestamp": 3576106,
   },
-  Object {
+  {
     "eventType": "Death",
     "sourceNPCID": null,
     "sourceNPCInstance": null,
     "targetPlayerID": 1,
     "timestamp": 3793055,
   },
-  Object {
+  {
     "eventType": "Death",
     "sourceNPCID": null,
     "sourceNPCInstance": null,
     "targetPlayerID": 1,
     "timestamp": 3889770,
   },
-  Object {
+  {
     "eventType": "Death",
     "sourceNPCID": null,
     "sourceNPCInstance": null,
     "targetPlayerID": 1,
     "timestamp": 3910966,
   },
-  Object {
+  {
     "eventType": "Death",
     "sourceNPCID": null,
     "sourceNPCInstance": null,
     "targetPlayerID": 1,
     "timestamp": 4036935,
   },
-  Object {
+  {
     "eventType": "Death",
     "sourceNPCID": null,
     "sourceNPCInstance": null,
     "targetPlayerID": 1,
     "timestamp": 4273729,
   },
-  Object {
+  {
     "eventType": "Death",
     "sourceNPCID": null,
     "sourceNPCInstance": null,
     "targetPlayerID": 1,
     "timestamp": 4634252,
   },
-  Object {
+  {
     "eventType": "Death",
     "sourceNPCID": null,
     "sourceNPCInstance": null,
     "targetPlayerID": 1,
     "timestamp": 9399646,
   },
-  Object {
+  {
     "eventType": "Death",
     "sourceNPCID": null,
     "sourceNPCInstance": null,
     "targetPlayerID": 1,
     "timestamp": 9400225,
   },
-  Object {
+  {
     "eventType": "Death",
     "sourceNPCID": null,
     "sourceNPCInstance": null,
     "targetPlayerID": 1,
     "timestamp": 9400225,
   },
-  Object {
+  {
     "eventType": "Death",
     "sourceNPCID": null,
     "sourceNPCInstance": null,
     "targetPlayerID": 1,
     "timestamp": 9430006,
   },
-  Object {
+  {
     "eventType": "Death",
     "sourceNPCID": null,
     "sourceNPCInstance": null,
     "targetPlayerID": 1,
     "timestamp": 9486481,
   },
-  Object {
+  {
     "eventType": "Death",
     "sourceNPCID": null,
     "sourceNPCInstance": null,
     "targetPlayerID": 1,
     "timestamp": 9769975,
   },
-  Object {
+  {
     "eventType": "Death",
     "sourceNPCID": null,
     "sourceNPCInstance": null,
     "targetPlayerID": 1,
     "timestamp": 9770061,
   },
-  Object {
+  {
     "eventType": "Death",
     "sourceNPCID": null,
     "sourceNPCInstance": null,
     "targetPlayerID": 1,
     "timestamp": 11090607,
   },
-  Object {
+  {
     "eventType": "Death",
     "sourceNPCID": null,
     "sourceNPCInstance": null,

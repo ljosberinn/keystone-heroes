@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`heal skips event with 0 healing 1`] = `
-Array [
+[
   null,
   null,
   null,
@@ -348,10 +348,10 @@ Array [
 `;
 
 exports[`heal tracks NW Kyrian Orb heal events 1`] = `
-Array [
+[
   null,
   null,
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 3169,
@@ -360,7 +360,7 @@ Array [
     "timestamp": 1913816,
   },
   null,
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 2685,
@@ -369,7 +369,7 @@ Array [
     "timestamp": 1915015,
   },
   null,
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 2973,
@@ -377,7 +377,7 @@ Array [
     "targetPlayerID": 1,
     "timestamp": 1915015,
   },
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 3301,
@@ -387,7 +387,7 @@ Array [
   },
   null,
   null,
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 2625,
@@ -395,7 +395,7 @@ Array [
     "targetPlayerID": 1,
     "timestamp": 1917790,
   },
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 2643,
@@ -405,7 +405,7 @@ Array [
   },
   null,
   null,
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 5945,
@@ -413,7 +413,7 @@ Array [
     "targetPlayerID": 1,
     "timestamp": 1919008,
   },
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 3301,
@@ -424,7 +424,7 @@ Array [
   null,
   null,
   null,
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 790,
@@ -434,7 +434,7 @@ Array [
   },
   null,
   null,
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 3047,
@@ -444,7 +444,7 @@ Array [
   },
   null,
   null,
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 5945,
@@ -452,7 +452,7 @@ Array [
     "targetPlayerID": 1,
     "timestamp": 1923003,
   },
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 2641,
@@ -462,7 +462,7 @@ Array [
   },
   null,
   null,
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 2695,
@@ -470,7 +470,7 @@ Array [
     "targetPlayerID": 1,
     "timestamp": 1924449,
   },
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 3301,
@@ -486,7 +486,7 @@ Array [
   null,
   null,
   null,
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 2973,
@@ -503,7 +503,7 @@ Array [
   null,
   null,
   null,
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 2984,
@@ -511,7 +511,7 @@ Array [
     "targetPlayerID": 1,
     "timestamp": 1928443,
   },
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 3301,
@@ -527,7 +527,7 @@ Array [
   null,
   null,
   null,
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 1702,
@@ -549,7 +549,7 @@ Array [
   null,
   null,
   null,
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 2983,
@@ -557,7 +557,7 @@ Array [
     "targetPlayerID": 1,
     "timestamp": 1932443,
   },
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 2793,
@@ -573,7 +573,7 @@ Array [
   null,
   null,
   null,
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 3169,
@@ -584,7 +584,7 @@ Array [
   null,
   null,
   null,
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 1933,
@@ -600,7 +600,7 @@ Array [
   null,
   null,
   null,
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 2984,
@@ -608,7 +608,7 @@ Array [
     "targetPlayerID": 1,
     "timestamp": 1936450,
   },
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 3300,
@@ -624,7 +624,7 @@ Array [
   null,
   null,
   null,
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 6337,
@@ -636,7 +636,7 @@ Array [
   null,
   null,
   null,
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 5945,
@@ -648,7 +648,7 @@ Array [
   null,
   null,
   null,
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 2927,
@@ -656,7 +656,7 @@ Array [
     "targetPlayerID": 1,
     "timestamp": 1939095,
   },
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 2695,
@@ -664,7 +664,7 @@ Array [
     "targetPlayerID": 1,
     "timestamp": 1940449,
   },
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 5435,
@@ -672,7 +672,7 @@ Array [
     "targetPlayerID": 1,
     "timestamp": 1940449,
   },
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 2694,
@@ -680,7 +680,7 @@ Array [
     "targetPlayerID": 1,
     "timestamp": 1940449,
   },
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 2654,
@@ -688,7 +688,7 @@ Array [
     "targetPlayerID": 1,
     "timestamp": 1940449,
   },
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 2983,
@@ -696,7 +696,7 @@ Array [
     "targetPlayerID": 1,
     "timestamp": 1940449,
   },
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 3301,
@@ -704,7 +704,7 @@ Array [
     "targetPlayerID": 1,
     "timestamp": 1940505,
   },
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 2982,
@@ -712,7 +712,7 @@ Array [
     "targetPlayerID": 1,
     "timestamp": 1940505,
   },
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 2981,
@@ -720,7 +720,7 @@ Array [
     "targetPlayerID": 1,
     "timestamp": 1940505,
   },
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 2798,
@@ -731,7 +731,7 @@ Array [
   null,
   null,
   null,
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 5371,
@@ -743,7 +743,7 @@ Array [
   null,
   null,
   null,
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 334,
@@ -764,7 +764,7 @@ Array [
   null,
   null,
   null,
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 963,
@@ -772,7 +772,7 @@ Array [
     "targetPlayerID": 1,
     "timestamp": 1945790,
   },
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 743,
@@ -782,7 +782,7 @@ Array [
   },
   null,
   null,
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 3168,
@@ -794,7 +794,7 @@ Array [
   null,
   null,
   null,
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 3573,
@@ -807,7 +807,7 @@ Array [
   null,
   null,
   null,
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 1060,
@@ -815,7 +815,7 @@ Array [
     "targetPlayerID": 1,
     "timestamp": 1948436,
   },
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 1091,
@@ -824,7 +824,7 @@ Array [
     "timestamp": 1948436,
   },
   null,
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 2983,
@@ -832,7 +832,7 @@ Array [
     "targetPlayerID": 1,
     "timestamp": 1948436,
   },
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 5518,
@@ -841,7 +841,7 @@ Array [
     "timestamp": 1948507,
   },
   null,
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 520,
@@ -851,7 +851,7 @@ Array [
   },
   null,
   null,
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 1139,
@@ -859,7 +859,7 @@ Array [
     "targetPlayerID": 1,
     "timestamp": 1949803,
   },
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 1661,
@@ -867,7 +867,7 @@ Array [
     "targetPlayerID": 1,
     "timestamp": 1949803,
   },
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 961,
@@ -875,7 +875,7 @@ Array [
     "targetPlayerID": 1,
     "timestamp": 1949803,
   },
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 3047,
@@ -887,7 +887,7 @@ Array [
   null,
   null,
   null,
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 5879,
@@ -900,7 +900,7 @@ Array [
   null,
   null,
   null,
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 2632,
@@ -908,7 +908,7 @@ Array [
     "targetPlayerID": 1,
     "timestamp": 1952459,
   },
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 2652,
@@ -916,7 +916,7 @@ Array [
     "targetPlayerID": 1,
     "timestamp": 1952459,
   },
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 2534,
@@ -927,7 +927,7 @@ Array [
   null,
   null,
   null,
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 1306,
@@ -937,7 +937,7 @@ Array [
   },
   null,
   null,
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 2234,
@@ -945,7 +945,7 @@ Array [
     "targetPlayerID": 1,
     "timestamp": 1953798,
   },
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 2861,
@@ -953,7 +953,7 @@ Array [
     "targetPlayerID": 1,
     "timestamp": 1953798,
   },
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 2817,
@@ -961,7 +961,7 @@ Array [
     "targetPlayerID": 1,
     "timestamp": 1953798,
   },
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 3168,
@@ -969,7 +969,7 @@ Array [
     "targetPlayerID": 1,
     "timestamp": 1953798,
   },
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 287,
@@ -977,7 +977,7 @@ Array [
     "targetPlayerID": 1,
     "timestamp": 1955000,
   },
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 3155,
@@ -986,7 +986,7 @@ Array [
     "timestamp": 1955000,
   },
   null,
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 373,
@@ -1000,7 +1000,7 @@ Array [
   null,
   null,
   null,
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 2695,
@@ -1008,7 +1008,7 @@ Array [
     "targetPlayerID": 1,
     "timestamp": 1956432,
   },
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 2694,
@@ -1016,7 +1016,7 @@ Array [
     "targetPlayerID": 1,
     "timestamp": 1956432,
   },
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 4124,
@@ -1024,7 +1024,7 @@ Array [
     "targetPlayerID": 1,
     "timestamp": 1956432,
   },
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 2664,
@@ -1032,7 +1032,7 @@ Array [
     "targetPlayerID": 1,
     "timestamp": 1956432,
   },
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 2948,
@@ -1040,7 +1040,7 @@ Array [
     "targetPlayerID": 1,
     "timestamp": 1956506,
   },
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 1601,
@@ -1048,7 +1048,7 @@ Array [
     "targetPlayerID": 1,
     "timestamp": 1956506,
   },
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 2948,
@@ -1056,7 +1056,7 @@ Array [
     "targetPlayerID": 1,
     "timestamp": 1956506,
   },
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 280,
@@ -1065,7 +1065,7 @@ Array [
     "timestamp": 1956506,
   },
   null,
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 2830,
@@ -1073,7 +1073,7 @@ Array [
     "targetPlayerID": 1,
     "timestamp": 1957805,
   },
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 2861,
@@ -1081,7 +1081,7 @@ Array [
     "targetPlayerID": 1,
     "timestamp": 1957805,
   },
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 2817,
@@ -1089,7 +1089,7 @@ Array [
     "targetPlayerID": 1,
     "timestamp": 1957805,
   },
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 2830,
@@ -1097,7 +1097,7 @@ Array [
     "targetPlayerID": 1,
     "timestamp": 1957805,
   },
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 1796,
@@ -1105,7 +1105,7 @@ Array [
     "targetPlayerID": 1,
     "timestamp": 1959004,
   },
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 5909,
@@ -1113,7 +1113,7 @@ Array [
     "targetPlayerID": 1,
     "timestamp": 1959004,
   },
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 1785,
@@ -1121,7 +1121,7 @@ Array [
     "targetPlayerID": 1,
     "timestamp": 1959004,
   },
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 1923,
@@ -1129,7 +1129,7 @@ Array [
     "targetPlayerID": 1,
     "timestamp": 1959004,
   },
-  Object {
+  {
     "abilityID": 344422,
     "eventType": "HealingDone",
     "healingDone": 2654,
@@ -1141,799 +1141,799 @@ Array [
 `;
 
 exports[`heal tracks Sanguine heal events 1`] = `
-Array [
-  Object {
+[
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 21147,
     "targetNPCID": 1,
     "timestamp": 12878155,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 17301,
     "targetNPCID": 1,
     "timestamp": 12878260,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 19224,
     "targetNPCID": 1,
     "timestamp": 12878260,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 46138,
     "targetNPCID": 1,
     "timestamp": 13123920,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 46138,
     "targetNPCID": 1,
     "timestamp": 13124913,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 46138,
     "targetNPCID": 1,
     "timestamp": 13139994,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 46138,
     "targetNPCID": 1,
     "timestamp": 13140948,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 46138,
     "targetNPCID": 1,
     "timestamp": 13141956,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 46137,
     "targetNPCID": 1,
     "timestamp": 13142937,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 46138,
     "targetNPCID": 1,
     "timestamp": 13143950,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 46138,
     "targetNPCID": 1,
     "timestamp": 13144946,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 46137,
     "targetNPCID": 1,
     "timestamp": 13145957,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 8313,
     "targetNPCID": 1,
     "timestamp": 13146941,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 733,
     "targetNPCID": 1,
     "timestamp": 13147951,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 21147,
     "targetNPCID": 1,
     "timestamp": 13288706,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 21146,
     "targetNPCID": 1,
     "timestamp": 13288706,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 11534,
     "targetNPCID": 1,
     "timestamp": 13288725,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 11534,
     "targetNPCID": 1,
     "timestamp": 13288725,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 11534,
     "targetNPCID": 1,
     "timestamp": 13288725,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 17302,
     "targetNPCID": 1,
     "timestamp": 13288827,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 19224,
     "targetNPCID": 1,
     "timestamp": 13288827,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 17302,
     "targetNPCID": 1,
     "timestamp": 13288955,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 21146,
     "targetNPCID": 1,
     "timestamp": 13289712,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 21146,
     "targetNPCID": 1,
     "timestamp": 13289712,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 11535,
     "targetNPCID": 1,
     "timestamp": 13289712,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 11535,
     "targetNPCID": 1,
     "timestamp": 13289712,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 11534,
     "targetNPCID": 1,
     "timestamp": 13289712,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 17301,
     "targetNPCID": 1,
     "timestamp": 13289831,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 17302,
     "targetNPCID": 1,
     "timestamp": 13289925,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 21146,
     "targetNPCID": 1,
     "timestamp": 13290706,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 21146,
     "targetNPCID": 1,
     "timestamp": 13290706,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 11534,
     "targetNPCID": 1,
     "timestamp": 13290730,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 11535,
     "targetNPCID": 1,
     "timestamp": 13290730,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 11535,
     "targetNPCID": 1,
     "timestamp": 13290730,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 17302,
     "targetNPCID": 1,
     "timestamp": 13290832,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 17301,
     "targetNPCID": 1,
     "timestamp": 13290931,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 11534,
     "targetNPCID": 1,
     "timestamp": 13291714,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 11534,
     "targetNPCID": 1,
     "timestamp": 13291714,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 17302,
     "targetNPCID": 1,
     "timestamp": 13291839,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 17301,
     "targetNPCID": 1,
     "timestamp": 13291934,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 21146,
     "targetNPCID": 1,
     "timestamp": 13293319,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 21146,
     "targetNPCID": 1,
     "timestamp": 13293319,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 19224,
     "targetNPCID": 1,
     "timestamp": 13293713,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 11534,
     "targetNPCID": 1,
     "timestamp": 13294113,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 21147,
     "targetNPCID": 1,
     "timestamp": 13294302,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 21146,
     "targetNPCID": 1,
     "timestamp": 13294302,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 11535,
     "targetNPCID": 1,
     "timestamp": 13294512,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 19224,
     "targetNPCID": 1,
     "timestamp": 13294713,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 19224,
     "targetNPCID": 1,
     "timestamp": 13295703,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 19224,
     "targetNPCID": 1,
     "timestamp": 13296716,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 17301,
     "targetNPCID": 1,
     "timestamp": 13300578,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 11534,
     "targetNPCID": 1,
     "timestamp": 13300616,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 17301,
     "targetNPCID": 1,
     "timestamp": 13301548,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 17302,
     "targetNPCID": 1,
     "timestamp": 13302568,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 17302,
     "targetNPCID": 1,
     "timestamp": 13303538,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 17302,
     "targetNPCID": 1,
     "timestamp": 13304540,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 17302,
     "targetNPCID": 1,
     "timestamp": 13305544,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 19224,
     "targetNPCID": 1,
     "timestamp": 13309101,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 19224,
     "targetNPCID": 1,
     "timestamp": 13310108,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 17302,
     "targetNPCID": 1,
     "timestamp": 13310339,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 38448,
     "targetNPCID": 1,
     "timestamp": 13311095,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 17302,
     "targetNPCID": 1,
     "timestamp": 13311342,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 21146,
     "targetNPCID": 1,
     "timestamp": 13311830,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 17301,
     "targetNPCID": 1,
     "timestamp": 13312354,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 17301,
     "targetNPCID": 1,
     "timestamp": 13336662,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 17301,
     "targetNPCID": 1,
     "timestamp": 13388406,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 21146,
     "targetNPCID": 1,
     "timestamp": 13531242,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 21147,
     "targetNPCID": 1,
     "timestamp": 13531403,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 19224,
     "targetNPCID": 1,
     "timestamp": 13531403,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 21147,
     "targetNPCID": 1,
     "timestamp": 13532218,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 21146,
     "targetNPCID": 1,
     "timestamp": 13532393,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 19224,
     "targetNPCID": 1,
     "timestamp": 13532393,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 19224,
     "targetNPCID": 1,
     "timestamp": 13537009,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 19224,
     "targetNPCID": 1,
     "timestamp": 13538024,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 19224,
     "targetNPCID": 1,
     "timestamp": 13540756,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 19224,
     "targetNPCID": 1,
     "timestamp": 13541737,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 19224,
     "targetNPCID": 1,
     "timestamp": 13542737,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 19224,
     "targetNPCID": 1,
     "timestamp": 13543730,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 11534,
     "targetNPCID": 1,
     "timestamp": 13722433,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 17301,
     "targetNPCID": 1,
     "timestamp": 13722510,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 11535,
     "targetNPCID": 1,
     "timestamp": 13722510,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 17302,
     "targetNPCID": 1,
     "timestamp": 13722510,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 11535,
     "targetNPCID": 1,
     "timestamp": 13723434,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 11535,
     "targetNPCID": 1,
     "timestamp": 13723496,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 17301,
     "targetNPCID": 1,
     "timestamp": 13723496,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 17302,
     "targetNPCID": 1,
     "timestamp": 13723496,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 11534,
     "targetNPCID": 1,
     "timestamp": 13724415,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 17302,
     "targetNPCID": 1,
     "timestamp": 13724498,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 17302,
     "targetNPCID": 1,
     "timestamp": 13724498,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 11535,
     "targetNPCID": 1,
     "timestamp": 13724944,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 11534,
     "targetNPCID": 1,
     "timestamp": 13725415,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 17301,
     "targetNPCID": 1,
     "timestamp": 13725510,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 17301,
     "targetNPCID": 1,
     "timestamp": 13725510,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 17301,
     "targetNPCID": 1,
     "timestamp": 13726518,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 17301,
     "targetNPCID": 1,
     "timestamp": 13726518,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 17302,
     "targetNPCID": 1,
     "timestamp": 13727502,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 17302,
     "targetNPCID": 1,
     "timestamp": 13727502,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 17302,
     "targetNPCID": 1,
     "timestamp": 13728491,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 17302,
     "targetNPCID": 1,
     "timestamp": 13728507,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 17302,
     "targetNPCID": 1,
     "timestamp": 13729495,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 17302,
     "targetNPCID": 1,
     "timestamp": 13730525,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 17302,
     "targetNPCID": 1,
     "timestamp": 13731506,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 17301,
     "targetNPCID": 1,
     "timestamp": 13733931,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 19224,
     "targetNPCID": 1,
     "timestamp": 13736130,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 19224,
     "targetNPCID": 1,
     "timestamp": 13737121,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 38448,
     "targetNPCID": 1,
     "timestamp": 13738127,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 21146,
     "targetNPCID": 1,
     "timestamp": 14110882,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 21147,
     "targetNPCID": 1,
     "timestamp": 14110882,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 21146,
     "targetNPCID": 1,
     "timestamp": 14111007,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 19224,
     "targetNPCID": 1,
     "timestamp": 14191875,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 19224,
     "targetNPCID": 1,
     "timestamp": 14192861,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 19224,
     "targetNPCID": 1,
     "timestamp": 14193889,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 19224,
     "targetNPCID": 1,
     "timestamp": 14194881,
   },
-  Object {
+  {
     "abilityID": 226510,
     "eventType": "HealingDone",
     "healingDone": 19224,

@@ -1,8 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`getMOTSEvents works 1`] = `
-Array [
-  Object {
+[
+  {
     "abilityGameID": 323881,
     "pin": "0",
     "sourceID": -1,
@@ -10,7 +10,7 @@ Array [
     "timestamp": 35495540,
     "type": "applydebuff",
   },
-  Object {
+  {
     "abilityGameID": 340004,
     "sourceID": 104,
     "targetID": -1,

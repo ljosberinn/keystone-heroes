@@ -1,8 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`getNWEvents works 1`] = `
-Array [
-  Object {
+[
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -15,7 +15,7 @@ Array [
     "timestamp": 1913800,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 5169,
     "hitType": 1,
@@ -28,7 +28,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 4922,
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 5169,
     "hitType": 1,
@@ -41,7 +41,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 4922,
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 5169,
     "hitType": 1,
@@ -54,7 +54,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 4922,
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -66,7 +66,7 @@ Array [
     "timestamp": 1913816,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 3169,
     "hitType": 1,
@@ -78,7 +78,7 @@ Array [
     "timestamp": 1913816,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 2,
@@ -89,7 +89,7 @@ Array [
     "timestamp": 1915001,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 11094,
     "hitType": 2,
@@ -101,7 +101,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 5282,
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 2685,
     "hitType": 1,
@@ -111,7 +111,7 @@ Array [
     "timestamp": 1915015,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 2,
@@ -123,7 +123,7 @@ Array [
     "timestamp": 1915015,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 2973,
     "hitType": 1,
@@ -134,7 +134,7 @@ Array [
     "timestamp": 1915015,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 3301,
     "hitType": 1,
@@ -146,7 +146,7 @@ Array [
     "timestamp": 1916507,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 5371,
     "hitType": 1,
@@ -160,7 +160,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 5333,
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 5600,
     "hitType": 1,
@@ -173,7 +173,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 5333,
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -186,7 +186,7 @@ Array [
     "timestamp": 1917790,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 5169,
     "hitType": 1,
@@ -199,7 +199,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 4922,
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 5169,
     "hitType": 1,
@@ -212,7 +212,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 4922,
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -224,7 +224,7 @@ Array [
     "timestamp": 1917790,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 2625,
     "hitType": 1,
@@ -236,7 +236,7 @@ Array [
     "timestamp": 1917790,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 2643,
     "hitType": 1,
@@ -246,7 +246,7 @@ Array [
     "timestamp": 1919008,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 5042,
     "hitType": 1,
@@ -258,7 +258,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 4802,
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 10085,
     "hitType": 2,
@@ -270,7 +270,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 4802,
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -282,7 +282,7 @@ Array [
     "timestamp": 1919008,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -293,7 +293,7 @@ Array [
     "timestamp": 1919008,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 5945,
     "hitType": 2,
@@ -304,7 +304,7 @@ Array [
     "timestamp": 1919008,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 3301,
     "hitType": 1,
@@ -316,7 +316,7 @@ Array [
     "timestamp": 1920502,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 5600,
     "hitType": 1,
@@ -329,7 +329,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 5333,
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 5600,
     "hitType": 1,
@@ -342,7 +342,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 5333,
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -354,7 +354,7 @@ Array [
     "timestamp": 1920502,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -367,7 +367,7 @@ Array [
     "timestamp": 1920502,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -379,7 +379,7 @@ Array [
     "timestamp": 1920502,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 790,
     "hitType": 1,
@@ -391,7 +391,7 @@ Array [
     "timestamp": 1920502,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -404,7 +404,7 @@ Array [
     "timestamp": 1921799,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 5168,
     "hitType": 1,
@@ -417,7 +417,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 4922,
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 5169,
     "hitType": 1,
@@ -430,7 +430,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 4922,
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 2,
@@ -442,7 +442,7 @@ Array [
     "timestamp": 1921799,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 3047,
     "hitType": 1,
@@ -454,7 +454,7 @@ Array [
     "timestamp": 1921799,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -465,7 +465,7 @@ Array [
     "timestamp": 1923003,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 5042,
     "hitType": 1,
@@ -477,7 +477,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 4802,
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 5042,
     "hitType": 1,
@@ -489,7 +489,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 4802,
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -501,7 +501,7 @@ Array [
     "timestamp": 1923003,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 5945,
     "hitType": 2,
@@ -512,7 +512,7 @@ Array [
     "timestamp": 1923003,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 2641,
     "hitType": 1,
@@ -522,7 +522,7 @@ Array [
     "timestamp": 1923089,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -533,7 +533,7 @@ Array [
     "timestamp": 1923089,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -544,7 +544,7 @@ Array [
     "timestamp": 1924449,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 2695,
     "hitType": 1,
@@ -554,7 +554,7 @@ Array [
     "timestamp": 1924449,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 3301,
     "hitType": 1,
@@ -566,7 +566,7 @@ Array [
     "timestamp": 1924512,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 5601,
     "hitType": 1,
@@ -579,7 +579,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 5333,
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 5601,
     "hitType": 1,
@@ -592,7 +592,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 5333,
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -605,7 +605,7 @@ Array [
     "timestamp": 1924512,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -617,7 +617,7 @@ Array [
     "timestamp": 1924512,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -630,7 +630,7 @@ Array [
     "timestamp": 1925812,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 5168,
     "hitType": 1,
@@ -643,7 +643,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 4922,
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 5169,
     "hitType": 1,
@@ -656,7 +656,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 4922,
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -668,7 +668,7 @@ Array [
     "timestamp": 1925812,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -681,7 +681,7 @@ Array [
     "timestamp": 1925812,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -692,7 +692,7 @@ Array [
     "timestamp": 1927003,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 5043,
     "hitType": 1,
@@ -704,7 +704,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 4802,
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 5043,
     "hitType": 1,
@@ -716,7 +716,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 4802,
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 2,
@@ -728,7 +728,7 @@ Array [
     "timestamp": 1927003,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -739,7 +739,7 @@ Array [
     "timestamp": 1927003,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 2973,
     "hitType": 1,
@@ -750,7 +750,7 @@ Array [
     "timestamp": 1927003,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -761,7 +761,7 @@ Array [
     "timestamp": 1927087,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 4965,
     "hitType": 1,
@@ -773,7 +773,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 4728,
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 4966,
     "hitType": 1,
@@ -785,7 +785,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 4728,
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -796,7 +796,7 @@ Array [
     "timestamp": 1927087,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 2,
@@ -808,7 +808,7 @@ Array [
     "timestamp": 1927087,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -819,7 +819,7 @@ Array [
     "timestamp": 1927087,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 2,
@@ -831,7 +831,7 @@ Array [
     "timestamp": 1927087,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -842,7 +842,7 @@ Array [
     "timestamp": 1928443,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 10327,
     "hitType": 2,
@@ -854,7 +854,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 4821,
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 5062,
     "hitType": 1,
@@ -866,7 +866,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 4821,
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -878,7 +878,7 @@ Array [
     "timestamp": 1928443,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -889,7 +889,7 @@ Array [
     "timestamp": 1928443,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -900,7 +900,7 @@ Array [
     "timestamp": 1928443,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 2984,
     "hitType": 1,
@@ -911,7 +911,7 @@ Array [
     "timestamp": 1928443,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 3301,
     "hitType": 1,
@@ -923,7 +923,7 @@ Array [
     "timestamp": 1928511,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 5600,
     "hitType": 1,
@@ -936,7 +936,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 5333,
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 11200,
     "hitType": 2,
@@ -949,7 +949,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 5333,
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -961,7 +961,7 @@ Array [
     "timestamp": 1928511,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -974,7 +974,7 @@ Array [
     "timestamp": 1928511,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -986,7 +986,7 @@ Array [
     "timestamp": 1928511,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -998,7 +998,7 @@ Array [
     "timestamp": 1928511,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -1011,7 +1011,7 @@ Array [
     "timestamp": 1929804,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 5169,
     "hitType": 1,
@@ -1024,7 +1024,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 4922,
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 5169,
     "hitType": 1,
@@ -1037,7 +1037,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 4922,
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 2,
@@ -1049,7 +1049,7 @@ Array [
     "timestamp": 1929804,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -1061,7 +1061,7 @@ Array [
     "timestamp": 1929804,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -1073,7 +1073,7 @@ Array [
     "timestamp": 1929804,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 1702,
     "hitType": 1,
@@ -1086,7 +1086,7 @@ Array [
     "timestamp": 1929804,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -1097,7 +1097,7 @@ Array [
     "timestamp": 1931007,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 5043,
     "hitType": 1,
@@ -1109,7 +1109,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 4802,
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 5043,
     "hitType": 1,
@@ -1121,7 +1121,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 4802,
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -1132,7 +1132,7 @@ Array [
     "timestamp": 1931007,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -1144,7 +1144,7 @@ Array [
     "timestamp": 1931008,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -1155,7 +1155,7 @@ Array [
     "timestamp": 1931008,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -1167,7 +1167,7 @@ Array [
     "timestamp": 1931008,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -1178,7 +1178,7 @@ Array [
     "timestamp": 1931079,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 4965,
     "hitType": 1,
@@ -1190,7 +1190,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 4728,
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 9931,
     "hitType": 2,
@@ -1202,7 +1202,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 4728,
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -1213,7 +1213,7 @@ Array [
     "timestamp": 1931079,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -1225,7 +1225,7 @@ Array [
     "timestamp": 1931079,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -1236,7 +1236,7 @@ Array [
     "timestamp": 1931079,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -1248,7 +1248,7 @@ Array [
     "timestamp": 1931079,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -1259,7 +1259,7 @@ Array [
     "timestamp": 1932443,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 5062,
     "hitType": 1,
@@ -1271,7 +1271,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 4821,
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 5063,
     "hitType": 1,
@@ -1283,7 +1283,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 4821,
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 2,
@@ -1295,7 +1295,7 @@ Array [
     "timestamp": 1932443,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 2,
@@ -1306,7 +1306,7 @@ Array [
     "timestamp": 1932443,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -1317,7 +1317,7 @@ Array [
     "timestamp": 1932443,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 2983,
     "hitType": 1,
@@ -1328,7 +1328,7 @@ Array [
     "timestamp": 1932443,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 2793,
     "hitType": 1,
@@ -1341,7 +1341,7 @@ Array [
     "timestamp": 1932495,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 5601,
     "hitType": 1,
@@ -1354,7 +1354,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 5333,
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 5600,
     "hitType": 1,
@@ -1367,7 +1367,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 5333,
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -1379,7 +1379,7 @@ Array [
     "timestamp": 1932495,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -1392,7 +1392,7 @@ Array [
     "timestamp": 1932495,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -1404,7 +1404,7 @@ Array [
     "timestamp": 1932495,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -1416,7 +1416,7 @@ Array [
     "timestamp": 1932495,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 2,
@@ -1429,7 +1429,7 @@ Array [
     "timestamp": 1933804,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 5169,
     "hitType": 1,
@@ -1442,7 +1442,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 4922,
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 5168,
     "hitType": 1,
@@ -1455,7 +1455,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 4922,
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -1467,7 +1467,7 @@ Array [
     "timestamp": 1933804,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 2,
@@ -1479,7 +1479,7 @@ Array [
     "timestamp": 1933804,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -1491,7 +1491,7 @@ Array [
     "timestamp": 1933804,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 3169,
     "hitType": 1,
@@ -1503,7 +1503,7 @@ Array [
     "timestamp": 1933804,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -1514,7 +1514,7 @@ Array [
     "timestamp": 1935000,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 5043,
     "hitType": 1,
@@ -1526,7 +1526,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 4802,
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 5043,
     "hitType": 1,
@@ -1538,7 +1538,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 4802,
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -1549,7 +1549,7 @@ Array [
     "timestamp": 1935000,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -1561,7 +1561,7 @@ Array [
     "timestamp": 1935000,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 1933,
     "hitType": 1,
@@ -1573,7 +1573,7 @@ Array [
     "timestamp": 1935000,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -1584,7 +1584,7 @@ Array [
     "timestamp": 1935081,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 4966,
     "hitType": 1,
@@ -1596,7 +1596,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 4728,
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 4965,
     "hitType": 1,
@@ -1608,7 +1608,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 4728,
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -1619,7 +1619,7 @@ Array [
     "timestamp": 1935081,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -1631,7 +1631,7 @@ Array [
     "timestamp": 1935081,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -1643,7 +1643,7 @@ Array [
     "timestamp": 1935081,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -1654,7 +1654,7 @@ Array [
     "timestamp": 1936450,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 5062,
     "hitType": 1,
@@ -1666,7 +1666,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 4821,
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 5062,
     "hitType": 1,
@@ -1678,7 +1678,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 4821,
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -1690,7 +1690,7 @@ Array [
     "timestamp": 1936450,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 2,
@@ -1701,7 +1701,7 @@ Array [
     "timestamp": 1936450,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 2,
@@ -1712,7 +1712,7 @@ Array [
     "timestamp": 1936450,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 2984,
     "hitType": 1,
@@ -1723,7 +1723,7 @@ Array [
     "timestamp": 1936450,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 3300,
     "hitType": 1,
@@ -1735,7 +1735,7 @@ Array [
     "timestamp": 1936498,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 5600,
     "hitType": 1,
@@ -1748,7 +1748,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 5333,
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 5601,
     "hitType": 1,
@@ -1761,7 +1761,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 5333,
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -1773,7 +1773,7 @@ Array [
     "timestamp": 1936513,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -1786,7 +1786,7 @@ Array [
     "timestamp": 1936513,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -1798,7 +1798,7 @@ Array [
     "timestamp": 1936513,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -1810,7 +1810,7 @@ Array [
     "timestamp": 1936513,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -1823,7 +1823,7 @@ Array [
     "timestamp": 1937799,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 5169,
     "hitType": 1,
@@ -1836,7 +1836,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 4922,
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 5169,
     "hitType": 1,
@@ -1849,7 +1849,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 4922,
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -1861,7 +1861,7 @@ Array [
     "timestamp": 1937799,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -1873,7 +1873,7 @@ Array [
     "timestamp": 1937799,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -1885,7 +1885,7 @@ Array [
     "timestamp": 1937799,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 6337,
     "hitType": 2,
@@ -1897,7 +1897,7 @@ Array [
     "timestamp": 1937799,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -1908,7 +1908,7 @@ Array [
     "timestamp": 1938994,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 5043,
     "hitType": 1,
@@ -1920,7 +1920,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 4802,
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 5043,
     "hitType": 1,
@@ -1932,7 +1932,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 4802,
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -1943,7 +1943,7 @@ Array [
     "timestamp": 1938994,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -1955,7 +1955,7 @@ Array [
     "timestamp": 1939008,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -1966,7 +1966,7 @@ Array [
     "timestamp": 1939008,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 5945,
     "hitType": 2,
@@ -1977,7 +1977,7 @@ Array [
     "timestamp": 1939008,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -1988,7 +1988,7 @@ Array [
     "timestamp": 1939080,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 4965,
     "hitType": 1,
@@ -2000,7 +2000,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 4728,
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 7969,
     "hitType": 2,
@@ -2013,7 +2013,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 4728,
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -2024,7 +2024,7 @@ Array [
     "timestamp": 1939095,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 2,
@@ -2036,7 +2036,7 @@ Array [
     "timestamp": 1939095,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -2047,7 +2047,7 @@ Array [
     "timestamp": 1939095,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 2927,
     "hitType": 1,
@@ -2058,7 +2058,7 @@ Array [
     "timestamp": 1939095,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 2695,
     "hitType": 1,
@@ -2068,7 +2068,7 @@ Array [
     "timestamp": 1940449,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 10327,
     "hitType": 2,
@@ -2080,7 +2080,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 4821,
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 5435,
     "hitType": 2,
@@ -2091,7 +2091,7 @@ Array [
     "timestamp": 1940449,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 2694,
     "hitType": 1,
@@ -2101,7 +2101,7 @@ Array [
     "timestamp": 1940449,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 2654,
     "hitType": 1,
@@ -2111,7 +2111,7 @@ Array [
     "timestamp": 1940449,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 2983,
     "hitType": 1,
@@ -2122,7 +2122,7 @@ Array [
     "timestamp": 1940449,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 3301,
     "hitType": 1,
@@ -2134,7 +2134,7 @@ Array [
     "timestamp": 1940505,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 5600,
     "hitType": 1,
@@ -2147,7 +2147,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 5333,
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 2982,
     "hitType": 1,
@@ -2158,7 +2158,7 @@ Array [
     "timestamp": 1940505,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 2981,
     "hitType": 1,
@@ -2169,7 +2169,7 @@ Array [
     "timestamp": 1940505,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 2798,
     "hitType": 1,
@@ -2181,7 +2181,7 @@ Array [
     "timestamp": 1940505,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -2194,7 +2194,7 @@ Array [
     "timestamp": 1941808,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -2206,7 +2206,7 @@ Array [
     "timestamp": 1941808,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 2,
@@ -2217,7 +2217,7 @@ Array [
     "timestamp": 1943011,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 5371,
     "hitType": 2,
@@ -2227,7 +2227,7 @@ Array [
     "timestamp": 1943011,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 2,
@@ -2239,7 +2239,7 @@ Array [
     "timestamp": 1943011,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 2,
@@ -2250,7 +2250,7 @@ Array [
     "timestamp": 1943011,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -2262,7 +2262,7 @@ Array [
     "timestamp": 1943011,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -2273,7 +2273,7 @@ Array [
     "timestamp": 1943088,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 334,
     "hitType": 1,
@@ -2284,7 +2284,7 @@ Array [
     "timestamp": 1943088,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -2296,7 +2296,7 @@ Array [
     "timestamp": 1943088,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -2307,7 +2307,7 @@ Array [
     "timestamp": 1943088,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -2319,7 +2319,7 @@ Array [
     "timestamp": 1943088,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 2,
@@ -2330,7 +2330,7 @@ Array [
     "timestamp": 1944450,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 11359,
     "hitType": 2,
@@ -2342,7 +2342,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 5303,
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 2,
@@ -2354,7 +2354,7 @@ Array [
     "timestamp": 1944450,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -2365,7 +2365,7 @@ Array [
     "timestamp": 1944450,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 2,
@@ -2376,7 +2376,7 @@ Array [
     "timestamp": 1944450,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -2388,7 +2388,7 @@ Array [
     "timestamp": 1944450,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -2401,7 +2401,7 @@ Array [
     "timestamp": 1944499,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 5600,
     "hitType": 1,
@@ -2414,7 +2414,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 5333,
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -2426,7 +2426,7 @@ Array [
     "timestamp": 1944499,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -2439,7 +2439,7 @@ Array [
     "timestamp": 1944499,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -2451,7 +2451,7 @@ Array [
     "timestamp": 1944499,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -2463,7 +2463,7 @@ Array [
     "timestamp": 1944499,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 963,
     "hitType": 1,
@@ -2476,7 +2476,7 @@ Array [
     "timestamp": 1945790,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 5168,
     "hitType": 1,
@@ -2489,7 +2489,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 4922,
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 743,
     "hitType": 1,
@@ -2501,7 +2501,7 @@ Array [
     "timestamp": 1945790,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 2,
@@ -2513,7 +2513,7 @@ Array [
     "timestamp": 1945790,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -2525,7 +2525,7 @@ Array [
     "timestamp": 1945790,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 3168,
     "hitType": 1,
@@ -2537,7 +2537,7 @@ Array [
     "timestamp": 1945790,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -2548,7 +2548,7 @@ Array [
     "timestamp": 1947003,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 11095,
     "hitType": 2,
@@ -2560,7 +2560,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 5282,
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 2,
@@ -2571,7 +2571,7 @@ Array [
     "timestamp": 1947003,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -2583,7 +2583,7 @@ Array [
     "timestamp": 1947003,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -2594,7 +2594,7 @@ Array [
     "timestamp": 1947003,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 3573,
     "hitType": 2,
@@ -2606,7 +2606,7 @@ Array [
     "timestamp": 1947003,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -2617,7 +2617,7 @@ Array [
     "timestamp": 1947075,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 4965,
     "hitType": 1,
@@ -2629,7 +2629,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 4728,
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -2640,7 +2640,7 @@ Array [
     "timestamp": 1947075,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -2652,7 +2652,7 @@ Array [
     "timestamp": 1947075,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -2663,7 +2663,7 @@ Array [
     "timestamp": 1947075,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -2675,7 +2675,7 @@ Array [
     "timestamp": 1947090,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 1060,
     "hitType": 2,
@@ -2686,7 +2686,7 @@ Array [
     "timestamp": 1948436,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 5569,
     "hitType": 1,
@@ -2698,7 +2698,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 5303,
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 1091,
     "hitType": 2,
@@ -2709,7 +2709,7 @@ Array [
     "timestamp": 1948436,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -2720,7 +2720,7 @@ Array [
     "timestamp": 1948436,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 2983,
     "hitType": 1,
@@ -2731,7 +2731,7 @@ Array [
     "timestamp": 1948436,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 5518,
     "hitType": 2,
@@ -2744,7 +2744,7 @@ Array [
     "timestamp": 1948507,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 5600,
     "hitType": 1,
@@ -2757,7 +2757,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 5333,
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -2769,7 +2769,7 @@ Array [
     "timestamp": 1948507,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 520,
     "hitType": 1,
@@ -2782,7 +2782,7 @@ Array [
     "timestamp": 1948507,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -2794,7 +2794,7 @@ Array [
     "timestamp": 1948507,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -2806,7 +2806,7 @@ Array [
     "timestamp": 1948507,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 1139,
     "hitType": 1,
@@ -2819,7 +2819,7 @@ Array [
     "timestamp": 1949803,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 5169,
     "hitType": 1,
@@ -2832,7 +2832,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 4922,
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 1661,
     "hitType": 1,
@@ -2844,7 +2844,7 @@ Array [
     "timestamp": 1949803,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 961,
     "hitType": 1,
@@ -2856,7 +2856,7 @@ Array [
     "timestamp": 1949803,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 3047,
     "hitType": 1,
@@ -2868,7 +2868,7 @@ Array [
     "timestamp": 1949805,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -2879,7 +2879,7 @@ Array [
     "timestamp": 1951013,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 5043,
     "hitType": 1,
@@ -2891,7 +2891,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 4802,
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -2902,7 +2902,7 @@ Array [
     "timestamp": 1951013,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -2914,7 +2914,7 @@ Array [
     "timestamp": 1951013,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -2925,7 +2925,7 @@ Array [
     "timestamp": 1951013,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 5879,
     "hitType": 2,
@@ -2937,7 +2937,7 @@ Array [
     "timestamp": 1951013,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -2948,7 +2948,7 @@ Array [
     "timestamp": 1951085,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 4966,
     "hitType": 1,
@@ -2960,7 +2960,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 4728,
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -2971,7 +2971,7 @@ Array [
     "timestamp": 1951103,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -2983,7 +2983,7 @@ Array [
     "timestamp": 1951103,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 2,
@@ -2994,7 +2994,7 @@ Array [
     "timestamp": 1951103,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -3006,7 +3006,7 @@ Array [
     "timestamp": 1951103,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 2632,
     "hitType": 1,
@@ -3017,7 +3017,7 @@ Array [
     "timestamp": 1952459,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 5063,
     "hitType": 1,
@@ -3029,7 +3029,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 4821,
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 2652,
     "hitType": 1,
@@ -3040,7 +3040,7 @@ Array [
     "timestamp": 1952459,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 2534,
     "hitType": 2,
@@ -3051,7 +3051,7 @@ Array [
     "timestamp": 1952459,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 2,
@@ -3063,7 +3063,7 @@ Array [
     "timestamp": 1952459,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 2,
@@ -3076,7 +3076,7 @@ Array [
     "timestamp": 1952501,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 11200,
     "hitType": 2,
@@ -3089,7 +3089,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 5333,
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -3101,7 +3101,7 @@ Array [
     "timestamp": 1952501,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 1306,
     "hitType": 1,
@@ -3114,7 +3114,7 @@ Array [
     "timestamp": 1952501,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -3126,7 +3126,7 @@ Array [
     "timestamp": 1952501,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -3138,7 +3138,7 @@ Array [
     "timestamp": 1952501,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 2234,
     "hitType": 1,
@@ -3151,7 +3151,7 @@ Array [
     "timestamp": 1953798,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 5168,
     "hitType": 1,
@@ -3164,7 +3164,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 4922,
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 2861,
     "hitType": 1,
@@ -3175,7 +3175,7 @@ Array [
     "timestamp": 1953798,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 2817,
     "hitType": 1,
@@ -3186,7 +3186,7 @@ Array [
     "timestamp": 1953798,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 3168,
     "hitType": 1,
@@ -3198,7 +3198,7 @@ Array [
     "timestamp": 1953798,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 287,
     "hitType": 1,
@@ -3209,7 +3209,7 @@ Array [
     "timestamp": 1955000,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 5043,
     "hitType": 1,
@@ -3221,7 +3221,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 4802,
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 3155,
     "hitType": 2,
@@ -3232,7 +3232,7 @@ Array [
     "timestamp": 1955000,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 2,
@@ -3244,7 +3244,7 @@ Array [
     "timestamp": 1955000,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 373,
     "hitType": 1,
@@ -3255,7 +3255,7 @@ Array [
     "timestamp": 1955000,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 2,
@@ -3267,7 +3267,7 @@ Array [
     "timestamp": 1955000,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -3278,7 +3278,7 @@ Array [
     "timestamp": 1955078,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 4965,
     "hitType": 1,
@@ -3290,7 +3290,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 4728,
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -3301,7 +3301,7 @@ Array [
     "timestamp": 1955078,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -3313,7 +3313,7 @@ Array [
     "timestamp": 1955078,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -3324,7 +3324,7 @@ Array [
     "timestamp": 1955078,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -3336,7 +3336,7 @@ Array [
     "timestamp": 1955078,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 2695,
     "hitType": 1,
@@ -3346,7 +3346,7 @@ Array [
     "timestamp": 1956432,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 5062,
     "hitType": 1,
@@ -3358,7 +3358,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 4821,
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 2694,
     "hitType": 1,
@@ -3368,7 +3368,7 @@ Array [
     "timestamp": 1956432,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 4124,
     "hitType": 2,
@@ -3379,7 +3379,7 @@ Array [
     "timestamp": 1956432,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 2664,
     "hitType": 1,
@@ -3390,7 +3390,7 @@ Array [
     "timestamp": 1956432,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 2948,
     "hitType": 1,
@@ -3402,7 +3402,7 @@ Array [
     "timestamp": 1956506,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 5600,
     "hitType": 1,
@@ -3415,7 +3415,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 5333,
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 1601,
     "hitType": 1,
@@ -3427,7 +3427,7 @@ Array [
     "timestamp": 1956506,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 2948,
     "hitType": 1,
@@ -3439,7 +3439,7 @@ Array [
     "timestamp": 1956506,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 280,
     "hitType": 2,
@@ -3451,7 +3451,7 @@ Array [
     "timestamp": 1956506,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 0,
     "hitType": 1,
@@ -3463,7 +3463,7 @@ Array [
     "timestamp": 1956506,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 2830,
     "hitType": 1,
@@ -3475,7 +3475,7 @@ Array [
     "timestamp": 1957805,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 5168,
     "hitType": 1,
@@ -3488,7 +3488,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 4922,
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 2861,
     "hitType": 1,
@@ -3499,7 +3499,7 @@ Array [
     "timestamp": 1957805,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 2817,
     "hitType": 1,
@@ -3510,7 +3510,7 @@ Array [
     "timestamp": 1957805,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 2830,
     "hitType": 1,
@@ -3522,7 +3522,7 @@ Array [
     "timestamp": 1957805,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 1796,
     "hitType": 1,
@@ -3533,7 +3533,7 @@ Array [
     "timestamp": 1959004,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344421,
     "amount": 5043,
     "hitType": 1,
@@ -3545,7 +3545,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 4802,
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 5909,
     "hitType": 2,
@@ -3555,7 +3555,7 @@ Array [
     "timestamp": 1959004,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 1785,
     "hitType": 1,
@@ -3567,7 +3567,7 @@ Array [
     "timestamp": 1959004,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 1923,
     "hitType": 1,
@@ -3578,7 +3578,7 @@ Array [
     "timestamp": 1959004,
     "type": "heal",
   },
-  Object {
+  {
     "abilityGameID": 344422,
     "amount": 2654,
     "hitType": 1,

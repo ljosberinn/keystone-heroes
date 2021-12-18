@@ -1,8 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`applybuff forwards bolstering stack 1`] = `
-Array [
-  Object {
+[
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -10,7 +10,7 @@ Array [
     "targetNPCInstance": 1,
     "timestamp": 6029413,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -18,7 +18,7 @@ Array [
     "targetNPCInstance": 2,
     "timestamp": 6029413,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -26,7 +26,7 @@ Array [
     "targetNPCInstance": 1,
     "timestamp": 6029413,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -34,7 +34,7 @@ Array [
     "targetNPCInstance": 3,
     "timestamp": 6029413,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -42,7 +42,7 @@ Array [
     "targetNPCInstance": 2,
     "timestamp": 6029413,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -50,7 +50,7 @@ Array [
     "targetNPCInstance": 1,
     "timestamp": 6029413,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -58,7 +58,7 @@ Array [
     "targetNPCInstance": 2,
     "timestamp": 6034063,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -66,7 +66,7 @@ Array [
     "targetNPCInstance": 1,
     "timestamp": 6034063,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -74,7 +74,7 @@ Array [
     "targetNPCInstance": 3,
     "timestamp": 6034063,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -82,7 +82,7 @@ Array [
     "targetNPCInstance": 2,
     "timestamp": 6034063,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -90,7 +90,7 @@ Array [
     "targetNPCInstance": 1,
     "timestamp": 6034063,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -98,7 +98,7 @@ Array [
     "targetNPCInstance": 1,
     "timestamp": 6034914,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -106,7 +106,7 @@ Array [
     "targetNPCInstance": 3,
     "timestamp": 6034914,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -114,7 +114,7 @@ Array [
     "targetNPCInstance": 2,
     "timestamp": 6034914,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -122,7 +122,7 @@ Array [
     "targetNPCInstance": 1,
     "timestamp": 6034914,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -130,7 +130,7 @@ Array [
     "targetNPCInstance": 1,
     "timestamp": 6035028,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -138,7 +138,7 @@ Array [
     "targetNPCInstance": 3,
     "timestamp": 6035028,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -146,7 +146,7 @@ Array [
     "targetNPCInstance": 1,
     "timestamp": 6035028,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -154,7 +154,7 @@ Array [
     "targetNPCInstance": 1,
     "timestamp": 6035637,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -162,7 +162,7 @@ Array [
     "targetNPCInstance": 3,
     "timestamp": 6035637,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -170,7 +170,7 @@ Array [
     "targetNPCInstance": 3,
     "timestamp": 6037240,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -178,7 +178,7 @@ Array [
     "targetNPCInstance": 2,
     "timestamp": 6066821,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -186,7 +186,7 @@ Array [
     "targetNPCInstance": 4,
     "timestamp": 6066821,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -194,7 +194,7 @@ Array [
     "targetNPCInstance": 3,
     "timestamp": 6066821,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -202,7 +202,7 @@ Array [
     "targetNPCInstance": 2,
     "timestamp": 6066821,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -210,7 +210,7 @@ Array [
     "targetNPCInstance": 1,
     "timestamp": 6066821,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -218,7 +218,7 @@ Array [
     "targetNPCInstance": 2,
     "timestamp": 6066821,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -226,7 +226,7 @@ Array [
     "targetNPCInstance": 3,
     "timestamp": 6066821,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -234,7 +234,7 @@ Array [
     "targetNPCInstance": 4,
     "timestamp": 6066821,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -242,7 +242,7 @@ Array [
     "targetNPCInstance": 4,
     "timestamp": 6066821,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -250,7 +250,7 @@ Array [
     "targetNPCInstance": 2,
     "timestamp": 6067842,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -258,7 +258,7 @@ Array [
     "targetNPCInstance": 4,
     "timestamp": 6067842,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -266,7 +266,7 @@ Array [
     "targetNPCInstance": 3,
     "timestamp": 6067842,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -274,7 +274,7 @@ Array [
     "targetNPCInstance": 2,
     "timestamp": 6067842,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -282,7 +282,7 @@ Array [
     "targetNPCInstance": 2,
     "timestamp": 6067842,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -290,7 +290,7 @@ Array [
     "targetNPCInstance": 3,
     "timestamp": 6067842,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -298,7 +298,7 @@ Array [
     "targetNPCInstance": 4,
     "timestamp": 6067842,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -306,7 +306,7 @@ Array [
     "targetNPCInstance": 4,
     "timestamp": 6067842,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -314,7 +314,7 @@ Array [
     "targetNPCInstance": 4,
     "timestamp": 6074548,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -322,7 +322,7 @@ Array [
     "targetNPCInstance": 3,
     "timestamp": 6074548,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -330,7 +330,7 @@ Array [
     "targetNPCInstance": 2,
     "timestamp": 6074548,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -338,7 +338,7 @@ Array [
     "targetNPCInstance": 3,
     "timestamp": 6074548,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -346,7 +346,7 @@ Array [
     "targetNPCInstance": 2,
     "timestamp": 6074548,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -354,7 +354,7 @@ Array [
     "targetNPCInstance": 2,
     "timestamp": 6074548,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -362,7 +362,7 @@ Array [
     "targetNPCInstance": 4,
     "timestamp": 6074548,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -370,7 +370,7 @@ Array [
     "targetNPCInstance": 4,
     "timestamp": 6078859,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -378,7 +378,7 @@ Array [
     "targetNPCInstance": 3,
     "timestamp": 6078859,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -386,7 +386,7 @@ Array [
     "targetNPCInstance": 2,
     "timestamp": 6078859,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -394,7 +394,7 @@ Array [
     "targetNPCInstance": 4,
     "timestamp": 6078859,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -402,7 +402,7 @@ Array [
     "targetNPCInstance": 2,
     "timestamp": 6078859,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -410,7 +410,7 @@ Array [
     "targetNPCInstance": 2,
     "timestamp": 6083842,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -418,7 +418,7 @@ Array [
     "targetNPCInstance": 4,
     "timestamp": 6083842,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -426,7 +426,7 @@ Array [
     "targetNPCInstance": 4,
     "timestamp": 6086160,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -434,7 +434,7 @@ Array [
     "targetNPCInstance": 3,
     "timestamp": 6086160,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -442,7 +442,7 @@ Array [
     "targetNPCInstance": 4,
     "timestamp": 6086160,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -450,7 +450,7 @@ Array [
     "targetNPCInstance": 2,
     "timestamp": 6117136,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -458,7 +458,7 @@ Array [
     "targetNPCInstance": 3,
     "timestamp": 6117136,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -466,7 +466,7 @@ Array [
     "targetNPCInstance": 4,
     "timestamp": 6117136,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -474,7 +474,7 @@ Array [
     "targetNPCInstance": 2,
     "timestamp": 6135410,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -482,7 +482,7 @@ Array [
     "targetNPCInstance": 3,
     "timestamp": 6135410,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -490,7 +490,7 @@ Array [
     "targetNPCInstance": 3,
     "timestamp": 6143395,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -498,7 +498,7 @@ Array [
     "targetNPCInstance": 4,
     "timestamp": 6202583,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -506,7 +506,7 @@ Array [
     "targetNPCInstance": 1,
     "timestamp": 6202583,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -514,7 +514,7 @@ Array [
     "targetNPCInstance": 1,
     "timestamp": 6202583,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -522,7 +522,7 @@ Array [
     "targetNPCInstance": 1,
     "timestamp": 6202826,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -530,7 +530,7 @@ Array [
     "targetNPCInstance": 1,
     "timestamp": 6202826,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -538,7 +538,7 @@ Array [
     "targetNPCInstance": 1,
     "timestamp": 6203241,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -546,7 +546,7 @@ Array [
     "targetNPCInstance": 7,
     "timestamp": 6264238,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -554,7 +554,7 @@ Array [
     "targetNPCInstance": 5,
     "timestamp": 6264238,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -562,7 +562,7 @@ Array [
     "targetNPCInstance": 5,
     "timestamp": 6264238,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -570,7 +570,7 @@ Array [
     "targetNPCInstance": 7,
     "timestamp": 6270958,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -578,7 +578,7 @@ Array [
     "targetNPCInstance": 5,
     "timestamp": 6270958,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -586,7 +586,7 @@ Array [
     "targetNPCInstance": 7,
     "timestamp": 6272668,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -594,7 +594,7 @@ Array [
     "targetNPCInstance": 2,
     "timestamp": 6301194,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -602,7 +602,7 @@ Array [
     "targetNPCInstance": 4,
     "timestamp": 6376090,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -610,7 +610,7 @@ Array [
     "targetNPCInstance": 6,
     "timestamp": 6376090,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -618,7 +618,7 @@ Array [
     "targetNPCInstance": 5,
     "timestamp": 6376090,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -626,7 +626,7 @@ Array [
     "targetNPCInstance": 8,
     "timestamp": 6376090,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -634,7 +634,7 @@ Array [
     "targetNPCInstance": 7,
     "timestamp": 6376090,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -642,7 +642,7 @@ Array [
     "targetNPCInstance": 6,
     "timestamp": 6376858,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -650,7 +650,7 @@ Array [
     "targetNPCInstance": 5,
     "timestamp": 6376858,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -658,7 +658,7 @@ Array [
     "targetNPCInstance": 8,
     "timestamp": 6376858,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -666,7 +666,7 @@ Array [
     "targetNPCInstance": 7,
     "timestamp": 6376858,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -674,7 +674,7 @@ Array [
     "targetNPCInstance": 6,
     "timestamp": 6377700,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -682,7 +682,7 @@ Array [
     "targetNPCInstance": 8,
     "timestamp": 6377700,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -690,7 +690,7 @@ Array [
     "targetNPCInstance": 7,
     "timestamp": 6377700,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -698,7 +698,7 @@ Array [
     "targetNPCInstance": 8,
     "timestamp": 6377722,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -706,7 +706,7 @@ Array [
     "targetNPCInstance": 7,
     "timestamp": 6377722,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -714,7 +714,7 @@ Array [
     "targetNPCInstance": 7,
     "timestamp": 6378420,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -722,7 +722,7 @@ Array [
     "targetNPCInstance": 9,
     "timestamp": 6406325,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -730,7 +730,7 @@ Array [
     "targetNPCInstance": 8,
     "timestamp": 6406325,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -738,7 +738,7 @@ Array [
     "targetNPCInstance": 9,
     "timestamp": 6406325,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -746,7 +746,7 @@ Array [
     "targetNPCInstance": 8,
     "timestamp": 6406325,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -754,7 +754,7 @@ Array [
     "targetNPCInstance": 7,
     "timestamp": 6406325,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -762,7 +762,7 @@ Array [
     "targetNPCInstance": 10,
     "timestamp": 6406325,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -770,7 +770,7 @@ Array [
     "targetNPCInstance": 9,
     "timestamp": 6406490,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -778,7 +778,7 @@ Array [
     "targetNPCInstance": 8,
     "timestamp": 6406490,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -786,7 +786,7 @@ Array [
     "targetNPCInstance": 9,
     "timestamp": 6406490,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -794,7 +794,7 @@ Array [
     "targetNPCInstance": 7,
     "timestamp": 6406490,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -802,7 +802,7 @@ Array [
     "targetNPCInstance": 10,
     "timestamp": 6406490,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -810,7 +810,7 @@ Array [
     "targetNPCInstance": 9,
     "timestamp": 6410075,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -818,7 +818,7 @@ Array [
     "targetNPCInstance": 8,
     "timestamp": 6410075,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -826,7 +826,7 @@ Array [
     "targetNPCInstance": 7,
     "timestamp": 6410075,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -834,7 +834,7 @@ Array [
     "targetNPCInstance": 10,
     "timestamp": 6410075,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -842,7 +842,7 @@ Array [
     "targetNPCInstance": 9,
     "timestamp": 6410488,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -850,7 +850,7 @@ Array [
     "targetNPCInstance": 8,
     "timestamp": 6410488,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -858,7 +858,7 @@ Array [
     "targetNPCInstance": 10,
     "timestamp": 6410488,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -866,7 +866,7 @@ Array [
     "targetNPCInstance": 9,
     "timestamp": 6425890,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -874,7 +874,7 @@ Array [
     "targetNPCInstance": 10,
     "timestamp": 6425890,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -882,7 +882,7 @@ Array [
     "targetNPCInstance": 10,
     "timestamp": 6430754,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -890,7 +890,7 @@ Array [
     "targetNPCInstance": 3,
     "timestamp": 6470567,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -898,7 +898,7 @@ Array [
     "targetNPCInstance": 9,
     "timestamp": 6539996,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -906,7 +906,7 @@ Array [
     "targetNPCInstance": 10,
     "timestamp": 6539996,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -914,7 +914,7 @@ Array [
     "targetNPCInstance": 10,
     "timestamp": 6539996,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -922,7 +922,7 @@ Array [
     "targetNPCInstance": 6,
     "timestamp": 6539996,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -930,7 +930,7 @@ Array [
     "targetNPCInstance": 9,
     "timestamp": 6543566,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -938,7 +938,7 @@ Array [
     "targetNPCInstance": 10,
     "timestamp": 6543566,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -946,7 +946,7 @@ Array [
     "targetNPCInstance": 6,
     "timestamp": 6543566,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -954,7 +954,7 @@ Array [
     "targetNPCInstance": 9,
     "timestamp": 6543566,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -962,7 +962,7 @@ Array [
     "targetNPCInstance": 6,
     "timestamp": 6543566,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -970,7 +970,7 @@ Array [
     "targetNPCInstance": 9,
     "timestamp": 6545166,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -978,7 +978,7 @@ Array [
     "targetNPCInstance": 11,
     "timestamp": 6569466,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -986,7 +986,7 @@ Array [
     "targetNPCInstance": 14,
     "timestamp": 6569466,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -994,7 +994,7 @@ Array [
     "targetNPCInstance": 12,
     "timestamp": 6569466,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -1002,7 +1002,7 @@ Array [
     "targetNPCInstance": 11,
     "timestamp": 6569466,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -1010,7 +1010,7 @@ Array [
     "targetNPCInstance": 7,
     "timestamp": 6569466,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -1018,7 +1018,7 @@ Array [
     "targetNPCInstance": 11,
     "timestamp": 6574198,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -1026,7 +1026,7 @@ Array [
     "targetNPCInstance": 12,
     "timestamp": 6574198,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -1034,7 +1034,7 @@ Array [
     "targetNPCInstance": 11,
     "timestamp": 6574198,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -1042,7 +1042,7 @@ Array [
     "targetNPCInstance": 7,
     "timestamp": 6574198,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -1050,7 +1050,7 @@ Array [
     "targetNPCInstance": 12,
     "timestamp": 6576849,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -1058,7 +1058,7 @@ Array [
     "targetNPCInstance": 11,
     "timestamp": 6576849,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -1066,7 +1066,7 @@ Array [
     "targetNPCInstance": 7,
     "timestamp": 6576849,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -1074,7 +1074,7 @@ Array [
     "targetNPCInstance": 11,
     "timestamp": 6578067,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -1082,7 +1082,7 @@ Array [
     "targetNPCInstance": 7,
     "timestamp": 6578067,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -1090,7 +1090,7 @@ Array [
     "targetNPCInstance": 7,
     "timestamp": 6580869,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -1098,7 +1098,7 @@ Array [
     "targetNPCInstance": 8,
     "timestamp": 6607192,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -1106,7 +1106,7 @@ Array [
     "targetNPCInstance": null,
     "timestamp": 6674648,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -1114,7 +1114,7 @@ Array [
     "targetNPCInstance": 7,
     "timestamp": 7027973,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -1122,7 +1122,7 @@ Array [
     "targetNPCInstance": 12,
     "timestamp": 7027973,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -1130,7 +1130,7 @@ Array [
     "targetNPCInstance": 11,
     "timestamp": 7027973,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -1138,7 +1138,7 @@ Array [
     "targetNPCInstance": 13,
     "timestamp": 7027973,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -1146,7 +1146,7 @@ Array [
     "targetNPCInstance": 7,
     "timestamp": 7031809,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -1154,7 +1154,7 @@ Array [
     "targetNPCInstance": 12,
     "timestamp": 7031809,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -1162,7 +1162,7 @@ Array [
     "targetNPCInstance": 13,
     "timestamp": 7031809,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -1170,7 +1170,7 @@ Array [
     "targetNPCInstance": 12,
     "timestamp": 7034322,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -1178,7 +1178,7 @@ Array [
     "targetNPCInstance": 13,
     "timestamp": 7034322,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -1186,7 +1186,7 @@ Array [
     "targetNPCInstance": 13,
     "timestamp": 7043808,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -1194,7 +1194,7 @@ Array [
     "targetNPCInstance": 13,
     "timestamp": 7087513,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -1202,7 +1202,7 @@ Array [
     "targetNPCInstance": 7,
     "timestamp": 7087513,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -1210,7 +1210,7 @@ Array [
     "targetNPCInstance": 2,
     "timestamp": 7087513,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -1218,7 +1218,7 @@ Array [
     "targetNPCInstance": 7,
     "timestamp": 7089394,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -1226,7 +1226,7 @@ Array [
     "targetNPCInstance": 2,
     "timestamp": 7089394,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": 1,
@@ -1238,92 +1238,92 @@ Array [
 `;
 
 exports[`applybuff tracks PF Slime buffs 1`] = `
-Array [
-  Object {
+[
+  {
     "abilityID": 340210,
     "eventType": "ApplyBuff",
     "sourcePlayerID": 1,
     "targetPlayerID": 1,
     "timestamp": 4006933,
   },
-  Object {
+  {
     "abilityID": 340210,
     "eventType": "ApplyBuff",
     "sourcePlayerID": 1,
     "targetPlayerID": 1,
     "timestamp": 4018740,
   },
-  Object {
+  {
     "abilityID": 340210,
     "eventType": "ApplyBuff",
     "sourcePlayerID": 1,
     "targetPlayerID": 1,
     "timestamp": 4076733,
   },
-  Object {
+  {
     "abilityID": 340210,
     "eventType": "ApplyBuff",
     "sourcePlayerID": 1,
     "targetPlayerID": 1,
     "timestamp": 4078931,
   },
-  Object {
+  {
     "abilityID": 340210,
     "eventType": "ApplyBuff",
     "sourcePlayerID": 1,
     "targetPlayerID": 1,
     "timestamp": 4563925,
   },
-  Object {
+  {
     "abilityID": 340225,
     "eventType": "ApplyBuff",
     "sourcePlayerID": 1,
     "targetPlayerID": 1,
     "timestamp": 4563925,
   },
-  Object {
+  {
     "abilityID": 340271,
     "eventType": "ApplyBuff",
     "sourcePlayerID": 1,
     "targetPlayerID": 1,
     "timestamp": 4622916,
   },
-  Object {
+  {
     "abilityID": 340271,
     "eventType": "ApplyBuff",
     "sourcePlayerID": 1,
     "targetPlayerID": 1,
     "timestamp": 4978916,
   },
-  Object {
+  {
     "abilityID": 340225,
     "eventType": "ApplyBuff",
     "sourcePlayerID": 1,
     "targetPlayerID": 1,
     "timestamp": 4979920,
   },
-  Object {
+  {
     "abilityID": 340225,
     "eventType": "ApplyBuff",
     "sourcePlayerID": 1,
     "targetPlayerID": 1,
     "timestamp": 4986724,
   },
-  Object {
+  {
     "abilityID": 340271,
     "eventType": "ApplyBuff",
     "sourcePlayerID": 1,
     "targetPlayerID": 1,
     "timestamp": 4986724,
   },
-  Object {
+  {
     "abilityID": 340210,
     "eventType": "ApplyBuff",
     "sourcePlayerID": 1,
     "targetPlayerID": 1,
     "timestamp": 5260722,
   },
-  Object {
+  {
     "abilityID": 340210,
     "eventType": "ApplyBuff",
     "sourcePlayerID": 1,
@@ -1334,122 +1334,122 @@ Array [
 `;
 
 exports[`applybuff tracks SD Lantern Buff 1`] = `
-Array [
-  Object {
+[
+  {
     "abilityID": 340433,
     "eventType": "ApplyBuff",
     "targetPlayerID": 1,
     "timestamp": 11577910,
   },
-  Object {
+  {
     "abilityID": 340433,
     "eventType": "ApplyBuff",
     "targetPlayerID": 1,
     "timestamp": 11577910,
   },
-  Object {
+  {
     "abilityID": 340433,
     "eventType": "ApplyBuff",
     "targetPlayerID": 1,
     "timestamp": 11577910,
   },
-  Object {
+  {
     "abilityID": 340433,
     "eventType": "ApplyBuff",
     "targetPlayerID": 1,
     "timestamp": 11577910,
   },
-  Object {
+  {
     "abilityID": 340433,
     "eventType": "ApplyBuff",
     "targetPlayerID": 1,
     "timestamp": 11577910,
   },
-  Object {
+  {
     "abilityID": 340433,
     "eventType": "ApplyBuff",
     "targetPlayerID": 1,
     "timestamp": 12269271,
   },
-  Object {
+  {
     "abilityID": 340433,
     "eventType": "ApplyBuff",
     "targetPlayerID": 1,
     "timestamp": 12269271,
   },
-  Object {
+  {
     "abilityID": 340433,
     "eventType": "ApplyBuff",
     "targetPlayerID": 1,
     "timestamp": 12269271,
   },
-  Object {
+  {
     "abilityID": 340433,
     "eventType": "ApplyBuff",
     "targetPlayerID": 1,
     "timestamp": 12269271,
   },
-  Object {
+  {
     "abilityID": 340433,
     "eventType": "ApplyBuff",
     "targetPlayerID": 1,
     "timestamp": 12269271,
   },
-  Object {
+  {
     "abilityID": 340433,
     "eventType": "ApplyBuff",
     "targetPlayerID": 1,
     "timestamp": 12640578,
   },
-  Object {
+  {
     "abilityID": 340433,
     "eventType": "ApplyBuff",
     "targetPlayerID": 1,
     "timestamp": 12640578,
   },
-  Object {
+  {
     "abilityID": 340433,
     "eventType": "ApplyBuff",
     "targetPlayerID": 1,
     "timestamp": 12640578,
   },
-  Object {
+  {
     "abilityID": 340433,
     "eventType": "ApplyBuff",
     "targetPlayerID": 1,
     "timestamp": 12640578,
   },
-  Object {
+  {
     "abilityID": 340433,
     "eventType": "ApplyBuff",
     "targetPlayerID": 1,
     "timestamp": 12640578,
   },
-  Object {
+  {
     "abilityID": 340433,
     "eventType": "ApplyBuff",
     "targetPlayerID": 1,
     "timestamp": 13482676,
   },
-  Object {
+  {
     "abilityID": 340433,
     "eventType": "ApplyBuff",
     "targetPlayerID": 1,
     "timestamp": 13482678,
   },
-  Object {
+  {
     "abilityID": 340433,
     "eventType": "ApplyBuff",
     "targetPlayerID": 1,
     "timestamp": 13482678,
   },
-  Object {
+  {
     "abilityID": 340433,
     "eventType": "ApplyBuff",
     "targetPlayerID": 1,
     "timestamp": 13482678,
   },
-  Object {
+  {
     "abilityID": 340433,
     "eventType": "ApplyBuff",
     "targetPlayerID": 1,
@@ -1459,22 +1459,22 @@ Array [
 `;
 
 exports[`applybuff tracks ToP banner aura 1`] = `
-Array [
-  Object {
+[
+  {
     "abilityID": 340378,
     "eventType": "ApplyBuff",
     "sourcePlayerID": 1,
     "targetPlayerID": 1,
     "timestamp": 5032705,
   },
-  Object {
+  {
     "abilityID": 340378,
     "eventType": "ApplyBuff",
     "sourcePlayerID": 1,
     "targetPlayerID": 1,
     "timestamp": 5549610,
   },
-  Object {
+  {
     "abilityID": 340378,
     "eventType": "ApplyBuff",
     "sourcePlayerID": 1,
@@ -1485,8 +1485,8 @@ Array [
 `;
 
 exports[`applybuff tracks bolstering 1`] = `
-Array [
-  Object {
+[
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1494,7 +1494,7 @@ Array [
     "targetNPCInstance": 1,
     "timestamp": 6029413,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1502,7 +1502,7 @@ Array [
     "targetNPCInstance": 2,
     "timestamp": 6029413,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1510,7 +1510,7 @@ Array [
     "targetNPCInstance": 1,
     "timestamp": 6029413,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1518,7 +1518,7 @@ Array [
     "targetNPCInstance": 3,
     "timestamp": 6029413,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1526,7 +1526,7 @@ Array [
     "targetNPCInstance": 2,
     "timestamp": 6029413,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1534,7 +1534,7 @@ Array [
     "targetNPCInstance": 1,
     "timestamp": 6029413,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1542,7 +1542,7 @@ Array [
     "targetNPCInstance": 2,
     "timestamp": 6034063,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1550,7 +1550,7 @@ Array [
     "targetNPCInstance": 1,
     "timestamp": 6034063,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1558,7 +1558,7 @@ Array [
     "targetNPCInstance": 3,
     "timestamp": 6034063,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1566,7 +1566,7 @@ Array [
     "targetNPCInstance": 2,
     "timestamp": 6034063,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1574,7 +1574,7 @@ Array [
     "targetNPCInstance": 1,
     "timestamp": 6034063,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1582,7 +1582,7 @@ Array [
     "targetNPCInstance": 1,
     "timestamp": 6034914,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1590,7 +1590,7 @@ Array [
     "targetNPCInstance": 3,
     "timestamp": 6034914,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1598,7 +1598,7 @@ Array [
     "targetNPCInstance": 2,
     "timestamp": 6034914,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1606,7 +1606,7 @@ Array [
     "targetNPCInstance": 1,
     "timestamp": 6034914,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1614,7 +1614,7 @@ Array [
     "targetNPCInstance": 1,
     "timestamp": 6035028,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1622,7 +1622,7 @@ Array [
     "targetNPCInstance": 3,
     "timestamp": 6035028,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1630,7 +1630,7 @@ Array [
     "targetNPCInstance": 1,
     "timestamp": 6035028,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1638,7 +1638,7 @@ Array [
     "targetNPCInstance": 1,
     "timestamp": 6035637,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1646,7 +1646,7 @@ Array [
     "targetNPCInstance": 3,
     "timestamp": 6035637,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1654,7 +1654,7 @@ Array [
     "targetNPCInstance": 3,
     "timestamp": 6037240,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1662,7 +1662,7 @@ Array [
     "targetNPCInstance": 2,
     "timestamp": 6066821,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1670,7 +1670,7 @@ Array [
     "targetNPCInstance": 4,
     "timestamp": 6066821,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1678,7 +1678,7 @@ Array [
     "targetNPCInstance": 3,
     "timestamp": 6066821,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1686,7 +1686,7 @@ Array [
     "targetNPCInstance": 2,
     "timestamp": 6066821,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1694,7 +1694,7 @@ Array [
     "targetNPCInstance": 1,
     "timestamp": 6066821,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1702,7 +1702,7 @@ Array [
     "targetNPCInstance": 2,
     "timestamp": 6066821,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1710,7 +1710,7 @@ Array [
     "targetNPCInstance": 3,
     "timestamp": 6066821,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1718,7 +1718,7 @@ Array [
     "targetNPCInstance": 4,
     "timestamp": 6066821,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1726,7 +1726,7 @@ Array [
     "targetNPCInstance": 4,
     "timestamp": 6066821,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1734,7 +1734,7 @@ Array [
     "targetNPCInstance": 2,
     "timestamp": 6067842,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1742,7 +1742,7 @@ Array [
     "targetNPCInstance": 4,
     "timestamp": 6067842,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1750,7 +1750,7 @@ Array [
     "targetNPCInstance": 3,
     "timestamp": 6067842,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1758,7 +1758,7 @@ Array [
     "targetNPCInstance": 2,
     "timestamp": 6067842,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1766,7 +1766,7 @@ Array [
     "targetNPCInstance": 2,
     "timestamp": 6067842,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1774,7 +1774,7 @@ Array [
     "targetNPCInstance": 3,
     "timestamp": 6067842,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1782,7 +1782,7 @@ Array [
     "targetNPCInstance": 4,
     "timestamp": 6067842,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1790,7 +1790,7 @@ Array [
     "targetNPCInstance": 4,
     "timestamp": 6067842,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1798,7 +1798,7 @@ Array [
     "targetNPCInstance": 4,
     "timestamp": 6074548,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1806,7 +1806,7 @@ Array [
     "targetNPCInstance": 3,
     "timestamp": 6074548,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1814,7 +1814,7 @@ Array [
     "targetNPCInstance": 2,
     "timestamp": 6074548,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1822,7 +1822,7 @@ Array [
     "targetNPCInstance": 3,
     "timestamp": 6074548,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1830,7 +1830,7 @@ Array [
     "targetNPCInstance": 2,
     "timestamp": 6074548,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1838,7 +1838,7 @@ Array [
     "targetNPCInstance": 2,
     "timestamp": 6074548,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1846,7 +1846,7 @@ Array [
     "targetNPCInstance": 4,
     "timestamp": 6074548,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1854,7 +1854,7 @@ Array [
     "targetNPCInstance": 4,
     "timestamp": 6078859,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1862,7 +1862,7 @@ Array [
     "targetNPCInstance": 3,
     "timestamp": 6078859,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1870,7 +1870,7 @@ Array [
     "targetNPCInstance": 2,
     "timestamp": 6078859,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1878,7 +1878,7 @@ Array [
     "targetNPCInstance": 4,
     "timestamp": 6078859,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1886,7 +1886,7 @@ Array [
     "targetNPCInstance": 2,
     "timestamp": 6078859,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1894,7 +1894,7 @@ Array [
     "targetNPCInstance": 2,
     "timestamp": 6083842,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1902,7 +1902,7 @@ Array [
     "targetNPCInstance": 4,
     "timestamp": 6083842,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1910,7 +1910,7 @@ Array [
     "targetNPCInstance": 4,
     "timestamp": 6086160,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1918,7 +1918,7 @@ Array [
     "targetNPCInstance": 3,
     "timestamp": 6086160,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1926,7 +1926,7 @@ Array [
     "targetNPCInstance": 4,
     "timestamp": 6086160,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1934,7 +1934,7 @@ Array [
     "targetNPCInstance": 2,
     "timestamp": 6117136,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1942,7 +1942,7 @@ Array [
     "targetNPCInstance": 3,
     "timestamp": 6117136,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1950,7 +1950,7 @@ Array [
     "targetNPCInstance": 4,
     "timestamp": 6117136,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1958,7 +1958,7 @@ Array [
     "targetNPCInstance": 2,
     "timestamp": 6135410,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1966,7 +1966,7 @@ Array [
     "targetNPCInstance": 3,
     "timestamp": 6135410,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1974,7 +1974,7 @@ Array [
     "targetNPCInstance": 3,
     "timestamp": 6143395,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1982,7 +1982,7 @@ Array [
     "targetNPCInstance": 4,
     "timestamp": 6202583,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1990,7 +1990,7 @@ Array [
     "targetNPCInstance": 1,
     "timestamp": 6202583,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -1998,7 +1998,7 @@ Array [
     "targetNPCInstance": 1,
     "timestamp": 6202583,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2006,7 +2006,7 @@ Array [
     "targetNPCInstance": 1,
     "timestamp": 6202826,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2014,7 +2014,7 @@ Array [
     "targetNPCInstance": 1,
     "timestamp": 6202826,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2022,7 +2022,7 @@ Array [
     "targetNPCInstance": 1,
     "timestamp": 6203241,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2030,7 +2030,7 @@ Array [
     "targetNPCInstance": 7,
     "timestamp": 6264238,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2038,7 +2038,7 @@ Array [
     "targetNPCInstance": 5,
     "timestamp": 6264238,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2046,7 +2046,7 @@ Array [
     "targetNPCInstance": 5,
     "timestamp": 6264238,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2054,7 +2054,7 @@ Array [
     "targetNPCInstance": 7,
     "timestamp": 6270958,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2062,7 +2062,7 @@ Array [
     "targetNPCInstance": 5,
     "timestamp": 6270958,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2070,7 +2070,7 @@ Array [
     "targetNPCInstance": 7,
     "timestamp": 6272668,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2078,7 +2078,7 @@ Array [
     "targetNPCInstance": 2,
     "timestamp": 6301194,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2086,7 +2086,7 @@ Array [
     "targetNPCInstance": 4,
     "timestamp": 6376090,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2094,7 +2094,7 @@ Array [
     "targetNPCInstance": 6,
     "timestamp": 6376090,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2102,7 +2102,7 @@ Array [
     "targetNPCInstance": 5,
     "timestamp": 6376090,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2110,7 +2110,7 @@ Array [
     "targetNPCInstance": 8,
     "timestamp": 6376090,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2118,7 +2118,7 @@ Array [
     "targetNPCInstance": 7,
     "timestamp": 6376090,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2126,7 +2126,7 @@ Array [
     "targetNPCInstance": 6,
     "timestamp": 6376858,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2134,7 +2134,7 @@ Array [
     "targetNPCInstance": 5,
     "timestamp": 6376858,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2142,7 +2142,7 @@ Array [
     "targetNPCInstance": 8,
     "timestamp": 6376858,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2150,7 +2150,7 @@ Array [
     "targetNPCInstance": 7,
     "timestamp": 6376858,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2158,7 +2158,7 @@ Array [
     "targetNPCInstance": 6,
     "timestamp": 6377700,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2166,7 +2166,7 @@ Array [
     "targetNPCInstance": 8,
     "timestamp": 6377700,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2174,7 +2174,7 @@ Array [
     "targetNPCInstance": 7,
     "timestamp": 6377700,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2182,7 +2182,7 @@ Array [
     "targetNPCInstance": 8,
     "timestamp": 6377722,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2190,7 +2190,7 @@ Array [
     "targetNPCInstance": 7,
     "timestamp": 6377722,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2198,7 +2198,7 @@ Array [
     "targetNPCInstance": 7,
     "timestamp": 6378420,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2206,7 +2206,7 @@ Array [
     "targetNPCInstance": 9,
     "timestamp": 6406325,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2214,7 +2214,7 @@ Array [
     "targetNPCInstance": 8,
     "timestamp": 6406325,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2222,7 +2222,7 @@ Array [
     "targetNPCInstance": 9,
     "timestamp": 6406325,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2230,7 +2230,7 @@ Array [
     "targetNPCInstance": 8,
     "timestamp": 6406325,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2238,7 +2238,7 @@ Array [
     "targetNPCInstance": 7,
     "timestamp": 6406325,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2246,7 +2246,7 @@ Array [
     "targetNPCInstance": 10,
     "timestamp": 6406325,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2254,7 +2254,7 @@ Array [
     "targetNPCInstance": 9,
     "timestamp": 6406490,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2262,7 +2262,7 @@ Array [
     "targetNPCInstance": 8,
     "timestamp": 6406490,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2270,7 +2270,7 @@ Array [
     "targetNPCInstance": 9,
     "timestamp": 6406490,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2278,7 +2278,7 @@ Array [
     "targetNPCInstance": 7,
     "timestamp": 6406490,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2286,7 +2286,7 @@ Array [
     "targetNPCInstance": 10,
     "timestamp": 6406490,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2294,7 +2294,7 @@ Array [
     "targetNPCInstance": 9,
     "timestamp": 6410075,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2302,7 +2302,7 @@ Array [
     "targetNPCInstance": 8,
     "timestamp": 6410075,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2310,7 +2310,7 @@ Array [
     "targetNPCInstance": 7,
     "timestamp": 6410075,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2318,7 +2318,7 @@ Array [
     "targetNPCInstance": 10,
     "timestamp": 6410075,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2326,7 +2326,7 @@ Array [
     "targetNPCInstance": 9,
     "timestamp": 6410488,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2334,7 +2334,7 @@ Array [
     "targetNPCInstance": 8,
     "timestamp": 6410488,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2342,7 +2342,7 @@ Array [
     "targetNPCInstance": 10,
     "timestamp": 6410488,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2350,7 +2350,7 @@ Array [
     "targetNPCInstance": 9,
     "timestamp": 6425890,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2358,7 +2358,7 @@ Array [
     "targetNPCInstance": 10,
     "timestamp": 6425890,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2366,7 +2366,7 @@ Array [
     "targetNPCInstance": 10,
     "timestamp": 6430754,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2374,7 +2374,7 @@ Array [
     "targetNPCInstance": 3,
     "timestamp": 6470567,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2382,7 +2382,7 @@ Array [
     "targetNPCInstance": 9,
     "timestamp": 6539996,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2390,7 +2390,7 @@ Array [
     "targetNPCInstance": 10,
     "timestamp": 6539996,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2398,7 +2398,7 @@ Array [
     "targetNPCInstance": 10,
     "timestamp": 6539996,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2406,7 +2406,7 @@ Array [
     "targetNPCInstance": 6,
     "timestamp": 6539996,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2414,7 +2414,7 @@ Array [
     "targetNPCInstance": 9,
     "timestamp": 6543566,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2422,7 +2422,7 @@ Array [
     "targetNPCInstance": 10,
     "timestamp": 6543566,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2430,7 +2430,7 @@ Array [
     "targetNPCInstance": 6,
     "timestamp": 6543566,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2438,7 +2438,7 @@ Array [
     "targetNPCInstance": 9,
     "timestamp": 6543566,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2446,7 +2446,7 @@ Array [
     "targetNPCInstance": 6,
     "timestamp": 6543566,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2454,7 +2454,7 @@ Array [
     "targetNPCInstance": 9,
     "timestamp": 6545166,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2462,7 +2462,7 @@ Array [
     "targetNPCInstance": 11,
     "timestamp": 6569466,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2470,7 +2470,7 @@ Array [
     "targetNPCInstance": 14,
     "timestamp": 6569466,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2478,7 +2478,7 @@ Array [
     "targetNPCInstance": 12,
     "timestamp": 6569466,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2486,7 +2486,7 @@ Array [
     "targetNPCInstance": 11,
     "timestamp": 6569466,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2494,7 +2494,7 @@ Array [
     "targetNPCInstance": 7,
     "timestamp": 6569466,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2502,7 +2502,7 @@ Array [
     "targetNPCInstance": 11,
     "timestamp": 6574198,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2510,7 +2510,7 @@ Array [
     "targetNPCInstance": 12,
     "timestamp": 6574198,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2518,7 +2518,7 @@ Array [
     "targetNPCInstance": 11,
     "timestamp": 6574198,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2526,7 +2526,7 @@ Array [
     "targetNPCInstance": 7,
     "timestamp": 6574198,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2534,7 +2534,7 @@ Array [
     "targetNPCInstance": 12,
     "timestamp": 6576849,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2542,7 +2542,7 @@ Array [
     "targetNPCInstance": 11,
     "timestamp": 6576849,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2550,7 +2550,7 @@ Array [
     "targetNPCInstance": 7,
     "timestamp": 6576849,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2558,7 +2558,7 @@ Array [
     "targetNPCInstance": 11,
     "timestamp": 6578067,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2566,7 +2566,7 @@ Array [
     "targetNPCInstance": 7,
     "timestamp": 6578067,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2574,7 +2574,7 @@ Array [
     "targetNPCInstance": 7,
     "timestamp": 6580869,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2582,7 +2582,7 @@ Array [
     "targetNPCInstance": 8,
     "timestamp": 6607192,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2590,7 +2590,7 @@ Array [
     "targetNPCInstance": null,
     "timestamp": 6674648,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2598,7 +2598,7 @@ Array [
     "targetNPCInstance": 7,
     "timestamp": 7027973,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2606,7 +2606,7 @@ Array [
     "targetNPCInstance": 12,
     "timestamp": 7027973,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2614,7 +2614,7 @@ Array [
     "targetNPCInstance": 11,
     "timestamp": 7027973,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2622,7 +2622,7 @@ Array [
     "targetNPCInstance": 13,
     "timestamp": 7027973,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2630,7 +2630,7 @@ Array [
     "targetNPCInstance": 7,
     "timestamp": 7031809,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2638,7 +2638,7 @@ Array [
     "targetNPCInstance": 12,
     "timestamp": 7031809,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2646,7 +2646,7 @@ Array [
     "targetNPCInstance": 13,
     "timestamp": 7031809,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2654,7 +2654,7 @@ Array [
     "targetNPCInstance": 12,
     "timestamp": 7034322,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2662,7 +2662,7 @@ Array [
     "targetNPCInstance": 13,
     "timestamp": 7034322,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2670,7 +2670,7 @@ Array [
     "targetNPCInstance": 13,
     "timestamp": 7043808,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2678,7 +2678,7 @@ Array [
     "targetNPCInstance": 13,
     "timestamp": 7087513,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2686,7 +2686,7 @@ Array [
     "targetNPCInstance": 7,
     "timestamp": 7087513,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2694,7 +2694,7 @@ Array [
     "targetNPCInstance": 2,
     "timestamp": 7087513,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2702,7 +2702,7 @@ Array [
     "targetNPCInstance": 7,
     "timestamp": 7089394,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2710,7 +2710,7 @@ Array [
     "targetNPCInstance": 2,
     "timestamp": 7089394,
   },
-  Object {
+  {
     "abilityID": 209859,
     "eventType": "ApplyBuff",
     "stacks": null,
@@ -2722,14 +2722,14 @@ Array [
 `;
 
 exports[`applybuff tracks engineering invisibility 1`] = `
-Array [
-  Object {
+[
+  {
     "abilityID": 321422,
     "eventType": "ApplyBuff",
     "sourcePlayerID": 1,
     "timestamp": 12295325,
   },
-  Object {
+  {
     "abilityID": 321422,
     "eventType": "ApplyBuff",
     "sourcePlayerID": 1,
@@ -2739,8 +2739,8 @@ Array [
 `;
 
 exports[`applybuff tracks invisibility potion 1`] = `
-Array [
-  Object {
+[
+  {
     "abilityID": 307195,
     "eventType": "ApplyBuff",
     "sourcePlayerID": 1,

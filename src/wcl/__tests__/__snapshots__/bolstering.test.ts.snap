@@ -1,8 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`getHighestBolsteringStack works 1`] = `
-Array [
-  Object {
+[
+  {
     "abilityGameID": 209859,
     "pin": "0",
     "sourceID": 174,

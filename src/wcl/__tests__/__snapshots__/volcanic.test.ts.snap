@@ -1,8 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`getVolcanicEvents works 1`] = `
-Array [
-  Object {
+[
+  {
     "abilityGameID": 209862,
     "absorbed": 7284,
     "amount": 0,
@@ -16,7 +16,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 8392,
   },
-  Object {
+  {
     "abilityGameID": 209862,
     "absorbed": 7284,
     "amount": 0,
@@ -30,7 +30,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 8392,
   },
-  Object {
+  {
     "abilityGameID": 209862,
     "absorbed": 5827,
     "amount": 0,
@@ -44,7 +44,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 8392,
   },
-  Object {
+  {
     "abilityGameID": 209862,
     "absorbed": 4497,
     "amount": 2788,
@@ -58,7 +58,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 8392,
   },
-  Object {
+  {
     "abilityGameID": 209862,
     "amount": 7927,
     "fight": 3,
@@ -71,7 +71,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 10615,
   },
-  Object {
+  {
     "abilityGameID": 209862,
     "amount": 8013,
     "fight": 3,
@@ -84,7 +84,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 9231,
   },
-  Object {
+  {
     "abilityGameID": 209862,
     "amount": 7470,
     "fight": 3,
@@ -98,7 +98,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 8424,
   },
-  Object {
+  {
     "abilityGameID": 209862,
     "amount": 7556,
     "fight": 3,
@@ -111,7 +111,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 8412,
   },
-  Object {
+  {
     "abilityGameID": 209862,
     "amount": 7471,
     "fight": 3,
@@ -125,7 +125,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 8424,
   },
-  Object {
+  {
     "abilityGameID": 209862,
     "absorbed": 8013,
     "amount": 0,
@@ -139,7 +139,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 9231,
   },
-  Object {
+  {
     "abilityGameID": 209862,
     "amount": 9470,
     "fight": 3,
@@ -153,7 +153,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 11768,
   },
-  Object {
+  {
     "abilityGameID": 209862,
     "amount": 7471,
     "fight": 3,
@@ -167,7 +167,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 8424,
   },
-  Object {
+  {
     "abilityGameID": 209862,
     "absorbed": 3108,
     "amount": 4210,
@@ -181,7 +181,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 8616,
   },
-  Object {
+  {
     "abilityGameID": 209862,
     "amount": 7470,
     "fight": 3,
@@ -195,7 +195,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 8424,
   },
-  Object {
+  {
     "abilityGameID": 209862,
     "amount": 8042,
     "fight": 3,
@@ -208,7 +208,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 8616,
   },
-  Object {
+  {
     "abilityGameID": 209862,
     "amount": 7470,
     "fight": 3,
@@ -222,7 +222,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 8424,
   },
-  Object {
+  {
     "abilityGameID": 209862,
     "amount": 7470,
     "fight": 3,
@@ -236,7 +236,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 8424,
   },
-  Object {
+  {
     "abilityGameID": 209862,
     "amount": 6716,
     "fight": 3,
@@ -249,7 +249,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 9345,
   },
-  Object {
+  {
     "abilityGameID": 209862,
     "amount": 8218,
     "fight": 3,
@@ -263,7 +263,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 9266,
   },
-  Object {
+  {
     "abilityGameID": 209862,
     "amount": 8203,
     "fight": 3,
@@ -276,7 +276,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 8788,
   },
-  Object {
+  {
     "abilityGameID": 209862,
     "amount": 8217,
     "fight": 3,
@@ -290,7 +290,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 9266,
   },
-  Object {
+  {
     "abilityGameID": 209862,
     "amount": 8203,
     "fight": 3,
@@ -303,7 +303,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 8788,
   },
-  Object {
+  {
     "abilityGameID": 209862,
     "amount": 9488,
     "fight": 3,

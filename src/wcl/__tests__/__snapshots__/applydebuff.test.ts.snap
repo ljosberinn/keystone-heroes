@@ -1,8 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`applydebuff tracks DOS Urn 1`] = `
-Array [
-  Object {
+[
+  {
     "abilityID": 228626,
     "eventType": "ApplyDebuff",
     "sourcePlayerID": null,
@@ -10,7 +10,7 @@ Array [
     "targetPlayerID": null,
     "timestamp": 647832,
   },
-  Object {
+  {
     "abilityID": 228626,
     "eventType": "ApplyDebuff",
     "sourcePlayerID": null,
@@ -18,7 +18,7 @@ Array [
     "targetPlayerID": null,
     "timestamp": 1286270,
   },
-  Object {
+  {
     "abilityID": 228626,
     "eventType": "ApplyDebuff",
     "sourcePlayerID": null,
@@ -26,7 +26,7 @@ Array [
     "targetPlayerID": null,
     "timestamp": 1286270,
   },
-  Object {
+  {
     "abilityID": 228626,
     "eventType": "ApplyDebuff",
     "sourcePlayerID": null,
@@ -34,7 +34,7 @@ Array [
     "targetPlayerID": null,
     "timestamp": 1286270,
   },
-  Object {
+  {
     "abilityID": 228626,
     "eventType": "ApplyDebuff",
     "sourcePlayerID": null,
@@ -42,7 +42,7 @@ Array [
     "targetPlayerID": null,
     "timestamp": 1286270,
   },
-  Object {
+  {
     "abilityID": 228626,
     "eventType": "ApplyDebuff",
     "sourcePlayerID": null,
@@ -50,7 +50,7 @@ Array [
     "targetPlayerID": null,
     "timestamp": 1286270,
   },
-  Object {
+  {
     "abilityID": 228626,
     "eventType": "ApplyDebuff",
     "sourcePlayerID": null,
@@ -62,8 +62,8 @@ Array [
 `;
 
 exports[`applydebuff tracks MOTS maze failures 1`] = `
-Array [
-  Object {
+[
+  {
     "abilityID": 323881,
     "eventType": "ApplyDebuff",
     "sourcePlayerID": null,
@@ -71,7 +71,7 @@ Array [
     "targetPlayerID": null,
     "timestamp": 35495540,
   },
-  Object {
+  {
     "abilityID": 323881,
     "eventType": "ApplyDebuff",
     "sourcePlayerID": null,
@@ -79,7 +79,7 @@ Array [
     "targetPlayerID": null,
     "timestamp": 35495540,
   },
-  Object {
+  {
     "abilityID": 323881,
     "eventType": "ApplyDebuff",
     "sourcePlayerID": null,
@@ -87,7 +87,7 @@ Array [
     "targetPlayerID": null,
     "timestamp": 35495540,
   },
-  Object {
+  {
     "abilityID": 323881,
     "eventType": "ApplyDebuff",
     "sourcePlayerID": null,
@@ -95,7 +95,7 @@ Array [
     "targetPlayerID": null,
     "timestamp": 35495540,
   },
-  Object {
+  {
     "abilityID": 323881,
     "eventType": "ApplyDebuff",
     "sourcePlayerID": null,
@@ -107,8 +107,8 @@ Array [
 `;
 
 exports[`applydebuff tracks SOA Spear 1`] = `
-Array [
-  Object {
+[
+  {
     "abilityID": 339917,
     "eventType": "ApplyDebuff",
     "sourcePlayerID": null,
@@ -116,7 +116,7 @@ Array [
     "targetPlayerID": null,
     "timestamp": 11913707,
   },
-  Object {
+  {
     "abilityID": 339917,
     "eventType": "ApplyDebuff",
     "sourcePlayerID": null,
@@ -124,7 +124,7 @@ Array [
     "targetPlayerID": null,
     "timestamp": 11913707,
   },
-  Object {
+  {
     "abilityID": 339917,
     "eventType": "ApplyDebuff",
     "sourcePlayerID": null,
@@ -132,7 +132,7 @@ Array [
     "targetPlayerID": null,
     "timestamp": 11913707,
   },
-  Object {
+  {
     "abilityID": 339917,
     "eventType": "ApplyDebuff",
     "sourcePlayerID": null,
@@ -140,7 +140,7 @@ Array [
     "targetPlayerID": null,
     "timestamp": 11913707,
   },
-  Object {
+  {
     "abilityID": 339917,
     "eventType": "ApplyDebuff",
     "sourcePlayerID": null,
@@ -148,7 +148,7 @@ Array [
     "targetPlayerID": null,
     "timestamp": 11913707,
   },
-  Object {
+  {
     "abilityID": 339917,
     "eventType": "ApplyDebuff",
     "sourcePlayerID": null,
@@ -156,7 +156,7 @@ Array [
     "targetPlayerID": null,
     "timestamp": 11913707,
   },
-  Object {
+  {
     "abilityID": 339917,
     "eventType": "ApplyDebuff",
     "sourcePlayerID": null,
@@ -164,7 +164,7 @@ Array [
     "targetPlayerID": null,
     "timestamp": 11913707,
   },
-  Object {
+  {
     "abilityID": 339917,
     "eventType": "ApplyDebuff",
     "sourcePlayerID": null,
@@ -172,7 +172,7 @@ Array [
     "targetPlayerID": null,
     "timestamp": 11913707,
   },
-  Object {
+  {
     "abilityID": 339917,
     "eventType": "ApplyDebuff",
     "sourcePlayerID": null,
@@ -180,7 +180,7 @@ Array [
     "targetPlayerID": null,
     "timestamp": 11913879,
   },
-  Object {
+  {
     "abilityID": 339917,
     "eventType": "ApplyDebuff",
     "sourcePlayerID": null,

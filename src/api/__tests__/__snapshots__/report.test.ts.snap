@@ -1,195 +1,195 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`/api/report existing report finished report 1`] = `
-Object {
-  "affixes": Array [
+{
+  "affixes": [
     9,
     7,
     13,
     128,
   ],
   "endTime": 1639499706988,
-  "fights": Array [
-    Object {
+  "fights": [
+    {
       "averageItemLevel": 249.4,
       "dungeon": 2285,
       "id": 1,
       "keystoneBonus": 1,
       "keystoneLevel": 23,
       "keystoneTime": 2035534,
-      "player": Array [
-        Object {
+      "player": [
+        {
           "class": 9,
           "spec": 26,
         },
-        Object {
+        {
           "class": 10,
           "spec": 29,
         },
-        Object {
+        {
           "class": 7,
           "spec": 21,
         },
-        Object {
+        {
           "class": 3,
           "spec": 8,
         },
-        Object {
+        {
           "class": 2,
           "spec": 5,
         },
       ],
       "rating": 166,
     },
-    Object {
+    {
       "averageItemLevel": 249.4,
       "dungeon": 2286,
       "id": 2,
       "keystoneBonus": 2,
       "keystoneLevel": 23,
       "keystoneTime": 1700172,
-      "player": Array [
-        Object {
+      "player": [
+        {
           "class": 9,
           "spec": 26,
         },
-        Object {
+        {
           "class": 10,
           "spec": 29,
         },
-        Object {
+        {
           "class": 7,
           "spec": 21,
         },
-        Object {
+        {
           "class": 3,
           "spec": 8,
         },
-        Object {
+        {
           "class": 2,
           "spec": 5,
         },
       ],
       "rating": 167,
     },
-    Object {
+    {
       "averageItemLevel": 249.4,
       "dungeon": 2289,
       "id": 3,
       "keystoneBonus": 1,
       "keystoneLevel": 24,
       "keystoneTime": 2126854,
-      "player": Array [
-        Object {
+      "player": [
+        {
           "class": 9,
           "spec": 26,
         },
-        Object {
+        {
           "class": 10,
           "spec": 29,
         },
-        Object {
+        {
           "class": 7,
           "spec": 21,
         },
-        Object {
+        {
           "class": 3,
           "spec": 8,
         },
-        Object {
+        {
           "class": 2,
           "spec": 5,
         },
       ],
       "rating": 170,
     },
-    Object {
+    {
       "averageItemLevel": 249.4,
       "dungeon": 2286,
       "id": 4,
       "keystoneBonus": 1,
       "keystoneLevel": 25,
       "keystoneTime": 1917470,
-      "player": Array [
-        Object {
+      "player": [
+        {
           "class": 9,
           "spec": 26,
         },
-        Object {
+        {
           "class": 10,
           "spec": 29,
         },
-        Object {
+        {
           "class": 7,
           "spec": 21,
         },
-        Object {
+        {
           "class": 3,
           "spec": 8,
         },
-        Object {
+        {
           "class": 2,
           "spec": 5,
         },
       ],
       "rating": 176,
     },
-    Object {
+    {
       "averageItemLevel": 249.4,
       "dungeon": 2285,
       "id": 5,
       "keystoneBonus": 1,
       "keystoneLevel": 25,
       "keystoneTime": 2339707,
-      "player": Array [
-        Object {
+      "player": [
+        {
           "class": 9,
           "spec": 26,
         },
-        Object {
+        {
           "class": 10,
           "spec": 29,
         },
-        Object {
+        {
           "class": 7,
           "spec": 21,
         },
-        Object {
+        {
           "class": 3,
           "spec": 8,
         },
-        Object {
+        {
           "class": 2,
           "spec": 5,
         },
       ],
       "rating": 175,
     },
-    Object {
+    {
       "averageItemLevel": 249.4,
       "dungeon": 2286,
       "id": 6,
       "keystoneBonus": 1,
       "keystoneLevel": 26,
       "keystoneTime": 2093779,
-      "player": Array [
-        Object {
+      "player": [
+        {
           "class": 9,
           "spec": 26,
         },
-        Object {
+        {
           "class": 10,
           "spec": 29,
         },
-        Object {
+        {
           "class": 7,
           "spec": 21,
         },
-        Object {
+        {
           "class": 3,
           "spec": 8,
         },
-        Object {
+        {
           "class": 2,
           "spec": 5,
         },
@@ -204,9 +204,9 @@ Object {
 `;
 
 exports[`/api/report existing report ongoing report - new fights - table request failing for new report 1`] = `
-Object {
+{
   "endTime": 10361293,
-  "fightIDs": Array [
+  "fightIDs": [
     8,
   ],
   "reportID": "THJWBAXcn2j9Nvkt",
@@ -215,9 +215,9 @@ Object {
 `;
 
 exports[`/api/report existing report ongoing report - new fights - table request failing for new report 2`] = `
-Object {
+{
   "endTime": 19400839,
-  "fightIDs": Array [
+  "fightIDs": [
     10,
   ],
   "reportID": "THJWBAXcn2j9Nvkt",
@@ -226,9 +226,9 @@ Object {
 `;
 
 exports[`/api/report existing report ongoing report - new fights - table request failing for new report 3`] = `
-Object {
+{
   "endTime": 21815165,
-  "fightIDs": Array [
+  "fightIDs": [
     11,
   ],
   "reportID": "THJWBAXcn2j9Nvkt",
@@ -237,9 +237,9 @@ Object {
 `;
 
 exports[`/api/report existing report ongoing report - new fights - table request failing for new report 4`] = `
-Object {
+{
   "endTime": 24455197,
-  "fightIDs": Array [
+  "fightIDs": [
     12,
   ],
   "reportID": "THJWBAXcn2j9Nvkt",
@@ -248,9 +248,9 @@ Object {
 `;
 
 exports[`/api/report existing report ongoing report - new fights - table request failing for new report 5`] = `
-Object {
+{
   "endTime": 1910367,
-  "fightIDs": Array [
+  "fightIDs": [
     99,
   ],
   "reportID": "THJWBAXcn2j9Nvkt",
@@ -259,15 +259,15 @@ Object {
 `;
 
 exports[`/api/report existing report ongoing report - new fights - table request failing for new report 6`] = `
-Object {
+{
   "error": "SECONDARY_REQUEST_FAILED",
 }
 `;
 
 exports[`/api/report existing report ongoing report - new fights 1`] = `
-Object {
+{
   "endTime": 10361293,
-  "fightIDs": Array [
+  "fightIDs": [
     8,
   ],
   "reportID": "THJWBAXcn2j9Nvkt",
@@ -276,9 +276,9 @@ Object {
 `;
 
 exports[`/api/report existing report ongoing report - new fights 2`] = `
-Object {
+{
   "endTime": 19400839,
-  "fightIDs": Array [
+  "fightIDs": [
     10,
   ],
   "reportID": "THJWBAXcn2j9Nvkt",
@@ -287,9 +287,9 @@ Object {
 `;
 
 exports[`/api/report existing report ongoing report - new fights 3`] = `
-Object {
+{
   "endTime": 21815165,
-  "fightIDs": Array [
+  "fightIDs": [
     11,
   ],
   "reportID": "THJWBAXcn2j9Nvkt",
@@ -298,9 +298,9 @@ Object {
 `;
 
 exports[`/api/report existing report ongoing report - new fights 4`] = `
-Object {
+{
   "endTime": 24455197,
-  "fightIDs": Array [
+  "fightIDs": [
     12,
   ],
   "reportID": "THJWBAXcn2j9Nvkt",
@@ -309,9 +309,9 @@ Object {
 `;
 
 exports[`/api/report existing report ongoing report - new fights 5`] = `
-Object {
+{
   "endTime": 1910367,
-  "fightIDs": Array [
+  "fightIDs": [
     99,
   ],
   "reportID": "THJWBAXcn2j9Nvkt",
@@ -320,18 +320,18 @@ Object {
 `;
 
 exports[`/api/report existing report ongoing report - new fights 6`] = `
-Object {
-  "regionUpsert": Array [
-    Array [
-      Object {
-        "create": Object {
+{
+  "regionUpsert": [
+    [
+      {
+        "create": {
           "slug": "EU",
         },
-        "select": Object {
+        "select": {
           "id": true,
         },
-        "update": Object {},
-        "where": Object {
+        "update": {},
+        "where": {
           "slug": "EU",
         },
       },
@@ -341,112 +341,112 @@ Object {
 `;
 
 exports[`/api/report existing report ongoing report - new fights 7`] = `
-Object {
-  "conduitCreateMany": Array [
-    Array [
-      Object {
-        "data": Array [
-          Object {
+{
+  "conduitCreateMany": [
+    [
+      {
+        "data": [
+          {
             "icon": "spell_deathknight_subversion",
             "id": 337972,
             "name": "Hardened Bones",
           },
-          Object {
+          {
             "icon": "ability_mage_deepfreeze",
             "id": 337988,
             "name": "Everfrost",
           },
-          Object {
+          {
             "icon": "ability_deathknight_frozencenter",
             "id": 337822,
             "name": "Accelerated Cold",
           },
-          Object {
+          {
             "icon": "spell_deathknight_mindfreeze",
             "id": 337705,
             "name": "Spirit Drain",
           },
-          Object {
+          {
             "icon": "ability_mount_goatmountwhite",
             "id": 339895,
             "name": "Repeat Decree",
           },
-          Object {
+          {
             "icon": "spell_fel_incinerate",
             "id": 339231,
             "name": "Growing Inferno",
           },
-          Object {
+          {
             "icon": "inv_armor_shield_naxxramas_d_01",
             "id": 338671,
             "name": "Fel Defender",
           },
-          Object {
+          {
             "icon": "inv_archaeology_orcclans_tattooknife",
             "id": 338682,
             "name": "Viscous Ink",
           },
-          Object {
+          {
             "icon": "ability_warrior_shieldmastery",
             "id": 334993,
             "name": "Stalwart Guardian",
           },
-          Object {
+          {
             "icon": "warrior_talent_icon_skirmisher",
             "id": 335232,
             "name": "Ashen Juggernaut",
           },
-          Object {
+          {
             "icon": "ability_toughness",
             "id": 335034,
             "name": "Inspiring Presence",
           },
-          Object {
+          {
             "icon": "spell_shadow_summonimp",
             "id": 337162,
             "name": "Depths of Insanity",
           },
-          Object {
+          {
             "icon": "spell_animarevendreth_groundstate",
             "id": 340212,
             "name": "Hallowed Discernment",
           },
-          Object {
+          {
             "icon": "achievement_dungeon_heroic_gloryoftheraider",
             "id": 339316,
             "name": "Echoing Blessings",
           },
-          Object {
+          {
             "icon": "inv_lightforgedmatrixability_lightsjudgment",
             "id": 339268,
             "name": "Light's Barding",
           },
-          Object {
+          {
             "icon": "item_holyspark",
             "id": 339984,
             "name": "Focused Light",
           },
-          Object {
+          {
             "icon": "ability_vehicle_sonicshockwave",
             "id": 338787,
             "name": "Shielding Words",
           },
-          Object {
+          {
             "icon": "inv_axe_02",
             "id": 0,
             "name": "Unknown Ability",
           },
-          Object {
+          {
             "icon": "spell_frost_frostblast",
             "id": 336569,
             "name": "Ice Bite",
           },
-          Object {
+          {
             "icon": "rogue_burstofspeed",
             "id": 337275,
             "name": "Incantation of Swiftness",
           },
-          Object {
+          {
             "icon": "spell_frost_coldhearted",
             "id": 336522,
             "name": "Icy Propulsion",
@@ -460,250 +460,250 @@ Object {
 `;
 
 exports[`/api/report existing report ongoing report - new fights 8`] = `
-Object {
-  "talentCreateMany": Array [
-    Array [
-      Object {
-        "data": Array [
-          Object {
+{
+  "talentCreateMany": [
+    [
+      {
+        "data": [
+          {
             "classID": 12,
             "icon": "spell_frost_frozencore",
             "id": 281208,
             "name": "Cold Heart",
             "specID": 36,
           },
-          Object {
+          {
             "classID": 12,
             "icon": "boss_odunrunes_blue",
             "id": 207104,
             "name": "Runic Attenuation",
             "specID": 36,
           },
-          Object {
+          {
             "classID": 12,
             "icon": "spell_frost_chillingblast",
             "id": 207167,
             "name": "Blinding Sleet",
             "specID": 36,
           },
-          Object {
+          {
             "classID": 12,
             "icon": "spell_frost_icestorm",
             "id": 207142,
             "name": "Avalanche",
             "specID": 36,
           },
-          Object {
+          {
             "classID": 12,
             "icon": "inv_helm_plate_raiddeathknight_p_01",
             "id": 212552,
             "name": "Wraith Walk",
             "specID": 36,
           },
-          Object {
+          {
             "classID": 12,
             "icon": "spell_frost_ice-shards",
             "id": 194912,
             "name": "Gathering Storm",
             "specID": 36,
           },
-          Object {
+          {
             "classID": 12,
             "icon": "spell_deathknight_breathofsindragosa",
             "id": 152279,
             "name": "Breath of Sindragosa",
             "specID": 36,
           },
-          Object {
+          {
             "classID": 9,
             "icon": "achievment_raid_houroftwilight",
             "id": 207548,
             "name": "Agonizing Flames",
             "specID": 26,
           },
-          Object {
+          {
             "classID": 9,
             "icon": "spell_fire_elementaldevastation",
             "id": 207739,
             "name": "Burning Alive",
             "specID": 26,
           },
-          Object {
+          {
             "classID": 9,
             "icon": "ability_warlock_backdraft",
             "id": 336639,
             "name": "Charred Flesh",
             "specID": 26,
           },
-          Object {
+          {
             "classID": 9,
             "icon": "ability_creature_felsunder",
             "id": 263642,
             "name": "Fracture",
             "specID": 26,
           },
-          Object {
+          {
             "classID": 9,
             "icon": "ability_demonhunter_sigilofchains",
             "id": 202138,
             "name": "Sigil of Chains",
             "specID": 26,
           },
-          Object {
+          {
             "classID": 9,
             "icon": "spell_shadow_demonform",
             "id": 321453,
             "name": "Demonic",
             "specID": 26,
           },
-          Object {
+          {
             "classID": 9,
             "icon": "inv_glaive_1h_artifactaldorchi_d_06",
             "id": 209258,
             "name": "Last Resort",
             "specID": 26,
           },
-          Object {
+          {
             "classID": 1,
             "icon": "ability_warrior_improveddisciplines",
             "id": 280721,
             "name": "Sudden Death",
             "specID": 2,
           },
-          Object {
+          {
             "classID": 1,
             "icon": "spell_impending_victory",
             "id": 202168,
             "name": "Impending Victory",
             "specID": 2,
           },
-          Object {
+          {
             "classID": 1,
             "icon": "inv_sword_48",
             "id": 206315,
             "name": "Massacre",
             "specID": 2,
           },
-          Object {
+          {
             "classID": 1,
             "icon": "ability_rogue_preparation",
             "id": 208154,
             "name": "Warpaint",
             "specID": 2,
           },
-          Object {
+          {
             "classID": 1,
             "icon": "spell_nature_focusedmind",
             "id": 335070,
             "name": "Cruelty",
             "specID": 2,
           },
-          Object {
+          {
             "classID": 1,
             "icon": "ability_warrior_bladestorm",
             "id": 46924,
             "name": "Bladestorm",
             "specID": 2,
           },
-          Object {
+          {
             "classID": 1,
             "icon": "warrior_talent_icon_angermanagement",
             "id": 152278,
             "name": "Anger Management",
             "specID": 2,
           },
-          Object {
+          {
             "classID": 10,
             "icon": "ability_paladin_swiftretribution",
             "id": 196926,
             "name": "Crusader's Might",
             "specID": 29,
           },
-          Object {
+          {
             "classID": 10,
             "icon": "spell_holy_divineprovidence",
             "id": 183778,
             "name": "Judgment of Light",
             "specID": 29,
           },
-          Object {
+          {
             "classID": 10,
             "icon": "ability_paladin_blindinglight",
             "id": 115750,
             "name": "Blinding Light",
             "specID": 29,
           },
-          Object {
+          {
             "classID": 10,
             "icon": "spell_holy_holyguidance",
             "id": 114154,
             "name": "Unbreakable Spirit",
             "specID": 29,
           },
-          Object {
+          {
             "classID": 10,
             "icon": "ability_paladin_holyavenger",
             "id": 105809,
             "name": "Holy Avenger",
             "specID": 29,
           },
-          Object {
+          {
             "classID": 10,
             "icon": "inv_helm_plate_raidpaladin_n_01",
             "id": 248033,
             "name": "Awakening",
             "specID": 29,
           },
-          Object {
+          {
             "classID": 10,
             "icon": "ability_paladin_beaconsoflight",
             "id": 156910,
             "name": "Beacon of Faith",
             "specID": 29,
           },
-          Object {
+          {
             "classID": 2,
             "icon": "achievement_dungeon_frozenthrone",
             "id": 205024,
             "name": "Lonely Winter",
             "specID": 5,
           },
-          Object {
+          {
             "classID": 2,
             "icon": "spell_arcane_massdispel",
             "id": 212653,
             "name": "Shimmer",
             "specID": 5,
           },
-          Object {
+          {
             "classID": 2,
             "icon": "spell_mage_runeofpower",
             "id": 116011,
             "name": "Rune of Power",
             "specID": 5,
           },
-          Object {
+          {
             "classID": 2,
             "icon": "spell_frost_frostblast",
             "id": 278309,
             "name": "Chain Reaction",
             "specID": 5,
           },
-          Object {
+          {
             "classID": 2,
             "icon": "spell_frost_ring-of-frost",
             "id": 113724,
             "name": "Ring of Frost",
             "specID": 5,
           },
-          Object {
+          {
             "classID": 2,
             "icon": "spell_frost_ice-shards",
             "id": 56377,
             "name": "Splitting Ice",
             "specID": 5,
           },
-          Object {
+          {
             "classID": 2,
             "icon": "spell_mage_thermalvoid",
             "id": 155149,
@@ -719,126 +719,126 @@ Object {
 `;
 
 exports[`/api/report existing report ongoing report - new fights 9`] = `
-Object {
-  "covenantTraitCreateMany": Array [
-    Array [
-      Object {
-        "data": Array [
-          Object {
+{
+  "covenantTraitCreateMany": [
+    [
+      {
+        "data": [
+          {
             "covenantID": 4,
             "icon": "inv_helm_crown_c_01_black",
             "id": 323921,
             "name": "Emeni's Magnificent Skin",
           },
-          Object {
+          {
             "covenantID": 4,
             "icon": "trade_archaeology_vrykul_runestick",
             "id": 342156,
             "name": "Lead by Example",
           },
-          Object {
+          {
             "covenantID": 4,
             "icon": "spell_nzinsanity_leadenfoot",
             "id": 323918,
             "name": "Gristled Toes",
           },
-          Object {
+          {
             "covenantID": 4,
             "icon": "item_alchemiststonec",
             "id": 324441,
             "name": "Hearth Kidneystone",
           },
-          Object {
+          {
             "covenantID": 1,
             "icon": "spell_arcane_focusedpower",
             "id": 328261,
             "name": "Focusing Mantra",
           },
-          Object {
+          {
             "covenantID": 1,
             "icon": "inv_misc_bag_14",
             "id": 328263,
             "name": "Cleansed Vestments",
           },
-          Object {
+          {
             "covenantID": 1,
             "icon": "ability_hunter_readiness",
             "id": 328257,
             "name": "Let Go of the Past",
           },
-          Object {
+          {
             "covenantID": 1,
             "icon": "spell_animabastion_buff",
             "id": 328266,
             "name": "Combat Meditation",
           },
-          Object {
+          {
             "covenantID": 2,
             "icon": "ability_rogue_bloodsplatter",
             "id": 331586,
             "name": "Thrill Seeker",
           },
-          Object {
+          {
             "covenantID": 2,
             "icon": "sha_ability_rogue_bloodyeye_nightmare",
             "id": 331582,
             "name": "Familiar Predicaments",
           },
-          Object {
+          {
             "covenantID": 2,
             "icon": "spell_shadow_deathsembrace",
             "id": 331576,
             "name": "Agent of Chaos",
           },
-          Object {
+          {
             "covenantID": 2,
             "icon": "ability_rogue_dirtydeeds",
             "id": 331579,
             "name": "Friends in Low Places",
           },
-          Object {
+          {
             "covenantID": 2,
             "icon": "spell_lifegivingspeed",
             "id": 336147,
             "name": "Leisurely Gait",
           },
-          Object {
+          {
             "covenantID": 2,
             "icon": "archaeology_5_0_umbrellaofchiji",
             "id": 336239,
             "name": "Soothing Shade",
           },
-          Object {
+          {
             "covenantID": 2,
             "icon": "inv_drink_23",
             "id": 319983,
             "name": "Wasteland Propriety",
           },
-          Object {
+          {
             "covenantID": 2,
             "icon": "achievement_guildperk_bountifulbags",
             "id": 336184,
             "name": "Exquisite Ingredients",
           },
-          Object {
+          {
             "covenantID": 2,
             "icon": "ability_rogue_bloodsplatter",
             "id": 331586,
             "name": "Thrill Seeker",
           },
-          Object {
+          {
             "covenantID": 2,
             "icon": "sha_ability_rogue_bloodyeye_nightmare",
             "id": 331582,
             "name": "Familiar Predicaments",
           },
-          Object {
+          {
             "covenantID": 2,
             "icon": "spell_shadow_deathsembrace",
             "id": 331576,
             "name": "Agent of Chaos",
           },
-          Object {
+          {
             "covenantID": 2,
             "icon": "ability_rogue_dirtydeeds",
             "id": 331579,
@@ -853,36 +853,36 @@ Object {
 `;
 
 exports[`/api/report existing report ongoing report - new fights 10`] = `
-Object {
-  "legendaryCreateMany": Array [
-    Array [
-      Object {
-        "data": Array [
-          Object {
+{
+  "legendaryCreateMany": [
+    [
+      {
+        "data": [
+          {
             "effectIcon": "spell_shadow_focusedpower",
             "effectName": "Koltira's Favor",
             "id": 334583,
             "itemID": 171417,
           },
-          Object {
+          {
             "effectIcon": "inv__felbarrage",
             "effectName": "Fiery Soul",
             "id": 337547,
             "itemID": 172321,
           },
-          Object {
+          {
             "effectIcon": "inv_60crafted_ring4b",
             "effectName": "Signet of Tormented Kings",
             "id": 335266,
             "itemID": 178926,
           },
-          Object {
+          {
             "effectIcon": "ability_paladin_conviction",
             "effectName": "The Mad Paragon",
             "id": 337594,
             "itemID": 171413,
           },
-          Object {
+          {
             "effectIcon": "spell_shadow_soulleech_2",
             "effectName": "Freezing Winds",
             "id": 327364,
@@ -897,35 +897,35 @@ Object {
 `;
 
 exports[`/api/report existing report ongoing report - new fights 11`] = `
-Object {
-  "reportCreate": Array [],
+{
+  "reportCreate": [],
 }
 `;
 
 exports[`/api/report existing report ongoing report - new fights 12`] = `
-Object {
-  "serverFindMany": Array [
-    Array [
-      Object {
-        "select": Object {
+{
+  "serverFindMany": [
+    [
+      {
+        "select": {
           "id": true,
           "name": true,
         },
-        "where": Object {
-          "OR": Array [
-            Object {
+        "where": {
+          "OR": [
+            {
               "name": "Hyjal",
               "regionID": 1,
             },
-            Object {
+            {
               "name": "Blackmoore",
               "regionID": 1,
             },
-            Object {
+            {
               "name": "Ysondre",
               "regionID": 1,
             },
-            Object {
+            {
               "name": "Kazzak",
               "regionID": 1,
             },
@@ -938,38 +938,38 @@ Object {
 `;
 
 exports[`/api/report existing report ongoing report - new fights 13`] = `
-Object {
-  "characterFindMany": Array [
-    Array [
-      Object {
-        "select": Object {
+{
+  "characterFindMany": [
+    [
+      {
+        "select": {
           "id": true,
           "name": true,
           "serverID": true,
         },
-        "where": Object {
-          "OR": Array [
-            Object {
+        "where": {
+          "OR": [
+            {
               "classID": 12,
               "name": "Wânheda",
               "serverID": 1,
             },
-            Object {
+            {
               "classID": 9,
               "name": "Xepheris",
               "serverID": 2,
             },
-            Object {
+            {
               "classID": 1,
               "name": "Steffen",
               "serverID": 3,
             },
-            Object {
+            {
               "classID": 10,
               "name": "Afkdin",
               "serverID": 3,
             },
-            Object {
+            {
               "classID": 2,
               "name": "Lorioa",
               "serverID": 4,
@@ -983,17 +983,17 @@ Object {
 `;
 
 exports[`/api/report existing report ongoing report - new fights 14`] = `
-Object {
-  "playerFindMany": Array [
-    Array [
-      Object {
-        "select": Object {
+{
+  "playerFindMany": [
+    [
+      {
+        "select": {
           "characterID": true,
           "id": true,
         },
-        "where": Object {
-          "OR": Array [
-            Object {
+        "where": {
+          "OR": [
+            {
               "actorID": 10,
               "characterID": 1,
               "covenantID": 4,
@@ -1005,7 +1005,7 @@ Object {
               "soulbindID": 5,
               "specID": 36,
             },
-            Object {
+            {
               "actorID": 1,
               "characterID": 2,
               "covenantID": 1,
@@ -1017,7 +1017,7 @@ Object {
               "soulbindID": 7,
               "specID": 26,
             },
-            Object {
+            {
               "actorID": 11,
               "characterID": 3,
               "covenantID": 2,
@@ -1029,7 +1029,7 @@ Object {
               "soulbindID": 8,
               "specID": 2,
             },
-            Object {
+            {
               "actorID": 6,
               "characterID": 4,
               "covenantID": 2,
@@ -1041,7 +1041,7 @@ Object {
               "soulbindID": 9,
               "specID": 29,
             },
-            Object {
+            {
               "actorID": 2,
               "characterID": 5,
               "covenantID": 2,
@@ -1062,115 +1062,115 @@ Object {
 `;
 
 exports[`/api/report existing report ongoing report - new fights 15`] = `
-Object {
-  "fightCreate": Array [
-    Array [
-      Object {
-        "data": Object {
-          "PlayerConduit": Object {
-            "createMany": Object {
-              "data": Array [
-                Object {
+{
+  "fightCreate": [
+    [
+      {
+        "data": {
+          "PlayerConduit": {
+            "createMany": {
+              "data": [
+                {
                   "conduitID": 337972,
                   "itemLevel": 226,
                   "playerID": 1,
                 },
-                Object {
+                {
                   "conduitID": 337988,
                   "itemLevel": 226,
                   "playerID": 1,
                 },
-                Object {
+                {
                   "conduitID": 337822,
                   "itemLevel": 200,
                   "playerID": 1,
                 },
-                Object {
+                {
                   "conduitID": 337705,
                   "itemLevel": 213,
                   "playerID": 1,
                 },
-                Object {
+                {
                   "conduitID": 339895,
                   "itemLevel": 226,
                   "playerID": 2,
                 },
-                Object {
+                {
                   "conduitID": 339231,
                   "itemLevel": 226,
                   "playerID": 2,
                 },
-                Object {
+                {
                   "conduitID": 338671,
                   "itemLevel": 226,
                   "playerID": 2,
                 },
-                Object {
+                {
                   "conduitID": 338682,
                   "itemLevel": 226,
                   "playerID": 2,
                 },
-                Object {
+                {
                   "conduitID": 334993,
                   "itemLevel": 226,
                   "playerID": 3,
                 },
-                Object {
+                {
                   "conduitID": 335232,
                   "itemLevel": 226,
                   "playerID": 3,
                 },
-                Object {
+                {
                   "conduitID": 335034,
                   "itemLevel": 226,
                   "playerID": 3,
                 },
-                Object {
+                {
                   "conduitID": 337162,
                   "itemLevel": 213,
                   "playerID": 3,
                 },
-                Object {
+                {
                   "conduitID": 340212,
                   "itemLevel": 200,
                   "playerID": 4,
                 },
-                Object {
+                {
                   "conduitID": 339316,
                   "itemLevel": 200,
                   "playerID": 4,
                 },
-                Object {
+                {
                   "conduitID": 339268,
                   "itemLevel": 200,
                   "playerID": 4,
                 },
-                Object {
+                {
                   "conduitID": 339984,
                   "itemLevel": 200,
                   "playerID": 4,
                 },
-                Object {
+                {
                   "conduitID": 338787,
                   "itemLevel": 213,
                   "playerID": 4,
                 },
-                Object {
+                {
                   "conduitID": 0,
                   "itemLevel": 200,
                   "playerID": 5,
                 },
-                Object {
+                {
                   "conduitID": 336569,
                   "itemLevel": 200,
                   "playerID": 5,
                 },
-                Object {
+                {
                   "conduitID": 337275,
                   "itemLevel": 213,
                   "playerID": 5,
                 },
-                Object {
+                {
                   "conduitID": 336522,
                   "itemLevel": 200,
                   "playerID": 5,
@@ -1178,294 +1178,294 @@ Object {
               ],
             },
           },
-          "PlayerCovenantTrait": Object {
-            "createMany": Object {
-              "data": Array [
-                Object {
+          "PlayerCovenantTrait": {
+            "createMany": {
+              "data": [
+                {
                   "covenantTraitID": 323921,
                   "playerID": 1,
                 },
-                Object {
+                {
                   "covenantTraitID": 342156,
                   "playerID": 1,
                 },
-                Object {
+                {
                   "covenantTraitID": 323918,
                   "playerID": 1,
                 },
-                Object {
+                {
                   "covenantTraitID": 324441,
                   "playerID": 1,
                 },
-                Object {
+                {
                   "covenantTraitID": 328261,
                   "playerID": 2,
                 },
-                Object {
+                {
                   "covenantTraitID": 328263,
                   "playerID": 2,
                 },
-                Object {
+                {
                   "covenantTraitID": 328257,
                   "playerID": 2,
                 },
-                Object {
+                {
                   "covenantTraitID": 328266,
                   "playerID": 2,
                 },
-                Object {
+                {
                   "covenantTraitID": 331586,
                   "playerID": 3,
                 },
-                Object {
+                {
                   "covenantTraitID": 331582,
                   "playerID": 3,
                 },
-                Object {
+                {
                   "covenantTraitID": 331576,
                   "playerID": 3,
                 },
-                Object {
+                {
                   "covenantTraitID": 331579,
                   "playerID": 3,
                 },
-                Object {
+                {
                   "covenantTraitID": 336147,
                   "playerID": 4,
                 },
-                Object {
+                {
                   "covenantTraitID": 336239,
                   "playerID": 4,
                 },
-                Object {
+                {
                   "covenantTraitID": 319983,
                   "playerID": 4,
                 },
-                Object {
+                {
                   "covenantTraitID": 336184,
                   "playerID": 4,
                 },
-                Object {
+                {
                   "covenantTraitID": 331586,
                   "playerID": 5,
                 },
-                Object {
+                {
                   "covenantTraitID": 331582,
                   "playerID": 5,
                 },
-                Object {
+                {
                   "covenantTraitID": 331576,
                   "playerID": 5,
                 },
-                Object {
+                {
                   "covenantTraitID": 331579,
                   "playerID": 5,
                 },
               ],
             },
           },
-          "PlayerFight": Object {
-            "createMany": Object {
-              "data": Array [
-                Object {
+          "PlayerFight": {
+            "createMany": {
+              "data": [
+                {
                   "playerID": 1,
                 },
-                Object {
+                {
                   "playerID": 2,
                 },
-                Object {
+                {
                   "playerID": 3,
                 },
-                Object {
+                {
                   "playerID": 4,
                 },
-                Object {
+                {
                   "playerID": 5,
                 },
               ],
             },
           },
-          "PlayerLegendary": Object {
-            "createMany": Object {
-              "data": Array [
-                Object {
+          "PlayerLegendary": {
+            "createMany": {
+              "data": [
+                {
                   "legendaryID": 334583,
                   "playerID": 1,
                 },
-                Object {
+                {
                   "legendaryID": 337547,
                   "playerID": 2,
                 },
-                Object {
+                {
                   "legendaryID": 335266,
                   "playerID": 3,
                 },
-                Object {
+                {
                   "legendaryID": 337594,
                   "playerID": 4,
                 },
-                Object {
+                {
                   "legendaryID": 327364,
                   "playerID": 5,
                 },
               ],
             },
           },
-          "PlayerTalent": Object {
-            "createMany": Object {
-              "data": Array [
-                Object {
+          "PlayerTalent": {
+            "createMany": {
+              "data": [
+                {
                   "playerID": 1,
                   "talentID": 281208,
                 },
-                Object {
+                {
                   "playerID": 1,
                   "talentID": 207104,
                 },
-                Object {
+                {
                   "playerID": 1,
                   "talentID": 207167,
                 },
-                Object {
+                {
                   "playerID": 1,
                   "talentID": 207142,
                 },
-                Object {
+                {
                   "playerID": 1,
                   "talentID": 212552,
                 },
-                Object {
+                {
                   "playerID": 1,
                   "talentID": 194912,
                 },
-                Object {
+                {
                   "playerID": 1,
                   "talentID": 152279,
                 },
-                Object {
+                {
                   "playerID": 2,
                   "talentID": 207548,
                 },
-                Object {
+                {
                   "playerID": 2,
                   "talentID": 207739,
                 },
-                Object {
+                {
                   "playerID": 2,
                   "talentID": 336639,
                 },
-                Object {
+                {
                   "playerID": 2,
                   "talentID": 263642,
                 },
-                Object {
+                {
                   "playerID": 2,
                   "talentID": 202138,
                 },
-                Object {
+                {
                   "playerID": 2,
                   "talentID": 321453,
                 },
-                Object {
+                {
                   "playerID": 2,
                   "talentID": 209258,
                 },
-                Object {
+                {
                   "playerID": 3,
                   "talentID": 280721,
                 },
-                Object {
+                {
                   "playerID": 3,
                   "talentID": 202168,
                 },
-                Object {
+                {
                   "playerID": 3,
                   "talentID": 206315,
                 },
-                Object {
+                {
                   "playerID": 3,
                   "talentID": 208154,
                 },
-                Object {
+                {
                   "playerID": 3,
                   "talentID": 335070,
                 },
-                Object {
+                {
                   "playerID": 3,
                   "talentID": 46924,
                 },
-                Object {
+                {
                   "playerID": 3,
                   "talentID": 152278,
                 },
-                Object {
+                {
                   "playerID": 4,
                   "talentID": 196926,
                 },
-                Object {
+                {
                   "playerID": 4,
                   "talentID": 183778,
                 },
-                Object {
+                {
                   "playerID": 4,
                   "talentID": 115750,
                 },
-                Object {
+                {
                   "playerID": 4,
                   "talentID": 114154,
                 },
-                Object {
+                {
                   "playerID": 4,
                   "talentID": 105809,
                 },
-                Object {
+                {
                   "playerID": 4,
                   "talentID": 248033,
                 },
-                Object {
+                {
                   "playerID": 4,
                   "talentID": 156910,
                 },
-                Object {
+                {
                   "playerID": 5,
                   "talentID": 205024,
                 },
-                Object {
+                {
                   "playerID": 5,
                   "talentID": 212653,
                 },
-                Object {
+                {
                   "playerID": 5,
                   "talentID": 116011,
                 },
-                Object {
+                {
                   "playerID": 5,
                   "talentID": 278309,
                 },
-                Object {
+                {
                   "playerID": 5,
                   "talentID": 113724,
                 },
-                Object {
+                {
                   "playerID": 5,
                   "talentID": 56377,
                 },
-                Object {
+                {
                   "playerID": 5,
                   "talentID": 155149,
                 },
               ],
             },
           },
-          "Report": Object {
-            "connect": Object {
+          "Report": {
+            "connect": {
               "id": 1,
             },
           },
           "averageItemLevel": 223.4,
           "chests": 1,
           "dps": 16927,
-          "dungeon": Object {},
+          "dungeon": {},
           "endTime": 1910367,
           "fightID": 99,
           "hps": 5401,
@@ -1483,202 +1483,202 @@ Object {
 `;
 
 exports[`/api/report existing report ongoing report - new fights 16`] = `
-Object {
-  "affixes": Array [
+{
+  "affixes": [
     10,
     11,
     124,
     121,
   ],
   "endTime": 1625344842249,
-  "fights": Array [
-    Object {
+  "fights": [
+    {
       "averageItemLevel": 249.4,
       "dungeon": 2285,
       "id": 1,
       "keystoneBonus": 1,
       "keystoneLevel": 23,
       "keystoneTime": 2035534,
-      "player": Array [
-        Object {
+      "player": [
+        {
           "class": 9,
           "spec": 26,
         },
-        Object {
+        {
           "class": 10,
           "spec": 29,
         },
-        Object {
+        {
           "class": 7,
           "spec": 21,
         },
-        Object {
+        {
           "class": 3,
           "spec": 8,
         },
-        Object {
+        {
           "class": 2,
           "spec": 5,
         },
       ],
       "rating": 166,
     },
-    Object {
+    {
       "averageItemLevel": 249.4,
       "dungeon": 2286,
       "id": 2,
       "keystoneBonus": 2,
       "keystoneLevel": 23,
       "keystoneTime": 1700172,
-      "player": Array [
-        Object {
+      "player": [
+        {
           "class": 9,
           "spec": 26,
         },
-        Object {
+        {
           "class": 10,
           "spec": 29,
         },
-        Object {
+        {
           "class": 7,
           "spec": 21,
         },
-        Object {
+        {
           "class": 3,
           "spec": 8,
         },
-        Object {
+        {
           "class": 2,
           "spec": 5,
         },
       ],
       "rating": 167,
     },
-    Object {
+    {
       "averageItemLevel": 249.4,
       "dungeon": 2289,
       "id": 3,
       "keystoneBonus": 1,
       "keystoneLevel": 24,
       "keystoneTime": 2126854,
-      "player": Array [
-        Object {
+      "player": [
+        {
           "class": 9,
           "spec": 26,
         },
-        Object {
+        {
           "class": 10,
           "spec": 29,
         },
-        Object {
+        {
           "class": 7,
           "spec": 21,
         },
-        Object {
+        {
           "class": 3,
           "spec": 8,
         },
-        Object {
+        {
           "class": 2,
           "spec": 5,
         },
       ],
       "rating": 170,
     },
-    Object {
+    {
       "averageItemLevel": 249.4,
       "dungeon": 2286,
       "id": 4,
       "keystoneBonus": 1,
       "keystoneLevel": 25,
       "keystoneTime": 1917470,
-      "player": Array [
-        Object {
+      "player": [
+        {
           "class": 9,
           "spec": 26,
         },
-        Object {
+        {
           "class": 10,
           "spec": 29,
         },
-        Object {
+        {
           "class": 7,
           "spec": 21,
         },
-        Object {
+        {
           "class": 3,
           "spec": 8,
         },
-        Object {
+        {
           "class": 2,
           "spec": 5,
         },
       ],
       "rating": 176,
     },
-    Object {
+    {
       "averageItemLevel": 249.4,
       "dungeon": 2285,
       "id": 5,
       "keystoneBonus": 1,
       "keystoneLevel": 25,
       "keystoneTime": 2339707,
-      "player": Array [
-        Object {
+      "player": [
+        {
           "class": 9,
           "spec": 26,
         },
-        Object {
+        {
           "class": 10,
           "spec": 29,
         },
-        Object {
+        {
           "class": 7,
           "spec": 21,
         },
-        Object {
+        {
           "class": 3,
           "spec": 8,
         },
-        Object {
+        {
           "class": 2,
           "spec": 5,
         },
       ],
       "rating": 175,
     },
-    Object {
+    {
       "averageItemLevel": 249.4,
       "dungeon": 2286,
       "id": 6,
       "keystoneBonus": 1,
       "keystoneLevel": 26,
       "keystoneTime": 2093779,
-      "player": Array [
-        Object {
+      "player": [
+        {
           "class": 9,
           "spec": 26,
         },
-        Object {
+        {
           "class": 10,
           "spec": 29,
         },
-        Object {
+        {
           "class": 7,
           "spec": 21,
         },
-        Object {
+        {
           "class": 3,
           "spec": 8,
         },
-        Object {
+        {
           "class": 2,
           "spec": 5,
         },
       ],
       "rating": 180,
     },
-    Object {
+    {
       "averageItemLevel": 223.4,
       "dps": 16927,
       "dungeon": null,
@@ -1687,16 +1687,16 @@ Object {
       "keystoneBonus": 1,
       "keystoneLevel": 17,
       "keystoneTime": 1896314,
-      "maps": Array [
+      "maps": [
         1674,
         1697,
       ],
-      "player": Array [
-        Object {
+      "player": [
+        {
           "class": 9,
           "covenantID": 1,
-          "legendaries": Array [
-            Object {
+          "legendaries": [
+            {
               "effectIcon": "inv__felbarrage.jpg",
               "effectName": "Fiery Soul",
               "id": 172321,
@@ -1705,11 +1705,11 @@ Object {
           "soulbindID": 7,
           "spec": 26,
         },
-        Object {
+        {
           "class": 10,
           "covenantID": 2,
-          "legendaries": Array [
-            Object {
+          "legendaries": [
+            {
               "effectIcon": "ability_paladin_conviction.jpg",
               "effectName": "The Mad Paragon",
               "id": 171413,
@@ -1718,11 +1718,11 @@ Object {
           "soulbindID": 9,
           "spec": 29,
         },
-        Object {
+        {
           "class": 12,
           "covenantID": 4,
-          "legendaries": Array [
-            Object {
+          "legendaries": [
+            {
               "effectIcon": "spell_shadow_focusedpower.jpg",
               "effectName": "Koltira's Favor",
               "id": 171417,
@@ -1731,11 +1731,11 @@ Object {
           "soulbindID": 5,
           "spec": 36,
         },
-        Object {
+        {
           "class": 1,
           "covenantID": 2,
-          "legendaries": Array [
-            Object {
+          "legendaries": [
+            {
               "effectIcon": "inv_60crafted_ring4b.jpg",
               "effectName": "Signet of Tormented Kings",
               "id": 178926,
@@ -1744,11 +1744,11 @@ Object {
           "soulbindID": 8,
           "spec": 2,
         },
-        Object {
+        {
           "class": 2,
           "covenantID": 2,
-          "legendaries": Array [
-            Object {
+          "legendaries": [
+            {
               "effectIcon": "spell_shadow_soulleech_2.jpg",
               "effectName": "Freezing Winds",
               "id": 173244,
@@ -1769,19 +1769,19 @@ Object {
 `;
 
 exports[`/api/report warcraftlogs failure empty fights 1`] = `
-Object {
+{
   "error": "BROKEN_LOG_OR_WCL_UNAVAILABLE",
 }
 `;
 
 exports[`/api/report warcraftlogs failure entirely empty response 1`] = `
-Object {
+{
   "error": "BROKEN_LOG_OR_WCL_UNAVAILABLE",
 }
 `;
 
 exports[`/api/report warcraftlogs failure report endTime identical to startTime 1`] = `
-Object {
+{
   "error": "EMPTY_LOG",
 }
 `;

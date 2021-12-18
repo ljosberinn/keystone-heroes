@@ -1,8 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`processEvents snapshot 1`] = `
-Array [
-  Object {
+[
+  {
     "abilityID": 228626,
     "eventType": "ApplyDebuff",
     "sourcePlayerID": null,
@@ -10,7 +10,7 @@ Array [
     "targetPlayerID": null,
     "timestamp": 647832,
   },
-  Object {
+  {
     "abilityID": 228626,
     "eventType": "ApplyDebuff",
     "sourcePlayerID": null,
@@ -18,7 +18,7 @@ Array [
     "targetPlayerID": null,
     "timestamp": 1286270,
   },
-  Object {
+  {
     "abilityID": 228626,
     "eventType": "ApplyDebuff",
     "sourcePlayerID": null,
@@ -26,7 +26,7 @@ Array [
     "targetPlayerID": null,
     "timestamp": 1286270,
   },
-  Object {
+  {
     "abilityID": 228626,
     "eventType": "ApplyDebuff",
     "sourcePlayerID": null,
@@ -34,7 +34,7 @@ Array [
     "targetPlayerID": null,
     "timestamp": 1286270,
   },
-  Object {
+  {
     "abilityID": 228626,
     "eventType": "ApplyDebuff",
     "sourcePlayerID": null,
@@ -42,7 +42,7 @@ Array [
     "targetPlayerID": null,
     "timestamp": 1286270,
   },
-  Object {
+  {
     "abilityID": 228626,
     "eventType": "ApplyDebuff",
     "sourcePlayerID": null,
@@ -50,7 +50,7 @@ Array [
     "targetPlayerID": null,
     "timestamp": 1286270,
   },
-  Object {
+  {
     "abilityID": 228626,
     "eventType": "ApplyDebuff",
     "sourcePlayerID": null,
@@ -58,133 +58,133 @@ Array [
     "targetPlayerID": null,
     "timestamp": 1286270,
   },
-  Object {
+  {
     "abilityID": 340210,
     "eventType": "ApplyBuff",
     "targetPlayerID": null,
     "timestamp": 4006933,
   },
-  Object {
+  {
     "abilityID": 340210,
     "eventType": "ApplyBuff",
     "targetPlayerID": null,
     "timestamp": 4018740,
   },
-  Object {
+  {
     "abilityID": 340210,
     "eventType": "ApplyBuff",
     "targetPlayerID": null,
     "timestamp": 4076733,
   },
-  Object {
+  {
     "abilityID": 340210,
     "eventType": "ApplyBuff",
     "targetPlayerID": null,
     "timestamp": 4078931,
   },
-  Object {
+  {
     "abilityID": 340210,
     "eventType": "ApplyBuff",
     "targetPlayerID": null,
     "timestamp": 4563925,
   },
-  Object {
+  {
     "abilityID": 340225,
     "eventType": "ApplyBuff",
     "targetPlayerID": null,
     "timestamp": 4563925,
   },
-  Object {
+  {
     "abilityID": 340271,
     "eventType": "ApplyBuff",
     "targetPlayerID": null,
     "timestamp": 4622916,
   },
-  Object {
+  {
     "abilityID": 340271,
     "eventType": "ApplyBuff",
     "targetPlayerID": null,
     "timestamp": 4978916,
   },
-  Object {
+  {
     "abilityID": 340225,
     "eventType": "ApplyBuff",
     "targetPlayerID": null,
     "timestamp": 4979920,
   },
-  Object {
+  {
     "abilityID": 340225,
     "eventType": "ApplyBuff",
     "targetPlayerID": null,
     "timestamp": 4986724,
   },
-  Object {
+  {
     "abilityID": 340271,
     "eventType": "ApplyBuff",
     "targetPlayerID": null,
     "timestamp": 4986724,
   },
-  Object {
+  {
     "abilityID": 340378,
     "eventType": "ApplyBuff",
     "targetPlayerID": null,
     "timestamp": 5032705,
   },
-  Object {
+  {
     "abilityID": 340210,
     "eventType": "ApplyBuff",
     "targetPlayerID": null,
     "timestamp": 5260722,
   },
-  Object {
+  {
     "abilityID": 340210,
     "eventType": "ApplyBuff",
     "targetPlayerID": null,
     "timestamp": 5262928,
   },
-  Object {
+  {
     "abilityID": 340378,
     "eventType": "ApplyBuff",
     "targetPlayerID": null,
     "timestamp": 5549610,
   },
-  Object {
+  {
     "abilityID": 340378,
     "eventType": "ApplyBuff",
     "targetPlayerID": null,
     "timestamp": 6031023,
   },
-  Object {
+  {
     "abilityID": 340433,
     "eventType": "ApplyBuff",
     "targetPlayerID": null,
     "timestamp": 11577910,
   },
-  Object {
+  {
     "abilityID": 340433,
     "eventType": "ApplyBuff",
     "targetPlayerID": null,
     "timestamp": 11577910,
   },
-  Object {
+  {
     "abilityID": 340433,
     "eventType": "ApplyBuff",
     "targetPlayerID": null,
     "timestamp": 11577910,
   },
-  Object {
+  {
     "abilityID": 340433,
     "eventType": "ApplyBuff",
     "targetPlayerID": null,
     "timestamp": 11577910,
   },
-  Object {
+  {
     "abilityID": 340433,
     "eventType": "ApplyBuff",
     "targetPlayerID": null,
     "timestamp": 11577910,
   },
-  Object {
+  {
     "abilityID": 339917,
     "eventType": "ApplyDebuff",
     "sourcePlayerID": null,
@@ -192,7 +192,7 @@ Array [
     "targetPlayerID": null,
     "timestamp": 11913707,
   },
-  Object {
+  {
     "abilityID": 339917,
     "eventType": "ApplyDebuff",
     "sourcePlayerID": null,
@@ -200,7 +200,7 @@ Array [
     "targetPlayerID": null,
     "timestamp": 11913707,
   },
-  Object {
+  {
     "abilityID": 339917,
     "eventType": "ApplyDebuff",
     "sourcePlayerID": null,
@@ -208,7 +208,7 @@ Array [
     "targetPlayerID": null,
     "timestamp": 11913707,
   },
-  Object {
+  {
     "abilityID": 339917,
     "eventType": "ApplyDebuff",
     "sourcePlayerID": null,
@@ -216,7 +216,7 @@ Array [
     "targetPlayerID": null,
     "timestamp": 11913707,
   },
-  Object {
+  {
     "abilityID": 339917,
     "eventType": "ApplyDebuff",
     "sourcePlayerID": null,
@@ -224,7 +224,7 @@ Array [
     "targetPlayerID": null,
     "timestamp": 11913707,
   },
-  Object {
+  {
     "abilityID": 339917,
     "eventType": "ApplyDebuff",
     "sourcePlayerID": null,
@@ -232,7 +232,7 @@ Array [
     "targetPlayerID": null,
     "timestamp": 11913707,
   },
-  Object {
+  {
     "abilityID": 339917,
     "eventType": "ApplyDebuff",
     "sourcePlayerID": null,
@@ -240,7 +240,7 @@ Array [
     "targetPlayerID": null,
     "timestamp": 11913707,
   },
-  Object {
+  {
     "abilityID": 339917,
     "eventType": "ApplyDebuff",
     "sourcePlayerID": null,
@@ -248,7 +248,7 @@ Array [
     "targetPlayerID": null,
     "timestamp": 11913707,
   },
-  Object {
+  {
     "abilityID": 339917,
     "eventType": "ApplyDebuff",
     "sourcePlayerID": null,
@@ -256,67 +256,67 @@ Array [
     "targetPlayerID": null,
     "timestamp": 11913879,
   },
-  Object {
+  {
     "abilityID": 340433,
     "eventType": "ApplyBuff",
     "targetPlayerID": null,
     "timestamp": 12269271,
   },
-  Object {
+  {
     "abilityID": 340433,
     "eventType": "ApplyBuff",
     "targetPlayerID": null,
     "timestamp": 12269271,
   },
-  Object {
+  {
     "abilityID": 340433,
     "eventType": "ApplyBuff",
     "targetPlayerID": null,
     "timestamp": 12269271,
   },
-  Object {
+  {
     "abilityID": 340433,
     "eventType": "ApplyBuff",
     "targetPlayerID": null,
     "timestamp": 12269271,
   },
-  Object {
+  {
     "abilityID": 340433,
     "eventType": "ApplyBuff",
     "targetPlayerID": null,
     "timestamp": 12269271,
   },
-  Object {
+  {
     "abilityID": 340433,
     "eventType": "ApplyBuff",
     "targetPlayerID": null,
     "timestamp": 12640578,
   },
-  Object {
+  {
     "abilityID": 340433,
     "eventType": "ApplyBuff",
     "targetPlayerID": null,
     "timestamp": 12640578,
   },
-  Object {
+  {
     "abilityID": 340433,
     "eventType": "ApplyBuff",
     "targetPlayerID": null,
     "timestamp": 12640578,
   },
-  Object {
+  {
     "abilityID": 340433,
     "eventType": "ApplyBuff",
     "targetPlayerID": null,
     "timestamp": 12640578,
   },
-  Object {
+  {
     "abilityID": 340433,
     "eventType": "ApplyBuff",
     "targetPlayerID": null,
     "timestamp": 12640578,
   },
-  Object {
+  {
     "abilityID": 339917,
     "eventType": "ApplyDebuff",
     "sourcePlayerID": null,
@@ -324,37 +324,37 @@ Array [
     "targetPlayerID": null,
     "timestamp": 12840160,
   },
-  Object {
+  {
     "abilityID": 340433,
     "eventType": "ApplyBuff",
     "targetPlayerID": null,
     "timestamp": 13482676,
   },
-  Object {
+  {
     "abilityID": 340433,
     "eventType": "ApplyBuff",
     "targetPlayerID": null,
     "timestamp": 13482678,
   },
-  Object {
+  {
     "abilityID": 340433,
     "eventType": "ApplyBuff",
     "targetPlayerID": null,
     "timestamp": 13482678,
   },
-  Object {
+  {
     "abilityID": 340433,
     "eventType": "ApplyBuff",
     "targetPlayerID": null,
     "timestamp": 13482678,
   },
-  Object {
+  {
     "abilityID": 340433,
     "eventType": "ApplyBuff",
     "targetPlayerID": null,
     "timestamp": 13482678,
   },
-  Object {
+  {
     "abilityID": 323881,
     "eventType": "ApplyDebuff",
     "sourcePlayerID": null,
@@ -362,7 +362,7 @@ Array [
     "targetPlayerID": null,
     "timestamp": 35495540,
   },
-  Object {
+  {
     "abilityID": 323881,
     "eventType": "ApplyDebuff",
     "sourcePlayerID": null,
@@ -370,7 +370,7 @@ Array [
     "targetPlayerID": null,
     "timestamp": 35495540,
   },
-  Object {
+  {
     "abilityID": 323881,
     "eventType": "ApplyDebuff",
     "sourcePlayerID": null,
@@ -378,7 +378,7 @@ Array [
     "targetPlayerID": null,
     "timestamp": 35495540,
   },
-  Object {
+  {
     "abilityID": 323881,
     "eventType": "ApplyDebuff",
     "sourcePlayerID": null,
@@ -386,7 +386,7 @@ Array [
     "targetPlayerID": null,
     "timestamp": 35495540,
   },
-  Object {
+  {
     "abilityID": 323881,
     "eventType": "ApplyDebuff",
     "sourcePlayerID": null,
@@ -394,115 +394,115 @@ Array [
     "targetPlayerID": null,
     "timestamp": 35495540,
   },
-  Object {
+  {
     "abilityID": 357900,
     "eventType": "ApplyBuff",
     "targetPlayerID": null,
     "timestamp": 4094243,
   },
-  Object {
+  {
     "abilityID": 357897,
     "eventType": "ApplyBuff",
     "targetPlayerID": null,
     "timestamp": 4095304,
   },
-  Object {
+  {
     "abilityID": 357575,
     "eventType": "ApplyBuff",
     "targetPlayerID": null,
     "timestamp": 4096033,
   },
-  Object {
+  {
     "abilityID": 357575,
     "eventType": "ApplyBuff",
     "targetPlayerID": null,
     "timestamp": 4096613,
   },
-  Object {
+  {
     "abilityID": 357575,
     "eventType": "ApplyBuff",
     "targetPlayerID": null,
     "timestamp": 4098344,
   },
-  Object {
+  {
     "abilityID": 357817,
     "eventType": "ApplyBuff",
     "targetPlayerID": null,
     "timestamp": 4498851,
   },
-  Object {
+  {
     "abilityID": 357814,
     "eventType": "ApplyBuff",
     "targetPlayerID": null,
     "timestamp": 4500940,
   },
-  Object {
+  {
     "abilityID": 357825,
     "eventType": "ApplyBuff",
     "targetPlayerID": null,
     "timestamp": 4504750,
   },
-  Object {
+  {
     "abilityID": 357815,
     "eventType": "ApplyBuff",
     "targetPlayerID": null,
     "timestamp": 4506129,
   },
-  Object {
+  {
     "abilityID": 357825,
     "eventType": "ApplyBuff",
     "targetPlayerID": null,
     "timestamp": 4510612,
   },
-  Object {
+  {
     "abilityID": 357706,
     "eventType": "ApplyBuff",
     "targetPlayerID": null,
     "timestamp": 4741467,
   },
-  Object {
+  {
     "abilityID": 357863,
     "eventType": "ApplyBuff",
     "targetPlayerID": null,
     "timestamp": 4741845,
   },
-  Object {
+  {
     "abilityID": 357747,
     "eventType": "ApplyBuff",
     "targetPlayerID": null,
     "timestamp": 4749497,
   },
-  Object {
+  {
     "abilityID": 357897,
     "eventType": "ApplyBuff",
     "targetPlayerID": null,
     "timestamp": 5090742,
   },
-  Object {
+  {
     "abilityID": 356828,
     "eventType": "ApplyBuff",
     "targetPlayerID": null,
     "timestamp": 5461614,
   },
-  Object {
+  {
     "abilityID": 357524,
     "eventType": "ApplyBuff",
     "targetPlayerID": null,
     "timestamp": 5463026,
   },
-  Object {
+  {
     "abilityID": 357524,
     "eventType": "ApplyBuff",
     "targetPlayerID": null,
     "timestamp": 5463652,
   },
-  Object {
+  {
     "abilityID": 357556,
     "eventType": "ApplyBuff",
     "targetPlayerID": null,
     "timestamp": 5465915,
   },
-  Object {
+  {
     "abilityID": 356828,
     "eventType": "ApplyBuff",
     "targetPlayerID": null,

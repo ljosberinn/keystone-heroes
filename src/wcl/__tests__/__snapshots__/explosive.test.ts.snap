@@ -1,9 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`getExplosiveEvents works 1`] = `
-Object {
-  "events": Array [
-    Object {
+{
+  "events": [
+    {
       "abilityGameID": 240446,
       "amount": 10184,
       "hitType": 1,
@@ -15,7 +15,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 15264,
     },
-    Object {
+    {
       "abilityGameID": 240446,
       "amount": 12602,
       "hitType": 1,
@@ -28,7 +28,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 15567,
     },
-    Object {
+    {
       "abilityGameID": 240446,
       "amount": 11508,
       "hitType": 1,
@@ -40,7 +40,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 17036,
     },
-    Object {
+    {
       "abilityGameID": 240446,
       "absorbed": 4817,
       "amount": 8699,
@@ -53,7 +53,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 16032,
     },
-    Object {
+    {
       "abilityGameID": 240446,
       "amount": 16325,
       "hitType": 1,
@@ -66,7 +66,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 27280,
     },
-    Object {
+    {
       "abilityGameID": 240446,
       "amount": 10227,
       "hitType": 1,
@@ -78,7 +78,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 15264,
     },
-    Object {
+    {
       "abilityGameID": 240446,
       "amount": 12601,
       "hitType": 1,
@@ -91,7 +91,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 15567,
     },
-    Object {
+    {
       "abilityGameID": 240446,
       "amount": 13076,
       "hitType": 1,
@@ -103,7 +103,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 15487,
     },
-    Object {
+    {
       "abilityGameID": 240446,
       "absorbed": 9030,
       "amount": 4486,
@@ -116,7 +116,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 16032,
     },
-    Object {
+    {
       "abilityGameID": 240446,
       "amount": 27209,
       "hitType": 1,
@@ -129,7 +129,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 40920,
     },
-    Object {
+    {
       "abilityGameID": 240446,
       "amount": 10227,
       "hitType": 1,
@@ -141,7 +141,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 15264,
     },
-    Object {
+    {
       "abilityGameID": 240446,
       "amount": 15244,
       "hitType": 1,
@@ -154,7 +154,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 18832,
     },
-    Object {
+    {
       "abilityGameID": 240446,
       "amount": 13208,
       "hitType": 1,
@@ -166,7 +166,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 15642,
     },
-    Object {
+    {
       "abilityGameID": 240446,
       "amount": 13516,
       "hitType": 1,
@@ -178,7 +178,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 16032,
     },
-    Object {
+    {
       "abilityGameID": 240446,
       "absorbed": 29930,
       "amount": 0,
@@ -192,7 +192,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 45011,
     },
-    Object {
+    {
       "abilityGameID": 240446,
       "amount": 11364,
       "hitType": 1,
@@ -204,7 +204,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 15264,
     },
-    Object {
+    {
       "abilityGameID": 240446,
       "amount": 19954,
       "hitType": 1,
@@ -217,7 +217,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 30008,
     },
-    Object {
+    {
       "abilityGameID": 240446,
       "absorbed": 18140,
       "amount": 0,
@@ -231,7 +231,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 27280,
     },
-    Object {
+    {
       "abilityGameID": 240446,
       "amount": 11363,
       "hitType": 1,
@@ -243,7 +243,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 15264,
     },
-    Object {
+    {
       "abilityGameID": 240446,
       "amount": 21340,
       "hitType": 1,
@@ -256,7 +256,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 23728,
     },
-    Object {
+    {
       "abilityGameID": 240446,
       "amount": 14966,
       "hitType": 1,
@@ -268,7 +268,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 15952,
     },
-    Object {
+    {
       "abilityGameID": 240446,
       "absorbed": 1791,
       "amount": 14728,
@@ -281,7 +281,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 17635,
     },
-    Object {
+    {
       "abilityGameID": 346665,
       "amount": 160,
       "hitType": 1,
@@ -296,7 +296,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 379,
     },
-    Object {
+    {
       "abilityGameID": 1,
       "amount": 160,
       "hitType": 1,
@@ -311,7 +311,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 521,
     },
-    Object {
+    {
       "abilityGameID": 196840,
       "amount": 160,
       "hitType": 1,
@@ -325,7 +325,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1227,
     },
-    Object {
+    {
       "abilityGameID": 225919,
       "amount": 160,
       "hitType": 1,
@@ -340,7 +340,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 878,
     },
-    Object {
+    {
       "abilityGameID": 1,
       "amount": 160,
       "hitType": 1,
@@ -354,7 +354,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 898,
     },
-    Object {
+    {
       "abilityGameID": 1,
       "amount": 160,
       "hitType": 1,
@@ -369,7 +369,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 897,
     },
-    Object {
+    {
       "abilityGameID": 1,
       "amount": 160,
       "hitType": 1,
@@ -384,7 +384,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 890,
     },
-    Object {
+    {
       "abilityGameID": 108853,
       "amount": 160,
       "hitType": 2,
@@ -397,7 +397,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1480,
     },
-    Object {
+    {
       "abilityGameID": 1,
       "amount": 160,
       "hitType": 1,
@@ -412,7 +412,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 918,
     },
-    Object {
+    {
       "abilityGameID": 225919,
       "amount": 160,
       "hitType": 1,
@@ -427,7 +427,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 880,
     },
-    Object {
+    {
       "abilityGameID": 1,
       "amount": 160,
       "hitType": 1,
@@ -441,7 +441,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 995,
     },
-    Object {
+    {
       "abilityGameID": 225919,
       "amount": 160,
       "hitType": 1,
@@ -456,7 +456,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 881,
     },
-    Object {
+    {
       "abilityGameID": 196840,
       "amount": 160,
       "hitType": 1,
@@ -470,7 +470,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1234,
     },
-    Object {
+    {
       "abilityGameID": 108853,
       "amount": 160,
       "hitType": 2,
@@ -483,7 +483,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1528,
     },
-    Object {
+    {
       "abilityGameID": 196840,
       "amount": 160,
       "hitType": 1,
@@ -497,7 +497,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1239,
     },
-    Object {
+    {
       "abilityGameID": 196840,
       "amount": 160,
       "hitType": 1,
@@ -511,7 +511,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1231,
     },
-    Object {
+    {
       "abilityGameID": 196840,
       "amount": 160,
       "hitType": 1,
@@ -525,7 +525,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1325,
     },
-    Object {
+    {
       "abilityGameID": 2948,
       "amount": 160,
       "hitType": 1,
@@ -538,7 +538,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 328,
     },
-    Object {
+    {
       "abilityGameID": 1,
       "amount": 160,
       "hitType": 1,
@@ -553,7 +553,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 688,
     },
-    Object {
+    {
       "abilityGameID": 2948,
       "amount": 160,
       "hitType": 1,
@@ -566,7 +566,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 415,
     },
-    Object {
+    {
       "abilityGameID": 225919,
       "amount": 160,
       "hitType": 1,
@@ -581,7 +581,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1254,
     },
-    Object {
+    {
       "abilityGameID": 108853,
       "amount": 160,
       "hitType": 2,
@@ -594,7 +594,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 2260,
     },
-    Object {
+    {
       "abilityGameID": 188389,
       "amount": 160,
       "hitType": 2,
@@ -608,7 +608,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 549,
     },
-    Object {
+    {
       "abilityGameID": 196840,
       "amount": 160,
       "hitType": 2,
@@ -622,7 +622,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1228,
     },
-    Object {
+    {
       "abilityGameID": 196840,
       "amount": 160,
       "hitType": 1,
@@ -636,7 +636,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1255,
     },
-    Object {
+    {
       "abilityGameID": 222031,
       "amount": 160,
       "hitType": 1,
@@ -649,7 +649,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1398,
     },
-    Object {
+    {
       "abilityGameID": 1,
       "amount": 160,
       "hitType": 1,
@@ -664,7 +664,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1005,
     },
-    Object {
+    {
       "abilityGameID": 1,
       "amount": 160,
       "hitType": 1,
@@ -679,7 +679,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 986,
     },
-    Object {
+    {
       "abilityGameID": 108853,
       "amount": 160,
       "hitType": 2,
@@ -692,7 +692,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1415,
     },
-    Object {
+    {
       "abilityGameID": 346665,
       "amount": 160,
       "hitType": 1,
@@ -707,7 +707,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 343,
     },
-    Object {
+    {
       "abilityGameID": 196840,
       "amount": 160,
       "hitType": 1,
@@ -721,7 +721,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1212,
     },
-    Object {
+    {
       "abilityGameID": 222031,
       "amount": 160,
       "hitType": 1,
@@ -734,7 +734,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1172,
     },
-    Object {
+    {
       "abilityGameID": 164812,
       "amount": 160,
       "hitType": 1,
@@ -747,7 +747,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 609,
     },
-    Object {
+    {
       "abilityGameID": 196840,
       "amount": 160,
       "hitType": 1,
@@ -761,7 +761,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1613,
     },
-    Object {
+    {
       "abilityGameID": 196840,
       "amount": 160,
       "hitType": 1,
@@ -775,7 +775,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1588,
     },
-    Object {
+    {
       "abilityGameID": 225919,
       "amount": 160,
       "hitType": 1,
@@ -790,7 +790,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1219,
     },
-    Object {
+    {
       "abilityGameID": 196840,
       "amount": 160,
       "hitType": 1,
@@ -804,7 +804,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1647,
     },
-    Object {
+    {
       "abilityGameID": 1,
       "amount": 160,
       "hitType": 1,
@@ -819,7 +819,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1203,
     },
-    Object {
+    {
       "abilityGameID": 196840,
       "amount": 160,
       "hitType": 2,
@@ -833,7 +833,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1646,
     },
-    Object {
+    {
       "abilityGameID": 108853,
       "amount": 160,
       "hitType": 2,
@@ -846,7 +846,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 2694,
     },
-    Object {
+    {
       "abilityGameID": 1,
       "amount": 160,
       "hitType": 2,
@@ -859,7 +859,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1066,
     },
-    Object {
+    {
       "abilityGameID": 1,
       "amount": 160,
       "hitType": 2,
@@ -873,7 +873,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 950,
     },
-    Object {
+    {
       "abilityGameID": 196840,
       "amount": 160,
       "hitType": 1,
@@ -887,7 +887,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1238,
     },
-    Object {
+    {
       "abilityGameID": 1,
       "amount": 160,
       "hitType": 1,
@@ -901,7 +901,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 882,
     },
-    Object {
+    {
       "abilityGameID": 222031,
       "amount": 160,
       "hitType": 1,
@@ -914,7 +914,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1208,
     },
-    Object {
+    {
       "abilityGameID": 222031,
       "amount": 160,
       "hitType": 1,
@@ -927,7 +927,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1450,
     },
-    Object {
+    {
       "abilityGameID": 346665,
       "amount": 160,
       "hitType": 1,
@@ -942,7 +942,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 383,
     },
-    Object {
+    {
       "abilityGameID": 164812,
       "amount": 160,
       "hitType": 1,
@@ -955,7 +955,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 409,
     },
-    Object {
+    {
       "abilityGameID": 108853,
       "amount": 160,
       "hitType": 2,
@@ -968,7 +968,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 2179,
     },
-    Object {
+    {
       "abilityGameID": 164812,
       "amount": 160,
       "hitType": 2,
@@ -981,7 +981,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 522,
     },
-    Object {
+    {
       "abilityGameID": 108853,
       "amount": 160,
       "hitType": 2,
@@ -994,7 +994,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1851,
     },
-    Object {
+    {
       "abilityGameID": 1,
       "amount": 160,
       "hitType": 1,
@@ -1009,7 +1009,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1252,
     },
-    Object {
+    {
       "abilityGameID": 1,
       "amount": 160,
       "hitType": 1,
@@ -1023,7 +1023,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1265,
     },
-    Object {
+    {
       "abilityGameID": 346665,
       "amount": 160,
       "hitType": 1,
@@ -1038,7 +1038,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 454,
     },
-    Object {
+    {
       "abilityGameID": 196840,
       "amount": 160,
       "hitType": 1,
@@ -1052,7 +1052,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1726,
     },
-    Object {
+    {
       "abilityGameID": 1,
       "amount": 160,
       "hitType": 1,
@@ -1067,7 +1067,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 914,
     },
-    Object {
+    {
       "abilityGameID": 196840,
       "amount": 160,
       "hitType": 1,
@@ -1081,7 +1081,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1411,
     },
-    Object {
+    {
       "abilityGameID": 1,
       "amount": 160,
       "hitType": 1,
@@ -1095,7 +1095,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 861,
     },
-    Object {
+    {
       "abilityGameID": 222031,
       "amount": 160,
       "hitType": 1,
@@ -1108,7 +1108,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1395,
     },
-    Object {
+    {
       "abilityGameID": 1,
       "amount": 160,
       "hitType": 1,
@@ -1122,7 +1122,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 874,
     },
-    Object {
+    {
       "abilityGameID": 346665,
       "amount": 160,
       "hitType": 1,
@@ -1137,7 +1137,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 340,
     },
-    Object {
+    {
       "abilityGameID": 222031,
       "amount": 160,
       "hitType": 1,
@@ -1150,7 +1150,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1252,
     },
-    Object {
+    {
       "abilityGameID": 337819,
       "amount": 160,
       "hitType": 2,
@@ -1163,7 +1163,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 780,
     },
-    Object {
+    {
       "abilityGameID": 337819,
       "amount": 160,
       "hitType": 1,
@@ -1177,7 +1177,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 812,
     },
-    Object {
+    {
       "abilityGameID": 196840,
       "amount": 160,
       "hitType": 1,
@@ -1191,7 +1191,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1212,
     },
-    Object {
+    {
       "abilityGameID": 346665,
       "amount": 160,
       "hitType": 1,
@@ -1206,7 +1206,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 342,
     },
-    Object {
+    {
       "abilityGameID": 222031,
       "amount": 160,
       "hitType": 1,
@@ -1219,7 +1219,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1219,
     },
-    Object {
+    {
       "abilityGameID": 346665,
       "amount": 160,
       "hitType": 1,
@@ -1234,7 +1234,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 446,
     },
-    Object {
+    {
       "abilityGameID": 196840,
       "amount": 160,
       "hitType": 1,
@@ -1248,7 +1248,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1823,
     },
-    Object {
+    {
       "abilityGameID": 1,
       "amount": 160,
       "hitType": 1,
@@ -1262,7 +1262,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1332,
     },
-    Object {
+    {
       "abilityGameID": 196840,
       "amount": 160,
       "hitType": 1,
@@ -1276,7 +1276,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1245,
     },
-    Object {
+    {
       "abilityGameID": 346665,
       "amount": 160,
       "hitType": 1,
@@ -1291,7 +1291,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 340,
     },
-    Object {
+    {
       "abilityGameID": 337819,
       "amount": 160,
       "hitType": 2,
@@ -1304,7 +1304,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 780,
     },
-    Object {
+    {
       "abilityGameID": 346665,
       "amount": 160,
       "hitType": 2,
@@ -1318,7 +1318,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 367,
     },
-    Object {
+    {
       "abilityGameID": 1,
       "amount": 160,
       "hitType": 1,
@@ -1332,7 +1332,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1072,
     },
-    Object {
+    {
       "abilityGameID": 1,
       "amount": 160,
       "hitType": 1,
@@ -1347,7 +1347,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 946,
     },
-    Object {
+    {
       "abilityGameID": 213243,
       "amount": 160,
       "hitType": 1,
@@ -1360,7 +1360,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1707,
     },
-    Object {
+    {
       "abilityGameID": 222031,
       "amount": 160,
       "hitType": 1,
@@ -1373,7 +1373,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1255,
     },
-    Object {
+    {
       "abilityGameID": 196840,
       "amount": 160,
       "hitType": 1,
@@ -1387,7 +1387,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1326,
     },
-    Object {
+    {
       "abilityGameID": 108853,
       "amount": 160,
       "hitType": 2,
@@ -1400,7 +1400,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1519,
     },
-    Object {
+    {
       "abilityGameID": 222031,
       "amount": 160,
       "hitType": 1,
@@ -1413,7 +1413,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1367,
     },
-    Object {
+    {
       "abilityGameID": 225919,
       "amount": 160,
       "hitType": 1,
@@ -1428,7 +1428,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 876,
     },
-    Object {
+    {
       "abilityGameID": 1,
       "amount": 160,
       "hitType": 1,
@@ -1443,7 +1443,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1034,
     },
-    Object {
+    {
       "abilityGameID": 1,
       "amount": 160,
       "hitType": 1,
@@ -1458,7 +1458,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1071,
     },
-    Object {
+    {
       "abilityGameID": 108853,
       "amount": 160,
       "hitType": 2,
@@ -1471,7 +1471,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 2228,
     },
-    Object {
+    {
       "abilityGameID": 196840,
       "amount": 160,
       "hitType": 1,
@@ -1485,7 +1485,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1212,
     },
-    Object {
+    {
       "abilityGameID": 1,
       "amount": 160,
       "hitType": 1,
@@ -1499,7 +1499,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 823,
     },
-    Object {
+    {
       "abilityGameID": 196840,
       "amount": 160,
       "hitType": 1,
@@ -1513,7 +1513,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1275,
     },
-    Object {
+    {
       "abilityGameID": 1,
       "amount": 160,
       "hitType": 1,
@@ -1528,7 +1528,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 957,
     },
-    Object {
+    {
       "abilityGameID": 196840,
       "amount": 160,
       "hitType": 1,
@@ -1542,7 +1542,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1285,
     },
-    Object {
+    {
       "abilityGameID": 164812,
       "amount": 160,
       "hitType": 1,
@@ -1555,7 +1555,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 505,
     },
-    Object {
+    {
       "abilityGameID": 188389,
       "amount": 160,
       "hitType": 1,
@@ -1569,7 +1569,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 528,
     },
-    Object {
+    {
       "abilityGameID": 1,
       "amount": 160,
       "hitType": 2,
@@ -1582,7 +1582,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 947,
     },
-    Object {
+    {
       "abilityGameID": 225919,
       "amount": 160,
       "hitType": 2,
@@ -1596,7 +1596,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 876,
     },
-    Object {
+    {
       "abilityGameID": 164812,
       "amount": 160,
       "hitType": 1,
@@ -1609,7 +1609,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 414,
     },
-    Object {
+    {
       "abilityGameID": 225919,
       "amount": 160,
       "hitType": 1,
@@ -1624,7 +1624,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 884,
     },
-    Object {
+    {
       "abilityGameID": 1,
       "amount": 160,
       "hitType": 1,
@@ -1639,7 +1639,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 957,
     },
-    Object {
+    {
       "abilityGameID": 337819,
       "amount": 160,
       "hitType": 2,
@@ -1652,7 +1652,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 812,
     },
-    Object {
+    {
       "abilityGameID": 196840,
       "amount": 160,
       "hitType": 2,
@@ -1666,7 +1666,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1450,
     },
-    Object {
+    {
       "abilityGameID": 346665,
       "amount": 160,
       "hitType": 1,
@@ -1681,7 +1681,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 349,
     },
-    Object {
+    {
       "abilityGameID": 222031,
       "amount": 160,
       "hitType": 1,
@@ -1694,7 +1694,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1425,
     },
-    Object {
+    {
       "abilityGameID": 1,
       "amount": 160,
       "hitType": 2,
@@ -1708,7 +1708,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 962,
     },
-    Object {
+    {
       "abilityGameID": 188389,
       "amount": 160,
       "hitType": 1,
@@ -1722,7 +1722,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 586,
     },
-    Object {
+    {
       "abilityGameID": 213243,
       "amount": 160,
       "hitType": 2,
@@ -1735,7 +1735,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1729,
     },
-    Object {
+    {
       "abilityGameID": 196840,
       "amount": 160,
       "hitType": 1,
@@ -1749,7 +1749,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1359,
     },
-    Object {
+    {
       "abilityGameID": 164812,
       "amount": 160,
       "hitType": 1,
@@ -1762,7 +1762,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 400,
     },
-    Object {
+    {
       "abilityGameID": 1,
       "amount": 160,
       "hitType": 1,
@@ -1776,7 +1776,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 928,
     },
-    Object {
+    {
       "abilityGameID": 337819,
       "amount": 160,
       "hitType": 1,
@@ -1790,7 +1790,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 812,
     },
-    Object {
+    {
       "abilityGameID": 1,
       "amount": 160,
       "hitType": 1,
@@ -1805,7 +1805,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 976,
     },
-    Object {
+    {
       "abilityGameID": 225919,
       "amount": 160,
       "hitType": 1,
@@ -1820,7 +1820,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 943,
     },
-    Object {
+    {
       "abilityGameID": 196840,
       "amount": 160,
       "hitType": 2,
@@ -1834,7 +1834,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1254,
     },
-    Object {
+    {
       "abilityGameID": 108853,
       "amount": 160,
       "hitType": 2,
@@ -1847,7 +1847,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1465,
     },
-    Object {
+    {
       "abilityGameID": 164812,
       "amount": 160,
       "hitType": 1,
@@ -1860,7 +1860,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 413,
     },
-    Object {
+    {
       "abilityGameID": 1,
       "amount": 160,
       "hitType": 1,
@@ -1875,7 +1875,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 535,
     },
-    Object {
+    {
       "abilityGameID": 164815,
       "amount": 160,
       "hitType": 1,
@@ -1888,7 +1888,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 398,
     },
-    Object {
+    {
       "abilityGameID": 196840,
       "amount": 160,
       "hitType": 1,
@@ -1902,7 +1902,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1267,
     },
-    Object {
+    {
       "abilityGameID": 196840,
       "amount": 160,
       "hitType": 1,
@@ -1916,7 +1916,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1278,
     },
-    Object {
+    {
       "abilityGameID": 227518,
       "amount": 160,
       "hitType": 1,
@@ -1929,7 +1929,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1645,
     },
-    Object {
+    {
       "abilityGameID": 196840,
       "amount": 160,
       "hitType": 1,
@@ -1943,7 +1943,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1308,
     },
-    Object {
+    {
       "abilityGameID": 222031,
       "amount": 160,
       "hitType": 2,
@@ -1956,7 +1956,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1269,
     },
-    Object {
+    {
       "abilityGameID": 1,
       "amount": 160,
       "hitType": 1,
@@ -1970,7 +1970,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1279,
     },
-    Object {
+    {
       "abilityGameID": 164812,
       "amount": 160,
       "hitType": 1,
@@ -1983,7 +1983,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 860,
     },
-    Object {
+    {
       "abilityGameID": 337819,
       "amount": 160,
       "hitType": 1,
@@ -1997,7 +1997,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1056,
     },
-    Object {
+    {
       "abilityGameID": 196840,
       "amount": 160,
       "hitType": 1,
@@ -2011,7 +2011,7 @@ Object {
       "type": "damage",
       "unmitigatedAmount": 1724,
     },
-    Object {
+    {
       "abilityGameID": 196840,
       "amount": 160,
       "hitType": 1,

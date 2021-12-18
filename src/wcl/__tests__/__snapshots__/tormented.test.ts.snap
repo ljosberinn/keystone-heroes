@@ -1,8 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`getTormentedEvents works 1`] = `
-Array [
-  Object {
+[
+  {
     "abilityGameID": 357900,
     "pin": "0",
     "sourceID": -1,
@@ -12,7 +12,7 @@ Array [
     "timestamp": 4094243,
     "type": "applybuff",
   },
-  Object {
+  {
     "abilityGameID": 357897,
     "pin": "0",
     "sourceID": 1,
@@ -22,7 +22,7 @@ Array [
     "timestamp": 4095304,
     "type": "applybuff",
   },
-  Object {
+  {
     "abilityGameID": 357575,
     "pin": "0",
     "sourceID": 2,
@@ -30,7 +30,7 @@ Array [
     "timestamp": 4096033,
     "type": "applybuff",
   },
-  Object {
+  {
     "abilityGameID": 357575,
     "pin": "0",
     "sourceID": 9,
@@ -38,7 +38,7 @@ Array [
     "timestamp": 4096613,
     "type": "applybuff",
   },
-  Object {
+  {
     "abilityGameID": 357575,
     "pin": "0",
     "sourceID": 8,
@@ -46,7 +46,7 @@ Array [
     "timestamp": 4098344,
     "type": "applybuff",
   },
-  Object {
+  {
     "abilityGameID": 357817,
     "pin": "0",
     "sourceID": 1,
@@ -56,7 +56,7 @@ Array [
     "timestamp": 4498851,
     "type": "applybuff",
   },
-  Object {
+  {
     "abilityGameID": 357814,
     "pin": "0",
     "sourceID": -1,
@@ -64,7 +64,7 @@ Array [
     "timestamp": 4500940,
     "type": "applybuff",
   },
-  Object {
+  {
     "abilityGameID": 357825,
     "pin": "0",
     "sourceID": -1,
@@ -72,7 +72,7 @@ Array [
     "timestamp": 4504750,
     "type": "applybuff",
   },
-  Object {
+  {
     "abilityGameID": 357815,
     "pin": "0",
     "sourceID": 6,
@@ -82,7 +82,7 @@ Array [
     "timestamp": 4506129,
     "type": "applybuff",
   },
-  Object {
+  {
     "abilityGameID": 357825,
     "pin": "0",
     "sourceID": -1,
@@ -90,7 +90,7 @@ Array [
     "timestamp": 4510612,
     "type": "applybuff",
   },
-  Object {
+  {
     "abilityGameID": 357706,
     "pin": "0",
     "sourceID": 2,
@@ -98,7 +98,7 @@ Array [
     "timestamp": 4741467,
     "type": "applybuff",
   },
-  Object {
+  {
     "abilityGameID": 357863,
     "pin": "0",
     "sourceID": 1,
@@ -108,7 +108,7 @@ Array [
     "timestamp": 4741845,
     "type": "applybuff",
   },
-  Object {
+  {
     "abilityGameID": 357575,
     "pin": "0",
     "sourceID": 9,
@@ -117,7 +117,7 @@ Array [
     "timestamp": 4742709,
     "type": "applybuffstack",
   },
-  Object {
+  {
     "abilityGameID": 357575,
     "pin": "0",
     "sourceID": 8,
@@ -126,7 +126,7 @@ Array [
     "timestamp": 4743923,
     "type": "applybuffstack",
   },
-  Object {
+  {
     "abilityGameID": 357747,
     "pin": "0",
     "sourceID": 6,
@@ -136,7 +136,7 @@ Array [
     "timestamp": 4749497,
     "type": "applybuff",
   },
-  Object {
+  {
     "abilityGameID": 356828,
     "pin": "0",
     "sourceID": 1,
@@ -144,7 +144,7 @@ Array [
     "timestamp": 5461614,
     "type": "applybuff",
   },
-  Object {
+  {
     "abilityGameID": 357524,
     "pin": "0",
     "sourceID": 2,
@@ -152,7 +152,7 @@ Array [
     "timestamp": 5463026,
     "type": "applybuff",
   },
-  Object {
+  {
     "abilityGameID": 357524,
     "pin": "0",
     "sourceID": 9,
@@ -160,7 +160,7 @@ Array [
     "timestamp": 5463652,
     "type": "applybuff",
   },
-  Object {
+  {
     "abilityGameID": 357556,
     "pin": "0",
     "sourceID": 6,
@@ -170,7 +170,7 @@ Array [
     "timestamp": 5465915,
     "type": "applybuff",
   },
-  Object {
+  {
     "abilityGameID": 356828,
     "pin": "0",
     "sourceID": 8,

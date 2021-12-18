@@ -1,8 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`getSpitefulEvents works 1`] = `
-Array [
-  Object {
+[
+  {
     "abilityGameID": 350163,
     "amount": 26576,
     "hitType": 1,
@@ -15,7 +15,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 38031,
   },
-  Object {
+  {
     "abilityGameID": 350163,
     "amount": 25450,
     "hitType": 1,
@@ -29,7 +29,7 @@ Array [
     "type": "damage",
     "unmitigatedAmount": 44804,
   },
-  Object {
+  {
     "abilityGameID": 350163,
     "absorbed": 3108,
     "amount": 40334,
