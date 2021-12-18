@@ -49,7 +49,7 @@ export default function InterruptRow({
     <tr
       className={classnames(
         "text-white",
-        isQuaking ? "bg-red-500" : "bg-green-500"
+        isQuaking ? "bg-red-500" : "bg-emerald-500"
       )}
     >
       <TimestampCell event={event} msSinceLastEvent={msSinceLastEvent} />

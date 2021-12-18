@@ -21,6 +21,16 @@ import { dungeons } from "../../../web/staticData";
 import { widthConstraint } from "../../../web/styles/tokens";
 import { timeDurationToString } from "../../../web/utils";
 
+const DeleteUtil = dynamic(
+  () =>
+    import(
+      /* webpackChunkName: "dev-utils" */ "../../../web/components/report/dev"
+    ),
+  {
+    suspense: true,
+  }
+);
+
 const GenericError = dynamic(
   () =>
     import(
@@ -178,6 +188,12 @@ export default function FightID(): JSX.Element | null {
       />
 
       <FightIDHead fight={fight} />
+
+      {process.env.NODE_ENV === "development" && (
+        <Suspense fallback={null}>
+          <DeleteUtil reportID={reportID} fightID={fightID} />
+        </Suspense>
+      )}
 
       {breadcrumbs}
 

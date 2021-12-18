@@ -1,6 +1,6 @@
 export const bgPrimary = "bg-white dark:bg-gray-700";
 export const bgSecondary = "bg-gray-200 dark:bg-gray-600";
-export const greenText = "text-green-600 dark:text-green-500";
+export const greenText = "text-emerald-600 dark:text-emerald-500";
 export const redText = "text-red-600 dark:text-red-400";
 
 export const hoverBg = "hover:bg-gray-300 dark:hover:bg-gray-500";

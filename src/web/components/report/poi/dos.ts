@@ -1,3 +1,5 @@
+import { DOS_URN } from "../../../../wcl/queries/events/dungeons/dos";
+import { spells } from "../../../staticData";
 import type { POIContextDefinition } from "./context";
 
 export const doors: POIContextDefinition["doors"] = {
@@ -47,41 +49,38 @@ export const doors: POIContextDefinition["doors"] = {
   ],
 };
 
-const HAUNTED_URN_ICON = "inv_misc_urn_01";
-const urnLabel = "Haunted Urn";
-
 export const poi: POIContextDefinition["poi"] = {
   // De Other Side
   1680: [
     {
-      icon: HAUNTED_URN_ICON,
+      icon: spells[DOS_URN].icon,
       x: 0.398_794_552_828_948_9,
       y: 0.768_446_106_766_405_9,
-      label: urnLabel,
+      label: spells[DOS_URN].name,
     },
     {
-      icon: HAUNTED_URN_ICON,
+      icon: spells[DOS_URN].icon,
       x: 0.650_614_754_098_360_7,
       y: 0.514_861_832_600_743_9,
-      label: urnLabel,
+      label: spells[DOS_URN].name,
     },
   ],
   // Ardenweald
   1677: [
     {
-      icon: HAUNTED_URN_ICON,
+      icon: spells[DOS_URN].icon,
       x: 0.495_901_639_344_262_3,
       y: 0.364_245_535_302_615_83,
-      label: urnLabel,
+      label: spells[DOS_URN].name,
     },
   ],
   // Zul'Gurub
   1679: [
     {
-      icon: HAUNTED_URN_ICON,
+      icon: spells[DOS_URN].icon,
       x: 0.578_893_442_622_950_8,
       y: 0.430_332_277_994_651_6,
-      label: urnLabel,
+      label: spells[DOS_URN].name,
     },
   ],
 };

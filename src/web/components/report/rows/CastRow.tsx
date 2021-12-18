@@ -104,7 +104,7 @@ export default function CastRow({
         <td
           className={classnames(
             delayedTooHard && "text-red-500",
-            usedUnderCooldown && "text-green-500",
+            usedUnderCooldown && "text-emerald-500",
             event.ability.lastUse ? null : "text-yellow-500"
           )}
           title={

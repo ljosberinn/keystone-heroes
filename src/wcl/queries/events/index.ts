@@ -1,24 +1,6 @@
 import { Affixes } from "@prisma/client";
 
 import type { DungeonIDs } from "../../../db/data/dungeons";
-import {
-  deathFilterExpression,
-  filterEnemyDeathEvents,
-  filterPlayerDeathEvents,
-  filterProfessionEvents,
-  filterRemarkableSpellEvents,
-  remarkableSpellFilterExpression,
-  engineeringBattleRezExpression,
-  invisibilityFilterExpression,
-  interruptFilterExpression,
-  filterPlayerInterruptEvents,
-  generalCovenantExpression,
-  filterCovenantCastEvents,
-  cheatDeathFilterExpression,
-  filterCheatDeathEvents,
-  trinketsFilterExpression,
-  filterTrinkets,
-} from "../events/other";
 import type {
   AllTrackedEventTypes,
   BeginCastEvent,
@@ -27,7 +9,34 @@ import type {
 } from "../events/types";
 import { filterAffixEvents, getAffixExpression } from "./affixes";
 import { findExplosiveTargetID } from "./affixes/explosive";
+import {
+  cheatDeathFilterExpression,
+  filterCheatDeathEvents,
+} from "./cheathDeath";
+import {
+  generalCovenantExpression,
+  filterCovenantCastEvents,
+} from "./covenant";
+import {
+  deathFilterExpression,
+  filterEnemyDeathEvents,
+  filterPlayerDeathEvents,
+} from "./death";
 import { getDungeonExpression, filterDungeonEvents } from "./dungeons";
+import {
+  filterPlayerInterruptEvents,
+  interruptFilterExpression,
+} from "./interrupts";
+import {
+  engineeringBattleRezExpression,
+  invisibilityFilterExpression,
+  filterProfessionEvents,
+} from "./professions";
+import {
+  filterRemarkableSpellEvents,
+  remarkableSpellFilterExpression,
+} from "./spells";
+import { filterTrinkets, trinketsFilterExpression } from "./trinkets";
 import { recursiveGetEvents } from "./utils";
 
 export type EventParams = {

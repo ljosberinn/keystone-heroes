@@ -78,7 +78,7 @@ export default function AbilityReadyRow({
 
       <td
         className={classnames(
-          usedUnderCooldown && "text-green-500",
+          usedUnderCooldown && "text-emerald-500",
           !event.ability.lastUse && "text-yellow-500"
         )}
       >

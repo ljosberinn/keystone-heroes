@@ -1,5 +1,5 @@
 import dynamic from "next/dynamic";
-import { Suspense, useState, SuspenseList } from "react";
+import { Suspense, useState, SuspenseList, useMemo } from "react";
 
 import type { FightSuccessResponse } from "../../../api/functions/fight";
 import { useFight } from "../../../pages/report/[reportID]/[fightID]";
@@ -51,6 +51,7 @@ import {
   isPlagueBombDamageEvent,
   isExplosivesDamageEvent,
   isMissingInterruptEventWithAbility,
+  isThrowCleaverDamageEvent,
 } from "./utils";
 
 type MostRelevantNPCReturn = {
@@ -336,7 +337,7 @@ function Sidebar() {
         />
       )}
 
-      <div className="flex w-full px-4 py-2 border-t-2 place-content-end border-gray-600">
+      <div className="flex w-full px-4 py-2 border-t-2 border-gray-600 place-content-end">
         this pull {pullNPCs.pull.percent.toFixed(2)}%
       </div>
 
@@ -345,6 +346,33 @@ function Sidebar() {
       </div>
     </div>
   );
+}
+
+function usePullSummaryRows(
+  selectedPull: FightSuccessResponse["pulls"][number]
+) {
+  const { dungeon, affixes } = useFight().fight;
+
+  const isPlaguefall = dungeons[dungeon].slug === "PF";
+  const isNecroticWake = dungeons[dungeon].slug === "NW";
+
+  return {
+    sanguineHealEvents: affixes.includes(8)
+      ? selectedPull.events.filter(isSanguineHealEvent)
+      : [],
+    plagueBombDamageEvents: isPlaguefall
+      ? selectedPull.events.filter(isPlagueBombDamageEvent)
+      : [],
+    violentDetonationDamageEvents: isPlaguefall
+      ? selectedPull.events.filter(isViolentDetonationDamageEvent)
+      : [],
+    explosivesEvents: affixes.includes(13)
+      ? selectedPull.events.filter(isExplosivesDamageEvent)
+      : [],
+    throwCleaverDamageEvents: isNecroticWake
+      ? selectedPull.events.filter(isThrowCleaverDamageEvent)
+      : [],
+  };
 }
 
 type EventCategory = "before" | "during" | "after";
@@ -357,30 +385,41 @@ function Events() {
 
   const [trackedPlayer, setTrackedPlayer] = useState(player.map((p) => p.id));
 
-  const playerIdPlayerNameMap = Object.fromEntries<string>(
-    player.map((p) => [p.id, p.name])
+  const playerIdPlayerNameMap = useMemo(
+    () => Object.fromEntries<string>(player.map((p) => [p.id, p.name])),
+    [player]
   );
 
-  const playerIdTextColorMap = Object.fromEntries(
-    player.map((p) => [
-      p.id,
-      classTextColorMap[classes[p.class].name.toLowerCase()],
-    ])
+  const playerIdTextColorMap = useMemo(
+    () =>
+      Object.fromEntries(
+        player.map((p) => [
+          p.id,
+          classTextColorMap[classes[p.class].name.toLowerCase()],
+        ])
+      ),
+    [player]
   );
 
-  const playerIdIconMap = Object.fromEntries(
-    player.map((player) => {
-      const { name, specs } = classes[player.class];
-      const spec = specs.find((spec) => spec.id === player.spec);
+  const playerIdIconMap = useMemo(
+    () =>
+      Object.fromEntries(
+        player.map((player) => {
+          const { name, specs } = classes[player.class];
+          const spec = specs.find((spec) => spec.id === player.spec);
 
-      return [
-        player.id,
+          return [
+            player.id,
 
-        <span className="block w-4 h-4" key={player.actorID}>
-          {spec ? <SpecIcon size={4} class={name} spec={spec.name} /> : null}
-        </span>,
-      ];
-    })
+            <span className="block w-4 h-4" key={player.actorID}>
+              {spec ? (
+                <SpecIcon size={4} class={name} spec={spec.name} />
+              ) : null}
+            </span>,
+          ];
+        })
+      ),
+    [player]
   );
 
   const { before, during, after } = selectedPull.events.reduce<
@@ -425,14 +464,13 @@ function Events() {
     }
   );
 
-  const sanguineHealEvents = selectedPull.events.filter(isSanguineHealEvent);
-  const plagueBombDamageEvents = selectedPull.events.filter(
-    isPlagueBombDamageEvent
-  );
-  const violentDetonationDamageEvents = selectedPull.events.filter(
-    isViolentDetonationDamageEvent
-  );
-  const explosivesEvents = selectedPull.events.filter(isExplosivesDamageEvent);
+  const {
+    explosivesEvents,
+    plagueBombDamageEvents,
+    sanguineHealEvents,
+    throwCleaverDamageEvents,
+    violentDetonationDamageEvents,
+  } = usePullSummaryRows(selectedPull);
 
   return (
     <div className="w-full min-h-screen px-4 py-2 bg-white rounded-lg lg:w-9/23 dark:bg-gray-700">
@@ -627,6 +665,10 @@ function Events() {
                   events={violentDetonationDamageEvents}
                 />
               ) : null}
+
+              {throwCleaverDamageEvents.length > 0 ? (
+                <ThrowCleaverDamageRow events={throwCleaverDamageEvents} />
+              ) : null}
               {explosivesEvents.length > 0 ? (
                 <ExplosivesSummaryRow
                   events={explosivesEvents}
@@ -771,6 +813,14 @@ const ViolentDetonationDamageRow = dynamic(
   () =>
     import(
       /* webpackChunkName: "ViolentDetonationDamageRow" */ "./rows/ViolentDetonationDamageRow"
+    ),
+  { suspense: true }
+);
+
+const ThrowCleaverDamageRow = dynamic(
+  () =>
+    import(
+      /* webpackChunkName: "ThrowCleaverDamageRow" */ "./rows/ThrowCleaverDamageRow"
     ),
   { suspense: true }
 );

@@ -110,7 +110,7 @@ export function MaybeWastedCooldownCell({
           wastedCastUpcoming
             ? "bg-red-500"
             : nextCastIsUnderCD
-            ? "text-green-500"
+            ? "text-emerald-500"
             : undefined
         )}
       >

@@ -5,6 +5,7 @@ import {
   tormentedBuffsAndDebuffs,
   tormentedAbilityGameIDSet,
 } from "../../queries/events/affixes/tormented";
+import { CHEAT_DEATHS } from "../../queries/events/cheathDeath";
 import { NW } from "../../queries/events/dungeons/nw";
 import { PF } from "../../queries/events/dungeons/pf";
 import {
@@ -13,11 +14,8 @@ import {
   SD_ZRALI_SHIELD_BUFF,
 } from "../../queries/events/dungeons/sd";
 import { TOP_BANNER_AURA } from "../../queries/events/dungeons/top";
-import {
-  CHEAT_DEATHS,
-  INVISIBILITY,
-  TRINKETS,
-} from "../../queries/events/other";
+import { INVISIBILITY } from "../../queries/events/professions";
+import { TRINKETS } from "../../queries/events/trinkets";
 import type { ApplyBuffEvent } from "../../queries/events/types";
 import type { Processor } from "../utils";
 
@@ -33,7 +31,11 @@ const noteworthyBuffs = new Set<number>([
   PF.GREEN_BUFF.aura,
   PF.RED_BUFF.aura,
   PF.PURPLE_BUFF.aura,
+  NW.SHIELD,
   SD_ZRALI_SHIELD,
+  SD_LANTERN_BUFF,
+  SD_ZRALI_SHIELD_BUFF,
+  NW.KYRIAN_ORB_BUFF,
   ...tormentedBuffsAndDebuffs
     .filter((deBuff) => deBuff.type.includes("applybuff"))
     .map((buff) => buff.id),
@@ -84,19 +86,19 @@ export const applyBuffProcessor: Processor<CustomApplyBuffEvent> = (
     };
   }
 
-  if (
-    targetPlayerID &&
-    (event.abilityGameID === SD_LANTERN_BUFF ||
-      event.abilityGameID === NW.KYRIAN_ORB_BUFF ||
-      event.abilityGameID === SD_ZRALI_SHIELD_BUFF)
-  ) {
-    return {
-      timestamp: event.timestamp,
-      eventType: EventType.ApplyBuff,
-      targetPlayerID,
-      abilityID: event.abilityGameID,
-    };
-  }
+  // if (
+  //   targetPlayerID &&
+  //   (event.abilityGameID === SD_LANTERN_BUFF ||
+  //     event.abilityGameID === NW.KYRIAN_ORB_BUFF ||
+  //     event.abilityGameID === SD_ZRALI_SHIELD_BUFF)
+  // ) {
+  //   return {
+  //     timestamp: event.timestamp,
+  //     eventType: EventType.ApplyBuff,
+  //     targetPlayerID,
+  //     abilityID: event.abilityGameID,
+  //   };
+  // }
 
   // buffs applied from environment on player
   if (

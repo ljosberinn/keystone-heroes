@@ -7750,6 +7750,19 @@ Array [
         "unmitigatedAmount": 5333,
       },
       Object {
+        "abilityGameID": 344422,
+        "amount": 0,
+        "hitType": 1,
+        "overheal": 2829,
+        "pin": "0",
+        "sourceID": 1,
+        "sourceMarker": 2,
+        "targetID": 1,
+        "targetMarker": 2,
+        "timestamp": 1917790,
+        "type": "heal",
+      },
+      Object {
         "abilityGameID": 344421,
         "amount": 5169,
         "hitType": 1,
@@ -7774,19 +7787,6 @@ Array [
         "timestamp": 1917790,
         "type": "damage",
         "unmitigatedAmount": 4922,
-      },
-      Object {
-        "abilityGameID": 344422,
-        "amount": 0,
-        "hitType": 1,
-        "overheal": 2829,
-        "pin": "0",
-        "sourceID": 1,
-        "sourceMarker": 2,
-        "targetID": 1,
-        "targetMarker": 2,
-        "timestamp": 1917790,
-        "type": "heal",
       },
       Object {
         "abilityGameID": 344422,
@@ -7813,6 +7813,16 @@ Array [
         "type": "heal",
       },
       Object {
+        "abilityGameID": 344422,
+        "amount": 2643,
+        "hitType": 1,
+        "pin": "0",
+        "sourceID": 9,
+        "targetID": 9,
+        "timestamp": 1919008,
+        "type": "heal",
+      },
+      Object {
         "abilityGameID": 344421,
         "amount": 5042,
         "hitType": 1,
@@ -7835,16 +7845,6 @@ Array [
         "timestamp": 1919008,
         "type": "damage",
         "unmitigatedAmount": 4802,
-      },
-      Object {
-        "abilityGameID": 344422,
-        "amount": 2643,
-        "hitType": 1,
-        "pin": "0",
-        "sourceID": 9,
-        "targetID": 9,
-        "timestamp": 1919008,
-        "type": "heal",
       },
       Object {
         "abilityGameID": 344422,
@@ -7881,6 +7881,18 @@ Array [
         "type": "heal",
       },
       Object {
+        "abilityGameID": 344422,
+        "amount": 3301,
+        "hitType": 1,
+        "pin": "0",
+        "sourceID": 4,
+        "sourceMarker": 7,
+        "targetID": 4,
+        "targetMarker": 7,
+        "timestamp": 1920502,
+        "type": "heal",
+      },
+      Object {
         "abilityGameID": 344421,
         "amount": 5600,
         "hitType": 1,
@@ -7905,18 +7917,6 @@ Array [
         "timestamp": 1920502,
         "type": "damage",
         "unmitigatedAmount": 5333,
-      },
-      Object {
-        "abilityGameID": 344422,
-        "amount": 3301,
-        "hitType": 1,
-        "pin": "0",
-        "sourceID": 4,
-        "sourceMarker": 7,
-        "targetID": 4,
-        "targetMarker": 7,
-        "timestamp": 1920502,
-        "type": "heal",
       },
       Object {
         "abilityGameID": 344422,
@@ -7968,6 +7968,19 @@ Array [
         "type": "heal",
       },
       Object {
+        "abilityGameID": 344422,
+        "amount": 0,
+        "hitType": 1,
+        "overheal": 2719,
+        "pin": "0",
+        "sourceID": 1,
+        "sourceMarker": 2,
+        "targetID": 1,
+        "targetMarker": 2,
+        "timestamp": 1921799,
+        "type": "heal",
+      },
+      Object {
         "abilityGameID": 344421,
         "amount": 5168,
         "hitType": 1,
@@ -7996,19 +8009,6 @@ Array [
       Object {
         "abilityGameID": 344422,
         "amount": 0,
-        "hitType": 1,
-        "overheal": 2719,
-        "pin": "0",
-        "sourceID": 1,
-        "sourceMarker": 2,
-        "targetID": 1,
-        "targetMarker": 2,
-        "timestamp": 1921799,
-        "type": "heal",
-      },
-      Object {
-        "abilityGameID": 344422,
-        "amount": 0,
         "hitType": 2,
         "overheal": 5418,
         "pin": "0",
@@ -8028,6 +8028,17 @@ Array [
         "targetID": 4,
         "targetMarker": 7,
         "timestamp": 1921799,
+        "type": "heal",
+      },
+      Object {
+        "abilityGameID": 344422,
+        "amount": 0,
+        "hitType": 1,
+        "overheal": 2643,
+        "pin": "0",
+        "sourceID": 9,
+        "targetID": 9,
+        "timestamp": 1923003,
         "type": "heal",
       },
       Object {
@@ -8053,17 +8064,6 @@ Array [
         "timestamp": 1923003,
         "type": "damage",
         "unmitigatedAmount": 4802,
-      },
-      Object {
-        "abilityGameID": 344422,
-        "amount": 0,
-        "hitType": 1,
-        "overheal": 2643,
-        "pin": "0",
-        "sourceID": 9,
-        "targetID": 9,
-        "timestamp": 1923003,
-        "type": "heal",
       },
       Object {
         "abilityGameID": 344422,
@@ -8131,6 +8131,18 @@ Array [
         "type": "heal",
       },
       Object {
+        "abilityGameID": 344422,
+        "amount": 3301,
+        "hitType": 1,
+        "pin": "0",
+        "sourceID": 4,
+        "sourceMarker": 7,
+        "targetID": 4,
+        "targetMarker": 7,
+        "timestamp": 1924512,
+        "type": "heal",
+      },
+      Object {
         "abilityGameID": 344421,
         "amount": 5601,
         "hitType": 1,
@@ -8158,18 +8170,6 @@ Array [
       },
       Object {
         "abilityGameID": 344422,
-        "amount": 3301,
-        "hitType": 1,
-        "pin": "0",
-        "sourceID": 4,
-        "sourceMarker": 7,
-        "targetID": 4,
-        "targetMarker": 7,
-        "timestamp": 1924512,
-        "type": "heal",
-      },
-      Object {
-        "abilityGameID": 344422,
         "amount": 0,
         "hitType": 1,
         "overheal": 2948,
@@ -8191,6 +8191,19 @@ Array [
         "sourceMarker": 7,
         "targetID": 9,
         "timestamp": 1924512,
+        "type": "heal",
+      },
+      Object {
+        "abilityGameID": 344422,
+        "amount": 0,
+        "hitType": 1,
+        "overheal": 2720,
+        "pin": "0",
+        "sourceID": 1,
+        "sourceMarker": 2,
+        "targetID": 1,
+        "targetMarker": 2,
+        "timestamp": 1925812,
         "type": "heal",
       },
       Object {
@@ -8223,19 +8236,6 @@ Array [
         "abilityGameID": 344422,
         "amount": 0,
         "hitType": 1,
-        "overheal": 2720,
-        "pin": "0",
-        "sourceID": 1,
-        "sourceMarker": 2,
-        "targetID": 1,
-        "targetMarker": 2,
-        "timestamp": 1925812,
-        "type": "heal",
-      },
-      Object {
-        "abilityGameID": 344422,
-        "amount": 0,
-        "hitType": 1,
         "overheal": 2708,
         "pin": "0",
         "sourceID": 1,
@@ -8255,6 +8255,17 @@ Array [
         "targetID": 4,
         "targetMarker": 7,
         "timestamp": 1925812,
+        "type": "heal",
+      },
+      Object {
+        "abilityGameID": 344422,
+        "amount": 0,
+        "hitType": 1,
+        "overheal": 2643,
+        "pin": "0",
+        "sourceID": 9,
+        "targetID": 9,
+        "timestamp": 1927003,
         "type": "heal",
       },
       Object {
@@ -8280,17 +8291,6 @@ Array [
         "timestamp": 1927003,
         "type": "damage",
         "unmitigatedAmount": 4802,
-      },
-      Object {
-        "abilityGameID": 344422,
-        "amount": 0,
-        "hitType": 1,
-        "overheal": 2643,
-        "pin": "0",
-        "sourceID": 9,
-        "targetID": 9,
-        "timestamp": 1927003,
-        "type": "heal",
       },
       Object {
         "abilityGameID": 344422,
@@ -8327,6 +8327,17 @@ Array [
         "type": "heal",
       },
       Object {
+        "abilityGameID": 344422,
+        "amount": 0,
+        "hitType": 1,
+        "overheal": 2642,
+        "pin": "0",
+        "sourceID": 8,
+        "targetID": 8,
+        "timestamp": 1927087,
+        "type": "heal",
+      },
+      Object {
         "abilityGameID": 344421,
         "amount": 4965,
         "hitType": 1,
@@ -8349,17 +8360,6 @@ Array [
         "timestamp": 1927087,
         "type": "damage",
         "unmitigatedAmount": 4728,
-      },
-      Object {
-        "abilityGameID": 344422,
-        "amount": 0,
-        "hitType": 1,
-        "overheal": 2642,
-        "pin": "0",
-        "sourceID": 8,
-        "targetID": 8,
-        "timestamp": 1927087,
-        "type": "heal",
       },
       Object {
         "abilityGameID": 344422,
@@ -8408,6 +8408,17 @@ Array [
         "type": "heal",
       },
       Object {
+        "abilityGameID": 344422,
+        "amount": 0,
+        "hitType": 1,
+        "overheal": 2696,
+        "pin": "0",
+        "sourceID": 2,
+        "targetID": 2,
+        "timestamp": 1928443,
+        "type": "heal",
+      },
+      Object {
         "abilityGameID": 344421,
         "amount": 10327,
         "hitType": 2,
@@ -8430,17 +8441,6 @@ Array [
         "timestamp": 1928443,
         "type": "damage",
         "unmitigatedAmount": 4821,
-      },
-      Object {
-        "abilityGameID": 344422,
-        "amount": 0,
-        "hitType": 1,
-        "overheal": 2696,
-        "pin": "0",
-        "sourceID": 2,
-        "targetID": 2,
-        "timestamp": 1928443,
-        "type": "heal",
       },
       Object {
         "abilityGameID": 344422,
@@ -8488,6 +8488,18 @@ Array [
         "type": "heal",
       },
       Object {
+        "abilityGameID": 344422,
+        "amount": 3301,
+        "hitType": 1,
+        "pin": "0",
+        "sourceID": 4,
+        "sourceMarker": 7,
+        "targetID": 4,
+        "targetMarker": 7,
+        "timestamp": 1928511,
+        "type": "heal",
+      },
+      Object {
         "abilityGameID": 344421,
         "amount": 5600,
         "hitType": 1,
@@ -8512,18 +8524,6 @@ Array [
         "timestamp": 1928511,
         "type": "damage",
         "unmitigatedAmount": 5333,
-      },
-      Object {
-        "abilityGameID": 344422,
-        "amount": 3301,
-        "hitType": 1,
-        "pin": "0",
-        "sourceID": 4,
-        "sourceMarker": 7,
-        "targetID": 4,
-        "targetMarker": 7,
-        "timestamp": 1928511,
-        "type": "heal",
       },
       Object {
         "abilityGameID": 344422,
@@ -8575,6 +8575,19 @@ Array [
         "type": "heal",
       },
       Object {
+        "abilityGameID": 344422,
+        "amount": 0,
+        "hitType": 1,
+        "overheal": 2829,
+        "pin": "0",
+        "sourceID": 1,
+        "sourceMarker": 2,
+        "targetID": 1,
+        "targetMarker": 2,
+        "timestamp": 1929804,
+        "type": "heal",
+      },
+      Object {
         "abilityGameID": 344421,
         "amount": 5169,
         "hitType": 1,
@@ -8599,19 +8612,6 @@ Array [
         "timestamp": 1929804,
         "type": "damage",
         "unmitigatedAmount": 4922,
-      },
-      Object {
-        "abilityGameID": 344422,
-        "amount": 0,
-        "hitType": 1,
-        "overheal": 2829,
-        "pin": "0",
-        "sourceID": 1,
-        "sourceMarker": 2,
-        "targetID": 1,
-        "targetMarker": 2,
-        "timestamp": 1929804,
-        "type": "heal",
       },
       Object {
         "abilityGameID": 344422,
@@ -8663,6 +8663,17 @@ Array [
         "type": "heal",
       },
       Object {
+        "abilityGameID": 344422,
+        "amount": 0,
+        "hitType": 1,
+        "overheal": 2644,
+        "pin": "0",
+        "sourceID": 9,
+        "targetID": 9,
+        "timestamp": 1931007,
+        "type": "heal",
+      },
+      Object {
         "abilityGameID": 344421,
         "amount": 5043,
         "hitType": 1,
@@ -8685,17 +8696,6 @@ Array [
         "timestamp": 1931007,
         "type": "damage",
         "unmitigatedAmount": 4802,
-      },
-      Object {
-        "abilityGameID": 344422,
-        "amount": 0,
-        "hitType": 1,
-        "overheal": 2644,
-        "pin": "0",
-        "sourceID": 9,
-        "targetID": 9,
-        "timestamp": 1931007,
-        "type": "heal",
       },
       Object {
         "abilityGameID": 344422,
@@ -8744,6 +8744,17 @@ Array [
         "type": "heal",
       },
       Object {
+        "abilityGameID": 344422,
+        "amount": 0,
+        "hitType": 1,
+        "overheal": 2642,
+        "pin": "0",
+        "sourceID": 8,
+        "targetID": 8,
+        "timestamp": 1931079,
+        "type": "heal",
+      },
+      Object {
         "abilityGameID": 344421,
         "amount": 4965,
         "hitType": 1,
@@ -8766,17 +8777,6 @@ Array [
         "timestamp": 1931079,
         "type": "damage",
         "unmitigatedAmount": 4728,
-      },
-      Object {
-        "abilityGameID": 344422,
-        "amount": 0,
-        "hitType": 1,
-        "overheal": 2642,
-        "pin": "0",
-        "sourceID": 8,
-        "targetID": 8,
-        "timestamp": 1931079,
-        "type": "heal",
       },
       Object {
         "abilityGameID": 344422,
@@ -8825,6 +8825,17 @@ Array [
         "type": "heal",
       },
       Object {
+        "abilityGameID": 344422,
+        "amount": 0,
+        "hitType": 1,
+        "overheal": 2695,
+        "pin": "0",
+        "sourceID": 2,
+        "targetID": 2,
+        "timestamp": 1932443,
+        "type": "heal",
+      },
+      Object {
         "abilityGameID": 344421,
         "amount": 5062,
         "hitType": 1,
@@ -8847,17 +8858,6 @@ Array [
         "timestamp": 1932443,
         "type": "damage",
         "unmitigatedAmount": 4821,
-      },
-      Object {
-        "abilityGameID": 344422,
-        "amount": 0,
-        "hitType": 1,
-        "overheal": 2695,
-        "pin": "0",
-        "sourceID": 2,
-        "targetID": 2,
-        "timestamp": 1932443,
-        "type": "heal",
       },
       Object {
         "abilityGameID": 344422,
@@ -8905,6 +8905,19 @@ Array [
         "type": "heal",
       },
       Object {
+        "abilityGameID": 344422,
+        "amount": 2793,
+        "hitType": 1,
+        "overheal": 508,
+        "pin": "0",
+        "sourceID": 4,
+        "sourceMarker": 7,
+        "targetID": 4,
+        "targetMarker": 7,
+        "timestamp": 1932495,
+        "type": "heal",
+      },
+      Object {
         "abilityGameID": 344421,
         "amount": 5601,
         "hitType": 1,
@@ -8929,19 +8942,6 @@ Array [
         "timestamp": 1932495,
         "type": "damage",
         "unmitigatedAmount": 5333,
-      },
-      Object {
-        "abilityGameID": 344422,
-        "amount": 2793,
-        "hitType": 1,
-        "overheal": 508,
-        "pin": "0",
-        "sourceID": 4,
-        "sourceMarker": 7,
-        "targetID": 4,
-        "targetMarker": 7,
-        "timestamp": 1932495,
-        "type": "heal",
       },
       Object {
         "abilityGameID": 344422,
@@ -8993,6 +8993,19 @@ Array [
         "type": "heal",
       },
       Object {
+        "abilityGameID": 344422,
+        "amount": 0,
+        "hitType": 2,
+        "overheal": 5659,
+        "pin": "0",
+        "sourceID": 1,
+        "sourceMarker": 2,
+        "targetID": 1,
+        "targetMarker": 2,
+        "timestamp": 1933804,
+        "type": "heal",
+      },
+      Object {
         "abilityGameID": 344421,
         "amount": 5169,
         "hitType": 1,
@@ -9017,19 +9030,6 @@ Array [
         "timestamp": 1933804,
         "type": "damage",
         "unmitigatedAmount": 4922,
-      },
-      Object {
-        "abilityGameID": 344422,
-        "amount": 0,
-        "hitType": 2,
-        "overheal": 5659,
-        "pin": "0",
-        "sourceID": 1,
-        "sourceMarker": 2,
-        "targetID": 1,
-        "targetMarker": 2,
-        "timestamp": 1933804,
-        "type": "heal",
       },
       Object {
         "abilityGameID": 344422,
@@ -9080,6 +9080,17 @@ Array [
         "type": "heal",
       },
       Object {
+        "abilityGameID": 344422,
+        "amount": 0,
+        "hitType": 1,
+        "overheal": 2643,
+        "pin": "0",
+        "sourceID": 9,
+        "targetID": 9,
+        "timestamp": 1935000,
+        "type": "heal",
+      },
+      Object {
         "abilityGameID": 344421,
         "amount": 5043,
         "hitType": 1,
@@ -9102,17 +9113,6 @@ Array [
         "timestamp": 1935000,
         "type": "damage",
         "unmitigatedAmount": 4802,
-      },
-      Object {
-        "abilityGameID": 344422,
-        "amount": 0,
-        "hitType": 1,
-        "overheal": 2643,
-        "pin": "0",
-        "sourceID": 9,
-        "targetID": 9,
-        "timestamp": 1935000,
-        "type": "heal",
       },
       Object {
         "abilityGameID": 344422,
@@ -9150,6 +9150,17 @@ Array [
         "type": "heal",
       },
       Object {
+        "abilityGameID": 344422,
+        "amount": 0,
+        "hitType": 1,
+        "overheal": 2642,
+        "pin": "0",
+        "sourceID": 8,
+        "targetID": 8,
+        "timestamp": 1935081,
+        "type": "heal",
+      },
+      Object {
         "abilityGameID": 344421,
         "amount": 4966,
         "hitType": 1,
@@ -9172,17 +9183,6 @@ Array [
         "timestamp": 1935081,
         "type": "damage",
         "unmitigatedAmount": 4728,
-      },
-      Object {
-        "abilityGameID": 344422,
-        "amount": 0,
-        "hitType": 1,
-        "overheal": 2642,
-        "pin": "0",
-        "sourceID": 8,
-        "targetID": 8,
-        "timestamp": 1935081,
-        "type": "heal",
       },
       Object {
         "abilityGameID": 344422,
@@ -9220,6 +9220,17 @@ Array [
         "type": "heal",
       },
       Object {
+        "abilityGameID": 344422,
+        "amount": 0,
+        "hitType": 1,
+        "overheal": 2695,
+        "pin": "0",
+        "sourceID": 2,
+        "targetID": 2,
+        "timestamp": 1936450,
+        "type": "heal",
+      },
+      Object {
         "abilityGameID": 344421,
         "amount": 5062,
         "hitType": 1,
@@ -9242,17 +9253,6 @@ Array [
         "timestamp": 1936450,
         "type": "damage",
         "unmitigatedAmount": 4821,
-      },
-      Object {
-        "abilityGameID": 344422,
-        "amount": 0,
-        "hitType": 1,
-        "overheal": 2695,
-        "pin": "0",
-        "sourceID": 2,
-        "targetID": 2,
-        "timestamp": 1936450,
-        "type": "heal",
       },
       Object {
         "abilityGameID": 344422,
@@ -9387,6 +9387,19 @@ Array [
         "type": "heal",
       },
       Object {
+        "abilityGameID": 344422,
+        "amount": 0,
+        "hitType": 1,
+        "overheal": 2829,
+        "pin": "0",
+        "sourceID": 1,
+        "sourceMarker": 2,
+        "targetID": 1,
+        "targetMarker": 2,
+        "timestamp": 1937799,
+        "type": "heal",
+      },
+      Object {
         "abilityGameID": 344421,
         "amount": 5169,
         "hitType": 1,
@@ -9411,19 +9424,6 @@ Array [
         "timestamp": 1937799,
         "type": "damage",
         "unmitigatedAmount": 4922,
-      },
-      Object {
-        "abilityGameID": 344422,
-        "amount": 0,
-        "hitType": 1,
-        "overheal": 2829,
-        "pin": "0",
-        "sourceID": 1,
-        "sourceMarker": 2,
-        "targetID": 1,
-        "targetMarker": 2,
-        "timestamp": 1937799,
-        "type": "heal",
       },
       Object {
         "abilityGameID": 344422,
@@ -9474,6 +9474,17 @@ Array [
         "type": "heal",
       },
       Object {
+        "abilityGameID": 344422,
+        "amount": 0,
+        "hitType": 1,
+        "overheal": 2643,
+        "pin": "0",
+        "sourceID": 9,
+        "targetID": 9,
+        "timestamp": 1938994,
+        "type": "heal",
+      },
+      Object {
         "abilityGameID": 344421,
         "amount": 5043,
         "hitType": 1,
@@ -9496,17 +9507,6 @@ Array [
         "timestamp": 1938994,
         "type": "damage",
         "unmitigatedAmount": 4802,
-      },
-      Object {
-        "abilityGameID": 344422,
-        "amount": 0,
-        "hitType": 1,
-        "overheal": 2643,
-        "pin": "0",
-        "sourceID": 9,
-        "targetID": 9,
-        "timestamp": 1938994,
-        "type": "heal",
       },
       Object {
         "abilityGameID": 344422,
@@ -9554,6 +9554,17 @@ Array [
         "type": "heal",
       },
       Object {
+        "abilityGameID": 344422,
+        "amount": 0,
+        "hitType": 1,
+        "overheal": 2641,
+        "pin": "0",
+        "sourceID": 8,
+        "targetID": 8,
+        "timestamp": 1939080,
+        "type": "heal",
+      },
+      Object {
         "abilityGameID": 344421,
         "amount": 4965,
         "hitType": 1,
@@ -9564,17 +9575,6 @@ Array [
         "timestamp": 1939080,
         "type": "damage",
         "unmitigatedAmount": 4728,
-      },
-      Object {
-        "abilityGameID": 344422,
-        "amount": 0,
-        "hitType": 1,
-        "overheal": 2641,
-        "pin": "0",
-        "sourceID": 8,
-        "targetID": 8,
-        "timestamp": 1939080,
-        "type": "heal",
       },
       Object {
         "abilityGameID": 344421,
@@ -9635,6 +9635,16 @@ Array [
         "type": "heal",
       },
       Object {
+        "abilityGameID": 344422,
+        "amount": 2695,
+        "hitType": 1,
+        "pin": "0",
+        "sourceID": 2,
+        "targetID": 2,
+        "timestamp": 1940449,
+        "type": "heal",
+      },
+      Object {
         "abilityGameID": 344421,
         "amount": 10327,
         "hitType": 2,
@@ -9645,16 +9655,6 @@ Array [
         "timestamp": 1940449,
         "type": "damage",
         "unmitigatedAmount": 4821,
-      },
-      Object {
-        "abilityGameID": 344422,
-        "amount": 2695,
-        "hitType": 1,
-        "pin": "0",
-        "sourceID": 2,
-        "targetID": 2,
-        "timestamp": 1940449,
-        "type": "heal",
       },
       Object {
         "abilityGameID": 344422,
@@ -9699,6 +9699,18 @@ Array [
         "type": "heal",
       },
       Object {
+        "abilityGameID": 344422,
+        "amount": 3301,
+        "hitType": 1,
+        "pin": "0",
+        "sourceID": 4,
+        "sourceMarker": 7,
+        "targetID": 4,
+        "targetMarker": 7,
+        "timestamp": 1940505,
+        "type": "heal",
+      },
+      Object {
         "abilityGameID": 344421,
         "amount": 5600,
         "hitType": 1,
@@ -9710,18 +9722,6 @@ Array [
         "timestamp": 1940505,
         "type": "damage",
         "unmitigatedAmount": 5333,
-      },
-      Object {
-        "abilityGameID": 344422,
-        "amount": 3301,
-        "hitType": 1,
-        "pin": "0",
-        "sourceID": 4,
-        "sourceMarker": 7,
-        "targetID": 4,
-        "targetMarker": 7,
-        "timestamp": 1940505,
-        "type": "heal",
       },
       Object {
         "abilityGameID": 344422,
@@ -9896,6 +9896,17 @@ Array [
         "type": "heal",
       },
       Object {
+        "abilityGameID": 344422,
+        "amount": 0,
+        "hitType": 2,
+        "overheal": 5500,
+        "pin": "0",
+        "sourceID": 2,
+        "targetID": 2,
+        "timestamp": 1944450,
+        "type": "heal",
+      },
+      Object {
         "abilityGameID": 344421,
         "amount": 11359,
         "hitType": 2,
@@ -9906,17 +9917,6 @@ Array [
         "timestamp": 1944450,
         "type": "damage",
         "unmitigatedAmount": 5303,
-      },
-      Object {
-        "abilityGameID": 344422,
-        "amount": 0,
-        "hitType": 2,
-        "overheal": 5500,
-        "pin": "0",
-        "sourceID": 2,
-        "targetID": 2,
-        "timestamp": 1944450,
-        "type": "heal",
       },
       Object {
         "abilityGameID": 344422,
@@ -9965,19 +9965,6 @@ Array [
         "type": "heal",
       },
       Object {
-        "abilityGameID": 344421,
-        "amount": 5600,
-        "hitType": 1,
-        "pin": "0",
-        "sourceID": 4,
-        "sourceMarker": 7,
-        "targetID": 31,
-        "targetInstance": 1,
-        "timestamp": 1944499,
-        "type": "damage",
-        "unmitigatedAmount": 5333,
-      },
-      Object {
         "abilityGameID": 344422,
         "amount": 0,
         "hitType": 1,
@@ -9989,6 +9976,19 @@ Array [
         "targetMarker": 7,
         "timestamp": 1944499,
         "type": "heal",
+      },
+      Object {
+        "abilityGameID": 344421,
+        "amount": 5600,
+        "hitType": 1,
+        "pin": "0",
+        "sourceID": 4,
+        "sourceMarker": 7,
+        "targetID": 31,
+        "targetInstance": 1,
+        "timestamp": 1944499,
+        "type": "damage",
+        "unmitigatedAmount": 5333,
       },
       Object {
         "abilityGameID": 344422,
@@ -10040,19 +10040,6 @@ Array [
         "type": "heal",
       },
       Object {
-        "abilityGameID": 344421,
-        "amount": 5168,
-        "hitType": 1,
-        "pin": "0",
-        "sourceID": 1,
-        "sourceMarker": 2,
-        "targetID": 31,
-        "targetInstance": 1,
-        "timestamp": 1945790,
-        "type": "damage",
-        "unmitigatedAmount": 4922,
-      },
-      Object {
         "abilityGameID": 344422,
         "amount": 963,
         "hitType": 1,
@@ -10064,6 +10051,19 @@ Array [
         "targetMarker": 2,
         "timestamp": 1945790,
         "type": "heal",
+      },
+      Object {
+        "abilityGameID": 344421,
+        "amount": 5168,
+        "hitType": 1,
+        "pin": "0",
+        "sourceID": 1,
+        "sourceMarker": 2,
+        "targetID": 31,
+        "targetInstance": 1,
+        "timestamp": 1945790,
+        "type": "damage",
+        "unmitigatedAmount": 4922,
       },
       Object {
         "abilityGameID": 344422,
@@ -10114,6 +10114,17 @@ Array [
         "type": "heal",
       },
       Object {
+        "abilityGameID": 344422,
+        "amount": 0,
+        "hitType": 1,
+        "overheal": 2643,
+        "pin": "0",
+        "sourceID": 9,
+        "targetID": 9,
+        "timestamp": 1947003,
+        "type": "heal",
+      },
+      Object {
         "abilityGameID": 344421,
         "amount": 11095,
         "hitType": 2,
@@ -10124,17 +10135,6 @@ Array [
         "timestamp": 1947003,
         "type": "damage",
         "unmitigatedAmount": 5282,
-      },
-      Object {
-        "abilityGameID": 344422,
-        "amount": 0,
-        "hitType": 1,
-        "overheal": 2643,
-        "pin": "0",
-        "sourceID": 9,
-        "targetID": 9,
-        "timestamp": 1947003,
-        "type": "heal",
       },
       Object {
         "abilityGameID": 344422,
@@ -10183,6 +10183,17 @@ Array [
         "type": "heal",
       },
       Object {
+        "abilityGameID": 344422,
+        "amount": 0,
+        "hitType": 1,
+        "overheal": 2641,
+        "pin": "0",
+        "sourceID": 8,
+        "targetID": 8,
+        "timestamp": 1947075,
+        "type": "heal",
+      },
+      Object {
         "abilityGameID": 344421,
         "amount": 4965,
         "hitType": 1,
@@ -10193,17 +10204,6 @@ Array [
         "timestamp": 1947075,
         "type": "damage",
         "unmitigatedAmount": 4728,
-      },
-      Object {
-        "abilityGameID": 344422,
-        "amount": 0,
-        "hitType": 1,
-        "overheal": 2641,
-        "pin": "0",
-        "sourceID": 8,
-        "targetID": 8,
-        "timestamp": 1947075,
-        "type": "heal",
       },
       Object {
         "abilityGameID": 344422,
@@ -10252,6 +10252,17 @@ Array [
         "type": "heal",
       },
       Object {
+        "abilityGameID": 344422,
+        "amount": 1060,
+        "hitType": 2,
+        "overheal": 4440,
+        "pin": "0",
+        "sourceID": 2,
+        "targetID": 2,
+        "timestamp": 1948436,
+        "type": "heal",
+      },
+      Object {
         "abilityGameID": 344421,
         "amount": 5569,
         "hitType": 1,
@@ -10262,17 +10273,6 @@ Array [
         "timestamp": 1948436,
         "type": "damage",
         "unmitigatedAmount": 5303,
-      },
-      Object {
-        "abilityGameID": 344422,
-        "amount": 1060,
-        "hitType": 2,
-        "overheal": 4440,
-        "pin": "0",
-        "sourceID": 2,
-        "targetID": 2,
-        "timestamp": 1948436,
-        "type": "heal",
       },
       Object {
         "abilityGameID": 344422,
@@ -10308,19 +10308,6 @@ Array [
         "type": "heal",
       },
       Object {
-        "abilityGameID": 344421,
-        "amount": 5600,
-        "hitType": 1,
-        "pin": "0",
-        "sourceID": 4,
-        "sourceMarker": 7,
-        "targetID": 31,
-        "targetInstance": 1,
-        "timestamp": 1948507,
-        "type": "damage",
-        "unmitigatedAmount": 5333,
-      },
-      Object {
         "abilityGameID": 344422,
         "amount": 5518,
         "hitType": 2,
@@ -10332,6 +10319,19 @@ Array [
         "targetMarker": 7,
         "timestamp": 1948507,
         "type": "heal",
+      },
+      Object {
+        "abilityGameID": 344421,
+        "amount": 5600,
+        "hitType": 1,
+        "pin": "0",
+        "sourceID": 4,
+        "sourceMarker": 7,
+        "targetID": 31,
+        "targetInstance": 1,
+        "timestamp": 1948507,
+        "type": "damage",
+        "unmitigatedAmount": 5333,
       },
       Object {
         "abilityGameID": 344422,
@@ -10383,19 +10383,6 @@ Array [
         "type": "heal",
       },
       Object {
-        "abilityGameID": 344421,
-        "amount": 5169,
-        "hitType": 1,
-        "pin": "0",
-        "sourceID": 1,
-        "sourceMarker": 2,
-        "targetID": 31,
-        "targetInstance": 1,
-        "timestamp": 1949803,
-        "type": "damage",
-        "unmitigatedAmount": 4922,
-      },
-      Object {
         "abilityGameID": 344422,
         "amount": 1139,
         "hitType": 1,
@@ -10407,6 +10394,19 @@ Array [
         "targetMarker": 2,
         "timestamp": 1949803,
         "type": "heal",
+      },
+      Object {
+        "abilityGameID": 344421,
+        "amount": 5169,
+        "hitType": 1,
+        "pin": "0",
+        "sourceID": 1,
+        "sourceMarker": 2,
+        "targetID": 31,
+        "targetInstance": 1,
+        "timestamp": 1949803,
+        "type": "damage",
+        "unmitigatedAmount": 4922,
       },
       Object {
         "abilityGameID": 344422,
@@ -10445,6 +10445,17 @@ Array [
         "type": "heal",
       },
       Object {
+        "abilityGameID": 344422,
+        "amount": 0,
+        "hitType": 1,
+        "overheal": 2643,
+        "pin": "0",
+        "sourceID": 9,
+        "targetID": 9,
+        "timestamp": 1951013,
+        "type": "heal",
+      },
+      Object {
         "abilityGameID": 344421,
         "amount": 5043,
         "hitType": 1,
@@ -10455,17 +10466,6 @@ Array [
         "timestamp": 1951013,
         "type": "damage",
         "unmitigatedAmount": 4802,
-      },
-      Object {
-        "abilityGameID": 344422,
-        "amount": 0,
-        "hitType": 1,
-        "overheal": 2643,
-        "pin": "0",
-        "sourceID": 9,
-        "targetID": 9,
-        "timestamp": 1951013,
-        "type": "heal",
       },
       Object {
         "abilityGameID": 344422,
@@ -10583,6 +10583,17 @@ Array [
         "type": "heal",
       },
       Object {
+        "abilityGameID": 344422,
+        "amount": 2632,
+        "hitType": 1,
+        "overheal": 63,
+        "pin": "0",
+        "sourceID": 2,
+        "targetID": 2,
+        "timestamp": 1952459,
+        "type": "heal",
+      },
+      Object {
         "abilityGameID": 344421,
         "amount": 5063,
         "hitType": 1,
@@ -10593,17 +10604,6 @@ Array [
         "timestamp": 1952459,
         "type": "damage",
         "unmitigatedAmount": 4821,
-      },
-      Object {
-        "abilityGameID": 344422,
-        "amount": 2632,
-        "hitType": 1,
-        "overheal": 63,
-        "pin": "0",
-        "sourceID": 2,
-        "targetID": 2,
-        "timestamp": 1952459,
-        "type": "heal",
       },
       Object {
         "abilityGameID": 344422,
@@ -10640,19 +10640,6 @@ Array [
         "type": "heal",
       },
       Object {
-        "abilityGameID": 344421,
-        "amount": 11200,
-        "hitType": 2,
-        "pin": "0",
-        "sourceID": 4,
-        "sourceMarker": 7,
-        "targetID": 31,
-        "targetInstance": 1,
-        "timestamp": 1952501,
-        "type": "damage",
-        "unmitigatedAmount": 5333,
-      },
-      Object {
         "abilityGameID": 344422,
         "amount": 0,
         "hitType": 2,
@@ -10664,6 +10651,19 @@ Array [
         "targetMarker": 7,
         "timestamp": 1952501,
         "type": "heal",
+      },
+      Object {
+        "abilityGameID": 344421,
+        "amount": 11200,
+        "hitType": 2,
+        "pin": "0",
+        "sourceID": 4,
+        "sourceMarker": 7,
+        "targetID": 31,
+        "targetInstance": 1,
+        "timestamp": 1952501,
+        "type": "damage",
+        "unmitigatedAmount": 5333,
       },
       Object {
         "abilityGameID": 344422,
@@ -10715,19 +10715,6 @@ Array [
         "type": "heal",
       },
       Object {
-        "abilityGameID": 344421,
-        "amount": 5168,
-        "hitType": 1,
-        "pin": "0",
-        "sourceID": 1,
-        "sourceMarker": 2,
-        "targetID": 31,
-        "targetInstance": 1,
-        "timestamp": 1953798,
-        "type": "damage",
-        "unmitigatedAmount": 4922,
-      },
-      Object {
         "abilityGameID": 344422,
         "amount": 2234,
         "hitType": 1,
@@ -10739,6 +10726,19 @@ Array [
         "targetMarker": 2,
         "timestamp": 1953798,
         "type": "heal",
+      },
+      Object {
+        "abilityGameID": 344421,
+        "amount": 5168,
+        "hitType": 1,
+        "pin": "0",
+        "sourceID": 1,
+        "sourceMarker": 2,
+        "targetID": 31,
+        "targetInstance": 1,
+        "timestamp": 1953798,
+        "type": "damage",
+        "unmitigatedAmount": 4922,
       },
       Object {
         "abilityGameID": 344422,
@@ -10775,6 +10775,17 @@ Array [
         "type": "heal",
       },
       Object {
+        "abilityGameID": 344422,
+        "amount": 287,
+        "hitType": 1,
+        "overheal": 2356,
+        "pin": "0",
+        "sourceID": 9,
+        "targetID": 9,
+        "timestamp": 1955000,
+        "type": "heal",
+      },
+      Object {
         "abilityGameID": 344421,
         "amount": 5043,
         "hitType": 1,
@@ -10785,17 +10796,6 @@ Array [
         "timestamp": 1955000,
         "type": "damage",
         "unmitigatedAmount": 4802,
-      },
-      Object {
-        "abilityGameID": 344422,
-        "amount": 287,
-        "hitType": 1,
-        "overheal": 2356,
-        "pin": "0",
-        "sourceID": 9,
-        "targetID": 9,
-        "timestamp": 1955000,
-        "type": "heal",
       },
       Object {
         "abilityGameID": 344422,
@@ -10844,6 +10844,17 @@ Array [
         "type": "heal",
       },
       Object {
+        "abilityGameID": 344422,
+        "amount": 0,
+        "hitType": 1,
+        "overheal": 2641,
+        "pin": "0",
+        "sourceID": 8,
+        "targetID": 8,
+        "timestamp": 1955078,
+        "type": "heal",
+      },
+      Object {
         "abilityGameID": 344421,
         "amount": 4965,
         "hitType": 1,
@@ -10854,17 +10865,6 @@ Array [
         "timestamp": 1955078,
         "type": "damage",
         "unmitigatedAmount": 4728,
-      },
-      Object {
-        "abilityGameID": 344422,
-        "amount": 0,
-        "hitType": 1,
-        "overheal": 2641,
-        "pin": "0",
-        "sourceID": 8,
-        "targetID": 8,
-        "timestamp": 1955078,
-        "type": "heal",
       },
       Object {
         "abilityGameID": 344422,
@@ -10913,6 +10913,16 @@ Array [
         "type": "heal",
       },
       Object {
+        "abilityGameID": 344422,
+        "amount": 2695,
+        "hitType": 1,
+        "pin": "0",
+        "sourceID": 2,
+        "targetID": 2,
+        "timestamp": 1956432,
+        "type": "heal",
+      },
+      Object {
         "abilityGameID": 344421,
         "amount": 5062,
         "hitType": 1,
@@ -10923,16 +10933,6 @@ Array [
         "timestamp": 1956432,
         "type": "damage",
         "unmitigatedAmount": 4821,
-      },
-      Object {
-        "abilityGameID": 344422,
-        "amount": 2695,
-        "hitType": 1,
-        "pin": "0",
-        "sourceID": 2,
-        "targetID": 2,
-        "timestamp": 1956432,
-        "type": "heal",
       },
       Object {
         "abilityGameID": 344422,
@@ -10967,6 +10967,18 @@ Array [
         "type": "heal",
       },
       Object {
+        "abilityGameID": 344422,
+        "amount": 2948,
+        "hitType": 1,
+        "pin": "0",
+        "sourceID": 4,
+        "sourceMarker": 7,
+        "targetID": 4,
+        "targetMarker": 7,
+        "timestamp": 1956506,
+        "type": "heal",
+      },
+      Object {
         "abilityGameID": 344421,
         "amount": 5600,
         "hitType": 1,
@@ -10978,18 +10990,6 @@ Array [
         "timestamp": 1956506,
         "type": "damage",
         "unmitigatedAmount": 5333,
-      },
-      Object {
-        "abilityGameID": 344422,
-        "amount": 2948,
-        "hitType": 1,
-        "pin": "0",
-        "sourceID": 4,
-        "sourceMarker": 7,
-        "targetID": 4,
-        "targetMarker": 7,
-        "timestamp": 1956506,
-        "type": "heal",
       },
       Object {
         "abilityGameID": 344422,
@@ -11040,6 +11040,18 @@ Array [
         "type": "heal",
       },
       Object {
+        "abilityGameID": 344422,
+        "amount": 2830,
+        "hitType": 1,
+        "pin": "0",
+        "sourceID": 1,
+        "sourceMarker": 2,
+        "targetID": 1,
+        "targetMarker": 2,
+        "timestamp": 1957805,
+        "type": "heal",
+      },
+      Object {
         "abilityGameID": 344421,
         "amount": 5168,
         "hitType": 1,
@@ -11051,18 +11063,6 @@ Array [
         "timestamp": 1957805,
         "type": "damage",
         "unmitigatedAmount": 4922,
-      },
-      Object {
-        "abilityGameID": 344422,
-        "amount": 2830,
-        "hitType": 1,
-        "pin": "0",
-        "sourceID": 1,
-        "sourceMarker": 2,
-        "targetID": 1,
-        "targetMarker": 2,
-        "timestamp": 1957805,
-        "type": "heal",
       },
       Object {
         "abilityGameID": 344422,
@@ -11099,6 +11099,17 @@ Array [
         "type": "heal",
       },
       Object {
+        "abilityGameID": 344422,
+        "amount": 1796,
+        "hitType": 1,
+        "overheal": 847,
+        "pin": "0",
+        "sourceID": 9,
+        "targetID": 9,
+        "timestamp": 1959004,
+        "type": "heal",
+      },
+      Object {
         "abilityGameID": 344421,
         "amount": 5043,
         "hitType": 1,
@@ -11109,17 +11120,6 @@ Array [
         "timestamp": 1959004,
         "type": "damage",
         "unmitigatedAmount": 4802,
-      },
-      Object {
-        "abilityGameID": 344422,
-        "amount": 1796,
-        "hitType": 1,
-        "overheal": 847,
-        "pin": "0",
-        "sourceID": 9,
-        "targetID": 9,
-        "timestamp": 1959004,
-        "type": "heal",
       },
       Object {
         "abilityGameID": 344422,
@@ -30654,7 +30654,7 @@ exports[`getEvents works 42`] = `"(type in (\\"applydebuff\\", \\"applybuff\\", 
 
 exports[`getEvents works 43`] = `"(type in (\\"cast\\", \\"applybuff\\", \\"removebuff\\") and ability.id in (358712, 329849, 329840))"`;
 
-exports[`getEvents works 44`] = `"(type = \\"applybuff\\" and ability.id = 335161)"`;
+exports[`getEvents works 44`] = `"(type in (\\"applybuff\\", \\"removebuff\\") and ability.id in (335161, 328050))"`;
 
 exports[`getEvents works 45`] = `"(type = \\"heal\\" and source.type = \\"player\\" and ability.id = 344422)"`;
 
@@ -30662,164 +30662,166 @@ exports[`getEvents works 46`] = `"(type = \\"damage\\" and source.type = \\"play
 
 exports[`getEvents works 47`] = `"((type = \\"begincast\\""`;
 
-exports[`getEvents works 48`] = `"type = \\"cast\\") and source.type = \\"player\\" and ability.id in (328128, 328351))"`;
+exports[`getEvents works 48`] = `"type = \\"cast\\") and source.type = \\"player\\" and ability.id in (328128, 328351, 328050))"`;
 
-exports[`getEvents works 49`] = `"(type in (\\"applybuff\\", \\"applybuffstack\\") and ability.id in (357524, 356828, 356827, 357778, 357556, 357864, 357848, 357897, 357839, 357900, 357889, 357825, 357834, 357817, 357820, 357842, 357814, 357815, 357829, 357609, 357706, 357863, 357604, 357747, 357847, 357575))"`;
+exports[`getEvents works 49`] = `"(type = \\"damage\\" and source.type = \\"npc\\" and ability.id = 323489)"`;
 
-exports[`getEvents works 50`] = `"(type in (\\"applybuff\\", \\"removebuff\\", \\"applybuffstack\\", \\"applydebuff\\", \\"removedebuff\\") and ability.id in (357525, 357852, 357898, 357826, 357835, 357818, 357830, 357607))"`;
+exports[`getEvents works 50`] = `"(type in (\\"applybuff\\", \\"applybuffstack\\") and ability.id in (357524, 356828, 356827, 357778, 357556, 357864, 357848, 357897, 357839, 357900, 357889, 357825, 357834, 357817, 357820, 357842, 357814, 357815, 357829, 357609, 357706, 357863, 357604, 357747, 357847, 357575))"`;
 
-exports[`getEvents works 51`] = `"(ability.name = \\"Sanguine Ichor\\" and ((target.type = \\"player\\" and type = \\"damage\\") OR (target.type = \\"npc\\" and type = \\"heal\\")))"`;
+exports[`getEvents works 51`] = `"(type in (\\"applybuff\\", \\"removebuff\\", \\"applybuffstack\\", \\"applydebuff\\", \\"removedebuff\\") and ability.id in (357525, 357852, 357898, 357826, 357835, 357818, 357830, 357607))"`;
 
-exports[`getEvents works 52`] = `"(type = \\"damage\\" and target.type = \\"player\\" and ability.id = 209862)"`;
+exports[`getEvents works 52`] = `"(ability.name = \\"Sanguine Ichor\\" and ((target.type = \\"player\\" and type = \\"damage\\") OR (target.type = \\"npc\\" and type = \\"heal\\")))"`;
 
-exports[`getEvents works 53`] = `"((type = \\"death\\" and target.type != \\"pet\\")"`;
+exports[`getEvents works 53`] = `"(type = \\"damage\\" and target.type = \\"player\\" and ability.id = 209862)"`;
 
-exports[`getEvents works 54`] = `"(ability.id = 300155 and type = \\"begincast\\"))"`;
+exports[`getEvents works 54`] = `"((type = \\"death\\" and target.type != \\"pet\\")"`;
 
-exports[`getEvents works 55`] = `"(source.type = \\"player\\" and type = \\"cast\\" and ability.id in (66, 498, 633, 642, 698, 740, 853, 871, 1022, 1122, 1161, 1719, 1766, 1850, 1856, 2050, 2094, 2139, 2825, 2983, 5211, 5246, 5277, 6552, 6940, 8122, 8143, 10060, 12042, 12472, 12975, 13750, 15286, 15487, 16191, 18499, 19236, 19574, 19577, 19647, 20484, 20707, 22812, 23920, 29166, 29893, 30283, 31224, 31821, 31850, 31884, 31935, 32182, 33206, 33891, 34433, 34861, 42650, 45438, 46585, 46924, 47528, 47536, 47568, 47585, 47788, 48707, 48743, 48792, 49028, 49039, 49206, 50334, 51052, 51271, 51533, 51690, 55233, 55342, 57994, 58875, 61336, 61999, 62618, 63560, 64382, 64843, 64901, 73325, 79140, 79206, 80353, 84714, 86659, 88625, 89766, 93985, 96231, 97462, 97547, 98008, 102342, 102543, 102558, 102560, 102793, 104773, 106898, 106951, 107574, 108199, 108238, 108271, 108280, 108281, 108978, 109304, 109964, 111898, 113858, 113860, 114018, 114050, 114051, 114052, 114158, 115176, 115203, 115288, 115310, 115399, 115750, 116705, 116849, 119381, 121471, 122278, 122470, 122783, 123040, 123904, 131894, 132158, 132578, 137619, 137639, 147362, 152173, 152279, 167105, 183752, 184364, 184662, 185313, 186257, 186265, 186289, 187707, 187827, 188501, 190319, 191634, 192058, 192222, 192249, 193530, 194223, 194844, 196555, 196718, 197721, 197908, 198067, 198103, 198154, 198589, 198838, 200166, 200174, 200183, 201430, 202137, 202138, 202770, 203651, 204018, 204021, 205021, 205180, 205191, 205636, 207167, 207289, 207399, 207684, 212084, 212552, 216331, 219809, 221699, 227847, 228260, 231895, 235219, 246287, 258925, 260402, 262228, 265187, 265202, 266779, 267171, 267217, 275699, 277925, 279302, 288613, 304971, 306830, 307443, 307865, 308491, 310454, 311648, 312202, 312321, 314791, 314793, 315443, 316958, 317009, 317349, 319454, 319952, 320137, 320341, 320674, 321530, 321792, 322109, 322118, 322507, 323546, 323547, 323639, 323654, 323673, 323764, 324128, 324143, 324149, 324220, 324386, 324724, 325013, 325028, 325153, 325197, 325216, 325289, 325640, 325727, 325886, 326059, 326434, 326860, 327104, 327193, 327574, 327661, 328204, 328231, 328281, 328282, 328305, 328547, 328620, 328622, 328923, 333889, 342601, 343527, 343721, 344867))"`;
+exports[`getEvents works 55`] = `"(ability.id = 300155 and type = \\"begincast\\"))"`;
 
-exports[`getEvents works 56`] = `"(type = \\"cast\\" and ability.id = 345130)"`;
+exports[`getEvents works 56`] = `"(source.type = \\"player\\" and type = \\"cast\\" and ability.id in (66, 498, 633, 642, 698, 740, 853, 871, 1022, 1122, 1161, 1719, 1766, 1850, 1856, 2050, 2094, 2139, 2825, 2983, 5211, 5246, 5277, 6552, 6940, 8122, 8143, 10060, 12042, 12472, 12975, 13750, 15286, 15487, 16191, 18499, 19236, 19574, 19577, 19647, 20484, 20707, 22812, 23920, 29166, 29893, 30283, 31224, 31821, 31850, 31884, 31935, 32182, 33206, 33891, 34433, 34861, 42650, 45438, 46585, 46924, 47528, 47536, 47568, 47585, 47788, 48707, 48743, 48792, 49028, 49039, 49206, 50334, 51052, 51271, 51533, 51690, 55233, 55342, 57994, 58875, 61336, 61999, 62618, 63560, 64382, 64843, 64901, 73325, 79140, 79206, 80353, 84714, 86659, 88625, 89766, 93985, 96231, 97462, 97547, 98008, 102342, 102543, 102558, 102560, 102793, 104773, 106898, 106951, 107574, 108199, 108238, 108271, 108280, 108281, 108978, 109304, 109964, 111898, 113858, 113860, 114018, 114050, 114051, 114052, 114158, 115176, 115203, 115288, 115310, 115399, 115750, 116705, 116849, 119381, 121471, 122278, 122470, 122783, 123040, 123904, 131894, 132158, 132578, 137619, 137639, 147362, 152173, 152279, 167105, 183752, 184364, 184662, 185313, 186257, 186265, 186289, 187707, 187827, 188501, 190319, 191634, 192058, 192222, 192249, 193530, 194223, 194844, 196555, 196718, 197721, 197908, 198067, 198103, 198154, 198589, 198838, 200166, 200174, 200183, 201430, 202137, 202138, 202770, 203651, 204018, 204021, 205021, 205180, 205191, 205636, 207167, 207289, 207399, 207684, 212084, 212552, 216331, 219809, 221699, 227847, 228260, 231895, 235219, 246287, 258925, 260402, 262228, 265187, 265202, 266779, 267171, 267217, 275699, 277925, 279302, 288613, 304971, 306830, 307443, 307865, 308491, 310454, 311648, 312202, 312321, 314791, 314793, 315443, 316958, 317009, 317349, 319454, 319952, 320137, 320341, 320674, 321530, 321792, 322109, 322118, 322507, 323546, 323547, 323639, 323654, 323673, 323764, 324128, 324143, 324149, 324220, 324386, 324724, 325013, 325028, 325153, 325197, 325216, 325289, 325640, 325727, 325886, 326059, 326434, 326860, 327104, 327193, 327574, 327661, 328204, 328231, 328281, 328282, 328305, 328547, 328620, 328622, 328923, 333889, 342601, 343527, 343721, 344867))"`;
 
-exports[`getEvents works 57`] = `"(type = \\"applybuff\\" and ability.id in (321422, 307195))"`;
+exports[`getEvents works 57`] = `"(type = \\"cast\\" and ability.id = 345130)"`;
 
-exports[`getEvents works 58`] = `"(type = \\"interrupt\\" and source.type = \\"player\\")"`;
+exports[`getEvents works 58`] = `"(type = \\"applybuff\\" and ability.id in (321422, 307195))"`;
 
-exports[`getEvents works 59`] = `"(type in (\\"cast\\", \\"applydebuff\\") and ability.id in (324631, 310143, 324739, 300728))"`;
+exports[`getEvents works 59`] = `"(type = \\"interrupt\\" and source.type = \\"player\\")"`;
 
-exports[`getEvents works 60`] = `"(type in (\\"applydebuff\\", \\"applybuff\\", \\"removebuff\\", \\"removedebuff\\") and ability.id in (320224, 45182, 45181, 320227, 209261))"`;
+exports[`getEvents works 60`] = `"(type in (\\"cast\\", \\"applydebuff\\") and ability.id in (324631, 310143, 324739, 300728))"`;
 
-exports[`getEvents works 61`] = `"(type in (\\"cast\\", \\"applybuff\\", \\"removebuff\\") and ability.id in (358712, 329849, 329840))"`;
+exports[`getEvents works 61`] = `"(type in (\\"applydebuff\\", \\"applybuff\\", \\"removebuff\\", \\"removedebuff\\") and ability.id in (320224, 45182, 45181, 320227, 209261))"`;
 
-exports[`getEvents works 62`] = `"(type = \\"cast\\" and source.type = \\"player\\" and ability.id = 342171)"`;
+exports[`getEvents works 62`] = `"(type in (\\"cast\\", \\"applybuff\\", \\"removebuff\\") and ability.id in (358712, 329849, 329840))"`;
 
-exports[`getEvents works 63`] = `"(type in (\\"applybuff\\", \\"applybuffstack\\") and ability.id in (357524, 356828, 356827, 357778, 357556, 357864, 357848, 357897, 357839, 357900, 357889, 357825, 357834, 357817, 357820, 357842, 357814, 357815, 357829, 357609, 357706, 357863, 357604, 357747, 357847, 357575))"`;
+exports[`getEvents works 63`] = `"(type = \\"cast\\" and source.type = \\"player\\" and ability.id = 342171)"`;
 
-exports[`getEvents works 64`] = `"(type in (\\"applybuff\\", \\"removebuff\\", \\"applybuffstack\\", \\"applydebuff\\", \\"removedebuff\\") and ability.id in (357525, 357852, 357898, 357826, 357835, 357818, 357830, 357607))"`;
+exports[`getEvents works 64`] = `"(type in (\\"applybuff\\", \\"applybuffstack\\") and ability.id in (357524, 356828, 356827, 357778, 357556, 357864, 357848, 357897, 357839, 357900, 357889, 357825, 357834, 357817, 357820, 357842, 357814, 357815, 357829, 357609, 357706, 357863, 357604, 357747, 357847, 357575))"`;
 
-exports[`getEvents works 65`] = `"(ability.name = \\"Sanguine Ichor\\" and ((target.type = \\"player\\" and type = \\"damage\\") OR (target.type = \\"npc\\" and type = \\"heal\\")))"`;
+exports[`getEvents works 65`] = `"(type in (\\"applybuff\\", \\"removebuff\\", \\"applybuffstack\\", \\"applydebuff\\", \\"removedebuff\\") and ability.id in (357525, 357852, 357898, 357826, 357835, 357818, 357830, 357607))"`;
 
-exports[`getEvents works 66`] = `"(type = \\"damage\\" and target.type = \\"player\\" and ability.id = 209862)"`;
+exports[`getEvents works 66`] = `"(ability.name = \\"Sanguine Ichor\\" and ((target.type = \\"player\\" and type = \\"damage\\") OR (target.type = \\"npc\\" and type = \\"heal\\")))"`;
 
-exports[`getEvents works 67`] = `"((type = \\"death\\" and target.type != \\"pet\\")"`;
+exports[`getEvents works 67`] = `"(type = \\"damage\\" and target.type = \\"player\\" and ability.id = 209862)"`;
 
-exports[`getEvents works 68`] = `"(ability.id = 300155 and type = \\"begincast\\"))"`;
+exports[`getEvents works 68`] = `"((type = \\"death\\" and target.type != \\"pet\\")"`;
 
-exports[`getEvents works 69`] = `"(source.type = \\"player\\" and type = \\"cast\\" and ability.id in (66, 498, 633, 642, 698, 740, 853, 871, 1022, 1122, 1161, 1719, 1766, 1850, 1856, 2050, 2094, 2139, 2825, 2983, 5211, 5246, 5277, 6552, 6940, 8122, 8143, 10060, 12042, 12472, 12975, 13750, 15286, 15487, 16191, 18499, 19236, 19574, 19577, 19647, 20484, 20707, 22812, 23920, 29166, 29893, 30283, 31224, 31821, 31850, 31884, 31935, 32182, 33206, 33891, 34433, 34861, 42650, 45438, 46585, 46924, 47528, 47536, 47568, 47585, 47788, 48707, 48743, 48792, 49028, 49039, 49206, 50334, 51052, 51271, 51533, 51690, 55233, 55342, 57994, 58875, 61336, 61999, 62618, 63560, 64382, 64843, 64901, 73325, 79140, 79206, 80353, 84714, 86659, 88625, 89766, 93985, 96231, 97462, 97547, 98008, 102342, 102543, 102558, 102560, 102793, 104773, 106898, 106951, 107574, 108199, 108238, 108271, 108280, 108281, 108978, 109304, 109964, 111898, 113858, 113860, 114018, 114050, 114051, 114052, 114158, 115176, 115203, 115288, 115310, 115399, 115750, 116705, 116849, 119381, 121471, 122278, 122470, 122783, 123040, 123904, 131894, 132158, 132578, 137619, 137639, 147362, 152173, 152279, 167105, 183752, 184364, 184662, 185313, 186257, 186265, 186289, 187707, 187827, 188501, 190319, 191634, 192058, 192222, 192249, 193530, 194223, 194844, 196555, 196718, 197721, 197908, 198067, 198103, 198154, 198589, 198838, 200166, 200174, 200183, 201430, 202137, 202138, 202770, 203651, 204018, 204021, 205021, 205180, 205191, 205636, 207167, 207289, 207399, 207684, 212084, 212552, 216331, 219809, 221699, 227847, 228260, 231895, 235219, 246287, 258925, 260402, 262228, 265187, 265202, 266779, 267171, 267217, 275699, 277925, 279302, 288613, 304971, 306830, 307443, 307865, 308491, 310454, 311648, 312202, 312321, 314791, 314793, 315443, 316958, 317009, 317349, 319454, 319952, 320137, 320341, 320674, 321530, 321792, 322109, 322118, 322507, 323546, 323547, 323639, 323654, 323673, 323764, 324128, 324143, 324149, 324220, 324386, 324724, 325013, 325028, 325153, 325197, 325216, 325289, 325640, 325727, 325886, 326059, 326434, 326860, 327104, 327193, 327574, 327661, 328204, 328231, 328281, 328282, 328305, 328547, 328620, 328622, 328923, 333889, 342601, 343527, 343721, 344867))"`;
+exports[`getEvents works 69`] = `"(ability.id = 300155 and type = \\"begincast\\"))"`;
 
-exports[`getEvents works 70`] = `"(type = \\"cast\\" and ability.id = 345130)"`;
+exports[`getEvents works 70`] = `"(source.type = \\"player\\" and type = \\"cast\\" and ability.id in (66, 498, 633, 642, 698, 740, 853, 871, 1022, 1122, 1161, 1719, 1766, 1850, 1856, 2050, 2094, 2139, 2825, 2983, 5211, 5246, 5277, 6552, 6940, 8122, 8143, 10060, 12042, 12472, 12975, 13750, 15286, 15487, 16191, 18499, 19236, 19574, 19577, 19647, 20484, 20707, 22812, 23920, 29166, 29893, 30283, 31224, 31821, 31850, 31884, 31935, 32182, 33206, 33891, 34433, 34861, 42650, 45438, 46585, 46924, 47528, 47536, 47568, 47585, 47788, 48707, 48743, 48792, 49028, 49039, 49206, 50334, 51052, 51271, 51533, 51690, 55233, 55342, 57994, 58875, 61336, 61999, 62618, 63560, 64382, 64843, 64901, 73325, 79140, 79206, 80353, 84714, 86659, 88625, 89766, 93985, 96231, 97462, 97547, 98008, 102342, 102543, 102558, 102560, 102793, 104773, 106898, 106951, 107574, 108199, 108238, 108271, 108280, 108281, 108978, 109304, 109964, 111898, 113858, 113860, 114018, 114050, 114051, 114052, 114158, 115176, 115203, 115288, 115310, 115399, 115750, 116705, 116849, 119381, 121471, 122278, 122470, 122783, 123040, 123904, 131894, 132158, 132578, 137619, 137639, 147362, 152173, 152279, 167105, 183752, 184364, 184662, 185313, 186257, 186265, 186289, 187707, 187827, 188501, 190319, 191634, 192058, 192222, 192249, 193530, 194223, 194844, 196555, 196718, 197721, 197908, 198067, 198103, 198154, 198589, 198838, 200166, 200174, 200183, 201430, 202137, 202138, 202770, 203651, 204018, 204021, 205021, 205180, 205191, 205636, 207167, 207289, 207399, 207684, 212084, 212552, 216331, 219809, 221699, 227847, 228260, 231895, 235219, 246287, 258925, 260402, 262228, 265187, 265202, 266779, 267171, 267217, 275699, 277925, 279302, 288613, 304971, 306830, 307443, 307865, 308491, 310454, 311648, 312202, 312321, 314791, 314793, 315443, 316958, 317009, 317349, 319454, 319952, 320137, 320341, 320674, 321530, 321792, 322109, 322118, 322507, 323546, 323547, 323639, 323654, 323673, 323764, 324128, 324143, 324149, 324220, 324386, 324724, 325013, 325028, 325153, 325197, 325216, 325289, 325640, 325727, 325886, 326059, 326434, 326860, 327104, 327193, 327574, 327661, 328204, 328231, 328281, 328282, 328305, 328547, 328620, 328622, 328923, 333889, 342601, 343527, 343721, 344867))"`;
 
-exports[`getEvents works 71`] = `"(type = \\"applybuff\\" and ability.id in (321422, 307195))"`;
+exports[`getEvents works 71`] = `"(type = \\"cast\\" and ability.id = 345130)"`;
 
-exports[`getEvents works 72`] = `"(type = \\"interrupt\\" and source.type = \\"player\\")"`;
+exports[`getEvents works 72`] = `"(type = \\"applybuff\\" and ability.id in (321422, 307195))"`;
 
-exports[`getEvents works 73`] = `"(type in (\\"cast\\", \\"applydebuff\\") and ability.id in (324631, 310143, 324739, 300728))"`;
+exports[`getEvents works 73`] = `"(type = \\"interrupt\\" and source.type = \\"player\\")"`;
 
-exports[`getEvents works 74`] = `"(type in (\\"applydebuff\\", \\"applybuff\\", \\"removebuff\\", \\"removedebuff\\") and ability.id in (320224, 45182, 45181, 320227, 209261))"`;
+exports[`getEvents works 74`] = `"(type in (\\"cast\\", \\"applydebuff\\") and ability.id in (324631, 310143, 324739, 300728))"`;
 
-exports[`getEvents works 75`] = `"(type in (\\"cast\\", \\"applybuff\\", \\"removebuff\\") and ability.id in (358712, 329849, 329840))"`;
+exports[`getEvents works 75`] = `"(type in (\\"applydebuff\\", \\"applybuff\\", \\"removebuff\\", \\"removedebuff\\") and ability.id in (320224, 45182, 45181, 320227, 209261))"`;
 
-exports[`getEvents works 76`] = `"(type = \\"death\\" and target.type = \\"npc\\" and target.id in (164705, 164707, 163891))"`;
+exports[`getEvents works 76`] = `"(type in (\\"cast\\", \\"applybuff\\", \\"removebuff\\") and ability.id in (358712, 329849, 329840))"`;
 
-exports[`getEvents works 77`] = `"(type = \\"applybuff\\" and target.type = \\"player\\" and ability.id in (340225, 340271, 340210))"`;
+exports[`getEvents works 77`] = `"(type = \\"death\\" and target.type = \\"npc\\" and target.id in (164705, 164707, 163891))"`;
 
-exports[`getEvents works 78`] = `"(type = \\"damage\\" and ability.id = 328501)"`;
+exports[`getEvents works 78`] = `"(type = \\"applybuff\\" and target.type = \\"player\\" and ability.id in (340225, 340271, 340210))"`;
 
-exports[`getEvents works 79`] = `"(type = \\"damage\\" and ability.id = 328986)"`;
+exports[`getEvents works 79`] = `"(type = \\"damage\\" and ability.id = 328501)"`;
 
-exports[`getEvents works 80`] = `"(type in (\\"applybuff\\", \\"applybuffstack\\") and ability.id in (357524, 356828, 356827, 357778, 357556, 357864, 357848, 357897, 357839, 357900, 357889, 357825, 357834, 357817, 357820, 357842, 357814, 357815, 357829, 357609, 357706, 357863, 357604, 357747, 357847, 357575))"`;
+exports[`getEvents works 80`] = `"(type = \\"damage\\" and ability.id = 328986)"`;
 
-exports[`getEvents works 81`] = `"(type in (\\"applybuff\\", \\"removebuff\\", \\"applybuffstack\\", \\"applydebuff\\", \\"removedebuff\\") and ability.id in (357525, 357852, 357898, 357826, 357835, 357818, 357830, 357607))"`;
+exports[`getEvents works 81`] = `"(type in (\\"applybuff\\", \\"applybuffstack\\") and ability.id in (357524, 356828, 356827, 357778, 357556, 357864, 357848, 357897, 357839, 357900, 357889, 357825, 357834, 357817, 357820, 357842, 357814, 357815, 357829, 357609, 357706, 357863, 357604, 357747, 357847, 357575))"`;
 
-exports[`getEvents works 82`] = `"(ability.name = \\"Sanguine Ichor\\" and ((target.type = \\"player\\" and type = \\"damage\\") OR (target.type = \\"npc\\" and type = \\"heal\\")))"`;
+exports[`getEvents works 82`] = `"(type in (\\"applybuff\\", \\"removebuff\\", \\"applybuffstack\\", \\"applydebuff\\", \\"removedebuff\\") and ability.id in (357525, 357852, 357898, 357826, 357835, 357818, 357830, 357607))"`;
 
-exports[`getEvents works 83`] = `"(type = \\"damage\\" and target.type = \\"player\\" and ability.id = 209862)"`;
+exports[`getEvents works 83`] = `"(ability.name = \\"Sanguine Ichor\\" and ((target.type = \\"player\\" and type = \\"damage\\") OR (target.type = \\"npc\\" and type = \\"heal\\")))"`;
 
-exports[`getEvents works 84`] = `"((type = \\"death\\" and target.type != \\"pet\\")"`;
+exports[`getEvents works 84`] = `"(type = \\"damage\\" and target.type = \\"player\\" and ability.id = 209862)"`;
 
-exports[`getEvents works 85`] = `"(ability.id = 300155 and type = \\"begincast\\"))"`;
+exports[`getEvents works 85`] = `"((type = \\"death\\" and target.type != \\"pet\\")"`;
 
-exports[`getEvents works 86`] = `"(source.type = \\"player\\" and type = \\"cast\\" and ability.id in (66, 498, 633, 642, 698, 740, 853, 871, 1022, 1122, 1161, 1719, 1766, 1850, 1856, 2050, 2094, 2139, 2825, 2983, 5211, 5246, 5277, 6552, 6940, 8122, 8143, 10060, 12042, 12472, 12975, 13750, 15286, 15487, 16191, 18499, 19236, 19574, 19577, 19647, 20484, 20707, 22812, 23920, 29166, 29893, 30283, 31224, 31821, 31850, 31884, 31935, 32182, 33206, 33891, 34433, 34861, 42650, 45438, 46585, 46924, 47528, 47536, 47568, 47585, 47788, 48707, 48743, 48792, 49028, 49039, 49206, 50334, 51052, 51271, 51533, 51690, 55233, 55342, 57994, 58875, 61336, 61999, 62618, 63560, 64382, 64843, 64901, 73325, 79140, 79206, 80353, 84714, 86659, 88625, 89766, 93985, 96231, 97462, 97547, 98008, 102342, 102543, 102558, 102560, 102793, 104773, 106898, 106951, 107574, 108199, 108238, 108271, 108280, 108281, 108978, 109304, 109964, 111898, 113858, 113860, 114018, 114050, 114051, 114052, 114158, 115176, 115203, 115288, 115310, 115399, 115750, 116705, 116849, 119381, 121471, 122278, 122470, 122783, 123040, 123904, 131894, 132158, 132578, 137619, 137639, 147362, 152173, 152279, 167105, 183752, 184364, 184662, 185313, 186257, 186265, 186289, 187707, 187827, 188501, 190319, 191634, 192058, 192222, 192249, 193530, 194223, 194844, 196555, 196718, 197721, 197908, 198067, 198103, 198154, 198589, 198838, 200166, 200174, 200183, 201430, 202137, 202138, 202770, 203651, 204018, 204021, 205021, 205180, 205191, 205636, 207167, 207289, 207399, 207684, 212084, 212552, 216331, 219809, 221699, 227847, 228260, 231895, 235219, 246287, 258925, 260402, 262228, 265187, 265202, 266779, 267171, 267217, 275699, 277925, 279302, 288613, 304971, 306830, 307443, 307865, 308491, 310454, 311648, 312202, 312321, 314791, 314793, 315443, 316958, 317009, 317349, 319454, 319952, 320137, 320341, 320674, 321530, 321792, 322109, 322118, 322507, 323546, 323547, 323639, 323654, 323673, 323764, 324128, 324143, 324149, 324220, 324386, 324724, 325013, 325028, 325153, 325197, 325216, 325289, 325640, 325727, 325886, 326059, 326434, 326860, 327104, 327193, 327574, 327661, 328204, 328231, 328281, 328282, 328305, 328547, 328620, 328622, 328923, 333889, 342601, 343527, 343721, 344867))"`;
+exports[`getEvents works 86`] = `"(ability.id = 300155 and type = \\"begincast\\"))"`;
 
-exports[`getEvents works 87`] = `"(type = \\"cast\\" and ability.id = 345130)"`;
+exports[`getEvents works 87`] = `"(source.type = \\"player\\" and type = \\"cast\\" and ability.id in (66, 498, 633, 642, 698, 740, 853, 871, 1022, 1122, 1161, 1719, 1766, 1850, 1856, 2050, 2094, 2139, 2825, 2983, 5211, 5246, 5277, 6552, 6940, 8122, 8143, 10060, 12042, 12472, 12975, 13750, 15286, 15487, 16191, 18499, 19236, 19574, 19577, 19647, 20484, 20707, 22812, 23920, 29166, 29893, 30283, 31224, 31821, 31850, 31884, 31935, 32182, 33206, 33891, 34433, 34861, 42650, 45438, 46585, 46924, 47528, 47536, 47568, 47585, 47788, 48707, 48743, 48792, 49028, 49039, 49206, 50334, 51052, 51271, 51533, 51690, 55233, 55342, 57994, 58875, 61336, 61999, 62618, 63560, 64382, 64843, 64901, 73325, 79140, 79206, 80353, 84714, 86659, 88625, 89766, 93985, 96231, 97462, 97547, 98008, 102342, 102543, 102558, 102560, 102793, 104773, 106898, 106951, 107574, 108199, 108238, 108271, 108280, 108281, 108978, 109304, 109964, 111898, 113858, 113860, 114018, 114050, 114051, 114052, 114158, 115176, 115203, 115288, 115310, 115399, 115750, 116705, 116849, 119381, 121471, 122278, 122470, 122783, 123040, 123904, 131894, 132158, 132578, 137619, 137639, 147362, 152173, 152279, 167105, 183752, 184364, 184662, 185313, 186257, 186265, 186289, 187707, 187827, 188501, 190319, 191634, 192058, 192222, 192249, 193530, 194223, 194844, 196555, 196718, 197721, 197908, 198067, 198103, 198154, 198589, 198838, 200166, 200174, 200183, 201430, 202137, 202138, 202770, 203651, 204018, 204021, 205021, 205180, 205191, 205636, 207167, 207289, 207399, 207684, 212084, 212552, 216331, 219809, 221699, 227847, 228260, 231895, 235219, 246287, 258925, 260402, 262228, 265187, 265202, 266779, 267171, 267217, 275699, 277925, 279302, 288613, 304971, 306830, 307443, 307865, 308491, 310454, 311648, 312202, 312321, 314791, 314793, 315443, 316958, 317009, 317349, 319454, 319952, 320137, 320341, 320674, 321530, 321792, 322109, 322118, 322507, 323546, 323547, 323639, 323654, 323673, 323764, 324128, 324143, 324149, 324220, 324386, 324724, 325013, 325028, 325153, 325197, 325216, 325289, 325640, 325727, 325886, 326059, 326434, 326860, 327104, 327193, 327574, 327661, 328204, 328231, 328281, 328282, 328305, 328547, 328620, 328622, 328923, 333889, 342601, 343527, 343721, 344867))"`;
 
-exports[`getEvents works 88`] = `"(type = \\"applybuff\\" and ability.id in (321422, 307195))"`;
+exports[`getEvents works 88`] = `"(type = \\"cast\\" and ability.id = 345130)"`;
 
-exports[`getEvents works 89`] = `"(type = \\"interrupt\\" and source.type = \\"player\\")"`;
+exports[`getEvents works 89`] = `"(type = \\"applybuff\\" and ability.id in (321422, 307195))"`;
 
-exports[`getEvents works 90`] = `"(type in (\\"cast\\", \\"applydebuff\\") and ability.id in (324631, 310143, 324739, 300728))"`;
+exports[`getEvents works 90`] = `"(type = \\"interrupt\\" and source.type = \\"player\\")"`;
 
-exports[`getEvents works 91`] = `"(type in (\\"applydebuff\\", \\"applybuff\\", \\"removebuff\\", \\"removedebuff\\") and ability.id in (320224, 45182, 45181, 320227, 209261))"`;
+exports[`getEvents works 91`] = `"(type in (\\"cast\\", \\"applydebuff\\") and ability.id in (324631, 310143, 324739, 300728))"`;
 
-exports[`getEvents works 92`] = `"(type in (\\"cast\\", \\"applybuff\\", \\"removebuff\\") and ability.id in (358712, 329849, 329840))"`;
+exports[`getEvents works 92`] = `"(type in (\\"applydebuff\\", \\"applybuff\\", \\"removebuff\\", \\"removedebuff\\") and ability.id in (320224, 45182, 45181, 320227, 209261))"`;
 
-exports[`getEvents works 93`] = `"(type = \\"applydebuff\\" and target.type = \\"player\\" and ability.id = 323881)"`;
+exports[`getEvents works 93`] = `"(type in (\\"cast\\", \\"applybuff\\", \\"removebuff\\") and ability.id in (358712, 329849, 329840))"`;
 
-exports[`getEvents works 94`] = `"(ability.id = 340004)"`;
+exports[`getEvents works 94`] = `"(type = \\"applydebuff\\" and target.type = \\"player\\" and ability.id = 323881)"`;
 
-exports[`getEvents works 95`] = `"(type in (\\"applybuff\\", \\"applybuffstack\\") and ability.id in (357524, 356828, 356827, 357778, 357556, 357864, 357848, 357897, 357839, 357900, 357889, 357825, 357834, 357817, 357820, 357842, 357814, 357815, 357829, 357609, 357706, 357863, 357604, 357747, 357847, 357575))"`;
+exports[`getEvents works 95`] = `"(ability.id = 340004)"`;
 
-exports[`getEvents works 96`] = `"(type in (\\"applybuff\\", \\"removebuff\\", \\"applybuffstack\\", \\"applydebuff\\", \\"removedebuff\\") and ability.id in (357525, 357852, 357898, 357826, 357835, 357818, 357830, 357607))"`;
+exports[`getEvents works 96`] = `"(type in (\\"applybuff\\", \\"applybuffstack\\") and ability.id in (357524, 356828, 356827, 357778, 357556, 357864, 357848, 357897, 357839, 357900, 357889, 357825, 357834, 357817, 357820, 357842, 357814, 357815, 357829, 357609, 357706, 357863, 357604, 357747, 357847, 357575))"`;
 
-exports[`getEvents works 97`] = `"(ability.name = \\"Sanguine Ichor\\" and ((target.type = \\"player\\" and type = \\"damage\\") OR (target.type = \\"npc\\" and type = \\"heal\\")))"`;
+exports[`getEvents works 97`] = `"(type in (\\"applybuff\\", \\"removebuff\\", \\"applybuffstack\\", \\"applydebuff\\", \\"removedebuff\\") and ability.id in (357525, 357852, 357898, 357826, 357835, 357818, 357830, 357607))"`;
 
-exports[`getEvents works 98`] = `"(type = \\"damage\\" and target.type = \\"player\\" and ability.id = 209862)"`;
+exports[`getEvents works 98`] = `"(ability.name = \\"Sanguine Ichor\\" and ((target.type = \\"player\\" and type = \\"damage\\") OR (target.type = \\"npc\\" and type = \\"heal\\")))"`;
 
-exports[`getEvents works 99`] = `"((type = \\"death\\" and target.type != \\"pet\\")"`;
+exports[`getEvents works 99`] = `"(type = \\"damage\\" and target.type = \\"player\\" and ability.id = 209862)"`;
 
-exports[`getEvents works 100`] = `"(ability.id = 300155 and type = \\"begincast\\"))"`;
+exports[`getEvents works 100`] = `"((type = \\"death\\" and target.type != \\"pet\\")"`;
 
-exports[`getEvents works 101`] = `"(source.type = \\"player\\" and type = \\"cast\\" and ability.id in (66, 498, 633, 642, 698, 740, 853, 871, 1022, 1122, 1161, 1719, 1766, 1850, 1856, 2050, 2094, 2139, 2825, 2983, 5211, 5246, 5277, 6552, 6940, 8122, 8143, 10060, 12042, 12472, 12975, 13750, 15286, 15487, 16191, 18499, 19236, 19574, 19577, 19647, 20484, 20707, 22812, 23920, 29166, 29893, 30283, 31224, 31821, 31850, 31884, 31935, 32182, 33206, 33891, 34433, 34861, 42650, 45438, 46585, 46924, 47528, 47536, 47568, 47585, 47788, 48707, 48743, 48792, 49028, 49039, 49206, 50334, 51052, 51271, 51533, 51690, 55233, 55342, 57994, 58875, 61336, 61999, 62618, 63560, 64382, 64843, 64901, 73325, 79140, 79206, 80353, 84714, 86659, 88625, 89766, 93985, 96231, 97462, 97547, 98008, 102342, 102543, 102558, 102560, 102793, 104773, 106898, 106951, 107574, 108199, 108238, 108271, 108280, 108281, 108978, 109304, 109964, 111898, 113858, 113860, 114018, 114050, 114051, 114052, 114158, 115176, 115203, 115288, 115310, 115399, 115750, 116705, 116849, 119381, 121471, 122278, 122470, 122783, 123040, 123904, 131894, 132158, 132578, 137619, 137639, 147362, 152173, 152279, 167105, 183752, 184364, 184662, 185313, 186257, 186265, 186289, 187707, 187827, 188501, 190319, 191634, 192058, 192222, 192249, 193530, 194223, 194844, 196555, 196718, 197721, 197908, 198067, 198103, 198154, 198589, 198838, 200166, 200174, 200183, 201430, 202137, 202138, 202770, 203651, 204018, 204021, 205021, 205180, 205191, 205636, 207167, 207289, 207399, 207684, 212084, 212552, 216331, 219809, 221699, 227847, 228260, 231895, 235219, 246287, 258925, 260402, 262228, 265187, 265202, 266779, 267171, 267217, 275699, 277925, 279302, 288613, 304971, 306830, 307443, 307865, 308491, 310454, 311648, 312202, 312321, 314791, 314793, 315443, 316958, 317009, 317349, 319454, 319952, 320137, 320341, 320674, 321530, 321792, 322109, 322118, 322507, 323546, 323547, 323639, 323654, 323673, 323764, 324128, 324143, 324149, 324220, 324386, 324724, 325013, 325028, 325153, 325197, 325216, 325289, 325640, 325727, 325886, 326059, 326434, 326860, 327104, 327193, 327574, 327661, 328204, 328231, 328281, 328282, 328305, 328547, 328620, 328622, 328923, 333889, 342601, 343527, 343721, 344867))"`;
+exports[`getEvents works 101`] = `"(ability.id = 300155 and type = \\"begincast\\"))"`;
 
-exports[`getEvents works 102`] = `"(type = \\"cast\\" and ability.id = 345130)"`;
+exports[`getEvents works 102`] = `"(source.type = \\"player\\" and type = \\"cast\\" and ability.id in (66, 498, 633, 642, 698, 740, 853, 871, 1022, 1122, 1161, 1719, 1766, 1850, 1856, 2050, 2094, 2139, 2825, 2983, 5211, 5246, 5277, 6552, 6940, 8122, 8143, 10060, 12042, 12472, 12975, 13750, 15286, 15487, 16191, 18499, 19236, 19574, 19577, 19647, 20484, 20707, 22812, 23920, 29166, 29893, 30283, 31224, 31821, 31850, 31884, 31935, 32182, 33206, 33891, 34433, 34861, 42650, 45438, 46585, 46924, 47528, 47536, 47568, 47585, 47788, 48707, 48743, 48792, 49028, 49039, 49206, 50334, 51052, 51271, 51533, 51690, 55233, 55342, 57994, 58875, 61336, 61999, 62618, 63560, 64382, 64843, 64901, 73325, 79140, 79206, 80353, 84714, 86659, 88625, 89766, 93985, 96231, 97462, 97547, 98008, 102342, 102543, 102558, 102560, 102793, 104773, 106898, 106951, 107574, 108199, 108238, 108271, 108280, 108281, 108978, 109304, 109964, 111898, 113858, 113860, 114018, 114050, 114051, 114052, 114158, 115176, 115203, 115288, 115310, 115399, 115750, 116705, 116849, 119381, 121471, 122278, 122470, 122783, 123040, 123904, 131894, 132158, 132578, 137619, 137639, 147362, 152173, 152279, 167105, 183752, 184364, 184662, 185313, 186257, 186265, 186289, 187707, 187827, 188501, 190319, 191634, 192058, 192222, 192249, 193530, 194223, 194844, 196555, 196718, 197721, 197908, 198067, 198103, 198154, 198589, 198838, 200166, 200174, 200183, 201430, 202137, 202138, 202770, 203651, 204018, 204021, 205021, 205180, 205191, 205636, 207167, 207289, 207399, 207684, 212084, 212552, 216331, 219809, 221699, 227847, 228260, 231895, 235219, 246287, 258925, 260402, 262228, 265187, 265202, 266779, 267171, 267217, 275699, 277925, 279302, 288613, 304971, 306830, 307443, 307865, 308491, 310454, 311648, 312202, 312321, 314791, 314793, 315443, 316958, 317009, 317349, 319454, 319952, 320137, 320341, 320674, 321530, 321792, 322109, 322118, 322507, 323546, 323547, 323639, 323654, 323673, 323764, 324128, 324143, 324149, 324220, 324386, 324724, 325013, 325028, 325153, 325197, 325216, 325289, 325640, 325727, 325886, 326059, 326434, 326860, 327104, 327193, 327574, 327661, 328204, 328231, 328281, 328282, 328305, 328547, 328620, 328622, 328923, 333889, 342601, 343527, 343721, 344867))"`;
 
-exports[`getEvents works 103`] = `"(type = \\"applybuff\\" and ability.id in (321422, 307195))"`;
+exports[`getEvents works 103`] = `"(type = \\"cast\\" and ability.id = 345130)"`;
 
-exports[`getEvents works 104`] = `"(type = \\"interrupt\\" and source.type = \\"player\\")"`;
+exports[`getEvents works 104`] = `"(type = \\"applybuff\\" and ability.id in (321422, 307195))"`;
 
-exports[`getEvents works 105`] = `"(type in (\\"cast\\", \\"applydebuff\\") and ability.id in (324631, 310143, 324739, 300728))"`;
+exports[`getEvents works 105`] = `"(type = \\"interrupt\\" and source.type = \\"player\\")"`;
 
-exports[`getEvents works 106`] = `"(type in (\\"applydebuff\\", \\"applybuff\\", \\"removebuff\\", \\"removedebuff\\") and ability.id in (320224, 45182, 45181, 320227, 209261))"`;
+exports[`getEvents works 106`] = `"(type in (\\"cast\\", \\"applydebuff\\") and ability.id in (324631, 310143, 324739, 300728))"`;
 
-exports[`getEvents works 107`] = `"(type in (\\"cast\\", \\"applybuff\\", \\"removebuff\\") and ability.id in (358712, 329849, 329840))"`;
+exports[`getEvents works 107`] = `"(type in (\\"applydebuff\\", \\"applybuff\\", \\"removebuff\\", \\"removedebuff\\") and ability.id in (320224, 45182, 45181, 320227, 209261))"`;
 
-exports[`getEvents works 108`] = `"(type = \\"applydebuff\\" and target.type = \\"npc\\" and ability.id = 228626)"`;
+exports[`getEvents works 108`] = `"(type in (\\"cast\\", \\"applybuff\\", \\"removebuff\\") and ability.id in (358712, 329849, 329840))"`;
 
-exports[`getEvents works 109`] = `"(ability.id = 340004)"`;
+exports[`getEvents works 109`] = `"(type = \\"applydebuff\\" and target.type = \\"npc\\" and ability.id = 228626)"`;
 
-exports[`getEvents works 110`] = `"(type in (\\"applybuff\\", \\"applybuffstack\\") and ability.id in (357524, 356828, 356827, 357778, 357556, 357864, 357848, 357897, 357839, 357900, 357889, 357825, 357834, 357817, 357820, 357842, 357814, 357815, 357829, 357609, 357706, 357863, 357604, 357747, 357847, 357575))"`;
+exports[`getEvents works 110`] = `"(ability.id = 340004)"`;
 
-exports[`getEvents works 111`] = `"(type in (\\"applybuff\\", \\"removebuff\\", \\"applybuffstack\\", \\"applydebuff\\", \\"removedebuff\\") and ability.id in (357525, 357852, 357898, 357826, 357835, 357818, 357830, 357607))"`;
+exports[`getEvents works 111`] = `"(type in (\\"applybuff\\", \\"applybuffstack\\") and ability.id in (357524, 356828, 356827, 357778, 357556, 357864, 357848, 357897, 357839, 357900, 357889, 357825, 357834, 357817, 357820, 357842, 357814, 357815, 357829, 357609, 357706, 357863, 357604, 357747, 357847, 357575))"`;
 
-exports[`getEvents works 112`] = `"(ability.name = \\"Sanguine Ichor\\" and ((target.type = \\"player\\" and type = \\"damage\\") OR (target.type = \\"npc\\" and type = \\"heal\\")))"`;
+exports[`getEvents works 112`] = `"(type in (\\"applybuff\\", \\"removebuff\\", \\"applybuffstack\\", \\"applydebuff\\", \\"removedebuff\\") and ability.id in (357525, 357852, 357898, 357826, 357835, 357818, 357830, 357607))"`;
 
-exports[`getEvents works 113`] = `"(type = \\"damage\\" and target.type = \\"player\\" and ability.id = 209862)"`;
+exports[`getEvents works 113`] = `"(ability.name = \\"Sanguine Ichor\\" and ((target.type = \\"player\\" and type = \\"damage\\") OR (target.type = \\"npc\\" and type = \\"heal\\")))"`;
 
-exports[`getEvents works 114`] = `"((type = \\"death\\" and target.type != \\"pet\\")"`;
+exports[`getEvents works 114`] = `"(type = \\"damage\\" and target.type = \\"player\\" and ability.id = 209862)"`;
 
-exports[`getEvents works 115`] = `"(ability.id = 300155 and type = \\"begincast\\"))"`;
+exports[`getEvents works 115`] = `"((type = \\"death\\" and target.type != \\"pet\\")"`;
 
-exports[`getEvents works 116`] = `"(source.type = \\"player\\" and type = \\"cast\\" and ability.id in (66, 498, 633, 642, 698, 740, 853, 871, 1022, 1122, 1161, 1719, 1766, 1850, 1856, 2050, 2094, 2139, 2825, 2983, 5211, 5246, 5277, 6552, 6940, 8122, 8143, 10060, 12042, 12472, 12975, 13750, 15286, 15487, 16191, 18499, 19236, 19574, 19577, 19647, 20484, 20707, 22812, 23920, 29166, 29893, 30283, 31224, 31821, 31850, 31884, 31935, 32182, 33206, 33891, 34433, 34861, 42650, 45438, 46585, 46924, 47528, 47536, 47568, 47585, 47788, 48707, 48743, 48792, 49028, 49039, 49206, 50334, 51052, 51271, 51533, 51690, 55233, 55342, 57994, 58875, 61336, 61999, 62618, 63560, 64382, 64843, 64901, 73325, 79140, 79206, 80353, 84714, 86659, 88625, 89766, 93985, 96231, 97462, 97547, 98008, 102342, 102543, 102558, 102560, 102793, 104773, 106898, 106951, 107574, 108199, 108238, 108271, 108280, 108281, 108978, 109304, 109964, 111898, 113858, 113860, 114018, 114050, 114051, 114052, 114158, 115176, 115203, 115288, 115310, 115399, 115750, 116705, 116849, 119381, 121471, 122278, 122470, 122783, 123040, 123904, 131894, 132158, 132578, 137619, 137639, 147362, 152173, 152279, 167105, 183752, 184364, 184662, 185313, 186257, 186265, 186289, 187707, 187827, 188501, 190319, 191634, 192058, 192222, 192249, 193530, 194223, 194844, 196555, 196718, 197721, 197908, 198067, 198103, 198154, 198589, 198838, 200166, 200174, 200183, 201430, 202137, 202138, 202770, 203651, 204018, 204021, 205021, 205180, 205191, 205636, 207167, 207289, 207399, 207684, 212084, 212552, 216331, 219809, 221699, 227847, 228260, 231895, 235219, 246287, 258925, 260402, 262228, 265187, 265202, 266779, 267171, 267217, 275699, 277925, 279302, 288613, 304971, 306830, 307443, 307865, 308491, 310454, 311648, 312202, 312321, 314791, 314793, 315443, 316958, 317009, 317349, 319454, 319952, 320137, 320341, 320674, 321530, 321792, 322109, 322118, 322507, 323546, 323547, 323639, 323654, 323673, 323764, 324128, 324143, 324149, 324220, 324386, 324724, 325013, 325028, 325153, 325197, 325216, 325289, 325640, 325727, 325886, 326059, 326434, 326860, 327104, 327193, 327574, 327661, 328204, 328231, 328281, 328282, 328305, 328547, 328620, 328622, 328923, 333889, 342601, 343527, 343721, 344867))"`;
+exports[`getEvents works 116`] = `"(ability.id = 300155 and type = \\"begincast\\"))"`;
 
-exports[`getEvents works 117`] = `"(type = \\"cast\\" and ability.id = 345130)"`;
+exports[`getEvents works 117`] = `"(source.type = \\"player\\" and type = \\"cast\\" and ability.id in (66, 498, 633, 642, 698, 740, 853, 871, 1022, 1122, 1161, 1719, 1766, 1850, 1856, 2050, 2094, 2139, 2825, 2983, 5211, 5246, 5277, 6552, 6940, 8122, 8143, 10060, 12042, 12472, 12975, 13750, 15286, 15487, 16191, 18499, 19236, 19574, 19577, 19647, 20484, 20707, 22812, 23920, 29166, 29893, 30283, 31224, 31821, 31850, 31884, 31935, 32182, 33206, 33891, 34433, 34861, 42650, 45438, 46585, 46924, 47528, 47536, 47568, 47585, 47788, 48707, 48743, 48792, 49028, 49039, 49206, 50334, 51052, 51271, 51533, 51690, 55233, 55342, 57994, 58875, 61336, 61999, 62618, 63560, 64382, 64843, 64901, 73325, 79140, 79206, 80353, 84714, 86659, 88625, 89766, 93985, 96231, 97462, 97547, 98008, 102342, 102543, 102558, 102560, 102793, 104773, 106898, 106951, 107574, 108199, 108238, 108271, 108280, 108281, 108978, 109304, 109964, 111898, 113858, 113860, 114018, 114050, 114051, 114052, 114158, 115176, 115203, 115288, 115310, 115399, 115750, 116705, 116849, 119381, 121471, 122278, 122470, 122783, 123040, 123904, 131894, 132158, 132578, 137619, 137639, 147362, 152173, 152279, 167105, 183752, 184364, 184662, 185313, 186257, 186265, 186289, 187707, 187827, 188501, 190319, 191634, 192058, 192222, 192249, 193530, 194223, 194844, 196555, 196718, 197721, 197908, 198067, 198103, 198154, 198589, 198838, 200166, 200174, 200183, 201430, 202137, 202138, 202770, 203651, 204018, 204021, 205021, 205180, 205191, 205636, 207167, 207289, 207399, 207684, 212084, 212552, 216331, 219809, 221699, 227847, 228260, 231895, 235219, 246287, 258925, 260402, 262228, 265187, 265202, 266779, 267171, 267217, 275699, 277925, 279302, 288613, 304971, 306830, 307443, 307865, 308491, 310454, 311648, 312202, 312321, 314791, 314793, 315443, 316958, 317009, 317349, 319454, 319952, 320137, 320341, 320674, 321530, 321792, 322109, 322118, 322507, 323546, 323547, 323639, 323654, 323673, 323764, 324128, 324143, 324149, 324220, 324386, 324724, 325013, 325028, 325153, 325197, 325216, 325289, 325640, 325727, 325886, 326059, 326434, 326860, 327104, 327193, 327574, 327661, 328204, 328231, 328281, 328282, 328305, 328547, 328620, 328622, 328923, 333889, 342601, 343527, 343721, 344867))"`;
 
-exports[`getEvents works 118`] = `"(type = \\"applybuff\\" and ability.id in (321422, 307195))"`;
+exports[`getEvents works 118`] = `"(type = \\"cast\\" and ability.id = 345130)"`;
 
-exports[`getEvents works 119`] = `"(type = \\"interrupt\\" and source.type = \\"player\\")"`;
+exports[`getEvents works 119`] = `"(type = \\"applybuff\\" and ability.id in (321422, 307195))"`;
 
-exports[`getEvents works 120`] = `"(type in (\\"cast\\", \\"applydebuff\\") and ability.id in (324631, 310143, 324739, 300728))"`;
+exports[`getEvents works 120`] = `"(type = \\"interrupt\\" and source.type = \\"player\\")"`;
 
-exports[`getEvents works 121`] = `"(type in (\\"applydebuff\\", \\"applybuff\\", \\"removebuff\\", \\"removedebuff\\") and ability.id in (320224, 45182, 45181, 320227, 209261))"`;
+exports[`getEvents works 121`] = `"(type in (\\"cast\\", \\"applydebuff\\") and ability.id in (324631, 310143, 324739, 300728))"`;
 
-exports[`getEvents works 122`] = `"(type in (\\"cast\\", \\"applybuff\\", \\"removebuff\\") and ability.id in (358712, 329849, 329840))"`;
+exports[`getEvents works 122`] = `"(type in (\\"applydebuff\\", \\"applybuff\\", \\"removebuff\\", \\"removedebuff\\") and ability.id in (320224, 45182, 45181, 320227, 209261))"`;
 
-exports[`getEvents works 123`] = `"(type = \\"applybuff\\" and ability.id = 340378)"`;
+exports[`getEvents works 123`] = `"(type in (\\"cast\\", \\"applybuff\\", \\"removebuff\\") and ability.id in (358712, 329849, 329840))"`;
 
-exports[`getEvents works 124`] = `"(ability.id = 340014)"`;
+exports[`getEvents works 124`] = `"(type = \\"applybuff\\" and ability.id = 340378)"`;
 
-exports[`getEvents works 125`] = `"(type in (\\"applybuff\\", \\"applybuffstack\\") and ability.id in (357524, 356828, 356827, 357778, 357556, 357864, 357848, 357897, 357839, 357900, 357889, 357825, 357834, 357817, 357820, 357842, 357814, 357815, 357829, 357609, 357706, 357863, 357604, 357747, 357847, 357575))"`;
+exports[`getEvents works 125`] = `"(ability.id = 340014)"`;
 
-exports[`getEvents works 126`] = `"(type in (\\"applybuff\\", \\"removebuff\\", \\"applybuffstack\\", \\"applydebuff\\", \\"removedebuff\\") and ability.id in (357525, 357852, 357898, 357826, 357835, 357818, 357830, 357607))"`;
+exports[`getEvents works 126`] = `"(type in (\\"applybuff\\", \\"applybuffstack\\") and ability.id in (357524, 356828, 356827, 357778, 357556, 357864, 357848, 357897, 357839, 357900, 357889, 357825, 357834, 357817, 357820, 357842, 357814, 357815, 357829, 357609, 357706, 357863, 357604, 357747, 357847, 357575))"`;
 
-exports[`getEvents works 127`] = `"(ability.name = \\"Sanguine Ichor\\" and ((target.type = \\"player\\" and type = \\"damage\\") OR (target.type = \\"npc\\" and type = \\"heal\\")))"`;
+exports[`getEvents works 127`] = `"(type in (\\"applybuff\\", \\"removebuff\\", \\"applybuffstack\\", \\"applydebuff\\", \\"removedebuff\\") and ability.id in (357525, 357852, 357898, 357826, 357835, 357818, 357830, 357607))"`;
 
-exports[`getEvents works 128`] = `"(type = \\"damage\\" and target.type = \\"player\\" and ability.id = 209862)"`;
+exports[`getEvents works 128`] = `"(ability.name = \\"Sanguine Ichor\\" and ((target.type = \\"player\\" and type = \\"damage\\") OR (target.type = \\"npc\\" and type = \\"heal\\")))"`;
+
+exports[`getEvents works 129`] = `"(type = \\"damage\\" and target.type = \\"player\\" and ability.id = 209862)"`;

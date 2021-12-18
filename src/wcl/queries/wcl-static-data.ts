@@ -7,7 +7,7 @@ import {
   tormentedSpells,
   tormentedBuffsAndDebuffs,
 } from "./events/affixes/tormented";
-import { TRINKETS } from "./events/other";
+import { TRINKETS } from "./events/trinkets";
 
 type NPCName = {
   id: number;

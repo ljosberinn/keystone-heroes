@@ -9,7 +9,7 @@ import { SANGUINE_ICHOR_DAMAGE } from "../../queries/events/affixes/sanguine";
 import { SPITEFUL } from "../../queries/events/affixes/spiteful";
 import { STORMING } from "../../queries/events/affixes/storming";
 import { VOLCANIC } from "../../queries/events/affixes/volcanic";
-import { NW } from "../../queries/events/dungeons/nw";
+import { NW, THROW_CLEAVER_CASTER_IDS } from "../../queries/events/dungeons/nw";
 import { PF } from "../../queries/events/dungeons/pf";
 import type { DamageEvent } from "../../queries/events/types";
 import type { Processor } from "../utils";
@@ -57,7 +57,7 @@ export const damageProcessor: Processor<DamageEvent> = (
         damage: event.unmitigatedAmount,
         targetPlayerID,
         sourceNPCID,
-        // only relevant on plagueborer
+        // only relevant on plagueborer or throw cleaver
         abilityID: event.abilityGameID,
       };
     }
@@ -93,7 +93,11 @@ export const damageProcessor: Processor<DamageEvent> = (
     };
   }
 
-  if (sourceNPCID === PF.RIGGED_PLAGUEBORER) {
+  if (
+    sourceNPCID &&
+    (sourceNPCID === PF.RIGGED_PLAGUEBORER ||
+      THROW_CLEAVER_CASTER_IDS.has(sourceNPCID))
+  ) {
     return {
       timestamp: event.timestamp,
       eventType: EventType.DamageDone,

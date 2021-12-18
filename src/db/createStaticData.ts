@@ -21,6 +21,8 @@ import {
   tormentedBuffsAndDebuffs,
 } from "../wcl/queries/events/affixes/tormented";
 import { VOLCANIC } from "../wcl/queries/events/affixes/volcanic";
+import { CHEAT_DEATHS } from "../wcl/queries/events/cheathDeath";
+import { SHARED_COVENANT_ABILITIES } from "../wcl/queries/events/covenant";
 import { DOS_URN, DOS_URN_OPENING } from "../wcl/queries/events/dungeons/dos";
 import { HOA_GARGOYLE } from "../wcl/queries/events/dungeons/hoa";
 import {
@@ -41,11 +43,7 @@ import {
   TOP_BANNER_AURA,
   TOP_OPENING,
 } from "../wcl/queries/events/dungeons/top";
-import {
-  CHEAT_DEATHS,
-  SHARED_COVENANT_ABILITIES,
-  TRINKETS,
-} from "../wcl/queries/events/other";
+import { TRINKETS } from "../wcl/queries/events/trinkets";
 import { allBossIDs, dungeons as rawDungeons } from "./data/dungeons";
 import { spells } from "./data/spellIds";
 import { prisma } from "./prisma";
@@ -426,6 +424,11 @@ async function create() {
       icon: "ability_revendreth_mage",
       cd: DUMMY_CD,
     },
+    [NW.THROW_CLEAVER]: {
+      cd: DUMMY_CD,
+      icon: "spell_deathknight_butcher2",
+      name: "Throw Cleaver",
+    },
     [NW.ORB]: {
       name: "Discharged Anima",
       icon: "spell_animabastion_orb",
@@ -443,7 +446,7 @@ async function create() {
     },
     [NW.KYRIAN_ORB_BUFF]: {
       name: "Anima Exhaust",
-      icon: "spell_animabastion_orb",
+      icon: "spell_animabastion_buff",
       cd: DUMMY_CD,
     },
     [NW.SPEAR]: {
@@ -454,6 +457,11 @@ async function create() {
     [NW.HAMMER]: {
       name: "Forgotten Forgehammer",
       icon: "inv_mace_1h_bastionquest_b_01",
+      cd: DUMMY_CD,
+    },
+    [NW.SHIELD]: {
+      name: "Discarded Shield",
+      icon: "inv_shield_1h_bastionquest_b_01",
       cd: DUMMY_CD,
     },
     [GRIEVOUS_WOUND]: {

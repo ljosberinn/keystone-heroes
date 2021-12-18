@@ -49,7 +49,7 @@ export default function ApplyBuffRow({
         "text-white",
         event.type === "RemoveBuff"
           ? "bg-yellow-700 hover:bg-yellow-900"
-          : "bg-green-600 hover:bg-green-800"
+          : "bg-emerald-600 hover:bg-emerald-800"
       )}
     >
       <TimestampCell event={event} msSinceLastEvent={msSinceLastEvent} />

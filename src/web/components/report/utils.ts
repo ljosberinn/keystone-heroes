@@ -1,4 +1,5 @@
 import type { FightSuccessResponse } from "../../../api/functions/fight";
+import { NW } from "../../../wcl/queries/events/dungeons/nw";
 import {
   SANGUINE_ICHOR_HEALING,
   spells,
@@ -18,6 +19,7 @@ import type { InterruptRowProps } from "./rows/InterruptRow";
 import type { MissedInterruptRowProps } from "./rows/MissedInterruptRow";
 import type { PlagueBombDamageRowProps } from "./rows/PlagueBombDamageRow";
 import type { SanguineTimeLossRowProps } from "./rows/SanguineTimeLossRow";
+import type { ThrowCleaverDamageRowProps } from "./rows/ThrowCleaverDamageRow";
 import type { ViolentDetonationDamageRowProps } from "./rows/ViolentDetonationDamageRow";
 
 const bloodlustTypes = new Set([
@@ -204,6 +206,12 @@ export const isExplosivesDamageEvent = (
   event: DefaultEvent
 ): event is ExplosiveSummaryRowProps["events"][number] =>
   event.type === "DamageDone" && event.targetNPC?.id === EXPLOSIVE.unit;
+
+export const isThrowCleaverDamageEvent = (
+  event: DefaultEvent
+): event is ThrowCleaverDamageRowProps["events"][number] =>
+  (event.type === "DamageDone" || event.type === "DamageTaken") &&
+  event.ability?.id === NW.THROW_CLEAVER;
 
 export const isMissingInterruptEventWithAbility = (
   event: DefaultEvent

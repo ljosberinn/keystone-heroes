@@ -1,7 +1,5 @@
-import {
-  filterProfessionEvents,
-  filterPlayerDeathEvents,
-} from "../queries/events/other";
+import { filterPlayerDeathEvents } from "../queries/events/death";
+import { filterProfessionEvents } from "../queries/events/professions";
 import allEvents from "./fixtures/allEvents.json";
 
 describe("other", () => {

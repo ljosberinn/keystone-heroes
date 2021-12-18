@@ -1,7 +1,7 @@
 import { EventType } from "@prisma/client";
 
 import { tormentedBuffsAndDebuffs } from "../../queries/events/affixes/tormented";
-import { CHEAT_DEATHS } from "../../queries/events/other";
+import { CHEAT_DEATHS } from "../../queries/events/cheathDeath";
 import type { RemoveDebuffEvent } from "../../queries/events/types";
 import type { Processor } from "../utils";
 

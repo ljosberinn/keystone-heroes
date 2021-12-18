@@ -418,7 +418,7 @@ export function Map(): JSX.Element {
         })}
       </div>
       <div
-        className="absolute top-0 left-0 w-screen h-screen bg-stone-600 opacity-50"
+        className="absolute top-0 left-0 w-screen h-screen opacity-50 bg-stone-600"
         hidden={!fullscreen}
       />
     </section>
@@ -459,7 +459,7 @@ function FullscreenPullNPCs() {
         />
       )}
 
-      <div className="flex w-full px-4 py-2 border-t-2 place-content-end border-gray-600">
+      <div className="flex w-full px-4 py-2 border-t-2 border-gray-600 place-content-end">
         this pull {pullNPCs.pull.percent.toFixed(2)}%
       </div>
 
@@ -1181,7 +1181,7 @@ function PullConnectionPolyline({
         markerMid="url(#triangle)"
         className={classnames(
           "polyline stroke-current"
-          // invisibilityUsage ? "text-green-500" : "text-red-500"
+          // invisibilityUsage ? "text-emerald-500" : "text-red-500"
         )}
         points={`${x},${y} ${middleX},${middleY} ${nextX},${nextY}`}
         style={{

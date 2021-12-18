@@ -196,6 +196,13 @@ Array [
 exports[`other filterProfessionEvents 1`] = `
 Array [
   Object {
+    "abilityGameID": 345130,
+    "sourceID": 5,
+    "targetID": 103,
+    "timestamp": 2826042,
+    "type": "cast",
+  },
+  Object {
     "abilityGameID": 307195,
     "sourceID": 1859,
     "sourceMarker": 6,
@@ -219,13 +226,6 @@ Array [
     "targetMarker": 2,
     "timestamp": 12297167,
     "type": "applybuff",
-  },
-  Object {
-    "abilityGameID": 345130,
-    "sourceID": 5,
-    "targetID": 103,
-    "timestamp": 2826042,
-    "type": "cast",
   },
 ]
 `;

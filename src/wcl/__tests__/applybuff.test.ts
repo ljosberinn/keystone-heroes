@@ -2,7 +2,7 @@ import { BOLSTERING } from "../queries/events/affixes/bolstering";
 import { PF } from "../queries/events/dungeons/pf";
 import { SD_LANTERN_BUFF } from "../queries/events/dungeons/sd";
 import { TOP_BANNER_AURA } from "../queries/events/dungeons/top";
-import { INVISIBILITY } from "../queries/events/other";
+import { INVISIBILITY } from "../queries/events/professions";
 import type { ApplyBuffEvent } from "../queries/events/types";
 import { applyBuffProcessor } from "../transform/events/applybuff";
 import allEvents from "./fixtures/allEvents.json";
