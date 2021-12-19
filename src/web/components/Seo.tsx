@@ -9,7 +9,7 @@ export const defaultDescription =
 export const url =
   process.env.NODE_ENV === "development"
     ? "http://localhost:3000"
-    : process.env.VERCEL_URL ?? "https://keystone-heroes.com";
+    : "https://keystone-heroes.com";
 export const logo = `${url}/summary_large_image.png`;
 
 type SeoProps = {
