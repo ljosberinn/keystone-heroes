@@ -14,7 +14,7 @@ import {
   affixNameIdMap,
 } from "../../staticData";
 import { usePullSettings, useReportStore } from "../../store";
-import { bgPrimary, bgSecondary } from "../../styles/tokens";
+import { bgPrimary, bgSecondary, grayscale } from "../../styles/tokens";
 import {
   createWowheadUrl,
   timeDurationToString,
@@ -188,10 +188,7 @@ function PullSelection() {
         <AbilityIcon
           icon="misc_arrowleft"
           alt="Last pull"
-          className={classnames(
-            "rounded-full w-8 h-8",
-            isFirst && "filter grayscale"
-          )}
+          className={classnames("rounded-full w-8 h-8", isFirst && grayscale)}
           width={32}
           height={32}
         />
@@ -280,10 +277,7 @@ function PullSelection() {
         <AbilityIcon
           icon="misc_arrowright"
           alt="Next pull"
-          className={classnames(
-            "rounded-full w-8 h-8",
-            isLast && "filter grayscale"
-          )}
+          className={classnames("rounded-full w-8 h-8", isLast && grayscale)}
           width={32}
           height={32}
         />
@@ -489,10 +483,20 @@ function Events() {
 
   return (
     <div className="w-full min-h-screen px-4 py-2 bg-white rounded-lg lg:w-9/23 dark:bg-gray-700">
+      <p>Filter Events by Player</p>
       <div className="flex justify-between w-full">
-        <div className="flex">
+        <div className="flex flex-col md:flex-row ">
           {player.map((p) => {
             const checked = trackedPlayer.includes(p.id);
+
+            const classData = classes[p.class];
+            const spec = classData.specs.find((spec) => spec.id === p.spec);
+
+            if (!spec) {
+              return null;
+            }
+
+            const disabled = checked && trackedPlayer.length === 1;
 
             return (
               <span className="p-2" key={p.id}>
@@ -501,7 +505,7 @@ function Events() {
                   aria-labelledby={`player-${p.id}`}
                   id={`player-${p.id}`}
                   checked={checked}
-                  disabled={checked && trackedPlayer.length === 1}
+                  disabled={disabled}
                   onChange={() => {
                     setTrackedPlayer((prev) =>
                       prev.includes(p.id)
@@ -512,9 +516,21 @@ function Events() {
                 />
                 <label
                   htmlFor={`player-${p.id}`}
-                  className={`pl-2 ${playerIdTextColorMap[p.id]}`}
+                  className={classnames(
+                    "pl-2 inline-flex items-center space-x-2",
+                    playerIdTextColorMap[p.id],
+                    !disabled && "cursor-pointer"
+                  )}
                 >
-                  {p.name}
+                  <span className="w-4 h-4">
+                    <SpecIcon
+                      class={classData.name}
+                      spec={spec.name}
+                      size={4}
+                      className={checked ? undefined : grayscale}
+                    />
+                  </span>
+                  <span>{p.name}</span>
                 </label>
               </span>
             );
@@ -696,7 +712,7 @@ function TableSettings() {
 
   return (
     <>
-      <thead>
+      <thead className="hidden md:table-header-group">
         <tr>
           <th colSpan={6} className={`sticky top-0 z-10 ${bgPrimary}`}>
             <button
@@ -707,7 +723,7 @@ function TableSettings() {
               <img
                 src="/static/icons/trade_engineering.jpg"
                 className="object-cover w-8 h-8 rounded-full"
-                alt="Map Options"
+                alt=""
                 width="32"
                 height="32"
               />

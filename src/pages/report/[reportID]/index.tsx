@@ -1,4 +1,3 @@
-import Head from "next/head";
 import { useRouter } from "next/router";
 import type { ParsedUrlQuery } from "querystring";
 import { useEffect } from "react";

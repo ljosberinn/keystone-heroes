@@ -8,3 +8,4 @@ export const hoverBg = "hover:bg-gray-300 dark:hover:bg-gray-500";
 export const widthConstraint = "mx-auto max-w-screen-2xl px-6 w-full";
 export const internalLinkClasses =
   "transition-colors duration-150 ease-in-out hover:text-yellow-600";
+export const grayscale = "filter grayscale";
