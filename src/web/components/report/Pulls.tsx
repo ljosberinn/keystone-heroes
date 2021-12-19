@@ -1,5 +1,5 @@
 import dynamic from "next/dynamic";
-import { Suspense, useState, SuspenseList, useMemo } from "react";
+import { Suspense, useState, SuspenseList, useMemo, memo } from "react";
 
 import type { FightSuccessResponse } from "../../../api/functions/fight";
 import { useFight } from "../../../pages/report/[reportID]/[fightID]";
@@ -439,35 +439,34 @@ function Events() {
   );
 
   const { before, during, after } = selectedPull.events.reduce<
-    Record<EventCategory, DefaultEvent[]>
+    Record<EventCategory, (DefaultEvent & { id: number })[]>
   >(
-    (acc, event) => {
-      if (
-        (event.sourcePlayerID &&
-          !trackedPlayer.includes(event.sourcePlayerID)) ||
-        (event.targetPlayerID && !trackedPlayer.includes(event.targetPlayerID))
-      ) {
+    (acc, event, index) => {
+      const playerID = event.sourcePlayerID ?? event.targetPlayerID;
+      const isIgnored = playerID ? !trackedPlayer.includes(playerID) : false;
+
+      if (isIgnored) {
         return acc;
       }
 
       if (event.category === "BEFORE") {
         return {
           ...acc,
-          before: [...acc.before, event],
+          before: [...acc.before, { ...event, id: index }],
         };
       }
 
       if (event.category === "DURING") {
         return {
           ...acc,
-          during: [...acc.during, event],
+          during: [...acc.during, { ...event, id: index }],
         };
       }
 
       if (event.category === "AFTER") {
         return {
           ...acc,
-          after: [...acc.after, event],
+          after: [...acc.after, { ...event, id: index }],
         };
       }
 
@@ -558,18 +557,14 @@ function Events() {
                       : timeDurationToString(0);
 
                     return (
-                      <Suspense
-                        fallback={null}
-                        key={createRowKey(event, index)}
-                      >
-                        <TableRow
-                          event={event}
-                          msSinceLastEvent={msSinceLastEvent}
-                          playerIdPlayerNameMap={playerIdPlayerNameMap}
-                          playerIdTextColorMap={playerIdTextColorMap}
-                          playerIdIconMap={playerIdIconMap}
-                        />
-                      </Suspense>
+                      <TableRow
+                        event={event}
+                        msSinceLastEvent={msSinceLastEvent}
+                        playerIdPlayerNameMap={playerIdPlayerNameMap}
+                        playerIdTextColorMap={playerIdTextColorMap}
+                        playerIdIconMap={playerIdIconMap}
+                        key={event.id}
+                      />
                     );
                   })}
                 </SuspenseList>
@@ -602,15 +597,14 @@ function Events() {
                       );
 
                   return (
-                    <Suspense fallback={null} key={createRowKey(event, index)}>
-                      <TableRow
-                        event={event}
-                        msSinceLastEvent={msSinceLastEvent}
-                        playerIdPlayerNameMap={playerIdPlayerNameMap}
-                        playerIdTextColorMap={playerIdTextColorMap}
-                        playerIdIconMap={playerIdIconMap}
-                      />
-                    </Suspense>
+                    <TableRow
+                      event={event}
+                      msSinceLastEvent={msSinceLastEvent}
+                      playerIdPlayerNameMap={playerIdPlayerNameMap}
+                      playerIdTextColorMap={playerIdTextColorMap}
+                      playerIdIconMap={playerIdIconMap}
+                      key={event.id}
+                    />
                   );
                 })}
               </SuspenseList>
@@ -649,18 +643,14 @@ function Events() {
                         );
 
                     return (
-                      <Suspense
-                        fallback={null}
-                        key={createRowKey(event, index)}
-                      >
-                        <TableRow
-                          event={event}
-                          msSinceLastEvent={msSinceLastEvent}
-                          playerIdPlayerNameMap={playerIdPlayerNameMap}
-                          playerIdTextColorMap={playerIdTextColorMap}
-                          playerIdIconMap={playerIdIconMap}
-                        />
-                      </Suspense>
+                      <TableRow
+                        event={event}
+                        msSinceLastEvent={msSinceLastEvent}
+                        playerIdPlayerNameMap={playerIdPlayerNameMap}
+                        playerIdTextColorMap={playerIdTextColorMap}
+                        playerIdIconMap={playerIdIconMap}
+                        key={event.id}
+                      />
                     );
                   })}
                 </SuspenseList>
@@ -913,79 +903,59 @@ const ApplyDebuffRow = dynamic(
   { suspense: true }
 );
 
-const createRowKey = (event: DefaultEvent, index: number) =>
-  `${event.timestamp}-${event.targetNPC ? event.targetNPC.id : "no-npc"}-${
-    event.sourcePlayerID ?? "no-sourceplayerid"
-  }-${event.targetPlayerID ? event.targetPlayerID : "no-targetplayerid"}-${
-    event.type
-  }-${event.ability ? event.ability.id : "no-ability"}-${
-    event.interruptedAbility
-      ? event.interruptedAbility
-      : "no-interrupted-ability"
-  }-${index}`;
+const comparator = <T extends { event: { id: number } }>(prev: T, next: T) =>
+  prev.event.id === next.event.id;
 
 export type TableRowProps = {
-  event: DefaultEvent;
+  event: DefaultEvent & { id: number };
   msSinceLastEvent: string;
 } & Omit<SourceOrTargetPlayerCellProps, "transparent">;
 
-function TableRow({
-  event,
-  playerIdPlayerNameMap,
-  playerIdTextColorMap,
-  msSinceLastEvent,
-  playerIdIconMap,
-}: TableRowProps) {
-  const sharedProps = {
+const TableRow = memo(
+  ({
+    event,
     msSinceLastEvent,
+    playerIdIconMap,
     playerIdPlayerNameMap,
     playerIdTextColorMap,
-    playerIdIconMap,
-  };
+  }: TableRowProps) => {
+    const sharedProps = {
+      msSinceLastEvent,
+      playerIdPlayerNameMap,
+      playerIdTextColorMap,
+      playerIdIconMap,
+    };
 
-  if (isCastEventWithAbilityAndSourcePlayer(event)) {
-    return <CastRow event={event} {...sharedProps} />;
-  }
+    // yep I know :shrug: better than memoing each and every of them individually
+    return (
+      <Suspense fallback={null}>
+        {isCastEventWithAbilityAndSourcePlayer(event) ? (
+          <CastRow event={event} {...sharedProps} />
+        ) : isDamageTakenEventWithTargetPlayer(event) ? (
+          <DamageTakenRow event={event} {...sharedProps} />
+        ) : isAbilityReadyEventWithAbilityAndSourcePlayer(event) ? (
+          <AbilityReadyRow event={event} {...sharedProps} />
+        ) : isPlayerOrNPCDeathEvent(event) ? (
+          <DeathRow event={event} {...sharedProps} />
+        ) : isInterruptEventWithSourceAndTargetPlayerAndAbility(event) ? (
+          <InterruptRow event={event} {...sharedProps} />
+        ) : isDamageDoneEventWithAbility(event) ? (
+          <DamageDoneRow event={event} {...sharedProps} />
+        ) : isHealingDoneEventWithAbility(event) ? (
+          <HealingDoneRow event={event} {...sharedProps} />
+        ) : isApplyBuffEventWithAbility(event) ? (
+          <ApplyBuffRow event={event} {...sharedProps} />
+        ) : isApplyDebuffEventWithAbility(event) ? (
+          <ApplyDebuffRow event={event} {...sharedProps} />
+        ) : isMissingInterruptEventWithAbility(event) ? (
+          <MissedInterruptRow event={event} {...sharedProps} />
+        ) : null}
+      </Suspense>
+    );
+  },
+  comparator
+);
 
-  if (isDamageTakenEventWithTargetPlayer(event)) {
-    return <DamageTakenRow event={event} {...sharedProps} />;
-  }
-
-  if (isAbilityReadyEventWithAbilityAndSourcePlayer(event)) {
-    return <AbilityReadyRow event={event} {...sharedProps} />;
-  }
-
-  if (isPlayerOrNPCDeathEvent(event)) {
-    return <DeathRow event={event} {...sharedProps} />;
-  }
-
-  if (isInterruptEventWithSourceAndTargetPlayerAndAbility(event)) {
-    return <InterruptRow event={event} {...sharedProps} />;
-  }
-
-  if (isDamageDoneEventWithAbility(event)) {
-    return <DamageDoneRow event={event} {...sharedProps} />;
-  }
-
-  if (isHealingDoneEventWithAbility(event)) {
-    return <HealingDoneRow event={event} {...sharedProps} />;
-  }
-
-  if (isApplyBuffEventWithAbility(event)) {
-    return <ApplyBuffRow event={event} {...sharedProps} />;
-  }
-
-  if (isApplyDebuffEventWithAbility(event)) {
-    return <ApplyDebuffRow event={event} {...sharedProps} />;
-  }
-
-  if (isMissingInterruptEventWithAbility(event)) {
-    return <MissedInterruptRow event={event} {...sharedProps} />;
-  }
-
-  if (typeof window !== "undefined") {
-    console.log(event);
-  }
-
-  return null;
+if (process.env.NODE_ENV === "development") {
+  TableRow.displayName = "TableRow";
 }

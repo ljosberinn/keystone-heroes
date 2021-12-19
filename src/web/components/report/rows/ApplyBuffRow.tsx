@@ -16,7 +16,7 @@ import type { CastRowProps } from "./CastRow";
 export type ApplyBuffRowProps = {
   event: Omit<DefaultEvent, "ability" | "type"> & {
     ability: CastRowProps["event"]["ability"];
-    type: "ApplyBuff" | "ApplyBuffStack" | "RemoveBuff";
+    type: "ApplyBuff" | "ApplyBuffStack" | "RemoveBuff" | "RemoveDebuff";
   };
 } & Pick<
   TableRowProps,
