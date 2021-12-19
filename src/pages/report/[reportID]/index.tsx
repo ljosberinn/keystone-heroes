@@ -12,6 +12,7 @@ import { reportHandlerError } from "../../../api/utils/errors";
 import { isValidReportId } from "../../../wcl/utils";
 import { ExternalLink } from "../../../web/components/ExternalLink";
 import { LinkBox, LinkOverlay } from "../../../web/components/LinkBox";
+import { Seo } from "../../../web/components/Seo";
 import { SpecIcon } from "../../../web/components/SpecIcon";
 import { useAbortableFetch } from "../../../web/hooks/useAbortableFetch";
 import { useIsMounted } from "../../../web/hooks/useIsMounted";
@@ -21,6 +22,7 @@ import {
   widthConstraint,
   greenText,
   redText,
+  yellowText,
 } from "../../../web/styles/tokens";
 import {
   classBorderColorMap,
@@ -139,9 +141,7 @@ export default function Report(): JSX.Element | null {
 
     return (
       <>
-        <Head>
-          <title>Unknown Report</title>
-        </Head>
+        <Seo title="Unknown Report" />
 
         <div className="flex flex-col items-center justify-center w-full px-16 py-8 m-auto xl:px-64 xl:py-32 lg:flex-row max-w-screen-2xl">
           <img
@@ -244,9 +244,7 @@ export default function Report(): JSX.Element | null {
 
   return (
     <>
-      <Head>
-        <title>{report.title}</title>
-      </Head>
+      <Seo title={report.title} />
 
       <div className={`${widthConstraint} py-6`}>
         {timed.length > 0 ? (
@@ -402,7 +400,9 @@ function TimeInformation({
       <span className="space-x-2">
         <span>{timeDurationToString(keystoneTime)}</span>
         <span
-          className={`italic ${isTimed ? greenText : redText}`}
+          className={`italic ${
+            dungeonTimer ? (isTimed ? greenText : redText) : yellowText
+          }`}
           title={`${keystoneBonus} chest${keystoneBonus > 1 ? "s" : ""}`}
         >
           {dungeonTimer

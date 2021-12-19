@@ -1,11 +1,9 @@
-import Head from "next/head";
+import { Seo } from "../web/components/Seo";
 
 export default function Privacy(): JSX.Element {
   return (
     <>
-      <Head>
-        <title>Privacy</title>
-      </Head>
+      <Seo title="Privacy" />
       <div>tbd</div>
     </>
   );

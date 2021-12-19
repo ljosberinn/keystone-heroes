@@ -5,6 +5,7 @@ import { useState } from "react";
 
 import { ExternalLink } from "../web/components/ExternalLink";
 import { MIN_KEYSTONE_LEVEL } from "../web/env";
+import { yellowText } from "../web/styles/tokens";
 import {
   ReportParseError,
   reportParseErrorMap,
@@ -22,7 +23,9 @@ export default function Home(): JSX.Element | null {
         <h1 className="text-2xl font-semibold text-center lg:text-5xl sm:text-3xl leading-tighter max-w-[16ch]">
           Analyse Mythic+ Logs In The Blink Of An Eye
         </h1>
-        <h2 className="pt-3 pb-10 text-sm leading-tight text-center text-yellow-600 dark:text-yellow-400 lg:text-xl sm:text-base ">
+        <h2
+          className={`pt-3 pb-10 text-sm leading-tight text-center ${yellowText} lg:text-xl sm:text-base`}
+        >
           stop guessing what you could improve or what went wrong - gain some
           actual insight for once
         </h2>
@@ -152,7 +155,7 @@ function Form() {
             type="text"
             name="report"
             placeholder="Warcraft Logs Report URL"
-            className="block w-full py-3 pl-10 text-black placeholder-stone-500 bg-transparent border-2 border-stone-500 rounded-lg shadow-sm outline-none dark:placeholder-stone-400 sm:border-r-0 dark:border-gray-700 sm:rounded-r-none dark:text-white focus:outline-none focus:ring-0 dark:focus:border-blue-500 focus:border-blue-500"
+            className="block w-full py-3 pl-10 text-black bg-transparent border-2 rounded-lg shadow-sm outline-none placeholder-stone-500 border-stone-500 dark:placeholder-stone-400 sm:border-r-0 dark:border-gray-700 sm:rounded-r-none dark:text-white focus:outline-none focus:ring-0 dark:focus:border-blue-500 focus:border-blue-500"
             required
             aria-labelledby="report-label"
             onChange={(event: ChangeEvent<HTMLInputElement>) => {

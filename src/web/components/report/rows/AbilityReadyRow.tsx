@@ -1,3 +1,4 @@
+import { yellowText } from "../../../styles/tokens";
 import { createWowheadUrl, timeDurationToString } from "../../../utils";
 import { classnames } from "../../../utils/classnames";
 import { AbilityIcon } from "../../AbilityIcon";
@@ -79,7 +80,7 @@ export default function AbilityReadyRow({
       <td
         className={classnames(
           usedUnderCooldown && "text-emerald-500",
-          !event.ability.lastUse && "text-yellow-500"
+          !event.ability.lastUse && yellowText
         )}
       >
         {event.ability.lastUse ? (

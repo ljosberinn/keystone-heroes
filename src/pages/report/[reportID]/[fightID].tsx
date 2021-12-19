@@ -1,5 +1,4 @@
 import dynamic from "next/dynamic";
-import Head from "next/head";
 import { useRouter } from "next/router";
 import Script from "next/script";
 import { createContext, useContext, Suspense } from "react";
@@ -12,12 +11,13 @@ import type {
 import { fightHandlerError } from "../../../api/utils/errors";
 import { isValidReportId } from "../../../wcl/utils";
 import { Breadcrumbs } from "../../../web/components/Breadcrumbs";
+import { Seo } from "../../../web/components/Seo";
 import { AffixImpact } from "../../../web/components/report/AffixImpact";
 import { Data } from "../../../web/components/report/Data";
 import { Map } from "../../../web/components/report/Map";
 import { Meta } from "../../../web/components/report/Meta";
 import { useAbortableFetch } from "../../../web/hooks/useAbortableFetch";
-import { dungeons } from "../../../web/staticData";
+import { affixes, dungeons } from "../../../web/staticData";
 import { widthConstraint } from "../../../web/styles/tokens";
 import { timeDurationToString } from "../../../web/utils";
 
@@ -224,26 +224,23 @@ type FightIDHeadProps = {
 function FightIDHead({ fight }: FightIDHeadProps) {
   const dungeon = dungeons[fight.dungeon];
 
-  const time = timeDurationToString(fight.meta.time);
-  const timeLeft = timeDurationToString(dungeon.time - fight.meta.time);
-
-  const title = `${dungeon.slug} +${fight.meta.level} in ${time}`;
-  const extendedTitle = `${dungeon.name} +${fight.meta.level} in ${time} | +${timeLeft} left | ${fight.meta.totalDeaths} deaths`;
+  const extendedTitle = [
+    fight.affixes.map((affix) => affixes[affix].name).join(", "),
+    fight.player
+      .map((player) => {
+        return player.name;
+      })
+      .join(", "),
+  ].join(" | ");
 
   return (
-    <Head>
-      <title>{title}</title>
-
-      <meta
-        key="og-description"
-        property="og:description"
-        content={extendedTitle}
-      />
-      <meta
-        key="og-image"
-        property="og:image"
-        content={`/static/dungeons/${dungeon.slug.toLowerCase()}.jpg`}
-      />
-    </Head>
+    <Seo
+      title={`+${fight.meta.level} ${dungeon.name} (${timeDurationToString(
+        fight.meta.time,
+        true
+      )})`}
+      description={extendedTitle}
+      image={`/static/dungeons/${dungeon.slug.toLowerCase()}.jpg`}
+    />
   );
 }

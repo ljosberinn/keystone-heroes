@@ -1,16 +1,12 @@
 import { Html, Head, Main, NextScript } from "next/document";
 
+import {
+  logoVersion,
+  defaultDescription,
+  defaultTitle,
+} from "../web/components/Seo";
 // eslint-disable-next-line import/no-namespace
 import * as icons from "../web/icons";
-import {
-  description,
-  title,
-  logo,
-  twitterHandle,
-  extendedTitle,
-  url,
-  logoVersion,
-} from "../web/seo";
 
 export default function CustomDocument(/* props: DocumentProps*/): JSX.Element {
   return (
@@ -28,29 +24,19 @@ export default function CustomDocument(/* props: DocumentProps*/): JSX.Element {
           href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap"
         />
 
-        <meta name="description" content={description} />
-        <link rel="canonical" href={url} />
+        <meta name="description" content={defaultDescription} />
 
-        <meta itemProp="name" content={title} />
-        <meta itemProp="description" content={description} />
-        <meta property="image" content={logo} />
-        <meta property="image:alt" content={description} />
+        <meta itemProp="name" content={defaultTitle} />
+        <meta itemProp="description" content={defaultDescription} />
 
-        <meta property="og:url" content={url} />
         <meta property="og:type" content="website" />
-        <meta property="og:title" content={title} />
 
-        <meta property="og:site_name" content={title} />
+        <meta property="og:site_name" content={defaultTitle} />
         <meta property="og:locale" content="en_US" />
 
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:creator" content={twitterHandle} />
-        <meta name="twitter:site" content={twitterHandle} />
-        <meta name="twitter:url" content={url} />
-        <meta name="twitter:title" content={extendedTitle} />
-        <meta name="twitter:description" content={description} />
-        <meta name="twitter:image" content={logo} />
-        <meta name="twitter:image:alt" content={title} />
+        <meta name="twitter:creator" content="@gerrit_alex" />
+        <meta name="twitter:site" content="@gerrit_alex" />
 
         <meta name="robots" content="index,follow" />
         <meta name="googlebot" content="index,follow" />

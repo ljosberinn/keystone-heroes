@@ -17,6 +17,7 @@ import {
   bgSecondary,
   greenText,
   redText,
+  yellowText,
 } from "../../styles/tokens";
 import {
   createWCLUrl,
@@ -62,7 +63,7 @@ export function Meta(): JSX.Element {
                 fight.meta.percent < 101
                   ? greenText
                   : fight.meta.percent < 103
-                  ? "text-yellow-600"
+                  ? yellowText
                   : redText
               }
             >
@@ -738,7 +739,7 @@ function Heading({ chests, level }: HeadingProps) {
         {Array.from({ length: chests }, (_, index) => (
           <svg
             key={index}
-            className="inline w-4 h-4 text-yellow-500 fill-current"
+            className={`inline w-4 h-4 ${yellowText} fill-current`}
           >
             <use href={`#${star.id}`} />
           </svg>

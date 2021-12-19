@@ -1,6 +1,5 @@
 import type { NextComponentType, NextPageContext } from "next";
 import { ThemeProvider } from "next-themes";
-import Head from "next/head";
 import "../web/styles/globals.css";
 import type { NextRouter } from "next/router";
 import { useRouter } from "next/router";
@@ -9,7 +8,7 @@ import { useEffect } from "react";
 import { Footer } from "../web/components/Footer";
 import { Header } from "../web/components/Header";
 import { RouteChangeIndicator } from "../web/components/RouteChangeIndicator";
-import { description, logo, extendedTitle } from "../web/seo";
+import { Seo } from "../web/components/Seo";
 import { useReportStore } from "../web/store";
 import { parseWCLUrl } from "../web/utils";
 
@@ -32,24 +31,12 @@ export default function App({
 
   return (
     <>
-      <Head>
+      <Seo>
         <meta
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width"
         />
-        <title>Keystone Heroes</title>
-        <meta
-          key="og-description"
-          property="og:description"
-          content={description}
-        />
-        <meta key="og-image" property="og:image" content={logo} />
-        <meta
-          key="og-image-alt"
-          property="og:image:alt"
-          content={extendedTitle}
-        />
-      </Head>
+      </Seo>
       <RouteChangeIndicator />
       <ThemeProvider attribute="class" defaultTheme="dark">
         <Header />

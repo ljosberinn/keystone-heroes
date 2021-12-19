@@ -1,5 +1,6 @@
 import { outlineQuestionCircle } from "../../../icons";
 import { DUMMY_CD, SD_LANTERN_OPENING } from "../../../staticData";
+import { greenText, redText, yellowText } from "../../../styles/tokens";
 import { createWowheadUrl, timeDurationToString } from "../../../utils";
 import { classnames } from "../../../utils/classnames";
 import { AbilityIcon } from "../../AbilityIcon";
@@ -103,9 +104,9 @@ export default function CastRow({
       {ability.cd === DUMMY_CD ? null : (
         <td
           className={classnames(
-            delayedTooHard && "text-red-500",
-            usedUnderCooldown && "text-emerald-500",
-            event.ability.lastUse ? null : "text-yellow-500"
+            delayedTooHard && redText,
+            usedUnderCooldown && greenText,
+            event.ability.lastUse ? null : yellowText
           )}
           title={
             delayedTooHard
