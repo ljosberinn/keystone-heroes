@@ -314,8 +314,8 @@ export const SPIRES_OF_ASCENSION: DungeonMeta = {
     168_420: 4, // Forsworn Champion
     168_681: 6, // Forsworn Helion
     166_411: 1, // Forsworn Usurper
-    166_718: 4, // Forsworn Warden
-    166_717: 4, // Forsworn Justicar
+    168_718: 4, // Forsworn Warden
+    168_717: 4, // Forsworn Justicar
     168_844: 12, // Lakesis
     168_845: 12, // Astronos
     168_843: 12, // Klotos

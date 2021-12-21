@@ -1601,12 +1601,8 @@ const createTotalCountReducer = (
   { unitCountMap }: typeof dungeonMap[number]
 ) => {
   return (acc: number, npc: { id: number; gameID: number }) => {
-    const deathCount = npcDeathCountMap[npc.id];
-    const npcCount = unitCountMap[npc.gameID];
-
-    if (deathCount === undefined || npcCount === undefined) {
-      return acc;
-    }
+    const deathCount = npcDeathCountMap[npc.id] ?? 0;
+    const npcCount = unitCountMap[npc.gameID] ?? 0;
 
     return acc + npcCount * deathCount;
   };

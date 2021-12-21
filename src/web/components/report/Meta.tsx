@@ -60,10 +60,12 @@ export function Meta(): JSX.Element {
           <span className="flex self-end space-x-1">
             <span
               className={
-                fight.meta.percent < 101
-                  ? greenText
-                  : fight.meta.percent < 103
+                fight.meta.percent > 102
+                  ? redText
+                  : fight.meta.percent > 101
                   ? yellowText
+                  : fight.meta.percent >= 100
+                  ? greenText
                   : redText
               }
             >
