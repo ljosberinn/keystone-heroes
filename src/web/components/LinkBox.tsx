@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 
 import { classnames } from "../utils/classnames";
+import { ExternalLink } from "./ExternalLink";
 import styles from "./LinkBox.module.css";
 
 type LinkBoxProps = {
@@ -38,6 +39,18 @@ export function LinkOverlay({
   children,
   className,
 }: LinkOverlayProps): JSX.Element {
+  if (href.includes("http")) {
+    return (
+      <ExternalLink
+        href={href}
+        data-linkbox-overlay
+        className={classnames(styles.link, className)}
+      >
+        {children}
+      </ExternalLink>
+    );
+  }
+
   return (
     <Link href={href} passHref>
       <a data-linkbox-overlay className={classnames(styles.link, className)}>
