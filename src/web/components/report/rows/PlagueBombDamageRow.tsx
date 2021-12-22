@@ -46,10 +46,9 @@ export default function PlagueBombDamageRow({
         <b>{totalDamageDone.toLocaleString("en-US")}</b>
         <span> - Estimated Time Save: </span>
         <b>
-          {timeDurationToString(
-            (totalDamageDone / fight.meta.dps) * 1000,
-            true
-          )}
+          {timeDurationToString((totalDamageDone / fight.meta.dps) * 1000, {
+            omitMs: true,
+          })}
         </b>
       </td>
     </tr>

@@ -304,26 +304,26 @@ function Sidebar() {
             start: pullNPCs.pull.startTime,
             end: pullNPCs.pull.endTime,
           })}
+          className="space-x-1"
         >
           <span>
             {timeDurationToString(
               pullNPCs.pull.startTime - fight.meta.startTime,
-              true
+              { omitMs: true }
             )}
           </span>
-          <span> - </span>
+          <span>-</span>
           <span>
             {timeDurationToString(
               pullNPCs.pull.endTime - fight.meta.startTime,
-              true
+              { omitMs: true }
             )}
           </span>
           <span>
-            {" "}
             (+
             {timeDurationToString(
               pullNPCs.pull.endTime - pullNPCs.pull.startTime,
-              true
+              { omitMs: true }
             )}
             )
           </span>

@@ -50,7 +50,7 @@ function BossKillIndicatorToggle() {
   );
 
   return (
-    <div className="space-x-2">
+    <div className="hidden space-x-2 sm:block">
       <input
         className="cursor-pointer"
         type="checkbox"
@@ -79,7 +79,7 @@ function TormentedKillIndicatorToggle() {
     useMapOptions(tormentedKillIndicatorSelector);
 
   return (
-    <div className="space-x-2">
+    <div className="hidden space-x-2 sm:block">
       <input
         className="cursor-pointer"
         type="checkbox"

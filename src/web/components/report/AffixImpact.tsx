@@ -102,7 +102,7 @@ export function AffixImpact(): JSX.Element {
   } = useAffixSpecificStats();
 
   return (
-    <section className="py-6">
+    <section className="py-6 drop-shadow-sm">
       <div className="px-6 py-6 bg-white lg:px-0 dark:bg-gray-900">
         <style jsx>
           {`
@@ -643,7 +643,10 @@ export function AffixImpact(): JSX.Element {
                     {sanguine.healing.toLocaleString("en-US")} total healing
                   </ExternalLink>{" "}
                   (est. time loss:{" "}
-                  {timeDurationToString(sanguine.estTimeLoss * 1000, true)})
+                  {timeDurationToString(sanguine.estTimeLoss * 1000, {
+                    omitMs: true,
+                  })}
+                  )
                 </ImpactRow>
               </>
             )}
@@ -704,7 +707,7 @@ function ImpactRow({ children }: ImpactRowProps) {
     <tr>
       <td
         colSpan={2}
-        className="flex flex-col space-y-2 text-center md:space-x-2 md:table-cell md:space-y-0"
+        className="flex flex-col space-y-2 text-center md:space-x-2 md:table-cell md:space-y-0 md:pt-2"
       >
         {children}
       </td>

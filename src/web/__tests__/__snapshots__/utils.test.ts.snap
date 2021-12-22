@@ -1,0 +1,177 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`timeDurationToString 1 negative 1`] = `"-00:00:001"`;
+
+exports[`timeDurationToString 1 negative omitMs 1`] = `"-00:00"`;
+
+exports[`timeDurationToString 1 negative toHours & omitMs 1`] = `"-01:00:00"`;
+
+exports[`timeDurationToString 1 negative toHours 1`] = `"-01:00:00:001"`;
+
+exports[`timeDurationToString 1 positive 1`] = `"00:00:001"`;
+
+exports[`timeDurationToString 1 positive omitMs 1`] = `"00:00"`;
+
+exports[`timeDurationToString 1 positive toHours & omitMs 1`] = `"01:00:00"`;
+
+exports[`timeDurationToString 1 positive toHours 1`] = `"01:00:00:001"`;
+
+exports[`timeDurationToString 10 negative 1`] = `"-00:00:010"`;
+
+exports[`timeDurationToString 10 negative omitMs 1`] = `"-00:00"`;
+
+exports[`timeDurationToString 10 negative toHours & omitMs 1`] = `"-01:00:00"`;
+
+exports[`timeDurationToString 10 negative toHours 1`] = `"-01:00:00:010"`;
+
+exports[`timeDurationToString 10 positive 1`] = `"00:00:010"`;
+
+exports[`timeDurationToString 10 positive omitMs 1`] = `"00:00"`;
+
+exports[`timeDurationToString 10 positive toHours & omitMs 1`] = `"01:00:00"`;
+
+exports[`timeDurationToString 10 positive toHours 1`] = `"01:00:00:010"`;
+
+exports[`timeDurationToString 100 negative 1`] = `"-00:00:100"`;
+
+exports[`timeDurationToString 100 negative omitMs 1`] = `"-00:00"`;
+
+exports[`timeDurationToString 100 negative toHours & omitMs 1`] = `"-01:00:00"`;
+
+exports[`timeDurationToString 100 negative toHours 1`] = `"-01:00:00:100"`;
+
+exports[`timeDurationToString 100 positive 1`] = `"00:00:100"`;
+
+exports[`timeDurationToString 100 positive omitMs 1`] = `"00:00"`;
+
+exports[`timeDurationToString 100 positive toHours & omitMs 1`] = `"01:00:00"`;
+
+exports[`timeDurationToString 100 positive toHours 1`] = `"01:00:00:100"`;
+
+exports[`timeDurationToString 1000 negative 1`] = `"-00:01:000"`;
+
+exports[`timeDurationToString 1000 negative omitMs 1`] = `"-00:01"`;
+
+exports[`timeDurationToString 1000 negative toHours & omitMs 1`] = `"-01:00:01"`;
+
+exports[`timeDurationToString 1000 negative toHours 1`] = `"-01:00:01:000"`;
+
+exports[`timeDurationToString 1000 positive 1`] = `"00:01:000"`;
+
+exports[`timeDurationToString 1000 positive omitMs 1`] = `"00:01"`;
+
+exports[`timeDurationToString 1000 positive toHours & omitMs 1`] = `"01:00:01"`;
+
+exports[`timeDurationToString 1000 positive toHours 1`] = `"01:00:01:000"`;
+
+exports[`timeDurationToString 10000 negative 1`] = `"-00:10:000"`;
+
+exports[`timeDurationToString 10000 negative omitMs 1`] = `"-00:10"`;
+
+exports[`timeDurationToString 10000 negative toHours & omitMs 1`] = `"-01:00:10"`;
+
+exports[`timeDurationToString 10000 negative toHours 1`] = `"-01:00:10:000"`;
+
+exports[`timeDurationToString 10000 positive 1`] = `"00:10:000"`;
+
+exports[`timeDurationToString 10000 positive omitMs 1`] = `"00:10"`;
+
+exports[`timeDurationToString 10000 positive toHours & omitMs 1`] = `"01:00:10"`;
+
+exports[`timeDurationToString 10000 positive toHours 1`] = `"01:00:10:000"`;
+
+exports[`timeDurationToString 100000 negative 1`] = `"-01:40:000"`;
+
+exports[`timeDurationToString 100000 negative omitMs 1`] = `"-01:40"`;
+
+exports[`timeDurationToString 100000 negative toHours & omitMs 1`] = `"-01:01:40"`;
+
+exports[`timeDurationToString 100000 negative toHours 1`] = `"-01:01:40:000"`;
+
+exports[`timeDurationToString 100000 positive 1`] = `"01:40:000"`;
+
+exports[`timeDurationToString 100000 positive omitMs 1`] = `"01:40"`;
+
+exports[`timeDurationToString 100000 positive toHours & omitMs 1`] = `"01:01:40"`;
+
+exports[`timeDurationToString 100000 positive toHours 1`] = `"01:01:40:000"`;
+
+exports[`timeDurationToString 1000000 negative 1`] = `"-16:40:000"`;
+
+exports[`timeDurationToString 1000000 negative omitMs 1`] = `"-16:40"`;
+
+exports[`timeDurationToString 1000000 negative toHours & omitMs 1`] = `"-01:16:40"`;
+
+exports[`timeDurationToString 1000000 negative toHours 1`] = `"-01:16:40:000"`;
+
+exports[`timeDurationToString 1000000 positive 1`] = `"16:40:000"`;
+
+exports[`timeDurationToString 1000000 positive omitMs 1`] = `"16:40"`;
+
+exports[`timeDurationToString 1000000 positive toHours & omitMs 1`] = `"01:16:40"`;
+
+exports[`timeDurationToString 1000000 positive toHours 1`] = `"01:16:40:000"`;
+
+exports[`timeDurationToString 10000000 negative 1`] = `"-46:40:000"`;
+
+exports[`timeDurationToString 10000000 negative omitMs 1`] = `"-46:40"`;
+
+exports[`timeDurationToString 10000000 negative toHours & omitMs 1`] = `"-03:46:40"`;
+
+exports[`timeDurationToString 10000000 negative toHours 1`] = `"-03:46:40:000"`;
+
+exports[`timeDurationToString 10000000 positive 1`] = `"46:40:000"`;
+
+exports[`timeDurationToString 10000000 positive omitMs 1`] = `"46:40"`;
+
+exports[`timeDurationToString 10000000 positive toHours & omitMs 1`] = `"03:46:40"`;
+
+exports[`timeDurationToString 10000000 positive toHours 1`] = `"03:46:40:000"`;
+
+exports[`timeDurationToString 100000000 negative 1`] = `"-46:40:000"`;
+
+exports[`timeDurationToString 100000000 negative omitMs 1`] = `"-46:40"`;
+
+exports[`timeDurationToString 100000000 negative toHours & omitMs 1`] = `"-04:46:40"`;
+
+exports[`timeDurationToString 100000000 negative toHours 1`] = `"-04:46:40:000"`;
+
+exports[`timeDurationToString 100000000 positive 1`] = `"46:40:000"`;
+
+exports[`timeDurationToString 100000000 positive omitMs 1`] = `"46:40"`;
+
+exports[`timeDurationToString 100000000 positive toHours & omitMs 1`] = `"04:46:40"`;
+
+exports[`timeDurationToString 100000000 positive toHours 1`] = `"04:46:40:000"`;
+
+exports[`timeDurationToString 1000000000 negative 1`] = `"-46:40:000"`;
+
+exports[`timeDurationToString 1000000000 negative omitMs 1`] = `"-46:40"`;
+
+exports[`timeDurationToString 1000000000 negative toHours & omitMs 1`] = `"-14:46:40"`;
+
+exports[`timeDurationToString 1000000000 negative toHours 1`] = `"-14:46:40:000"`;
+
+exports[`timeDurationToString 1000000000 positive 1`] = `"46:40:000"`;
+
+exports[`timeDurationToString 1000000000 positive omitMs 1`] = `"46:40"`;
+
+exports[`timeDurationToString 1000000000 positive toHours & omitMs 1`] = `"14:46:40"`;
+
+exports[`timeDurationToString 1000000000 positive toHours 1`] = `"14:46:40:000"`;
+
+exports[`timeDurationToString 10000000000 negative 1`] = `"-46:40:000"`;
+
+exports[`timeDurationToString 10000000000 negative omitMs 1`] = `"-46:40"`;
+
+exports[`timeDurationToString 10000000000 negative toHours & omitMs 1`] = `"-18:46:40"`;
+
+exports[`timeDurationToString 10000000000 negative toHours 1`] = `"-18:46:40:000"`;
+
+exports[`timeDurationToString 10000000000 positive 1`] = `"46:40:000"`;
+
+exports[`timeDurationToString 10000000000 positive omitMs 1`] = `"46:40"`;
+
+exports[`timeDurationToString 10000000000 positive toHours & omitMs 1`] = `"18:46:40"`;
+
+exports[`timeDurationToString 10000000000 positive toHours 1`] = `"18:46:40:000"`;

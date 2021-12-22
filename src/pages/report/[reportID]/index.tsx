@@ -9,6 +9,7 @@ import type {
 } from "../../../api/functions/report";
 import { reportHandlerError } from "../../../api/utils/errors";
 import { isValidReportId } from "../../../wcl/utils";
+import { Affixes } from "../../../web/components/Affixes";
 import { ExternalLink } from "../../../web/components/ExternalLink";
 import { LinkBox, LinkOverlay } from "../../../web/components/LinkBox";
 import { Seo } from "../../../web/components/Seo";
@@ -22,6 +23,8 @@ import {
   greenText,
   redText,
   yellowText,
+  bgSecondary,
+  hoverShadow,
 } from "../../../web/styles/tokens";
 import {
   classBorderColorMap,
@@ -241,60 +244,131 @@ export default function Report(): JSX.Element | null {
     }
   );
 
+  const startDate = new Date(report.startTime);
+  const endDate = new Date(report.endTime);
+
+  const minmaxKeyLevel = report.fights.reduce(
+    (acc, fight) => {
+      return {
+        ...acc,
+        min: fight.keystoneLevel < acc.min ? fight.keystoneLevel : acc.min,
+        max: fight.keystoneLevel > acc.max ? fight.keystoneLevel : acc.max,
+      };
+    },
+    { min: Infinity, max: 0 }
+  );
+
   return (
     <>
       <Seo title={report.title} />
 
       <div className={`${widthConstraint} py-6`}>
-        {timed.length > 0 ? (
-          <>
-            <h1 className="pb-4 text-3xl font-bold">Timed Keys</h1>
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 2xl:grid-cols-3 2xl:gap-8">
-              {generateCards({
-                fights: timed,
-                category: "timed",
-                reportID,
-              })}
-            </div>
-          </>
-        ) : null}
+        <div className={`${bgSecondary} p-4 rounded-lg`}>
+          <div className="sm:flex sm:justify-between">
+            <h1 className="pb-4 space-x-2 text-4xl font-bold sm:inline-block">
+              <span>Report</span>
+              <ExternalLink
+                href={createWCLUrl({ reportID })}
+                className="italic underline"
+              >
+                {report.title}
+              </ExternalLink>
+            </h1>
 
-        {untimed.length > 0 ? (
-          <>
-            <h1 className="pb-4 text-3xl font-bold">Keys Over Time</h1>
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 2xl:grid-cols-3 2xl:gap-8">
-              {generateCards({
-                fights: untimed,
-                category: "untimed",
-                reportID,
-              })}
-            </div>
-          </>
-        ) : null}
+            <Affixes ids={report.affixes} className="pb-4 sm:pb-0" />
+          </div>
 
-        {indeterminate.length > 0 ? (
-          <>
-            <h1 className="pb-4 text-3xl font-bold">Indeterminate Keys</h1>
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 2xl:grid-cols-3 2xl:gap-8">
-              {generateCards({
-                fights: indeterminate,
-                category: "indeterminate",
-                reportID,
+          <span className="space-x-1">
+            <time dateTime={startDate.toISOString()}>
+              {startDate.toLocaleDateString("en-US")}{" "}
+              {startDate.toLocaleTimeString("en-US")}
+            </time>
+            <span>-</span>
+            <time dateTime={endDate.toISOString()}>
+              {endDate.toLocaleDateString("en-US")}{" "}
+              {endDate.toLocaleTimeString("en-US")}
+            </time>
+            <span className="hidden md:inline">
+              (Session of{" "}
+              {timeDurationToString(report.endTime - report.startTime, {
+                omitMs: true,
+                toHours: true,
               })}
-            </div>
-          </>
-        ) : null}
+              )
+            </span>
+          </span>
+
+          <p>
+            {report.fights.length} Keys (+{minmaxKeyLevel.min} to +
+            {minmaxKeyLevel.max})
+          </p>
+        </div>
+
+        <div className={`${bgPrimary} p-4 rounded-lg mt-4`}>
+          {timed.length > 0 ? (
+            <>
+              <h1 className="py-4 text-3xl font-bold">
+                Timed Keys ({timed.length})
+              </h1>
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 2xl:grid-cols-3 2xl:gap-8">
+                {generateCards({
+                  fights: timed,
+                  category: "timed",
+                  reportID,
+                })}
+              </div>
+            </>
+          ) : null}
+
+          {untimed.length > 0 ? (
+            <>
+              <h1
+                className={classnames(
+                  "text-3xl font-bold",
+                  timed.length > 0 ? "py-4" : "pb-4"
+                )}
+              >
+                Keys Over Time ({untimed.length})
+              </h1>
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 2xl:grid-cols-3 2xl:gap-8">
+                {generateCards({
+                  fights: untimed,
+                  category: "untimed",
+                  reportID,
+                })}
+              </div>
+            </>
+          ) : null}
+
+          {indeterminate.length > 0 ? (
+            <>
+              <h1
+                className={classnames(
+                  "text-3xl font-bold",
+                  untimed.length > 0 || timed.length > 0 ? "py-4" : "pb-4"
+                )}
+              >
+                Indeterminate Keys ({indeterminate.length})
+              </h1>
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 2xl:grid-cols-3 2xl:gap-8">
+                {generateCards({
+                  fights: indeterminate,
+                  category: "indeterminate",
+                  reportID,
+                })}
+              </div>
+            </>
+          ) : null}
+        </div>
       </div>
     </>
   );
 }
 
-type PickFromUnion<T, K extends string> = T extends { [P in K]: unknown }
-  ? T[K]
-  : never;
+const commonCardClassNames = `${hoverShadow} rounded-lg hover:-translate-y-1 transition-transform`;
 
 type FightCardProps = {
-  fight: PickFromUnion<ReportResponse, "fights">[number];
+  fight: ReportSuccessResponse["fights"][number];
   reportID: string;
 };
 
@@ -308,16 +382,16 @@ function FightCard({ fight, reportID }: FightCardProps) {
       : true;
 
   return (
-    <div className={`p-2 rounded-lg shadow-sm ${bgPrimary}`}>
+    <div className={commonCardClassNames}>
       <LinkBox
         className={classnames(
-          "relative flex items-center justify-center h-64 text-2xl rounded-md bg-cover bg-white transition-colors duration-500",
+          "relative flex items-center justify-center h-64 text-2xl rounded-md bg-cover bg-maincolor",
           dungeon
             ? `bg-${dungeon.slug.toLowerCase()}`
-            : "bg-fallback hover:bg-blend-luminosity",
+            : "bg-fallback hover:bg-blend-multiply",
           isTimed
-            ? "hover:bg-blend-luminosity"
-            : "bg-blend-luminosity hover:bg-blend-normal"
+            ? "hover:bg-blend-multiply"
+            : "bg-blend-multiply hover:bg-blend-normal"
         )}
         as="section"
         aria-labelledby={`fight-${fight.id}`}
@@ -452,7 +526,7 @@ type BearCardProps = {
 
 function BearCard({ type }: BearCardProps) {
   return (
-    <div className={`p-2 rounded-lg shadow-sm ${bgPrimary}`}>
+    <div className={commonCardClassNames}>
       <div className="h-64 text-2xl bg-white bg-cover rounded-md bg-fallback bg-blend-luminosity">
         <div
           className={`bg-no-repeat bg-contain h-64 bg-cover rounded-md w-full h-full ${type}`}
@@ -468,6 +542,7 @@ const cardCache: Record<
     timed: Record<number, BearCardProps["type"]>;
     untimed: Record<number, BearCardProps["type"]>;
     indeterminate: Record<number, BearCardProps["type"]>;
+    hasSupportCard: boolean;
   }
 > = {};
 
@@ -477,104 +552,115 @@ type GenerateCardArgs = {
   reportID: string;
 };
 
+const mutateOrRetrieveCache = ({
+  category,
+  reportID,
+}: Omit<GenerateCardArgs, "fights">) => {
+  if (reportID in cardCache) {
+    return cardCache[reportID][category];
+  }
+
+  cardCache[reportID] = {
+    timed: {},
+    untimed: {},
+    indeterminate: {},
+    hasSupportCard: false,
+  };
+
+  return cardCache[reportID][category];
+};
+
+const maybeSpawnBuyMeACoffeeCard = ({
+  reportID,
+  index,
+}: Pick<GenerateCardArgs, "reportID"> & { index: number }) => {
+  if (index % 2 !== 1) {
+    return null;
+  }
+
+  const cache = cardCache[reportID];
+
+  if (!cache.hasSupportCard && Math.random() >= 0.5) {
+    cache.hasSupportCard = true;
+    return <BuyMeACoffeeCard key={`support-${reportID}`} />;
+  }
+
+  return null;
+};
+
 function generateCards({
   fights,
   category,
   reportID,
 }: GenerateCardArgs): (JSX.Element | null)[] {
-  let hasBuyMeACoffeeCard = false;
+  // retrieve cache of this report
+  const cache = mutateOrRetrieveCache({ category, reportID });
 
   return fights.reduce<(JSX.Element | null)[]>((acc, fight, index) => {
-    // retrieve cache of this report
-    const cache = reportID in cardCache ? cardCache[reportID][category] : null;
     // retrieve cache of this array index
-    const cachedType = cache && index in cache ? cache[index] : null;
-
-    // first loop, mutate cache
-    if (index === 0 && !cache) {
-      cardCache[reportID] = {
-        timed: {},
-        untimed: {},
-        indeterminate: {},
-      };
-    }
+    const cachedType = index in cache ? cache[index] : null;
 
     // add a 50% chance to spawn a BuyMeACoffeeCard on odd indices
-    const shouldSpawnBuyMeACoffeeCard =
-      !hasBuyMeACoffeeCard && index % 2 === 1 && Math.random() >= 0.5;
-    if (shouldSpawnBuyMeACoffeeCard) {
-      hasBuyMeACoffeeCard = true;
-    }
+    const supportJsx = maybeSpawnBuyMeACoffeeCard({ reportID, index });
+    const defaultJsx = (
+      <FightCard reportID={reportID} fight={fight} key={fight.id} />
+    );
 
-    const buyMeACoffeeJsx = shouldSpawnBuyMeACoffeeCard ? (
-      <BuyMeACoffeeCard />
-    ) : null;
-
-    // only consider even calculating spawning a card if nothing
-    // is already cached
     const maySpawn =
-      cache && Object.values(cache).some((cache) => cache.length > 0)
-        ? false
-        : index > 0 && index + 1 < fights.length && Math.random() >= 0.66;
+      index > 0 && index + 1 < fights.length && Math.random() >= 0.66;
 
-    const jsx = <FightCard reportID={reportID} fight={fight} key={fight.id} />;
-
-    // may not add now or absed on previous iteration
+    // may not add now or based on previous iteration
     if (!maySpawn && !cachedType) {
-      return [...acc, jsx, buyMeACoffeeJsx];
+      return [...acc, defaultJsx, supportJsx];
     }
 
     // use cache. straightforward
     if (cachedType) {
       return [
         ...acc,
-        jsx,
-        // eslint-disable-next-line react/no-array-index-key
-        <BearCard type={cachedType} key={`${cachedType}-${index}`} />,
-        buyMeACoffeeJsx,
+        defaultJsx,
+        <BearCard type={cachedType} key={`${cachedType}-${reportID}`} />,
+        supportJsx,
       ];
     }
 
     // retrieve all previously used options
-    const usedOptions = cache ? Object.values(cache) : [];
+    const usedOptions = Object.values(cache);
 
     // compare whether new options are possible
     const hasExhaustedAllOptions =
-      usedOptions.length === categories.timed.length;
+      usedOptions.length === categories[category].length;
 
     // may spawn, but nothing to spawn :(
     if (hasExhaustedAllOptions) {
-      return [...acc, jsx, buyMeACoffeeJsx];
+      return [...acc, defaultJsx, supportJsx];
     }
 
     // reroll until we hit something we haven't seen yet
-    let nextType = pickType("timed");
+    let nextType = pickType(category);
 
     while (usedOptions.includes(nextType)) {
-      nextType = pickType("timed");
+      nextType = pickType(category);
     }
 
     // cache it
-    cardCache[reportID].timed[index] = nextType;
+    cardCache[reportID][category][index] = nextType;
 
     // use it
     return [
       ...acc,
-      jsx,
-      // eslint-disable-next-line react/no-array-index-key
-      <BearCard type={nextType} key={`${nextType}-${index}`} />,
-      buyMeACoffeeJsx,
+      defaultJsx,
+      <BearCard type={nextType} key={`${nextType}-${reportID}`} />,
+      supportJsx,
     ];
   }, []);
 }
 
 function BuyMeACoffeeCard() {
   return (
-    <div className={`p-2 rounded-lg shadow-sm ${bgPrimary}`}>
+    <div className={commonCardClassNames}>
       <LinkBox
-        className={classnames(
-          "relative flex items-center justify-center h-64 text-2xl rounded-md"
-        )}
+        className="relative flex items-center justify-center h-64 text-2xl rounded-md"
         as="section"
         aria-labelledby="buy-me-a-coffee"
       >

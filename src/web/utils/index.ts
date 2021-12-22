@@ -1,29 +1,32 @@
+import { format } from "date-fns";
+
 import { isValidReportId } from "../../wcl/utils";
 
-export const timeDurationToString = (time: number, omitMs = false): string => {
-  const isNegative = time < 0;
+type TimeDurationOptions = {
+  omitMs?: boolean;
+  toHours?: boolean;
+};
 
-  const inSeconds = time / 1000;
-  const minutes = isNegative
-    ? Math.ceil(inSeconds / 60)
-    : Math.floor(inSeconds / 60);
-  const seconds = isNegative
-    ? Math.ceil(inSeconds - minutes * 60) * -1
-    : Math.floor(inSeconds - minutes * 60);
+export const timeDurationToString = (
+  time: number,
+  options?: TimeDurationOptions
+): string => {
+  const { omitMs = false, toHours = false } = options ?? {};
 
-  const prefix = inSeconds < 0 ? "-" : "";
+  const pattern =
+    omitMs && toHours
+      ? "HH:mm:ss"
+      : omitMs
+      ? "mm:ss"
+      : toHours
+      ? "HH:mm:ss:SSS"
+      : "mm:ss:SSS";
 
-  if (omitMs) {
-    return `${prefix}${minutes}:${seconds.toString().padStart(2, "0")}`;
+  if (time < 0) {
+    return `-${format(time * -1, pattern)}`;
   }
 
-  const ms =
-    (time - minutes * 60 * 1000 - seconds * 1000) * (isNegative ? -1 : 1);
-
-  return `${prefix}${minutes}:${seconds.toString().padStart(2, "0")}.${ms
-    .toString()
-    .slice(0, 3)
-    .padStart(3, "0")}`;
+  return format(time, pattern);
 };
 
 type WCLUrlParams = {

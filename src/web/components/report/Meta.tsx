@@ -5,7 +5,6 @@ import { useFight } from "../../../pages/report/[reportID]/[fightID]";
 import { useToggle } from "../../hooks/useToggle";
 import { asc, desc, reset, sort, star } from "../../icons";
 import {
-  affixes as allAffixes,
   classes,
   covenants,
   soulbinds,
@@ -16,6 +15,7 @@ import {
   bgPrimary,
   bgSecondary,
   greenText,
+  hoverShadow,
   redText,
   yellowText,
 } from "../../styles/tokens";
@@ -27,6 +27,7 @@ import {
 } from "../../utils";
 import { classnames } from "../../utils/classnames";
 import { AbilityIcon, STATIC_ICON_PREFIX } from "../AbilityIcon";
+import { Affixes } from "../Affixes";
 import { ExternalLink } from "../ExternalLink";
 import { SpecIcon } from "../SpecIcon";
 
@@ -37,14 +38,14 @@ export function Meta(): JSX.Element {
 
   return (
     <section
-      className="flex flex-col flex-1 h-auto"
+      className={`flex flex-col flex-1 h-auto ${hoverShadow}`}
       aria-labelledby="meta-title"
     >
-      <div className={`rounded-t-lg shadow-sm ${bgSecondary}`}>
+      <div className={`rounded-t-lg ${bgSecondary}`}>
         <div className="justify-between p-4 md:flex lg:block ">
           <Heading chests={fight.meta.chests} level={fight.meta.level} />
 
-          <Affixes affixes={fight.affixes} />
+          <Affixes ids={fight.affixes} className="pt-4 md:pt-0 lg:pt-4" />
         </div>
 
         {/* <-------> */}
@@ -83,7 +84,7 @@ export function Meta(): JSX.Element {
 
       {/* <-------> */}
 
-      <div className={`h-full p-4 rounded-b-lg shadow-sm ${bgPrimary}`}>
+      <div className={`h-full p-4 rounded-b-lg ${bgPrimary}`}>
         <PlayerTable
           player={fight.player}
           dps={fight.meta.dps}
@@ -182,10 +183,9 @@ function TimeInformation({
             fightID,
             type: "deaths",
           })}
-          title={`lost ${timeDurationToString(
-            meta.totalDeaths * 5 * 1000,
-            true
-          )} due to deaths`}
+          title={`lost ${timeDurationToString(meta.totalDeaths * 5 * 1000, {
+            omitMs: true,
+          })} due to deaths`}
         >
           <span>{meta.totalDeaths}</span>
           <img
@@ -684,36 +684,6 @@ function SortIndicator({ sortBy, sortOrder, type }: SortIndicatorProps) {
         }`}
       />
     </svg>
-  );
-}
-
-type AffixesProps = {
-  affixes: FightSuccessResponse["affixes"];
-};
-
-function Affixes({ affixes }: AffixesProps) {
-  return (
-    <div className="flex pt-4 space-x-1 space-x-2 md:pt-0 lg:pt-4">
-      {affixes.map((affix) => (
-        <ExternalLink
-          href={createWowheadUrl({
-            category: "affix",
-            id: affix,
-          })}
-          key={affix}
-          className="w-10 h-10"
-        >
-          <AbilityIcon
-            icon={allAffixes[affix].icon}
-            alt={allAffixes[affix].name}
-            title={allAffixes[affix].name}
-            className="object-cover w-full h-full rounded-full"
-            width={40}
-            height={40}
-          />
-        </ExternalLink>
-      ))}
-    </div>
   );
 }
 

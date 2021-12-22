@@ -51,7 +51,7 @@ export default function SanguineTimeLossRow({
         <span> Healing: </span>
         <b>{formatNumber(healing)}</b>
         <span> - Estimated Time Loss: </span>
-        <b>{timeDurationToString(estTimeLoss * 1000, true)}</b>
+        <b>{timeDurationToString(estTimeLoss * 1000, { omitMs: true })}</b>
       </td>
     </tr>
   );

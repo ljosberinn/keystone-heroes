@@ -64,10 +64,9 @@ export function MaybeWastedCooldownCell({
           <span className="hidden md:inline">in </span>
           <span className="md:hidden">+</span>
           <span>
-            {timeDurationToString(
-              event.ability.nextUse - event.timestamp,
-              true
-            )}{" "}
+            {timeDurationToString(event.ability.nextUse - event.timestamp, {
+              omitMs: true,
+            })}{" "}
           </span>
           <span className="hidden xl:inline">(missing {couldUseNTimes}x)</span>
         </td>
@@ -117,7 +116,9 @@ export function MaybeWastedCooldownCell({
         <span className="hidden md:inline">in </span>
         <span className="md:hidden">+</span>
         <span>
-          {timeDurationToString(event.ability.nextUse - event.timestamp, true)}{" "}
+          {timeDurationToString(event.ability.nextUse - event.timestamp, {
+            omitMs: true,
+          })}{" "}
         </span>
         {wastedCastUpcoming && (
           <span className="hidden xl:inline">

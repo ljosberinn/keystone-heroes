@@ -120,10 +120,9 @@ export default function CastRow({
             <>
               <span className="md:hidden">-</span>
               <span>
-                {timeDurationToString(
-                  event.timestamp - event.ability.lastUse,
-                  true
-                )}{" "}
+                {timeDurationToString(event.timestamp - event.ability.lastUse, {
+                  omitMs: true,
+                })}
               </span>
 
               <span className="hidden md:inline"> ago</span>

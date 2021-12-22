@@ -1,4 +1,4 @@
-import { parseWCLUrl } from "../utils";
+import { parseWCLUrl, timeDurationToString } from "../utils";
 
 describe("parseWCLUrl", () => {
   test("fails given no url", () => {
@@ -96,5 +96,70 @@ describe("parseWCLUrl", () => {
         "reportID": "aZ9y3jMctCqRvhKA",
       }
     `);
+  });
+});
+
+describe("timeDurationToString", () => {
+  const numbers = [
+    1, 10, 100, 1000, 10_000, 100_000, 1_000_000, 10_000_000, 100_000_000,
+    1_000_000_000, 10_000_000_000,
+  ];
+
+  test.each(numbers)("%d positive", (number) => {
+    expect(timeDurationToString(number)).toMatchSnapshot();
+  });
+
+  test.each(numbers)("%d positive omitMs", (number) => {
+    expect(
+      timeDurationToString(number, {
+        omitMs: true,
+      })
+    ).toMatchSnapshot();
+  });
+
+  test.each(numbers)("%d positive toHours", (number) => {
+    expect(
+      timeDurationToString(number, {
+        toHours: true,
+      })
+    ).toMatchSnapshot();
+  });
+
+  test.each(numbers)("%d positive toHours & omitMs", (number) => {
+    expect(
+      timeDurationToString(number, {
+        toHours: true,
+        omitMs: true,
+      })
+    ).toMatchSnapshot();
+  });
+
+  test.each(numbers)("%d negative", (number) => {
+    expect(timeDurationToString(number * -1)).toMatchSnapshot();
+  });
+
+  test.each(numbers)("%d negative omitMs", (number) => {
+    expect(
+      timeDurationToString(number * -1, {
+        omitMs: true,
+      })
+    ).toMatchSnapshot();
+  });
+
+  test.each(numbers)("%d negative toHours", (number) => {
+    expect(
+      timeDurationToString(number * -1, {
+        toHours: true,
+      })
+    ).toMatchSnapshot();
+  });
+
+  test.each(numbers)("%d negative toHours & omitMs", (number) => {
+    expect(
+      timeDurationToString(number * -1, {
+        toHours: true,
+        omitMs: true,
+      })
+    ).toMatchSnapshot();
   });
 });

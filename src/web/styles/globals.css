@@ -80,3 +80,7 @@ a [title] {
 .bg-concern {
   background-image: url(/static/bear/concern-256.png);
 }
+
+.bg-maincolor {
+  background-color: rgba(17, 24, 39, 0.5);
+}

@@ -31,7 +31,7 @@ import {
   useReportStore,
   useRestoreMapOptions,
 } from "../../store";
-import { bgPrimary, bgSecondary } from "../../styles/tokens";
+import { bgPrimary, bgSecondary, hoverShadow } from "../../styles/tokens";
 import { timeDurationToString } from "../../utils";
 import { classnames } from "../../utils/classnames";
 import {
@@ -264,11 +264,11 @@ export function Map(): JSX.Element {
 
   return (
     <section
-      className="flex flex-col w-full h-auto max-w-screen-xl pt-4 lg:pt-0 lg:w-4/6"
+      className={`flex flex-col w-full h-auto max-w-screen-xl pt-4 lg:pt-0 lg:w-4/6 ${hoverShadow}`}
       aria-labelledby="section-route"
     >
       <Triangle />
-      <div className={`rounded-t-lg shadow-sm ${bgSecondary}`}>
+      <div className={`rounded-t-lg ${bgSecondary}`}>
         <h2 id="section-route" className="px-4 pt-4 text-2xl font-bold">
           Route
         </h2>
@@ -321,7 +321,7 @@ export function Map(): JSX.Element {
           </select>
         </div>
       </div>
-      <div className={`p-2 rounded-b-lg shadow-sm ${bgPrimary}`}>
+      <div className={`p-2 rounded-b-lg ${bgPrimary}`}>
         {zones.map((zone, index) => {
           const hidden = index !== selectedTab;
 
@@ -627,17 +627,16 @@ function KillIndicator({ type, fullscreen }: KillIndicatorProps) {
 
           const fightStart = timeDurationToString(
             pull.startTime - meta.startTime,
-            true
+            { omitMs: true }
           ).padStart(5, "0");
 
-          const fightEnd = timeDurationToString(
-            pull.endTime - meta.startTime,
-            true
-          ).padStart(5, "0");
+          const fightEnd = timeDurationToString(pull.endTime - meta.startTime, {
+            omitMs: true,
+          }).padStart(5, "0");
 
           const fightDuration = timeDurationToString(
             pull.endTime - pull.startTime,
-            true
+            { omitMs: true }
           ).padStart(5, "0");
 
           const percentUpToThisPull = pulls.reduce((acc, p) => {

@@ -155,7 +155,7 @@ function Form() {
             type="text"
             name="report"
             placeholder="Warcraft Logs Report URL"
-            className="block w-full py-3 pl-10 text-black bg-transparent border-2 rounded-lg shadow-sm outline-none placeholder-stone-500 border-stone-500 dark:placeholder-stone-400 sm:border-r-0 dark:border-gray-700 sm:rounded-r-none dark:text-white focus:outline-none focus:ring-0 dark:focus:border-blue-500 focus:border-blue-500"
+            className="block w-full py-3 pl-10 text-black bg-transparent border-2 rounded-lg outline-none placeholder-stone-500 border-stone-500 dark:placeholder-stone-400 sm:border-r-0 dark:border-gray-700 sm:rounded-r-none dark:text-white focus:outline-none focus:ring-0 dark:focus:border-blue-500 focus:border-blue-500"
             required
             aria-labelledby="report-label"
             onChange={(event: ChangeEvent<HTMLInputElement>) => {

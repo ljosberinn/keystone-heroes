@@ -237,7 +237,7 @@ function FightIDHead({ fight }: FightIDHeadProps) {
     <Seo
       title={`+${fight.meta.level} ${dungeon.name} (${timeDurationToString(
         fight.meta.time,
-        true
+        { omitMs: true }
       )})`}
       description={extendedTitle}
       image={`/static/dungeons/${dungeon.slug.toLowerCase()}.jpg`}
