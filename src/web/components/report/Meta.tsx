@@ -258,6 +258,9 @@ function PlayerRow({ player, fightID, reportID }: PlayerRowProps) {
 
   const classColor = classBorderColorMap[name.toLowerCase()];
 
+  const hasNoFurtherData =
+    player.talents.length === 0 && player.conduits.length === 0;
+
   return (
     <Fragment key={player.actorID}>
       <tr>
@@ -285,6 +288,7 @@ function PlayerRow({ player, fightID, reportID }: PlayerRowProps) {
               <button
                 type="button"
                 onClick={toggle}
+                disabled={hasNoFurtherData}
                 className={classnames(
                   classColor,
                   player.covenant ? "-ml-3" : "pl-2",
@@ -292,14 +296,16 @@ function PlayerRow({ player, fightID, reportID }: PlayerRowProps) {
                 )}
               >
                 <span>{player.name}</span>
-                <sup
-                  className="hidden lg:inline"
-                  title="click to toggle more info"
-                >
-                  <svg className="inline w-4 h-4 ml-1 text-black dark:text-white">
-                    <use href="#outline-question-circle" />
-                  </svg>
-                </sup>
+                {!hasNoFurtherData && (
+                  <sup
+                    className="hidden lg:inline"
+                    title="click to toggle more info"
+                  >
+                    <svg className="inline w-4 h-4 ml-1 text-black dark:text-white">
+                      <use href="#outline-question-circle" />
+                    </svg>
+                  </sup>
+                )}
               </button>
             </span>
           </span>
@@ -370,7 +376,7 @@ function PlayerRow({ player, fightID, reportID }: PlayerRowProps) {
 
             {player.soulbind ? (
               <>
-                <span>|</span>
+                {player.legendaries.length > 0 ? <span>|</span> : null}
                 <div className="w-6 h-6">
                   <img
                     // TODO: store assets locally
@@ -388,7 +394,7 @@ function PlayerRow({ player, fightID, reportID }: PlayerRowProps) {
 
             {player.tormented.length > 0 ? (
               <>
-                <span>|</span>
+                {player.soulbind ? <span>|</span> : null}
                 {player.tormented.map((id, index) => {
                   const power = tormentedPowers[id];
 

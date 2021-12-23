@@ -10,6 +10,7 @@ import type {
 import { createIsSpecificEvent } from "../utils";
 
 export const NW = {
+  ORB_CAST: 328_404,
   ORB: 328_406,
   HAMMER: 328_128,
   SPEAR: 328_351,
@@ -64,6 +65,7 @@ export const filterExpression = [
     NW.HAMMER,
     NW.SPEAR,
     NW.SHIELD,
+    NW.ORB_CAST,
   ].join(", ")})`,
   `type = "damage" and source.type = "npc" and ability.id = ${NW.THROW_CLEAVER}`,
 ];
@@ -105,7 +107,7 @@ const isNwOrbDamageEvent = createIsSpecificEvent<DamageEvent>({
 
 const isNwOrbCastEvent = createIsSpecificEvent<CastEvent>({
   type: "cast",
-  abilityGameID: NW.ORB,
+  abilityGameID: NW.ORB_CAST,
 });
 
 const isNwKyrianOrbDamageEvent = createIsSpecificEvent<DamageEvent>({

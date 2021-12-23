@@ -30662,7 +30662,7 @@ exports[`getEvents works 46`] = `"(type = \\"damage\\" and source.type = \\"play
 
 exports[`getEvents works 47`] = `"((type = \\"begincast\\""`;
 
-exports[`getEvents works 48`] = `"type = \\"cast\\") and source.type = \\"player\\" and ability.id in (328128, 328351, 328050))"`;
+exports[`getEvents works 48`] = `"type = \\"cast\\") and source.type = \\"player\\" and ability.id in (328128, 328351, 328050, 328404))"`;
 
 exports[`getEvents works 49`] = `"(type = \\"damage\\" and source.type = \\"npc\\" and ability.id = 323489)"`;
 

@@ -54,6 +54,11 @@ import {
   isExplosivesDamageEvent,
   isMissingInterruptEventWithAbility,
   isThrowCleaverDamageEvent,
+  isAnimaExhaustDamageEvent,
+  isAnimaExhaustHealEvent,
+  isBloodyJavelinDamageEvent,
+  isDischargedAnimaDamageEvent,
+  isForgottenForgehammerDamageEvent,
 } from "./utils";
 
 type MostRelevantNPCReturn = {
@@ -382,6 +387,21 @@ function usePullSummaryRows(
     throwCleaverDamageEvents: isNecroticWake
       ? selectedPull.events.filter(isThrowCleaverDamageEvent)
       : [],
+    animaaExhaustDamageEvents: isNecroticWake
+      ? selectedPull.events.filter(isAnimaExhaustDamageEvent)
+      : [],
+    animaExhaustHealEvents: isNecroticWake
+      ? selectedPull.events.filter(isAnimaExhaustHealEvent)
+      : [],
+    bloodyJavelinDamageEvents: isNecroticWake
+      ? selectedPull.events.filter(isBloodyJavelinDamageEvent)
+      : [],
+    dischargedAnimaDamageEvents: isNecroticWake
+      ? selectedPull.events.filter(isDischargedAnimaDamageEvent)
+      : [],
+    forgottenForgehammerEvents: isNecroticWake
+      ? selectedPull.events.filter(isForgottenForgehammerDamageEvent)
+      : [],
   };
 }
 
@@ -479,6 +499,11 @@ function Events() {
     sanguineHealEvents,
     throwCleaverDamageEvents,
     violentDetonationDamageEvents,
+    animaaExhaustDamageEvents,
+    animaExhaustHealEvents,
+    bloodyJavelinDamageEvents,
+    dischargedAnimaDamageEvents,
+    forgottenForgehammerEvents,
   } = usePullSummaryRows(selectedPull);
 
   return (
@@ -691,6 +716,26 @@ function Events() {
               {throwCleaverDamageEvents.length > 0 ? (
                 <ThrowCleaverDamageRow events={throwCleaverDamageEvents} />
               ) : null}
+              {animaaExhaustDamageEvents.length > 0 ? (
+                <AnimaExhaustDamageRow events={animaaExhaustDamageEvents} />
+              ) : null}
+
+              {animaExhaustHealEvents.length > 0 ? (
+                <AnimaExhaustHealingRow events={animaExhaustHealEvents} />
+              ) : null}
+
+              {bloodyJavelinDamageEvents.length > 0 ? (
+                <BloodyJavelinDamageRow events={bloodyJavelinDamageEvents} />
+              ) : null}
+
+              {dischargedAnimaDamageEvents.length > 0 ? (
+                <DischargedAnimaDamageRow
+                  events={dischargedAnimaDamageEvents}
+                />
+              ) : null}
+              {forgottenForgehammerEvents.length > 0 ? (
+                <ForgottenForgehammerRow events={forgottenForgehammerEvents} />
+              ) : null}
               {explosivesEvents.length > 0 ? (
                 <ExplosivesSummaryRow
                   events={explosivesEvents}
@@ -858,6 +903,46 @@ const ThrowCleaverDamageRow = dynamic(
   () =>
     import(
       /* webpackChunkName: "ThrowCleaverDamageRow" */ "./rows/ThrowCleaverDamageRow"
+    ),
+  { suspense: true }
+);
+
+const AnimaExhaustDamageRow = dynamic(
+  () =>
+    import(
+      /* webpackChunkName: "AnimaExhaustDamageRow" */ "./rows/AnimaExhaustDamageRow"
+    ),
+  { suspense: true }
+);
+
+const AnimaExhaustHealingRow = dynamic(
+  () =>
+    import(
+      /* webpackChunkName: "AnimaExhaustHealingRow" */ "./rows/AnimaExhaustHealingRow"
+    ),
+  { suspense: true }
+);
+
+const BloodyJavelinDamageRow = dynamic(
+  () =>
+    import(
+      /* webpackChunkName: "BloodyJavelinDamageRow" */ "./rows/BloodyJavelinDamageRow"
+    ),
+  { suspense: true }
+);
+
+const DischargedAnimaDamageRow = dynamic(
+  () =>
+    import(
+      /* webpackChunkName: "DischargedAnimaDamageRow" */ "./rows/DischargedAnimaDamageRow"
+    ),
+  { suspense: true }
+);
+
+const ForgottenForgehammerRow = dynamic(
+  () =>
+    import(
+      /* webpackChunkName: "ForgottenForgehammerRow" */ "./rows/ForgottenForgehammerRow"
     ),
   { suspense: true }
 );

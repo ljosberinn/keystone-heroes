@@ -298,10 +298,12 @@ export default function Report(): JSX.Element | null {
             </span>
           </span>
 
-          <p>
-            {report.fights.length} Keys (+{minmaxKeyLevel.min} to +
-            {minmaxKeyLevel.max})
-          </p>
+          {report.fights.length > 1 && (
+            <p>
+              {report.fights.length} Keys (+{minmaxKeyLevel.min} to +
+              {minmaxKeyLevel.max})
+            </p>
+          )}
         </div>
 
         <div className={`${bgPrimary} p-4 rounded-lg mt-4`}>

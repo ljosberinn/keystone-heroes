@@ -47,15 +47,19 @@ export const createWCLUrl = ({
   fightID: fight,
   ...rest
 }: WCLUrlParams): string => {
+  const base = `https://www.warcraftlogs.com/reports/${report}`;
+
+  if (!fight) {
+    return base;
+  }
+
   // @ts-expect-error fixing later
   const params = new URLSearchParams({
     ...rest,
     translate: "true",
   }).toString();
 
-  const url = `https://www.warcraftlogs.com/reports/${report}${
-    fight ? `#fight=${fight}` : ""
-  }`;
+  const url = `${base}${fight ? `#fight=${fight}` : ""}`;
 
   return `${url}&${params}`;
 };

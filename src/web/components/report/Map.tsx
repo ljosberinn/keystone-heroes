@@ -16,11 +16,17 @@ import type { FightSuccessResponse } from "../../../api/functions/fight";
 import { useFight } from "../../../pages/report/[reportID]/[fightID]";
 import { usePrevious } from "../../hooks/usePrevious";
 import {
+  DOS_URN,
   dungeons,
   EXPLOSIVE,
+  HOA_GARGOYLE,
   isBoss,
   isTormentedLieutenant,
+  NW,
+  SD_LANTERN_BUFF,
+  SOA_SPEAR,
   spells,
+  TOP_BANNER_AURA,
   tormentedLieutenants,
 } from "../../staticData";
 import type { MapOptionsStore } from "../../store";
@@ -927,30 +933,28 @@ function Svg({ imageSize, zoneID, onDoorClick, fullscreen }: SvgProps) {
           />
           <PointsOfInterestWrapper zoneID={zoneID} />
         </PointsOfInterestProvider>
-        {thisZonesPulls
-          .filter((pull) => !pull.isWipe)
-          .map((pull, index) => {
-            const x = pull.x * imageSize.clientWidth;
-            const y = pull.y * imageSize.clientHeight;
-            const nextPull =
-              thisZonesPulls[index + 1]?.id === pull.id + 1
-                ? thisZonesPulls[index + 1]
-                : null;
+        {thisZonesPulls.map((pull, index) => {
+          const x = pull.x * imageSize.clientWidth;
+          const y = pull.y * imageSize.clientHeight;
+          const nextPull =
+            thisZonesPulls[index + 1]?.id === pull.id + 1
+              ? thisZonesPulls[index + 1]
+              : null;
 
-            return (
-              <Fragment key={pull.startTime}>
-                <PullIndicatorIcon pull={pull} x={x} y={y} />
+          return (
+            <Fragment key={pull.startTime}>
+              <PullIndicatorIcon pull={pull} x={x} y={y} />
 
-                <PullConnectionPolyline
-                  x={x}
-                  y={y}
-                  pull={pull}
-                  nextPull={nextPull}
-                  imageSize={imageSize}
-                />
-              </Fragment>
-            );
-          })}
+              <PullConnectionPolyline
+                x={x}
+                y={y}
+                pull={pull}
+                nextPull={nextPull}
+                imageSize={imageSize}
+              />
+            </Fragment>
+          );
+        })}
       </svg>
     </>
   );
@@ -1018,6 +1022,150 @@ type PullIndicatorIconProps = {
 const selectedOutlineClasses =
   "opacity-100 outline-white outline-2 outline-dotted outline-offset-2";
 
+function useDungeonSpecificPullIndicatorEvent(
+  pull: PullIndicatorIconProps["pull"]
+): {
+  label: string;
+  icon: string;
+} | null {
+  const { dungeon } = useFight().fight;
+  const slug = dungeons[dungeon].slug.toLowerCase();
+
+  switch (slug) {
+    case "sd": {
+      const lanternOpening = pull.events.some(
+        (event) =>
+          event.type === "ApplyBuff" && event.ability?.id === SD_LANTERN_BUFF
+      );
+
+      if (lanternOpening) {
+        return {
+          label: `A lantern was used during this pull.`,
+          icon: spells[SD_LANTERN_BUFF].icon,
+        };
+      }
+
+      return null;
+    }
+    case "hoa": {
+      const gargoyle = pull.events.some(
+        (event) => event.type === "Cast" && event.ability?.id === HOA_GARGOYLE
+      );
+
+      if (gargoyle) {
+        return {
+          label: `${spells[HOA_GARGOYLE].name} was charmed during this pull.`,
+          icon: spells[HOA_GARGOYLE].icon,
+        };
+      }
+
+      return null;
+    }
+    case "top": {
+      const banner = pull.events.some(
+        (event) =>
+          event.type === "ApplyBuff" && event.ability?.id === TOP_BANNER_AURA
+      );
+
+      if (banner) {
+        return {
+          label: `${spells[TOP_BANNER_AURA].name} was activated.`,
+          icon: spells[TOP_BANNER_AURA].icon,
+        };
+      }
+
+      return null;
+    }
+    case "nw":
+      {
+        const spear = pull.events.some(
+          (event) => event.type === "Cast" && event.ability?.id === NW.SPEAR
+        );
+
+        if (spear) {
+          return {
+            label: `${spells[NW.SPEAR].name} was used on this pull.`,
+            icon: spells[NW.SPEAR].icon,
+          };
+        }
+
+        const hammer = pull.events.some(
+          (event) => event.type === "Cast" && event.ability?.id === NW.HAMMER
+        );
+
+        if (hammer) {
+          return {
+            label: `${spells[NW.HAMMER].name} was used on this pull.`,
+            icon: spells[NW.HAMMER].icon,
+          };
+        }
+
+        const orb = pull.events.some(
+          (event) => event.type === "DamageDone" && event.ability?.id === NW.ORB
+        );
+
+        if (orb) {
+          return {
+            label: `${spells[NW.ORB].name} was used on this pull.`,
+            icon: spells[NW.ORB].icon,
+          };
+        }
+
+        const kyrianOrb = pull.events.some(
+          (event) =>
+            event.type === "DamageDone" &&
+            event.ability?.id === NW.KYRIAN_ORB_DAMAGE
+        );
+
+        if (kyrianOrb) {
+          return {
+            label: `${spells[NW.KYRIAN_ORB_BUFF].name} was used on this pull.`,
+            icon: spells[NW.KYRIAN_ORB_BUFF].icon,
+          };
+        }
+
+        // shield? :shrug:
+      }
+      break;
+    case "dos":
+      {
+        const usedUrn = pull.events.some(
+          (event) =>
+            event.type === "ApplyDebuff" && event.ability?.id === DOS_URN
+        );
+
+        if (usedUrn) {
+          return {
+            label: `${spells[DOS_URN].name} was used on this pull.`,
+            icon: spells[DOS_URN].icon,
+          };
+        }
+      }
+
+      break;
+    case "soa": {
+      const hasSpear = pull.events.some(
+        (event) =>
+          event.type === "ApplyDebuff" && event.ability?.id === SOA_SPEAR
+      );
+
+      if (hasSpear) {
+        return {
+          label: `${spells[SOA_SPEAR].name} was used on this pull.`,
+          icon: spells[SOA_SPEAR].icon,
+        };
+      }
+
+      return null;
+    }
+    default: {
+      return null;
+    }
+  }
+
+  return null;
+}
+
 function PullIndicatorIcon({ pull, x, y }: PullIndicatorIconProps) {
   const { selectedPull, setSelectedPull } = useReportStore(reportStoreSelector);
 
@@ -1045,6 +1193,48 @@ function PullIndicatorIcon({ pull, x, y }: PullIndicatorIconProps) {
     x: centerX,
     y: centerY,
   };
+
+  const dungeonSpecificIcon = useDungeonSpecificPullIndicatorEvent(pull);
+
+  if (dungeonSpecificIcon) {
+    return (
+      <g {...gProps}>
+        <image
+          aria-label={dungeonSpecificIcon.label}
+          href={`${STATIC_ICON_PREFIX}${dungeonSpecificIcon.icon}.jpg`}
+          {...sharedProps}
+        />
+        <text
+          textAnchor="middle"
+          x={x}
+          y={y + 21.02 / 4}
+          className="text-white fill-current"
+        >
+          {pull.id}
+        </text>
+      </g>
+    );
+  }
+
+  if (pull.isWipe) {
+    return (
+      <g {...gProps}>
+        <image
+          aria-label="This pull was a wipe."
+          href="/static/skull.png"
+          {...sharedProps}
+        />
+        <text
+          textAnchor="middle"
+          x={x}
+          y={y + 21.02 / 4}
+          className="fill-red-600"
+        >
+          {pull.id}
+        </text>
+      </g>
+    );
+  }
 
   const bloodlust = findBloodlust(pull);
 

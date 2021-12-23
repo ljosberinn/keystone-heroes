@@ -7,13 +7,18 @@ import {
   NW,
 } from "../../staticData";
 import type { AbilityReadyRowProps } from "./rows/AbilityReadyRow";
+import type { AnimaExhaustDamageRowProps } from "./rows/AnimaExhaustDamageRow";
+import type { AnimaExhaustHealingRowProps } from "./rows/AnimaExhaustHealingRow";
 import type { ApplyBuffRowProps } from "./rows/ApplyBuffRow";
 import type { ApplyDebuffRowProps } from "./rows/ApplyDebuffRow";
+import type { BloodyJavelinDamageRowProps } from "./rows/BloodyJavelinDamageRow";
 import type { CastRowProps } from "./rows/CastRow";
 import type { DamageDoneRowProps } from "./rows/DamageDoneRow";
 import type { DamageTakenRowProps } from "./rows/DamageTakenRow";
 import type { DeathRowProps } from "./rows/DeathRow";
+import type { DischargedAnimaDamageRowProps } from "./rows/DischargedAnimaDamageRow";
 import type { ExplosiveSummaryRowProps } from "./rows/ExplosivesSummaryRow";
+import type { ForgottenForgehammerRowProps } from "./rows/ForgottenForgehammerRow";
 import type { HealingDoneRowProps } from "./rows/HealingDoneRow";
 import type { InterruptRowProps } from "./rows/InterruptRow";
 import type { MissedInterruptRowProps } from "./rows/MissedInterruptRow";
@@ -213,10 +218,35 @@ export const isThrowCleaverDamageEvent = (
   (event.type === "DamageDone" || event.type === "DamageTaken") &&
   event.ability?.id === NW.THROW_CLEAVER;
 
+export const isAnimaExhaustDamageEvent = (
+  event: DefaultEvent
+): event is AnimaExhaustDamageRowProps["events"][number] =>
+  event.type === "DamageDone" && event.ability?.id === NW.KYRIAN_ORB_DAMAGE;
+
+export const isAnimaExhaustHealEvent = (
+  event: DefaultEvent
+): event is AnimaExhaustHealingRowProps["events"][number] =>
+  event.type === "HealingDone" && event.ability?.id === NW.KYRIAN_ORB_DAMAGE;
+
+export const isBloodyJavelinDamageEvent = (
+  event: DefaultEvent
+): event is BloodyJavelinDamageRowProps["events"][number] =>
+  event.type === "DamageDone" && event.ability?.id === NW.SPEAR;
+
+export const isDischargedAnimaDamageEvent = (
+  event: DefaultEvent
+): event is DischargedAnimaDamageRowProps["events"][number] =>
+  event.type === "DamageDone" && event.ability?.id === NW.ORB;
+
 export const isMissingInterruptEventWithAbility = (
   event: DefaultEvent
 ): event is MissedInterruptRowProps["event"] =>
   event.type === "MissedInterrupt" && event.ability !== null;
+
+export const isForgottenForgehammerDamageEvent = (
+  event: DefaultEvent
+): event is ForgottenForgehammerRowProps["events"][number] =>
+  event.type === "DamageDone" && event.ability?.id === NW.HAMMER;
 
 export const formatNumber = (value: number): string => {
   if (value > 1_000_000) {

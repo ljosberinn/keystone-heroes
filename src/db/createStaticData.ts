@@ -438,6 +438,11 @@ async function create() {
       icon: "spell_animabastion_orb",
       cd: DUMMY_CD,
     },
+    [NW.ORB_CAST]: {
+      name: "Discharged Anima",
+      icon: "spell_animabastion_orb",
+      cd: DUMMY_CD,
+    },
     [NW.KYRIAN_ORB_DAMAGE]: {
       name: "Anima Exhaust",
       icon: "spell_animabastion_orb",
