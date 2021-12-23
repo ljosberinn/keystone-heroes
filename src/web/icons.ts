@@ -10,6 +10,7 @@ import {
   FaSortDown,
   FaSort,
   FaUndo,
+  FaPatreon,
 } from "react-icons/fa";
 import { SiBuymeacoffee } from "react-icons/si";
 
@@ -68,4 +69,8 @@ export const sort = {
 export const reset = {
   id: "reset",
   component: FaUndo,
+};
+export const patreon = {
+  id: "patreon",
+  component: FaPatreon,
 };

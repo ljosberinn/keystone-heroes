@@ -27,7 +27,7 @@ import type { SanguineTimeLossRowProps } from "./rows/SanguineTimeLossRow";
 import type { ThrowCleaverDamageRowProps } from "./rows/ThrowCleaverDamageRow";
 import type { ViolentDetonationDamageRowProps } from "./rows/ViolentDetonationDamageRow";
 
-const bloodlustTypes = new Set([
+export const bloodlustTypes = new Set([
   // Heroism
   32_182,
   // Drums of Deathly Ferocity
@@ -37,12 +37,13 @@ const bloodlustTypes = new Set([
   // Bloodlust
   2825,
 ]);
-const invisibilityTypes = new Set([
+export const invisibilityTypes = new Set([
   // Invisible; Potion of the Hidden Spirit
   307_195,
   // Dimensional Shifter
   321_422,
 ]);
+export const SHROUD_OF_CONCEALMENT = 114_018;
 
 export const findBloodlust = <
   T extends { events: FightSuccessResponse["pulls"][number]["events"] }
@@ -77,7 +78,7 @@ export const detectInvisibilityUsage = (
   const shroudEvent = pull.events.find(
     (event) =>
       event.type === "Cast" &&
-      event.ability?.id === 114_018 &&
+      event.ability?.id === SHROUD_OF_CONCEALMENT &&
       event.category === "AFTER"
   );
 

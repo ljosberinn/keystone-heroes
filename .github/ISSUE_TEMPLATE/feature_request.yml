@@ -16,7 +16,7 @@ body:
         you ask a question, here are some resources to get help first:
 
         - Ask in GitHub Discussions: https://github.com/ljosberinn/keystone-heroes/discussions
-        - Ask in chat: TODO
+        - Ask in chat: https://discord.gg/ubUjUTMdhE
   - type: textarea
     attributes:
       label: What is the new or updated feature that you are suggesting?

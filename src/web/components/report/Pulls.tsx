@@ -579,7 +579,10 @@ function Events() {
             <ErrorBoundary>
               <tbody>
                 <tr>
-                  <td colSpan={6} className="text-center">
+                  <td
+                    colSpan={6}
+                    className={`sticky text-center top-6 ${bgPrimary}`}
+                  >
                     <span
                       className="font-semibold"
                       title="Events that happend closer to this pull than the last can be found here."
@@ -624,7 +627,10 @@ function Events() {
               }
             >
               <tr>
-                <td colSpan={6} className="text-center">
+                <td
+                  colSpan={6}
+                  className={`sticky text-center top-6 ${bgPrimary}`}
+                >
                   <span className="font-semibold">During Pull</span>
                 </td>
               </tr>
@@ -660,7 +666,10 @@ function Events() {
             <ErrorBoundary>
               <tbody className="border-t-2 border-gray-900">
                 <tr>
-                  <td colSpan={6} className="text-center">
+                  <td
+                    colSpan={6}
+                    className={`sticky text-center top-6 ${bgPrimary}`}
+                  >
                     <span
                       className="font-semibold"
                       title="Events that happend closer to this pull than the next can be found here."
@@ -782,7 +791,7 @@ function TableSettings() {
         </tr>
       </thead>
       {open ? (
-        <tbody>
+        <tbody className="hidden md:table-row-group">
           <tr>
             <td colSpan={6} className={`sticky top-12 z-10 ${bgPrimary} pb-2`}>
               <div className="flex items-center hidden space-x-2 md:block">
@@ -830,8 +839,8 @@ function TableHead() {
   );
   const settingsOpen = usePullSettings((state) => state.open);
 
-  const zIndex = settingsOpen ? "top-20" : "top-12";
-  const className = `sticky z-10 ${bgPrimary} ${zIndex}`;
+  const top = settingsOpen ? "md:top-24" : "md:top-12";
+  const className = `sticky z-10 ${bgPrimary} top-0 ${top}`;
 
   return (
     <thead>

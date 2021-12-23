@@ -87,7 +87,7 @@ export function Dialog({
         <div className="fixed inset-0 rounded-lg" aria-hidden />
         <As
           className={classnames(
-            "inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white rounded-lg",
+            "inline-block w-full max-w-xl p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white rounded-lg",
             hoverShadow,
             className,
             bgSecondary

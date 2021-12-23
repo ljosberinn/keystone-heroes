@@ -10,7 +10,6 @@ export default function MapOptions(): JSX.Element {
     <Dialog
       defaultOpen
       as="section"
-      // className="absolute top-0 left-0 w-full h-full p-4 text-white bg-stone-500 dark:bg-gray-500 dark:bg-opacity-70 bg-opacity-70"
       aria-labelledby="map-options-heading"
       onClose={toggleMapOptions}
     >

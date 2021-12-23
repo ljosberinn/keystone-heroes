@@ -2,32 +2,34 @@ import { useTheme } from "next-themes";
 import Link from "next/link";
 import { version } from "react";
 
-// import { defaultQueryParams, url } from "../../pages/routes/discover";
-import { buymeacoffee, paypal, twitter, discord /* map */ } from "../icons";
+import { buymeacoffee, paypal, twitter, discord, patreon } from "../icons";
 import { internalLinkClasses } from "../styles/tokens";
-// import { createInternalUrl } from "../utils";
 import { ColorModeToggle } from "./ColorModeToggle";
 import { ExternalLink } from "./ExternalLink";
 import { Logo } from "./Logo";
 
 type FooterNavLinkProps = {
   href: string;
-  children: string | JSX.Element;
-  internal?: boolean;
+  children: string;
+  icon:
+    | typeof buymeacoffee
+    | typeof patreon
+    | typeof paypal
+    | typeof discord
+    | typeof twitter;
 };
 
-function FooterNavLink({ href, children, internal }: FooterNavLinkProps) {
+function FooterNavLink({ href, children, icon }: FooterNavLinkProps) {
   return (
     <li className="py-1 text-base leading-relaxed md:text-sm">
-      {internal ? (
-        <Link href={href} prefetch={false}>
-          <a className={internalLinkClasses}>{children}</a>
-        </Link>
-      ) : (
-        <ExternalLink className={internalLinkClasses} href={href}>
+      <ExternalLink className={internalLinkClasses} href={href}>
+        <span className="md:items-center md:justify-end md:flex">
+          <svg className="inline w-6 h-6 mr-2">
+            <use href={`#${icon.id}`} />
+          </svg>
           {children}
-        </ExternalLink>
-      )}
+        </span>
+      </ExternalLink>
     </li>
   );
 }
@@ -43,50 +45,40 @@ export function Footer(): JSX.Element {
 
           <div className="grid items-center w-full grid-cols-1 text-center md:grid-cols-2 lg:pr-8 md:gap-10 md:text-left md:items-start md:w-auto">
             <ul>
-              {/* <FooterNavLink
-                internal
-                href={createInternalUrl(url, defaultQueryParams)}
-              >
-                <span className="md:items-center md:justify-end md:flex">
-                  <svg className="inline w-6 h-6 mr-2">
-                    <use href={`#${map.id}`} />
-                  </svg>
-                  Discover Routes
-                </span>
-              </FooterNavLink> */}
+              {/*
+               */}
             </ul>
             <ul className="md:text-right">
-              <FooterNavLink href="https://buymeacoffee.com/rOSn8DF">
-                <span className="md:items-center md:justify-end md:flex">
-                  <svg className="inline w-6 h-6 mr-2">
-                    <use href={`#${buymeacoffee.id}`} />
-                  </svg>
-                  Buy Me A Coffee
-                </span>
+              <FooterNavLink
+                href="https://buymeacoffee.com/rOSn8DF"
+                icon={buymeacoffee}
+              >
+                Buy Me A Coffee
               </FooterNavLink>
-              <FooterNavLink href="https://www.paypal.com/paypalme/gerritalex">
-                <span className="md:items-center md:justify-end md:flex">
-                  <svg className="inline w-6 h-6 mr-2">
-                    <use href={`#${paypal.id}`} />
-                  </svg>
-                  PayPal
-                </span>
+
+              <FooterNavLink href="/" icon={patreon}>
+                Patreon
               </FooterNavLink>
-              <FooterNavLink href="https://twitter.com/gerrit_alex">
-                <span className="md:items-center md:justify-end md:flex">
-                  <svg className="inline w-6 h-6 mr-2">
-                    <use href={`#${twitter.id}`} />
-                  </svg>
-                  Twitter
-                </span>
+
+              <FooterNavLink
+                href="https://www.paypal.com/paypalme/gerritalex"
+                icon={paypal}
+              >
+                PayPal
               </FooterNavLink>
-              <FooterNavLink href="/">
-                <span className="md:items-center md:justify-end md:flex">
-                  <svg className="inline w-6 h-6 mr-2">
-                    <use href={`#${discord.id}`} />
-                  </svg>
-                  Discord
-                </span>
+
+              <FooterNavLink
+                href="https://twitter.com/gerrit_alex"
+                icon={twitter}
+              >
+                Twitter
+              </FooterNavLink>
+
+              <FooterNavLink
+                href="https://discord.gg/ubUjUTMdhE"
+                icon={discord}
+              >
+                Discord
               </FooterNavLink>
             </ul>
           </div>
