@@ -28,8 +28,15 @@ export default function DeleteUtil({
   }
 
   return (
-    <button onClick={handleDelete} type="button">
-      delete
-    </button>
+    <div className="m-auto border-2 border-red-500">
+      <h1>DEV ONLY</h1>
+      <button
+        onClick={handleDelete}
+        type="button"
+        className="p-2 m-2 bg-red-900"
+      >
+        delete report & reload (disable cache must be active)
+      </button>
+    </div>
   );
 }

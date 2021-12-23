@@ -1,6 +1,5 @@
 import type { ReactNode } from "react";
-import { useRef } from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 import { bgSecondary, hoverShadow } from "../styles/tokens";
 import { classnames } from "../utils/classnames";

@@ -404,8 +404,13 @@ function FightCard({ fight, reportID }: FightCardProps) {
             className="p-4 bg-white rounded-lg dark:bg-gray-900"
           >
             <h2 id={`fight-${fight.id}`} className="font-extrabold text-center">
-              {dungeon ? dungeon.name : "Unknown Dungeon"} +
-              {fight.keystoneLevel}
+              <span className="inline md:hidden">
+                {dungeon ? dungeon.slug : "Unknown"}
+              </span>
+              <span className="hidden md:inline">
+                {dungeon ? dungeon.name : "Unknown Dungeon"}
+              </span>
+              <span> +{fight.keystoneLevel}</span>
             </h2>
 
             <TimeInformation
@@ -531,7 +536,7 @@ function BearCard({ type }: BearCardProps) {
     <div className={commonCardClassNames}>
       <div className="h-64 text-2xl bg-white bg-cover rounded-md bg-fallback bg-blend-luminosity">
         <div
-          className={`bg-no-repeat bg-contain h-64 bg-cover rounded-md w-full h-full ${type}`}
+          className={`bg-no-repeat h-64 bg-cover sm:bg-contain rounded-md w-full h-full ${type}`}
         />
       </div>
     </div>
@@ -668,7 +673,7 @@ function BuyMeACoffeeCard() {
       >
         <LinkOverlay
           href="https://www.buymeacoffee.com/rOSn8DF"
-          className="flex flex-col justify-center w-full h-full p-4 bg-white rounded-lg dark:bg-gray-900 "
+          className="flex flex-col justify-center w-full h-full p-2 bg-white rounded-lg md:p-4 dark:bg-gray-900 "
         >
           <h2 id="buy-me-a-coffee" className="font-extrabold text-center">
             Consider supporting the site to keep the lights on {"<3"}

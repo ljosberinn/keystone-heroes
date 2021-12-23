@@ -1,17 +1,15 @@
 import type { ReactNode } from "react";
 import { useContext, createContext } from "react";
 
-type PullMetaDefinition = {
+type PullMetaContextDefinition = {
   fightStartTime: number;
   pullEndTime: number;
 };
 
-const PullDetailsSettingsContext = createContext<PullMetaDefinition | null>(
-  null
-);
+const PullMetaContext = createContext<PullMetaContextDefinition | null>(null);
 
-export const usePullMeta = (): PullMetaDefinition => {
-  const ctx = useContext(PullDetailsSettingsContext);
+export const usePullMeta = (): PullMetaContextDefinition => {
+  const ctx = useContext(PullMetaContext);
 
   if (!ctx) {
     throw new Error("used outside of provider");
@@ -38,8 +36,8 @@ export function PullMetaProvider({
   };
 
   return (
-    <PullDetailsSettingsContext.Provider value={value}>
+    <PullMetaContext.Provider value={value}>
       {children}
-    </PullDetailsSettingsContext.Provider>
+    </PullMetaContext.Provider>
   );
 }

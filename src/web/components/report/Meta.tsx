@@ -268,7 +268,11 @@ function PlayerRow({ player, fightID, reportID }: PlayerRowProps) {
           <span className="flex items-center w-full space-x-2">
             <span className="inline-flex items-center w-full">
               <span className="w-8 h-8">
-                <SpecIcon class={name} spec={spec.name} />
+                <SpecIcon
+                  class={name}
+                  spec={spec.name}
+                  className={`border-2 ${classColor}`}
+                />
               </span>
               {player.covenant ? (
                 <span className="w-4 h-4 ml-2">

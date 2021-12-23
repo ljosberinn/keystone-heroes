@@ -185,7 +185,7 @@ function PullSelection() {
       <button
         type="button"
         disabled={isFirst}
-        className="flex items-center w-1/3 space-x-2 focus:outline-none focus:ring"
+        className="flex items-center w-1/6 space-x-2 md:w-1/3 focus:outline-none focus:ring"
         onClick={() => {
           setSelectedPull(selectedPullID - 1);
         }}
@@ -199,11 +199,13 @@ function PullSelection() {
         />
 
         {mostRelevantNPCsByPull.last ? (
-          <span>{mostRelevantNPCsByPull.last.name}</span>
+          <span className="hidden md:inline">
+            {mostRelevantNPCsByPull.last.name}
+          </span>
         ) : null}
       </button>
 
-      <div className="flex justify-center w-1/3 space-x-2">
+      <div className="flex justify-center w-4/6 space-x-2 md:w-1/3">
         {invisibilityType ? (
           <span>
             {invisibilityType === "shroud" ? (
@@ -270,13 +272,15 @@ function PullSelection() {
       <button
         type="button"
         disabled={isLast}
-        className="flex items-center justify-end w-1/3 space-x-2 focus:outline-none focus:ring"
+        className="flex items-center justify-end w-1/6 space-x-2 md:w-1/3 focus:outline-none focus:ring"
         onClick={() => {
           setSelectedPull(selectedPullID + 1);
         }}
       >
         {mostRelevantNPCsByPull.next ? (
-          <span>{mostRelevantNPCsByPull.next.name}</span>
+          <span className="hidden md:inline">
+            {mostRelevantNPCsByPull.next.name}
+          </span>
         ) : null}
 
         <AbilityIcon
