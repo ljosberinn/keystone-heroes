@@ -29,6 +29,7 @@ export function Dialog({
   const [open, setOpen] = useState(defaultOpen);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const activeElementRef = useRef<Element | null>(null);
+  const dialogRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (!open) {
@@ -72,6 +73,68 @@ export function Dialog({
     };
   }, [open]);
 
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+
+    document.documentElement.classList.add("overflow-hidden");
+
+    return () => {
+      document.documentElement.classList.remove("overflow-hidden");
+    };
+  }, [open]);
+
+  useEffect(() => {
+    if (!open || !onClose) {
+      return;
+    }
+
+    const listener = (event: MouseEvent) => {
+      const { clientX, clientY, target } = event;
+
+      if (!dialogRef.current || !activeElementRef.current) {
+        return;
+      }
+
+      /**
+       * nasty workaround; without this, on subsequent reopenings of a dialog,
+       * the dialog will instantly close again
+       *
+       * triggering element must always be a button
+       */
+      const isTriggeringDialog =
+        target instanceof HTMLElement &&
+        // directly interacting with the triggering button
+        ((target.tagName.toLowerCase() === "button" &&
+          target === activeElementRef.current) ||
+          // interacting with child of button
+          target.closest("button") === activeElementRef.current);
+
+      if (isTriggeringDialog) {
+        return;
+      }
+
+      const rect = dialogRef.current.getBoundingClientRect();
+
+      const xIsOutside = clientX < rect.x || clientX > rect.x + rect.width;
+      const yIsOutside = clientY < rect.y || clientY > rect.y + rect.height;
+
+      if (xIsOutside || yIsOutside) {
+        setOpen(false);
+        if (onClose) {
+          onClose();
+        }
+      }
+    };
+
+    document.addEventListener("click", listener);
+
+    return () => {
+      document.removeEventListener("click", listener);
+    };
+  }, [open, onClose]);
+
   if (!open) {
     return null;
   }
@@ -86,6 +149,7 @@ export function Dialog({
       <div className="px-4 text-center">
         <div className="fixed inset-0 rounded-lg" aria-hidden />
         <As
+          ref={dialogRef}
           className={classnames(
             "inline-block w-full max-w-xl p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white rounded-lg",
             hoverShadow,

@@ -128,9 +128,9 @@ export default function Legend(): JSX.Element {
 
       <div className="space-y-2">
         <ul>
-          <li className="py-2">
-            <div className="flex space-x-2">
-              <div className="flex w-1/5 space-x-1">
+          <li className="pb-2">
+            <div className="flex flex-col space-y-2 md:space-y-0 md:space-x-2 md:flex-row">
+              <div className="flex space-x-1 md:w-1/5">
                 <img
                   src="/static/skull.png"
                   loading="lazy"
@@ -140,7 +140,7 @@ export default function Legend(): JSX.Element {
                   className="w-6 h-6"
                 />
               </div>
-              <div className="w-4/5">
+              <div className="md:w-4/5">
                 <span>
                   This pull includes at least 5 deaths of 5 individual players
                   and is considered a wipe.
@@ -227,9 +227,9 @@ export default function Legend(): JSX.Element {
 
 function ListItem({ icons, label }: Item) {
   return (
-    <li className="py-2">
-      <div className="flex space-x-2">
-        <div className="flex w-1/5 space-x-1">
+    <li className="pb-2">
+      <div className="flex flex-col space-y-2 md:space-y-0 md:space-x-2 md:flex-row">
+        <div className="flex space-x-1 md:w-1/5">
           {icons.map((icon) => {
             return (
               <img
@@ -244,7 +244,7 @@ function ListItem({ icons, label }: Item) {
             );
           })}
         </div>
-        <div className="w-4/5">
+        <div className="md:w-4/5">
           <span>{label}</span>
         </div>
       </div>
