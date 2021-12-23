@@ -32,6 +32,8 @@ jobs:
       - name: Test
         timeout-minutes: 4
         run: yarn test --ci --coverage
+        env:
+          TZ: "Europe/Amsterdam"
       - name: Deploy
         uses: amondnet/vercel-action@v20
         with:

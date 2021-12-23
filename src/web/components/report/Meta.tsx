@@ -129,7 +129,7 @@ function WarcraftLogsProfileLink({
 }: LinkProps): JSX.Element {
   return (
     <ExternalLink
-      href={`https://www.warcraftlogs.com/character/${region}/${server}/${name}`}
+      href={`https://www.warcraftlogs.com/character/${region}/${server}/${name}?zone=25`}
       className="flex justify-center"
     >
       <img

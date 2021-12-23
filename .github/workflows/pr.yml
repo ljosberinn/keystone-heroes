@@ -32,3 +32,5 @@ jobs:
       - name: Test
         timeout-minutes: 4
         run: yarn test --ci --coverage
+        env:
+          TZ: "Europe/Amsterdam"

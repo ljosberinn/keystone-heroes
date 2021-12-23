@@ -9,4 +9,4 @@ export const widthConstraint = "mx-auto max-w-screen-2xl px-6 w-full";
 export const internalLinkClasses =
   "transition-colors duration-150 ease-in-out hover:text-yellow-600";
 export const grayscale = "filter grayscale";
-export const hoverShadow = "drop-shadow-lg hover:drop-shadow-xl";
+export const hoverShadow = "shadow-lg hover:shadow-xl";
