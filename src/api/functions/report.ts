@@ -32,7 +32,7 @@ import {
 import type { GameZone } from "../../wcl/types";
 import { isValidReportId, maybeOngoingReport } from "../../wcl/utils";
 import { MIN_KEYSTONE_LEVEL } from "../../web/env";
-import { createTransaction, withSentry } from "../middleware";
+import { withSentry, configureScope } from "../middleware";
 import { sortByRole } from "../utils";
 import {
   cacheControlKey,
@@ -47,6 +47,7 @@ import {
   BAD_REQUEST,
   UNPROCESSABLE_ENTITY,
 } from "../utils/statusCodes";
+import type { RequestHandler } from "../utils/types";
 
 type Request = {
   query: {
@@ -658,531 +659,500 @@ export const loadExistingReport = async (
   });
 };
 
-export const reportHandler = withSentry<Request, ReportResponse>(
-  async (req, res) => {
-    if (
-      !req.query.reportID ||
-      Array.isArray(req.query.reportID) ||
-      !isValidReportId(req.query.reportID)
-    ) {
-      res.status(BAD_REQUEST).end();
-      return;
-    }
+const handler: RequestHandler<Request, ReportResponse> = async (req, res) => {
+  if (
+    !req.query.reportID ||
+    Array.isArray(req.query.reportID) ||
+    !isValidReportId(req.query.reportID)
+  ) {
+    res.status(BAD_REQUEST).end();
+    return;
+  }
 
-    const { reportID } = req.query;
-    const transaction = createTransaction(`/api/report?reportID=${reportID}`, {
-      reportID,
+  const { reportID } = req.query;
+  configureScope((scope) => {
+    scope.setTag("reportID", reportID);
+  });
+
+  const existingReport = await loadExistingReport(reportID);
+
+  if (existingReport && !maybeOngoingReport(existingReport.endTime.getTime())) {
+    res.setHeader(cacheControlKey, STALE_WHILE_REVALIDATE_SEVEN_DAYS);
+    res.json(createResponseFromDB(existingReport));
+    return;
+  }
+
+  const report = await getInitialReportData({ reportID });
+
+  if (
+    !report ||
+    // no report
+    !report.reportData?.report ||
+    // broken report
+    !report.reportData.report.region?.slug ||
+    !report.reportData.report.fights
+  ) {
+    res.setHeader(cacheControlKey, STALE_WHILE_REVALIDATE_FIVE_MINUTES);
+    res.status(SERVICE_UNAVAILABLE).json({
+      error: "BROKEN_LOG_OR_WCL_UNAVAILABLE",
     });
+    return;
+  }
 
-    const existingReport = await loadExistingReport(reportID);
+  // empty report
+  if (
+    report.reportData.report.fights.length === 0 ||
+    report.reportData.report.startTime === report.reportData.report.endTime
+  ) {
+    res.setHeader(cacheControlKey, STALE_WHILE_REVALIDATE_TWO_MINUTES);
 
-    if (
-      existingReport &&
-      !maybeOngoingReport(existingReport.endTime.getTime())
-    ) {
-      transaction.setHttpStatus(200);
-      transaction.finish();
+    res.status(UNPROCESSABLE_ENTITY).json({
+      error: "EMPTY_LOG",
+    });
+    return;
+  }
 
-      res.setHeader(cacheControlKey, STALE_WHILE_REVALIDATE_SEVEN_DAYS);
+  const {
+    startTime,
+    endTime,
+    title,
+    region: { slug: region },
+  } = report.reportData.report;
+  const persistedFightIDs = getFightIDsOfExistingReport(existingReport);
+  const fightIsUnknown = createFightIsUnknownFilter(persistedFightIDs);
+
+  const fights = report.reportData.report.fights.reduce<Fight[]>(
+    (acc, fight) => {
+      if (
+        fightIsFight(fight) &&
+        fightHasFivePlayers(fight) &&
+        fightFulfillsKeystoneLevelRequirement(fight) &&
+        fightIsUnknown(fight) &&
+        fightHasSupportedAffixes(fight)
+      ) {
+        if (!fight.gameZone || fight.gameZone.id in dungeonMap) {
+          return [...acc, fight];
+        }
+
+        const fightMaps = new Set(fight.maps.map((map) => map.id));
+
+        // report K9Mfcb2CtjZ7pX6q contains zone 2222 as starting point, however
+        // via .maps property its clear its the SD21 in the log, which is 2296
+        const match = Object.entries(dungeonMap).find(([_, dungeon]) => {
+          return dungeon.zones.every((zone) => fightMaps.has(zone.id));
+        });
+
+        if (!match) {
+          return acc;
+        }
+
+        const fixedFight: Fight = {
+          ...fight,
+          gameZone: {
+            id: Number.parseInt(match[0]),
+          },
+        };
+
+        return [...acc, fixedFight];
+      }
+
+      return acc;
+    },
+    []
+  );
+
+  // no valid (new) fights found
+  if (fights.length === 0) {
+    // maybeOngoingFight === true
+    if (existingReport && persistedFightIDs.length > 0) {
+      res.setHeader(cacheControlKey, STALE_WHILE_REVALIDATE_TWO_MINUTES);
       res.json(createResponseFromDB(existingReport));
       return;
     }
 
-    const report = await getInitialReportData({ reportID });
+    res.setHeader(cacheControlKey, STALE_WHILE_REVALIDATE_TWO_MINUTES);
+    res.status(BAD_REQUEST).json({
+      error: "NO_ELIGIBLE_KEYS",
+    });
+    return;
+  }
 
-    if (
-      !report ||
-      // no report
-      !report.reportData?.report ||
-      // broken report
-      !report.reportData.report.region?.slug ||
-      !report.reportData.report.fights
-    ) {
-      transaction.setHttpStatus(SERVICE_UNAVAILABLE);
-      transaction.finish();
-
-      res.setHeader(cacheControlKey, STALE_WHILE_REVALIDATE_FIVE_MINUTES);
-      res.status(SERVICE_UNAVAILABLE).json({
-        error: "BROKEN_LOG_OR_WCL_UNAVAILABLE",
+  const maybeFightsWithMeta: (FightWithMeta | null)[] = await Promise.all(
+    fights.map(async (fight) => {
+      const table = await getTableData({
+        reportID,
+        startTime: fight.startTime,
+        endTime: fight.endTime,
+        fightIDs: [fight.id],
       });
-      return;
-    }
 
-    // empty report
-    if (
-      report.reportData.report.fights.length === 0 ||
-      report.reportData.report.startTime === report.reportData.report.endTime
-    ) {
-      transaction.setHttpStatus(UNPROCESSABLE_ENTITY);
-      transaction.finish();
-
-      res.setHeader(cacheControlKey, STALE_WHILE_REVALIDATE_TWO_MINUTES);
-
-      res.status(UNPROCESSABLE_ENTITY).json({
-        error: "EMPTY_LOG",
-      });
-      return;
-    }
-
-    const {
-      startTime,
-      endTime,
-      title,
-      region: { slug: region },
-    } = report.reportData.report;
-    const persistedFightIDs = getFightIDsOfExistingReport(existingReport);
-    const fightIsUnknown = createFightIsUnknownFilter(persistedFightIDs);
-
-    const fights = report.reportData.report.fights.reduce<Fight[]>(
-      (acc, fight) => {
-        if (
-          fightIsFight(fight) &&
-          fightHasFivePlayers(fight) &&
-          fightFulfillsKeystoneLevelRequirement(fight) &&
-          fightIsUnknown(fight) &&
-          fightHasSupportedAffixes(fight)
-        ) {
-          if (!fight.gameZone || fight.gameZone.id in dungeonMap) {
-            return [...acc, fight];
-          }
-
-          const fightMaps = new Set(fight.maps.map((map) => map.id));
-
-          // report K9Mfcb2CtjZ7pX6q contains zone 2222 as starting point, however
-          // via .maps property its clear its the SD21 in the log, which is 2296
-          const match = Object.entries(dungeonMap).find(([_, dungeon]) => {
-            return dungeon.zones.every((zone) => fightMaps.has(zone.id));
-          });
-
-          if (!match) {
-            return acc;
-          }
-
-          const fixedFight: Fight = {
-            ...fight,
-            gameZone: {
-              id: Number.parseInt(match[0]),
-            },
-          };
-
-          return [...acc, fixedFight];
-        }
-
-        return acc;
-      },
-      []
-    );
-
-    // no valid (new) fights found
-    if (fights.length === 0) {
-      // maybeOngoingFight === true
-      if (existingReport && persistedFightIDs.length > 0) {
-        transaction.setHttpStatus(200);
-        transaction.finish();
-
-        res.setHeader(cacheControlKey, STALE_WHILE_REVALIDATE_TWO_MINUTES);
-        res.json(createResponseFromDB(existingReport));
-        return;
+      if (!table.reportData?.report?.table?.data) {
+        return null;
       }
 
-      transaction.setHttpStatus(BAD_REQUEST);
-      transaction.finish();
+      const {
+        friendlyPlayers,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        keystoneAffixes,
+        maps,
+        averageItemLevel,
+        ...rest
+      } = fight;
+      const { damageDone, healingDone, deathEvents } =
+        table.reportData.report.table.data;
+      const playerDetails = Object.values(
+        table.reportData.report.table.data.playerDetails
+      ).flat();
+      const keystoneTimeInSeconds = fight.keystoneTime / 1000;
 
-      res.setHeader(cacheControlKey, STALE_WHILE_REVALIDATE_TWO_MINUTES);
-      res.status(BAD_REQUEST).json({
-        error: "NO_ELIGIBLE_KEYS",
-      });
-      return;
-    }
+      const player = friendlyPlayers.reduce<Player[]>((acc, id) => {
+        const characterOrEventMatchesID = <T extends { id: number }>(
+          dataset: T
+        ) => dataset.id === id;
 
-    const maybeFightsWithMeta: (FightWithMeta | null)[] = await Promise.all(
-      fights.map(async (fight) => {
-        const table = await getTableData({
-          reportID,
-          startTime: fight.startTime,
-          endTime: fight.endTime,
-          fightIDs: [fight.id],
-        });
+        const damageDoneMatch = damageDone.find(characterOrEventMatchesID);
+        const healingDoneMatch = healingDone.find(characterOrEventMatchesID);
+        const detailsMatch = playerDetails.find(characterOrEventMatchesID);
 
-        if (!table.reportData?.report?.table?.data) {
-          return null;
+        if (!damageDoneMatch || !healingDoneMatch || !detailsMatch) {
+          return acc;
         }
 
         const {
-          friendlyPlayers,
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          keystoneAffixes,
-          maps,
-          averageItemLevel,
-          ...rest
-        } = fight;
-        const { damageDone, healingDone, deathEvents } =
-          table.reportData.report.table.data;
-        const playerDetails = Object.values(
-          table.reportData.report.table.data.playerDetails
-        ).flat();
-        const keystoneTimeInSeconds = fight.keystoneTime / 1000;
+          specs,
+          combatantInfo,
+          type,
+          server = "Anonymous",
+          maxItemLevel,
+          name,
+        } = detailsMatch;
 
-        const player = friendlyPlayers.reduce<Player[]>((acc, id) => {
-          const characterOrEventMatchesID = <T extends { id: number }>(
-            dataset: T
-          ) => dataset.id === id;
+        const classID = classMapByName[type];
+        const spec = allSpecs.find(
+          (spec) => spec.classID === classID && spec.name === specs[0]
+        );
 
-          const damageDoneMatch = damageDone.find(characterOrEventMatchesID);
-          const healingDoneMatch = healingDone.find(characterOrEventMatchesID);
-          const detailsMatch = playerDetails.find(characterOrEventMatchesID);
+        if (!spec) {
+          return acc;
+        }
 
-          if (!damageDoneMatch || !healingDoneMatch || !detailsMatch) {
-            return acc;
-          }
+        const deaths = deathEvents.filter(characterOrEventMatchesID);
+        const dps = Math.round(damageDoneMatch.total / keystoneTimeInSeconds);
+        const hps = Math.round(healingDoneMatch.total / keystoneTimeInSeconds);
 
-          const {
-            specs,
-            combatantInfo,
-            type,
-            server = "Anonymous",
-            maxItemLevel,
-            name,
-          } = detailsMatch;
+        const secureFields = {
+          name,
+          server,
+          class: type,
+          spec: specs[0],
+          classID,
+          specID: spec.id,
+          role: spec.role,
+          dps,
+          hps,
+          deaths: deaths.length,
+          itemLevel: maxItemLevel,
+          actorID: id,
+          legendaries: [],
+        };
 
-          const classID = classMapByName[type];
-          const spec = allSpecs.find(
-            (spec) => spec.classID === classID && spec.name === specs[0]
-          );
-
-          if (!spec) {
-            return acc;
-          }
-
-          const deaths = deathEvents.filter(characterOrEventMatchesID);
-          const dps = Math.round(damageDoneMatch.total / keystoneTimeInSeconds);
-          const hps = Math.round(
-            healingDoneMatch.total / keystoneTimeInSeconds
-          );
-
-          const secureFields = {
-            name,
-            server,
-            class: type,
-            spec: specs[0],
-            classID,
-            specID: spec.id,
-            role: spec.role,
-            dps,
-            hps,
-            deaths: deaths.length,
-            itemLevel: maxItemLevel,
-            actorID: id,
-            legendaries: [],
-          };
-
-          if (Array.isArray(combatantInfo)) {
-            return [
-              ...acc,
-              {
-                ...secureFields,
-                legendary: null,
-                covenantID: null,
-                soulbindID: null,
-                covenantTraits: null,
-                conduits: [],
-                talents: [],
-              },
-            ];
-          }
-
-          const legendaries =
-            combatantInfo.gear.filter(
-              (item): item is LegendaryItem =>
-                item.quality === ItemQuality.LEGENDARY
-            ) ?? null;
-          const covenantID = combatantInfo.covenantID ?? null;
-          const soulbindID = combatantInfo.soulbindID ?? null;
-          const covenantTraits = covenantID
-            ? (combatantInfo.artifact ?? combatantInfo.customPowerSet).filter(
-                (talent) => talent.guid !== 0
-              )
-            : null;
-
+        if (Array.isArray(combatantInfo)) {
           return [
             ...acc,
             {
               ...secureFields,
-              talents: combatantInfo.talents,
-              conduits:
-                combatantInfo.heartOfAzeroth ??
-                combatantInfo.secondaryCustomPowerSet,
-              legendaries,
-              soulbindID,
-              covenantID,
-              covenantTraits,
+              legendary: null,
+              covenantID: null,
+              soulbindID: null,
+              covenantTraits: null,
+              conduits: [],
+              talents: [],
             },
           ];
-        }, []);
-
-        if (player.length !== 5) {
-          return null;
         }
 
-        const normalizedAverageItemLevel = Number.parseFloat(
-          averageItemLevel.toFixed(2)
-        );
-        const uniqueMaps = [...new Set(maps.map((map) => map.id))];
+        const legendaries =
+          combatantInfo.gear.filter(
+            (item): item is LegendaryItem =>
+              item.quality === ItemQuality.LEGENDARY
+          ) ?? null;
+        const covenantID = combatantInfo.covenantID ?? null;
+        const soulbindID = combatantInfo.soulbindID ?? null;
+        const covenantTraits = covenantID
+          ? (combatantInfo.artifact ?? combatantInfo.customPowerSet).filter(
+              (talent) => talent.guid !== 0
+            )
+          : null;
 
-        return {
-          ...rest,
-          player,
-          averageItemLevel: normalizedAverageItemLevel,
-          maps: uniqueMaps,
-        };
-      })
-    );
+        return [
+          ...acc,
+          {
+            ...secureFields,
+            talents: combatantInfo.talents,
+            conduits:
+              combatantInfo.heartOfAzeroth ??
+              combatantInfo.secondaryCustomPowerSet,
+            legendaries,
+            soulbindID,
+            covenantID,
+            covenantTraits,
+          },
+        ];
+      }, []);
 
-    const fightsWithMeta = maybeFightsWithMeta.filter(
-      (fight): fight is FightWithMeta => fight !== null
-    );
-
-    if (fightsWithMeta.length === 0) {
-      transaction.setHttpStatus(SERVICE_UNAVAILABLE);
-      transaction.finish();
-
-      res.setHeader(cacheControlKey, STALE_WHILE_REVALIDATE_FIVE_MINUTES);
-      res.status(SERVICE_UNAVAILABLE).json({
-        error: "SECONDARY_REQUEST_FAILED",
-      });
-      return;
-    }
-
-    const internalReportID = await determineReportID(
-      existingReport,
-      fights[0],
-      {
-        endTime: new Date(endTime),
-        startTime: new Date(startTime),
-        title,
-        report: reportID,
-        region,
+      if (player.length !== 5) {
+        return null;
       }
-    );
 
-    const allPlayer = fightsWithMeta.flatMap((fight) => fight.player);
-
-    const conduitCreateMany: Prisma.ConduitCreateManyInput[] =
-      allPlayer.flatMap((player) =>
-        player.conduits.map((conduit) => {
-          return {
-            id: conduit.guid,
-            name: conduit.name,
-            icon: removeImageFormat(conduit.abilityIcon),
-          };
-        })
+      const normalizedAverageItemLevel = Number.parseFloat(
+        averageItemLevel.toFixed(2)
       );
+      const uniqueMaps = [...new Set(maps.map((map) => map.id))];
 
-    const talentCreateMany: Prisma.TalentCreateManyInput[] = allPlayer.flatMap(
-      (player) =>
-        player.talents.map((talent) => {
-          return {
-            id: talent.guid,
-            name: talent.name,
-            icon: removeImageFormat(talent.abilityIcon),
-            classID: player.classID,
-            specID: player.specID,
-          };
-        })
-    );
+      return {
+        ...rest,
+        player,
+        averageItemLevel: normalizedAverageItemLevel,
+        maps: uniqueMaps,
+      };
+    })
+  );
 
-    const covenantTraitCreateMany: Prisma.CovenantTraitCreateManyInput[] =
-      allPlayer
-        .filter(
-          (
-            dataset
-          ): dataset is Omit<Player, "covenantTraits"> & {
-            covenantTraits: CovenantTrait[];
-            covenantID: number;
-          } => {
-            return (
-              dataset.covenantTraits !== null && dataset.covenantID !== null
-            );
-          }
-        )
-        .flatMap((dataset) => {
-          return dataset.covenantTraits.map((trait) => {
-            return {
-              id: trait.guid,
-              name: trait.name,
-              icon: removeImageFormat(trait.abilityIcon),
-              covenantID: dataset.covenantID,
-            };
-          });
-        });
+  const fightsWithMeta = maybeFightsWithMeta.filter(
+    (fight): fight is FightWithMeta => fight !== null
+  );
 
-    const legendariesCreateMany: Prisma.LegendaryCreateManyInput[] =
-      allPlayer.flatMap((player) =>
-        player.legendaries
-          .filter((legendary) => isCraftableShadowlandsLegendary(legendary.id))
-          .map((legendary) => {
-            return {
-              id: legendary.effectID,
-              effectIcon: removeImageFormat(legendary.effectIcon),
-              itemID: legendary.id,
-              effectName: legendary.effectName ?? "Unknown Legendary",
-            };
-          })
-      );
-
-    await prisma.conduit.createMany({
-      skipDuplicates: true,
-      data: conduitCreateMany,
+  if (fightsWithMeta.length === 0) {
+    res.setHeader(cacheControlKey, STALE_WHILE_REVALIDATE_FIVE_MINUTES);
+    res.status(SERVICE_UNAVAILABLE).json({
+      error: "SECONDARY_REQUEST_FAILED",
     });
-
-    await prisma.talent.createMany({
-      skipDuplicates: true,
-      data: talentCreateMany,
-    });
-
-    await prisma.covenantTrait.createMany({
-      skipDuplicates: true,
-      data: covenantTraitCreateMany,
-    });
-
-    await prisma.legendary.createMany({
-      skipDuplicates: true,
-      data: legendariesCreateMany,
-    });
-
-    const regionDataset = await prisma.region.upsert({
-      select: {
-        id: true,
-      },
-      create: {
-        slug: region,
-      },
-      where: {
-        slug: region,
-      },
-      update: {},
-    });
-
-    const serverMap = await persistServer(
-      [...new Set(allPlayer.map((player) => player.server))],
-      regionDataset.id
-    );
-
-    const characterMap = await persistCharacters(
-      allPlayer.map((player) => {
-        return {
-          name: player.name,
-          serverID: serverMap[player.server],
-          classID: player.classID,
-        };
-      })
-    );
-
-    const fightsCreateInput = await Promise.all(
-      fightsWithMeta.map<Promise<Prisma.FightCreateInput>>(async (fight) => {
-        const {
-          playerIDs,
-          playerConduitCreateMany,
-          playerCovenantTraitCreateMany,
-          playerTalentCreateMany,
-          playerLegendaryCreateMany,
-        } = await createManyPlayer(fight.player, {
-          reportID: internalReportID,
-          serverMap,
-          characterMap,
-        });
-
-        const dungeon: Prisma.DungeonCreateNestedOneWithoutFightInput =
-          fight.gameZone
-            ? {
-                connect: {
-                  id: fight.gameZone.id,
-                },
-              }
-            : {};
-
-        return {
-          startTime: fight.startTime,
-          endTime: fight.endTime,
-          averageItemLevel: fight.averageItemLevel,
-          chests: fight.keystoneBonus,
-          fightID: fight.id,
-          keystoneLevel: fight.keystoneLevel,
-          keystoneTime: fight.keystoneTime,
-          rating: fight.rating ?? 0,
-          dps: fight.player.reduce((acc, player) => acc + player.dps, 0),
-          hps: fight.player.reduce((acc, player) => acc + player.hps, 0),
-          totalDeaths: fight.player.reduce(
-            (acc, player) => acc + player.deaths,
-            0
-          ),
-          percent: 0,
-          Report: {
-            connect: {
-              id: internalReportID,
-            },
-          },
-          dungeon,
-          PlayerFight: {
-            createMany: {
-              data: playerIDs,
-            },
-          },
-          PlayerConduit: {
-            createMany: {
-              data: playerConduitCreateMany,
-            },
-          },
-          PlayerTalent: {
-            createMany: {
-              data: playerTalentCreateMany,
-            },
-          },
-          PlayerCovenantTrait: {
-            createMany: {
-              data: playerCovenantTraitCreateMany,
-            },
-          },
-          PlayerLegendary: {
-            createMany: {
-              data: playerLegendaryCreateMany,
-            },
-          },
-        };
-      })
-    );
-
-    await Promise.all(
-      fightsCreateInput.map((data) =>
-        prisma.fight.create({
-          data,
-        })
-      )
-    );
-
-    const previouslyStoredReports = existingReport
-      ? createResponseFromDB(existingReport).fights
-      : [];
-    const response = createResponseFromRawData({
-      endTime,
-      startTime,
-      title,
-      region,
-      fightsWithMeta,
-      affixes: fights[0].keystoneAffixes,
-    });
-
-    transaction.setHttpStatus(200);
-    transaction.finish();
-
-    res.setHeader(cacheControlKey, STALE_WHILE_REVALIDATE_THIRTY_MINUTES);
-
-    res.json({
-      ...response,
-      fights: [...previouslyStoredReports, ...response.fights],
-    });
+    return;
   }
-);
+
+  const internalReportID = await determineReportID(existingReport, fights[0], {
+    endTime: new Date(endTime),
+    startTime: new Date(startTime),
+    title,
+    report: reportID,
+    region,
+  });
+
+  const allPlayer = fightsWithMeta.flatMap((fight) => fight.player);
+
+  const conduitCreateMany: Prisma.ConduitCreateManyInput[] = allPlayer.flatMap(
+    (player) =>
+      player.conduits.map((conduit) => {
+        return {
+          id: conduit.guid,
+          name: conduit.name,
+          icon: removeImageFormat(conduit.abilityIcon),
+        };
+      })
+  );
+
+  const talentCreateMany: Prisma.TalentCreateManyInput[] = allPlayer.flatMap(
+    (player) =>
+      player.talents.map((talent) => {
+        return {
+          id: talent.guid,
+          name: talent.name,
+          icon: removeImageFormat(talent.abilityIcon),
+          classID: player.classID,
+          specID: player.specID,
+        };
+      })
+  );
+
+  const covenantTraitCreateMany: Prisma.CovenantTraitCreateManyInput[] =
+    allPlayer
+      .filter(
+        (
+          dataset
+        ): dataset is Omit<Player, "covenantTraits"> & {
+          covenantTraits: CovenantTrait[];
+          covenantID: number;
+        } => {
+          return dataset.covenantTraits !== null && dataset.covenantID !== null;
+        }
+      )
+      .flatMap((dataset) => {
+        return dataset.covenantTraits.map((trait) => {
+          return {
+            id: trait.guid,
+            name: trait.name,
+            icon: removeImageFormat(trait.abilityIcon),
+            covenantID: dataset.covenantID,
+          };
+        });
+      });
+
+  const legendariesCreateMany: Prisma.LegendaryCreateManyInput[] =
+    allPlayer.flatMap((player) =>
+      player.legendaries
+        .filter((legendary) => isCraftableShadowlandsLegendary(legendary.id))
+        .map((legendary) => {
+          return {
+            id: legendary.effectID,
+            effectIcon: removeImageFormat(legendary.effectIcon),
+            itemID: legendary.id,
+            effectName: legendary.effectName ?? "Unknown Legendary",
+          };
+        })
+    );
+
+  await prisma.conduit.createMany({
+    skipDuplicates: true,
+    data: conduitCreateMany,
+  });
+
+  await prisma.talent.createMany({
+    skipDuplicates: true,
+    data: talentCreateMany,
+  });
+
+  await prisma.covenantTrait.createMany({
+    skipDuplicates: true,
+    data: covenantTraitCreateMany,
+  });
+
+  await prisma.legendary.createMany({
+    skipDuplicates: true,
+    data: legendariesCreateMany,
+  });
+
+  const regionDataset = await prisma.region.upsert({
+    select: {
+      id: true,
+    },
+    create: {
+      slug: region,
+    },
+    where: {
+      slug: region,
+    },
+    update: {},
+  });
+
+  const serverMap = await persistServer(
+    [...new Set(allPlayer.map((player) => player.server))],
+    regionDataset.id
+  );
+
+  const characterMap = await persistCharacters(
+    allPlayer.map((player) => {
+      return {
+        name: player.name,
+        serverID: serverMap[player.server],
+        classID: player.classID,
+      };
+    })
+  );
+
+  const fightsCreateInput = await Promise.all(
+    fightsWithMeta.map<Promise<Prisma.FightCreateInput>>(async (fight) => {
+      const {
+        playerIDs,
+        playerConduitCreateMany,
+        playerCovenantTraitCreateMany,
+        playerTalentCreateMany,
+        playerLegendaryCreateMany,
+      } = await createManyPlayer(fight.player, {
+        reportID: internalReportID,
+        serverMap,
+        characterMap,
+      });
+
+      const dungeon: Prisma.DungeonCreateNestedOneWithoutFightInput =
+        fight.gameZone
+          ? {
+              connect: {
+                id: fight.gameZone.id,
+              },
+            }
+          : {};
+
+      return {
+        startTime: fight.startTime,
+        endTime: fight.endTime,
+        averageItemLevel: fight.averageItemLevel,
+        chests: fight.keystoneBonus,
+        fightID: fight.id,
+        keystoneLevel: fight.keystoneLevel,
+        keystoneTime: fight.keystoneTime,
+        rating: fight.rating ?? 0,
+        dps: fight.player.reduce((acc, player) => acc + player.dps, 0),
+        hps: fight.player.reduce((acc, player) => acc + player.hps, 0),
+        totalDeaths: fight.player.reduce(
+          (acc, player) => acc + player.deaths,
+          0
+        ),
+        percent: 0,
+        Report: {
+          connect: {
+            id: internalReportID,
+          },
+        },
+        dungeon,
+        PlayerFight: {
+          createMany: {
+            data: playerIDs,
+          },
+        },
+        PlayerConduit: {
+          createMany: {
+            data: playerConduitCreateMany,
+          },
+        },
+        PlayerTalent: {
+          createMany: {
+            data: playerTalentCreateMany,
+          },
+        },
+        PlayerCovenantTrait: {
+          createMany: {
+            data: playerCovenantTraitCreateMany,
+          },
+        },
+        PlayerLegendary: {
+          createMany: {
+            data: playerLegendaryCreateMany,
+          },
+        },
+      };
+    })
+  );
+
+  await Promise.all(
+    fightsCreateInput.map((data) =>
+      prisma.fight.create({
+        data,
+      })
+    )
+  );
+
+  const previouslyStoredReports = existingReport
+    ? createResponseFromDB(existingReport).fights
+    : [];
+  const response = createResponseFromRawData({
+    endTime,
+    startTime,
+    title,
+    region,
+    fightsWithMeta,
+    affixes: fights[0].keystoneAffixes,
+  });
+
+  res.setHeader(cacheControlKey, STALE_WHILE_REVALIDATE_THIRTY_MINUTES);
+
+  res.json({
+    ...response,
+    fights: [...previouslyStoredReports, ...response.fights],
+  });
+};
+
+// @ts-expect-error type incompatibility with next-connect, irrelevant
+export const reportHandler = withSentry(handler);
 
 const determineReportID = async (
   existingReport: RawReport,

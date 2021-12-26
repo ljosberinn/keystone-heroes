@@ -1,16 +1,8 @@
-import {
-  init,
-  configureScope,
-  captureException,
-  startTransaction,
-} from "@sentry/node";
-import type { Transaction } from "@sentry/types";
-import type { NextApiRequest } from "next";
-
 import { isValidReportId } from "../../wcl/utils";
-import { sentrySettings } from "../utils/sentrySettings";
 import { BAD_REQUEST } from "../utils/statusCodes";
-import type { Middleware, RequestHandler } from "../utils/types";
+import type { Middleware } from "../utils/types";
+
+export { withSentry, configureScope } from "@sentry/nextjs";
 
 export const createValidReportIDMiddleware =
   (key: string): Middleware =>
@@ -34,60 +26,4 @@ export const validFightIDMiddleware: Middleware = (req, res, next) => {
   }
 
   next();
-};
-
-export const withSentry = <
-  Req extends Partial<NextApiRequest> = Record<string, unknown>,
-  Res = undefined
->(
-  handler: RequestHandler<Req, Res>
-): RequestHandler<Req, Res> => {
-  init(sentrySettings);
-
-  configureScope((scope) => {
-    scope.setTag("runtime", "node");
-
-    if (process.env.VERCEL) {
-      scope.setTag("vercel", true);
-    }
-
-    scope.addEventProcessor((event) =>
-      event.type === "transaction" && event.transaction === "/404"
-        ? null
-        : event
-    );
-  });
-
-  return (req, res, next) => {
-    try {
-      console.log("before handler", req.url);
-      return handler(req, res, next);
-    } catch (error) {
-      console.log("in catch", error);
-      if (error instanceof Error) {
-        captureException(error);
-      }
-
-      console.log("after captureEx report");
-
-      throw error;
-    }
-  };
-};
-
-export const createTransaction = (
-  name: string,
-  metadata?: Record<string, unknown>
-): Transaction => {
-  const transaction = startTransaction({
-    op: "transaction",
-    name,
-    data: metadata,
-  });
-
-  configureScope((scope) => {
-    scope.setSpan(transaction);
-  });
-
-  return transaction;
 };

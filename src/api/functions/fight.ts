@@ -55,7 +55,7 @@ import type {
 import { processEvents } from "../../wcl/transform";
 import type { PersistedDungeonPull } from "../../wcl/transform/utils";
 import {
-  createTransaction,
+  configureScope,
   createValidReportIDMiddleware,
   validFightIDMiddleware,
   withSentry,
@@ -74,6 +74,7 @@ import {
   UNPROCESSABLE_ENTITY,
   OK,
 } from "../utils/statusCodes";
+import type { RequestHandler } from "../utils/types";
 
 type Request = {
   query: {
@@ -1445,24 +1446,18 @@ const getResponseOrRetrieveAndCreateFight = async (
   };
 };
 
-const handler = withSentry<Request, FightResponse>(async (req, res) => {
+const handler: RequestHandler<Request, FightResponse> = async (req, res) => {
   const { reportID } = req.query;
   const fightID = Number.parseInt(req.query.fightID);
 
-  const transaction = createTransaction(
-    `api/fight?reportID=${reportID}&fightID=${fightID}`,
-    {
-      reportID,
-      fightID,
-    }
-  );
+  configureScope((scope) => {
+    scope.setTag("reportID", reportID);
+    scope.setTag("fightID", fightID);
+  });
 
   const maybeStoredFight = await loadExistingFight(reportID, fightID);
 
   if (!maybeStoredFight) {
-    transaction.setHttpStatus(NOT_FOUND);
-    transaction.finish();
-
     res.setHeader(cacheControlKey, NO_CACHE);
     res.status(NOT_FOUND).json({ error: "UNKNOWN_REPORT" });
     return;
@@ -1474,15 +1469,12 @@ const handler = withSentry<Request, FightResponse>(async (req, res) => {
     fightID
   );
 
-  transaction.setHttpStatus(status);
-  transaction.finish();
-
   if (cache) {
     res.setHeader(cacheControlKey, STALE_WHILE_REVALIDATE_SEVEN_DAYS);
   }
 
   res.status(status).json(json);
-});
+};
 
 const ensureCorrectDungeonID = (
   storedDungeon: { id: number } | null,
@@ -2002,4 +1994,5 @@ const createPullNPCDeathCountMap = (
 export const fightHandler = nc()
   .get(createValidReportIDMiddleware("reportID"))
   .get(validFightIDMiddleware)
-  .get(handler);
+  // @ts-expect-error type incompatibility with next-connect, irrelevant
+  .get(withSentry(handler));

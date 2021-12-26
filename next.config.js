@@ -1,4 +1,5 @@
 // @ts-check
+const { withSentryConfig } = require("@sentry/nextjs");
 
 const date = new Date();
 
@@ -101,4 +102,8 @@ const securityHeaders = [
   },
 ];
 
-module.exports = config;
+// @ts-expect-error sentry doesn't use the correct types
+module.exports = withSentryConfig(config, {
+  // disable in dev as its noisy in the console on basically every reload
+  silent: process.env.NODE_ENV === "development",
+});
