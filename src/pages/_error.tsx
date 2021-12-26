@@ -1,6 +1,6 @@
-import { captureException, flush, init } from "@sentry/react";
 import type { NextPageContext } from "next";
 import NextErrorComponent from "next/error";
+import Link from "next/link";
 import { useEffect } from "react";
 
 import { sentrySettings } from "../api/utils/sentrySettings";
@@ -11,26 +11,48 @@ type ErrorProps = {
   err?: Error;
 };
 
-export default function MyError({
+export default function CustomError({
   statusCode,
   hasGetInitialPropsRun,
   err,
 }: ErrorProps): JSX.Element {
   useEffect(() => {
     if (!hasGetInitialPropsRun && err) {
-      init(sentrySettings);
-      // getInitialProps is not called in case of
-      // https://github.com/vercel/next.js/issues/8592. As a workaround, we pass
-      // err via _app.js so it can be captured
-      captureException(err);
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises, promise/prefer-await-to-then
+      import(/* webpackChunkName: "sentry.react" */ "@sentry/react").then(
+        (mod) => {
+          mod.init(sentrySettings);
+          // getInitialProps is not called in case of
+          // https://github.com/vercel/next.js/issues/8592. As a workaround, we pass
+          // err via _app.js so it can be captured
+          mod.captureException(err);
+        }
+      );
       // Flushing is not required in this case as it only happens on the client
     }
   }, [hasGetInitialPropsRun, err]);
 
-  return <NextErrorComponent statusCode={statusCode} />;
+  return (
+    <div className="flex flex-col items-center justify-center w-full px-16 py-8 m-auto xl:px-64 xl:py-32 lg:flex-row max-w-screen-2xl">
+      <img
+        src="/static/bear/concern-256.png"
+        height="256"
+        width="256"
+        alt="An error occured! Or something."
+        loading="lazy"
+      />
+      <div className="pt-8 lg:pl-24 lg:pt-0">
+        <h1 className="font-semibold ">{statusCode}</h1>
+        <p className="pt-8">You seem to be lost.</p>
+        <Link href="/">
+          <a className="underline">Let's stop being lost, shall we.</a>
+        </Link>
+      </div>
+    </div>
+  );
 }
 
-MyError.getInitialProps = async (ctx: NextPageContext) => {
+CustomError.getInitialProps = async (ctx: NextPageContext) => {
   const errorInitialProps = await NextErrorComponent.getInitialProps(ctx);
 
   const clone = {
@@ -39,6 +61,10 @@ MyError.getInitialProps = async (ctx: NextPageContext) => {
     // getInitialProps has run
     hasGetInitialPropsRun: true,
   };
+
+  const { captureException, flush } = await import(
+    /* webpackChunkName: "sentry.react" */ "@sentry/react"
+  );
 
   // Running on the server, the response object (`res`) is available.
   //
