@@ -106,4 +106,6 @@ const securityHeaders = [
 module.exports = withSentryConfig(config, {
   // disable in dev as its noisy in the console on basically every reload
   silent: process.env.NODE_ENV === "development",
+  // we want reporting, but not actually create a release when building locally
+  dryRun: typeof process.env.VERCEL === "undefined",
 });
