@@ -78,6 +78,26 @@ async function create() {
     })
   );
 
+  const rawCovenantTraits = await prisma.covenantTrait.findMany({
+    select: {
+      name: true,
+      id: true,
+      icon: true,
+    },
+  });
+
+  const covenantTraits = Object.fromEntries(
+    rawCovenantTraits.map((covenantTrait) => {
+      return [
+        covenantTrait.id,
+        {
+          name: covenantTrait.name,
+          icon: covenantTrait.icon,
+        },
+      ];
+    })
+  );
+
   const rawSoulbinds = await prisma.soulbind.findMany({
     select: {
       name: true,
@@ -92,6 +112,23 @@ async function create() {
         soulbind.id,
         { name: soulbind.name, covenantID: soulbind.covenantID },
       ];
+    })
+  );
+
+  const rawNPCs = await prisma.pullNPC.findMany({
+    select: {
+      npc: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+    },
+  });
+
+  const npcMap = Object.fromEntries(
+    rawNPCs.map((npc) => {
+      return [npc.npc.id, npc.npc.name];
     })
   );
 
@@ -195,7 +232,7 @@ async function create() {
     rawLegendaries.map((legendary) => [
       legendary.id,
       {
-        effectName: legendary.effectName,
+        name: legendary.effectName,
         icon: legendary.effectIcon,
       },
     ])
@@ -625,6 +662,8 @@ export const DOS_URN = ${DOS_URN};
 export const TOP_BANNER_AURA = ${TOP_BANNER_AURA};
 export const NW = JSON.parse(\`${JSON.stringify(NW)}\`);
 
+type StaticDataMap = Record<number, { name: string, icon: string }>;
+
 export const isBoss = (id: number): boolean => allBossIDs.has(id);
 export const isTormentedLieutenant = (id: number): boolean => tormentedLieutenantIDs.has(id);
 export const classes: Record<number, { name: string; cooldowns: number[]; specs: { id: number; name: string; cooldowns: number[]; }[]}> = JSON.parse(\`${JSON.stringify(
@@ -633,33 +672,39 @@ export const classes: Record<number, { name: string; cooldowns: number[]; specs:
 export const dungeons: Record<number, { name: string; slug: string; time: number; zones: {id: number; name: string; }[]; unitCountMap: Record<number, number>; count: number; covenant: number }> = JSON.parse(\`${JSON.stringify(
     dungeons
   )}\`);
-export const affixes: Record<number, { name: string; icon: string;}> = JSON.parse(\`${JSON.stringify(
+export const affixes: StaticDataMap = JSON.parse(\`${JSON.stringify(
     affixes
   )}\`);
 export const affixNameIdMap = JSON.parse(\`${JSON.stringify(affixNameIdMap)}\`);
 export const soulbinds: Record<number, { name: string; covenantID: number}> = JSON.parse(\`${JSON.stringify(
     soulbinds
   )}\`);
-export const covenants: Record<number, { name: string; icon: string;}> = JSON.parse(\`${JSON.stringify(
+export const covenants: StaticDataMap = JSON.parse(\`${JSON.stringify(
     covenants
   )}\`);
 export const spells: Record<number, { icon: string; name: string; cd: number; }> = JSON.parse(\`${JSON.stringify(
     extendedSpells
   )}\`);
-export const tormentedLieutenants: Record<number, { name: string; icon: string; }> = JSON.parse(\`${JSON.stringify(
+export const tormentedLieutenants: StaticDataMap = JSON.parse(\`${JSON.stringify(
     tormentedLieutenantMap
   )}\`);
 export const tormentedPowers: Record<number, { name: string; icon: string; sourceTormentorID: number[]; }> = JSON.parse(\`${JSON.stringify(
     tormentedPowerMap
   )}\`);
-export const legendaries: Record<number, { effectName: string; icon: string; }> = JSON.parse(\`${JSON.stringify(
+export const legendaries: StaticDataMap = JSON.parse(\`${JSON.stringify(
     legendaries
   )}\`);
-export const talents: Record<number, { name: string; icon: string; }> = JSON.parse(\`${JSON.stringify(
+export const talents: StaticDataMap = JSON.parse(\`${JSON.stringify(
     talents
   )}\`);
-export const conduits: Record<number, { name: string; icon: string }> = JSON.parse(\`${JSON.stringify(
+export const conduits: StaticDataMap = JSON.parse(\`${JSON.stringify(
     conduits
+  )}\`);
+export const covenantTraits: StaticDataMap = JSON.parse(\`${JSON.stringify(
+    covenantTraits
+  )}\`);
+export const npcs: Record<number, string> = JSON.parse(\`${JSON.stringify(
+    npcMap
   )}\`);
 `;
 
@@ -677,6 +722,7 @@ export const conduits: Record<number, { name: string; icon: string }> = JSON.par
     ...rawTalents.map((talent) => talent.icon),
     ...rawConduits.map((conduit) => conduit.icon),
     ...rawCovenants.map((covenant) => covenant.icon),
+    ...rawCovenantTraits.map((conduit) => conduit.icon),
     "inv_alchemy_80_potion02orange",
     "inv_misc_questionmark",
     "inv_misc_spyglass_03",

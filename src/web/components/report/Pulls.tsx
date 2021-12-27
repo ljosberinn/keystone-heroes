@@ -12,6 +12,7 @@ import {
   isTormentedLieutenant,
   EXPLOSIVE,
   affixNameIdMap,
+  npcs,
 } from "../../staticData";
 import { usePullSettings, useReportStore } from "../../store";
 import { bgPrimary, bgSecondary, grayscale } from "../../styles/tokens";
@@ -115,23 +116,31 @@ const useMostRelevantNPCByPull = (
   );
 };
 
+type EnhancedNPC = FightSuccessResponse["pulls"][number]["npcs"][number] & {
+  rawCount: number;
+};
+
 const findMostRelevantNPCOfPull = (
   pull: FightSuccessResponse["pulls"][number],
   dungeon: typeof dungeons[number]
-) => {
+): { id: number; count: number; name: string } => {
   const boss = pull.npcs.find((npc) => isBoss(npc.id));
 
   if (boss) {
-    return boss;
+    return {
+      ...boss,
+      name: npcs[boss.id],
+    };
   }
 
   const lieutenant = pull.npcs.find((npc) => isTormentedLieutenant(npc.id));
 
   if (lieutenant) {
-    return lieutenant;
+    return {
+      ...lieutenant,
+      name: npcs[lieutenant.id],
+    };
   }
-
-  type EnhancedNPC = typeof pull.npcs[number] & { rawCount: number };
 
   const npcWithHighestCount = pull.npcs
     .map<EnhancedNPC>((npc) => ({
@@ -153,7 +162,18 @@ const findMostRelevantNPCOfPull = (
       return acc.rawCount > npc.rawCount ? acc : npc;
     }, null);
 
-  return npcWithHighestCount ?? { id: 0, count: 0, name: "Unknown" };
+  if (!npcWithHighestCount) {
+    return {
+      id: 0,
+      count: 0,
+      name: "Unknown",
+    };
+  }
+
+  return {
+    ...npcWithHighestCount,
+    name: npcs[npcWithHighestCount.id],
+  };
 };
 
 function PullSelection() {

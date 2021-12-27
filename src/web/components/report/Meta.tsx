@@ -10,6 +10,10 @@ import {
   soulbinds,
   tormentedPowers,
   dungeons,
+  legendaries,
+  conduits,
+  talents,
+  covenantTraits,
 } from "../../staticData";
 import {
   bgPrimary,
@@ -355,28 +359,28 @@ function PlayerRow({ player, fightID, reportID }: PlayerRowProps) {
             <div
               className={`${classColor} relative w-4 h-4 mr-4 border-b-2 dark:border-opacity-50 border-l-2 border-solid left-4`}
             />
-            {player.legendaries.length > 0
-              ? player.legendaries.map((legendary) => {
-                  return (
-                    <ExternalLink
-                      href={createWowheadUrl({
-                        category: "spell",
-                        id: legendary.id,
-                      })}
-                      className="w-6 h-6"
-                      key={legendary.id}
-                    >
-                      <AbilityIcon
-                        icon={legendary.effectIcon}
-                        alt={legendary.effectName}
-                        className="object-cover w-full h-full rounded-full"
-                        width={24}
-                        height={24}
-                      />
-                    </ExternalLink>
-                  );
-                })
-              : null}
+            {player.legendaries.map((id) => {
+              const { name, icon } = legendaries[id];
+
+              return (
+                <ExternalLink
+                  href={createWowheadUrl({
+                    category: "spell",
+                    id,
+                  })}
+                  className="w-6 h-6"
+                  key={id}
+                >
+                  <AbilityIcon
+                    icon={icon}
+                    alt={name}
+                    className="object-cover w-full h-full rounded-full"
+                    width={24}
+                    height={24}
+                  />
+                </ExternalLink>
+              );
+            })}
 
             {player.soulbind ? (
               <>
@@ -406,7 +410,7 @@ function PlayerRow({ player, fightID, reportID }: PlayerRowProps) {
                     <span
                       className="w-6 h-6"
                       // eslint-disable-next-line react/no-array-index-key
-                      key={`${id}-${index}}`}
+                      key={`${id}-${index}`}
                     >
                       <ExternalLink
                         href={createWowheadUrl({
@@ -459,18 +463,20 @@ function PlayerRow({ player, fightID, reportID }: PlayerRowProps) {
                   className={`${classColor} relative w-4 h-4 mr-4 border-b-2 dark:border-opacity-50 border-l-2 border-solid left-4`}
                 />
 
-                {player.talents.map((talent) => {
+                {player.talents.map((id) => {
+                  const { icon, name } = talents[id];
+
                   return (
-                    <span className="w-6 h-6" key={talent.id}>
+                    <span className="w-6 h-6" key={id}>
                       <ExternalLink
                         href={createWowheadUrl({
                           category: "spell",
-                          id: talent.id,
+                          id,
                         })}
                       >
                         <AbilityIcon
-                          icon={talent.icon}
-                          alt={talent.name}
+                          icon={icon}
+                          alt={name}
                           className="object-cover w-full h-full rounded-full"
                           width={24}
                           height={24}
@@ -490,21 +496,54 @@ function PlayerRow({ player, fightID, reportID }: PlayerRowProps) {
                 />
 
                 {player.conduits.map((conduit) => {
+                  const { icon, name } = conduits[conduit.id];
+
+                  const url = createWowheadUrl({
+                    category: "spell",
+                    id: conduit.id,
+                  });
+
                   return (
                     <span className="w-6 h-6" key={conduit.id}>
-                      <ExternalLink
-                        href={createWowheadUrl({
-                          category: "spell",
-                          id: conduit.id,
-                        })}
-                      >
+                      <ExternalLink href={`${url}&ilvl=${conduit.itemLevel}`}>
                         <AbilityIcon
-                          icon={conduit.icon}
-                          alt={conduit.name}
+                          icon={icon}
+                          alt={`${name} @ ${conduit.itemLevel}`}
                           className="object-cover w-full h-full rounded-full"
                           width={24}
                           height={24}
-                          title={`${conduit.name} @ ${conduit.itemLevel}`}
+                        />
+                      </ExternalLink>
+                    </span>
+                  );
+                })}
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td colSpan={4}>
+              <div className="flex h-10 space-x-1">
+                <div
+                  className={`${classColor} relative w-4 h-4 mr-4 border-b-2 dark:border-opacity-50 border-l-2 border-solid left-4`}
+                />
+
+                {player.covenantTraits.map((id) => {
+                  const { icon, name } = covenantTraits[id];
+
+                  return (
+                    <span className="w-6 h-6" key={name}>
+                      <ExternalLink
+                        href={createWowheadUrl({
+                          category: "spell",
+                          id,
+                        })}
+                      >
+                        <AbilityIcon
+                          icon={icon}
+                          alt={name}
+                          className="object-cover w-full h-full rounded-full"
+                          width={24}
+                          height={24}
                         />
                       </ExternalLink>
                     </span>

@@ -22,6 +22,7 @@ import {
   HOA_GARGOYLE,
   isBoss,
   isTormentedLieutenant,
+  npcs,
   NW,
   SD_LANTERN_BUFF,
   SOA_SPEAR,
@@ -542,6 +543,29 @@ const killIndicatorSelector = ({
   renderTormentedKillIndicator,
 });
 
+function findBossOrLieutenantName(
+  pull: FightSuccessResponse["pulls"][number],
+  isBossType: boolean
+) {
+  if (isBossType) {
+    const boss = pull.npcs.find((npc) => isBoss(npc.id));
+
+    if (!boss) {
+      return null;
+    }
+
+    return npcs[boss.id];
+  }
+
+  const lieutenant = pull.npcs.find((npc) => isTormentedLieutenant(npc.id));
+
+  if (!lieutenant) {
+    return null;
+  }
+
+  return npcs[lieutenant.id];
+}
+
 function KillIndicator({ type, fullscreen }: KillIndicatorProps) {
   const setSelectedPull = useReportStore((state) => state.setSelectedPull);
   const { renderBossKillIndicator, renderTormentedKillIndicator } =
@@ -621,11 +645,10 @@ function KillIndicator({ type, fullscreen }: KillIndicatorProps) {
           const usedLust = findBloodlust(pull);
           const lustAbility = usedLust ? spells[usedLust] : null;
 
-          const maybeRelevantNpcName = isBossType
-            ? pull.npcs
-                .filter((npc) => isBoss(npc.id))
-                .map((npc) => npc.name)?.[0]
-            : pull.npcs.find((npc) => isTormentedLieutenant(npc.id))?.name;
+          const maybeRelevantNpcName = findBossOrLieutenantName(
+            pull,
+            isBossType
+          );
 
           if (!maybeRelevantNpcName) {
             return null;
@@ -1292,7 +1315,7 @@ function PullIndicatorIcon({ pull, x, y }: PullIndicatorIconProps) {
     <g {...gProps}>
       {bossNPC ? (
         <image
-          aria-label={bossNPC.name}
+          aria-label={npcs[bossNPC.id]}
           href={`/static/npcs/${bossNPC.id}.png`}
           className={classnames(
             selected ? selectedOutlineClasses : "opacity-70"

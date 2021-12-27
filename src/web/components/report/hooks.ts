@@ -5,6 +5,7 @@ import {
   EXPLOSIVE,
   isBoss,
   isTormentedLieutenant,
+  npcs as allNPCs,
 } from "../../staticData";
 import { useReportStore } from "../../store";
 import { isExplosivesDamageEvent } from "./utils";
@@ -52,6 +53,7 @@ export function usePullNPCs(): PullNPCs {
         countPerNPC,
         isBoss: isBoss(npc.id),
         isTormentedLieutenant: isTormentedLieutenant(npc.id),
+        name: allNPCs[npc.id],
       };
     })
     .sort((a, b) => {

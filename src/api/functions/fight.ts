@@ -113,15 +113,12 @@ export type FightSuccessResponse = {
   > & {
     class: Class["id"];
     spec: Spec["id"];
-    legendaries: Pick<
-      Legendary,
-      "effectIcon" | "effectName" | "id" | "itemID"
-    >[];
-    conduits: (Conduit & {
+    legendaries: Legendary["id"][];
+    conduits: (Pick<Conduit, "id"> & {
       itemLevel: PlayerConduit["itemLevel"];
     })[];
-    covenantTraits: Pick<CovenantTrait, "icon" | "name">[];
-    talents: Pick<Talent, "icon" | "name" | "id">[];
+    covenantTraits: CovenantTrait["id"][];
+    talents: Talent["id"][];
     covenant: Covenant["id"] | null;
     soulbind: Soulbind["id"] | null;
     name: Character["name"];
@@ -160,7 +157,7 @@ export type FightSuccessResponse = {
     })[];
     zone: Zone["id"];
     percent: number;
-    npcs: (Pick<PullNPC, "count"> & Pick<NPC, "id" | "name">)[];
+    npcs: (Pick<NPC, "id"> & Pick<PullNPC, "count">)[];
     id: number;
     hasBoss: boolean;
   })[];
@@ -207,19 +204,16 @@ type RawFight =
           PlayerLegendary: {
             legendary: {
               id: number;
-              effectIcon: string;
-              effectName: string;
-              itemID: number;
             } | null;
           }[];
-          PlayerConduit: (Pick<PlayerConduit, "itemLevel"> & {
-            conduit: Conduit;
-          })[];
+          PlayerConduit: ({
+            conduit: Pick<Conduit, "id">;
+          } & Pick<PlayerConduit, "itemLevel">)[];
           PlayerCovenantTrait: {
-            covenantTrait: Pick<CovenantTrait, "icon" | "name">;
+            covenantTrait: Pick<CovenantTrait, "id">;
           }[];
           PlayerTalent: {
-            talent: Pick<Talent, "id" | "icon" | "name">;
+            talent: Pick<Talent, "id">;
           }[];
           covenant: Pick<Covenant, "id"> | null;
           soulbind: Pick<Soulbind, "id"> | null;
@@ -237,7 +231,7 @@ type RawFight =
         "startTime" | "endTime" | "x" | "y" | "isWipe" | "percent"
       > & {
         PullZone: { zone: Pick<Zone, "id"> }[];
-        PullNPC: (Pick<PullNPC, "count"> & { npc: Pick<NPC, "id" | "name"> })[];
+        PullNPC: (Pick<PullNPC, "count"> & { npc: Pick<NPC, "id"> })[];
         Event: (Pick<
           Event,
           | "eventType"
@@ -319,10 +313,7 @@ export const loadExistingFight = async (
                 select: {
                   legendary: {
                     select: {
-                      effectIcon: true,
-                      effectName: true,
                       id: true,
-                      itemID: true,
                     },
                   },
                 },
@@ -332,8 +323,6 @@ export const loadExistingFight = async (
                   itemLevel: true,
                   conduit: {
                     select: {
-                      icon: true,
-                      name: true,
                       id: true,
                     },
                   },
@@ -343,8 +332,7 @@ export const loadExistingFight = async (
                 select: {
                   covenantTrait: {
                     select: {
-                      icon: true,
-                      name: true,
+                      id: true,
                     },
                   },
                 },
@@ -354,8 +342,6 @@ export const loadExistingFight = async (
                   talent: {
                     select: {
                       id: true,
-                      icon: true,
-                      name: true,
                     },
                   },
                 },
@@ -452,7 +438,6 @@ export const loadExistingFight = async (
               npc: {
                 select: {
                   id: true,
-                  name: true,
                 },
               },
             },
@@ -979,7 +964,6 @@ export const createResponseFromStoredFight = (
         return {
           count: pullNPC.count,
           id: pullNPC.npc.id,
-          name: pullNPC.npc.name,
         };
       });
 
@@ -1091,7 +1075,7 @@ export const createResponseFromStoredFight = (
           playerFight.player.PlayerConduit.map((playerConduit) => {
             return {
               itemLevel: playerConduit.itemLevel,
-              ...playerConduit.conduit,
+              id: playerConduit.conduit.id,
             };
           });
 
@@ -1099,18 +1083,18 @@ export const createResponseFromStoredFight = (
           FightSuccessResponse["player"][number]["legendaries"]
         >((acc, playerLegendary) => {
           return playerLegendary.legendary
-            ? [...acc, playerLegendary.legendary]
+            ? [...acc, playerLegendary.legendary.id]
             : acc;
         }, []);
 
         const covenantTraits: FightSuccessResponse["player"][number]["covenantTraits"] =
           playerFight.player.PlayerCovenantTrait.map(
-            (playerCovenantTrait) => playerCovenantTrait.covenantTrait
+            (playerCovenantTrait) => playerCovenantTrait.covenantTrait.id
           );
 
         const talents: FightSuccessResponse["player"][number]["talents"] =
           playerFight.player.PlayerTalent.map(
-            (playerTalent) => playerTalent.talent
+            (playerTalent) => playerTalent.talent.id
           );
 
         return {
