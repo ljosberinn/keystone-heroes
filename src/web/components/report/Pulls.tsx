@@ -457,7 +457,7 @@ function Events() {
   );
 
   const { before, during, after } = selectedPull.events.reduce<
-    Record<EventCategory, (DefaultEvent & { id: number })[]>
+    Record<EventCategory, (DefaultEvent & { key: string })[]>
   >(
     (acc, event, index) => {
       const playerID = event.sourcePlayerID ?? event.targetPlayerID;
@@ -468,24 +468,18 @@ function Events() {
       }
 
       if (event.category === "BEFORE") {
-        return {
-          ...acc,
-          before: [...acc.before, { ...event, id: index }],
-        };
+        acc.before.push({ ...event, key: createKey(event, index) });
+        return acc;
       }
 
       if (event.category === "DURING") {
-        return {
-          ...acc,
-          during: [...acc.during, { ...event, id: index }],
-        };
+        acc.during.push({ ...event, key: createKey(event, index) });
+        return acc;
       }
 
       if (event.category === "AFTER") {
-        return {
-          ...acc,
-          after: [...acc.after, { ...event, id: index }],
-        };
+        acc.after.push({ ...event, key: createKey(event, index) });
+        return acc;
       }
 
       return acc;
@@ -611,7 +605,7 @@ function Events() {
                         playerIdPlayerNameMap={playerIdPlayerNameMap}
                         playerIdTextColorMap={playerIdTextColorMap}
                         playerIdIconMap={playerIdIconMap}
-                        key={event.id}
+                        key={event.key}
                       />
                     );
                   })}
@@ -654,7 +648,7 @@ function Events() {
                       playerIdPlayerNameMap={playerIdPlayerNameMap}
                       playerIdTextColorMap={playerIdTextColorMap}
                       playerIdIconMap={playerIdIconMap}
-                      key={event.id}
+                      key={event.key}
                     />
                   );
                 })}
@@ -703,7 +697,7 @@ function Events() {
                         playerIdPlayerNameMap={playerIdPlayerNameMap}
                         playerIdTextColorMap={playerIdTextColorMap}
                         playerIdIconMap={playerIdIconMap}
-                        key={event.id}
+                        key={event.key}
                       />
                     );
                   })}
@@ -725,22 +719,18 @@ function Events() {
                   events={violentDetonationDamageEvents}
                 />
               ) : null}
-
               {throwCleaverDamageEvents.length > 0 ? (
                 <ThrowCleaverDamageRow events={throwCleaverDamageEvents} />
               ) : null}
               {animaaExhaustDamageEvents.length > 0 ? (
                 <AnimaExhaustDamageRow events={animaaExhaustDamageEvents} />
               ) : null}
-
               {animaExhaustHealEvents.length > 0 ? (
                 <AnimaExhaustHealingRow events={animaExhaustHealEvents} />
               ) : null}
-
               {bloodyJavelinDamageEvents.length > 0 ? (
                 <BloodyJavelinDamageRow events={bloodyJavelinDamageEvents} />
               ) : null}
-
               {dischargedAnimaDamageEvents.length > 0 ? (
                 <DischargedAnimaDamageRow
                   events={dischargedAnimaDamageEvents}
@@ -763,6 +753,10 @@ function Events() {
     </div>
   );
 }
+
+const createKey = (event: DefaultEvent, index: number) => {
+  return `${event.timestamp}-${event.type}-${index}`;
+};
 
 function TableSettings() {
   const { toggleAbsoluteTimestamps, useAbsoluteTimestamps, toggle, open } =
@@ -1017,11 +1011,11 @@ const ApplyDebuffRow = dynamic(
   { suspense: true }
 );
 
-const comparator = <T extends { event: { id: number } }>(prev: T, next: T) =>
-  prev.event.id === next.event.id;
+const comparator = <T extends { event: { key: string } }>(prev: T, next: T) =>
+  prev.event.key === next.event.key;
 
 export type TableRowProps = {
-  event: DefaultEvent & { id: number };
+  event: DefaultEvent & { key: string };
   msSinceLastEvent: string;
 } & Omit<SourceOrTargetPlayerCellProps, "transparent">;
 
