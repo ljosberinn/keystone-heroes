@@ -56,7 +56,10 @@ export function Footer(): JSX.Element {
                 Buy Me A Coffee
               </FooterNavLink>
 
-              <FooterNavLink href="/" icon={patreon}>
+              <FooterNavLink
+                href="https://www.patreon.com/keystoneheroes"
+                icon={patreon}
+              >
                 Patreon
               </FooterNavLink>
 
