@@ -738,7 +738,7 @@ const handler: RequestHandler<Request, ReportResponse> = async (req, res) => {
 
         // report K9Mfcb2CtjZ7pX6q contains zone 2222 as starting point, however
         // via .maps property its clear its the SD21 in the log, which is 2296
-        const match = Object.entries(dungeonMap).find(([_, dungeon]) => {
+        const match = Object.entries(dungeonMap).find(([, dungeon]) => {
           return dungeon.zones.every((zone) => fightMaps.has(zone.id));
         });
 
