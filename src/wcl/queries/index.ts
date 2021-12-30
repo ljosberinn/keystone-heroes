@@ -1,11 +1,11 @@
 import { getCachedSdk } from "../client";
 import type {
-  FightPullsQuery,
-  FightPullsQueryVariables,
-  InitialReportDataQuery,
-  InitialReportDataQueryVariables,
-  TableQuery,
-  TableQueryVariables,
+  GetReportQuery,
+  GetReportQueryVariables,
+  GetTableQuery,
+  GetTableQueryVariables,
+  GetPullsOfFightQuery,
+  GetPullsOfFightQueryVariables,
 } from "../types";
 import type { Table } from "./types";
 
@@ -25,11 +25,11 @@ export type {
 export { ItemQuality } from "./types";
 
 export const getInitialReportData = async (
-  params: InitialReportDataQueryVariables
-): Promise<InitialReportDataQuery> => {
+  params: GetReportQueryVariables
+): Promise<GetReportQuery> => {
   const sdk = await getCachedSdk();
 
-  return sdk.InitialReportData(params);
+  return sdk.getReport(params);
 };
 
 // TODO: duplicate
@@ -43,7 +43,7 @@ type TypedTableQuery = {
   reportData?: {
     report?:
       | (Omit<
-          DeepNullablePath<TableQuery, ["reportData", "report"]>,
+          DeepNullablePath<GetTableQuery, ["reportData", "report"]>,
           "table"
         > & { table?: { data: Table } })
       | null;
@@ -51,17 +51,17 @@ type TypedTableQuery = {
 };
 
 export const getTableData = async (
-  params: TableQueryVariables
+  params: GetTableQueryVariables
 ): Promise<TypedTableQuery> => {
   const sdk = await getCachedSdk();
 
-  return sdk.Table(params);
+  return sdk.getTable(params);
 };
 
 export const getFightPulls = async (
-  params: FightPullsQueryVariables
-): Promise<FightPullsQuery> => {
+  params: GetPullsOfFightQueryVariables
+): Promise<GetPullsOfFightQuery> => {
   const sdk = await getCachedSdk();
 
-  return sdk.FightPulls(params);
+  return sdk.getPullsOfFight(params);
 };

@@ -176,11 +176,71 @@ const findMostRelevantNPCOfPull = (
   };
 };
 
+type PullNavigationButtonProps = {
+  disabled: boolean;
+  nextPullID: number;
+  unitName: string | null;
+  direction: "left" | "right";
+};
+
+function PullNavigationButton({
+  disabled,
+  unitName,
+  direction,
+  nextPullID,
+}: PullNavigationButtonProps) {
+  const setSelectedPull = useReportStore((state) => state.setSelectedPull);
+
+  const iconClassName = classnames(
+    "rounded-full w-8 h-8",
+    disabled && grayscale
+  );
+
+  const isRight = direction === "right";
+
+  return (
+    <button
+      type="button"
+      disabled={disabled}
+      className={classnames(
+        "flex items-center w-1/6 space-x-2 md:w-1/4 lg:w-1/3 focus:outline-none focus:ring",
+        isRight && "justify-end"
+      )}
+      onClick={() => {
+        setSelectedPull(nextPullID);
+      }}
+    >
+      {isRight ? null : (
+        <AbilityIcon
+          icon="misc_arrowleft"
+          alt="Last pull"
+          className={iconClassName}
+          width={32}
+          height={32}
+        />
+      )}
+
+      {unitName ? (
+        <span className="hidden truncate md:inline">{unitName}</span>
+      ) : null}
+
+      {isRight ? (
+        <AbilityIcon
+          icon="misc_arrowright"
+          alt="Next pull"
+          className={iconClassName}
+          width={32}
+          height={32}
+        />
+      ) : null}
+    </button>
+  );
+}
+
 function PullSelection() {
   const { fight } = useFight();
 
   const selectedPullID = useReportStore((state) => state.selectedPull);
-  const setSelectedPull = useReportStore((state) => state.setSelectedPull);
   const mostRelevantNPCsByPull = useMostRelevantNPCByPull(selectedPullID);
 
   if (!mostRelevantNPCsByPull.current) {
@@ -202,30 +262,16 @@ function PullSelection() {
 
   return (
     <div className="flex justify-between w-full p-4">
-      <button
-        type="button"
+      <PullNavigationButton
         disabled={isFirst}
-        className="flex items-center w-1/6 space-x-2 md:w-1/3 focus:outline-none focus:ring"
-        onClick={() => {
-          setSelectedPull(selectedPullID - 1);
-        }}
-      >
-        <AbilityIcon
-          icon="misc_arrowleft"
-          alt="Last pull"
-          className={classnames("rounded-full w-8 h-8", isFirst && grayscale)}
-          width={32}
-          height={32}
-        />
+        nextPullID={selectedPullID - 1}
+        direction="left"
+        unitName={
+          mostRelevantNPCsByPull.last ? mostRelevantNPCsByPull.last.name : null
+        }
+      />
 
-        {mostRelevantNPCsByPull.last ? (
-          <span className="hidden md:inline">
-            {mostRelevantNPCsByPull.last.name}
-          </span>
-        ) : null}
-      </button>
-
-      <div className="flex justify-center w-4/6 space-x-2 md:w-1/3">
+      <div className="flex justify-center w-4/6 space-x-2 md:w-2/4 lg:w-1/3">
         {invisibilityType ? (
           <span>
             {invisibilityType === "shroud" ? (
@@ -258,7 +304,7 @@ function PullSelection() {
             category: "npc",
             id: mostRelevantNPCsByPull.current.id,
           })}
-          className="flex items-center space-x-2"
+          className="flex items-center space-x-2 truncate"
         >
           <img
             src={`/static/npcs/${mostRelevantNPCsByPull.current.id}.png`}
@@ -269,9 +315,10 @@ function PullSelection() {
             loading="lazy"
           />
 
-          <span>{`${mostRelevantNPCsByPull.current.name} ${
-            selectedPull.isWipe ? "(Wipe)" : ""
-          }`}</span>
+          <span className="space-x-1">
+            <span>{mostRelevantNPCsByPull.current.name}</span>
+            {selectedPull.isWipe ? <span>(Wipe)</span> : null}
+          </span>
         </ExternalLink>
 
         <span>
@@ -289,43 +336,53 @@ function PullSelection() {
         </span>
       </div>
 
-      <button
-        type="button"
+      <PullNavigationButton
         disabled={isLast}
-        className="flex items-center justify-end w-1/6 space-x-2 md:w-1/3 focus:outline-none focus:ring"
-        onClick={() => {
-          setSelectedPull(selectedPullID + 1);
-        }}
-      >
-        {mostRelevantNPCsByPull.next ? (
-          <span className="hidden md:inline">
-            {mostRelevantNPCsByPull.next.name}
-          </span>
-        ) : null}
-
-        <AbilityIcon
-          icon="misc_arrowright"
-          alt="Next pull"
-          className={classnames("rounded-full w-8 h-8", isLast && grayscale)}
-          width={32}
-          height={32}
-        />
-      </button>
+        nextPullID={selectedPullID + 1}
+        direction="right"
+        unitName={
+          mostRelevantNPCsByPull.next ? mostRelevantNPCsByPull.next.name : null
+        }
+      />
     </div>
   );
 }
 
 function Sidebar() {
   const { fight, fightID, reportID } = useFight();
-  const pullNPCs = usePullNPCs();
+  const selectedPullID = useReportStore((store) => store.selectedPull);
+
+  const pullNPCs = usePullNPCs(selectedPullID);
 
   if (!pullNPCs) {
     return null;
   }
 
+  const previousPullEnd =
+    selectedPullID === 1
+      ? null
+      : fight.pulls.find((pull) => pull.id === selectedPullID - 1)?.endTime ??
+        null;
+
+  const nextPullStart =
+    fight.pulls.find((pull) => pull.id === selectedPullID + 1)?.startTime ??
+    null;
+
   return (
     <div className="flex flex-col w-full bg-white rounded-lg lg:w-3/12 dark:bg-gray-700">
+      <p className="px-2 pt-2 text-xl font-semibold text-center">
+        Pull {selectedPullID}
+      </p>
       <div className="flex w-full p-2 justify-evenly">
+        <span>
+          {previousPullEnd ? (
+            <>
+              +{Math.round((pullNPCs.pull.startTime - previousPullEnd) / 1000)}s
+            </>
+          ) : (
+            "-"
+          )}
+        </span>
         <ExternalLink
           href={createWCLUrl({
             reportID,
@@ -348,15 +405,41 @@ function Sidebar() {
               { omitMs: true }
             )}
           </span>
-          <span>
-            (+
-            {timeDurationToString(
-              pullNPCs.pull.endTime - pullNPCs.pull.startTime,
-              { omitMs: true }
-            )}
-            )
-          </span>
         </ExternalLink>
+
+        <span>
+          {nextPullStart ? (
+            <>+{Math.round((nextPullStart - pullNPCs.pull.endTime) / 1000)}s</>
+          ) : (
+            "-"
+          )}
+        </span>
+      </div>
+
+      <div className="flex justify-around w-full px-2 pb-2">
+        <span
+          className="hidden lg:inline"
+          title="Time spent out of combat after last pull"
+        >
+          <svg className="inline w-4 h-4">
+            <use href={`#${outlineQuestionCircle.id}`} />
+          </svg>
+        </span>
+        <span>
+          +
+          {timeDurationToString(
+            pullNPCs.pull.endTime - pullNPCs.pull.startTime,
+            { omitMs: true }
+          )}
+        </span>
+        <span
+          className="hidden lg:inline"
+          title="Amount of time spent out of combat before next pull"
+        >
+          <svg className="inline w-4 h-4">
+            <use href={`#${outlineQuestionCircle.id}`} />
+          </svg>
+        </span>
       </div>
 
       {pullNPCs.npcs.map((npc) => {

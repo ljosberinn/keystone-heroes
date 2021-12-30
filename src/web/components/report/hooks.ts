@@ -7,7 +7,6 @@ import {
   isTormentedLieutenant,
   npcs as allNPCs,
 } from "../../staticData";
-import { useReportStore } from "../../store";
 import { isExplosivesDamageEvent } from "./utils";
 
 type PullNPCs = {
@@ -27,11 +26,9 @@ type PullNPCs = {
   percentAfterThisPull: number;
 } | null;
 
-export function usePullNPCs(): PullNPCs {
+export function usePullNPCs(selectedPullID: number): PullNPCs {
   const { fight } = useFight();
   const { pulls, dungeon: dungeonID } = fight;
-
-  const { selectedPull: selectedPullID } = useReportStore();
 
   const pull = pulls[selectedPullID - 1];
 

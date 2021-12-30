@@ -5,7 +5,7 @@ import type { AnyEvent } from "./types";
 export type GetEventBaseParams<
   T extends Record<string, unknown> = Record<string, unknown>
 > = Pick<
-  Parameters<Sdk["EventData"]>[0],
+  Parameters<Sdk["getEvents"]>[0],
   "reportID" | "startTime" | "endTime"
 > &
   T;
@@ -22,7 +22,7 @@ export const recursiveGetEvents = async <T extends AnyEvent>(
   previousEvents: T[] = []
 ): Promise<T[]> => {
   const sdk = await getCachedSdk();
-  const response = await sdk.EventData({ ...params, limit: 10_000 });
+  const response = await sdk.getEvents({ ...params, limit: 10_000 });
 
   const { data = [], nextPageTimestamp = null } =
     response?.reportData?.report?.events ?? {};

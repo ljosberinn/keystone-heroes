@@ -3,10 +3,10 @@ import { setupServer } from "msw/node";
 
 import { DungeonIDs, dungeonMap } from "../../db/data/dungeons";
 import type {
-  InitialReportDataQuery,
-  InitialReportDataQueryVariables,
-  TableQuery,
-  TableQueryVariables,
+  GetTableQuery,
+  GetTableQueryVariables,
+  GetReportQuery,
+  GetReportQueryVariables,
 } from "../../wcl/types";
 import { ONGOING_REPORT_THRESHOLD } from "../../wcl/utils";
 import {
@@ -31,9 +31,9 @@ import wclResponseFixture from "./fixtures/wclResponse.json";
 
 const validReportID = "THJWBAXcn2j9Nvkt";
 
-const createInitialReportDataHandler = (data: InitialReportDataQuery) => {
-  return graphql.query<InitialReportDataQuery, InitialReportDataQueryVariables>(
-    "InitialReportData",
+const createGetReportDataHandler = (data: GetReportQuery) => {
+  return graphql.query<GetReportQuery, GetReportQueryVariables>(
+    "getReport",
     (_req, res, ctx) => res(ctx.data(data))
   );
 };
@@ -59,7 +59,7 @@ describe("/api/report", () => {
 
   describe("warcraftlogs failure", () => {
     test("entirely empty response", async () => {
-      server.use(createInitialReportDataHandler({}));
+      server.use(createGetReportDataHandler({}));
 
       // @ts-expect-error mock typing issue
       prisma.report.findFirst.mockResolvedValue(null);
@@ -74,7 +74,7 @@ describe("/api/report", () => {
 
     test("empty fights", async () => {
       server.use(
-        createInitialReportDataHandler({
+        createGetReportDataHandler({
           reportData: {
             report: {
               fights: [],
@@ -99,7 +99,7 @@ describe("/api/report", () => {
 
     test("report endTime identical to startTime", async () => {
       server.use(
-        createInitialReportDataHandler({
+        createGetReportDataHandler({
           reportData: {
             report: {
               fights: [
@@ -160,7 +160,7 @@ describe("/api/report", () => {
       // @ts-expect-error since `select` is used, partials are fine
       prisma.report.findFirst.mockResolvedValue({ ...ongoingReport });
 
-      server.use(createInitialReportDataHandler(wclResponseFixture));
+      server.use(createGetReportDataHandler(wclResponseFixture));
 
       const { res, json } = await testLambda(reportHandler, {
         query: { reportID: validReportID },
@@ -180,7 +180,7 @@ describe("/api/report", () => {
       prisma.report.findFirst.mockResolvedValue(ongoingReport);
 
       server.use(
-        createInitialReportDataHandler({
+        createGetReportDataHandler({
           reportData: {
             report: {
               ...wclResponseFixture.reportData.report,
@@ -197,8 +197,8 @@ describe("/api/report", () => {
       );
 
       server.use(
-        graphql.query<TableQuery, TableQueryVariables>(
-          "Table",
+        graphql.query<GetTableQuery, GetTableQueryVariables>(
+          "getTable",
           (req, res, ctx) => {
             expect(req.variables).toMatchSnapshot();
 
@@ -222,7 +222,7 @@ describe("/api/report", () => {
       prisma.week.findFirst.mockResolvedValue({ id: 10 });
 
       server.use(
-        createInitialReportDataHandler({
+        createGetReportDataHandler({
           reportData: {
             report: {
               ...wclResponseFixture.reportData.report,
@@ -239,8 +239,8 @@ describe("/api/report", () => {
       );
 
       server.use(
-        graphql.query<TableQuery, TableQueryVariables>(
-          "Table",
+        graphql.query<GetTableQuery, GetTableQueryVariables>(
+          "getTable",
           (req, res, ctx) => {
             expect(req.variables).toMatchSnapshot();
 

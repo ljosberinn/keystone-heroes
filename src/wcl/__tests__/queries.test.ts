@@ -4,7 +4,7 @@ import { setupServer } from "msw/node";
 
 import { DungeonIDs } from "../../db/data/dungeons";
 import { getEvents } from "../queries/events";
-import type { EventDataQuery, EventDataQueryVariables } from "../types";
+import type { GetEventsQuery, GetEventsQueryVariables } from "../types";
 import allEvents from "./fixtures/allEvents.json";
 
 describe("getEvents", () => {
@@ -30,8 +30,8 @@ describe("getEvents", () => {
     const filterExpressions: string[] = [];
 
     server.use(
-      graphql.query<EventDataQuery, EventDataQueryVariables>(
-        "EventData",
+      graphql.query<GetEventsQuery, GetEventsQueryVariables>(
+        "getEvents",
         (req, res, ctx) => {
           expect(req.variables.startTime).toBe(startTime);
           expect(req.variables.endTime).toBe(endTime);

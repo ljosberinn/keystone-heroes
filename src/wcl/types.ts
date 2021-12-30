@@ -1718,11 +1718,11 @@ export type Zone = {
   partitions?: Maybe<Maybe<Partition>[]>;
 };
 
-export type InitialReportDataQueryVariables = Exact<{
+export type GetReportQueryVariables = Exact<{
   reportID: Scalars["String"];
 }>;
 
-export type InitialReportDataQuery = {
+export type GetReportQuery = {
   __typename?: "Query";
   reportData?:
     | {
@@ -1783,7 +1783,7 @@ export type InitialReportDataQuery = {
     | undefined;
 };
 
-export type EventDataQueryVariables = Exact<{
+export type GetEventsQueryVariables = Exact<{
   reportID: Scalars["String"];
   startTime: Scalars["Float"];
   endTime: Scalars["Float"];
@@ -1791,7 +1791,7 @@ export type EventDataQueryVariables = Exact<{
   filterExpression?: InputMaybe<Scalars["String"]>;
 }>;
 
-export type EventDataQuery = {
+export type GetEventsQuery = {
   __typename?: "Query";
   reportData?:
     | {
@@ -1815,96 +1815,14 @@ export type EventDataQuery = {
     | undefined;
 };
 
-export type PetActorsQueryVariables = Exact<{
-  reportID: Scalars["String"];
-}>;
-
-export type PetActorsQuery = {
-  __typename?: "Query";
-  reportData?:
-    | {
-        __typename?: "ReportData";
-        report?:
-          | {
-              __typename?: "Report";
-              masterData?:
-                | {
-                    __typename?: "ReportMasterData";
-                    actors?:
-                      | (
-                          | {
-                              __typename?: "ReportActor";
-                              gameID?: number | null | undefined;
-                              petOwner?: number | null | undefined;
-                              id?: number | null | undefined;
-                            }
-                          | null
-                          | undefined
-                        )[]
-                      | null
-                      | undefined;
-                  }
-                | null
-                | undefined;
-            }
-          | null
-          | undefined;
-      }
-    | null
-    | undefined;
-};
-
-export type EnemyNpcIdsQueryVariables = Exact<{
-  reportID: Scalars["String"];
-  fightIDs: InputMaybe<Scalars["Int"]>[] | InputMaybe<Scalars["Int"]>;
-}>;
-
-export type EnemyNpcIdsQuery = {
-  __typename?: "Query";
-  reportData?:
-    | {
-        __typename?: "ReportData";
-        report?:
-          | {
-              __typename?: "Report";
-              fights?:
-                | (
-                    | {
-                        __typename?: "ReportFight";
-                        enemyNPCs?:
-                          | (
-                              | {
-                                  __typename?: "ReportFightNPC";
-                                  id?: number | null | undefined;
-                                  gameID?: number | null | undefined;
-                                }
-                              | null
-                              | undefined
-                            )[]
-                          | null
-                          | undefined;
-                      }
-                    | null
-                    | undefined
-                  )[]
-                | null
-                | undefined;
-            }
-          | null
-          | undefined;
-      }
-    | null
-    | undefined;
-};
-
-export type TableQueryVariables = Exact<{
+export type GetTableQueryVariables = Exact<{
   reportID: Scalars["String"];
   fightIDs: InputMaybe<Scalars["Int"]>[] | InputMaybe<Scalars["Int"]>;
   startTime: Scalars["Float"];
   endTime: Scalars["Float"];
 }>;
 
-export type TableQuery = {
+export type GetTableQuery = {
   __typename?: "Query";
   reportData?:
     | {
@@ -1918,12 +1836,12 @@ export type TableQuery = {
     | undefined;
 };
 
-export type FightPullsQueryVariables = Exact<{
+export type GetPullsOfFightQueryVariables = Exact<{
   reportID: Scalars["String"];
   fightIDs: InputMaybe<Scalars["Int"]>[] | InputMaybe<Scalars["Int"]>;
 }>;
 
-export type FightPullsQuery = {
+export type GetPullsOfFightQuery = {
   __typename?: "Query";
   reportData?:
     | {
@@ -1986,8 +1904,8 @@ export type FightPullsQuery = {
     | undefined;
 };
 
-export const InitialReportDataDocument = gql`
-  query InitialReportData($reportID: String!) {
+export const GetReportDocument = gql`
+  query getReport($reportID: String!) {
     reportData {
       report(code: $reportID) {
         title
@@ -2018,8 +1936,8 @@ export const InitialReportDataDocument = gql`
     }
   }
 `;
-export const EventDataDocument = gql`
-  query EventData(
+export const GetEventsDocument = gql`
+  query getEvents(
     $reportID: String!
     $startTime: Float!
     $endTime: Float!
@@ -2041,37 +1959,8 @@ export const EventDataDocument = gql`
     }
   }
 `;
-export const PetActorsDocument = gql`
-  query PetActors($reportID: String!) {
-    reportData {
-      report(code: $reportID) {
-        masterData {
-          actors(type: "Pet") {
-            gameID
-            petOwner
-            id
-          }
-        }
-      }
-    }
-  }
-`;
-export const EnemyNpcIdsDocument = gql`
-  query EnemyNPCIds($reportID: String!, $fightIDs: [Int]!) {
-    reportData {
-      report(code: $reportID) {
-        fights(killType: Kills, fightIDs: $fightIDs) {
-          enemyNPCs {
-            id
-            gameID
-          }
-        }
-      }
-    }
-  }
-`;
-export const TableDocument = gql`
-  query Table(
+export const GetTableDocument = gql`
+  query getTable(
     $reportID: String!
     $fightIDs: [Int]!
     $startTime: Float!
@@ -2084,8 +1973,8 @@ export const TableDocument = gql`
     }
   }
 `;
-export const FightPullsDocument = gql`
-  query FightPulls($reportID: String!, $fightIDs: [Int]!) {
+export const GetPullsOfFightDocument = gql`
+  query getPullsOfFight($reportID: String!, $fightIDs: [Int]!) {
     reportData {
       report(code: $reportID) {
         fights(translate: true, fightIDs: $fightIDs) {
@@ -2120,83 +2009,57 @@ export function getSdk(
   withWrapper: SdkFunctionWrapper = defaultWrapper
 ) {
   return {
-    InitialReportData(
-      variables: InitialReportDataQueryVariables,
+    getReport(
+      variables: GetReportQueryVariables,
       requestHeaders?: Dom.RequestInit["headers"]
-    ): Promise<InitialReportDataQuery> {
+    ): Promise<GetReportQuery> {
       return withWrapper(
         (wrappedRequestHeaders) =>
-          client.request<InitialReportDataQuery>(
-            InitialReportDataDocument,
+          client.request<GetReportQuery>(GetReportDocument, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        "getReport"
+      );
+    },
+    getEvents(
+      variables: GetEventsQueryVariables,
+      requestHeaders?: Dom.RequestInit["headers"]
+    ): Promise<GetEventsQuery> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<GetEventsQuery>(GetEventsDocument, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        "getEvents"
+      );
+    },
+    getTable(
+      variables: GetTableQueryVariables,
+      requestHeaders?: Dom.RequestInit["headers"]
+    ): Promise<GetTableQuery> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<GetTableQuery>(GetTableDocument, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        "getTable"
+      );
+    },
+    getPullsOfFight(
+      variables: GetPullsOfFightQueryVariables,
+      requestHeaders?: Dom.RequestInit["headers"]
+    ): Promise<GetPullsOfFightQuery> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<GetPullsOfFightQuery>(
+            GetPullsOfFightDocument,
             variables,
             { ...requestHeaders, ...wrappedRequestHeaders }
           ),
-        "InitialReportData"
-      );
-    },
-    EventData(
-      variables: EventDataQueryVariables,
-      requestHeaders?: Dom.RequestInit["headers"]
-    ): Promise<EventDataQuery> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<EventDataQuery>(EventDataDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
-          }),
-        "EventData"
-      );
-    },
-    PetActors(
-      variables: PetActorsQueryVariables,
-      requestHeaders?: Dom.RequestInit["headers"]
-    ): Promise<PetActorsQuery> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<PetActorsQuery>(PetActorsDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
-          }),
-        "PetActors"
-      );
-    },
-    EnemyNPCIds(
-      variables: EnemyNpcIdsQueryVariables,
-      requestHeaders?: Dom.RequestInit["headers"]
-    ): Promise<EnemyNpcIdsQuery> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<EnemyNpcIdsQuery>(EnemyNpcIdsDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
-          }),
-        "EnemyNPCIds"
-      );
-    },
-    Table(
-      variables: TableQueryVariables,
-      requestHeaders?: Dom.RequestInit["headers"]
-    ): Promise<TableQuery> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<TableQuery>(TableDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
-          }),
-        "Table"
-      );
-    },
-    FightPulls(
-      variables: FightPullsQueryVariables,
-      requestHeaders?: Dom.RequestInit["headers"]
-    ): Promise<FightPullsQuery> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<FightPullsQuery>(FightPullsDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
-          }),
-        "FightPulls"
+        "getPullsOfFight"
       );
     },
   };

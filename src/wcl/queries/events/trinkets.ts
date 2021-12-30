@@ -29,24 +29,20 @@ export const TRINKETS = {
   },
 };
 
-export const trinketsFilterExpression = `type in ("cast", "applybuff", "removebuff") and ability.id in (${Object.values(
-  TRINKETS
-)
+const trinketAbilities = Object.values(TRINKETS);
+
+export const trinketsFilterExpression = `type in ("cast", "applybuff", "removebuff") and ability.id in (${trinketAbilities
   .map((trinket) => trinket.id)
   .join(", ")})`;
 
-export const isTrinketEvent = (() => {
-  const abilities = Object.values(TRINKETS);
-
-  return (
-    event: AllTrackedEventTypes
-  ): event is CastEvent | ApplyBuffEvent | RemoveBuffEvent => {
-    return abilities.some(
-      (ability) =>
-        ability.type.includes(event.type) && ability.id === event.abilityGameID
-    );
-  };
-})();
+export const isTrinketEvent = (
+  event: AllTrackedEventTypes
+): event is CastEvent | ApplyBuffEvent | RemoveBuffEvent => {
+  return trinketAbilities.some(
+    (ability) =>
+      ability.type.includes(event.type) && ability.id === event.abilityGameID
+  );
+};
 
 export const filterTrinkets = (
   allEvents: AllTrackedEventTypes[]

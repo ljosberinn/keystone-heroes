@@ -433,7 +433,8 @@ export function Map(): JSX.Element {
 }
 
 function FullscreenPullNPCs() {
-  const pullNPCs = usePullNPCs();
+  const selectedPull = useReportStore((store) => store.selectedPull);
+  const pullNPCs = usePullNPCs(selectedPull);
 
   if (!pullNPCs) {
     return null;

@@ -1790,6 +1790,12 @@ const calculatePullsWithWipesAndPercent = (
           return false;
         }
 
+        // skip adding units that somehow appear in multiple pulls, e.g.
+        // Ickor Bileflesh in PF
+        const wasKilledDuringThisPull = killedNPCTargetIDsOfThisPull.has(
+          npc.id
+        );
+
         // each angel before Devos sends two DeathEvents - one on actual death,
         // one when their ability is transferred to the next, around 6 seconds later
         // which may show up in logs while already fighting the next
@@ -1802,14 +1808,14 @@ const calculatePullsWithWipesAndPercent = (
             return false;
           }
 
-          soaAngelDeathMap[npc.gameID] = true;
-        }
+          // only mark as killed if actually dies during this pull
+          if (wasKilledDuringThisPull) {
+            soaAngelDeathMap[npc.gameID] = true;
 
-        // skip adding units that somehow appear in multiple pulls, e.g.
-        // Ickor Bileflesh in PF
-        const wasKilledDuringThisPull = killedNPCTargetIDsOfThisPull.has(
-          npc.id
-        );
+            // override whatever the death count map says about the death amount
+            deathCountMap[pull.startTime][npc.id] = 1;
+          }
+        }
 
         // check whether the next pull kills this unit. if so, merge the pulls
         // this occurs e.g. in report /BjF97Nm1faLkCnwT/17 for Ickor Bileflesh

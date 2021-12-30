@@ -1,4 +1,4 @@
-query InitialReportData($reportID: String!) {
+query getReport($reportID: String!) {
   reportData {
     report(code: $reportID) {
       title
@@ -35,7 +35,7 @@ query InitialReportData($reportID: String!) {
   }
 }
 
-query EventData(
+query getEvents(
   $reportID: String!
   $startTime: Float!
   $endTime: Float!
@@ -57,34 +57,7 @@ query EventData(
   }
 }
 
-query PetActors($reportID: String!) {
-  reportData {
-    report(code: $reportID) {
-      masterData {
-        actors(type: "Pet") {
-          gameID
-          petOwner
-          id
-        }
-      }
-    }
-  }
-}
-
-query EnemyNPCIds($reportID: String!, $fightIDs: [Int]!) {
-  reportData {
-    report(code: $reportID) {
-      fights(killType: Kills, fightIDs: $fightIDs) {
-        enemyNPCs {
-          id
-          gameID
-        }
-      }
-    }
-  }
-}
-
-query Table(
+query getTable(
   $reportID: String!
   $fightIDs: [Int]!
   $startTime: Float!
@@ -97,7 +70,7 @@ query Table(
   }
 }
 
-query FightPulls($reportID: String!, $fightIDs: [Int]!) {
+query getPullsOfFight($reportID: String!, $fightIDs: [Int]!) {
   reportData {
     report(code: $reportID) {
       fights(translate: true, fightIDs: $fightIDs) {

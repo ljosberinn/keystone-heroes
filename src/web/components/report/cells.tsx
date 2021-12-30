@@ -1,6 +1,12 @@
+import type { FightSuccessResponse } from "../../../api/functions/fight";
 import { useFight } from "../../../pages/report/[reportID]/[fightID]";
+import { asc } from "../../icons";
 import { spells, DUMMY_CD } from "../../staticData";
-import { usePullSettings } from "../../store";
+import {
+  reportStoreSelector,
+  usePullSettings,
+  useReportStore,
+} from "../../store";
 import { timeDurationToString } from "../../utils";
 import { classnames } from "../../utils/classnames";
 import { usePullMeta } from "./PullDetailsSettings";
@@ -25,6 +31,57 @@ const calcMissedUsageCount = ({
 }) => {
   return (then - now) / 1000 / cd - offset;
 };
+
+function findNextPullBasedOnTimestamp(
+  nextUseTimestamp: number,
+  allPulls: FightSuccessResponse["pulls"]
+) {
+  const match = allPulls.find((pull) => {
+    return (
+      pull.startTime <= nextUseTimestamp && pull.endTime >= nextUseTimestamp
+    );
+  });
+
+  return match ? match.id : null;
+}
+
+type LinkToNextUsePullButtonProps = {
+  nextUse: null | number;
+  allPulls: FightSuccessResponse["pulls"];
+  children: JSX.Element | (JSX.Element | null)[];
+};
+
+function LinkToUsePullButton({
+  allPulls,
+  children,
+  nextUse,
+}: LinkToNextUsePullButtonProps): JSX.Element {
+  const { setSelectedPull, selectedPull } = useReportStore(reportStoreSelector);
+
+  const nextUsePullID = nextUse
+    ? findNextPullBasedOnTimestamp(nextUse, allPulls)
+    : null;
+
+  if (!nextUsePullID || selectedPull === nextUsePullID) {
+    // @ts-expect-error its fine
+    return children;
+  }
+
+  const handleClick = () => {
+    setSelectedPull(nextUsePullID);
+  };
+
+  return (
+    <button type="button" onClick={handleClick}>
+      {children}
+      <sup className="hidden md:inline" title="Jump to pull with next use">
+        <svg className="inline w-4 h-4 rotate-45">
+          <use href={`#${asc.id}`} />
+        </svg>
+      </sup>
+    </button>
+  );
+}
 
 export function MaybeWastedCooldownCell({
   event,
@@ -61,14 +118,21 @@ export function MaybeWastedCooldownCell({
 
       return (
         <td className="pl-2 bg-red-500">
-          <span className="hidden md:inline">in </span>
-          <span className="md:hidden">+</span>
-          <span>
-            {timeDurationToString(event.ability.nextUse - event.timestamp, {
-              omitMs: true,
-            })}{" "}
-          </span>
-          <span className="hidden xl:inline">(missing {couldUseNTimes}x)</span>
+          <LinkToUsePullButton
+            allPulls={fight.pulls}
+            nextUse={event.ability.nextUse}
+          >
+            <span className="hidden md:inline">in </span>
+            <span className="md:hidden">+</span>
+            <span>
+              {timeDurationToString(event.ability.nextUse - event.timestamp, {
+                omitMs: true,
+              })}{" "}
+            </span>
+            <span className="hidden xl:inline">
+              (missing {couldUseNTimes}x)
+            </span>
+          </LinkToUsePullButton>
         </td>
       );
     }
@@ -113,18 +177,23 @@ export function MaybeWastedCooldownCell({
             : undefined
         )}
       >
-        <span className="hidden md:inline">in </span>
-        <span className="md:hidden">+</span>
-        <span>
-          {timeDurationToString(event.ability.nextUse - event.timestamp, {
-            omitMs: true,
-          })}{" "}
-        </span>
-        {wastedCastUpcoming && (
-          <span className="hidden xl:inline">
-            (missing {Math.floor(couldUseNTimes)}x)
+        <LinkToUsePullButton
+          allPulls={fight.pulls}
+          nextUse={event.ability.nextUse}
+        >
+          <span className="hidden md:inline">in </span>
+          <span className="md:hidden">+</span>
+          <span>
+            {timeDurationToString(event.ability.nextUse - event.timestamp, {
+              omitMs: true,
+            })}{" "}
           </span>
-        )}
+          {wastedCastUpcoming ? (
+            <span className="hidden xl:inline">
+              (missing {Math.floor(couldUseNTimes)}x)
+            </span>
+          ) : null}
+        </LinkToUsePullButton>
       </td>
     );
   }

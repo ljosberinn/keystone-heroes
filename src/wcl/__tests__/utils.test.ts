@@ -28,7 +28,7 @@ describe("recursiveGetEvents", () => {
     let requestNumber = 0;
 
     server.use(
-      graphql.query("EventData", (req, res, ctx) => {
+      graphql.query("getEvents", (req, res, ctx) => {
         expect(req.variables.startTime).toBe(
           // eslint-disable-next-line jest/no-if
           requestNumber === 0 ? 0 : requestNumber * 1000
@@ -83,7 +83,7 @@ describe("recursiveGetEvents", () => {
     const dummy = jest.fn();
 
     server.use(
-      graphql.query("EventData", (_req, res, ctx) => {
+      graphql.query("getEvents", (_req, res, ctx) => {
         if (requestNumber !== 1) {
           dummy();
 
@@ -129,7 +129,7 @@ describe("recursiveGetEvents", () => {
 
   test("fails gracefully given no response", async () => {
     server.use(
-      graphql.query("EventData", (_req, res, ctx) => {
+      graphql.query("getEvents", (_req, res, ctx) => {
         return res(ctx.data({}));
       })
     );
@@ -147,7 +147,7 @@ describe("recursiveGetEvents", () => {
 
   test("fails gracefully given an invalid response", async () => {
     server.use(
-      graphql.query("EventData", (_req, res, ctx) => {
+      graphql.query("getEvents", (_req, res, ctx) => {
         return res(ctx.data({ foo: "bar" }));
       })
     );
