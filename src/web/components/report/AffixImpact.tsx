@@ -102,7 +102,10 @@ export function AffixImpact(): JSX.Element {
   } = useAffixSpecificStats();
 
   return (
-    <section className="py-6 drop-shadow-sm">
+    <section
+      className="py-6 drop-shadow-sm"
+      aria-labelledby="affix-impact-heading"
+    >
       <div className="px-6 py-6 bg-white lg:px-0 dark:bg-gray-900">
         <style jsx>
           {`
@@ -113,14 +116,13 @@ export function AffixImpact(): JSX.Element {
             }
           `}
         </style>
+        <h2
+          id="affix-impact-heading"
+          className="pb-2 text-xl font-semibold text-left lg:text-center"
+        >
+          Affix Impact
+        </h2>
         <table className="w-full paddingLessTable">
-          <thead>
-            <tr>
-              <th className="pb-2 text-xl text-left lg:text-center">
-                Affix Impact
-              </th>
-            </tr>
-          </thead>
           <tbody>
             {explosives.spawned > 0 && (
               <>
@@ -705,10 +707,7 @@ type ImpactRowProps = {
 function ImpactRow({ children }: ImpactRowProps) {
   return (
     <tr>
-      <td
-        colSpan={2}
-        className="flex flex-col space-y-2 text-center md:space-x-2 md:table-cell md:space-y-0 md:pt-2"
-      >
+      <td className="flex flex-col space-y-2 text-center md:space-x-2 md:table-cell md:space-y-0 md:pt-2">
         {children}
       </td>
     </tr>

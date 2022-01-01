@@ -263,7 +263,7 @@ function Supabase() {
           y2="71.8295"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#249361" />
+          <stop offset="0" stopColor="#249361" />
           <stop offset="1" stopColor="#3ECF8E" />
         </linearGradient>
         <linearGradient
@@ -274,7 +274,7 @@ function Supabase() {
           y2="65.0806"
           gradientUnits="userSpaceOnUse"
         >
-          <stop />
+          <stop offset="0" />
           <stop offset="1" stopOpacity="0" />
         </linearGradient>
       </defs>

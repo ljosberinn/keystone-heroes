@@ -746,7 +746,7 @@ function Heading({ chests, level }: HeadingProps) {
   const dungeon = dungeons[fight.dungeon];
 
   return (
-    <h1 className="text-3xl font-bold" id="meta-title">
+    <h2 className="text-3xl font-bold" id="meta-title">
       <ExternalLink href={createWCLUrl({ reportID, fightID })}>
         <span className="lg:hidden 2xl:inline-block hover:underline">
           {dungeon.name}
@@ -766,6 +766,6 @@ function Heading({ chests, level }: HeadingProps) {
           </svg>
         ))}
       </sup>
-    </h1>
+    </h2>
   );
 }

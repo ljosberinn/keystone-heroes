@@ -14,6 +14,7 @@ import {
   affixNameIdMap,
   npcs,
 } from "../../staticData";
+import type { PullSettings } from "../../store";
 import { usePullSettings, useReportStore } from "../../store";
 import { bgPrimary, bgSecondary, grayscale } from "../../styles/tokens";
 import {
@@ -370,9 +371,9 @@ function Sidebar() {
 
   return (
     <div className="flex flex-col w-full bg-white rounded-lg lg:w-3/12 dark:bg-gray-700">
-      <p className="px-2 pt-2 text-xl font-semibold text-center">
+      <h3 className="px-2 pt-2 text-xl font-semibold text-center">
         Pull {selectedPullID}
-      </p>
+      </h3>
       <div className="flex w-full p-2 justify-evenly">
         <span>
           {previousPullEnd ? (
@@ -608,7 +609,8 @@ function Events() {
   } = usePullSummaryRows(selectedPull);
 
   return (
-    <div className="w-full min-h-screen px-4 py-2 bg-white rounded-lg lg:w-9/23 dark:bg-gray-700">
+    <section className="w-full min-h-screen px-4 py-2 bg-white rounded-lg lg:w-9/23 dark:bg-gray-700">
+      <h3 className="font-semibold font-xl pb-2 text-xl">Events</h3>
       <p>Filter Events by Player</p>
       <div className="flex justify-between w-full">
         <div className="flex flex-col md:flex-row ">
@@ -665,7 +667,6 @@ function Events() {
       </div>
 
       <table className="w-full">
-        <TableSettings />
         <TableHead />
 
         <PullMetaProvider
@@ -853,7 +854,7 @@ function Events() {
           </tfoot>
         </PullMetaProvider>
       </table>
-    </div>
+    </section>
   );
 }
 
@@ -861,89 +862,83 @@ const createKey = (event: DefaultEvent, index: number) => {
   return `${event.timestamp}-${event.type}-${index}`;
 };
 
-function TableSettings() {
-  const { toggleAbsoluteTimestamps, useAbsoluteTimestamps, toggle, open } =
-    usePullSettings();
-
-  return (
-    <>
-      <thead className="hidden md:table-header-group">
-        <tr>
-          <th colSpan={6} className={`sticky top-0 z-10 ${bgPrimary}`}>
-            <button
-              type="button"
-              className="flex items-center justify-center w-full py-2 space-x-2"
-              onClick={toggle}
-            >
-              <img
-                src="/static/icons/trade_engineering.jpg"
-                className="object-cover w-8 h-8 rounded-full"
-                alt=""
-                width="32"
-                height="32"
-              />
-              <span>Settings</span>
-            </button>
-          </th>
-        </tr>
-      </thead>
-      {open ? (
-        <tbody className="hidden md:table-row-group">
-          <tr>
-            <td colSpan={6} className={`sticky top-12 z-10 ${bgPrimary} pb-2`}>
-              <div className="flex items-center hidden space-x-2 md:block">
-                <input
-                  className="cursor-pointer"
-                  type="checkbox"
-                  checked={useAbsoluteTimestamps}
-                  onChange={toggleAbsoluteTimestamps}
-                  id="useAbsoluteTimestamps"
-                  aria-labelledby="useAbsoluteTimestamps"
-                />
-                <label
-                  htmlFor="useAbsoluteTimestamps"
-                  className="cursor-pointer"
-                >
-                  use absolute timestamps
-                </label>
-              </div>
-
-              <div className="flex items-center hidden space-x-2 md:block">
-                <input
-                  className="cursor-pointer"
-                  type="checkbox"
-                  checked={false}
-                  // onChange={toggleAbsoluteTimestamps}
-                  id="groupSimilarEvents"
-                  aria-labelledby="groupSimilarEvents"
-                  disabled
-                />
-                <label htmlFor="groupSimilarEvents" className="cursor-pointer">
-                  group similar events (e.g. Bursting)
-                </label>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      ) : null}
-    </>
-  );
-}
+const tableSettingsSelector = ({
+  toggleAbsoluteTimestamps,
+  useAbsoluteTimestamps,
+  toggle,
+  open,
+}: PullSettings) => ({
+  toggleAbsoluteTimestamps,
+  useAbsoluteTimestamps,
+  toggle,
+  open,
+});
 
 function TableHead() {
-  const usesAbsoluteTimestamps = usePullSettings(
-    (state) => state.useAbsoluteTimestamps
-  );
-  const settingsOpen = usePullSettings((state) => state.open);
+  const { toggleAbsoluteTimestamps, useAbsoluteTimestamps, toggle, open } =
+    usePullSettings(tableSettingsSelector);
 
-  const top = settingsOpen ? "md:top-24" : "md:top-12";
+  const top = open ? "md:top-24" : "md:top-12";
   const className = `sticky z-10 ${bgPrimary} top-0 ${top}`;
 
   return (
     <thead>
+      <tr className="hidden md:table-row">
+        <th colSpan={6} className={`sticky top-0 z-10 ${bgPrimary}`}>
+          <button
+            type="button"
+            className="flex items-center justify-center w-full py-2 space-x-2"
+            onClick={toggle}
+          >
+            <img
+              src="/static/icons/trade_engineering.jpg"
+              className="object-cover w-8 h-8 rounded-full"
+              alt=""
+              width="32"
+              height="32"
+            />
+            <span>Settings</span>
+          </button>
+        </th>
+      </tr>
+
+      {open ? (
+        <tr className="hidden md:table-row">
+          <td colSpan={6} className={`sticky top-12 z-10 ${bgPrimary} pb-2`}>
+            <div className="flex items-center hidden space-x-2 md:block">
+              <input
+                className="cursor-pointer"
+                type="checkbox"
+                checked={useAbsoluteTimestamps}
+                onChange={toggleAbsoluteTimestamps}
+                id="useAbsoluteTimestamps"
+                aria-labelledby="useAbsoluteTimestamps"
+              />
+              <label htmlFor="useAbsoluteTimestamps" className="cursor-pointer">
+                use absolute timestamps
+              </label>
+            </div>
+
+            <div className="flex items-center hidden space-x-2 md:block">
+              <input
+                className="cursor-pointer"
+                type="checkbox"
+                checked={false}
+                // onChange={toggleAbsoluteTimestamps}
+                id="groupSimilarEvents"
+                aria-labelledby="groupSimilarEvents"
+                disabled
+              />
+              <label htmlFor="groupSimilarEvents" className="cursor-pointer">
+                group similar events (e.g. Bursting)
+              </label>
+            </div>
+          </td>
+        </tr>
+      ) : null}
       <tr className="text-left">
         <th className={classnames(className, "hidden md:table-cell")}>
-          {usesAbsoluteTimestamps ? "Abs." : "Rel."} Time
+          {useAbsoluteTimestamps ? "Abs." : "Rel."} Time
         </th>
         <th className={className}>Type</th>
         <th className={className}>Actor</th>

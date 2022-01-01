@@ -271,7 +271,7 @@ export function Map(): JSX.Element {
 
   return (
     <section
-      className={`flex flex-col w-full h-auto max-w-screen-xl pt-4 lg:pt-0 lg:w-4/6 ${hoverShadow}`}
+      className="flex flex-col w-full h-auto max-w-screen-xl pt-4 lg:pt-0 lg:w-4/6"
       aria-labelledby="section-route"
     >
       <Triangle />
@@ -328,7 +328,7 @@ export function Map(): JSX.Element {
           </select>
         </div>
       </div>
-      <div className={`p-2 rounded-b-lg ${bgPrimary}`}>
+      <div className={`p-2 rounded-b-lg ${bgPrimary} ${hoverShadow}`}>
         {zones.map((zone, index) => {
           const hidden = index !== selectedTab;
 

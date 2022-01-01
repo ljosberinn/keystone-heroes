@@ -245,7 +245,7 @@ export const useLegend = create<Legend>((set) => {
   };
 });
 
-type PullSettings = {
+export type PullSettings = {
   useAbsoluteTimestamps: boolean;
   toggleAbsoluteTimestamps: () => void;
 
