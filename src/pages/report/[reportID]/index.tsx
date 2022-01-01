@@ -205,7 +205,9 @@ export default function Report(): JSX.Element | null {
           loading="lazy"
         />
 
-        <p className="pt-8 lg:pl-24 lg:pt-0">Bear busy. Please stand by.</p>
+        <p className="pt-8 lg:pl-24 lg:pt-0">
+          Bear busy retrieving report. Please stand by.
+        </p>
       </div>
     );
   }
