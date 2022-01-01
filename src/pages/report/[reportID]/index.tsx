@@ -1,6 +1,7 @@
+import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import type { ParsedUrlQuery } from "querystring";
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 
 import type {
   ReportErrorResponse,
@@ -14,6 +15,7 @@ import { ExternalLink } from "../../../web/components/ExternalLink";
 import { LinkBox, LinkOverlay } from "../../../web/components/LinkBox";
 import { Seo } from "../../../web/components/Seo";
 import { SpecIcon } from "../../../web/components/SpecIcon";
+import type { SupportCardProps } from "../../../web/components/report/SupportCard";
 import { useAbortableFetch } from "../../../web/hooks/useAbortableFetch";
 import { useIsMounted } from "../../../web/hooks/useIsMounted";
 import { classes, dungeons } from "../../../web/staticData";
@@ -369,7 +371,7 @@ export default function Report(): JSX.Element | null {
   );
 }
 
-const commonCardClassNames = `${hoverShadow} rounded-lg hover:-translate-y-1 transition-transform`;
+export const commonCardClassNames = `${hoverShadow} rounded-lg hover:-translate-y-1 transition-transform`;
 
 type FightCardProps = {
   fight: ReportSuccessResponse["fights"][number];
@@ -551,7 +553,7 @@ const cardCache: Record<
     timed: Record<number, BearCardProps["type"]>;
     untimed: Record<number, BearCardProps["type"]>;
     indeterminate: Record<number, BearCardProps["type"]>;
-    hasSupportCard: boolean;
+    supportCard: "buyMeACoffee" | "patreon" | null;
   }
 > = {};
 
@@ -573,28 +575,62 @@ const mutateOrRetrieveCache = ({
     timed: {},
     untimed: {},
     indeterminate: {},
-    hasSupportCard: false,
+    supportCard: null,
   };
 
   return cardCache[reportID][category];
 };
 
-const maybeSpawnBuyMeACoffeeCard = ({
+const SupportCard = dynamic(
+  () =>
+    import(
+      /* webpackChunkName: "SupportCard" */ "../../../web/components/report/SupportCard"
+    ),
+  {
+    suspense: true,
+  }
+);
+
+const maybeSpawnSupportCard = ({
   reportID,
   index,
-}: Pick<GenerateCardArgs, "reportID"> & { index: number }) => {
-  if (index % 2 !== 1) {
+  spawnedPreviously,
+}: Pick<GenerateCardArgs, "reportID"> & {
+  index: number;
+  spawnedPreviously: boolean;
+}) => {
+  if (spawnedPreviously || index % 2 !== 1) {
     return null;
   }
 
   const cache = cardCache[reportID];
 
-  if (!cache.hasSupportCard && Math.random() >= 0.5) {
-    cache.hasSupportCard = true;
-    return <BuyMeACoffeeCard key={`support-${reportID}`} />;
+  if (cache.supportCard) {
+    return (
+      <Suspense
+        fallback={<div />}
+        key={`support-${cache.supportCard}-${reportID}`}
+      >
+        <SupportCard type={cache.supportCard} />
+      </Suspense>
+    );
   }
 
-  return null;
+  const shouldSpawn = Math.random() >= 0.5;
+
+  if (!shouldSpawn) {
+    return null;
+  }
+
+  const type: SupportCardProps["type"] =
+    Math.random() >= 0.5 ? "buyMeACoffee" : "patreon";
+  cache.supportCard = type;
+
+  return (
+    <Suspense fallback={<div />} key={`support-${type}-${reportID}`}>
+      <SupportCard type={type} />
+    </Suspense>
+  );
 };
 
 function generateCards({
@@ -604,13 +640,23 @@ function generateCards({
 }: GenerateCardArgs): (JSX.Element | null)[] {
   // retrieve cache of this report
   const cache = mutateOrRetrieveCache({ category, reportID });
+  let spawnedSupportCard = false;
 
   return fights.reduce<(JSX.Element | null)[]>((acc, fight, index) => {
     // retrieve cache of this array index
     const cachedType = index in cache ? cache[index] : null;
 
-    // add a 50% chance to spawn a BuyMeACoffeeCard on odd indices
-    const supportJsx = maybeSpawnBuyMeACoffeeCard({ reportID, index });
+    // add a 50% chance to spawn a support on odd indices
+    const supportJsx = maybeSpawnSupportCard({
+      reportID,
+      index,
+      spawnedPreviously: spawnedSupportCard,
+    });
+
+    if (supportJsx) {
+      spawnedSupportCard = true;
+    }
+
     const defaultJsx = (
       <FightCard reportID={reportID} fight={fight} key={fight.id} />
     );
@@ -620,17 +666,18 @@ function generateCards({
 
     // may not add now or based on previous iteration
     if (!maySpawn && !cachedType) {
-      return [...acc, defaultJsx, supportJsx];
+      acc.push(defaultJsx, supportJsx);
+      return acc;
     }
 
     // use cache. straightforward
     if (cachedType) {
-      return [
-        ...acc,
+      acc.push(
         defaultJsx,
         <BearCard type={cachedType} key={`${cachedType}-${reportID}`} />,
-        supportJsx,
-      ];
+        supportJsx
+      );
+      return acc;
     }
 
     // retrieve all previously used options
@@ -642,7 +689,8 @@ function generateCards({
 
     // may spawn, but nothing to spawn :(
     if (hasExhaustedAllOptions) {
-      return [...acc, defaultJsx, supportJsx];
+      acc.push(defaultJsx, supportJsx);
+      return acc;
     }
 
     // reroll until we hit something we haven't seen yet
@@ -656,59 +704,11 @@ function generateCards({
     cardCache[reportID][category][index] = nextType;
 
     // use it
-    return [
-      ...acc,
+    acc.push(
       defaultJsx,
       <BearCard type={nextType} key={`${nextType}-${reportID}`} />,
-      supportJsx,
-    ];
+      supportJsx
+    );
+    return acc;
   }, []);
-}
-
-function BuyMeACoffeeCard() {
-  return (
-    <div className={commonCardClassNames}>
-      <LinkBox
-        className="relative flex items-center justify-center h-64 text-2xl rounded-md"
-        as="section"
-        aria-labelledby="buy-me-a-coffee"
-      >
-        <LinkOverlay
-          href="https://www.buymeacoffee.com/rOSn8DF"
-          className="flex flex-col justify-center w-full h-full p-2 bg-white rounded-lg md:p-4 dark:bg-gray-900 "
-        >
-          <h2 id="buy-me-a-coffee" className="font-extrabold text-center">
-            Consider supporting the site to keep the lights on {"<3"}
-          </h2>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 300 300"
-          >
-            <path d="M0 0h300v300H0z" />
-            <path
-              fill="#0D0C22"
-              d="m215.457 85.7847-.164-.0968-.381-.1161c.153.1293.345.2042.545.2129ZM217.856 102.917l-.184.052.184-.052ZM215.529 85.7583c-.024-.003-.047-.0085-.069-.0164-.001.0152-.001.0305 0 .0457.025-.0032.049-.0134.069-.0293Z"
-            />
-            <path
-              fill="#0D0C22"
-              d="M215.459 85.7869h.025v-.0154l-.025.0154ZM217.709 102.886l.277-.158.104-.058.093-.1c-.176.076-.336.183-.474.316ZM215.939 86.1589l-.271-.2581-.184-.1c.099.1744.263.303.455.3581ZM147.753 252.409c-.217.094-.406.24-.552.426l.171-.11c.116-.106.281-.232.381-.316ZM187.347 244.619c0-.245-.12-.2-.09.671 0-.071.029-.142.041-.21.017-.155.029-.306.049-.461ZM183.241 252.409c-.216.094-.406.24-.552.426l.171-.11c.117-.106.281-.232.381-.316ZM119.87 254.261c-.165-.143-.366-.237-.581-.271.174.084.349.168.465.232l.116.039ZM113.594 248.252c-.025-.254-.103-.5-.229-.722.089.231.163.468.223.709l.006.013Z"
-            />
-            <path
-              fill="#FD0"
-              d="M155.742 140.782c-8.614 3.687-18.389 7.869-31.059 7.869-5.3-.011-10.574-.738-15.679-2.162l8.762 89.963c.31 3.76 2.023 7.266 4.799 9.822 2.776 2.555 6.411 3.974 10.184 3.973 0 0 12.424.645 16.57.645 4.461 0 17.841-.645 17.841-.645 3.772 0 7.406-1.419 10.181-3.974 2.775-2.556 4.488-6.062 4.798-9.821l9.385-99.413c-4.194-1.432-8.427-2.384-13.199-2.384-8.252-.003-14.901 2.839-22.583 6.127Z"
-            />
-            <path
-              fill="#0D0C22"
-              d="m81.8789 102.4.1484.139.0968.058c-.0745-.074-.1567-.14-.2452-.197Z"
-            />
-            <path
-              fill="#0D0C22"
-              d="m232.044 94.0967-1.32-6.6557c-1.184-5.9717-3.871-11.6144-10.001-13.7727-1.965-.6904-4.194-.9872-5.701-2.4164-1.506-1.4292-1.952-3.6489-2.3-5.7072-.645-3.7779-1.252-7.559-1.913-11.3304-.571-3.2424-1.023-6.8847-2.51-9.8593-1.936-3.9941-5.952-6.3298-9.947-7.8752-2.046-.764-4.135-1.4103-6.255-1.9357-9.979-2.6326-20.47-3.6005-30.736-4.1521-12.322-.68-24.677-.4751-36.969.6129-9.15.8324-18.787 1.839-27.4811 5.0039-3.1778 1.1582-6.4524 2.5487-8.8689 5.0038-2.9649 3.0165-3.9327 7.6816-1.7679 11.4434 1.5389 2.6713 4.1456 4.5586 6.9105 5.8072 3.6013 1.6087 7.3624 2.8328 11.2204 3.652 10.744 2.3745 21.871 3.3069 32.846 3.7037 12.165.491 24.35.0931 36.457-1.1904 2.993-.3291 5.982-.7238 8.965-1.1841 3.513-.5387 5.769-5.1329 4.733-8.3333-1.239-3.8262-4.568-5.3103-8.333-4.7328-.555.0871-1.107.1678-1.662.2484l-.4.0581c-1.275.1613-2.551.3119-3.826.4517-2.635.2839-5.276.5161-7.924.6968-5.929.413-11.875.6033-17.818.613-5.839 0-11.682-.1645-17.509-.5485-2.658-.1742-5.31-.3957-7.955-.6646-1.204-.1258-2.404-.2581-3.604-.4065l-1.142-.1451-.249-.0355-1.184-.171c-2.419-.3646-4.839-.784-7.233-1.2905-.241-.0536-.457-.188-.612-.381-.155-.193-.24-.433-.24-.6804 0-.2475.085-.4875.24-.6805.155-.193.371-.3274.612-.3809h.045c2.075-.442 4.165-.8195 6.262-1.1486.699-.1097 1.401-.2172 2.104-.3226h.019c1.313-.0871 2.633-.3226 3.939-.4775 11.369-1.1824 22.804-1.5856 34.227-1.2066 5.546.1613 11.089.4872 16.609 1.0485 1.187.1226 2.368.2517 3.549.3969.451.0548.906.1193 1.361.1742l.916.1322c2.672.3979 5.329.8808 7.972 1.4486 3.917.8517 8.947 1.1292 10.689 5.42.555 1.3615.806 2.8746 1.113 4.3038l.39 1.8228c.01.0327.018.0661.023.1.922 4.3016 1.846 8.6032 2.771 12.9049.068.3177.069.6461.005.9645-.065.3184-.195.6201-.381.8861-.187.2661-.426.4909-.703.6604-.277.1695-.586.2801-.908.3248h-.026l-.565.0774-.558.0742c-1.768.2302-3.538.4452-5.31.6453-3.491.3979-6.987.742-10.489 1.0324-6.957.5785-13.929.9581-20.915 1.1388-3.56.0946-7.118.1387-10.676.1323-14.159-.0112-28.307-.8341-42.373-2.4648-1.522-.1807-3.045-.3743-4.568-.5711 1.181.1517-.858-.1161-1.271-.1742-.968-.1355-1.9358-.2764-2.9036-.4226-3.2488-.4872-6.4783-1.0873-9.7206-1.6131-3.9199-.6453-7.6687-.3226-11.2143 1.6131-2.9104 1.5926-5.266 4.0348-6.7525 7.0009-1.5292 3.1616-1.9841 6.604-2.668 10.0012-.684 3.3972-1.7486 7.0525-1.3454 10.54.8679 7.527 6.1298 13.644 13.6985 15.012 7.1203 1.29 14.2792 2.335 21.4579 3.226 28.198 3.453 56.685 3.866 84.971 1.232 2.304-.215 4.604-.449 6.901-.703.718-.079 1.444.004 2.125.242.682.238 1.301.625 1.813 1.134.513.508.905 1.125 1.148 1.805.243.679.331 1.405.257 2.123l-.716 6.962c-1.443 14.068-2.887 28.136-4.33 42.202-1.505 14.772-3.021 29.542-4.546 44.312-.43 4.16-.86 8.318-1.29 12.476-.413 4.094-.471 8.317-1.249 12.362-1.226 6.363-5.533 10.269-11.817 11.699-5.758 1.31-11.64 1.998-17.544 2.052-6.546.035-13.089-.255-19.635-.22-6.988.039-15.547-.606-20.941-5.807-4.74-4.568-5.395-11.721-6.04-17.905-.86-8.189-1.713-16.376-2.558-24.562l-4.743-45.518-3.068-29.452c-.051-.487-.103-.968-.151-1.458-.368-3.514-2.8556-6.953-6.7755-6.775-3.3552.148-7.1686 3-6.775 6.775l2.2745 21.835 4.7038 45.166c1.3399 12.83 2.6766 25.662 4.0101 38.496.2581 2.458.5001 4.923.7711 7.381 1.474 13.434 11.734 20.674 24.439 22.713 7.42 1.193 15.021 1.439 22.551 1.561 9.653.155 19.402.526 28.897-1.223 14.069-2.581 24.625-11.975 26.132-26.548.43-4.207.86-8.415 1.291-12.624 1.43-13.92 2.858-27.841 4.284-41.763l4.665-45.49 2.139-20.848c.107-1.034.543-2.005 1.245-2.772.702-.766 1.632-1.286 2.652-1.483 4.023-.784 7.869-2.123 10.731-5.185 4.555-4.874 5.462-11.23 3.852-17.6373ZM80.7056 98.594c.0613-.029-.0516.4968-.1.742-.0096-.371.0097-.7001.1-.742Zm.3904 3.02c.0323-.023.1291.106.2291.261-.1517-.142-.2484-.248-.2323-.261h.0032Zm.3839.506c.1388.236.213.384 0 0Zm.7711.626h.0193c0 .023.0355.045.0484.068-.0214-.025-.0451-.048-.0709-.068h.0032Zm135.023-.935c-1.445 1.374-3.623 2.013-5.775 2.332-24.132 3.581-48.615 5.394-73.012 4.594-17.46-.597-34.737-2.536-52.0226-4.978-1.6937-.239-3.5295-.548-4.6941-1.797-2.1938-2.355-1.1163-7.0975-.5452-9.943.5226-2.6068 1.5227-6.0814 4.6231-6.4524 4.8393-.5678 10.4594 1.4744 15.2468 2.2002 5.764.8797 11.55 1.5841 17.357 2.1132 24.784 2.2584 49.984 1.9067 74.658-1.3969 4.497-.6044 8.978-1.3066 13.444-2.1067 3.977-.713 8.388-2.0519 10.791 2.068 1.649 2.8068 1.868 6.5621 1.613 9.7334-.078 1.3818-.682 2.6812-1.687 3.6332h.003Z"
-            />
-          </svg>
-        </LinkOverlay>
-      </LinkBox>
-    </div>
-  );
 }

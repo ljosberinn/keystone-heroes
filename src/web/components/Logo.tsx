@@ -8,7 +8,7 @@ export function Logo(): JSX.Element {
     <Link href="/">
       <a className="flex flex-row items-center space-x-4">
         <img
-          src={theme === "light" ? "/logo-dark.png" : "/logo-light.png"}
+          src={theme === "light" ? "/logo-dark-48.png" : "/logo-light-48.png"}
           alt="Logo"
           height="48"
           width="48"

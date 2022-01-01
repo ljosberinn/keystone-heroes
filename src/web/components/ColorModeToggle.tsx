@@ -42,7 +42,9 @@ export function ColorModeToggle(): JSX.Element | null {
       className="flex items-center justify-between"
       onClick={handleThemeChange}
     >
-      <span className="mr-3">{isDark ? "Dark" : "Light"} Mode</span>
+      <span className="mr-3 hidden md:inline">
+        {isDark ? "Dark" : "Light"} Mode
+      </span>
       <span className="flex-shrink-0 w-16 h-10 p-1 rounded-full bg-stone-100 dark:bg-gray-800">
         <span
           className={classnames(

@@ -26,9 +26,6 @@ export default function CustomDocument(/* props: DocumentProps*/): JSX.Element {
 
         <meta name="description" content={defaultDescription} />
 
-        <meta itemProp="name" content={defaultTitle} />
-        <meta itemProp="description" content={defaultDescription} />
-
         <meta property="og:type" content="website" />
 
         <meta property="og:site_name" content={defaultTitle} />

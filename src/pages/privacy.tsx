@@ -26,7 +26,7 @@ export default function Privacy(): JSX.Element {
                 track you in any considerable manner. The hosting service -{" "}
                 <ExternalLink className="underline" href="https://vercel.com">
                   Vercel
-                </ExternalLink>
+                </ExternalLink>{" "}
                 - like any service of this category I'm aware of, collects
                 access metrics, including, but possibly not limited to
                 timestamp, IP address, url and browser user agent.
@@ -51,7 +51,7 @@ export default function Privacy(): JSX.Element {
             </ul>
           </div>
 
-          <div className="lg:block  max-h-fit w-7/12 flex justify-between">
+          <div className="lg:block  max-h-fit lg:w-7/12 flex justify-between">
             <div className="h-5/6">
               <img
                 src="/static/broker.png"
@@ -62,6 +62,8 @@ export default function Privacy(): JSX.Element {
                 )}
                 alt="Broker concept art"
                 loading="lazy"
+                width="580"
+                height="587"
               />
             </div>
             <p className="hidden italic h-1/6 lg:flex justify-center items-center">

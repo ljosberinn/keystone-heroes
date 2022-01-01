@@ -1,4 +1,8 @@
+import { buymeacoffee, patreon, discord, paypal } from "../icons";
+import { internalLinkClasses } from "../styles/tokens";
+import { buyMeACoffeeUrl, patreonUrl, paypalUrl, discordUrl } from "../urls";
 import { ColorModeToggle } from "./ColorModeToggle";
+import { ExternalLink } from "./ExternalLink";
 import { Logo } from "./Logo";
 
 export function Header(): JSX.Element {
@@ -10,8 +14,35 @@ export function Header(): JSX.Element {
             <Logo />
           </li>
         </ul>
-        <ColorModeToggle />
+        <ul className="flex items-center space-x-1 sm:space-x-2 md:space-x-4">
+          <HeaderNavLink href={buyMeACoffeeUrl} icon={buymeacoffee} />
+          <HeaderNavLink href={patreonUrl} icon={patreon} />
+          <HeaderNavLink href={paypalUrl} icon={paypal} />
+          <HeaderNavLink href={discordUrl} icon={discord} />
+          <li>
+            <ColorModeToggle />
+          </li>
+        </ul>
       </nav>
     </header>
+  );
+}
+
+type HeaderNavLinkProps = {
+  href: string;
+  icon: typeof buymeacoffee | typeof patreon | typeof discord | typeof paypal;
+};
+
+function HeaderNavLink({ href, icon }: HeaderNavLinkProps) {
+  return (
+    <li className="py-1 text-base leading-relaxed md:text-sm">
+      <ExternalLink className={internalLinkClasses} href={href}>
+        <span className="md:items-center md:justify-end md:flex">
+          <svg className="inline w-6 h-6 mr-2">
+            <use href={`#${icon.id}`} />
+          </svg>
+        </span>
+      </ExternalLink>
+    </li>
   );
 }

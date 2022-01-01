@@ -4,6 +4,13 @@ import { version } from "react";
 
 import { buymeacoffee, paypal, twitter, discord, patreon } from "../icons";
 import { internalLinkClasses } from "../styles/tokens";
+import {
+  buyMeACoffeeUrl,
+  discordUrl,
+  patreonUrl,
+  paypalUrl,
+  twitterUrl,
+} from "../urls";
 import { ColorModeToggle } from "./ColorModeToggle";
 import { ExternalLink } from "./ExternalLink";
 import { Logo } from "./Logo";
@@ -49,38 +56,23 @@ export function Footer(): JSX.Element {
                */}
             </ul>
             <ul className="md:text-right">
-              <FooterNavLink
-                href="https://buymeacoffee.com/rOSn8DF"
-                icon={buymeacoffee}
-              >
+              <FooterNavLink href={buyMeACoffeeUrl} icon={buymeacoffee}>
                 Buy Me A Coffee
               </FooterNavLink>
 
-              <FooterNavLink
-                href="https://www.patreon.com/keystoneheroes"
-                icon={patreon}
-              >
+              <FooterNavLink href={patreonUrl} icon={patreon}>
                 Patreon
               </FooterNavLink>
 
-              <FooterNavLink
-                href="https://www.paypal.com/paypalme/gerritalex"
-                icon={paypal}
-              >
+              <FooterNavLink href={paypalUrl} icon={paypal}>
                 PayPal
               </FooterNavLink>
 
-              <FooterNavLink
-                href="https://twitter.com/gerrit_alex"
-                icon={twitter}
-              >
+              <FooterNavLink href={twitterUrl} icon={twitter}>
                 Twitter
               </FooterNavLink>
 
-              <FooterNavLink
-                href="https://discord.gg/ubUjUTMdhE"
-                icon={discord}
-              >
+              <FooterNavLink href={discordUrl} icon={discord}>
                 Discord
               </FooterNavLink>
             </ul>
