@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { useState } from "react";
 
 import type { FightSuccessResponse } from "../../../api/functions/fight";
 import { useFight } from "../../../pages/report/[reportID]/[fightID]";
@@ -32,6 +32,7 @@ import {
 import { classnames } from "../../utils/classnames";
 import { AbilityIcon, STATIC_ICON_PREFIX } from "../AbilityIcon";
 import { Affixes } from "../Affixes";
+import { ErrorBoundary } from "../ErrorBoundary";
 import { ExternalLink } from "../ExternalLink";
 import { SpecIcon } from "../SpecIcon";
 
@@ -266,7 +267,7 @@ function PlayerRow({ player, fightID, reportID }: PlayerRowProps) {
     player.talents.length === 0 && player.conduits.length === 0;
 
   return (
-    <Fragment key={player.actorID}>
+    <ErrorBoundary key={player.actorID}>
       <tr>
         <td className="flex h-10 px-0 space-x-2">
           <span className="flex items-center w-full space-x-2">
@@ -360,6 +361,10 @@ function PlayerRow({ player, fightID, reportID }: PlayerRowProps) {
               className={`${classColor} relative w-4 h-4 mr-4 border-b-2 dark:border-opacity-50 border-l-2 border-solid left-4`}
             />
             {player.legendaries.map((id) => {
+              if (!(id in legendaries)) {
+                return null;
+              }
+
               const { name, icon } = legendaries[id];
 
               return (
@@ -454,7 +459,7 @@ function PlayerRow({ player, fightID, reportID }: PlayerRowProps) {
           )}
         </td>
       </tr>
-      {open && (
+      {open ? (
         <>
           <tr>
             <td colSpan={4}>
@@ -464,6 +469,10 @@ function PlayerRow({ player, fightID, reportID }: PlayerRowProps) {
                 />
 
                 {player.talents.map((id) => {
+                  if (!(id in talents)) {
+                    return null;
+                  }
+
                   const { icon, name } = talents[id];
 
                   return (
@@ -496,6 +505,10 @@ function PlayerRow({ player, fightID, reportID }: PlayerRowProps) {
                 />
 
                 {player.conduits.map((conduit) => {
+                  if (!(conduit.id in conduits)) {
+                    return null;
+                  }
+
                   const { icon, name } = conduits[conduit.id];
 
                   const url = createWowheadUrl({
@@ -528,6 +541,10 @@ function PlayerRow({ player, fightID, reportID }: PlayerRowProps) {
                 />
 
                 {player.covenantTraits.map((id) => {
+                  if (!(id in covenantTraits)) {
+                    return null;
+                  }
+
                   const { icon, name } = covenantTraits[id];
 
                   return (
@@ -553,8 +570,8 @@ function PlayerRow({ player, fightID, reportID }: PlayerRowProps) {
             </td>
           </tr>
         </>
-      )}
-    </Fragment>
+      ) : null}
+    </ErrorBoundary>
   );
 }
 

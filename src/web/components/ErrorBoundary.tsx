@@ -1,4 +1,4 @@
-import type { ErrorInfo } from "react";
+import type { ErrorInfo, PropsWithChildren } from "react";
 import { Component } from "react";
 
 import { sentrySettings } from "../../api/utils/sentrySettings";
@@ -6,10 +6,9 @@ import { sentrySettings } from "../../api/utils/sentrySettings";
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports
 let Sentry: typeof import("@sentry/react") | null = null;
 
-export type ErrorBoundaryProps = {
-  children: JSX.Element;
+export type ErrorBoundaryProps = PropsWithChildren<{
   fallback?: JSX.Element;
-};
+}>;
 
 type State = {
   error: null | Error;
@@ -77,12 +76,12 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, State> {
     flush(error, componentStack);
   }
 
-  public render(): JSX.Element {
+  public render(): ErrorBoundaryProps["children"] {
     const { children, fallback } = this.props;
     const { error } = this.state;
 
     if (error) {
-      return fallback ?? <h1>welp</h1>;
+      return fallback ?? null;
     }
 
     return children;
