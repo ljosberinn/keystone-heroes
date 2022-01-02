@@ -18,6 +18,7 @@ import { Map } from "../../../web/components/report/Map";
 import { Meta } from "../../../web/components/report/Meta";
 import { useAbortableFetch } from "../../../web/hooks/useAbortableFetch";
 import { affixes, dungeons } from "../../../web/staticData";
+import { concern, hands } from "../../../web/styles/bears";
 import { widthConstraint } from "../../../web/styles/tokens";
 import { timeDurationToString } from "../../../web/utils";
 
@@ -84,10 +85,10 @@ const useFightURL = () => {
 };
 
 const imageMap: Record<FightErrorResponse["error"], string> = {
-  MISSING_DUNGEON: "/static/bear/hands-256.png",
-  BROKEN_LOG_OR_WCL_UNAVAILABLE: "/static/bear/hands-256.png",
-  FATAL_ERROR: "/static/bear/concern-256.png",
-  UNKNOWN_REPORT: "/static/bear/concern-256.png",
+  MISSING_DUNGEON: hands,
+  BROKEN_LOG_OR_WCL_UNAVAILABLE: hands,
+  FATAL_ERROR: concern,
+  UNKNOWN_REPORT: concern,
 };
 
 type FightContextDefinition = {

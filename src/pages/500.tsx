@@ -1,10 +1,12 @@
 import Link from "next/link";
 
+import { concern } from "../web/styles/bears";
+
 export default function FiveHundred(): JSX.Element {
   return (
     <div className="flex flex-col items-center justify-center w-full px-16 py-8 m-auto xl:px-64 xl:py-32 lg:flex-row max-w-screen-2xl">
       <img
-        src="/static/bear/concern-256.png"
+        src={concern}
         height="256"
         width="256"
         alt="An error occured! Or something."

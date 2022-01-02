@@ -19,6 +19,7 @@ import type { SupportCardProps } from "../../../web/components/report/SupportCar
 import { useAbortableFetch } from "../../../web/hooks/useAbortableFetch";
 import { useIsMounted } from "../../../web/hooks/useIsMounted";
 import { classes, dungeons } from "../../../web/staticData";
+import { concern, hands, cry } from "../../../web/styles/bears";
 import {
   bgPrimary,
   widthConstraint,
@@ -40,10 +41,11 @@ enum ReportUrlError {
 }
 
 const imageMap: Record<ReportErrorResponse["error"], string> = {
-  EMPTY_LOG: "/static/bear/concern-256.png",
-  BROKEN_LOG_OR_WCL_UNAVAILABLE: "/static/bear/hands-256.png",
-  NO_ELIGIBLE_KEYS: "/static/bear/concern-256.png",
-  SECONDARY_REQUEST_FAILED: "/static/bear/cry-256.png",
+  EMPTY_LOG: concern,
+  BROKEN_LOG_OR_WCL_UNAVAILABLE: hands,
+  NO_ELIGIBLE_KEYS: concern,
+  SECONDARY_REQUEST_FAILED: cry,
+  PRIVATE_REPORT: concern,
 };
 
 const useReportURL = (): {
@@ -149,7 +151,7 @@ export default function Report(): JSX.Element | null {
 
         <div className="flex flex-col items-center justify-center w-full px-16 py-8 m-auto xl:px-64 xl:py-32 lg:flex-row max-w-screen-2xl">
           <img
-            src="/static/bear/concern-256.png"
+            src={concern}
             height="256"
             width="256"
             alt="Our bear is concerned."
