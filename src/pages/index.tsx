@@ -51,6 +51,14 @@ export default function Home(): JSX.Element | null {
           {/* </Link> */}
         </div>
 
+        <ExternalLink
+          href="https://www.youtube.com/watch?v=KiyeJpMkZFQ"
+          className="pt-8"
+        >
+          Watch an introduction to the site on{" "}
+          <span className="underline">YouTube</span>!
+        </ExternalLink>
+
         <p className="max-w-sm pt-10 text-xs text-center text-stone-800 dark:text-stone-200 sm:text-sm">
           Explore previously imported routes and filter by dungeon, key level,
           legendary, spec, group composition and more!
