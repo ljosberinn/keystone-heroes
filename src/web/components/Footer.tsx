@@ -101,6 +101,16 @@ export function Footer(): JSX.Element {
             </ExternalLink>
             .
           </span>
+          <span>
+            Bear Emotes from{" "}
+            <ExternalLink
+              className="underline"
+              href="https://yilinzc.carrd.co/"
+            >
+              yilinzc
+            </ExternalLink>
+            .
+          </span>
         </small>
 
         <small className="flex flex-col justify-center w-full py-2 space-x-0 space-y-1 text-xs text-center text-stone-500 md:text-right md:space-x-2 md:space-y-0 md:flex-row md:justify-end dark:text-stone-300">

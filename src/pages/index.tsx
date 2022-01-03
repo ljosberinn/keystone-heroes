@@ -24,12 +24,22 @@ export default function Home(): JSX.Element | null {
           Analyse Mythic+ Logs In The Blink Of An Eye
         </h1>
         <h2
-          className={`pt-3 pb-10 text-sm leading-tight text-center ${yellowText} lg:text-xl sm:text-base`}
+          className={`pt-3 text-sm leading-tight text-center ${yellowText} lg:text-xl sm:text-base`}
         >
           stop guessing what you could improve or what went wrong - gain some
           actual insight for once
         </h2>
+
+        <ExternalLink
+          href="https://www.youtube.com/watch?v=KiyeJpMkZFQ"
+          className="my-8"
+        >
+          Watch an introduction to the site on{" "}
+          <span className="underline">YouTube</span>!
+        </ExternalLink>
+
         <Form />
+
         <p className="max-w-sm pt-10 text-xs text-center text-stone-800 dark:text-stone-200 sm:text-sm">
           Enter any Warcraft Logs report link that includes Mythic+ runs on
           level {MIN_KEYSTONE_LEVEL} or higher. You can paste an URL anywhere!
@@ -50,14 +60,6 @@ export default function Home(): JSX.Element | null {
           {/* </a> */}
           {/* </Link> */}
         </div>
-
-        <ExternalLink
-          href="https://www.youtube.com/watch?v=KiyeJpMkZFQ"
-          className="pt-8"
-        >
-          Watch an introduction to the site on{" "}
-          <span className="underline">YouTube</span>!
-        </ExternalLink>
 
         <p className="max-w-sm pt-10 text-xs text-center text-stone-800 dark:text-stone-200 sm:text-sm">
           Explore previously imported routes and filter by dungeon, key level,
