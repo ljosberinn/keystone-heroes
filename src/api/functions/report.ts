@@ -778,8 +778,8 @@ const handler: RequestHandler<Request, ReportResponse> = async (req, res) => {
       return;
     }
 
-    const maybeFightsWithMeta: (FightWithMeta | null)[] = await Promise.all(
-      fights.map(async (fight) => {
+    const maybeFightsWithMeta = await Promise.all(
+      fights.map<Promise<FightWithMeta | null>>(async (fight) => {
         const table = await getTableData({
           reportID,
           startTime: fight.startTime,

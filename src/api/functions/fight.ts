@@ -61,6 +61,7 @@ import {
   withSentry,
 } from "../middleware";
 import { sortByRole } from "../utils";
+import { sendJSON } from "../utils/api";
 import {
   cacheControlKey,
   STALE_WHILE_REVALIDATE_SEVEN_DAYS,
@@ -1457,7 +1458,8 @@ const handler: RequestHandler<Request, FightResponse> = async (req, res) => {
     res.setHeader(cacheControlKey, STALE_WHILE_REVALIDATE_SEVEN_DAYS);
   }
 
-  res.status(status).json(json);
+  res.status(status);
+  sendJSON(res, json);
 };
 
 const ensureCorrectDungeonID = (

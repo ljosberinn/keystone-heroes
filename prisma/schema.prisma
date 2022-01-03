@@ -155,13 +155,10 @@ model Fight {
   hps              Int
   totalDeaths      Int
   averageItemLevel Float
-  startTime        Int
-  endTime          Int
+  startTime        BigInt
+  endTime          BigInt
   percent          Float
   rating           Int
-
-  twitchTvUrl String?
-  youtubeUrl  String?
 
   dungeonID Int?
 
@@ -380,8 +377,8 @@ model Pull {
   id Int @id @default(autoincrement())
 
   fightID   Int
-  startTime Int
-  endTime   Int
+  startTime BigInt
+  endTime   BigInt
   x         Float
   y         Float
   isWipe    Boolean
@@ -431,7 +428,7 @@ model Event {
   id Int @id @default(autoincrement())
 
   eventType EventType
-  timestamp Int
+  timestamp BigInt
   abilityID Int?
   ability   Ability?  @relation("ability", fields: [abilityID], references: [id])
 
