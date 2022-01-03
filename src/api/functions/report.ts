@@ -61,7 +61,7 @@ export type ReportSuccessResponse = Pick<Report, "title"> & {
   region: Region["slug"];
   fights: (Omit<
     FightWithMeta,
-    "gameZone" | "player" | "startTime" | "endTime" | "dps" | "hps"
+    "gameZone" | "player" | "startTime" | "endTime" | "dps" | "hps" | "maps"
   > & {
     dungeon: Dungeon["id"] | null;
     player: {
@@ -128,9 +128,10 @@ type Player = {
 
 type FightWithMeta = Omit<
   Fight,
-  "friendlyPlayers" | "maps" | "__typename" | "keystoneAffixes" | "maps"
+  "friendlyPlayers" | "__typename" | "keystoneAffixes" | "maps"
 > & {
   player: Player[];
+  maps: number[];
 };
 
 export const fightIsFight = (fight: MaybeFight): fight is Fight => {
@@ -537,35 +538,40 @@ const createResponseFromRawData = ({
     title,
     region,
     fights: fightsWithMeta
-      .map((fight) => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { gameZone, player, startTime, endTime, ...rest } = fight;
+      .map<ReportSuccessResponse["fights"][number]>(
+        ({
+          averageItemLevel,
+          id,
+          keystoneBonus,
+          keystoneLevel,
+          keystoneTime,
+          rating,
+          gameZone,
+          player,
+        }) => {
+          const dungeon = gameZone ? dungeonMap[gameZone.id] : null;
 
-        const dungeon = gameZone ? dungeonMap[gameZone.id] : null;
-
-        return {
-          ...rest,
-          dps: player.reduce((acc, player) => acc + player.dps, 0),
-          hps: player.reduce((acc, player) => acc + player.hps, 0),
-          totalDeaths: player.reduce((acc, player) => acc + player.deaths, 0),
-          dungeon: dungeon && gameZone ? gameZone.id : null,
-          player: [...player]
-            .sort((a, b) => sortByRole(a.role, b.role))
-            .map((player) => {
-              return {
-                class: player.classID,
-                spec: player.specID,
-                soulbindID: player.soulbindID,
-                covenantID: player.covenantID,
-                legendaries: player.legendaries.map((legendary) => ({
-                  id: legendary.id,
-                  effectIcon: legendary.effectIcon,
-                  effectName: legendary.effectName,
-                })),
-              };
-            }),
-        };
-      })
+          return {
+            averageItemLevel,
+            id,
+            keystoneBonus,
+            keystoneLevel,
+            keystoneTime,
+            rating,
+            dungeon: dungeon && gameZone ? gameZone.id : null,
+            player: [...player]
+              .sort((a, b) => sortByRole(a.role, b.role))
+              .map<ReportSuccessResponse["fights"][number]["player"][number]>(
+                (player) => {
+                  return {
+                    class: player.classID,
+                    spec: player.specID,
+                  };
+                }
+              ),
+          };
+        }
+      )
       .sort((a, b) => a.id - b.id),
     affixes,
   };
