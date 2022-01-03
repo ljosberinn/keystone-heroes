@@ -61,7 +61,6 @@ import {
   withSentry,
 } from "../middleware";
 import { sortByRole } from "../utils";
-import { sendJSON } from "../utils/api";
 import {
   cacheControlKey,
   STALE_WHILE_REVALIDATE_SEVEN_DAYS,
@@ -127,10 +126,11 @@ export type FightSuccessResponse = {
     region: Region["slug"];
     tormented: Ability["id"][];
   })[];
-  pulls: (Pick<Pull, "startTime" | "endTime" | "x" | "y" | "isWipe"> & {
+  pulls: (Pick<Pull, "x" | "y" | "isWipe"> & {
+    startTime: number;
+    endTime: number;
     events: (Pick<
       Event,
-      | "timestamp"
       | "sourcePlayerID"
       | "targetPlayerID"
       | "sourceNPCInstance"
@@ -139,6 +139,7 @@ export type FightSuccessResponse = {
       | "healingDone"
       | "stacks"
     > & {
+      timestamp: number;
       type: Event["eventType"] | "AbilityReady" | "MissedInterrupt";
       sourceNPC: NPC | null;
       targetNPC: NPC | null;
@@ -183,8 +184,6 @@ type RawFight =
       Fight,
       | "id"
       | "fightID"
-      | "startTime"
-      | "endTime"
       | "chests"
       | "keystoneLevel"
       | "keystoneTime"
@@ -195,6 +194,8 @@ type RawFight =
       | "percent"
       | "rating"
     > & {
+      startTime: number;
+      endTime: number;
       dungeon: Pick<Dungeon, "id"> | null;
       PlayerFight: {
         player: Pick<
@@ -227,16 +228,14 @@ type RawFight =
           };
         };
       }[];
-      Pull: (Pick<
-        Pull,
-        "startTime" | "endTime" | "x" | "y" | "isWipe" | "percent"
-      > & {
+      Pull: (Pick<Pull, "x" | "y" | "isWipe" | "percent"> & {
+        startTime: number;
+        endTime: number;
         PullZone: { zone: Pick<Zone, "id"> }[];
         PullNPC: (Pick<PullNPC, "count"> & { npc: Pick<NPC, "id"> })[];
         Event: (Pick<
           Event,
           | "eventType"
-          | "timestamp"
           | "sourcePlayerID"
           | "targetPlayerID"
           | "sourceNPCInstance"
@@ -245,6 +244,7 @@ type RawFight =
           | "healingDone"
           | "stacks"
         > & {
+          timestamp: number;
           sourceNPC: NPC | null;
           targetNPC: NPC | null;
           ability: Ability | null;
@@ -268,7 +268,7 @@ export const loadExistingFight = async (
   reportID: string,
   fightID: number
 ): Promise<RawFight> => {
-  return prisma.fight.findFirst({
+  const rawFight = await prisma.fight.findFirst({
     where: {
       Report: {
         report: reportID,
@@ -484,6 +484,9 @@ export const loadExistingFight = async (
       },
     },
   });
+
+  // BigInt.toJSON is polyfilled
+  return JSON.parse(JSON.stringify(rawFight));
 };
 
 const omitNullValues = <T extends Record<string, unknown>>(dataset: T): T =>
@@ -1458,8 +1461,7 @@ const handler: RequestHandler<Request, FightResponse> = async (req, res) => {
     res.setHeader(cacheControlKey, STALE_WHILE_REVALIDATE_SEVEN_DAYS);
   }
 
-  res.status(status);
-  sendJSON(res, json);
+  res.status(status).json(json);
 };
 
 const ensureCorrectDungeonID = (
@@ -1511,7 +1513,7 @@ const persistPulls = async (
     data: pulls,
   });
 
-  const storedPulls = await prisma.pull.findMany({
+  const rawStoredPulls = await prisma.pull.findMany({
     where: {
       OR: pulls,
     },
@@ -1522,9 +1524,16 @@ const persistPulls = async (
     },
   });
 
+  const storedPulls = JSON.parse(JSON.stringify(rawStoredPulls)) as {
+    id: number;
+    startTime: number;
+    endTime: number;
+  }[];
+
   return dungeonPulls.reduce<PersistedDungeonPull[]>((acc, pull) => {
     const match = storedPulls.find(
       (storedPull) =>
+        // coming from the DB, these are bigints
         storedPull.startTime === pull.startTime &&
         storedPull.endTime === pull.endTime
     );

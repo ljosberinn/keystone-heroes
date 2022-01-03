@@ -127,5 +127,11 @@ export const getBolsteringEvents = (
     return [];
   }
 
-  return getHighestBolsteringStack(allEvents.filter(isBolsteringEvent));
+  const bolsteringEvents = allEvents.filter(isBolsteringEvent);
+
+  if (bolsteringEvents.length === 0) {
+    return [];
+  }
+
+  return getHighestBolsteringStack(bolsteringEvents);
 };

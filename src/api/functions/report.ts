@@ -1200,7 +1200,7 @@ const determineReportID = async (
   > & { region: string }
 ) => {
   if (existingReport) {
-    return Promise.resolve(existingReport.id);
+    return existingReport.id;
   }
 
   const weekID = await findWeekByAffixes(keystoneAffixes);

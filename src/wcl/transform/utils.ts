@@ -19,11 +19,13 @@ export type Processor<
 
 export type PersistedDungeonPull = Pick<
   Pull,
-  "id" | "x" | "y" | "startTime" | "endTime" | "isWipe" | "percent"
+  "id" | "x" | "y" | "isWipe" | "percent"
 > & {
   maps: PullZone["zoneID"][];
   enemyNPCs: Pick<
     Required<DeepNonNullable<ReportDungeonPullNpc>>,
     "gameID" | "id"
   >[];
+  startTime: number;
+  endTime: number;
 };

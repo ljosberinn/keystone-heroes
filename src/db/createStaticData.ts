@@ -738,7 +738,7 @@ export const npcs: Record<number, string> = JSON.parse(\`${JSON.stringify(
       const exists = existsSync(path);
 
       if (exists) {
-        return Promise.resolve(true);
+        return true;
       }
 
       log(`loading ${icon}.jpg`);

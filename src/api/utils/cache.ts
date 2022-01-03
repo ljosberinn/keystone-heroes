@@ -10,3 +10,11 @@ export const STALE_WHILE_REVALIDATE_THIRTY_MINUTES =
   "max-age=1800, stale-while-revalidate=3600";
 
 export const NO_CACHE = "no-cache";
+
+if (!("toJSON" in BigInt.prototype)) {
+  // @ts-expect-error required to parse BigInts to numbers
+  // eslint-disable-next-line no-extend-native
+  BigInt.prototype.toJSON = function toJSON() {
+    return Number(this);
+  };
+}
