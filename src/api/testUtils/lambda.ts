@@ -43,6 +43,7 @@ export async function testLambda<
         return res;
       },
       json: resolveWithRes,
+      // @ts-expect-error incompatible since @types/node 17.0.6 but required
       end: (json) => {
         resolveWithRes(json);
       },
