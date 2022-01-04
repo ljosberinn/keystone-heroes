@@ -132,6 +132,8 @@ function WarcraftLogsProfileLink({
   server,
   region,
 }: LinkProps): JSX.Element {
+  const alt = `Visit Warcraft Logs profile of ${name}`;
+
   return (
     <ExternalLink
       href={`https://www.warcraftlogs.com/character/${region}/${server}/${name}?zone=25`}
@@ -139,8 +141,8 @@ function WarcraftLogsProfileLink({
     >
       <img
         src="/static/icons/wcl.png"
-        alt={`Visit WarcraftLogs profile of ${name}`}
-        title={`Visit WarcraftLogs profile of ${name}`}
+        alt={alt}
+        title={alt}
         className="w-6 h-6"
         width={24}
         height={24}
