@@ -141,7 +141,7 @@ export function Footer(): JSX.Element {
           <ExternalLink
             href={`https://www.npmjs.com/package/react/v/${
               version.includes("experimental")
-                ? version.replace("18.0.0", "0.0.0")
+                ? version.replace("18.0.0", "0.0.0").replace("-rc.0", "")
                 : version
             }`}
             className="flex"
@@ -161,7 +161,7 @@ export function Footer(): JSX.Element {
 
         <small className="flex items-center justify-center w-full pt-2 pb-6 space-x-1 space-y-1 text-xs text-stone-500 md:space-x-2 md:space-y-0 md:justify-end dark:text-stone-300">
           <ExternalLink
-            href={`https://github.com/ljosberinn/wcl-to-mdt/tree/${
+            href={`https://github.com/ljosberinn/keystone-heroes/tree/${
               process.env.NEXT_PUBLIC_COMMIT_SHA ?? "master"
             }`}
           >
