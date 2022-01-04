@@ -48,12 +48,12 @@ describe("parseWCLUrl", () => {
   test("passes given general report url", () => {
     expect(parseWCLUrl("https://www.warcraftlogs.com/reports/aZ9y3jMctCqRvhKA"))
       .toMatchInlineSnapshot(`
-      {
-        "error": null,
-        "fightID": null,
-        "reportID": "aZ9y3jMctCqRvhKA",
-      }
-    `);
+        {
+          "error": null,
+          "fightID": null,
+          "reportID": "aZ9y3jMctCqRvhKA",
+        }
+      `);
   });
 
   test("passes given report url with fight id hash", () => {
