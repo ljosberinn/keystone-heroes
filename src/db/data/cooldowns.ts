@@ -1,6 +1,7 @@
+import type { Cooldown } from "@prisma/client";
+
 import { classes } from "./classes";
 import { specs } from "./specs";
-import type { Cooldown } from ".prisma/client";
 
 export const cooldowns = classes
   .flatMap<Omit<Cooldown, "id">>((classData) => {
