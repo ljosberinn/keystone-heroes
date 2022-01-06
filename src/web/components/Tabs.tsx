@@ -1,5 +1,12 @@
-import { forwardRef } from "react";
-import type { MouseEvent, KeyboardEvent } from "react";
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import type { MouseEvent, KeyboardEvent as ReactKeyboardEvent } from "react";
 
 import { bgPrimary, hoverBg } from "../styles/tokens";
 import { classnames } from "../utils/classnames";
@@ -31,7 +38,7 @@ export type TabButtonProps = {
   children: string;
   className?: string;
   id: string | number;
-  onKeyDown: (event: KeyboardEvent<HTMLButtonElement>) => void;
+  onKeyDown: (event: ReactKeyboardEvent<HTMLButtonElement>) => void;
   onClick: (event: MouseEvent<HTMLButtonElement>) => void;
   index: number;
   listLength: number;
@@ -115,3 +122,98 @@ export const TabPanel = forwardRef<HTMLDivElement, TabPanelProps>(
     );
   }
 );
+
+type UseTabsReturn = {
+  /**
+   * index of the currently selected tab
+   */
+  selectedTab: number;
+  /**
+   * keyboard handler for arrow buttons for <TabButton />
+   */
+  onKeyDown: (event: ReactKeyboardEvent<HTMLButtonElement>) => void;
+  /**
+   * click handler for <TabButton />
+   */
+  onTabClick: (next: number) => void;
+  /**
+   * ref maintainer for focus handling
+   */
+  attachRef: (index: number, ref: HTMLButtonElement | null) => void;
+};
+
+export function useTabs(
+  tabs: unknown[],
+  initialTab: number | (() => number) = 0
+): UseTabsReturn {
+  const [selectedTab, setSelectedTab] = useState(
+    typeof initialTab === "number" ? initialTab : initialTab()
+  );
+
+  const shouldFocusRef = useRef(false);
+  const buttonRefs = useRef<(HTMLButtonElement | null)[]>([]);
+
+  useEffect(() => {
+    if (shouldFocusRef.current) {
+      shouldFocusRef.current = false;
+      buttonRefs.current[selectedTab]?.focus();
+    }
+  });
+
+  const onKeyDown = useCallback(
+    (event: ReactKeyboardEvent<HTMLButtonElement>) => {
+      const { key } = event;
+
+      const isSMOrLarger = window.innerWidth >= 640;
+      const nextKey = isSMOrLarger ? "ArrowRight" : "ArrowDown";
+      const lastKey = isSMOrLarger ? "ArrowLeft" : "ArrowUp";
+
+      const lookupValue = key === nextKey ? 1 : key === lastKey ? -1 : null;
+
+      if (!lookupValue) {
+        return;
+      }
+
+      event.preventDefault();
+      shouldFocusRef.current = true;
+
+      setSelectedTab((currentIndex) => {
+        const nextIndex = currentIndex + lookupValue;
+
+        // going from first to last
+        if (nextIndex < 0) {
+          return tabs.length - 1;
+        }
+
+        // going from nth to nth
+        if (tabs.length - 1 >= nextIndex) {
+          return nextIndex;
+        }
+
+        // going from last to first
+        return 0;
+      });
+    },
+    [tabs]
+  );
+
+  const onTabClick = useCallback((next: number) => {
+    setSelectedTab(next);
+  }, []);
+
+  const attachRef = useCallback(
+    (index: number, ref: HTMLButtonElement | null) => {
+      buttonRefs.current[index] = ref;
+    },
+    []
+  );
+
+  return useMemo(() => {
+    return {
+      onTabClick,
+      onKeyDown,
+      attachRef,
+      selectedTab,
+    };
+  }, [selectedTab, onTabClick, onKeyDown, attachRef]);
+}

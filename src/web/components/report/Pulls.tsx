@@ -610,7 +610,7 @@ function Events() {
 
   return (
     <section className="w-full min-h-screen px-4 py-2 bg-white rounded-lg lg:w-9/23 dark:bg-gray-700">
-      <h3 className="font-semibold font-xl pb-2 text-xl">Events</h3>
+      <h3 className="pb-2 text-xl font-semibold font-xl">Events</h3>
       <p>Filter Events by Player</p>
       <div className="flex justify-between w-full">
         <div className="flex flex-col md:flex-row ">
@@ -958,17 +958,22 @@ function TableHead() {
 
 export function Pulls(): JSX.Element | null {
   return (
-    <div className={`rounded-b-lg ${bgSecondary} p-2`}>
-      <div className="w-full">
-        <PullSelection />
+    <>
+      <div className={`px-4 rounded-t-lg pb-4 pt-4 ${bgPrimary}`}>
+        <h2 className="text-2xl font-bold">Pull Details</h2>
+      </div>
+      <div className={`rounded-b-lg ${bgSecondary} p-2`}>
+        <div className="w-full">
+          <PullSelection />
 
-        <div className="flex flex-col w-full space-y-4 lg:space-x-4 lg:flex-row lg:space-y-0">
-          <Sidebar />
+          <div className="flex flex-col w-full space-y-4 lg:space-x-4 lg:flex-row lg:space-y-0">
+            <Sidebar />
 
-          <Events />
+            <Events />
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

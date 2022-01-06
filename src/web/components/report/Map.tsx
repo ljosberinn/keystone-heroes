@@ -1,8 +1,5 @@
 import dynamic from "next/dynamic";
-import type {
-  KeyboardEvent as ReactKeyboardEvent,
-  MutableRefObject,
-} from "react";
+import type { MutableRefObject } from "react";
 import {
   Fragment,
   useState,
@@ -49,7 +46,7 @@ import {
   STATIC_ICON_PREFIX,
   ZOOM_ICON,
 } from "../AbilityIcon";
-import { TabList, TabButton, TabPanel } from "../Tabs";
+import { TabList, TabButton, TabPanel, useTabs } from "../Tabs";
 import { SidebarNPC } from "./SidebarNPC";
 import { usePullNPCs } from "./hooks";
 import { usePointsOfInterest, PointsOfInterestProvider } from "./poi/context";
@@ -179,28 +176,21 @@ export function Map(): JSX.Element {
   const { zones } = dungeons[fight.dungeon];
   const { pulls } = fight;
 
-  const [selectedTab, setSelectedTab] = useState(() => {
-    if (pulls.length > 0) {
-      const dungeon = dungeons[fight.dungeon];
+  const { attachRef, onKeyDown, onTabClick, selectedTab } = useTabs(
+    zones,
+    () => {
+      if (pulls.length > 0) {
+        const dungeon = dungeons[fight.dungeon];
 
-      const zoneToSelect = pulls[0].zone;
-      const tab = dungeon.zones.findIndex((zone) => zone.id === zoneToSelect);
+        const zoneToSelect = pulls[0].zone;
+        const tab = dungeon.zones.findIndex((zone) => zone.id === zoneToSelect);
 
-      return tab > -1 ? tab : 0;
+        return tab > -1 ? tab : 0;
+      }
+
+      return 0;
     }
-
-    return 0;
-  });
-
-  const shouldFocusRef = useRef(false);
-  const buttonRefs = useRef<(HTMLButtonElement | null)[]>([]);
-
-  useEffect(() => {
-    if (shouldFocusRef.current) {
-      shouldFocusRef.current = false;
-      buttonRefs.current[selectedTab]?.focus();
-    }
-  });
+  );
 
   // synchronize selected tab with pull selection in <Data />
   useEffect(() => {
@@ -219,55 +209,21 @@ export function Map(): JSX.Element {
       return;
     }
 
-    setSelectedTab(nextTab);
-  }, [selectedPull, previouslySelectedPull, pulls, zones, selectedTab]);
-
-  const onTabButtonClick = (nextIndex: number) => {
-    setSelectedTab(nextIndex);
-  };
+    onTabClick(nextTab);
+  }, [
+    selectedPull,
+    previouslySelectedPull,
+    pulls,
+    zones,
+    selectedTab,
+    onTabClick,
+  ]);
 
   const toggleFullscreen = useCallback((nextValue?: boolean) => {
     setFullscreen((prev) => {
       return typeof nextValue === "undefined" ? !prev : nextValue;
     });
   }, []);
-
-  const onKeyDown = useCallback(
-    (event: ReactKeyboardEvent<HTMLButtonElement>) => {
-      const { key } = event;
-
-      const isSMOrLarger = window.innerWidth >= 640;
-      const nextKey = isSMOrLarger ? "ArrowRight" : "ArrowDown";
-      const lastKey = isSMOrLarger ? "ArrowLeft" : "ArrowUp";
-
-      const lookupValue = key === nextKey ? 1 : key === lastKey ? -1 : null;
-
-      if (!lookupValue) {
-        return;
-      }
-
-      event.preventDefault();
-      shouldFocusRef.current = true;
-
-      setSelectedTab((currentIndex) => {
-        const nextIndex = currentIndex + lookupValue;
-
-        // going from first to last
-        if (nextIndex < 0) {
-          return zones.length - 1;
-        }
-
-        // going from nth to nth
-        if (zones.length - 1 >= nextIndex) {
-          return nextIndex;
-        }
-
-        // going from last to first
-        return 0;
-      });
-    },
-    [zones.length]
-  );
 
   return (
     <section
@@ -287,7 +243,7 @@ export function Map(): JSX.Element {
         <TabList aria-label="Zone Selection">
           {zones.map((zone, index) => {
             function onClick() {
-              onTabButtonClick(index);
+              onTabClick(index);
             }
 
             return (
@@ -295,7 +251,7 @@ export function Map(): JSX.Element {
                 key={zone.id}
                 id={zone.id}
                 ref={(ref) => {
-                  buttonRefs.current[index] = ref;
+                  attachRef(index, ref);
                 }}
                 onKeyDown={onKeyDown}
                 selectedIndex={selectedTab}
@@ -315,7 +271,7 @@ export function Map(): JSX.Element {
             className="w-full py-2 text-center"
             value={selectedTab}
             onChange={(event) => {
-              onTabButtonClick(Number.parseInt(event.target.value));
+              onTabClick(Number.parseInt(event.target.value));
             }}
           >
             {zones.map((zone, index) => {
@@ -380,7 +336,7 @@ export function Map(): JSX.Element {
                       );
 
                       if (nextZoneIndex > -1) {
-                        onTabButtonClick(nextZoneIndex);
+                        onTabClick(nextZoneIndex);
                       }
                     }}
                   />
