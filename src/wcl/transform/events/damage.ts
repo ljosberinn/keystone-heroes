@@ -29,11 +29,19 @@ export const damageProcessor: Processor<DamageEvent> = (
   event,
   { targetPlayerID, sourcePlayerID, sourceNPCID, targetNPCID }
 ) => {
-  if (event.amount === 0) {
+  const {
+    amount,
+    absorbed = 0,
+    overkill = 0,
+    timestamp,
+    abilityGameID: abilityID,
+  } = event;
+
+  const damage = amount + absorbed + overkill;
+
+  if (damage === 0) {
     return null;
   }
-
-  const { amount: damage, timestamp, abilityGameID: abilityID } = event;
 
   // player taking damage
   if (targetPlayerID) {
