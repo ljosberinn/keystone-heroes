@@ -956,7 +956,8 @@ function TableHead() {
   );
 }
 
-export function Pulls(): JSX.Element | null {
+// eslint-disable-next-line import/no-default-export
+export default function Pulls(): JSX.Element {
   return (
     <>
       <div className={`px-4 rounded-t-lg pb-4 pt-4 ${bgPrimary}`}>

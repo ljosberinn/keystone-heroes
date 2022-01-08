@@ -1,13 +1,31 @@
-import { bgPrimary, widthConstraint } from "../../styles/tokens";
+import dynamic from "next/dynamic";
+import { Suspense } from "react";
+
+import { widthConstraint } from "../../styles/tokens";
 import { TabList, TabPanel, TabButton, useTabs } from "../Tabs";
-import { Pulls } from "./Pulls";
+
+const Pulls = dynamic(() => import(/* webpackChunkName: "Pulls" */ "./Pulls"), {
+  suspense: true,
+});
+
+const CDManagement = dynamic(
+  () =>
+    import(/* webpackChunkName: "CooldownManagement" */ "./CooldownManagement"),
+  {
+    suspense: true,
+  }
+);
 
 const tabs = [
   { id: "events", title: "Events", component: Pulls },
-  { id: "cd-management", title: "Cooldown Management", component: () => null },
+  {
+    id: "cd-management",
+    title: "Cooldown Management",
+    component: CDManagement,
+  },
 ];
 
-export function Data(): JSX.Element {
+export function Analysis(): JSX.Element {
   const { onKeyDown, onTabClick, attachRef, selectedTab } = useTabs(tabs);
 
   return (
@@ -44,7 +62,9 @@ export function Data(): JSX.Element {
 
           return (
             <TabPanel id={tab.id} key={tab.id} hidden={hidden}>
-              <Component />
+              <Suspense fallback={null}>
+                <Component />
+              </Suspense>
             </TabPanel>
           );
         })}

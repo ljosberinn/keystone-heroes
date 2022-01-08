@@ -192,7 +192,7 @@ export function Map(): JSX.Element {
     }
   );
 
-  // synchronize selected tab with pull selection in <Data />
+  // synchronize selected tab with pull selection in <Analysis />
   useEffect(() => {
     if (
       previouslySelectedPull === selectedPull ||
