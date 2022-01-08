@@ -37,7 +37,7 @@ export const damageProcessor: Processor<DamageEvent> = (
     abilityGameID: abilityID,
   } = event;
 
-  const damage = amount + absorbed + overkill;
+  const damage = amount + absorbed + (sourcePlayerID ? 0 : overkill);
 
   if (damage === 0) {
     return null;

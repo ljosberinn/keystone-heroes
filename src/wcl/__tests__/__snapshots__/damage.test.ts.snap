@@ -36,7 +36,7 @@ exports[`damage player damaging npc ignores targetNPCID on NW Kyrian Orb Damage 
   },
   {
     "abilityID": 344421,
-    "damage": 5600,
+    "damage": 5371,
     "eventType": "DamageDone",
     "sourcePlayerID": 1,
     "targetNPCID": null,
@@ -428,7 +428,7 @@ exports[`damage player damaging npc ignores targetNPCID on NW Kyrian Orb Damage 
   },
   {
     "abilityID": 344421,
-    "damage": 9931,
+    "damage": 7969,
     "eventType": "DamageDone",
     "sourcePlayerID": 1,
     "targetNPCID": null,
