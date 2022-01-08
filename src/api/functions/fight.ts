@@ -53,7 +53,10 @@ import type {
   DamageEvent,
 } from "../../wcl/queries/events/types";
 import { processEvents } from "../../wcl/transform";
-import type { PersistedDungeonPull } from "../../wcl/transform/utils";
+import type {
+  PersistableDungeonPull,
+  PersistedDungeonPull,
+} from "../../wcl/transform/utils";
 import {
   configureScope,
   createValidReportIDMiddleware,
@@ -1173,7 +1176,7 @@ const getResponseOrRetrieveAndCreateFight = async (
 
   const dungeonPulls =
     maybeFightPulls.reportData.report.fights[0].dungeonPulls.reduce<
-      Omit<PersistedDungeonPull, "id" | "isWipe" | "percent">[]
+      Omit<PersistableDungeonPull, "isWipe" | "percent" | "count">[]
     >((acc, pull) => {
       if (!pull || !pull.maps || !pull.enemyNPCs) {
         return acc;
@@ -1380,15 +1383,10 @@ const getResponseOrRetrieveAndCreateFight = async (
     });
   });
 
-  const totalPercent = pullsWithWipesAndPercent.reduce(
-    (acc, pull) => acc + pull.percent,
-    0
-  );
-
   await prisma.$transaction([
     prisma.fight.update({
       data: {
-        percent: totalPercent,
+        percent: calculateTotalPercent(pullsWithWipesAndPercent, dungeonID),
         // since we need to update `totalPercent` anyways, we might aswell
         // always update the dungeonID too, even though it may already have
         // been present
@@ -1466,7 +1464,7 @@ const handler: RequestHandler<Request, FightResponse> = async (req, res) => {
 
 const ensureCorrectDungeonID = (
   storedDungeon: { id: number } | null,
-  pulls: Omit<PersistedDungeonPull, "id" | "isWipe" | "percent">[]
+  pulls: Omit<PersistedDungeonPull, "id" | "isWipe" | "percent" | "count">[]
 ): DungeonIDs | null => {
   const allNPCIDs = new Set(
     pulls.flatMap((pull) => pull.enemyNPCs.map((npc) => npc.gameID))
@@ -1493,7 +1491,7 @@ const ensureCorrectDungeonID = (
 };
 
 const persistPulls = async (
-  dungeonPulls: Omit<PersistedDungeonPull, "id">[],
+  dungeonPulls: PersistableDungeonPull[],
   fightID: number
 ): Promise<PersistedDungeonPull[]> => {
   const pulls = dungeonPulls.map<Prisma.PullCreateManyInput>((pull) => {
@@ -1596,7 +1594,11 @@ const createTotalCountReducer = (
 };
 
 const calculatePullCoordinates = (
-  { x, y, enemyNPCs }: Omit<PersistedDungeonPull, "id" | "percent" | "isWipe">,
+  {
+    x,
+    y,
+    enemyNPCs,
+  }: Omit<PersistedDungeonPull, "id" | "percent" | "isWipe" | "count">,
   { maxX, minX, minY, maxY, id }: Omit<Zone, "dungeonID">,
   dungeonID: DungeonIDs,
   npcs: { gameID: number }[]
@@ -1747,14 +1749,14 @@ type PullWipePercentMeta = {
 };
 
 const calculatePullsWithWipesAndPercent = (
-  pulls: Omit<PersistedDungeonPull, "id" | "percent" | "isWipe">[],
+  pulls: Omit<PersistableDungeonPull, "percent" | "isWipe" | "count">[],
   {
     dungeonID,
     playerDeathEvents,
     deathEventMap,
     deathCountMap,
   }: PullWipePercentMeta
-): Omit<PersistedDungeonPull, "id">[] => {
+): PersistableDungeonPull[] => {
   const dungeon = dungeonMap[dungeonID];
   const hasNoWipes = playerDeathEvents.length < 5;
 
@@ -1765,178 +1767,165 @@ const calculatePullsWithWipesAndPercent = (
       ? Object.fromEntries([...SOA_FINAL_BOSS_ANGELS].map((id) => [id, false]))
       : {};
 
-  return pulls.reduce<Omit<PersistedDungeonPull, "id">[]>(
-    (acc, pull, index) => {
-      if (skipNextPull) {
-        skipNextPull = false;
-        return acc;
+  return pulls.reduce<PersistableDungeonPull[]>((acc, pull, index) => {
+    if (skipNextPull) {
+      skipNextPull = false;
+      return acc;
+    }
+
+    const isLastPull = pulls.length === index + 1;
+    const isWipe = hasNoWipes ? false : isPullWipe(playerDeathEvents, pull);
+
+    // TODO: ensure that in deathEventMap pets are not included
+    const killedNPCTargetIDsOfThisPull = new Set([
+      ...deathEventMap[pull.startTime].map((event) =>
+        event.type === "begincast" ? event.sourceID : event.targetID
+      ),
+      // in 648wL1X7D9fNATMv648wL1X7D9fNATMv/#fight=2 Kaal as last boss does
+      // not appear as death event
+      ...(isLastPull ? pull.enemyNPCs.map((npc) => npc.id) : []),
+    ]);
+
+    /**
+     * EXPERIMENTAL
+     * - in q7KrbYV1hmTWMyw fight 4 pull 2, Blightbone was pulled to reset
+     * - he's instead killed 2 pulls further in, so 0 npcs die in this pull
+     */
+    if (killedNPCTargetIDsOfThisPull.size === 0) {
+      return acc;
+    }
+
+    // ensure this pull isn't effectively empty, e.g. only 1 Spiteful Shade
+    const enemyNPCs = pull.enemyNPCs.filter((npc) => {
+      // ignore generally excluded NPCs to reduce noise
+      if (EXCLUDED_NPCS.has(npc.gameID)) {
+        return false;
       }
 
-      const isLastPull = pulls.length === index + 1;
-      const isWipe = hasNoWipes ? false : isPullWipe(playerDeathEvents, pull);
+      // skip adding units that somehow appear in multiple pulls, e.g.
+      // Ickor Bileflesh in PF
+      const wasKilledDuringThisPull = killedNPCTargetIDsOfThisPull.has(npc.id);
 
-      // TODO: ensure that in deathEventMap pets are not included
-      const killedNPCTargetIDsOfThisPull = new Set([
-        ...deathEventMap[pull.startTime].map((event) =>
-          event.type === "begincast" ? event.sourceID : event.targetID
-        ),
-        // in 648wL1X7D9fNATMv648wL1X7D9fNATMv/#fight=2 Kaal as last boss does
-        // not appear as death event
-        ...(isLastPull ? pull.enemyNPCs.map((npc) => npc.id) : []),
-      ]);
+      // each angel before Devos sends two DeathEvents - one on actual death,
+      // one when their ability is transferred to the next, around 6 seconds later
+      // which may show up in logs while already fighting the next
+      // search here for `Lakesis` for example
+      // https://www.warcraftlogs.com/reports/BafFCwYDkrX2KTpv#fight=3&type=summary&pins=2%24Off%24%23244F4B%24expression%24type%20%3D%20%22death%22&view=events
+      if (SOA_FINAL_BOSS_ANGELS.has(npc.gameID)) {
+        const diedPrior = soaAngelDeathMap[npc.gameID];
 
-      /**
-       * EXPERIMENTAL
-       * - in q7KrbYV1hmTWMyw fight 4 pull 2, Blightbone was pulled to reset
-       * - he's instead killed 2 pulls further in, so 0 npcs die in this pull
-       */
-      if (killedNPCTargetIDsOfThisPull.size === 0) {
-        return acc;
-      }
-
-      // ensure this pull isn't effectively empty, e.g. only 1 Spiteful Shade
-      const enemyNPCs = pull.enemyNPCs.filter((npc) => {
-        // ignore generally excluded NPCs to reduce noise
-        if (EXCLUDED_NPCS.has(npc.gameID)) {
+        if (diedPrior) {
           return false;
         }
 
-        // skip adding units that somehow appear in multiple pulls, e.g.
-        // Ickor Bileflesh in PF
-        const wasKilledDuringThisPull = killedNPCTargetIDsOfThisPull.has(
-          npc.id
+        // only mark as killed if actually dies during this pull
+        if (wasKilledDuringThisPull) {
+          soaAngelDeathMap[npc.gameID] = true;
+
+          // override whatever the death count map says about the death amount
+          deathCountMap[pull.startTime][npc.id] = 1;
+        }
+      }
+
+      // check whether the next pull kills this unit. if so, merge the pulls
+      // this occurs e.g. in report /BjF97Nm1faLkCnwT/17 for Ickor Bileflesh
+      if (!wasKilledDuringThisPull) {
+        const nextPull = pulls[index + 1];
+
+        if (!nextPull) {
+          return true;
+        }
+
+        const killedNPCTargetIDsOfNextPull = new Set(
+          deathEventMap[nextPull.startTime].map((event) => event.targetID)
+        );
+        const isKilledDuringNextPull = killedNPCTargetIDsOfNextPull.has(npc.id);
+
+        // e.g. in case of connecting tormented LT with amarth in NW through spear
+        // without filtering the boss adds would be included
+        // see /KLqfvBh9CHz2dMpm#fight=3
+        const relevantNPCsOfNextPull = nextPull.enemyNPCs.filter(
+          (npc) => !EXCLUDED_NPCS.has(npc.gameID)
         );
 
-        // each angel before Devos sends two DeathEvents - one on actual death,
-        // one when their ability is transferred to the next, around 6 seconds later
-        // which may show up in logs while already fighting the next
-        // search here for `Lakesis` for example
-        // https://www.warcraftlogs.com/reports/BafFCwYDkrX2KTpv#fight=3&type=summary&pins=2%24Off%24%23244F4B%24expression%24type%20%3D%20%22death%22&view=events
-        if (SOA_FINAL_BOSS_ANGELS.has(npc.gameID)) {
-          const diedPrior = soaAngelDeathMap[npc.gameID];
-
-          if (diedPrior) {
-            return false;
-          }
-
-          // only mark as killed if actually dies during this pull
-          if (wasKilledDuringThisPull) {
-            soaAngelDeathMap[npc.gameID] = true;
-
-            // override whatever the death count map says about the death amount
-            deathCountMap[pull.startTime][npc.id] = 1;
-          }
+        if (
+          /**
+           * only merge if its a not wipe, see e.g.
+           * https://www.warcraftlogs.com/reports/1MGH6BRTCwNdprkf#fight=3
+           * where 2 attempts are made on 3rd boss, the first being a wipe
+           * which merges both pulls unintentionally
+           */
+          !isWipe &&
+          relevantNPCsOfNextPull.length === 1 &&
+          isKilledDuringNextPull
+        ) {
+          // merge fight duration
+          pull.endTime = nextPull.endTime;
+          skipNextPull = true;
+          return true;
         }
-
-        // check whether the next pull kills this unit. if so, merge the pulls
-        // this occurs e.g. in report /BjF97Nm1faLkCnwT/17 for Ickor Bileflesh
-        if (!wasKilledDuringThisPull) {
-          const nextPull = pulls[index + 1];
-
-          if (!nextPull) {
-            return true;
-          }
-
-          const killedNPCTargetIDsOfNextPull = new Set(
-            deathEventMap[nextPull.startTime].map((event) => event.targetID)
-          );
-          const isKilledDuringNextPull = killedNPCTargetIDsOfNextPull.has(
-            npc.id
-          );
-
-          // e.g. in case of connecting tormented LT with amarth in NW through spear
-          // without filtering the boss adds would be included
-          // see /KLqfvBh9CHz2dMpm#fight=3
-          const relevantNPCsOfNextPull = nextPull.enemyNPCs.filter(
-            (npc) => !EXCLUDED_NPCS.has(npc.gameID)
-          );
-
-          if (
-            /**
-             * only merge if its a not wipe, see e.g.
-             * https://www.warcraftlogs.com/reports/1MGH6BRTCwNdprkf#fight=3
-             * where 2 attempts are made on 3rd boss, the first being a wipe
-             * which merges both pulls unintentionally
-             */
-            !isWipe &&
-            relevantNPCsOfNextPull.length === 1 &&
-            isKilledDuringNextPull
-          ) {
-            // merge fight duration
-            pull.endTime = nextPull.endTime;
-            skipNextPull = true;
-            return true;
-          }
-        }
-
-        // some bosses, e.g. Globgrog don't have death events, but phaseend
-        // some bosses die shortly after a pull ended e.g. Margrave Stradama
-        const isBoss = allBossIDs.has(npc.gameID);
-
-        return wasKilledDuringThisPull || isBoss;
-      });
-
-      if (enemyNPCs.length === 0) {
-        return acc;
       }
 
-      const totalCount = enemyNPCs.reduce(
-        createTotalCountReducer(
-          {
-            ...deathCountMap[pull.startTime],
-            // merge deaths from next pull into this one
-            ...(skipNextPull
-              ? deathCountMap[pulls[index + 1].startTime]
-              : null),
-          },
-          dungeon
-        ),
-        0
-      );
+      // some bosses, e.g. Globgrog don't have death events, but phaseend
+      // some bosses die shortly after a pull ended e.g. Margrave Stradama
+      const isBoss = allBossIDs.has(npc.gameID);
 
-      const percent = (totalCount / dungeon.count) * 100;
+      return wasKilledDuringThisPull || isBoss;
+    });
 
-      // skip pulls that
-      if (
-        // gave no percent
-        percent === 0 &&
-        // - are not a wipe
-        !isWipe &&
-        // - are not a boss fight
-        !enemyNPCs.some((npc) => allBossIDs.has(npc.gameID)) &&
-        // - are not a Tormented lieutenant (high change of being a 0% pull)
-        !enemyNPCs.some((npc) => tormentedLieutenantIDSet.has(npc.gameID))
-      ) {
-        return acc;
-      }
+    if (enemyNPCs.length === 0) {
+      return acc;
+    }
 
-      const zone = dungeon.zones.find((zone) => pull.maps[0] === zone.id);
-
-      if (!zone) {
-        return acc;
-      }
-
-      const { x, y } = calculatePullCoordinates(
-        pull,
-        zone,
-        dungeonID,
-        enemyNPCs
-      );
-
-      return [
-        ...acc,
+    const totalCount = enemyNPCs.reduce(
+      createTotalCountReducer(
         {
-          ...pull,
-          isWipe,
-          percent,
-          enemyNPCs,
-          x,
-          y,
+          ...deathCountMap[pull.startTime],
+          // merge deaths from next pull into this one
+          ...(skipNextPull ? deathCountMap[pulls[index + 1].startTime] : null),
         },
-      ];
-    },
-    []
-  );
+        dungeon
+      ),
+      0
+    );
+
+    const percent = (totalCount / dungeon.count) * 100;
+
+    // skip pulls that
+    if (
+      // gave no percent
+      percent === 0 &&
+      // - are not a wipe
+      !isWipe &&
+      // - are not a boss fight
+      !enemyNPCs.some((npc) => allBossIDs.has(npc.gameID)) &&
+      // - are not a Tormented lieutenant (high change of being a 0% pull)
+      !enemyNPCs.some((npc) => tormentedLieutenantIDSet.has(npc.gameID))
+    ) {
+      return acc;
+    }
+
+    const zone = dungeon.zones.find((zone) => pull.maps[0] === zone.id);
+
+    if (!zone) {
+      return acc;
+    }
+
+    const { x, y } = calculatePullCoordinates(pull, zone, dungeonID, enemyNPCs);
+
+    return [
+      ...acc,
+      {
+        ...pull,
+        isWipe,
+        percent,
+        enemyNPCs,
+        count: totalCount,
+        x,
+        y,
+      },
+    ];
+  }, []);
 };
 
 //
@@ -1948,7 +1937,7 @@ const calculatePullsWithWipesAndPercent = (
  * so we can ideally fake a death event based on dungeonencounterend
  */
 const createPullNPCDeathEventMap = (
-  pulls: Omit<PersistedDungeonPull, "id" | "percent" | "isWipe">[],
+  pulls: Omit<PersistedDungeonPull, "id" | "percent" | "isWipe" | "count">[],
   enemyDeathEvents: (BeginCastEvent | DeathEvent | DamageEvent)[]
 ): Record<number, (BeginCastEvent | DeathEvent | DamageEvent)[]> => {
   return Object.fromEntries<(DeathEvent | BeginCastEvent | DamageEvent)[]>(
@@ -1990,6 +1979,23 @@ const createPullNPCDeathCountMap = (
       ];
     })
   );
+};
+
+export const calculateTotalPercent = (
+  pulls: PersistableDungeonPull[],
+  dungeonID: number
+): number => {
+  const { count } = dungeonMap[dungeonID];
+
+  const clearedCount = pulls.reduce((acc, pull) => {
+    return acc + pull.count;
+  }, 0);
+
+  if (count === clearedCount) {
+    return 100;
+  }
+
+  return (clearedCount / count) * 100;
 };
 
 export const fightHandler = nc()
