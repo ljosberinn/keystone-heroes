@@ -30,6 +30,7 @@ import {
   SHROUD_ICON,
   STATIC_ICON_PREFIX,
 } from "../AbilityIcon";
+import { Checkbox } from "../Checkbox";
 import { ErrorBoundary } from "../ErrorBoundary";
 import { ExternalLink } from "../ExternalLink";
 import { SpecIcon } from "../SpecIcon";
@@ -609,7 +610,9 @@ function Events() {
   } = usePullSummaryRows(selectedPull);
 
   return (
-    <section className="w-full min-h-screen px-4 py-2 bg-white rounded-lg lg:w-9/23 dark:bg-gray-700">
+    <section
+      className={`w-full min-h-screen px-4 py-2 rounded-lg lg:w-9/12 ${bgPrimary}`}
+    >
       <h3 className="pb-2 text-xl font-semibold font-xl">Events</h3>
       <p>Filter Events by Player</p>
       <div className="flex justify-between w-full">
@@ -628,8 +631,7 @@ function Events() {
 
             return (
               <span className="p-2" key={p.id}>
-                <input
-                  type="checkbox"
+                <Checkbox
                   aria-labelledby={`player-${p.id}`}
                   id={`player-${p.id}`}
                   checked={checked}
@@ -641,14 +643,7 @@ function Events() {
                         : [...prev, p.id]
                     );
                   }}
-                />
-                <label
-                  htmlFor={`player-${p.id}`}
-                  className={classnames(
-                    "pl-2 inline-flex items-center space-x-2",
-                    playerIdTextColorMap[p.id],
-                    !disabled && "cursor-pointer"
-                  )}
+                  className={playerIdTextColorMap[p.id]}
                 >
                   <span className="w-4 h-4">
                     <SpecIcon
@@ -658,8 +653,10 @@ function Events() {
                       className={checked ? undefined : grayscale}
                     />
                   </span>
-                  <span>{p.name}</span>
-                </label>
+                  <span className={checked ? undefined : grayscale}>
+                    {p.name}
+                  </span>
+                </Checkbox>
               </span>
             );
           })}
@@ -961,7 +958,7 @@ export default function Pulls(): JSX.Element {
   return (
     <>
       <div className={`px-4 rounded-t-lg pb-4 pt-4 ${bgPrimary}`}>
-        <h2 className="text-2xl font-bold">Pull Details</h2>
+        <h2 className="text-2xl font-bold">Events</h2>
       </div>
       <div className={`rounded-b-lg ${bgSecondary} p-2`}>
         <div className="w-full">

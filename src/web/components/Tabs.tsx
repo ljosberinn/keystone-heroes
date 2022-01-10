@@ -35,7 +35,7 @@ export function TabList({
 }
 
 export type TabButtonProps = {
-  children: string;
+  children: string | JSX.Element;
   className?: string;
   id: string | number;
   onKeyDown: (event: ReactKeyboardEvent<HTMLButtonElement>) => void;
@@ -96,13 +96,25 @@ export type TabPanelProps = {
   children: JSX.Element | (JSX.Element | null)[];
   id: number | string;
   "data-map-container"?: number;
+  lazy?: boolean;
 };
 
 export const TabPanel = forwardRef<HTMLDivElement, TabPanelProps>(
   (
-    { children, className, id, hidden, "data-map-container": dataMapContainer },
+    {
+      children,
+      className,
+      id,
+      hidden,
+      "data-map-container": dataMapContainer,
+      lazy,
+    },
     ref
   ) => {
+    if (hidden && lazy) {
+      return null;
+    }
+
     return (
       <div
         hidden={hidden}

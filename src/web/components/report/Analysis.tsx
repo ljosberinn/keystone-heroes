@@ -61,7 +61,7 @@ export function Analysis(): JSX.Element {
           const Component = tab.component;
 
           return (
-            <TabPanel id={tab.id} key={tab.id} hidden={hidden}>
+            <TabPanel id={tab.id} key={tab.id} hidden={hidden} lazy={index > 0}>
               <Suspense fallback={null}>
                 <Component />
               </Suspense>
