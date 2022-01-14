@@ -27,7 +27,7 @@ export default function Home(): JSX.Element | null {
           className={`pt-3 text-sm leading-tight text-center ${yellowText} lg:text-xl sm:text-base`}
         >
           stop guessing what you could improve or what went wrong - gain some
-          actual insight for once
+          actual insight
         </h2>
 
         <ExternalLink
