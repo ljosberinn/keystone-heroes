@@ -202,6 +202,21 @@ export const classBorderColorMap: Record<string, string> = {
   mage: "border-mage",
 };
 
+export const classFillColorMap: Record<string, string> = {
+  demonhunter: "fill-demonhunter",
+  warlock: "fill-warlock",
+  rogue: "fill-rogue",
+  warrior: "fill-warrior",
+  priest: "fill-priest",
+  hunter: "fill-hunter",
+  deathknight: "fill-deathknight",
+  shaman: "fill-shaman",
+  paladin: "fill-paladin",
+  monk: "fill-monk",
+  druid: "fill-druid",
+  mage: "fill-mage",
+};
+
 export const createInternalUrl = (
   url: string,
   defaultQueryParams?: Record<string, string | number>

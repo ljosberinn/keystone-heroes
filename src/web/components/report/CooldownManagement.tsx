@@ -6,7 +6,11 @@ import type { FightSuccessResponse } from "../../../api/functions/fight";
 import { useFight } from "../../../pages/report/[reportID]/[fightID]";
 import { classes, spells } from "../../staticData";
 import { bgPrimary, grayscale } from "../../styles/tokens";
-import { classBorderColorMap } from "../../utils";
+import {
+  classBorderColorMap,
+  classFillColorMap,
+  classTextColorMap,
+} from "../../utils";
 import { classnames } from "../../utils/classnames";
 import { STATIC_ICON_PREFIX } from "../AbilityIcon";
 import { Checkbox } from "../Checkbox";
@@ -43,7 +47,7 @@ const isCastOrAbilityReadyEventWithAbilityAndSourcePlayerID = (
 // eslint-disable-next-line import/no-default-export
 export default function CooldownManagement(): JSX.Element {
   const { player, pulls, meta } = useFight().fight;
-  const [zoom, setZoom] = useState(1);
+  const [zoomFactor, setZoomFactor] = useState(1);
   const [cooldown, setCooldown] = useState(120);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [trackedPlayer, setTrackedPlayer] = useState(player.map((p) => p.id));
@@ -58,7 +62,7 @@ export default function CooldownManagement(): JSX.Element {
       }
 
       if (name === "zoom") {
-        setZoom(value / 100);
+        setZoomFactor(value / 100);
       }
     },
     []
@@ -79,22 +83,72 @@ export default function CooldownManagement(): JSX.Element {
   const allRelevantEvents = useMemo(
     () =>
       pulls.flatMap((pull) =>
-        pull.events.filter(
-          isCastOrAbilityReadyEventWithAbilityAndSourcePlayerID
-        )
+        pull.events
+          .filter(isCastOrAbilityReadyEventWithAbilityAndSourcePlayerID)
+          .filter((event) => event.ability.id in spells)
       ),
     [pulls]
   );
 
-  const relevantEventSubset = allRelevantEvents.filter((event) =>
-    trackedPlayer.includes(event.sourcePlayerID)
+  const abilityIdTextColorMap = useMemo(() => {
+    const playerClassMap = Object.fromEntries(
+      player.map((p) => [p.id, classes[p.class].name.toLowerCase()])
+    );
+
+    return Object.fromEntries(
+      allRelevantEvents.map(({ ability, sourcePlayerID }) => {
+        const className = playerClassMap[sourcePlayerID];
+
+        return [ability.id, classFillColorMap[className]];
+      })
+    );
+  }, [player, allRelevantEvents]);
+
+  const relevantEventsSubset = useMemo(
+    () =>
+      allRelevantEvents.filter(
+        (event) =>
+          trackedPlayer.includes(event.sourcePlayerID) &&
+          spells[event.ability.id].cd >= cooldown
+      ),
+    [allRelevantEvents, trackedPlayer, cooldown]
   );
 
-  const allUsedAbilities = new Set(
-    allRelevantEvents.map((event) => event.ability.id)
-  );
+  // eslint-disable-next-line unicorn/prefer-object-from-entries
+  const castsByPlayer = relevantEventsSubset.reduce<
+    Record<number, CastOrAbilityReadyEventWIthABilityAndSourcePlayerID[]>
+  >((acc, event) => {
+    if (event.sourcePlayerID in acc) {
+      acc[event.sourcePlayerID].push(event);
+    } else {
+      acc[event.sourcePlayerID] = [event];
+    }
 
-  console.log(allRelevantEvents);
+    return acc;
+  }, {});
+
+  // eslint-disable-next-line unicorn/prefer-object-from-entries
+  const abilitiesByPlayer = relevantEventsSubset.reduce<
+    Record<number, number[]>
+  >((acc, event) => {
+    const { ability, sourcePlayerID } = event;
+
+    if (sourcePlayerID in acc) {
+      if (!acc[sourcePlayerID].includes(ability.id)) {
+        acc[sourcePlayerID].push(ability.id);
+      }
+    } else {
+      acc[sourcePlayerID] = [ability.id];
+    }
+
+    return acc;
+  }, {});
+
+  const amountOfVisibleAbilities = Object.values(
+    abilitiesByPlayer
+  ).reduce<number>((acc, arr) => acc + arr.length, 0);
+
+  console.log({ castsByPlayer, abilitiesByPlayer });
 
   const playerAbilityMap = useMemo(
     () =>
@@ -163,33 +217,47 @@ export default function CooldownManagement(): JSX.Element {
     })
     .join(" ");
 
-  // eslint-disable-next-line unicorn/prefer-object-from-entries
-  const allAbilityIDs = Object.entries(playerAbilityMap).reduce<
-    Record<number, number[]>
-  >((acc, [playerID, abilityMap]) => {
-    const id = Number.parseInt(playerID);
-
-    Object.keys(abilityMap).forEach((abilityID) => {
-      const asNumber = Number.parseInt(abilityID);
-
-      if (asNumber in acc && !acc[asNumber].includes(id)) {
-        acc[asNumber].push(id);
-      } else {
-        acc[asNumber] = [id];
-      }
-    });
-
-    return acc;
-  }, {});
-
-  const zoomFactor = zoom;
-
   const width =
     zoomFactor === 1
       ? undefined
       : containerRef.current
       ? containerRef.current.clientWidth * zoomFactor
       : undefined;
+
+  const height = 30 + amountOfVisibleAbilities * 40;
+  console.log({ height, amountOfVisibleAbilities });
+
+  const allUsedAbilities = Object.values(abilitiesByPlayer).flatMap((arr) =>
+    arr.sort((a, b) => {
+      const abilityA = spells[a];
+      const abilityB = spells[b];
+
+      const cdDiff = abilityB.cd - abilityA.cd;
+
+      if (cdDiff !== 0) {
+        return cdDiff;
+      }
+
+      return abilityB.name.localeCompare(abilityA.name);
+    })
+  );
+
+  const mappableData = Object.values(castsByPlayer).flatMap((arr) => {
+    return arr.sort((a, b) => {
+      const abilityA = spells[a.ability.id];
+      const abilityB = spells[b.ability.id];
+
+      const cdDiff = abilityB.cd - abilityA.cd;
+
+      if (cdDiff !== 0) {
+        return cdDiff;
+      }
+
+      return abilityB.name.localeCompare(abilityA.name);
+    });
+  });
+
+  console.log({ allUsedAbilities });
 
   return (
     <section className={`w-full px-4 py-2 rounded-lg ${bgPrimary}`}>
@@ -211,7 +279,10 @@ export default function CooldownManagement(): JSX.Element {
 
             const disabled = checked && trackedPlayer.length === 1;
 
-            const classColor = classBorderColorMap[name.toLowerCase()];
+            const lowercasedClassName = name.toLowerCase();
+
+            const classBorderColor = classBorderColorMap[lowercasedClassName];
+            const classTextColor = classTextColorMap[lowercasedClassName];
 
             return (
               <span className="p-2" key={p.id}>
@@ -220,11 +291,14 @@ export default function CooldownManagement(): JSX.Element {
                   checked={checked}
                   disabled={disabled}
                   onChange={() => {
-                    setTrackedPlayer((prev) =>
-                      prev.includes(p.id)
-                        ? prev.filter((id) => id !== p.id)
-                        : [...prev, p.id]
-                    );
+                    setTrackedPlayer((prev) => {
+                      if (prev.includes(p.id)) {
+                        return prev.filter((id) => id !== p.id);
+                      }
+
+                      // TODO: sort by role
+                      return [...prev, p.id];
+                    });
                   }}
                 >
                   <span
@@ -239,11 +313,11 @@ export default function CooldownManagement(): JSX.Element {
                         spec={spec.name}
                         className={classnames(
                           "border-2",
-                          checked && classColor
+                          checked && classBorderColor
                         )}
                       />
                     </span>
-                    <span>{p.name}</span>
+                    <span className={classTextColor}>{p.name}</span>
                   </span>
                 </Checkbox>
               </span>
@@ -260,7 +334,7 @@ export default function CooldownManagement(): JSX.Element {
             onChange={handleRangeChange}
             name="zoom"
             aria-labelledby="zoom-label"
-            value={zoom * 100}
+            value={zoomFactor * 100}
             id="zoom"
           />
           <label htmlFor="zoom" id="zoom-label">
@@ -287,159 +361,176 @@ export default function CooldownManagement(): JSX.Element {
         </div>
       </div>
 
-      <div className="w-full overflow-x-scroll" ref={containerRef}>
+      <div
+        className={classnames("w-full", zoomFactor > 1 && "overflow-x-scroll")}
+        ref={containerRef}
+      >
         <style jsx>{css}</style>
         <svg
-          height="2000"
           width={width}
           className={width === undefined ? "w-full" : undefined}
+          height={height}
         >
-          {pulls.map((pull) => {
-            const [pullStartX, pullEndX, center] = calculatePullXCoordinates(
-              pull,
-              meta
-            );
-
-            return (
-              <Fragment key={pull.id}>
-                <line
-                  y1={50}
-                  y2={950}
-                  x1={`${pullStartX}%`}
-                  x2={`${pullStartX}%`}
-                  stroke="gray"
-                  strokeDasharray={4}
-                />
-                <line
-                  y1={50}
-                  y2={950}
-                  x1={`${pullEndX}%`}
-                  x2={`${pullEndX}%`}
-                  stroke="gray"
-                  strokeDasharray={4}
-                />
-
-                <text dx="0" x={`${center}%`} y={2000}>
-                  <tspan
-                    x={`${center}%`}
-                    dx="0"
-                    dy="0"
-                    textAnchor="middle"
-                    fill="gray"
-                    stroke="transparent"
-                  >
-                    {pull.id}
-                  </tspan>
-                </text>
-              </Fragment>
-            );
-          })}
-
-          {Object.entries(allAbilityIDs).map(
-            ([abilityID, users], index, arr) => {
-              if (!trackedPlayer.some((player) => users.includes(player))) {
-                return null;
-              }
-
-              // return Object.keys(abilityMap)
-              //   .sort((a, b) => {
-              //     const abilityA = spells[Number.parseInt(a)];
-              //     const abilityB = spells[Number.parseInt(b)];
-
-              //     if (!abilityA) {
-              //       return 1;
-              //     }
-
-              //     if (!abilityB) {
-              //       return -1;
-              //     }
-
-              //     return abilityB.cd - abilityA.cd;
-              //   })
-              // .map((abilityID, index, arr) => {
-              const ability = spells[Number.parseInt(abilityID)];
-              const center = 0;
-
-              const perRow = 2000 / arr.length;
-
-              const y = 50 + index * perRow - 5;
+          <g>
+            {pulls.map((pull) => {
+              const [pullStartX, pullEndX, center] = calculatePullXCoordinates(
+                pull,
+                meta
+              );
 
               return (
-                <text dx="0" x={`${center}%`} y={750} key={abilityID}>
+                <Fragment key={pull.id}>
+                  <line
+                    y2="95%"
+                    x1={`${pullStartX}%`}
+                    x2={`${pullStartX}%`}
+                    stroke="gray"
+                    strokeDasharray={4}
+                  />
+                  <line
+                    y2="95%"
+                    x1={`${pullEndX}%`}
+                    x2={`${pullEndX}%`}
+                    stroke="gray"
+                    strokeDasharray={4}
+                  />
+
+                  <text dx="0" x={`${center}%`} y={height}>
+                    <tspan
+                      x={`${center}%`}
+                      dx="0"
+                      dy="0"
+                      textAnchor="middle"
+                      fill="gray"
+                      stroke="transparent"
+                    >
+                      {pull.id}
+                    </tspan>
+                  </text>
+                </Fragment>
+              );
+            })}
+          </g>
+
+          <g>
+            {allUsedAbilities.map((id, index) => {
+              const ability = spells[id];
+
+              const y = 20 + index * 40;
+
+              return (
+                <text dx="0" x="0" y={height} key={id}>
                   <tspan
-                    x={0}
+                    x="0"
                     y={y}
                     dx="0"
                     dy="0"
                     textAnchor="left"
                     fill="gray"
                     stroke="transparent"
+                    className={abilityIdTextColorMap[id]}
                   >
                     {ability.name}
                   </tspan>
                 </text>
               );
-              // });
-            }
-          )}
+            })}
+          </g>
 
-          {Object.entries(playerAbilityMap).flatMap(([actorID, abilityMap]) => {
-            if (!trackedPlayer.includes(Number.parseInt(actorID))) {
-              return null;
-            }
+          <g>
+            {mappableData.map((event, index) => {
+              const { icon } = spells[event.ability.id];
 
-            return Object.entries(abilityMap)
-              .sort((a, b) => {
-                const abilityA = spells[Number.parseInt(a[0])];
-                const abilityB = spells[Number.parseInt(b[0])];
+              const x =
+                ((event.timestamp - meta.startTime) / meta.time) * 100 -
+                // x offset of half of icon width based on max svg size
+                // so its on the line
+                (12 / 1488) * 100;
 
-                if (!abilityA) {
-                  return 1;
+              const index = allUsedAbilities.indexOf(event.ability.id);
+
+              const y = 22.5 + index * 40;
+
+              return (
+                <image
+                  key={`${event.sourcePlayerID}-${event.timestamp}-${index}`}
+                  width="24"
+                  height="24"
+                  x={`${x < 0 ? 0 : x}%`}
+                  y={y}
+                  href={`${STATIC_ICON_PREFIX}${icon}.jpg`}
+                  className={classnames(
+                    "grayscale",
+                    event.type === "AbilityReady" && "outline-dashed outline-1",
+                    event.ability.wasted
+                      ? "outline-red-500"
+                      : "opacity-75 outline-white-500"
+                  )}
+                />
+              );
+            })}
+          </g>
+
+          {/* <g>
+            {Object.entries(playerAbilityMap).flatMap(
+              ([actorID, abilityMap]) => {
+                if (!trackedPlayer.includes(Number.parseInt(actorID))) {
+                  return null;
                 }
 
-                if (!abilityB) {
-                  return -1;
-                }
+                return Object.entries(abilityMap)
+                  .sort((a, b) => {
+                    const abilityA = spells[Number.parseInt(a[0])];
+                    const abilityB = spells[Number.parseInt(b[0])];
 
-                return abilityB.cd - abilityA.cd;
-              })
-              .map(([abilityID, events], index, arr) => {
-                return events.map((event) => {
-                  const ability = spells[Number.parseInt(abilityID)];
+                    if (!abilityA) {
+                      return 1;
+                    }
 
-                  const x =
-                    ((event.timestamp - meta.startTime) / meta.time) * 100 -
-                    // x offset of half of icon width based on max svg size
-                    // so its on the line
-                    (12 / 1488) * 100;
+                    if (!abilityB) {
+                      return -1;
+                    }
 
-                  const svgHeight = 2000;
-                  const perRow = svgHeight / arr.length;
+                    return abilityB.cd - abilityA.cd;
+                  })
+                  .map(([abilityID, events], index, arr) => {
+                    return events.map((event) => {
+                      const ability = spells[Number.parseInt(abilityID)];
 
-                  const y = 50 + index * perRow;
+                      const x =
+                        ((event.timestamp - meta.startTime) / meta.time) * 100 -
+                        // x offset of half of icon width based on max svg size
+                        // so its on the line
+                        (12 / 1488) * 100;
 
-                  return (
-                    <image
-                      key={event.key}
-                      href={`${STATIC_ICON_PREFIX}${ability.icon}.jpg`}
-                      x={`${x}%`}
-                      y={y}
-                      width={24}
-                      height={24}
-                      className={classnames(
-                        "grayscale cursor-pointer",
-                        event.type === "AbilityReady" &&
-                          "outline-dashed outline-1",
-                        event.ability.wasted
-                          ? "outline-red-500"
-                          : "opacity-75 outline-white-500"
-                      )}
-                      data-ability={abilityID}
-                    />
-                  );
-                });
-              });
-          })}
+                      const perRow = height / arr.length;
+
+                      const y = 25 + index * perRow;
+
+                      return (
+                        <image
+                          key={event.key}
+                          href={`${STATIC_ICON_PREFIX}${ability.icon}.jpg`}
+                          x={`${x < 0 ? 0 : x}%`}
+                          y={y}
+                          width={24}
+                          height={24}
+                          className={classnames(
+                            "grayscale cursor-pointer",
+                            event.type === "AbilityReady" &&
+                              "outline-dashed outline-1",
+                            event.ability.wasted
+                              ? "outline-red-500"
+                              : "opacity-75 outline-white-500"
+                          )}
+                          data-ability={abilityID}
+                        />
+                      );
+                    });
+                  });
+              }
+            )}
+          </g> */}
         </svg>
       </div>
     </section>
