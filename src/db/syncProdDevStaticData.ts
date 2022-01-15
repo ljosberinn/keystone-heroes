@@ -41,6 +41,34 @@ try {
     const devTalents = await devDb.talent.findMany();
     const devCooldowns = await devDb.cooldown.findMany();
 
+    console.table({
+      legendaries: {
+        dev: devLegendaries.length,
+        prod: prodLegendaries.length,
+        diff: devLegendaries.length - prodLegendaries.length,
+      },
+      conduits: {
+        dev: devConduits.length,
+        prod: prodConduits.length,
+        diff: devConduits.length - prodConduits.length,
+      },
+      talents: {
+        dev: devTalents.length,
+        prod: prodTalents.length,
+        diff: devTalents.length - prodTalents.length,
+      },
+      cooldowns: {
+        dev: devCooldowns.length,
+        prod: prodCooldowns.length,
+        diff: devCooldowns.length - prodCooldowns.length,
+      },
+      covenantTraits: {
+        dev: devCovenantTraits.length,
+        prod: prodCovenantTraits.length,
+        diff: devCovenantTraits.length - prodCovenantTraits.length,
+      },
+    });
+
     console.log("done loading data - begin upsertion");
     console.time("upsert");
 

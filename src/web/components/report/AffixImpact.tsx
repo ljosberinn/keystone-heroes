@@ -3,7 +3,6 @@ import { useFight } from "../../../pages/report/[reportID]/[fightID]";
 import {
   spells,
   EXPLOSIVE,
-  classes,
   QUAKING,
   VOLCANIC,
   STORMING,
@@ -38,6 +37,7 @@ import {
   calculateBurstingMetrics,
   calculateNecroticMetrics,
 } from "../../utils/affixes";
+import { getClassAndSpecName } from "../../utils/player";
 import { AbilityIcon } from "../AbilityIcon";
 import { ExternalLink } from "../ExternalLink";
 import { SpecIcon } from "../SpecIcon";
@@ -101,6 +101,12 @@ export function AffixImpact(): JSX.Element {
     necrotic,
   } = useAffixSpecificStats();
 
+  const playerIDClassInfoMap = Object.fromEntries(
+    player.map((p) => {
+      return [p.id, getClassAndSpecName(p)];
+    })
+  );
+
   return (
     <section
       className="py-6 drop-shadow-sm"
@@ -148,13 +154,7 @@ export function AffixImpact(): JSX.Element {
 
                 <ImpactRow>
                   {player.map((player) => {
-                    const { name, specs } = classes[player.class];
-                    const spec = specs.find((spec) => spec.id === player.spec);
-
-                    if (!spec) {
-                      return null;
-                    }
-
+                    const meta = playerIDClassInfoMap[player.id];
                     const kills = explosives.kills[player.id] ?? 0;
 
                     return (
@@ -165,8 +165,8 @@ export function AffixImpact(): JSX.Element {
                         <span className="w-6 h-6">
                           <SpecIcon
                             size={6}
-                            class={name}
-                            spec={spec.name}
+                            class={meta.className}
+                            spec={meta.specName}
                             alt={player.name}
                           />
                         </span>
@@ -191,12 +191,7 @@ export function AffixImpact(): JSX.Element {
 
                 <ImpactRow>
                   {player.map((player) => {
-                    const { name, specs } = classes[player.class];
-                    const spec = specs.find((spec) => spec.id === player.spec);
-
-                    if (!spec) {
-                      return null;
-                    }
+                    const meta = playerIDClassInfoMap[player.id];
 
                     const damageTaken = quaking.damage[player.id] ?? 0;
 
@@ -216,8 +211,8 @@ export function AffixImpact(): JSX.Element {
                         <span className="w-6 h-6">
                           <SpecIcon
                             size={6}
-                            class={name}
-                            spec={spec.name}
+                            class={meta.className}
+                            spec={meta.specName}
                             alt={player.name}
                           />
                         </span>
@@ -233,12 +228,7 @@ export function AffixImpact(): JSX.Element {
                 </ImpactRow>
                 <ImpactRow>
                   {player.map((player) => {
-                    const { name, specs } = classes[player.class];
-                    const spec = specs.find((spec) => spec.id === player.spec);
-
-                    if (!spec) {
-                      return null;
-                    }
+                    const meta = playerIDClassInfoMap[player.id];
 
                     const interrupts = quaking.interrupts[player.id] ?? 0;
 
@@ -258,8 +248,8 @@ export function AffixImpact(): JSX.Element {
                         <span className="w-6 h-6">
                           <SpecIcon
                             size={6}
-                            class={name}
-                            spec={spec.name}
+                            class={meta.className}
+                            spec={meta.specName}
                             alt={player.name}
                           />
                         </span>
@@ -286,12 +276,7 @@ export function AffixImpact(): JSX.Element {
 
                 <ImpactRow>
                   {player.map((player) => {
-                    const { name, specs } = classes[player.class];
-                    const spec = specs.find((spec) => spec.id === player.spec);
-
-                    if (!spec) {
-                      return null;
-                    }
+                    const meta = playerIDClassInfoMap[player.id];
 
                     const damageTaken = volcanic.damage[player.id] ?? 0;
                     const hits = volcanic.hits[player.id] ?? 0;
@@ -311,8 +296,8 @@ export function AffixImpact(): JSX.Element {
                         <span className="w-6 h-6">
                           <SpecIcon
                             size={6}
-                            class={name}
-                            spec={spec.name}
+                            class={meta.className}
+                            spec={meta.specName}
                             alt={player.name}
                           />
                         </span>
@@ -339,12 +324,7 @@ export function AffixImpact(): JSX.Element {
                 />
                 <ImpactRow>
                   {player.map((player) => {
-                    const { name, specs } = classes[player.class];
-                    const spec = specs.find((spec) => spec.id === player.spec);
-
-                    if (!spec) {
-                      return null;
-                    }
+                    const meta = playerIDClassInfoMap[player.id];
 
                     const damageTaken = storming.damage[player.id] ?? 0;
                     const hits = storming.hits[player.id] ?? 0;
@@ -364,8 +344,8 @@ export function AffixImpact(): JSX.Element {
                         <span className="w-6 h-6">
                           <SpecIcon
                             size={6}
-                            class={name}
-                            spec={spec.name}
+                            class={meta.className}
+                            spec={meta.specName}
                             alt={player.name}
                           />
                         </span>
@@ -392,12 +372,7 @@ export function AffixImpact(): JSX.Element {
                 />
                 <ImpactRow>
                   {player.map((player) => {
-                    const { name, specs } = classes[player.class];
-                    const spec = specs.find((spec) => spec.id === player.spec);
-
-                    if (!spec) {
-                      return null;
-                    }
+                    const meta = playerIDClassInfoMap[player.id];
 
                     const damageTaken = spiteful.damage[player.id] ?? 0;
                     const hits = spiteful.hits[player.id] ?? 0;
@@ -417,8 +392,8 @@ export function AffixImpact(): JSX.Element {
                         <span className="w-6 h-6">
                           <SpecIcon
                             size={6}
-                            class={name}
-                            spec={spec.name}
+                            class={meta.className}
+                            spec={meta.specName}
                             alt={player.name}
                           />
                         </span>
@@ -445,12 +420,7 @@ export function AffixImpact(): JSX.Element {
                 />
                 <ImpactRow>
                   {player.map((player) => {
-                    const { name, specs } = classes[player.class];
-                    const spec = specs.find((spec) => spec.id === player.spec);
-
-                    if (!spec) {
-                      return null;
-                    }
+                    const meta = playerIDClassInfoMap[player.id];
 
                     const damageTaken = grievous.damage[player.id] ?? 0;
 
@@ -469,8 +439,8 @@ export function AffixImpact(): JSX.Element {
                         <span className="w-6 h-6">
                           <SpecIcon
                             size={6}
-                            class={name}
-                            spec={spec.name}
+                            class={meta.className}
+                            spec={meta.specName}
                             alt={player.name}
                           />
                         </span>
@@ -492,12 +462,7 @@ export function AffixImpact(): JSX.Element {
                 />
                 <ImpactRow>
                   {player.map((player) => {
-                    const { name, specs } = classes[player.class];
-                    const spec = specs.find((spec) => spec.id === player.spec);
-
-                    if (!spec) {
-                      return null;
-                    }
+                    const meta = playerIDClassInfoMap[player.id];
 
                     const damageTaken = necrotic.damage[player.id] ?? 0;
 
@@ -516,8 +481,8 @@ export function AffixImpact(): JSX.Element {
                         <span className="w-6 h-6">
                           <SpecIcon
                             size={6}
-                            class={name}
-                            spec={spec.name}
+                            class={meta.className}
+                            spec={meta.specName}
                             alt={player.name}
                           />
                         </span>
@@ -543,12 +508,7 @@ export function AffixImpact(): JSX.Element {
                 />
                 <ImpactRow>
                   {player.map((player) => {
-                    const { name, specs } = classes[player.class];
-                    const spec = specs.find((spec) => spec.id === player.spec);
-
-                    if (!spec) {
-                      return null;
-                    }
+                    const meta = playerIDClassInfoMap[player.id];
 
                     const damageTaken = bursting.damage[player.id] ?? 0;
 
@@ -567,8 +527,8 @@ export function AffixImpact(): JSX.Element {
                         <span className="w-6 h-6">
                           <SpecIcon
                             size={6}
-                            class={name}
-                            spec={spec.name}
+                            class={meta.className}
+                            spec={meta.specName}
                             alt={player.name}
                           />
                         </span>
@@ -590,12 +550,7 @@ export function AffixImpact(): JSX.Element {
                 />
                 <ImpactRow>
                   {player.map((player) => {
-                    const { name, specs } = classes[player.class];
-                    const spec = specs.find((spec) => spec.id === player.spec);
-
-                    if (!spec) {
-                      return null;
-                    }
+                    const meta = playerIDClassInfoMap[player.id];
 
                     const damageTaken = sanguine.damage[player.id] ?? 0;
                     const hits = sanguine.hits[player.id] ?? 0;
@@ -615,8 +570,8 @@ export function AffixImpact(): JSX.Element {
                         <span className="w-6 h-6">
                           <SpecIcon
                             size={6}
-                            class={name}
-                            spec={spec.name}
+                            class={meta.className}
+                            spec={meta.specName}
                             alt={player.name}
                           />
                         </span>

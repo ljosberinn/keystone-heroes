@@ -24,12 +24,14 @@ import {
   createWCLUrl,
 } from "../../utils";
 import { classnames } from "../../utils/classnames";
+import { getClassAndSpecName } from "../../utils/player";
 import {
   AbilityIcon,
   INVIS_POTION_ICON,
   SHROUD_ICON,
   STATIC_ICON_PREFIX,
 } from "../AbilityIcon";
+import { Checkbox } from "../Checkbox";
 import { ErrorBoundary } from "../ErrorBoundary";
 import { ExternalLink } from "../ExternalLink";
 import { SpecIcon } from "../SpecIcon";
@@ -121,7 +123,7 @@ type EnhancedNPC = FightSuccessResponse["pulls"][number]["npcs"][number] & {
   rawCount: number;
 };
 
-const findMostRelevantNPCOfPull = (
+export const findMostRelevantNPCOfPull = (
   pull: FightSuccessResponse["pulls"][number],
   dungeon: typeof dungeons[number]
 ): { id: number; count: number; name: string } => {
@@ -515,7 +517,7 @@ function usePullSummaryRows(
 
 type EventCategory = "before" | "during" | "after";
 
-function Events() {
+function EventsTable() {
   const { pulls, player, meta } = useFight().fight;
 
   const selectedPullID = useReportStore((state) => state.selectedPull);
@@ -543,16 +545,13 @@ function Events() {
     () =>
       Object.fromEntries(
         player.map((player) => {
-          const { name, specs } = classes[player.class];
-          const spec = specs.find((spec) => spec.id === player.spec);
+          const { className, specName } = getClassAndSpecName(player);
 
           return [
             player.id,
 
             <span className="block w-4 h-4" key={player.actorID}>
-              {spec ? (
-                <SpecIcon size={4} class={name} spec={spec.name} />
-              ) : null}
+              <SpecIcon size={4} class={className} spec={specName} />
             </span>,
           ];
         })
@@ -609,29 +608,21 @@ function Events() {
   } = usePullSummaryRows(selectedPull);
 
   return (
-    <section className="w-full min-h-screen px-4 py-2 bg-white rounded-lg lg:w-9/23 dark:bg-gray-700">
-      <h3 className="font-semibold font-xl pb-2 text-xl">Events</h3>
+    <div
+      className={`w-full min-h-screen px-4 py-2 rounded-lg lg:w-9/12 ${bgPrimary}`}
+    >
       <p>Filter Events by Player</p>
       <div className="flex justify-between w-full">
-        <div className="flex flex-col md:flex-row ">
+        <div className="flex flex-col md:flex-row">
           {player.map((p) => {
+            const { className, specName, colors } = getClassAndSpecName(p);
+
             const checked = trackedPlayer.includes(p.id);
-
-            const classData = classes[p.class];
-            const spec = classData.specs.find((spec) => spec.id === p.spec);
-
-            if (!spec) {
-              return null;
-            }
-
             const disabled = checked && trackedPlayer.length === 1;
 
             return (
               <span className="p-2" key={p.id}>
-                <input
-                  type="checkbox"
-                  aria-labelledby={`player-${p.id}`}
-                  id={`player-${p.id}`}
+                <Checkbox
                   checked={checked}
                   disabled={disabled}
                   onChange={() => {
@@ -641,25 +632,22 @@ function Events() {
                         : [...prev, p.id]
                     );
                   }}
-                />
-                <label
-                  htmlFor={`player-${p.id}`}
-                  className={classnames(
-                    "pl-2 inline-flex items-center space-x-2",
-                    playerIdTextColorMap[p.id],
-                    !disabled && "cursor-pointer"
-                  )}
+                  spanClassName={colors.peerFocus}
                 >
-                  <span className="w-4 h-4">
+                  <span className="w-8 h-8">
                     <SpecIcon
-                      class={classData.name}
-                      spec={spec.name}
-                      size={4}
-                      className={checked ? undefined : grayscale}
+                      class={className}
+                      spec={specName}
+                      className={classnames(
+                        "border-2",
+                        checked ? colors.border : grayscale
+                      )}
                     />
                   </span>
-                  <span>{p.name}</span>
-                </label>
+                  <span className={checked ? colors.text : undefined}>
+                    {p.name}
+                  </span>
+                </Checkbox>
               </span>
             );
           })}
@@ -854,7 +842,7 @@ function Events() {
           </tfoot>
         </PullMetaProvider>
       </table>
-    </section>
+    </div>
   );
 }
 
@@ -956,19 +944,25 @@ function TableHead() {
   );
 }
 
-export function Pulls(): JSX.Element | null {
+// eslint-disable-next-line import/no-default-export
+export default function Events(): JSX.Element {
   return (
-    <div className={`rounded-b-lg ${bgSecondary} p-2`}>
-      <div className="w-full">
+    <section aria-labelledby="events-heading">
+      <div className={`px-4 rounded-t-lg pb-4 pt-4 ${bgPrimary}`}>
+        <h2 id="events-heading" className="text-2xl font-bold">
+          Events
+        </h2>
+      </div>
+      <div className={`rounded-b-lg ${bgSecondary} p-2 w-full`}>
         <PullSelection />
 
         <div className="flex flex-col w-full space-y-4 lg:space-x-4 lg:flex-row lg:space-y-0">
           <Sidebar />
 
-          <Events />
+          <EventsTable />
         </div>
       </div>
-    </div>
+    </section>
   );
 }
 

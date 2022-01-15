@@ -361,6 +361,15 @@ async function create() {
     })
   );
 
+  const dungeonSpecificSpells = [
+    ...Object.values(NW),
+    HOA_GARGOYLE,
+    SD_LANTERN_OPENING,
+    MOTS_OPENING,
+    DOS_URN_OPENING,
+    TOP_OPENING,
+  ];
+
   const extendedSpells = {
     // should come first so they can be overridden by class/covenant spels below
     ...Object.fromEntries(
@@ -664,6 +673,10 @@ export const NW = JSON.parse(\`${JSON.stringify(NW)}\`);
 
 type StaticDataMap = Record<number, { name: string, icon: string }>;
 
+const dungeonSpells = new Set<number>(${JSON.stringify([
+    ...dungeonSpecificSpells,
+  ])});
+export const isDungeonSpecificSpell = (id: number): boolean => dungeonSpells.has(id);
 export const isBoss = (id: number): boolean => allBossIDs.has(id);
 export const isTormentedLieutenant = (id: number): boolean => tormentedLieutenantIDs.has(id);
 export const classes: Record<number, { name: string; cooldowns: number[]; specs: { id: number; name: string; cooldowns: number[]; }[]}> = JSON.parse(\`${JSON.stringify(

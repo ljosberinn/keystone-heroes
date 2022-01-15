@@ -6,7 +6,7 @@ import { createWowheadUrl } from "../../../utils";
 import { calculateExplosiveMetrics } from "../../../utils/affixes";
 import { classnames } from "../../../utils/classnames";
 import { ExternalLink } from "../../ExternalLink";
-import type { TableRowProps } from "../Pulls";
+import type { TableRowProps } from "../Events";
 import type { DefaultEvent } from "../utils";
 
 export type ExplosiveSummaryRowProps = {

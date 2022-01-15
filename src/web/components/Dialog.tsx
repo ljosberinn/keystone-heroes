@@ -90,28 +90,19 @@ export function Dialog({
       return;
     }
 
+    /**
+     * @see https://gist.github.com/bvaughn/fc1c3f27f1aab91c7378f2264f7c3aa1#file-attaching-manual-event-listeners-in-passive-effect-js-L33
+     */
+    const timeOfEffect = performance.now();
+
     const listener = (event: MouseEvent) => {
-      const { clientX, clientY, target } = event;
+      const { clientX, clientY, timeStamp } = event;
 
-      if (!dialogRef.current || !activeElementRef.current) {
-        return;
-      }
-
-      /**
-       * nasty workaround; without this, on subsequent reopenings of a dialog,
-       * the dialog will instantly close again
-       *
-       * triggering element must always be a button
-       */
-      const isTriggeringDialog =
-        target instanceof HTMLElement &&
-        // directly interacting with the triggering button
-        ((target.tagName.toLowerCase() === "button" &&
-          target === activeElementRef.current) ||
-          // interacting with child of button
-          target.closest("button") === activeElementRef.current);
-
-      if (isTriggeringDialog) {
+      if (
+        timeOfEffect > timeStamp ||
+        !dialogRef.current ||
+        !activeElementRef.current
+      ) {
         return;
       }
 

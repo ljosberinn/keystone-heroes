@@ -1,6 +1,6 @@
 import { createWowheadUrl } from "../../../utils";
 import { ExternalLink } from "../../ExternalLink";
-import type { TableRowProps } from "../Pulls";
+import type { TableRowProps } from "../Events";
 import { TimestampCell, TypeCell, SourceOrTargetPlayerCell } from "../cells";
 import type { PlayerDeathEvent, NPCDeathEvent } from "../utils";
 

@@ -13,7 +13,7 @@ import { isValidReportId } from "../../../wcl/utils";
 import { Breadcrumbs } from "../../../web/components/Breadcrumbs";
 import { Seo } from "../../../web/components/Seo";
 import { AffixImpact } from "../../../web/components/report/AffixImpact";
-import { Data } from "../../../web/components/report/Data";
+import { Analysis } from "../../../web/components/report/Analysis";
 import { Map } from "../../../web/components/report/Map";
 import { Meta } from "../../../web/components/report/Meta";
 import { useAbortableFetch } from "../../../web/hooks/useAbortableFetch";
@@ -215,7 +215,7 @@ export default function FightID(): JSX.Element | null {
 
       <AffixImpact />
 
-      <Data />
+      <Analysis />
     </FightContext.Provider>
   );
 }
