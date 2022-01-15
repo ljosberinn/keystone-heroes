@@ -4,9 +4,12 @@ import { Suspense } from "react";
 import { widthConstraint } from "../../styles/tokens";
 import { TabList, TabPanel, TabButton, useTabs } from "../Tabs";
 
-const Pulls = dynamic(() => import(/* webpackChunkName: "Pulls" */ "./Pulls"), {
-  suspense: true,
-});
+const Events = dynamic(
+  () => import(/* webpackChunkName: "Events" */ "./Events"),
+  {
+    suspense: true,
+  }
+);
 
 const CDManagement = dynamic(
   () =>
@@ -17,7 +20,7 @@ const CDManagement = dynamic(
 );
 
 const tabs = [
-  { id: "events", title: "Events", component: Pulls },
+  { id: "events", title: "Events", component: Events },
   {
     id: "cd-management",
     title: "Cooldown Management",

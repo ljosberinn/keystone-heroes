@@ -18,26 +18,23 @@ export function Checkbox({
   className,
 }: CheckboxProps): JSX.Element {
   return (
-    <>
+    <label
+      className={classnames(
+        "inline-flex items-center",
+        className,
+        !disabled && "cursor-pointer"
+      )}
+    >
       <input
         type="checkbox"
-        id={id}
-        className="hidden"
+        // className="sr-only"
+        className="absolute w-8 h-8 opacity-0 peer"
         aria-labelledby={id}
         checked={checked}
         disabled={disabled}
         onChange={onChange}
       />
-      <label
-        htmlFor={id}
-        className={classnames(
-          "pl-2 inline-flex items-center space-x-2",
-          className,
-          !disabled && "cursor-pointer"
-        )}
-      >
-        {children}
-      </label>
-    </>
+      <span className="peer-checked:text-red">{children}</span>
+    </label>
   );
 }

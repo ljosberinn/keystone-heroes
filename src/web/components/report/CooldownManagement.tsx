@@ -1,17 +1,13 @@
 import type { ChangeEvent } from "react";
-import { useRef } from "react";
-import { Fragment, useCallback, useMemo, useState } from "react";
+import { memo, Fragment, useCallback, useMemo, useState, useRef } from "react";
 
 import type { FightSuccessResponse } from "../../../api/functions/fight";
 import { useFight } from "../../../pages/report/[reportID]/[fightID]";
-import { classes, spells } from "../../staticData";
-import { bgPrimary, grayscale } from "../../styles/tokens";
-import {
-  classBorderColorMap,
-  classFillColorMap,
-  classTextColorMap,
-} from "../../utils";
+import { spells } from "../../staticData";
+import { bgPrimary, bgSecondary, grayscale } from "../../styles/tokens";
+import { timeDurationToString } from "../../utils";
 import { classnames } from "../../utils/classnames";
+import { getClassAndSpecName } from "../../utils/player";
 import { STATIC_ICON_PREFIX } from "../AbilityIcon";
 import { Checkbox } from "../Checkbox";
 import { SpecIcon } from "../SpecIcon";
@@ -26,31 +22,16 @@ type CastOrAbilityReadyEventWIthABilityAndSourcePlayerID = Omit<
   sourcePlayerID: NonNullable<DefaultEvent["sourcePlayerID"]>;
 };
 
-const isCastOrAbilityReadyEventWithAbilityAndSourcePlayerID = (
-  event: DefaultEvent
-): event is CastOrAbilityReadyEventWIthABilityAndSourcePlayerID => {
-  if (event.type !== "AbilityReady" && event.type !== "Cast") {
-    return false;
-  }
-
-  if (!event.ability) {
-    return false;
-  }
-
-  if (!event.sourcePlayerID) {
-    return false;
-  }
-
-  return true;
-};
+const rowHeight = 45;
 
 // eslint-disable-next-line import/no-default-export
 export default function CooldownManagement(): JSX.Element {
   const { player, pulls, meta } = useFight().fight;
-  const [zoomFactor, setZoomFactor] = useState(1);
+  const [zoomFactor, setZoomFactor] = useState(2);
   const [cooldown, setCooldown] = useState(120);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [trackedPlayer, setTrackedPlayer] = useState(player.map((p) => p.id));
+  console.time("test");
 
   const handleRangeChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
@@ -68,221 +49,276 @@ export default function CooldownManagement(): JSX.Element {
     []
   );
 
-  type Foo = Record<
-    FightSuccessResponse["player"][number]["actorID"],
-    Record<
-      NonNullable<
-        FightSuccessResponse["pulls"][number]["events"][number]["ability"]
-      >["id"],
-      (FightSuccessResponse["pulls"][number]["events"][number] & {
-        key: string;
-      })[]
-    >
-  >;
+  const togglePlayer = useCallback((playerID: number) => {
+    setTrackedPlayer((prev) => {
+      if (prev.includes(playerID)) {
+        return prev.filter((id) => id !== playerID);
+      }
+
+      // TODO: sort by role
+      return [...prev, playerID];
+    });
+  }, []);
 
   const allRelevantEvents = useMemo(
     () =>
       pulls.flatMap((pull) =>
-        pull.events
-          .filter(isCastOrAbilityReadyEventWithAbilityAndSourcePlayerID)
-          .filter((event) => event.ability.id in spells)
+        pull.events.filter(
+          (
+            event
+          ): event is CastOrAbilityReadyEventWIthABilityAndSourcePlayerID =>
+            isCastOrAbilityReadyEventWithAbilityAndSourcePlayerID(event) &&
+            event.ability.id in spells
+        )
       ),
     [pulls]
   );
 
-  const abilityIdTextColorMap = useMemo(() => {
-    const playerClassMap = Object.fromEntries(
-      player.map((p) => [p.id, classes[p.class].name.toLowerCase()])
-    );
+  const { amountOfVisibleAbilities, allUsedAbilities, displayableData } =
+    useMemo(() => {
+      const relevantEvents = allRelevantEvents.filter(
+        ({ sourcePlayerID, ability }) =>
+          trackedPlayer.includes(sourcePlayerID) &&
+          spells[ability.id].cd >= cooldown
+      );
 
-    return Object.fromEntries(
-      allRelevantEvents.map(({ ability, sourcePlayerID }) => {
-        const className = playerClassMap[sourcePlayerID];
+      // eslint-disable-next-line unicorn/prefer-object-from-entries
+      const castsByPlayer = relevantEvents.reduce<
+        Record<number, CastOrAbilityReadyEventWIthABilityAndSourcePlayerID[]>
+      >((acc, event) => {
+        if (event.sourcePlayerID in acc) {
+          acc[event.sourcePlayerID].push(event);
+        } else {
+          acc[event.sourcePlayerID] = [event];
+        }
 
-        return [ability.id, classFillColorMap[className]];
-      })
-    );
-  }, [player, allRelevantEvents]);
+        return acc;
+      }, {});
 
-  const relevantEventsSubset = useMemo(
-    () =>
-      allRelevantEvents.filter(
-        (event) =>
-          trackedPlayer.includes(event.sourcePlayerID) &&
-          spells[event.ability.id].cd >= cooldown
-      ),
-    [allRelevantEvents, trackedPlayer, cooldown]
-  );
+      const abilitiesByPlayer = Object.fromEntries(
+        Object.entries(castsByPlayer).map(([id, casts]) => {
+          return [id, [...new Set(casts.map((cast) => cast.ability.id))]];
+        })
+      );
 
-  // eslint-disable-next-line unicorn/prefer-object-from-entries
-  const castsByPlayer = relevantEventsSubset.reduce<
-    Record<number, CastOrAbilityReadyEventWIthABilityAndSourcePlayerID[]>
-  >((acc, event) => {
-    if (event.sourcePlayerID in acc) {
-      acc[event.sourcePlayerID].push(event);
-    } else {
-      acc[event.sourcePlayerID] = [event];
-    }
+      const amountOfVisibleAbilities = Object.entries(
+        abilitiesByPlayer
+      ).reduce<number>((acc, [, arr]) => acc + arr.length, 0);
 
-    return acc;
-  }, {});
+      const playerIDFillColorMap = Object.fromEntries(
+        player.map((p) => {
+          const { colors } = getClassAndSpecName(p);
 
-  // eslint-disable-next-line unicorn/prefer-object-from-entries
-  const abilitiesByPlayer = relevantEventsSubset.reduce<
-    Record<number, number[]>
-  >((acc, event) => {
-    const { ability, sourcePlayerID } = event;
+          return [p.id, colors.fill];
+        })
+      );
 
-    if (sourcePlayerID in acc) {
-      if (!acc[sourcePlayerID].includes(ability.id)) {
-        acc[sourcePlayerID].push(ability.id);
-      }
-    } else {
-      acc[sourcePlayerID] = [ability.id];
-    }
+      const allUsedAbilities = player.flatMap(({ id }) => {
+        const fillColor = playerIDFillColorMap[id];
 
-    return acc;
-  }, {});
-
-  const amountOfVisibleAbilities = Object.values(
-    abilitiesByPlayer
-  ).reduce<number>((acc, arr) => acc + arr.length, 0);
-
-  console.log({ castsByPlayer, abilitiesByPlayer });
-
-  const playerAbilityMap = useMemo(
-    () =>
-      pulls
-        .flatMap((pull) => pull.events)
-        // eslint-disable-next-line unicorn/prefer-object-from-entries
-        .reduce<Foo>((acc, event, index) => {
-          if (
-            !event.ability ||
-            !event.sourcePlayerID ||
-            (event.type !== "Cast" && event.type !== "AbilityReady")
-          ) {
-            return acc;
-          }
-
-          const ability = spells[event.ability.id];
-
-          if (!ability || ability.cd < cooldown) {
-            return acc;
-          }
-
-          if (!(event.sourcePlayerID in acc)) {
-            acc[event.sourcePlayerID] = {
-              [event.ability.id]: [
-                {
-                  ...event,
-                  key: `${event.timestamp}-${event.sourcePlayerID}-${index}`,
-                },
-              ],
-            };
-
-            return acc;
-          }
-
-          const ref = acc[event.sourcePlayerID];
-
-          if (event.ability.id in ref) {
-            ref[event.ability.id].push({
-              ...event,
-              key: `${event.timestamp}-${event.sourcePlayerID}-${index}`,
-            });
-          } else {
-            ref[event.ability.id] = [
-              {
-                ...event,
-                key: `${event.timestamp}-${event.sourcePlayerID}-${index}`,
-              },
-            ];
-          }
-
-          return acc;
-        }, {}),
-    [pulls, cooldown]
-  );
-
-  const css = Object.entries(playerAbilityMap)
-    .flatMap(([, abilityMap]) => {
-      return Object.keys(abilityMap).map((abilityID) => {
-        const dataSelector = `[data-ability="${abilityID}"]`;
-        return `
-        ${dataSelector}:hover,
-        ${dataSelector}:hover ~ image${dataSelector} {
-          filter: none;
-        }`;
+        return (abilitiesByPlayer[id] ?? [])
+          .map((ability) => {
+            return { id: ability, fillColor, sourcePlayerID: id };
+          })
+          .sort((a, b) => {
+            return sortAbilitiesByCdOrName(a.id, b.id);
+          });
       });
-    })
-    .join(" ");
+
+      const displayableData = Object.values(castsByPlayer).flatMap((arr) => {
+        return arr.sort((a, b) => {
+          return sortAbilitiesByCdOrName(a.ability.id, b.ability.id);
+        });
+      });
+
+      return {
+        amountOfVisibleAbilities,
+        allUsedAbilities,
+        displayableData,
+      };
+    }, [allRelevantEvents, trackedPlayer, cooldown, player]);
+
+  // type Foo = Record<
+  //   FightSuccessResponse["player"][number]["actorID"],
+  //   Record<
+  //     NonNullable<
+  //       FightSuccessResponse["pulls"][number]["events"][number]["ability"]
+  //     >["id"],
+  //     (FightSuccessResponse["pulls"][number]["events"][number] & {
+  //       key: string;
+  //     })[]
+  //   >
+  // >;
+
+  // const playerAbilityMap = useMemo(
+  //   () =>
+  //     pulls
+  //       .flatMap((pull) => pull.events)
+  //       // eslint-disable-next-line unicorn/prefer-object-from-entries
+  //       .reduce<Foo>((acc, event, index) => {
+  //         if (
+  //           !event.ability ||
+  //           !event.sourcePlayerID ||
+  //           (event.type !== "Cast" && event.type !== "AbilityReady")
+  //         ) {
+  //           return acc;
+  //         }
+
+  //         const ability = spells[event.ability.id];
+
+  //         if (!ability || ability.cd < cooldown) {
+  //           return acc;
+  //         }
+
+  //         if (!(event.sourcePlayerID in acc)) {
+  //           acc[event.sourcePlayerID] = {
+  //             [event.ability.id]: [
+  //               {
+  //                 ...event,
+  //                 key: `${event.timestamp}-${event.sourcePlayerID}-${index}`,
+  //               },
+  //             ],
+  //           };
+
+  //           return acc;
+  //         }
+
+  //         const ref = acc[event.sourcePlayerID];
+
+  //         if (event.ability.id in ref) {
+  //           ref[event.ability.id].push({
+  //             ...event,
+  //             key: `${event.timestamp}-${event.sourcePlayerID}-${index}`,
+  //           });
+  //         } else {
+  //           ref[event.ability.id] = [
+  //             {
+  //               ...event,
+  //               key: `${event.timestamp}-${event.sourcePlayerID}-${index}`,
+  //             },
+  //           ];
+  //         }
+
+  //         return acc;
+  //       }, {}),
+  //   [pulls, cooldown]
+  // );
+
+  // const css = Object.entries(playerAbilityMap)
+  //   .flatMap(([, abilityMap]) => {
+  //     return Object.keys(abilityMap).map((abilityID) => {
+  //       const dataSelector = `[data-ability="${abilityID}"]`;
+  //       return `
+  //       ${dataSelector}:hover,
+  //       ${dataSelector}:hover ~ image${dataSelector} {
+  //         filter: none;
+  //       }`;
+  //     });
+  //   })
+  //   .join(" ");
 
   const width =
-    zoomFactor === 1
+    zoomFactor === 1 || !containerRef.current
       ? undefined
-      : containerRef.current
-      ? containerRef.current.clientWidth * zoomFactor
-      : undefined;
+      : containerRef.current.clientWidth * zoomFactor;
 
-  const height = 30 + amountOfVisibleAbilities * 40;
-  console.log({ height, amountOfVisibleAbilities });
+  const height = 40 + amountOfVisibleAbilities * rowHeight;
 
-  const allUsedAbilities = Object.values(abilitiesByPlayer).flatMap((arr) =>
-    arr.sort((a, b) => {
-      const abilityA = spells[a];
-      const abilityB = spells[b];
-
-      const cdDiff = abilityB.cd - abilityA.cd;
-
-      if (cdDiff !== 0) {
-        return cdDiff;
-      }
-
-      return abilityB.name.localeCompare(abilityA.name);
-    })
-  );
-
-  const mappableData = Object.values(castsByPlayer).flatMap((arr) => {
-    return arr.sort((a, b) => {
-      const abilityA = spells[a.ability.id];
-      const abilityB = spells[b.ability.id];
-
-      const cdDiff = abilityB.cd - abilityA.cd;
-
-      if (cdDiff !== 0) {
-        return cdDiff;
-      }
-
-      return abilityB.name.localeCompare(abilityA.name);
-    });
-  });
-
-  console.log({ allUsedAbilities });
+  console.timeEnd("test");
 
   return (
-    <section className={`w-full px-4 py-2 rounded-lg ${bgPrimary}`}>
-      <h3 className="pb-2 text-xl font-semibold font-xl">
-        Cooldown Management
-      </h3>
+    <section aria-labelledby="cd-management-heading">
+      <div className={`px-4 rounded-t-lg pb-4 pt-4 ${bgPrimary}`}>
+        <h2 id="cd-management-heading" className="text-2xl font-bold">
+          Cooldown Management
+        </h2>
+      </div>
+      <div className={`rounded-b-lg ${bgSecondary} p-2`}>
+        <div className="w-full">
+          <Settings
+            handleRangeChange={handleRangeChange}
+            zoomFactor={zoomFactor}
+            minCooldown={cooldown}
+            togglePlayer={togglePlayer}
+            trackedPlayer={trackedPlayer}
+            player={player}
+          />
+
+          <div className="flex flex-col w-full space-y-4 lg:space-x-4 lg:flex-row lg:space-y-0">
+            <div
+              className={classnames(
+                "w-full",
+                zoomFactor > 1 && "overflow-x-scroll"
+              )}
+              ref={containerRef}
+            >
+              {/* <style jsx>{css}</style> */}
+              <svg
+                width={width}
+                className={classnames(
+                  width === undefined && "w-full",
+                  zoomFactor > 1 && "mb-4"
+                )}
+                height={height}
+              >
+                <PullGrid height={height} />
+                <AbilityNames height={height} abilities={allUsedAbilities} />
+
+                <g data-type="abilities">
+                  {displayableData.map((event) => {
+                    const index = allUsedAbilities.findIndex(
+                      (ability) =>
+                        ability.id === event.ability.id &&
+                        ability.sourcePlayerID === event.sourcePlayerID
+                    );
+
+                    return (
+                      <AbilityListItem
+                        event={event}
+                        keyStart={meta.startTime}
+                        keyTime={meta.time}
+                        offset={index}
+                        key={`${event.sourcePlayerID}-${event.timestamp}-${index}`}
+                      />
+                    );
+                  })}
+                </g>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+type SettingsProps = {
+  trackedPlayer: number[];
+  togglePlayer: (id: number) => void;
+  handleRangeChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  zoomFactor: number;
+  minCooldown: number;
+  player: FightSuccessResponse["player"];
+};
+
+function Settings({
+  trackedPlayer,
+  togglePlayer,
+  handleRangeChange,
+  zoomFactor,
+  minCooldown,
+  player,
+}: SettingsProps) {
+  return (
+    <>
       <p>Filter Cooldowns by Player</p>
       <div className="flex justify-between w-full">
-        <div className="flex flex-col md:flex-row ">
+        <div className="flex flex-col md:flex-row">
           {player.map((p) => {
             const checked = trackedPlayer.includes(p.id);
-
-            const { name, specs } = classes[p.class];
-            const spec = specs.find((spec) => spec.id === p.spec);
-
-            if (!spec) {
-              return null;
-            }
+            const { className, specName, colors } = getClassAndSpecName(p);
 
             const disabled = checked && trackedPlayer.length === 1;
-
-            const lowercasedClassName = name.toLowerCase();
-
-            const classBorderColor = classBorderColorMap[lowercasedClassName];
-            const classTextColor = classTextColorMap[lowercasedClassName];
 
             return (
               <span className="p-2" key={p.id}>
@@ -291,14 +327,7 @@ export default function CooldownManagement(): JSX.Element {
                   checked={checked}
                   disabled={disabled}
                   onChange={() => {
-                    setTrackedPlayer((prev) => {
-                      if (prev.includes(p.id)) {
-                        return prev.filter((id) => id !== p.id);
-                      }
-
-                      // TODO: sort by role
-                      return [...prev, p.id];
-                    });
+                    togglePlayer(p.id);
                   }}
                 >
                   <span
@@ -309,27 +338,30 @@ export default function CooldownManagement(): JSX.Element {
                   >
                     <span className="w-8 h-8">
                       <SpecIcon
-                        class={name}
-                        spec={spec.name}
+                        class={className}
+                        spec={specName}
                         className={classnames(
                           "border-2",
-                          checked && classBorderColor
+                          checked && colors.border
                         )}
                       />
                     </span>
-                    <span className={classTextColor}>{p.name}</span>
+                    <span className={colors.text}>{p.name}</span>
                   </span>
                 </Checkbox>
               </span>
             );
           })}
         </div>
+      </div>
 
+      <p>asd</p>
+      <div className="flex flex-col md:flex-row">
         <div>
           <input
             type="range"
             min="100"
-            max="1000"
+            max="1500"
             step="50"
             onChange={handleRangeChange}
             name="zoom"
@@ -338,7 +370,7 @@ export default function CooldownManagement(): JSX.Element {
             id="zoom"
           />
           <label htmlFor="zoom" id="zoom-label">
-            Zoom (default 1, current {zoomFactor})
+            Zoom (default 2, current {zoomFactor})
           </label>
         </div>
 
@@ -350,190 +382,18 @@ export default function CooldownManagement(): JSX.Element {
             step="30"
             name="cooldown"
             aria-label="Cooldown"
-            value={cooldown}
+            value={minCooldown}
             onChange={handleRangeChange}
             id="cooldown"
             aria-labelledby="cooldown-label"
           />
           <label htmlFor="cooldown" id="cooldown-label">
-            Minimum Ability Cooldown Threshold (default 120, current {cooldown})
+            Minimum Ability Cooldown Threshold (default 120, current{" "}
+            {minCooldown})
           </label>
         </div>
       </div>
-
-      <div
-        className={classnames("w-full", zoomFactor > 1 && "overflow-x-scroll")}
-        ref={containerRef}
-      >
-        <style jsx>{css}</style>
-        <svg
-          width={width}
-          className={width === undefined ? "w-full" : undefined}
-          height={height}
-        >
-          <g>
-            {pulls.map((pull) => {
-              const [pullStartX, pullEndX, center] = calculatePullXCoordinates(
-                pull,
-                meta
-              );
-
-              return (
-                <Fragment key={pull.id}>
-                  <line
-                    y2="95%"
-                    x1={`${pullStartX}%`}
-                    x2={`${pullStartX}%`}
-                    stroke="gray"
-                    strokeDasharray={4}
-                  />
-                  <line
-                    y2="95%"
-                    x1={`${pullEndX}%`}
-                    x2={`${pullEndX}%`}
-                    stroke="gray"
-                    strokeDasharray={4}
-                  />
-
-                  <text dx="0" x={`${center}%`} y={height}>
-                    <tspan
-                      x={`${center}%`}
-                      dx="0"
-                      dy="0"
-                      textAnchor="middle"
-                      fill="gray"
-                      stroke="transparent"
-                    >
-                      {pull.id}
-                    </tspan>
-                  </text>
-                </Fragment>
-              );
-            })}
-          </g>
-
-          <g>
-            {allUsedAbilities.map((id, index) => {
-              const ability = spells[id];
-
-              const y = 20 + index * 40;
-
-              return (
-                <text dx="0" x="0" y={height} key={id}>
-                  <tspan
-                    x="0"
-                    y={y}
-                    dx="0"
-                    dy="0"
-                    textAnchor="left"
-                    fill="gray"
-                    stroke="transparent"
-                    className={abilityIdTextColorMap[id]}
-                  >
-                    {ability.name}
-                  </tspan>
-                </text>
-              );
-            })}
-          </g>
-
-          <g>
-            {mappableData.map((event, index) => {
-              const { icon } = spells[event.ability.id];
-
-              const x =
-                ((event.timestamp - meta.startTime) / meta.time) * 100 -
-                // x offset of half of icon width based on max svg size
-                // so its on the line
-                (12 / 1488) * 100;
-
-              const index = allUsedAbilities.indexOf(event.ability.id);
-
-              const y = 22.5 + index * 40;
-
-              return (
-                <image
-                  key={`${event.sourcePlayerID}-${event.timestamp}-${index}`}
-                  width="24"
-                  height="24"
-                  x={`${x < 0 ? 0 : x}%`}
-                  y={y}
-                  href={`${STATIC_ICON_PREFIX}${icon}.jpg`}
-                  className={classnames(
-                    "grayscale",
-                    event.type === "AbilityReady" && "outline-dashed outline-1",
-                    event.ability.wasted
-                      ? "outline-red-500"
-                      : "opacity-75 outline-white-500"
-                  )}
-                />
-              );
-            })}
-          </g>
-
-          {/* <g>
-            {Object.entries(playerAbilityMap).flatMap(
-              ([actorID, abilityMap]) => {
-                if (!trackedPlayer.includes(Number.parseInt(actorID))) {
-                  return null;
-                }
-
-                return Object.entries(abilityMap)
-                  .sort((a, b) => {
-                    const abilityA = spells[Number.parseInt(a[0])];
-                    const abilityB = spells[Number.parseInt(b[0])];
-
-                    if (!abilityA) {
-                      return 1;
-                    }
-
-                    if (!abilityB) {
-                      return -1;
-                    }
-
-                    return abilityB.cd - abilityA.cd;
-                  })
-                  .map(([abilityID, events], index, arr) => {
-                    return events.map((event) => {
-                      const ability = spells[Number.parseInt(abilityID)];
-
-                      const x =
-                        ((event.timestamp - meta.startTime) / meta.time) * 100 -
-                        // x offset of half of icon width based on max svg size
-                        // so its on the line
-                        (12 / 1488) * 100;
-
-                      const perRow = height / arr.length;
-
-                      const y = 25 + index * perRow;
-
-                      return (
-                        <image
-                          key={event.key}
-                          href={`${STATIC_ICON_PREFIX}${ability.icon}.jpg`}
-                          x={`${x < 0 ? 0 : x}%`}
-                          y={y}
-                          width={24}
-                          height={24}
-                          className={classnames(
-                            "grayscale cursor-pointer",
-                            event.type === "AbilityReady" &&
-                              "outline-dashed outline-1",
-                            event.ability.wasted
-                              ? "outline-red-500"
-                              : "opacity-75 outline-white-500"
-                          )}
-                          data-ability={abilityID}
-                        />
-                      );
-                    });
-                  });
-              }
-            )}
-          </g> */}
-        </svg>
-      </div>
-    </section>
+    </>
   );
 }
 
@@ -550,3 +410,209 @@ function calculatePullXCoordinates(
 
   return [pullStartX, finalPullEndX, center];
 }
+
+function sortAbilitiesByCdOrName(a: number, b: number) {
+  const abilityA = spells[a];
+  const abilityB = spells[b];
+
+  const cdDiff = abilityB.cd - abilityA.cd;
+
+  if (cdDiff !== 0) {
+    return cdDiff;
+  }
+
+  return abilityB.name.localeCompare(abilityA.name);
+}
+
+function isCastOrAbilityReadyEventWithAbilityAndSourcePlayerID(
+  event: DefaultEvent
+): event is CastOrAbilityReadyEventWIthABilityAndSourcePlayerID {
+  if (event.type !== "AbilityReady" && event.type !== "Cast") {
+    return false;
+  }
+
+  if (!event.ability) {
+    return false;
+  }
+
+  if (!event.sourcePlayerID) {
+    return false;
+  }
+
+  return true;
+}
+
+type PullGridProps = {
+  height: number;
+};
+
+const PullGrid = memo(({ height }: PullGridProps) => {
+  const { pulls, meta } = useFight().fight;
+
+  return (
+    <g data-type="pull-grid">
+      {pulls.map((pull, index) => {
+        const [pullStartX, pullEndX, center] = calculatePullXCoordinates(
+          pull,
+          meta
+        );
+
+        const lastPull = pulls[index - 1];
+        const nextPull = pulls[index + 1];
+
+        return (
+          <Fragment key={pull.id}>
+            {lastPull ? null : (
+              <rect
+                height="100%"
+                x="0"
+                width={`${pullStartX}%`}
+                className="dark:fill-gray-600"
+              />
+            )}
+            <line
+              y2="100%"
+              x1={`${pullStartX}%`}
+              x2={`${pullStartX}%`}
+              stroke="gray"
+              strokeDasharray={4}
+            />
+            <line
+              y2="100%"
+              x1={`${pullEndX}%`}
+              x2={`${pullEndX}%`}
+              stroke="gray"
+              strokeDasharray={4}
+            />
+
+            {nextPull ? (
+              <rect
+                height="100%"
+                x={`${pullEndX}%`}
+                width={`${
+                  calculatePullXCoordinates(nextPull, meta)[0] - pullEndX
+                }%`}
+                className="dark:fill-gray-600"
+              />
+            ) : null}
+
+            <text x={`${center}%`} y={height}>
+              <tspan
+                x={`${center}%`}
+                dx="0"
+                dy="0"
+                textAnchor="middle"
+                fill="gray"
+                stroke="transparent"
+              >
+                Pull {pull.id}
+              </tspan>
+            </text>
+
+            <text x={`${center}%`} y="15">
+              <tspan
+                x={`${center}%`}
+                dx="0"
+                dy="0"
+                textAnchor="middle"
+                fill="gray"
+                stroke="transparent"
+              >
+                Pull {pull.id}
+              </tspan>
+            </text>
+          </Fragment>
+        );
+      })}
+    </g>
+  );
+});
+
+type AbilityNamesProps = {
+  abilities: {
+    id: number;
+    fillColor: string;
+  }[];
+  height: number;
+};
+
+const AbilityNames = memo(({ abilities, height }: AbilityNamesProps) => {
+  return (
+    <text dx="0" x="0" y={height} data-type="ability-names">
+      {abilities.map((dataset, index) => {
+        const ability = spells[dataset.id];
+
+        const y = 30 + index * rowHeight;
+
+        return (
+          <tspan
+            key={`${dataset.id}-${dataset.fillColor}-${y}`}
+            x="0"
+            y={y}
+            className={dataset.fillColor}
+            aria-details="test"
+          >
+            {ability.name}
+          </tspan>
+        );
+      })}
+    </text>
+  );
+});
+
+type AbilityListItemProps = {
+  event: CastOrAbilityReadyEventWIthABilityAndSourcePlayerID;
+  keyStart: number;
+  keyTime: number;
+  offset: number;
+};
+
+const AbilityListItem = memo(
+  ({ event, keyStart, keyTime, offset }: AbilityListItemProps) => {
+    const ability = spells[event.ability.id];
+    const cd = ability.cd * 1000;
+
+    const x =
+      ((event.timestamp - keyStart) / keyTime) * 100 -
+      // x offset of half of icon width based on max svg size
+      // so its on the line
+      (12 / 1456) * 100;
+
+    const y = 34 + offset * rowHeight;
+
+    const title = [
+      event.type,
+      !event.ability.lastUse && "First Use",
+      event.type === "Cast" &&
+        event.ability.lastUse &&
+        `delayed by ${timeDurationToString(
+          event.timestamp - event.ability.lastUse - cd,
+          { omitMs: true }
+        )}s after being ready`,
+      event.ability.wasted && "wasted Cooldown Window",
+    ]
+      .filter(Boolean)
+      .join(" - ");
+
+    return (
+      <g>
+        <image
+          width="24"
+          height="24"
+          x={`${x < 0 ? 0 : x}%`}
+          y={y}
+          href={`${STATIC_ICON_PREFIX}${ability.icon}.jpg`}
+          xlinkTitle="test"
+          className={classnames(
+            "grayscale",
+            event.type === "AbilityReady" && "outline-dashed outline-1",
+            event.ability.wasted
+              ? "outline-red-500"
+              : "opacity-75 outline-white-500"
+          )}
+        />
+        <title>{title}</title>
+      </g>
+    );
+  }
+);

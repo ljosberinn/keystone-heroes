@@ -1,7 +1,7 @@
 import { createWowheadUrl } from "../../../utils";
 import { AbilityIcon } from "../../AbilityIcon";
 import { ExternalLink } from "../../ExternalLink";
-import type { TableRowProps } from "../Pulls";
+import type { TableRowProps } from "../Events";
 import {
   ResponsiveAbilityCell,
   SourceOrTargetPlayerCell,

@@ -24,6 +24,7 @@ import {
   createWCLUrl,
 } from "../../utils";
 import { classnames } from "../../utils/classnames";
+import { getClassAndSpecName } from "../../utils/player";
 import {
   AbilityIcon,
   INVIS_POTION_ICON,
@@ -516,7 +517,7 @@ function usePullSummaryRows(
 
 type EventCategory = "before" | "during" | "after";
 
-function Events() {
+function EventsTable() {
   const { pulls, player, meta } = useFight().fight;
 
   const selectedPullID = useReportStore((state) => state.selectedPull);
@@ -544,16 +545,13 @@ function Events() {
     () =>
       Object.fromEntries(
         player.map((player) => {
-          const { name, specs } = classes[player.class];
-          const spec = specs.find((spec) => spec.id === player.spec);
+          const { className, specName } = getClassAndSpecName(player);
 
           return [
             player.id,
 
             <span className="block w-4 h-4" key={player.actorID}>
-              {spec ? (
-                <SpecIcon size={4} class={name} spec={spec.name} />
-              ) : null}
+              <SpecIcon size={4} class={className} spec={specName} />
             </span>,
           ];
         })
@@ -610,22 +608,16 @@ function Events() {
   } = usePullSummaryRows(selectedPull);
 
   return (
-    <section
+    <div
       className={`w-full min-h-screen px-4 py-2 rounded-lg lg:w-9/12 ${bgPrimary}`}
     >
-      <h3 className="pb-2 text-xl font-semibold font-xl">Events</h3>
       <p>Filter Events by Player</p>
       <div className="flex justify-between w-full">
         <div className="flex flex-col md:flex-row ">
           {player.map((p) => {
             const checked = trackedPlayer.includes(p.id);
 
-            const classData = classes[p.class];
-            const spec = classData.specs.find((spec) => spec.id === p.spec);
-
-            if (!spec) {
-              return null;
-            }
+            const { className, specName } = getClassAndSpecName(p);
 
             const disabled = checked && trackedPlayer.length === 1;
 
@@ -647,8 +639,8 @@ function Events() {
                 >
                   <span className="w-4 h-4">
                     <SpecIcon
-                      class={classData.name}
-                      spec={spec.name}
+                      class={className}
+                      spec={specName}
                       size={4}
                       className={checked ? undefined : grayscale}
                     />
@@ -851,7 +843,7 @@ function Events() {
           </tfoot>
         </PullMetaProvider>
       </table>
-    </section>
+    </div>
   );
 }
 
@@ -954,24 +946,24 @@ function TableHead() {
 }
 
 // eslint-disable-next-line import/no-default-export
-export default function Pulls(): JSX.Element {
+export default function Events(): JSX.Element {
   return (
-    <>
+    <section aria-labelledby="events-heading">
       <div className={`px-4 rounded-t-lg pb-4 pt-4 ${bgPrimary}`}>
-        <h2 className="text-2xl font-bold">Events</h2>
+        <h2 id="events-heading" className="text-2xl font-bold">
+          Events
+        </h2>
       </div>
-      <div className={`rounded-b-lg ${bgSecondary} p-2`}>
-        <div className="w-full">
-          <PullSelection />
+      <div className={`rounded-b-lg ${bgSecondary} p-2 w-full`}>
+        <PullSelection />
 
-          <div className="flex flex-col w-full space-y-4 lg:space-x-4 lg:flex-row lg:space-y-0">
-            <Sidebar />
+        <div className="flex flex-col w-full space-y-4 lg:space-x-4 lg:flex-row lg:space-y-0">
+          <Sidebar />
 
-            <Events />
-          </div>
+          <EventsTable />
         </div>
       </div>
-    </>
+    </section>
   );
 }
 

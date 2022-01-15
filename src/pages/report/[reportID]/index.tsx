@@ -18,7 +18,7 @@ import { SpecIcon } from "../../../web/components/SpecIcon";
 import type { SupportCardProps } from "../../../web/components/report/SupportCard";
 import { useAbortableFetch } from "../../../web/hooks/useAbortableFetch";
 import { useIsMounted } from "../../../web/hooks/useIsMounted";
-import { classes, dungeons } from "../../../web/staticData";
+import { dungeons } from "../../../web/staticData";
 import { concern, hands, cry } from "../../../web/styles/bears";
 import {
   bgPrimary,
@@ -29,12 +29,9 @@ import {
   bgSecondary,
   hoverShadow,
 } from "../../../web/styles/tokens";
-import {
-  classBorderColorMap,
-  createWCLUrl,
-  timeDurationToString,
-} from "../../../web/utils";
+import { createWCLUrl, timeDurationToString } from "../../../web/utils";
 import { classnames } from "../../../web/utils/classnames";
+import { getClassAndSpecName } from "../../../web/utils/player";
 
 enum ReportUrlError {
   INVALID_REPORT_ID = "The report ID seems to be malformed.",
@@ -435,14 +432,8 @@ function FightCard({ fight, reportID }: FightCardProps) {
 
             <div className="flex justify-center w-full pt-4 space-x-2">
               {fight.player.map((player, index) => {
-                const { name, specs } = classes[player.class];
-                const spec = specs.find((spec) => spec.id === player.spec);
-
-                if (!spec) {
-                  return null;
-                }
-
-                const classColor = classBorderColorMap[name.toLowerCase()];
+                const { className, colors, specName } =
+                  getClassAndSpecName(player);
 
                 return (
                   <div
@@ -451,9 +442,9 @@ function FightCard({ fight, reportID }: FightCardProps) {
                     key={`${player.class}-${player.spec}-${index}`}
                   >
                     <SpecIcon
-                      class={name}
-                      spec={spec.name}
-                      className={`${classColor} border-2`}
+                      class={className}
+                      spec={specName}
+                      className={`${colors.border} border-2`}
                     />
                   </div>
                 );

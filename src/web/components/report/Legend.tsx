@@ -61,7 +61,7 @@ const dungeonSpecificIcons: Record<number, Item[]> = {
   2286: [
     {
       icons: [spells[NW.HAMMER].icon],
-      label: "Forgotten Forge",
+      label: "Forgotten Forgehammer was used on this pull.",
     },
     {
       label: `${spells[NW.SPEAR].name} was used on this pull.`,

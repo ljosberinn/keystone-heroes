@@ -2,7 +2,7 @@ import { createWowheadUrl } from "../../../utils";
 import { classnames } from "../../../utils/classnames";
 import { AbilityIcon } from "../../AbilityIcon";
 import { ExternalLink } from "../../ExternalLink";
-import type { TableRowProps } from "../Pulls";
+import type { TableRowProps } from "../Events";
 import {
   TimestampCell,
   TypeCell,

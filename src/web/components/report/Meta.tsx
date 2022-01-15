@@ -5,7 +5,6 @@ import { useFight } from "../../../pages/report/[reportID]/[fightID]";
 import { useToggle } from "../../hooks/useToggle";
 import { asc, desc, reset, sort, star } from "../../icons";
 import {
-  classes,
   covenants,
   soulbinds,
   tormentedPowers,
@@ -27,9 +26,9 @@ import {
   createWCLUrl,
   timeDurationToString,
   createWowheadUrl,
-  classBorderColorMap,
 } from "../../utils";
 import { classnames } from "../../utils/classnames";
+import { getClassAndSpecName } from "../../utils/player";
 import { AbilityIcon, STATIC_ICON_PREFIX } from "../AbilityIcon";
 import { Affixes } from "../Affixes";
 import { ErrorBoundary } from "../ErrorBoundary";
@@ -254,14 +253,7 @@ type PlayerRowProps = {
 
 function PlayerRow({ player, fightID, reportID }: PlayerRowProps) {
   const [open, toggle] = useToggle(false);
-  const { name, specs } = classes[player.class];
-  const spec = specs.find((spec) => spec.id === player.spec);
-
-  if (!spec) {
-    return null;
-  }
-
-  const classColor = classBorderColorMap[name.toLowerCase()];
+  const { colors, specName, className } = getClassAndSpecName(player);
 
   const hasNoFurtherData =
     player.talents.length === 0 && player.conduits.length === 0;
@@ -274,9 +266,9 @@ function PlayerRow({ player, fightID, reportID }: PlayerRowProps) {
             <span className="inline-flex items-center w-full">
               <span className="w-8 h-8">
                 <SpecIcon
-                  class={name}
-                  spec={spec.name}
-                  className={`border-2 ${classColor}`}
+                  class={className}
+                  spec={specName}
+                  className={`border-2 ${colors.border}`}
                 />
               </span>
               {player.covenant ? (
@@ -299,7 +291,7 @@ function PlayerRow({ player, fightID, reportID }: PlayerRowProps) {
                 onClick={toggle}
                 disabled={hasNoFurtherData}
                 className={classnames(
-                  classColor,
+                  colors.border,
                   player.covenant ? "-ml-3" : "pl-2",
                   "border-b-2 dark:border-opacity-50 flex-grow flex"
                 )}
@@ -322,7 +314,7 @@ function PlayerRow({ player, fightID, reportID }: PlayerRowProps) {
 
         <td className="px-0 text-right">
           <span
-            className={`${classColor} border-b-2 dark:border-opacity-50 text-right flex flex-grow justify-end`}
+            className={`${colors.border} border-b-2 dark:border-opacity-50 text-right flex flex-grow justify-end`}
           >
             {player.itemLevel}
           </span>
@@ -335,7 +327,7 @@ function PlayerRow({ player, fightID, reportID }: PlayerRowProps) {
               type: "damage-done",
               source: player.actorID,
             })}
-            className={`${classColor} border-b-2 dark:border-opacity-50 text-right flex flex-grow justify-end`}
+            className={`${colors.border} border-b-2 dark:border-opacity-50 text-right flex flex-grow justify-end`}
           >
             {player.dps.toLocaleString("en-US")}
           </ExternalLink>
@@ -348,7 +340,7 @@ function PlayerRow({ player, fightID, reportID }: PlayerRowProps) {
               type: "healing",
               source: player.actorID,
             })}
-            className={`${classColor} border-b-2 dark:border-opacity-50 text-right flex flex-grow justify-end`}
+            className={`${colors.border} border-b-2 dark:border-opacity-50 text-right flex flex-grow justify-end`}
           >
             {player.hps.toLocaleString("en-US")}
           </ExternalLink>
@@ -358,7 +350,7 @@ function PlayerRow({ player, fightID, reportID }: PlayerRowProps) {
         <td colSpan={3} className="px-0">
           <div className="flex h-10 space-x-1">
             <div
-              className={`${classColor} relative w-4 h-4 mr-4 border-b-2 dark:border-opacity-50 border-l-2 border-solid left-4`}
+              className={`${colors.border} relative w-4 h-4 mr-4 border-b-2 dark:border-opacity-50 border-l-2 border-solid left-4`}
             />
             {player.legendaries.map((id) => {
               if (!(id in legendaries)) {
@@ -465,7 +457,7 @@ function PlayerRow({ player, fightID, reportID }: PlayerRowProps) {
             <td colSpan={4}>
               <div className="flex h-10 space-x-1">
                 <div
-                  className={`${classColor} relative w-4 h-4 mr-4 border-b-2 dark:border-opacity-50 border-l-2 border-solid left-4`}
+                  className={`${colors.border} relative w-4 h-4 mr-4 border-b-2 dark:border-opacity-50 border-l-2 border-solid left-4`}
                 />
 
                 {player.talents.map((id) => {
@@ -501,7 +493,7 @@ function PlayerRow({ player, fightID, reportID }: PlayerRowProps) {
             <td colSpan={4}>
               <div className="flex h-10 space-x-1">
                 <div
-                  className={`${classColor} relative w-4 h-4 mr-4 border-b-2 dark:border-opacity-50 border-l-2 border-solid left-4`}
+                  className={`${colors.border} relative w-4 h-4 mr-4 border-b-2 dark:border-opacity-50 border-l-2 border-solid left-4`}
                 />
 
                 {player.conduits.map((conduit) => {
@@ -537,7 +529,7 @@ function PlayerRow({ player, fightID, reportID }: PlayerRowProps) {
             <td colSpan={4}>
               <div className="flex h-10 space-x-1">
                 <div
-                  className={`${classColor} relative w-4 h-4 mr-4 border-b-2 dark:border-opacity-50 border-l-2 border-solid left-4`}
+                  className={`${colors.border} relative w-4 h-4 mr-4 border-b-2 dark:border-opacity-50 border-l-2 border-solid left-4`}
                 />
 
                 {player.covenantTraits.map((id) => {
