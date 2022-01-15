@@ -1,6 +1,11 @@
 import { classes } from "../staticData";
 
-import { classBorderColorMap, classFillColorMap, classTextColorMap } from ".";
+import {
+  classBorderColorMap,
+  classFillColorMap,
+  classTextColorMap,
+  classPeerColorMap,
+} from ".";
 
 type ClassInfo = {
   className: string;
@@ -9,6 +14,7 @@ type ClassInfo = {
     border: string;
     text: string;
     fill: string;
+    peerFocus: string;
   };
 };
 
@@ -27,6 +33,7 @@ export const getClassAndSpecName = <T extends { class: number; spec: number }>(
       border: classBorderColorMap[lowercasedClassName],
       text: classTextColorMap[lowercasedClassName],
       fill: classFillColorMap[lowercasedClassName],
+      peerFocus: classPeerColorMap[lowercasedClassName],
     },
   };
 };

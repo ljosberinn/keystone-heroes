@@ -123,7 +123,7 @@ type EnhancedNPC = FightSuccessResponse["pulls"][number]["npcs"][number] & {
   rawCount: number;
 };
 
-const findMostRelevantNPCOfPull = (
+export const findMostRelevantNPCOfPull = (
   pull: FightSuccessResponse["pulls"][number],
   dungeon: typeof dungeons[number]
 ): { id: number; count: number; name: string } => {
@@ -613,19 +613,16 @@ function EventsTable() {
     >
       <p>Filter Events by Player</p>
       <div className="flex justify-between w-full">
-        <div className="flex flex-col md:flex-row ">
+        <div className="flex flex-col md:flex-row">
           {player.map((p) => {
+            const { className, specName, colors } = getClassAndSpecName(p);
+
             const checked = trackedPlayer.includes(p.id);
-
-            const { className, specName } = getClassAndSpecName(p);
-
             const disabled = checked && trackedPlayer.length === 1;
 
             return (
               <span className="p-2" key={p.id}>
                 <Checkbox
-                  aria-labelledby={`player-${p.id}`}
-                  id={`player-${p.id}`}
                   checked={checked}
                   disabled={disabled}
                   onChange={() => {
@@ -635,17 +632,19 @@ function EventsTable() {
                         : [...prev, p.id]
                     );
                   }}
-                  className={playerIdTextColorMap[p.id]}
+                  spanClassName={colors.peerFocus}
                 >
-                  <span className="w-4 h-4">
+                  <span className="w-8 h-8">
                     <SpecIcon
                       class={className}
                       spec={specName}
-                      size={4}
-                      className={checked ? undefined : grayscale}
+                      className={classnames(
+                        "border-2",
+                        checked ? colors.border : grayscale
+                      )}
                     />
                   </span>
-                  <span className={checked ? undefined : grayscale}>
+                  <span className={checked ? colors.text : undefined}>
                     {p.name}
                   </span>
                 </Checkbox>

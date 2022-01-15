@@ -217,6 +217,21 @@ export const classFillColorMap: Record<string, string> = {
   mage: "fill-mage",
 };
 
+export const classPeerColorMap: Record<string, string> = {
+  demonhunter: "peer-focus:ring peer-focus:ring-demonhunter",
+  warlock: "peer-focus:ring peer-focus:ring-warlock",
+  rogue: "peer-focus:ring peer-focus:ring-rogue",
+  warrior: "peer-focus:ring peer-focus:ring-warrior",
+  priest: "peer-focus:ring peer-focus:ring-priest",
+  hunter: "peer-focus:ring peer-focus:ring-hunter",
+  deathknight: "peer-focus:ring peer-focus:ring-deathknight",
+  shaman: "peer-focus:ring peer-focus:ring-shaman",
+  paladin: "peer-focus:ring peer-focus:ring-paladin",
+  monk: "peer-focus:ring peer-focus:ring-monk",
+  druid: "peer-focus:ring peer-focus:ring-druid",
+  mage: "peer-focus:ring peer-focus:ring-mage",
+};
+
 export const createInternalUrl = (
   url: string,
   defaultQueryParams?: Record<string, string | number>

@@ -5,6 +5,9 @@ const {
 const {
   createJestOverride,
 } = require("eslint-config-galex/src/overrides/jest");
+const {
+  createReactOverride,
+} = require("eslint-config-galex/src/overrides/react");
 
 const deps = getDependencies();
 
@@ -13,4 +16,14 @@ const jestOverride = createJestOverride({
   rules: { "jest/require-top-level-describe": "off" },
 });
 
-module.exports = createConfig({ overrides: [jestOverride], root: true });
+const reactOverride = createReactOverride({
+  ...deps,
+  rules: {
+    "jsx-a11y/control-has-associated-label": "off",
+  },
+});
+
+module.exports = createConfig({
+  overrides: [jestOverride, reactOverride],
+  root: true,
+});

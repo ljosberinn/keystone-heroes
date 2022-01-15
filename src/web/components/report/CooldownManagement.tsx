@@ -1,9 +1,18 @@
-import type { ChangeEvent } from "react";
-import { memo, Fragment, useCallback, useMemo, useState, useRef } from "react";
+import type { ChangeEvent, MutableRefObject } from "react";
+import {
+  memo,
+  Fragment,
+  useCallback,
+  useMemo,
+  useState,
+  useRef,
+  useEffect,
+  useReducer,
+} from "react";
 
 import type { FightSuccessResponse } from "../../../api/functions/fight";
 import { useFight } from "../../../pages/report/[reportID]/[fightID]";
-import { spells } from "../../staticData";
+import { dungeons, isDungeonSpecificSpell, spells } from "../../staticData";
 import { bgPrimary, bgSecondary, grayscale } from "../../styles/tokens";
 import { timeDurationToString } from "../../utils";
 import { classnames } from "../../utils/classnames";
@@ -11,6 +20,7 @@ import { getClassAndSpecName } from "../../utils/player";
 import { STATIC_ICON_PREFIX } from "../AbilityIcon";
 import { Checkbox } from "../Checkbox";
 import { SpecIcon } from "../SpecIcon";
+import { findMostRelevantNPCOfPull } from "./Events";
 
 type DefaultEvent = FightSuccessResponse["pulls"][number]["events"][number];
 type CastOrAbilityReadyEventWIthABilityAndSourcePlayerID = Omit<
@@ -22,16 +32,19 @@ type CastOrAbilityReadyEventWIthABilityAndSourcePlayerID = Omit<
   sourcePlayerID: NonNullable<DefaultEvent["sourcePlayerID"]>;
 };
 
-const rowHeight = 45;
+const rowHeight = 60;
 
 // eslint-disable-next-line import/no-default-export
 export default function CooldownManagement(): JSX.Element {
   const { player, pulls, meta } = useFight().fight;
-  const [zoomFactor, setZoomFactor] = useState(2);
+  const [zoomFactor, setZoomFactor] = useState(5);
   const [cooldown, setCooldown] = useState(120);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [trackedPlayer, setTrackedPlayer] = useState(player.map((p) => p.id));
-  console.time("test");
+
+  // required to apply initial zoom level of 5
+  const [, forceRerender] = useReducer((val: number) => val + 1, 1);
+  useEffect(forceRerender, [forceRerender]);
 
   const handleRangeChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
@@ -74,7 +87,7 @@ export default function CooldownManagement(): JSX.Element {
     [pulls]
   );
 
-  const { amountOfVisibleAbilities, allUsedAbilities, displayableData } =
+  const { amountOfVisibleAbilities, allUsedAbilities, displayableData, css } =
     useMemo(() => {
       const relevantEvents = allRelevantEvents.filter(
         ({ sourcePlayerID, ability }) =>
@@ -131,100 +144,39 @@ export default function CooldownManagement(): JSX.Element {
         });
       });
 
+      const css = `${allUsedAbilities
+        .reduce<string[]>((acc, ability) => {
+          const data = `[data-ability-id="${ability.id}"][data-player-id="${ability.sourcePlayerID}"]`;
+          const selector = `g${data}:hover image, g${data}:hover ~ g${data} image`;
+
+          return acc.includes(selector) ? acc : [...acc, selector];
+        }, [])
+        .join(", ")} { filter: unset }`;
+
       return {
         amountOfVisibleAbilities,
         allUsedAbilities,
         displayableData,
+        css,
       };
     }, [allRelevantEvents, trackedPlayer, cooldown, player]);
 
-  // type Foo = Record<
-  //   FightSuccessResponse["player"][number]["actorID"],
-  //   Record<
-  //     NonNullable<
-  //       FightSuccessResponse["pulls"][number]["events"][number]["ability"]
-  //     >["id"],
-  //     (FightSuccessResponse["pulls"][number]["events"][number] & {
-  //       key: string;
-  //     })[]
-  //   >
-  // >;
+  useEffect(() => {
+    const sheet = document.createElement("style");
+    sheet.textContent = css;
 
-  // const playerAbilityMap = useMemo(
-  //   () =>
-  //     pulls
-  //       .flatMap((pull) => pull.events)
-  //       // eslint-disable-next-line unicorn/prefer-object-from-entries
-  //       .reduce<Foo>((acc, event, index) => {
-  //         if (
-  //           !event.ability ||
-  //           !event.sourcePlayerID ||
-  //           (event.type !== "Cast" && event.type !== "AbilityReady")
-  //         ) {
-  //           return acc;
-  //         }
+    document.head.append(sheet);
 
-  //         const ability = spells[event.ability.id];
+    return () => {
+      sheet.remove();
+    };
+  }, [css]);
 
-  //         if (!ability || ability.cd < cooldown) {
-  //           return acc;
-  //         }
-
-  //         if (!(event.sourcePlayerID in acc)) {
-  //           acc[event.sourcePlayerID] = {
-  //             [event.ability.id]: [
-  //               {
-  //                 ...event,
-  //                 key: `${event.timestamp}-${event.sourcePlayerID}-${index}`,
-  //               },
-  //             ],
-  //           };
-
-  //           return acc;
-  //         }
-
-  //         const ref = acc[event.sourcePlayerID];
-
-  //         if (event.ability.id in ref) {
-  //           ref[event.ability.id].push({
-  //             ...event,
-  //             key: `${event.timestamp}-${event.sourcePlayerID}-${index}`,
-  //           });
-  //         } else {
-  //           ref[event.ability.id] = [
-  //             {
-  //               ...event,
-  //               key: `${event.timestamp}-${event.sourcePlayerID}-${index}`,
-  //             },
-  //           ];
-  //         }
-
-  //         return acc;
-  //       }, {}),
-  //   [pulls, cooldown]
-  // );
-
-  // const css = Object.entries(playerAbilityMap)
-  //   .flatMap(([, abilityMap]) => {
-  //     return Object.keys(abilityMap).map((abilityID) => {
-  //       const dataSelector = `[data-ability="${abilityID}"]`;
-  //       return `
-  //       ${dataSelector}:hover,
-  //       ${dataSelector}:hover ~ image${dataSelector} {
-  //         filter: none;
-  //       }`;
-  //     });
-  //   })
-  //   .join(" ");
-
-  const width =
-    zoomFactor === 1 || !containerRef.current
-      ? undefined
-      : containerRef.current.clientWidth * zoomFactor;
-
-  const height = 40 + amountOfVisibleAbilities * rowHeight;
-
-  console.timeEnd("test");
+  const { width, height } = calculcateDimensions({
+    amountOfVisibleAbilities,
+    containerRef,
+    zoomFactor,
+  });
 
   return (
     <section aria-labelledby="cd-management-heading">
@@ -244,7 +196,7 @@ export default function CooldownManagement(): JSX.Element {
             player={player}
           />
 
-          <div className="flex flex-col w-full space-y-4 lg:space-x-4 lg:flex-row lg:space-y-0">
+          <div className={`${bgPrimary} p-2 mt-4 rounded-lg`}>
             <div
               className={classnames(
                 "w-full",
@@ -252,16 +204,15 @@ export default function CooldownManagement(): JSX.Element {
               )}
               ref={containerRef}
             >
-              {/* <style jsx>{css}</style> */}
               <svg
                 width={width}
                 className={classnames(
-                  width === undefined && "w-full",
+                  !width && "w-full",
                   zoomFactor > 1 && "mb-4"
                 )}
                 height={height}
               >
-                <PullGrid height={height} />
+                <PullGrid height={height} zoom={zoomFactor} />
                 <AbilityNames height={height} abilities={allUsedAbilities} />
 
                 <g data-type="abilities">
@@ -315,38 +266,34 @@ function Settings({
       <div className="flex justify-between w-full">
         <div className="flex flex-col md:flex-row">
           {player.map((p) => {
-            const checked = trackedPlayer.includes(p.id);
             const { className, specName, colors } = getClassAndSpecName(p);
 
+            const checked = trackedPlayer.includes(p.id);
             const disabled = checked && trackedPlayer.length === 1;
 
             return (
               <span className="p-2" key={p.id}>
                 <Checkbox
-                  id={`player-${p.id}-cds`}
                   checked={checked}
                   disabled={disabled}
                   onChange={() => {
                     togglePlayer(p.id);
                   }}
+                  className="w-full md:w-auto"
+                  spanClassName={colors.peerFocus}
                 >
-                  <span
-                    className={classnames(
-                      "flex items-center space-x-2",
-                      !checked && grayscale
-                    )}
-                  >
-                    <span className="w-8 h-8">
-                      <SpecIcon
-                        class={className}
-                        spec={specName}
-                        className={classnames(
-                          "border-2",
-                          checked && colors.border
-                        )}
-                      />
-                    </span>
-                    <span className={colors.text}>{p.name}</span>
+                  <span className="w-8 h-8">
+                    <SpecIcon
+                      class={className}
+                      spec={specName}
+                      className={classnames(
+                        "border-2",
+                        checked ? colors.border : grayscale
+                      )}
+                    />
+                  </span>
+                  <span className={checked ? colors.text : undefined}>
+                    {p.name}
                   </span>
                 </Checkbox>
               </span>
@@ -355,41 +302,39 @@ function Settings({
         </div>
       </div>
 
-      <p>asd</p>
-      <div className="flex flex-col md:flex-row">
-        <div>
-          <input
-            type="range"
-            min="100"
-            max="1500"
-            step="50"
-            onChange={handleRangeChange}
-            name="zoom"
-            aria-labelledby="zoom-label"
-            value={zoomFactor * 100}
-            id="zoom"
-          />
-          <label htmlFor="zoom" id="zoom-label">
-            Zoom (default 2, current {zoomFactor})
+      <div className="flex flex-col">
+        <div className="pt-4 md:pt-0">
+          <label className="flex flex-col md:flex-row">
+            <input
+              type="range"
+              min="100"
+              max="2000"
+              step="50"
+              onChange={handleRangeChange}
+              name="zoom"
+              value={zoomFactor * 100}
+            />
+            <span className="pl-2">
+              Zoom (default 5x, current {zoomFactor}x)
+            </span>
           </label>
         </div>
 
-        <div>
-          <input
-            type="range"
-            min="60"
-            max="600"
-            step="30"
-            name="cooldown"
-            aria-label="Cooldown"
-            value={minCooldown}
-            onChange={handleRangeChange}
-            id="cooldown"
-            aria-labelledby="cooldown-label"
-          />
-          <label htmlFor="cooldown" id="cooldown-label">
-            Minimum Ability Cooldown Threshold (default 120, current{" "}
-            {minCooldown})
+        <div className="pt-4 md:pt-0">
+          <label className="flex flex-col md:flex-row">
+            <input
+              type="range"
+              min="60"
+              max="600"
+              step="30"
+              name="cooldown"
+              value={minCooldown}
+              onChange={handleRangeChange}
+            />
+            <span className="pl-2">
+              Minimum Ability Cooldown Threshold (default 120s, current{" "}
+              {minCooldown}s)
+            </span>
           </label>
         </div>
       </div>
@@ -439,15 +384,20 @@ function isCastOrAbilityReadyEventWithAbilityAndSourcePlayerID(
     return false;
   }
 
+  if (isDungeonSpecificSpell(event.ability.id)) {
+    return false;
+  }
+
   return true;
 }
 
 type PullGridProps = {
   height: number;
+  zoom: number;
 };
 
-const PullGrid = memo(({ height }: PullGridProps) => {
-  const { pulls, meta } = useFight().fight;
+function PullGrid({ height, zoom }: PullGridProps) {
+  const { pulls, meta, dungeon } = useFight().fight;
 
   return (
     <g data-type="pull-grid">
@@ -457,8 +407,19 @@ const PullGrid = memo(({ height }: PullGridProps) => {
           meta
         );
 
+        const { name } = findMostRelevantNPCOfPull(pull, dungeons[dungeon]);
+
         const lastPull = pulls[index - 1];
         const nextPull = pulls[index + 1];
+
+        const pullDurationInfo = `${timeDurationToString(
+          pull.startTime - meta.startTime,
+          {
+            omitMs: true,
+          }
+        )} - ${timeDurationToString(pull.endTime - meta.startTime, {
+          omitMs: true,
+        })}`;
 
         return (
           <Fragment key={pull.id}>
@@ -467,9 +428,10 @@ const PullGrid = memo(({ height }: PullGridProps) => {
                 height="100%"
                 x="0"
                 width={`${pullStartX}%`}
-                className="dark:fill-gray-600"
+                className="fill-gray-200 dark:fill-gray-600"
               />
             )}
+
             <line
               y2="100%"
               x1={`${pullStartX}%`}
@@ -492,11 +454,11 @@ const PullGrid = memo(({ height }: PullGridProps) => {
                 width={`${
                   calculatePullXCoordinates(nextPull, meta)[0] - pullEndX
                 }%`}
-                className="dark:fill-gray-600"
+                className="fill-gray-200 dark:fill-gray-600"
               />
             ) : null}
 
-            <text x={`${center}%`} y={height}>
+            <text x={`${center}%`} y={height} className="cursor-help">
               <tspan
                 x={`${center}%`}
                 dx="0"
@@ -505,11 +467,31 @@ const PullGrid = memo(({ height }: PullGridProps) => {
                 fill="gray"
                 stroke="transparent"
               >
-                Pull {pull.id}
+                {zoom >= 2 ? `Pull ${pull.id}` : pull.id}
+                <title>{pullDurationInfo}</title>
               </tspan>
             </text>
 
-            <text x={`${center}%`} y="15">
+            {zoom >= 5 ? (
+              <text
+                x={`${center}%`}
+                y={height - 20}
+                className="hidden md:block"
+              >
+                <tspan
+                  x={`${center}%`}
+                  dx="0"
+                  dy="0"
+                  textAnchor="middle"
+                  fill="gray"
+                  stroke="transparent"
+                >
+                  {name}
+                </tspan>
+              </text>
+            ) : null}
+
+            <text x={`${center}%`} y="15" className="cursor-help">
               <tspan
                 x={`${center}%`}
                 dx="0"
@@ -518,20 +500,37 @@ const PullGrid = memo(({ height }: PullGridProps) => {
                 fill="gray"
                 stroke="transparent"
               >
-                Pull {pull.id}
+                {zoom >= 2 ? `Pull ${pull.id}` : pull.id}
+                <title>{pullDurationInfo}</title>
               </tspan>
             </text>
+
+            {zoom >= 5 ? (
+              <text x={`${center}%`} y={35} className="hidden md:block">
+                <tspan
+                  x={`${center}%`}
+                  dx="0"
+                  dy="0"
+                  textAnchor="middle"
+                  fill="gray"
+                  stroke="transparent"
+                >
+                  {name}
+                </tspan>
+              </text>
+            ) : null}
           </Fragment>
         );
       })}
     </g>
   );
-});
+}
 
 type AbilityNamesProps = {
   abilities: {
     id: number;
     fillColor: string;
+    sourcePlayerID: number;
   }[];
   height: number;
 };
@@ -542,15 +541,20 @@ const AbilityNames = memo(({ abilities, height }: AbilityNamesProps) => {
       {abilities.map((dataset, index) => {
         const ability = spells[dataset.id];
 
-        const y = 30 + index * rowHeight;
+        const y = 55 + index * rowHeight;
+        const lastIsDifferentPlayer = abilities[index - 1]
+          ? abilities[index - 1].sourcePlayerID !== dataset.sourcePlayerID
+          : true;
 
         return (
           <tspan
             key={`${dataset.id}-${dataset.fillColor}-${y}`}
             x="0"
             y={y}
-            className={dataset.fillColor}
-            aria-details="test"
+            className={classnames(
+              dataset.fillColor,
+              lastIsDifferentPlayer && "font-bold"
+            )}
           >
             {ability.name}
           </tspan>
@@ -572,30 +576,40 @@ const AbilityListItem = memo(
     const ability = spells[event.ability.id];
     const cd = ability.cd * 1000;
 
-    const x =
-      ((event.timestamp - keyStart) / keyTime) * 100 -
-      // x offset of half of icon width based on max svg size
-      // so its on the line
-      (12 / 1456) * 100;
+    const x = ((event.timestamp - keyStart) / keyTime) * 100;
+    const y = rowHeight + 7.5 + offset * rowHeight;
 
-    const y = 34 + offset * rowHeight;
+    const delay = event.ability.lastUse
+      ? event.timestamp - event.ability.lastUse - cd
+      : null;
 
     const title = [
-      event.type,
+      `${event.type} @ ${timeDurationToString(event.timestamp - keyStart, {
+        omitMs: true,
+      })}`,
       !event.ability.lastUse && "First Use",
       event.type === "Cast" &&
-        event.ability.lastUse &&
-        `delayed by ${timeDurationToString(
-          event.timestamp - event.ability.lastUse - cd,
-          { omitMs: true }
-        )}s after being ready`,
+        delay &&
+        delay > 0 &&
+        `delayed by ${timeDurationToString(delay, {
+          omitMs: true,
+        })} after being ready`,
+      delay &&
+        delay < 0 &&
+        `used ${timeDurationToString(delay * -1, {
+          omitMs: true,
+        })} under default cooldown`,
       event.ability.wasted && "wasted Cooldown Window",
     ]
       .filter(Boolean)
       .join(" - ");
 
     return (
-      <g>
+      <g
+        data-ability-id={event.ability.id}
+        data-player-id={event.sourcePlayerID}
+        className="cursor-help"
+      >
         <image
           width="24"
           height="24"
@@ -616,3 +630,31 @@ const AbilityListItem = memo(
     );
   }
 );
+
+type CalculcateDimensionsArgs = {
+  zoomFactor: number;
+  containerRef: MutableRefObject<HTMLDivElement | null>;
+  amountOfVisibleAbilities: number;
+};
+
+function calculcateDimensions({
+  amountOfVisibleAbilities,
+  containerRef,
+  zoomFactor,
+}: CalculcateDimensionsArgs) {
+  const height = 75 + amountOfVisibleAbilities * rowHeight;
+
+  const width =
+    // zoom 1 doesnt need to calc; without ref we can't calc
+    zoomFactor === 1 || !containerRef.current
+      ? undefined
+      : // assign min width based on clientWidth (only affects mobile)
+      containerRef.current.clientWidth > 1456
+      ? containerRef.current.clientWidth * zoomFactor
+      : 1456 * zoomFactor;
+
+  return {
+    width,
+    height,
+  };
+}

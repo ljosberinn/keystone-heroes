@@ -32,9 +32,9 @@ export function Analysis(): JSX.Element {
   const { onKeyDown, onTabClick, attachRef, selectedTab } = useTabs(tabs);
 
   return (
-    <section className={`${widthConstraint} pb-6`}>
+    <div className={`${widthConstraint} pb-6`}>
       <div className="drop-shadow-lg">
-        <TabList aria-label="Analysis Panels">
+        <TabList aria-label="Analysis Panels" presentOnMobile>
           {tabs.map((tab, index) => {
             function onClick() {
               onTabClick(index);
@@ -72,6 +72,6 @@ export function Analysis(): JSX.Element {
           );
         })}
       </div>
-    </section>
+    </div>
   );
 }

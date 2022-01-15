@@ -14,11 +14,13 @@ import { classnames } from "../utils/classnames";
 export type TabListProps = {
   children: JSX.Element[];
   "aria-label"?: string;
+  presentOnMobile?: boolean;
 };
 
 export function TabList({
   children,
   "aria-label": ariaLabel,
+  presentOnMobile,
 }: TabListProps): JSX.Element {
   return (
     <div className="flex justify-between pt-2">
@@ -26,7 +28,12 @@ export function TabList({
         role="tablist"
         aria-label={ariaLabel}
         aria-orientation="horizontal"
-        className="hidden w-full px-2 sm:flex sm:flex-row sm:py-0 sm:w-initial"
+        className={classnames(
+          "px-2",
+          presentOnMobile
+            ? "flex flex-row"
+            : "hidden sm:flex sm:flex-row sm:w-initial sm:py-0 w-full"
+        )}
       >
         {children}
       </div>
