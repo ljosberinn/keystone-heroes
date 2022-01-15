@@ -20,16 +20,16 @@ type MaybeWastedCooldownCellProps = {
 
 const calcMissedUsageCount = ({
   now,
-  then,
+  other,
   cd,
   offset,
 }: {
   now: number;
-  then: number;
+  other: number;
   cd: number;
   offset: number;
 }) => {
-  return (then - now) / 1000 / cd - offset;
+  return (other - now) / 1000 / cd - offset;
 };
 
 function findNextPullBasedOnTimestamp(
@@ -151,7 +151,7 @@ export function MaybeWastedCooldownCell({
 
   const couldUseNTimes = calcMissedUsageCount({
     now: event.timestamp,
-    then: event.ability.nextUse ? event.ability.nextUse : keyEnd,
+    other: event.ability.nextUse ? event.ability.nextUse : keyEnd,
     cd: ability.cd,
     // offset by 1 if Cast since CD must recuperate first
     offset: event.ability.nextUse && event.type === "Cast" ? 1 : 0,

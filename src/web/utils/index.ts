@@ -80,7 +80,7 @@ export enum ReportParseError {
 }
 
 export const reportParseErrorMap: Record<ReportParseError, string> = {
-  INVALID_HOST: "This doesn't seem to be a WarcraftLogs link.",
+  INVALID_HOST: "This doesn't seem to be a Warcraft Logs link.",
   INVALID_REPORT_ID: "The report ID seems to be malformed.",
   INVALID_URL: "This doesn't seem to be a valid URL.",
 };

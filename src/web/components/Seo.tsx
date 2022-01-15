@@ -5,7 +5,7 @@ export const logoVersion = "?v2";
 export const defaultTitle = "Keystone Heroes";
 export const extendedTitle = `${defaultTitle} - Mythic+ Log Analysis`;
 export const defaultDescription =
-  "In-depth analysis for Mythic+ runs based on WarcraftLogs including routes, cooldown usage and other improvement vectors.";
+  "In-depth analysis for Mythic+ runs based on Warcraft Logs including routes, cooldown usage and other improvement vectors.";
 export const url =
   process.env.NODE_ENV === "development"
     ? "http://localhost:3000"

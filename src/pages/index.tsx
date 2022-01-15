@@ -27,7 +27,7 @@ export default function Home(): JSX.Element | null {
           className={`pt-3 text-sm leading-tight text-center ${yellowText} lg:text-xl sm:text-base`}
         >
           stop guessing what you could improve or what went wrong - gain some
-          actual insight for once
+          actual insight
         </h2>
 
         <ExternalLink
@@ -83,20 +83,23 @@ export default function Home(): JSX.Element | null {
 
 function BackgroundImage() {
   return (
-    <div className="absolute inset-0">
+    <div className="absolute inset-0 overflow-hidden">
       <style jsx>
         {`
           @keyframes change-opacity {
             0% {
               opacity: 0.1;
+              transform: scale(1);
             }
 
             50% {
               opacity: 0.2;
+              transform: scale(1.025);
             }
 
             100% {
               opacity: 0.1;
+              transform: scale(1);
             }
           }
 

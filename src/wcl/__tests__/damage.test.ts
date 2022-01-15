@@ -104,7 +104,7 @@ describe("damage", () => {
   test("skips events doing 0 damage", () => {
     const result = damageEvents.map((event) =>
       damageProcessor(
-        { ...event, amount: 0 },
+        { ...event, amount: 0, overkill: 0, absorbed: 0 },
         {
           ...params,
           sourceNPCID: PF.RIGGED_PLAGUEBORER,

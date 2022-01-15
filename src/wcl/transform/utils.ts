@@ -29,3 +29,7 @@ export type PersistedDungeonPull = Pick<
   startTime: number;
   endTime: number;
 };
+
+export type PersistableDungeonPull = Omit<PersistedDungeonPull, "id"> & {
+  count: number;
+};

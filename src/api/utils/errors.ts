@@ -3,7 +3,7 @@ import { MIN_KEYSTONE_LEVEL } from "../../web/env";
 export const reportHandlerError = {
   NO_ELIGIBLE_KEYS: `This report does not appear to contain any keys matching the minimum key level requirement (${MIN_KEYSTONE_LEVEL}), does not contain any finished key (timed or untimed) or includes unsupported dungeons/affixes.`,
   BROKEN_LOG_OR_WCL_UNAVAILABLE:
-    "This report is either broken or the request to Warcraftlogs failed. Please try again at a later time.",
+    "This report is either broken or the request to Warcraft Logs failed. Please try again at a later time.",
   SECONDARY_REQUEST_FAILED:
     "Warcraftlogs could not be reached or the API request limit has been reached. Please try again at a later time.",
   EMPTY_LOG: "This report does not contain any fights.",
