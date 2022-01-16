@@ -36,7 +36,7 @@ const rowHeight = 60;
 
 // eslint-disable-next-line import/no-default-export
 export default function CooldownManagement(): JSX.Element {
-  const { player, pulls, meta } = useFight().fight;
+  const { player, pulls } = useFight().fight;
   const [zoomFactor, setZoomFactor] = useState(5);
   const [cooldown, setCooldown] = useState(120);
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -87,7 +87,7 @@ export default function CooldownManagement(): JSX.Element {
     [pulls]
   );
 
-  const { amountOfVisibleAbilities, allUsedAbilities, displayableData, css } =
+  const { amountOfVisibleAbilities, allUsedAbilities, events, css } =
     useMemo(() => {
       const relevantEvents = allRelevantEvents.filter(
         ({ sourcePlayerID, ability }) =>
@@ -138,10 +138,23 @@ export default function CooldownManagement(): JSX.Element {
           });
       });
 
-      const displayableData = Object.values(castsByPlayer).flatMap((arr) => {
-        return arr.sort((a, b) => {
-          return sortAbilitiesByCdOrName(a.ability.id, b.ability.id);
-        });
+      const events = Object.values(castsByPlayer).flatMap((arr) => {
+        return arr
+          .sort((a, b) => {
+            return sortAbilitiesByCdOrName(a.ability.id, b.ability.id);
+          })
+          .map((event) => {
+            const offset = allUsedAbilities.findIndex(
+              (ability) =>
+                ability.id === event.ability.id &&
+                ability.sourcePlayerID === event.sourcePlayerID
+            );
+
+            return {
+              ...event,
+              offset,
+            };
+          });
       });
 
       const css = `${allUsedAbilities
@@ -156,7 +169,7 @@ export default function CooldownManagement(): JSX.Element {
       return {
         amountOfVisibleAbilities,
         allUsedAbilities,
-        displayableData,
+        events,
         css,
       };
     }, [allRelevantEvents, trackedPlayer, cooldown, player]);
@@ -213,27 +226,9 @@ export default function CooldownManagement(): JSX.Element {
                 height={height}
               >
                 <PullGrid height={height} zoom={zoomFactor} />
+                <TimelineGrid height={height} zoom={zoomFactor} />
+                <AbilityList events={events} />
                 <AbilityNames height={height} abilities={allUsedAbilities} />
-
-                <g data-type="abilities">
-                  {displayableData.map((event) => {
-                    const index = allUsedAbilities.findIndex(
-                      (ability) =>
-                        ability.id === event.ability.id &&
-                        ability.sourcePlayerID === event.sourcePlayerID
-                    );
-
-                    return (
-                      <AbilityListItem
-                        event={event}
-                        keyStart={meta.startTime}
-                        keyTime={meta.time}
-                        offset={index}
-                        key={`${event.sourcePlayerID}-${event.timestamp}-${index}`}
-                      />
-                    );
-                  })}
-                </g>
               </svg>
             </div>
           </div>
@@ -399,6 +394,8 @@ type PullGridProps = {
 function PullGrid({ height, zoom }: PullGridProps) {
   const { pulls, meta, dungeon } = useFight().fight;
 
+  const timelineOffset = isTimelineVisible(zoom) ? 20 : 0;
+
   return (
     <g data-type="pull-grid">
       {pulls.map((pull, index) => {
@@ -432,21 +429,6 @@ function PullGrid({ height, zoom }: PullGridProps) {
               />
             )}
 
-            <line
-              y2="100%"
-              x1={`${pullStartX}%`}
-              x2={`${pullStartX}%`}
-              stroke="gray"
-              strokeDasharray={4}
-            />
-            <line
-              y2="100%"
-              x1={`${pullEndX}%`}
-              x2={`${pullEndX}%`}
-              stroke="gray"
-              strokeDasharray={4}
-            />
-
             {nextPull ? (
               <rect
                 height="100%"
@@ -458,7 +440,11 @@ function PullGrid({ height, zoom }: PullGridProps) {
               />
             ) : null}
 
-            <text x={`${center}%`} y={height} className="cursor-help">
+            <text
+              x={`${center}%`}
+              y={height - timelineOffset}
+              className="cursor-help"
+            >
               <tspan
                 x={`${center}%`}
                 dx="0"
@@ -475,7 +461,7 @@ function PullGrid({ height, zoom }: PullGridProps) {
             {zoom >= 5 ? (
               <text
                 x={`${center}%`}
-                y={height - 20}
+                y={height - 20 - timelineOffset}
                 className="hidden md:block"
               >
                 <tspan
@@ -537,7 +523,13 @@ type AbilityNamesProps = {
 
 const AbilityNames = memo(({ abilities, height }: AbilityNamesProps) => {
   return (
-    <text dx="0" x="0" y={height} data-type="ability-names">
+    <text
+      dx="0"
+      x="0"
+      y={height}
+      data-type="ability-names"
+      className="pointer-events-none"
+    >
       {abilities.map((dataset, index) => {
         const ability = spells[dataset.id];
 
@@ -565,71 +557,70 @@ const AbilityNames = memo(({ abilities, height }: AbilityNamesProps) => {
 });
 
 type AbilityListItemProps = {
-  event: CastOrAbilityReadyEventWIthABilityAndSourcePlayerID;
+  event: CastOrAbilityReadyEventWIthABilityAndSourcePlayerID & {
+    offset: number;
+  };
   keyStart: number;
   keyTime: number;
-  offset: number;
 };
 
-const AbilityListItem = memo(
-  ({ event, keyStart, keyTime, offset }: AbilityListItemProps) => {
-    const ability = spells[event.ability.id];
-    const cd = ability.cd * 1000;
+function AbilityListItem({ event, keyStart, keyTime }: AbilityListItemProps) {
+  const ability = spells[event.ability.id];
+  const cd = ability.cd * 1000;
 
-    const x = ((event.timestamp - keyStart) / keyTime) * 100;
-    const y = rowHeight + 7.5 + offset * rowHeight;
+  const x = ((event.timestamp - keyStart) / keyTime) * 100;
+  const y = rowHeight / 2 + 7.5 + event.offset * rowHeight;
 
-    const delay = event.ability.lastUse
-      ? event.timestamp - event.ability.lastUse - cd
-      : null;
+  const delay = event.ability.lastUse
+    ? event.timestamp - event.ability.lastUse - cd
+    : null;
 
-    const title = [
-      `${event.type} @ ${timeDurationToString(event.timestamp - keyStart, {
-        omitMs: true,
-      })}`,
-      !event.ability.lastUse && "First Use",
-      event.type === "Cast" &&
-        delay &&
-        delay > 0 &&
-        `delayed by ${timeDurationToString(delay, {
-          omitMs: true,
-        })} after being ready`,
+  const title = [
+    `${event.type} @ ${timeDurationToString(event.timestamp - keyStart, {
+      omitMs: true,
+    })}`,
+    !event.ability.lastUse && "First Use",
+    event.type === "Cast" &&
       delay &&
-        delay < 0 &&
-        `used ${timeDurationToString(delay * -1, {
-          omitMs: true,
-        })} under default cooldown`,
-      event.ability.wasted && "wasted Cooldown Window",
-    ]
-      .filter(Boolean)
-      .join(" - ");
+      delay > 0 &&
+      `delayed by ${timeDurationToString(delay, {
+        omitMs: true,
+      })} after being ready`,
+    delay &&
+      delay < 0 &&
+      `used ${timeDurationToString(delay * -1, {
+        omitMs: true,
+      })} under default cooldown`,
+    event.ability.wasted && "wasted Cooldown Window",
+  ]
+    .filter(Boolean)
+    .join(" - ");
 
-    return (
-      <g
-        data-ability-id={event.ability.id}
-        data-player-id={event.sourcePlayerID}
-        className="cursor-help"
-      >
-        <image
-          width="24"
-          height="24"
-          x={`${x < 0 ? 0 : x}%`}
-          y={y}
-          href={`${STATIC_ICON_PREFIX}${ability.icon}.jpg`}
-          xlinkTitle="test"
-          className={classnames(
-            "grayscale",
-            event.type === "AbilityReady" && "outline-dashed outline-1",
-            event.ability.wasted
-              ? "outline-red-500"
-              : "opacity-75 outline-white-500"
-          )}
-        />
-        <title>{title}</title>
-      </g>
-    );
-  }
-);
+  return (
+    <g
+      data-ability-id={event.ability.id}
+      data-player-id={event.sourcePlayerID}
+      className="cursor-help"
+    >
+      <image
+        width="24"
+        height="24"
+        x={`${x < 0 ? 0 : x}%`}
+        y={y}
+        href={`${STATIC_ICON_PREFIX}${ability.icon}.jpg`}
+        xlinkTitle="test"
+        className={classnames(
+          "grayscale",
+          event.type === "AbilityReady" && "outline-dashed outline-1",
+          event.ability.wasted
+            ? "outline-red-500"
+            : "opacity-75 outline-white-500"
+        )}
+      />
+      <title>{title}</title>
+    </g>
+  );
+}
 
 type CalculcateDimensionsArgs = {
   zoomFactor: number;
@@ -642,7 +633,10 @@ function calculcateDimensions({
   containerRef,
   zoomFactor,
 }: CalculcateDimensionsArgs) {
-  const height = 75 + amountOfVisibleAbilities * rowHeight;
+  const height =
+    45 +
+    amountOfVisibleAbilities * rowHeight +
+    (isTimelineVisible(zoomFactor) ? 20 : 0);
 
   const width =
     // zoom 1 doesnt need to calc; without ref we can't calc
@@ -657,4 +651,93 @@ function calculcateDimensions({
     width,
     height,
   };
+}
+
+type AbilityListProps = {
+  events: AbilityListItemProps["event"][];
+};
+
+const AbilityList = memo(({ events }: AbilityListProps) => {
+  const { meta } = useFight().fight;
+
+  return (
+    <g data-type="abilities">
+      {events.map((event) => {
+        return (
+          <AbilityListItem
+            event={event}
+            keyStart={meta.startTime}
+            keyTime={meta.time}
+            key={`${event.sourcePlayerID}-${event.timestamp}-${event.offset}`}
+          />
+        );
+      })}
+    </g>
+  );
+});
+
+type TimelineGripdProps = {
+  zoom: number;
+  height: number;
+};
+
+const interval = 5;
+const isTimelineVisible = (zoomFactor: number) => zoomFactor >= 5.5;
+
+function TimelineGrid({ zoom, height }: TimelineGripdProps) {
+  const { meta } = useFight().fight;
+
+  if (!isTimelineVisible(zoom)) {
+    return null;
+  }
+
+  const keyTimeInSeconds = meta.time / 1000;
+
+  const steps = Array.from(
+    { length: Math.floor(keyTimeInSeconds / interval) + 1 },
+    (_, index) => {
+      return index * interval;
+    }
+  );
+
+  return (
+    <g data-type="timeline">
+      {steps.map((step) => {
+        if (step === 0) {
+          return null;
+        }
+
+        const x = (step / keyTimeInSeconds) * 100;
+        const isQuarterMinute = step % 15 === 0;
+
+        return (
+          <Fragment key={step}>
+            <line
+              y2="100%"
+              x1={`${x}%`}
+              x2={`${x}%`}
+              stroke="darkgray"
+              strokeDasharray={4}
+              strokeOpacity={isQuarterMinute ? 0.5 : 0.2}
+              key={step}
+            />
+            {zoom < 11 && !isQuarterMinute ? (
+              <text className="hidden md:block" x={`${x}%`} y={height}>
+                <tspan
+                  x={`${x}%`}
+                  dx="0"
+                  dy="0"
+                  textAnchor="middle"
+                  fill="gray"
+                  stroke="transparent"
+                >
+                  {timeDurationToString(step * 1000, { omitMs: true })}
+                </tspan>
+              </text>
+            ) : null}
+          </Fragment>
+        );
+      })}
+    </g>
+  );
 }
