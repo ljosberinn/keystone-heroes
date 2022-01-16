@@ -218,6 +218,12 @@ export default function CooldownManagement(): JSX.Element {
               ref={containerRef}
             >
               <svg
+                height={height}
+                className="absolute max-w-[20ch] pointer-events-none"
+              >
+                <AbilityNames height={height} abilities={allUsedAbilities} />
+              </svg>
+              <svg
                 width={width}
                 className={classnames(
                   !width && "w-full",
@@ -228,7 +234,6 @@ export default function CooldownManagement(): JSX.Element {
                 <PullGrid height={height} zoom={zoomFactor} />
                 <TimelineGrid height={height} zoom={zoomFactor} />
                 <AbilityList events={events} />
-                <AbilityNames height={height} abilities={allUsedAbilities} />
               </svg>
             </div>
           </div>
@@ -256,7 +261,7 @@ function Settings({
   player,
 }: SettingsProps) {
   return (
-    <>
+    <div className={`${bgSecondary} sticky top-0 z-10 p-2`}>
       <p>Filter Cooldowns by Player</p>
       <div className="flex justify-between w-full">
         <div className="flex flex-col md:flex-row">
@@ -333,7 +338,7 @@ function Settings({
           </label>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 
@@ -523,13 +528,7 @@ type AbilityNamesProps = {
 
 const AbilityNames = memo(({ abilities, height }: AbilityNamesProps) => {
   return (
-    <text
-      dx="0"
-      x="0"
-      y={height}
-      data-type="ability-names"
-      className="pointer-events-none"
-    >
+    <text dx="0" x="0" y={height} data-type="ability-names">
       {abilities.map((dataset, index) => {
         const ability = spells[dataset.id];
 
@@ -548,7 +547,8 @@ const AbilityNames = memo(({ abilities, height }: AbilityNamesProps) => {
               lastIsDifferentPlayer && "font-bold"
             )}
           >
-            {ability.name}
+            {ability.name.slice(0, 20)}
+            {ability.name.length > 20 ? "..." : null}
           </tspan>
         );
       })}
@@ -687,9 +687,7 @@ const isTimelineVisible = (zoomFactor: number) => zoomFactor >= 5.5;
 function TimelineGrid({ zoom, height }: TimelineGripdProps) {
   const { meta } = useFight().fight;
 
-  if (!isTimelineVisible(zoom)) {
-    return null;
-  }
+  const visible = isTimelineVisible(zoom);
 
   const keyTimeInSeconds = meta.time / 1000;
 
@@ -703,12 +701,13 @@ function TimelineGrid({ zoom, height }: TimelineGripdProps) {
   return (
     <g data-type="timeline">
       {steps.map((step) => {
-        if (step === 0) {
+        const isQuarterMinute = step % 15 === 0;
+
+        if (step === 0 || (!isQuarterMinute && !visible)) {
           return null;
         }
 
         const x = (step / keyTimeInSeconds) * 100;
-        const isQuarterMinute = step % 15 === 0;
 
         return (
           <Fragment key={step}>
@@ -718,11 +717,11 @@ function TimelineGrid({ zoom, height }: TimelineGripdProps) {
               x2={`${x}%`}
               stroke="darkgray"
               strokeDasharray={4}
-              strokeOpacity={isQuarterMinute ? 0.5 : 0.2}
+              strokeOpacity={isQuarterMinute && visible ? 0.5 : 0.25}
               key={step}
             />
-            {zoom < 11 && !isQuarterMinute ? (
-              <text className="hidden md:block" x={`${x}%`} y={height}>
+            {(visible && isQuarterMinute) || zoom > 11 ? (
+              <text x={`${x}%`} y={height}>
                 <tspan
                   x={`${x}%`}
                   dx="0"

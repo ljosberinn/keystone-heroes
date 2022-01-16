@@ -1,4 +1,1 @@
-module.exports = {
-  extends: "galex",
-  root: true,
-};
+module.exports = require("./.eslintrc.web.js");
