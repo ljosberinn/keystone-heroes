@@ -689,14 +689,23 @@ function TimelineGrid({ zoom, height }: TimelineGripdProps) {
 
   const visible = isTimelineVisible(zoom);
 
-  const keyTimeInSeconds = meta.time / 1000;
+  const { steps, keyTimeInSeconds } = useMemo(() => {
+    const keyTimeInSeconds = meta.time / 1000;
 
-  const steps = Array.from(
-    { length: Math.floor(keyTimeInSeconds / interval) + 1 },
-    (_, index) => {
-      return index * interval;
-    }
-  );
+    const steps = Array.from(
+      { length: Math.floor(keyTimeInSeconds / interval) + 1 },
+      (_, index) => {
+        return index * interval;
+      }
+    );
+
+    return {
+      steps,
+      keyTimeInSeconds,
+    };
+  }, [meta.time]);
+
+  const zoomOverEleven = zoom > 11;
 
   return (
     <g data-type="timeline">
@@ -708,35 +717,58 @@ function TimelineGrid({ zoom, height }: TimelineGripdProps) {
         }
 
         const x = (step / keyTimeInSeconds) * 100;
+        const strokeOpacity = isQuarterMinute && visible ? 0.5 : 0.25;
 
         return (
-          <Fragment key={step}>
-            <line
-              y2="100%"
-              x1={`${x}%`}
-              x2={`${x}%`}
-              stroke="darkgray"
-              strokeDasharray={4}
-              strokeOpacity={isQuarterMinute && visible ? 0.5 : 0.25}
-              key={step}
-            />
-            {(visible && isQuarterMinute) || zoom > 11 ? (
-              <text x={`${x}%`} y={height}>
-                <tspan
-                  x={`${x}%`}
-                  dx="0"
-                  dy="0"
-                  textAnchor="middle"
-                  fill="gray"
-                  stroke="transparent"
-                >
-                  {timeDurationToString(step * 1000, { omitMs: true })}
-                </tspan>
-              </text>
-            ) : null}
-          </Fragment>
+          <TimelineGridItem
+            key={step}
+            strokeOpacity={strokeOpacity}
+            x={x}
+            height={height}
+            hasText={(visible && isQuarterMinute) || zoomOverEleven}
+            step={step}
+          />
         );
       })}
     </g>
   );
 }
+
+type TimelineGridItemProps = {
+  strokeOpacity: number;
+  x: number;
+  height: number;
+  step: number;
+  hasText: boolean;
+};
+
+const TimelineGridItem = memo(
+  ({ strokeOpacity, x, height, step, hasText }: TimelineGridItemProps) => {
+    return (
+      <>
+        <line
+          y2="100%"
+          x1={`${x}%`}
+          x2={`${x}%`}
+          stroke="darkgray"
+          strokeDasharray={4}
+          strokeOpacity={strokeOpacity}
+        />
+        {hasText ? (
+          <text x={`${x}%`} y={height}>
+            <tspan
+              x={`${x}%`}
+              dx="0"
+              dy="0"
+              textAnchor="middle"
+              fill="gray"
+              stroke="transparent"
+            >
+              {timeDurationToString(step * 1000, { omitMs: true })}
+            </tspan>
+          </text>
+        ) : null}
+      </>
+    );
+  }
+);
