@@ -102,11 +102,13 @@ export enum DungeonIDs {
   MISTS_OF_TIRNA_SCITHE = 2290,
   DE_OTHER_SIDE = 2291,
   THEATER_OF_PAIN = 2293,
+  // TAZAVESH_LOWER = ???,
+  TAZAVESH = 2441,
   // Battle for Azeroth
   // Legion
 }
 
-type DungeonMeta = Omit<Dungeon, "id" | "time"> & {
+export type DungeonMeta = Omit<Dungeon, "id" | "time"> & {
   /**
    * 1 chest / 2 chest / 3 chest in milliseconds
    */
@@ -766,6 +768,12 @@ export const THEATER_OF_PAIN: DungeonMeta = {
   covenant: Covenants.Necrolord,
 };
 
+/**
+ * @see https://www.warcraftlogs.com/reports/7wQbrYxg6KJZfc1W#fight=2&view=replay
+ *
+ * - $.getJSON(url, console.log)
+ * - first replay segment url
+ */
 export const TAZAVESH_LOWER: DungeonMeta = {
   bossIDs: [
     Boss.ZO_PHEX,
@@ -884,7 +892,7 @@ export const TAZAVESH_UPPER: DungeonMeta = {
       minY: 0,
     },
     {
-      id: 1995,
+      id: 1996,
       name: "Boralus Harbor",
       order: 3,
       maxX: 0,
@@ -923,6 +931,9 @@ export const dungeonMap: Record<Dungeon["id"], DungeonMeta> = {
   [DungeonIDs.MISTS_OF_TIRNA_SCITHE]: MISTS_OF_TIRNA_SCITHE,
   [DungeonIDs.DE_OTHER_SIDE]: DE_OTHER_SIDE,
   [DungeonIDs.THEATER_OF_PAIN]: THEATER_OF_PAIN,
+  // megadungeon have the same zone id
+  [`1${DungeonIDs.TAZAVESH}`]: TAZAVESH_LOWER,
+  [`2${DungeonIDs.TAZAVESH}`]: TAZAVESH_UPPER,
 };
 
 export const allBossIDs = new Set<number>(
@@ -935,3 +946,18 @@ export const dungeons: (Omit<Dungeon, "time"> & DungeonMeta)[] = Object.entries(
   id: Number.parseInt(id),
   ...dataset,
 }));
+
+export const findDungeonByIDAndMaps = (
+  id: number,
+  maps: Set<number>
+): DungeonMeta | null => {
+  if (id in dungeonMap) {
+    return dungeonMap[id];
+  }
+
+  const match = dungeons.find((dungeon) =>
+    dungeon.zones.every((zone) => maps.has(zone.id))
+  );
+
+  return match ?? null;
+};
