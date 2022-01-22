@@ -1,6 +1,7 @@
 import { EventType } from "@prisma/client";
 
 import { BURSTING } from "../../queries/events/affixes/bursting";
+import { encryptedDebuffIDs } from "../../queries/events/affixes/encrypted";
 import { NECROTIC } from "../../queries/events/affixes/necrotic";
 import { tormentedBuffsAndDebuffs } from "../../queries/events/affixes/tormented";
 import { CHEAT_DEATHS } from "../../queries/events/cheathDeath";
@@ -22,6 +23,7 @@ const ids = new Set<number>([
   ...Object.values(CHEAT_DEATHS)
     .filter((ability) => ability.type.includes("applydebuff"))
     .map((ability) => ability.id),
+  ...Object.values(encryptedDebuffIDs),
 ]);
 
 export const applyDebuffProcessor: Processor<ApplyDebuffEvent> = (

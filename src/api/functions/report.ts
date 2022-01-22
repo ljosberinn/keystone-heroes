@@ -182,14 +182,7 @@ export const fightHasFivePlayers = (fight: Fight): boolean =>
   fight.friendlyPlayers.length === 5;
 
 export const fightHasSupportedAffixes = (fight: Fight): boolean => {
-  if (
-    fight.keystoneAffixes.includes(getAffixByName("Encrypted")) ||
-    fight.keystoneAffixes.includes(getAffixByName("Infernal"))
-  ) {
-    return false;
-  }
-
-  return true;
+  return !fight.keystoneAffixes.includes(getAffixByName("Infernal"));
 };
 
 const isCraftableShadowlandsLegendary = (id: number) => id !== 186_414;
