@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import { EXPLOSIVE, spells } from "../../staticData";
 import { createWowheadUrl } from "../../utils";
 import { AbilityIcon } from "../AbilityIcon";
@@ -15,6 +17,8 @@ type SidebarNPCProps = {
 };
 
 export function SidebarNPC({ npc }: SidebarNPCProps): JSX.Element {
+  const [npcIconErrored, setNpcIconErrored] = useState(false);
+
   return (
     <div className="flex items-center justify-between w-full px-4 py-2">
       <span>{npc.count}x</span>
@@ -34,14 +38,20 @@ export function SidebarNPC({ npc }: SidebarNPCProps): JSX.Element {
             className="object-cover w-8 h-8 rounded-full"
             alt={spells[EXPLOSIVE.ability].name}
           />
+        ) : npcIconErrored ? (
+          <span className="w-8 h-8" />
         ) : (
+          // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
           <img
             src={`/static/npcs/${npc.id}.png`}
-            alt={npc.name}
+            alt=""
             className="object-cover w-8 h-8 rounded-full"
             width={32}
             height={32}
             loading="lazy"
+            onError={() => {
+              setNpcIconErrored(true);
+            }}
           />
         )}
 
