@@ -28,7 +28,6 @@ export default function Discover({
 
   useEffect(() => {
     if (Object.keys(query).length === 0) {
-      // eslint-disable-next-line no-void
       void push({
         pathname: url,
         query: defaultQueryParams,
@@ -52,7 +51,6 @@ export default function Discover({
       delete nextQuery[key];
     }
 
-    // eslint-disable-next-line no-void
     void push(
       {
         pathname: url,
