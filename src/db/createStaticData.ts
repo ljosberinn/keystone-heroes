@@ -713,7 +713,7 @@ const encryptedMinibossIDs = new Set<number>(${JSON.stringify(
   )})
 
 const allBossIDs = new Set<number>(${JSON.stringify([...allBossIDs])});
-export const encryptedAbilities: Record<number, { icon: string; name: string, type: string }> = ${JSON.stringify(
+export const encryptedAbilities: Record<number, { icon: string; name: string, type: string }> = JSON.parse(\`${JSON.stringify(
     Object.fromEntries(
       encryptedDebuffs.map((dataset) => [
         dataset.id,
@@ -724,7 +724,7 @@ export const encryptedAbilities: Record<number, { icon: string; name: string, ty
         },
       ])
     )
-  )};
+  )}\`);
 export const ENCRYPTED = new Set<number>(${JSON.stringify(
     Object.values(encryptedDamageAbilityIDs)
   )});
