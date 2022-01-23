@@ -1,7 +1,7 @@
 name: Mergability Check
 
 on:
-  push:
+  pull_request:
     branches-ignore:
       - master
 

@@ -53,6 +53,8 @@ export const encryptedMinibosses = [
 ];
 
 export const encryptedDamageAbilityIDs = {
+  // urh relic
+  energyBarrage: 368_077,
   // vy
   shoot: 366_406,
   fusionBeam: 366_409,
@@ -63,6 +65,11 @@ export const encryptedDamageAbilityIDs = {
 };
 
 export const encryptedAbilities = [
+  {
+    name: "Energy Barrage",
+    id: encryptedDamageAbilityIDs.energyBarrage,
+    icon: "spell_progenitor_missile",
+  },
   {
     name: "Shoot",
     id: encryptedDamageAbilityIDs.shoot,
