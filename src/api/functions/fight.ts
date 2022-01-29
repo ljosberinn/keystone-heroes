@@ -641,6 +641,10 @@ const calculateAbilityReadyEvents = (
   return response;
 };
 
+const notNecessarilyMissingInterruptingAbilities = new Set([
+  31_935, // Avenger's Shield
+]);
+
 type CalcMissedInterruptEventsReturn = CalcAbilityReadyEventsReturn;
 
 const calculateMissedInterruptEvents = (
@@ -657,7 +661,9 @@ const calculateMissedInterruptEvents = (
         !event.sourcePlayerID ||
         !event.ability ||
         // ignore e.g. cast events of NW weapons
-        !(event.ability.id in spells)
+        !(event.ability.id in spells) ||
+        // ignore abilities that _may_ interrupt but don't necessarily
+        notNecessarilyMissingInterruptingAbilities.has(event.ability.id)
       ) {
         return acc;
       }

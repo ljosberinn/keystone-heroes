@@ -134,6 +134,7 @@ type DungeonMeta = Omit<Dungeon, "id" | "time"> & {
  */
 export const EXCLUDED_NPCS = new Set([
   SPITEFUL.unit,
+  180_786, // Bindings of Misery, spawn from Soggodon
   // MOTS
   168_988, // Overgrowth, stun cast from Tirnenn Villager
   165_251, // Illusionary Vuplinvia Mistcaller
@@ -142,8 +143,8 @@ export const EXCLUDED_NPCS = new Set([
   // DOS
   171_685, // Primeval Grasp; some hidden unit present _exclusively_ in the first fight
   168_326, // Shattered Visage; totem during Mueh'zala fight
-  165_905, // Son of Hakkar
   167_966, // Experimental Sludge, DOS Mechagon minigame
+  165_905, // Son of Hakkar via Hakkar
   // NW
   164_702, // Carrion Worm via Blightbone
   168_246, // Reanimated Crossbowman via Amarth
@@ -646,6 +647,7 @@ export const DE_OTHER_SIDE: DungeonMeta = {
     170_572: 6, // Atal'ai Hoodoo Hexxer
     170_490: 5, // Atal'ai High Priest
     170_486: 2, // Atal'ai Devoted
+    170_488: 2, // Son of Hakkar - transformed Atal'ai Devoted
     170_480: 5, // Atal'ai Deathwalker
     164_862: 3, // Weald Shimmermoth
     164_857: 2, // Spriggan Mendbender
