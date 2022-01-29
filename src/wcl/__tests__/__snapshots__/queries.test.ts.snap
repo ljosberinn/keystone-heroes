@@ -385,6 +385,13 @@ exports[`getEvents works 1`] = `
         "type": "cast",
       },
       {
+        "abilityGameID": 330323,
+        "sourceID": 104,
+        "targetID": -1,
+        "timestamp": 2394615,
+        "type": "cast",
+      },
+      {
         "abilityGameID": 202137,
         "sourceID": 5,
         "targetID": -1,
@@ -396,6 +403,14 @@ exports[`getEvents works 1`] = `
         "sourceID": 5,
         "targetID": -1,
         "timestamp": 2397603,
+        "type": "cast",
+      },
+      {
+        "abilityGameID": 349857,
+        "sourceID": 103,
+        "targetID": 99,
+        "targetInstance": 3,
+        "timestamp": 2398354,
         "type": "cast",
       },
       {
@@ -4889,6 +4904,13 @@ exports[`getEvents works 1`] = `
         "type": "cast",
       },
       {
+        "abilityGameID": 330323,
+        "sourceID": 104,
+        "targetID": -1,
+        "timestamp": 2394615,
+        "type": "cast",
+      },
+      {
         "abilityGameID": 202137,
         "sourceID": 5,
         "targetID": -1,
@@ -4900,6 +4922,14 @@ exports[`getEvents works 1`] = `
         "sourceID": 5,
         "targetID": -1,
         "timestamp": 2397603,
+        "type": "cast",
+      },
+      {
+        "abilityGameID": 349857,
+        "sourceID": 103,
+        "targetID": 99,
+        "targetInstance": 3,
+        "timestamp": 2398354,
         "type": "cast",
       },
       {
@@ -11231,6 +11261,13 @@ exports[`getEvents works 1`] = `
         "type": "cast",
       },
       {
+        "abilityGameID": 330323,
+        "sourceID": 104,
+        "targetID": -1,
+        "timestamp": 2394615,
+        "type": "cast",
+      },
+      {
         "abilityGameID": 202137,
         "sourceID": 5,
         "targetID": -1,
@@ -11242,6 +11279,14 @@ exports[`getEvents works 1`] = `
         "sourceID": 5,
         "targetID": -1,
         "timestamp": 2397603,
+        "type": "cast",
+      },
+      {
+        "abilityGameID": 349857,
+        "sourceID": 103,
+        "targetID": 99,
+        "targetInstance": 3,
+        "timestamp": 2398354,
         "type": "cast",
       },
       {
@@ -13897,6 +13942,13 @@ exports[`getEvents works 1`] = `
         "type": "cast",
       },
       {
+        "abilityGameID": 330323,
+        "sourceID": 104,
+        "targetID": -1,
+        "timestamp": 2394615,
+        "type": "cast",
+      },
+      {
         "abilityGameID": 202137,
         "sourceID": 5,
         "targetID": -1,
@@ -13908,6 +13960,14 @@ exports[`getEvents works 1`] = `
         "sourceID": 5,
         "targetID": -1,
         "timestamp": 2397603,
+        "type": "cast",
+      },
+      {
+        "abilityGameID": 349857,
+        "sourceID": 103,
+        "targetID": 99,
+        "targetInstance": 3,
+        "timestamp": 2398354,
         "type": "cast",
       },
       {
@@ -16620,6 +16680,13 @@ exports[`getEvents works 1`] = `
         "type": "cast",
       },
       {
+        "abilityGameID": 330323,
+        "sourceID": 104,
+        "targetID": -1,
+        "timestamp": 2394615,
+        "type": "cast",
+      },
+      {
         "abilityGameID": 202137,
         "sourceID": 5,
         "targetID": -1,
@@ -16631,6 +16698,14 @@ exports[`getEvents works 1`] = `
         "sourceID": 5,
         "targetID": -1,
         "timestamp": 2397603,
+        "type": "cast",
+      },
+      {
+        "abilityGameID": 349857,
+        "sourceID": 103,
+        "targetID": 99,
+        "targetInstance": 3,
+        "timestamp": 2398354,
         "type": "cast",
       },
       {
@@ -22842,6 +22917,13 @@ exports[`getEvents works 1`] = `
         "type": "cast",
       },
       {
+        "abilityGameID": 330323,
+        "sourceID": 104,
+        "targetID": -1,
+        "timestamp": 2394615,
+        "type": "cast",
+      },
+      {
         "abilityGameID": 202137,
         "sourceID": 5,
         "targetID": -1,
@@ -22853,6 +22935,14 @@ exports[`getEvents works 1`] = `
         "sourceID": 5,
         "targetID": -1,
         "timestamp": 2397603,
+        "type": "cast",
+      },
+      {
+        "abilityGameID": 349857,
+        "sourceID": 103,
+        "targetID": 99,
+        "targetInstance": 3,
+        "timestamp": 2398354,
         "type": "cast",
       },
       {
@@ -25594,6 +25684,13 @@ exports[`getEvents works 1`] = `
         "type": "cast",
       },
       {
+        "abilityGameID": 330323,
+        "sourceID": 104,
+        "targetID": -1,
+        "timestamp": 2394615,
+        "type": "cast",
+      },
+      {
         "abilityGameID": 202137,
         "sourceID": 5,
         "targetID": -1,
@@ -25605,6 +25702,14 @@ exports[`getEvents works 1`] = `
         "sourceID": 5,
         "targetID": -1,
         "timestamp": 2397603,
+        "type": "cast",
+      },
+      {
+        "abilityGameID": 349857,
+        "sourceID": 103,
+        "targetID": 99,
+        "targetInstance": 3,
+        "timestamp": 2398354,
         "type": "cast",
       },
       {
@@ -28260,6 +28365,13 @@ exports[`getEvents works 1`] = `
         "type": "cast",
       },
       {
+        "abilityGameID": 330323,
+        "sourceID": 104,
+        "targetID": -1,
+        "timestamp": 2394615,
+        "type": "cast",
+      },
+      {
         "abilityGameID": 202137,
         "sourceID": 5,
         "targetID": -1,
@@ -28271,6 +28383,14 @@ exports[`getEvents works 1`] = `
         "sourceID": 5,
         "targetID": -1,
         "timestamp": 2397603,
+        "type": "cast",
+      },
+      {
+        "abilityGameID": 349857,
+        "sourceID": 103,
+        "targetID": 99,
+        "targetInstance": 3,
+        "timestamp": 2398354,
         "type": "cast",
       },
       {
@@ -30586,7 +30706,7 @@ exports[`getEvents works 8`] = `"(type in (\\"cast\\", \\"applydebuff\\") and ab
 
 exports[`getEvents works 9`] = `"(type in (\\"applydebuff\\", \\"applybuff\\", \\"removebuff\\", \\"removedebuff\\") and ability.id in (320224, 45182, 45181, 320227, 209261))"`;
 
-exports[`getEvents works 10`] = `"(type in (\\"cast\\", \\"applybuff\\", \\"removebuff\\") and ability.id in (358712, 329849, 329840))"`;
+exports[`getEvents works 10`] = `"(type in (\\"cast\\", \\"applybuff\\", \\"removebuff\\", \\"applydebuff\\", \\"removedebuff\\", \\"applybuffstack\\", \\"removebuffstack\\") and ability.id in (358712, 329849, 329840, 330323, 348139, 345801, 345805, 355333, 345231, 345228, 344900, 344907, 345251, 345211, 344916, 329831, 331523, 355321, 355303, 353692, 351926, 345539, 345541, 343393, 330067, 332301, 332299, 332300, 345530, 336588, 349857, 331624, 311491, 355327, 357785, 356281, 351867, 351872, 345595, 345549, 345739, 342432, 336866, 344662, 334058, 333734, 345695, 311444, 345432, 345439, 343385, 343386, 345548, 336841, 342423, 355318, 344231, 336465, 345019, 339517, 345319, 343399, 344384, 336182, 348136))"`;
 
 exports[`getEvents works 11`] = `"(type = \\"begincast\\" and ability.id = 340013)"`;
 
@@ -30622,7 +30742,7 @@ exports[`getEvents works 26`] = `"(type in (\\"cast\\", \\"applydebuff\\") and a
 
 exports[`getEvents works 27`] = `"(type in (\\"applydebuff\\", \\"applybuff\\", \\"removebuff\\", \\"removedebuff\\") and ability.id in (320224, 45182, 45181, 320227, 209261))"`;
 
-exports[`getEvents works 28`] = `"(type in (\\"cast\\", \\"applybuff\\", \\"removebuff\\") and ability.id in (358712, 329849, 329840))"`;
+exports[`getEvents works 28`] = `"(type in (\\"cast\\", \\"applybuff\\", \\"removebuff\\", \\"applydebuff\\", \\"removedebuff\\", \\"applybuffstack\\", \\"removebuffstack\\") and ability.id in (358712, 329849, 329840, 330323, 348139, 345801, 345805, 355333, 345231, 345228, 344900, 344907, 345251, 345211, 344916, 329831, 331523, 355321, 355303, 353692, 351926, 345539, 345541, 343393, 330067, 332301, 332299, 332300, 345530, 336588, 349857, 331624, 311491, 355327, 357785, 356281, 351867, 351872, 345595, 345549, 345739, 342432, 336866, 344662, 334058, 333734, 345695, 311444, 345432, 345439, 343385, 343386, 345548, 336841, 342423, 355318, 344231, 336465, 345019, 339517, 345319, 343399, 344384, 336182, 348136))"`;
 
 exports[`getEvents works 29`] = `"(type = \\"applydebuff\\" and ability.id = 339917)"`;
 
@@ -30652,7 +30772,7 @@ exports[`getEvents works 41`] = `"(type in (\\"cast\\", \\"applydebuff\\") and a
 
 exports[`getEvents works 42`] = `"(type in (\\"applydebuff\\", \\"applybuff\\", \\"removebuff\\", \\"removedebuff\\") and ability.id in (320224, 45182, 45181, 320227, 209261))"`;
 
-exports[`getEvents works 43`] = `"(type in (\\"cast\\", \\"applybuff\\", \\"removebuff\\") and ability.id in (358712, 329849, 329840))"`;
+exports[`getEvents works 43`] = `"(type in (\\"cast\\", \\"applybuff\\", \\"removebuff\\", \\"applydebuff\\", \\"removedebuff\\", \\"applybuffstack\\", \\"removebuffstack\\") and ability.id in (358712, 329849, 329840, 330323, 348139, 345801, 345805, 355333, 345231, 345228, 344900, 344907, 345251, 345211, 344916, 329831, 331523, 355321, 355303, 353692, 351926, 345539, 345541, 343393, 330067, 332301, 332299, 332300, 345530, 336588, 349857, 331624, 311491, 355327, 357785, 356281, 351867, 351872, 345595, 345549, 345739, 342432, 336866, 344662, 334058, 333734, 345695, 311444, 345432, 345439, 343385, 343386, 345548, 336841, 342423, 355318, 344231, 336465, 345019, 339517, 345319, 343399, 344384, 336182, 348136))"`;
 
 exports[`getEvents works 44`] = `"(type in (\\"applybuff\\", \\"removebuff\\") and ability.id in (335161, 328050))"`;
 
@@ -30690,7 +30810,7 @@ exports[`getEvents works 60`] = `"(type in (\\"cast\\", \\"applydebuff\\") and a
 
 exports[`getEvents works 61`] = `"(type in (\\"applydebuff\\", \\"applybuff\\", \\"removebuff\\", \\"removedebuff\\") and ability.id in (320224, 45182, 45181, 320227, 209261))"`;
 
-exports[`getEvents works 62`] = `"(type in (\\"cast\\", \\"applybuff\\", \\"removebuff\\") and ability.id in (358712, 329849, 329840))"`;
+exports[`getEvents works 62`] = `"(type in (\\"cast\\", \\"applybuff\\", \\"removebuff\\", \\"applydebuff\\", \\"removedebuff\\", \\"applybuffstack\\", \\"removebuffstack\\") and ability.id in (358712, 329849, 329840, 330323, 348139, 345801, 345805, 355333, 345231, 345228, 344900, 344907, 345251, 345211, 344916, 329831, 331523, 355321, 355303, 353692, 351926, 345539, 345541, 343393, 330067, 332301, 332299, 332300, 345530, 336588, 349857, 331624, 311491, 355327, 357785, 356281, 351867, 351872, 345595, 345549, 345739, 342432, 336866, 344662, 334058, 333734, 345695, 311444, 345432, 345439, 343385, 343386, 345548, 336841, 342423, 355318, 344231, 336465, 345019, 339517, 345319, 343399, 344384, 336182, 348136))"`;
 
 exports[`getEvents works 63`] = `"(type = \\"cast\\" and source.type = \\"player\\" and ability.id = 342171)"`;
 
@@ -30718,7 +30838,7 @@ exports[`getEvents works 74`] = `"(type in (\\"cast\\", \\"applydebuff\\") and a
 
 exports[`getEvents works 75`] = `"(type in (\\"applydebuff\\", \\"applybuff\\", \\"removebuff\\", \\"removedebuff\\") and ability.id in (320224, 45182, 45181, 320227, 209261))"`;
 
-exports[`getEvents works 76`] = `"(type in (\\"cast\\", \\"applybuff\\", \\"removebuff\\") and ability.id in (358712, 329849, 329840))"`;
+exports[`getEvents works 76`] = `"(type in (\\"cast\\", \\"applybuff\\", \\"removebuff\\", \\"applydebuff\\", \\"removedebuff\\", \\"applybuffstack\\", \\"removebuffstack\\") and ability.id in (358712, 329849, 329840, 330323, 348139, 345801, 345805, 355333, 345231, 345228, 344900, 344907, 345251, 345211, 344916, 329831, 331523, 355321, 355303, 353692, 351926, 345539, 345541, 343393, 330067, 332301, 332299, 332300, 345530, 336588, 349857, 331624, 311491, 355327, 357785, 356281, 351867, 351872, 345595, 345549, 345739, 342432, 336866, 344662, 334058, 333734, 345695, 311444, 345432, 345439, 343385, 343386, 345548, 336841, 342423, 355318, 344231, 336465, 345019, 339517, 345319, 343399, 344384, 336182, 348136))"`;
 
 exports[`getEvents works 77`] = `"(type = \\"death\\" and target.type = \\"npc\\" and target.id in (164705, 164707, 163891))"`;
 
@@ -30752,7 +30872,7 @@ exports[`getEvents works 91`] = `"(type in (\\"cast\\", \\"applydebuff\\") and a
 
 exports[`getEvents works 92`] = `"(type in (\\"applydebuff\\", \\"applybuff\\", \\"removebuff\\", \\"removedebuff\\") and ability.id in (320224, 45182, 45181, 320227, 209261))"`;
 
-exports[`getEvents works 93`] = `"(type in (\\"cast\\", \\"applybuff\\", \\"removebuff\\") and ability.id in (358712, 329849, 329840))"`;
+exports[`getEvents works 93`] = `"(type in (\\"cast\\", \\"applybuff\\", \\"removebuff\\", \\"applydebuff\\", \\"removedebuff\\", \\"applybuffstack\\", \\"removebuffstack\\") and ability.id in (358712, 329849, 329840, 330323, 348139, 345801, 345805, 355333, 345231, 345228, 344900, 344907, 345251, 345211, 344916, 329831, 331523, 355321, 355303, 353692, 351926, 345539, 345541, 343393, 330067, 332301, 332299, 332300, 345530, 336588, 349857, 331624, 311491, 355327, 357785, 356281, 351867, 351872, 345595, 345549, 345739, 342432, 336866, 344662, 334058, 333734, 345695, 311444, 345432, 345439, 343385, 343386, 345548, 336841, 342423, 355318, 344231, 336465, 345019, 339517, 345319, 343399, 344384, 336182, 348136))"`;
 
 exports[`getEvents works 94`] = `"(type = \\"applydebuff\\" and target.type = \\"player\\" and ability.id = 323881)"`;
 
@@ -30782,7 +30902,7 @@ exports[`getEvents works 106`] = `"(type in (\\"cast\\", \\"applydebuff\\") and 
 
 exports[`getEvents works 107`] = `"(type in (\\"applydebuff\\", \\"applybuff\\", \\"removebuff\\", \\"removedebuff\\") and ability.id in (320224, 45182, 45181, 320227, 209261))"`;
 
-exports[`getEvents works 108`] = `"(type in (\\"cast\\", \\"applybuff\\", \\"removebuff\\") and ability.id in (358712, 329849, 329840))"`;
+exports[`getEvents works 108`] = `"(type in (\\"cast\\", \\"applybuff\\", \\"removebuff\\", \\"applydebuff\\", \\"removedebuff\\", \\"applybuffstack\\", \\"removebuffstack\\") and ability.id in (358712, 329849, 329840, 330323, 348139, 345801, 345805, 355333, 345231, 345228, 344900, 344907, 345251, 345211, 344916, 329831, 331523, 355321, 355303, 353692, 351926, 345539, 345541, 343393, 330067, 332301, 332299, 332300, 345530, 336588, 349857, 331624, 311491, 355327, 357785, 356281, 351867, 351872, 345595, 345549, 345739, 342432, 336866, 344662, 334058, 333734, 345695, 311444, 345432, 345439, 343385, 343386, 345548, 336841, 342423, 355318, 344231, 336465, 345019, 339517, 345319, 343399, 344384, 336182, 348136))"`;
 
 exports[`getEvents works 109`] = `"(type = \\"applydebuff\\" and target.type = \\"npc\\" and ability.id = 228626)"`;
 
@@ -30812,7 +30932,7 @@ exports[`getEvents works 121`] = `"(type in (\\"cast\\", \\"applydebuff\\") and 
 
 exports[`getEvents works 122`] = `"(type in (\\"applydebuff\\", \\"applybuff\\", \\"removebuff\\", \\"removedebuff\\") and ability.id in (320224, 45182, 45181, 320227, 209261))"`;
 
-exports[`getEvents works 123`] = `"(type in (\\"cast\\", \\"applybuff\\", \\"removebuff\\") and ability.id in (358712, 329849, 329840))"`;
+exports[`getEvents works 123`] = `"(type in (\\"cast\\", \\"applybuff\\", \\"removebuff\\", \\"applydebuff\\", \\"removedebuff\\", \\"applybuffstack\\", \\"removebuffstack\\") and ability.id in (358712, 329849, 329840, 330323, 348139, 345801, 345805, 355333, 345231, 345228, 344900, 344907, 345251, 345211, 344916, 329831, 331523, 355321, 355303, 353692, 351926, 345539, 345541, 343393, 330067, 332301, 332299, 332300, 345530, 336588, 349857, 331624, 311491, 355327, 357785, 356281, 351867, 351872, 345595, 345549, 345739, 342432, 336866, 344662, 334058, 333734, 345695, 311444, 345432, 345439, 343385, 343386, 345548, 336841, 342423, 355318, 344231, 336465, 345019, 339517, 345319, 343399, 344384, 336182, 348136))"`;
 
 exports[`getEvents works 124`] = `"(type = \\"applybuff\\" and ability.id = 340378)"`;
 

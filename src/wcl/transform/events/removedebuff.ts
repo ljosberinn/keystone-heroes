@@ -2,6 +2,7 @@ import { EventType } from "@prisma/client";
 
 import { tormentedBuffsAndDebuffs } from "../../queries/events/affixes/tormented";
 import { CHEAT_DEATHS } from "../../queries/events/cheathDeath";
+import { TRINKETS } from "../../queries/events/trinkets";
 import type { RemoveDebuffEvent } from "../../queries/events/types";
 import type { Processor } from "../utils";
 
@@ -12,6 +13,9 @@ const relevantBuffs = new Set<number>([
   ...Object.values(CHEAT_DEATHS)
     .filter((ability) => ability.type.includes("removedebuff"))
     .map((ability) => ability.id),
+  ...Object.values(TRINKETS)
+    .filter((ability) => ability.type.includes("removedebuff"))
+    .flatMap((ability) => ability.ids),
 ]);
 
 export const removeDebuffProcessor: Processor<RemoveDebuffEvent> = (

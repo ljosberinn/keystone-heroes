@@ -28,7 +28,7 @@ const relevantBuffs = new Set<number>([
     .map((ability) => ability.id),
   ...Object.values(TRINKETS)
     .filter((ability) => ability.type.includes("removebuff"))
-    .map((ability) => ability.id),
+    .flatMap((ability) => ability.ids),
 ]);
 
 export const removeBuffProcessor: Processor<RemoveBuffEvent> = (

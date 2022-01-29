@@ -47,6 +47,7 @@ import {
   tormentedLieutenantIDSet,
   tormentedLieutenants,
 } from "../../wcl/queries/events/affixes/tormented";
+import { trinketAbilityIDCooldownMap } from "../../wcl/queries/events/trinkets";
 import type {
   DeathEvent,
   BeginCastEvent,
@@ -539,13 +540,31 @@ const eventHasRelevantAbilityAndSourcePlayerIDAndIsNotInterruptEvent = (
     "category" | "relTimestamp"
   >
 ): event is EventWithAbilityAndSourcePlayerID => {
-  return (
-    "ability" in event &&
-    event.ability !== null &&
-    event.ability.id in spells &&
-    event.sourcePlayerID !== null &&
-    event.type === "Cast"
-  );
+  if (
+    event.type !== "Cast" ||
+    !("ability" in event) ||
+    event.sourcePlayerID === null ||
+    event.ability === null
+  ) {
+    return false;
+  }
+
+  if (
+    event.ability.id in spells ||
+    event.ability.id in trinketAbilityIDCooldownMap
+  ) {
+    return true;
+  }
+
+  return false;
+};
+
+const findCD = (id: number) => {
+  if (id in spells) {
+    return spells[id].cd;
+  }
+
+  return trinketAbilityIDCooldownMap[id];
 };
 
 type CalcAbilityReadyEventsReturn = Omit<
@@ -569,7 +588,8 @@ const calculateAbilityReadyEvents = (
   // for const ... is around 2x faster than a reduce here
   for (const event of generallyRelevantEvents) {
     const index = generallyRelevantEvents.indexOf(event);
-    const { cd } = spells[event.ability.id];
+
+    const cd = findCD(event.ability.id);
 
     const nextCast = generallyRelevantEvents
       .slice(index)

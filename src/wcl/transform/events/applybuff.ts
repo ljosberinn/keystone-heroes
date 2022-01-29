@@ -44,7 +44,7 @@ const noteworthyBuffs = new Set<number>([
     .map((ability) => ability.id),
   ...Object.values(TRINKETS)
     .filter((ability) => ability.type.includes("applybuff"))
-    .map((ability) => ability.id),
+    .flatMap((ability) => ability.ids),
 ]);
 
 export const applyBuffProcessor: Processor<CustomApplyBuffEvent> = (

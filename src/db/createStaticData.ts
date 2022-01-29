@@ -415,14 +415,18 @@ async function create() {
       ])
     ),
     ...Object.fromEntries(
-      Object.values(TRINKETS).map((trinket) => [
-        trinket.id,
-        {
-          name: trinket.name,
-          icon: trinket.icon,
-          cd: trinket.cd,
-        },
-      ])
+      Object.values(TRINKETS).flatMap((trinket) => {
+        return trinket.ids.map((id) => {
+          return [
+            id,
+            {
+              name: trinket.name,
+              icon: trinket.icon,
+              cd: trinket.cd,
+            },
+          ];
+        });
+      })
     ),
     [SANGUINE_ICHOR_DAMAGE]: {
       name: "Sanguine Ichor",

@@ -7,6 +7,7 @@ import { CHEAT_DEATHS } from "../../queries/events/cheathDeath";
 import { DOS_URN } from "../../queries/events/dungeons/dos";
 import { ENVELOPMENT_OF_MISTS } from "../../queries/events/dungeons/mots";
 import { SOA_SPEAR } from "../../queries/events/dungeons/soa";
+import { TRINKETS } from "../../queries/events/trinkets";
 import type { ApplyDebuffEvent } from "../../queries/events/types";
 import type { Processor } from "../utils";
 
@@ -22,6 +23,9 @@ const ids = new Set<number>([
   ...Object.values(CHEAT_DEATHS)
     .filter((ability) => ability.type.includes("applydebuff"))
     .map((ability) => ability.id),
+  ...Object.values(TRINKETS)
+    .filter((ability) => ability.type.includes("applydebuff"))
+    .flatMap((ability) => ability.ids),
 ]);
 
 export const applyDebuffProcessor: Processor<ApplyDebuffEvent> = (

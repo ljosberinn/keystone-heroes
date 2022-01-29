@@ -608,7 +608,6 @@ function AbilityListItem({ event, keyStart, keyTime }: AbilityListItemProps) {
         x={`${x < 0 ? 0 : x}%`}
         y={y}
         href={`${STATIC_ICON_PREFIX}${ability.icon}.jpg`}
-        xlinkTitle="test"
         className={classnames(
           "grayscale",
           event.type === "AbilityReady" && "outline-dashed outline-1",

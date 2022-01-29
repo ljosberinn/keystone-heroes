@@ -66,7 +66,15 @@ async function loadSpellNames() {
     { id: 358_967, name: "Inferno", icon: "ability_foundryraid_blastwave" },
     ...tormentedSpells,
     ...tormentedBuffsAndDebuffs,
-    ...Object.values(TRINKETS),
+    ...Object.values(TRINKETS).flatMap((trinket) =>
+      trinket.ids.map((id) => {
+        return {
+          id,
+          name: trinket.name,
+          icon: trinket.icon,
+        };
+      })
+    ),
   ]
     .map((dataset) => ({
       id: dataset.id,
