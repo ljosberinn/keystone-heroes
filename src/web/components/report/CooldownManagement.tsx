@@ -37,8 +37,8 @@ const rowHeight = 60;
 // eslint-disable-next-line import/no-default-export
 export default function CooldownManagement(): JSX.Element {
   const { player, pulls } = useFight().fight;
-  const [zoomFactor, setZoomFactor] = useState(5);
-  const [cooldown, setCooldown] = useState(120);
+  const [zoomFactor, setZoomFactor] = useState(1);
+  const [cooldown, setCooldown] = useState(60);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [trackedPlayer, setTrackedPlayer] = useState(player.map((p) => p.id));
 
@@ -315,7 +315,7 @@ function Settings({
               value={zoomFactor * 100}
             />
             <span className="pl-2">
-              Zoom (default 5x, current {zoomFactor}x)
+              Zoom (default 1x, current {zoomFactor}x)
             </span>
           </label>
         </div>
@@ -332,7 +332,7 @@ function Settings({
               onChange={handleRangeChange}
             />
             <span className="pl-2">
-              Minimum Ability Cooldown Threshold (default 120s, current{" "}
+              Minimum Ability Cooldown Threshold (default 60s, current{" "}
               {minCooldown}s)
             </span>
           </label>

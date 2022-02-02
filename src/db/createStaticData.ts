@@ -43,6 +43,7 @@ import {
   TOP_BANNER_AURA,
   TOP_OPENING,
 } from "../wcl/queries/events/dungeons/top";
+import { RACIALS } from "../wcl/queries/events/racials";
 import { TRINKETS } from "../wcl/queries/events/trinkets";
 import { allBossIDs, dungeons as rawDungeons } from "./data/dungeons";
 import { spells } from "./data/spellIds";
@@ -428,6 +429,21 @@ async function create() {
         });
       })
     ),
+    ...Object.fromEntries(
+      Object.values(RACIALS)
+        .flat()
+        .sort((a, b) => a.cd - b.cd)
+        .map((racial) => {
+          return [
+            racial.id,
+            {
+              name: racial.name,
+              cd: racial.cd === 0 ? DUMMY_CD : racial.cd,
+              icon: racial.icon,
+            },
+          ];
+        })
+    ),
     [SANGUINE_ICHOR_DAMAGE]: {
       name: "Sanguine Ichor",
       icon: "spell_shadow_bloodboil",
@@ -732,18 +748,22 @@ export const npcs: Record<number, string> = JSON.parse(\`${JSON.stringify(
   const spellIconBasePath = resolve("public/static/icons");
 
   const allLoadableIcons = [
-    ...Object.values(extendedSpells).map((spell) => spell.icon),
-    ...tormentedLieutenants.map((lt) => lt.icon),
-    ...rawAffixes.map((affix) => affix.icon),
-    ...rawLegendaries.map((legendary) => legendary.effectIcon),
-    ...rawTalents.map((talent) => talent.icon),
-    ...rawConduits.map((conduit) => conduit.icon),
-    ...rawCovenants.map((covenant) => covenant.icon),
-    ...rawCovenantTraits.map((conduit) => conduit.icon),
-    "inv_alchemy_80_potion02orange",
-    "inv_misc_questionmark",
-    "inv_misc_spyglass_03",
-  ].filter((path): path is string => !!path);
+    ...new Set(
+      [
+        ...Object.values(extendedSpells).map((spell) => spell.icon),
+        ...tormentedLieutenants.map((lt) => lt.icon),
+        ...rawAffixes.map((affix) => affix.icon),
+        ...rawLegendaries.map((legendary) => legendary.effectIcon),
+        ...rawTalents.map((talent) => talent.icon),
+        ...rawConduits.map((conduit) => conduit.icon),
+        ...rawCovenants.map((covenant) => covenant.icon),
+        ...rawCovenantTraits.map((conduit) => conduit.icon),
+        "inv_alchemy_80_potion02orange",
+        "inv_misc_questionmark",
+        "inv_misc_spyglass_03",
+      ].filter((path): path is string => !!path)
+    ),
+  ];
 
   log(`verifying presence of ${allLoadableIcons.length} icons`);
 

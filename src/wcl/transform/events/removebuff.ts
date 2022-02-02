@@ -9,6 +9,7 @@ import {
   SD_ZRALI_SHIELD_BUFF,
 } from "../../queries/events/dungeons/sd";
 import { TOP_BANNER_AURA } from "../../queries/events/dungeons/top";
+import { RACIALS } from "../../queries/events/racials";
 import { TRINKETS } from "../../queries/events/trinkets";
 import type { RemoveBuffEvent } from "../../queries/events/types";
 import type { Processor } from "../utils";
@@ -29,6 +30,10 @@ const relevantBuffs = new Set<number>([
   ...Object.values(TRINKETS)
     .filter((ability) => ability.type.includes("removebuff"))
     .flatMap((ability) => ability.ids),
+  ...Object.values(RACIALS)
+    .flat()
+    .filter((ability) => ability.type.includes("removebuff"))
+    .map((racial) => racial.id),
 ]);
 
 export const removeBuffProcessor: Processor<RemoveBuffEvent> = (

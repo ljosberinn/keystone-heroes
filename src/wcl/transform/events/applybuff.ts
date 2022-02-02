@@ -15,6 +15,7 @@ import {
 } from "../../queries/events/dungeons/sd";
 import { TOP_BANNER_AURA } from "../../queries/events/dungeons/top";
 import { INVISIBILITY } from "../../queries/events/professions";
+import { RACIALS } from "../../queries/events/racials";
 import { TRINKETS } from "../../queries/events/trinkets";
 import type { ApplyBuffEvent } from "../../queries/events/types";
 import type { Processor } from "../utils";
@@ -45,6 +46,10 @@ const noteworthyBuffs = new Set<number>([
   ...Object.values(TRINKETS)
     .filter((ability) => ability.type.includes("applybuff"))
     .flatMap((ability) => ability.ids),
+  ...Object.values(RACIALS)
+    .flat()
+    .filter((ability) => ability.type.includes("applybuff"))
+    .map((racial) => racial.id),
 ]);
 
 export const applyBuffProcessor: Processor<CustomApplyBuffEvent> = (

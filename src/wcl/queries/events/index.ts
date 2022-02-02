@@ -32,6 +32,7 @@ import {
   invisibilityFilterExpression,
   filterProfessionEvents,
 } from "./professions";
+import { racialsFilterExpression, filterRacials } from "./racials";
 import {
   filterRemarkableSpellEvents,
   remarkableSpellFilterExpression,
@@ -61,6 +62,7 @@ const generateFilterExpression = ({
     generalCovenantExpression,
     cheatDeathFilterExpression,
     trinketsFilterExpression,
+    racialsFilterExpression,
     ...getDungeonExpression(dungeonID),
     ...getAffixExpression(affixes),
   ]
@@ -121,6 +123,7 @@ export const getEvents = async (
   const sharedCovenantAbilitiesEvents = filterCovenantCastEvents(allEvents);
   const cheatDeathEvents = filterCheatDeathEvents(allEvents);
   const trinketEvents = filterTrinkets(allEvents);
+  const racialEvents = filterRacials(allEvents);
 
   return {
     allEvents: [
@@ -133,6 +136,7 @@ export const getEvents = async (
       ...sharedCovenantAbilitiesEvents,
       ...cheatDeathEvents,
       ...trinketEvents,
+      ...racialEvents,
     ].sort((a, b) => a.timestamp - b.timestamp),
     playerDeathEvents,
     enemyDeathEvents,

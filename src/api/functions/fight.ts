@@ -47,6 +47,7 @@ import {
   tormentedLieutenantIDSet,
   tormentedLieutenants,
 } from "../../wcl/queries/events/affixes/tormented";
+import { racialAbilityIDCooldownMap } from "../../wcl/queries/events/racials";
 import { trinketAbilityIDCooldownMap } from "../../wcl/queries/events/trinkets";
 import type {
   DeathEvent,
@@ -551,7 +552,8 @@ const eventHasRelevantAbilityAndSourcePlayerIDAndIsNotInterruptEvent = (
 
   if (
     event.ability.id in spells ||
-    event.ability.id in trinketAbilityIDCooldownMap
+    event.ability.id in trinketAbilityIDCooldownMap ||
+    event.ability.id in racialAbilityIDCooldownMap
   ) {
     return true;
   }
@@ -562,6 +564,10 @@ const eventHasRelevantAbilityAndSourcePlayerIDAndIsNotInterruptEvent = (
 const findCD = (id: number) => {
   if (id in spells) {
     return spells[id].cd;
+  }
+
+  if (id in racialAbilityIDCooldownMap) {
+    return racialAbilityIDCooldownMap[id];
   }
 
   return trinketAbilityIDCooldownMap[id];
@@ -1510,6 +1516,9 @@ const getResponseOrRetrieveAndCreateFight = async (
           pull.Event.map((event) => event.id)
         ),
       },
+      // however, we want to keep all events that interrupted abilities
+      // so we can actually name them in the events
+      interruptedAbility: null,
     },
   });
 
