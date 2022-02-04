@@ -192,17 +192,6 @@ export const fightHasSupportedAffixes = (fight: Fight): boolean => {
   return true;
 };
 
-const irrelevantLegendaries = new Set([
-  // BT Warglaives, thank you Dey
-  32_837, 32_838,
-  // Sylvanas Bow
-  186_414,
-]);
-
-const isCraftableShadowlandsLegendaryAndNotLegacyLegendary = (id: number) => {
-  return !irrelevantLegendaries.has(id);
-};
-
 export const createFightIsUnknownFilter = (
   persistedFightIDs: number[]
 ): ((fight: Fight) => boolean) => {
@@ -429,9 +418,7 @@ const createManyPlayer = async (
 
   const playerLegendaryCreateMany = dataWithPlayerID.flatMap((player) => {
     return player.legendaries
-      .filter((legendary) =>
-        isCraftableShadowlandsLegendaryAndNotLegacyLegendary(legendary.id)
-      )
+      .filter(legendaryIsRelevantLegendary)
       .map<Prisma.PlayerLegendaryCreateManyFightInput>((legendary) => {
         return {
           playerID: player.playerID,
@@ -448,6 +435,15 @@ const createManyPlayer = async (
     playerLegendaryCreateMany,
   };
 };
+
+/**
+ * ensures e.g. Sylvanas bow or legacy legendaries like Warglaives (thank you Dey)
+ * are ignored
+ */
+const legendaryIsRelevantLegendary = (
+  item: LegendaryItem
+): item is Required<LegendaryItem> =>
+  !!(item.effectID && item.effectName && item.effectIcon);
 
 type RawReport = {
   id: number;
@@ -1020,9 +1016,7 @@ const handler: RequestHandler<Request, ReportResponse> = async (req, res) => {
     const legendariesCreateMany: Prisma.LegendaryCreateManyInput[] =
       allPlayer.flatMap((player) =>
         player.legendaries
-          .filter((legendary) =>
-            isCraftableShadowlandsLegendaryAndNotLegacyLegendary(legendary.id)
-          )
+          .filter(legendaryIsRelevantLegendary)
           .map((legendary) => {
             return {
               id: legendary.effectID,
