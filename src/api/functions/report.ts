@@ -192,7 +192,16 @@ export const fightHasSupportedAffixes = (fight: Fight): boolean => {
   return true;
 };
 
-const isCraftableShadowlandsLegendary = (id: number) => id !== 186_414;
+const irrelevantLegendaries = new Set([
+  // BT Warglaives, thank you Dey
+  32_837, 32_838,
+  // Sylvanas Bow
+  186_414,
+]);
+
+const isCraftableShadowlandsLegendaryAndNotLegacyLegendary = (id: number) => {
+  return !irrelevantLegendaries.has(id);
+};
 
 export const createFightIsUnknownFilter = (
   persistedFightIDs: number[]
@@ -243,6 +252,10 @@ const createCharacterKey = (
 ) => `${character.name}-${character.serverID}`;
 
 const removeImageFormat = (icon: string) => {
+  if (!icon) {
+    debugger;
+  }
+
   if (!icon.includes(".")) {
     return icon;
   }
@@ -416,7 +429,9 @@ const createManyPlayer = async (
 
   const playerLegendaryCreateMany = dataWithPlayerID.flatMap((player) => {
     return player.legendaries
-      .filter((legendary) => isCraftableShadowlandsLegendary(legendary.id))
+      .filter((legendary) =>
+        isCraftableShadowlandsLegendaryAndNotLegacyLegendary(legendary.id)
+      )
       .map<Prisma.PlayerLegendaryCreateManyFightInput>((legendary) => {
         return {
           playerID: player.playerID,
@@ -1005,7 +1020,9 @@ const handler: RequestHandler<Request, ReportResponse> = async (req, res) => {
     const legendariesCreateMany: Prisma.LegendaryCreateManyInput[] =
       allPlayer.flatMap((player) =>
         player.legendaries
-          .filter((legendary) => isCraftableShadowlandsLegendary(legendary.id))
+          .filter((legendary) =>
+            isCraftableShadowlandsLegendaryAndNotLegacyLegendary(legendary.id)
+          )
           .map((legendary) => {
             return {
               id: legendary.effectID,
@@ -1175,6 +1192,8 @@ const handler: RequestHandler<Request, ReportResponse> = async (req, res) => {
 
       return;
     }
+
+    console.log(error);
 
     res.status(SERVICE_UNAVAILABLE).json({
       error: "BROKEN_LOG_OR_WCL_UNAVAILABLE",
