@@ -195,17 +195,8 @@ export const fightHasFivePlayers = (fight: Fight): boolean =>
   fight.friendlyPlayers.length === 5;
 
 export const fightHasSupportedAffixes = (fight: Fight): boolean => {
-  if (
-    fight.keystoneAffixes.includes(getAffixByName("Encrypted")) ||
-    fight.keystoneAffixes.includes(getAffixByName("Infernal"))
-  ) {
-    return false;
-  }
-
-  return true;
+  return !fight.keystoneAffixes.includes(getAffixByName("Infernal"));
 };
-
-const isCraftableShadowlandsLegendary = (id: number) => id !== 186_414;
 
 export const createFightIsUnknownFilter = (
   persistedFightIDs: number[]
@@ -256,6 +247,10 @@ const createCharacterKey = (
 ) => `${character.name}-${character.serverID}`;
 
 const removeImageFormat = (icon: string) => {
+  if (!icon) {
+    debugger;
+  }
+
   if (!icon.includes(".")) {
     return icon;
   }
@@ -429,7 +424,7 @@ const createManyPlayer = async (
 
   const playerLegendaryCreateMany = dataWithPlayerID.flatMap((player) => {
     return player.legendaries
-      .filter((legendary) => isCraftableShadowlandsLegendary(legendary.id))
+      .filter(legendaryIsRelevantLegendary)
       .map<Prisma.PlayerLegendaryCreateManyFightInput>((legendary) => {
         return {
           playerID: player.playerID,
@@ -446,6 +441,15 @@ const createManyPlayer = async (
     playerLegendaryCreateMany,
   };
 };
+
+/**
+ * ensures e.g. Sylvanas bow or legacy legendaries like Warglaives (thank you Dey)
+ * are ignored
+ */
+const legendaryIsRelevantLegendary = (
+  item: LegendaryItem
+): item is Required<LegendaryItem> =>
+  !!(item.effectID && item.effectName && item.effectIcon);
 
 type RawReport = {
   id: number;
@@ -1028,7 +1032,7 @@ const handler: RequestHandler<Request, ReportResponse> = async (req, res) => {
     const legendariesCreateMany: Prisma.LegendaryCreateManyInput[] =
       allPlayer.flatMap((player) =>
         player.legendaries
-          .filter((legendary) => isCraftableShadowlandsLegendary(legendary.id))
+          .filter(legendaryIsRelevantLegendary)
           .map((legendary) => {
             return {
               id: legendary.effectID,
@@ -1198,6 +1202,8 @@ const handler: RequestHandler<Request, ReportResponse> = async (req, res) => {
 
       return;
     }
+
+    console.log(error);
 
     res.status(SERVICE_UNAVAILABLE).json({
       error: "BROKEN_LOG_OR_WCL_UNAVAILABLE",

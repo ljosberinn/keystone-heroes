@@ -158,8 +158,9 @@ export type Item = {
 
 export type LegendaryItem = Item & {
   quality: ItemQuality.LEGENDARY;
-  effectID: number;
-  effectIcon: string;
+  // legacy legendaries or e.g. Sylvanas bow have neither ID nor effectIcon, -name
+  effectID?: number;
+  effectIcon?: string;
   /**
    * in case the legendary is not yet in WCLs database (e.g. shortly after
    * a new patch), the effectName is missing

@@ -32,6 +32,9 @@ function MissingPercentWarning({ percent }: { percent: number }) {
       <br />
       - the log is broken due to the game not sending the events
       <br />
+      - specific NPCs were killed that do not log a death event (e.g. Son of
+      Hakkar in De Other Side)
+      <br />
       <br />
       Please proceed with this in mind.
     </>

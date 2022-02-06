@@ -1,5 +1,6 @@
 import { EventType } from "@prisma/client";
 
+import { encryptedAbilityIDs } from "../../queries/events/affixes/encrypted";
 import { tormentedBuffsAndDebuffs } from "../../queries/events/affixes/tormented";
 import { CHEAT_DEATHS } from "../../queries/events/cheathDeath";
 import { NW } from "../../queries/events/dungeons/nw";
@@ -9,6 +10,7 @@ import {
   SD_ZRALI_SHIELD_BUFF,
 } from "../../queries/events/dungeons/sd";
 import { TOP_BANNER_AURA } from "../../queries/events/dungeons/top";
+import { RACIALS } from "../../queries/events/racials";
 import { TRINKETS } from "../../queries/events/trinkets";
 import type { RemoveBuffEvent } from "../../queries/events/types";
 import type { Processor } from "../utils";
@@ -28,7 +30,12 @@ const relevantBuffs = new Set<number>([
     .map((ability) => ability.id),
   ...Object.values(TRINKETS)
     .filter((ability) => ability.type.includes("removebuff"))
-    .map((ability) => ability.id),
+    .flatMap((ability) => ability.ids),
+  ...Object.values(RACIALS)
+    .flat()
+    .filter((ability) => ability.type.includes("removebuff"))
+    .map((racial) => racial.id),
+  ...Object.values(encryptedAbilityIDs),
 ]);
 
 export const removeBuffProcessor: Processor<RemoveBuffEvent> = (

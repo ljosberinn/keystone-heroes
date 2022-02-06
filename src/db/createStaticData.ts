@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/no-identical-functions */
 /* eslint-disable sonarjs/no-duplicate-string */
 import { config } from "dotenv";
 import { writeFileSync, existsSync, createWriteStream, unlinkSync } from "fs";
@@ -5,6 +6,12 @@ import { get } from "https";
 import { resolve } from "path";
 
 import { BURSTING } from "../wcl/queries/events/affixes/bursting";
+import {
+  encryptedAbilities,
+  encryptedAbilityIDs,
+  encryptedDebuffs,
+  encryptedMinibosses,
+} from "../wcl/queries/events/affixes/encrypted";
 import { EXPLOSIVE } from "../wcl/queries/events/affixes/explosive";
 import { GRIEVOUS_WOUND } from "../wcl/queries/events/affixes/grievous";
 import { NECROTIC } from "../wcl/queries/events/affixes/necrotic";
@@ -43,10 +50,12 @@ import {
   TOP_BANNER_AURA,
   TOP_OPENING,
 } from "../wcl/queries/events/dungeons/top";
+import { RACIALS } from "../wcl/queries/events/racials";
 import { TRINKETS } from "../wcl/queries/events/trinkets";
 import { allBossIDs, dungeons as rawDungeons } from "./data/dungeons";
 import { spells } from "./data/spellIds";
 import { prisma } from "./prisma";
+import knownInterruptedAbilities from "./raw/interruptedAbilities.json";
 
 config();
 
@@ -56,6 +65,70 @@ const log = (str: string) => {
 };
 
 const DUMMY_CD = 9999;
+
+const getAndPersistInterruptedAbilities = async () => {
+  const storedIDs = knownInterruptedAbilities.map((ability) => ability.id);
+
+  log(`found ${storedIDs.length} KNOWN interrupted abilities`);
+
+  const storedInterruptedAbilityIDs = await prisma.event.findMany({
+    where: {
+      interruptedAbilityID: {
+        not: null,
+      },
+      AND: {
+        interruptedAbilityID: {
+          not: {
+            in: storedIDs,
+          },
+        },
+      },
+    },
+    select: {
+      interruptedAbilityID: true,
+    },
+  });
+
+  log(
+    `found ${storedInterruptedAbilityIDs.length} PERSISTED interrupted abilities`
+  );
+
+  const uniqueInterruptedAbilityIDs = [
+    ...new Set([
+      ...storedIDs,
+      ...storedInterruptedAbilityIDs
+        .map((interruptedAbility) => interruptedAbility.interruptedAbilityID)
+        .filter((maybeNumber): maybeNumber is number => maybeNumber !== null),
+    ]),
+  ];
+
+  log(
+    `found ${uniqueInterruptedAbilityIDs.length} UNIQUE interrupted abilities`
+  );
+
+  const abilities = await prisma.ability.findMany({
+    where: {
+      id: {
+        in: uniqueInterruptedAbilityIDs,
+        notIn: Object.keys(spells).map((key) => Number.parseInt(key)),
+      },
+    },
+    select: {
+      id: true,
+      name: true,
+      icon: true,
+    },
+  });
+
+  await prisma.event.deleteMany();
+
+  writeFileSync(
+    resolve("src/db/raw/interruptedAbilities.json"),
+    JSON.stringify(abilities)
+  );
+
+  return abilities;
+};
 
 async function create() {
   if (process.env.NODE_ENV === "test" || !process.env.DATABASE_URL) {
@@ -278,39 +351,7 @@ async function create() {
 
   log(`found ${rawConduits.length} conduits`);
 
-  const interruptedAbilitiyIDs = await prisma.event.findMany({
-    where: {
-      interruptedAbilityID: {
-        not: null,
-      },
-    },
-    select: {
-      interruptedAbilityID: true,
-    },
-  });
-
-  const uniqueInterruptedAbilities = [
-    ...new Set(
-      interruptedAbilitiyIDs
-        .map((interruptedAbility) => interruptedAbility.interruptedAbilityID)
-        .filter((maybeNumber): maybeNumber is number => maybeNumber !== null)
-    ),
-  ];
-
-  const interruptedAbilities = await prisma.ability.findMany({
-    where: {
-      id: {
-        in: uniqueInterruptedAbilities,
-        // ignore abilities interrupted by Quaking for.. obvious reasons
-        notIn: Object.keys(spells).map((key) => Number.parseInt(key)),
-      },
-    },
-    select: {
-      id: true,
-      name: true,
-      icon: true,
-    },
-  });
+  const interruptedAbilities = await getAndPersistInterruptedAbilities();
 
   log(`found ${interruptedAbilities.length} interrupted abilities`);
 
@@ -323,7 +364,11 @@ async function create() {
         classData.id,
         {
           name: classData.name,
-          cooldowns: classData.Cooldown.map((cooldown) => cooldown.ability.id),
+          cooldowns: [
+            ...new Set(
+              classData.Cooldown.map((cooldown) => cooldown.ability.id)
+            ),
+          ],
           specs: classData.Spec.map((spec) => {
             return {
               id: spec.id,
@@ -370,6 +415,19 @@ async function create() {
     TOP_OPENING,
   ];
 
+  const encryptedDebuffMap = Object.fromEntries(
+    encryptedDebuffs.map((debuff) => {
+      return [
+        debuff.id,
+        {
+          name: debuff.name,
+          icon: debuff.icon,
+          cd: 0,
+        },
+      ];
+    })
+  );
+
   const extendedSpells = {
     // should come first so they can be overridden by class/covenant spels below
     ...Object.fromEntries(
@@ -415,14 +473,33 @@ async function create() {
       ])
     ),
     ...Object.fromEntries(
-      Object.values(TRINKETS).map((trinket) => [
-        trinket.id,
-        {
-          name: trinket.name,
-          icon: trinket.icon,
-          cd: trinket.cd,
-        },
-      ])
+      Object.values(TRINKETS).flatMap((trinket) => {
+        return trinket.ids.map((id) => {
+          return [
+            id,
+            {
+              name: trinket.name,
+              icon: trinket.icon,
+              cd: trinket.cd,
+            },
+          ];
+        });
+      })
+    ),
+    ...Object.fromEntries(
+      Object.values(RACIALS)
+        .flat()
+        .sort((a, b) => a.cd - b.cd)
+        .map((racial) => {
+          return [
+            racial.id,
+            {
+              name: racial.name,
+              cd: racial.cd === 0 ? DUMMY_CD : racial.cd,
+              icon: racial.icon,
+            },
+          ];
+        })
     ),
     [SANGUINE_ICHOR_DAMAGE]: {
       name: "Sanguine Ichor",
@@ -630,6 +707,21 @@ async function create() {
       ])
     ),
 
+    ...encryptedDebuffMap,
+
+    ...Object.fromEntries(
+      encryptedAbilities.map((debuff) => {
+        return [
+          debuff.id,
+          {
+            name: debuff.name,
+            icon: debuff.icon,
+            cd: 0,
+          },
+        ];
+      })
+    ),
+
     ...Object.fromEntries(
       tormentedBuffsAndDebuffs.map((deBuff) => [
         deBuff.id,
@@ -648,8 +740,27 @@ async function create() {
 /* eslint-disable sonarjs/no-duplicate-string */
 const tormentedLieutenantIDs = new Set<number>(${JSON.stringify(
     tormentedLieutenants.map((lt) => lt.id)
-  )});  
+  )}); 
+const encryptedMinibossIDs = new Set<number>(${JSON.stringify(
+    encryptedMinibosses.map((npc) => npc.id)
+  )})
+
 const allBossIDs = new Set<number>(${JSON.stringify([...allBossIDs])});
+export const encryptedAbilities: Record<number, { icon: string; name: string, type: string }> = JSON.parse(\`${JSON.stringify(
+    Object.fromEntries(
+      encryptedDebuffs.map((dataset) => [
+        dataset.id,
+        {
+          name: dataset.name,
+          icon: dataset.icon,
+          type: dataset.type,
+        },
+      ])
+    )
+  )}\`);
+export const ENCRYPTED = new Set<number>(${JSON.stringify(
+    Object.values(encryptedAbilityIDs)
+  )});
 export const VOLCANIC = ${VOLCANIC};
 export const BURSTING = JSON.parse(\`${JSON.stringify(BURSTING)}\`);
 export const NECROTIC = ${NECROTIC};
@@ -679,6 +790,7 @@ const dungeonSpells = new Set<number>(${JSON.stringify([
 export const isDungeonSpecificSpell = (id: number): boolean => dungeonSpells.has(id);
 export const isBoss = (id: number): boolean => allBossIDs.has(id);
 export const isTormentedLieutenant = (id: number): boolean => tormentedLieutenantIDs.has(id);
+export const isEncryptedMiniboss = (id: number): boolean => encryptedMinibossIDs.has(id);
 export const classes: Record<number, { name: string; cooldowns: number[]; specs: { id: number; name: string; cooldowns: number[]; }[]}> = JSON.parse(\`${JSON.stringify(
     classes
   )}\`);
@@ -728,18 +840,22 @@ export const npcs: Record<number, string> = JSON.parse(\`${JSON.stringify(
   const spellIconBasePath = resolve("public/static/icons");
 
   const allLoadableIcons = [
-    ...Object.values(extendedSpells).map((spell) => spell.icon),
-    ...tormentedLieutenants.map((lt) => lt.icon),
-    ...rawAffixes.map((affix) => affix.icon),
-    ...rawLegendaries.map((legendary) => legendary.effectIcon),
-    ...rawTalents.map((talent) => talent.icon),
-    ...rawConduits.map((conduit) => conduit.icon),
-    ...rawCovenants.map((covenant) => covenant.icon),
-    ...rawCovenantTraits.map((conduit) => conduit.icon),
-    "inv_alchemy_80_potion02orange",
-    "inv_misc_questionmark",
-    "inv_misc_spyglass_03",
-  ].filter((path): path is string => !!path);
+    ...new Set(
+      [
+        ...Object.values(extendedSpells).map((spell) => spell.icon),
+        ...tormentedLieutenants.map((lt) => lt.icon),
+        ...rawAffixes.map((affix) => affix.icon),
+        ...rawLegendaries.map((legendary) => legendary.effectIcon),
+        ...rawTalents.map((talent) => talent.icon),
+        ...rawConduits.map((conduit) => conduit.icon),
+        ...rawCovenants.map((covenant) => covenant.icon),
+        ...rawCovenantTraits.map((conduit) => conduit.icon),
+        "inv_alchemy_80_potion02orange",
+        "inv_misc_questionmark",
+        "inv_misc_spyglass_03",
+      ].filter((path): path is string => !!path)
+    ),
+  ];
 
   log(`verifying presence of ${allLoadableIcons.length} icons`);
 

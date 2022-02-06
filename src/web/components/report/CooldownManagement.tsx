@@ -36,9 +36,9 @@ const rowHeight = 60;
 
 // eslint-disable-next-line import/no-default-export
 export default function CooldownManagement(): JSX.Element {
-  const { player, pulls, meta } = useFight().fight;
-  const [zoomFactor, setZoomFactor] = useState(5);
-  const [cooldown, setCooldown] = useState(120);
+  const { player, pulls } = useFight().fight;
+  const [zoomFactor, setZoomFactor] = useState(1);
+  const [cooldown, setCooldown] = useState(60);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [trackedPlayer, setTrackedPlayer] = useState(player.map((p) => p.id));
 
@@ -87,7 +87,7 @@ export default function CooldownManagement(): JSX.Element {
     [pulls]
   );
 
-  const { amountOfVisibleAbilities, allUsedAbilities, displayableData, css } =
+  const { amountOfVisibleAbilities, allUsedAbilities, events, css } =
     useMemo(() => {
       const relevantEvents = allRelevantEvents.filter(
         ({ sourcePlayerID, ability }) =>
@@ -138,10 +138,23 @@ export default function CooldownManagement(): JSX.Element {
           });
       });
 
-      const displayableData = Object.values(castsByPlayer).flatMap((arr) => {
-        return arr.sort((a, b) => {
-          return sortAbilitiesByCdOrName(a.ability.id, b.ability.id);
-        });
+      const events = Object.values(castsByPlayer).flatMap((arr) => {
+        return arr
+          .sort((a, b) => {
+            return sortAbilitiesByCdOrName(a.ability.id, b.ability.id);
+          })
+          .map((event) => {
+            const offset = allUsedAbilities.findIndex(
+              (ability) =>
+                ability.id === event.ability.id &&
+                ability.sourcePlayerID === event.sourcePlayerID
+            );
+
+            return {
+              ...event,
+              offset,
+            };
+          });
       });
 
       const css = `${allUsedAbilities
@@ -156,7 +169,7 @@ export default function CooldownManagement(): JSX.Element {
       return {
         amountOfVisibleAbilities,
         allUsedAbilities,
-        displayableData,
+        events,
         css,
       };
     }, [allRelevantEvents, trackedPlayer, cooldown, player]);
@@ -205,6 +218,12 @@ export default function CooldownManagement(): JSX.Element {
               ref={containerRef}
             >
               <svg
+                height={height}
+                className="absolute max-w-[20ch] pointer-events-none"
+              >
+                <AbilityNames height={height} abilities={allUsedAbilities} />
+              </svg>
+              <svg
                 width={width}
                 className={classnames(
                   !width && "w-full",
@@ -213,27 +232,8 @@ export default function CooldownManagement(): JSX.Element {
                 height={height}
               >
                 <PullGrid height={height} zoom={zoomFactor} />
-                <AbilityNames height={height} abilities={allUsedAbilities} />
-
-                <g data-type="abilities">
-                  {displayableData.map((event) => {
-                    const index = allUsedAbilities.findIndex(
-                      (ability) =>
-                        ability.id === event.ability.id &&
-                        ability.sourcePlayerID === event.sourcePlayerID
-                    );
-
-                    return (
-                      <AbilityListItem
-                        event={event}
-                        keyStart={meta.startTime}
-                        keyTime={meta.time}
-                        offset={index}
-                        key={`${event.sourcePlayerID}-${event.timestamp}-${index}`}
-                      />
-                    );
-                  })}
-                </g>
+                <TimelineGrid height={height} zoom={zoomFactor} />
+                <AbilityList events={events} />
               </svg>
             </div>
           </div>
@@ -261,7 +261,7 @@ function Settings({
   player,
 }: SettingsProps) {
   return (
-    <>
+    <div className={`${bgSecondary} sticky top-0 z-10 p-2`}>
       <p>Filter Cooldowns by Player</p>
       <div className="flex justify-between w-full">
         <div className="flex flex-col md:flex-row">
@@ -315,7 +315,7 @@ function Settings({
               value={zoomFactor * 100}
             />
             <span className="pl-2">
-              Zoom (default 5x, current {zoomFactor}x)
+              Zoom (default 1x, current {zoomFactor}x)
             </span>
           </label>
         </div>
@@ -332,13 +332,13 @@ function Settings({
               onChange={handleRangeChange}
             />
             <span className="pl-2">
-              Minimum Ability Cooldown Threshold (default 120s, current{" "}
+              Minimum Ability Cooldown Threshold (default 60s, current{" "}
               {minCooldown}s)
             </span>
           </label>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 
@@ -399,6 +399,8 @@ type PullGridProps = {
 function PullGrid({ height, zoom }: PullGridProps) {
   const { pulls, meta, dungeon } = useFight().fight;
 
+  const timelineOffset = isTimelineVisible(zoom) ? 20 : 0;
+
   return (
     <g data-type="pull-grid">
       {pulls.map((pull, index) => {
@@ -432,21 +434,6 @@ function PullGrid({ height, zoom }: PullGridProps) {
               />
             )}
 
-            <line
-              y2="100%"
-              x1={`${pullStartX}%`}
-              x2={`${pullStartX}%`}
-              stroke="gray"
-              strokeDasharray={4}
-            />
-            <line
-              y2="100%"
-              x1={`${pullEndX}%`}
-              x2={`${pullEndX}%`}
-              stroke="gray"
-              strokeDasharray={4}
-            />
-
             {nextPull ? (
               <rect
                 height="100%"
@@ -458,7 +445,11 @@ function PullGrid({ height, zoom }: PullGridProps) {
               />
             ) : null}
 
-            <text x={`${center}%`} y={height} className="cursor-help">
+            <text
+              x={`${center}%`}
+              y={height - timelineOffset}
+              className="cursor-help"
+            >
               <tspan
                 x={`${center}%`}
                 dx="0"
@@ -475,7 +466,7 @@ function PullGrid({ height, zoom }: PullGridProps) {
             {zoom >= 5 ? (
               <text
                 x={`${center}%`}
-                y={height - 20}
+                y={height - 20 - timelineOffset}
                 className="hidden md:block"
               >
                 <tspan
@@ -556,7 +547,8 @@ const AbilityNames = memo(({ abilities, height }: AbilityNamesProps) => {
               lastIsDifferentPlayer && "font-bold"
             )}
           >
-            {ability.name}
+            {ability.name.slice(0, 20)}
+            {ability.name.length > 20 ? "..." : null}
           </tspan>
         );
       })}
@@ -565,71 +557,69 @@ const AbilityNames = memo(({ abilities, height }: AbilityNamesProps) => {
 });
 
 type AbilityListItemProps = {
-  event: CastOrAbilityReadyEventWIthABilityAndSourcePlayerID;
+  event: CastOrAbilityReadyEventWIthABilityAndSourcePlayerID & {
+    offset: number;
+  };
   keyStart: number;
   keyTime: number;
-  offset: number;
 };
 
-const AbilityListItem = memo(
-  ({ event, keyStart, keyTime, offset }: AbilityListItemProps) => {
-    const ability = spells[event.ability.id];
-    const cd = ability.cd * 1000;
+function AbilityListItem({ event, keyStart, keyTime }: AbilityListItemProps) {
+  const ability = spells[event.ability.id];
+  const cd = ability.cd * 1000;
 
-    const x = ((event.timestamp - keyStart) / keyTime) * 100;
-    const y = rowHeight + 7.5 + offset * rowHeight;
+  const x = ((event.timestamp - keyStart) / keyTime) * 100;
+  const y = rowHeight / 2 + 7.5 + event.offset * rowHeight;
 
-    const delay = event.ability.lastUse
-      ? event.timestamp - event.ability.lastUse - cd
-      : null;
+  const delay = event.ability.lastUse
+    ? event.timestamp - event.ability.lastUse - cd
+    : null;
 
-    const title = [
-      `${event.type} @ ${timeDurationToString(event.timestamp - keyStart, {
-        omitMs: true,
-      })}`,
-      !event.ability.lastUse && "First Use",
-      event.type === "Cast" &&
-        delay &&
-        delay > 0 &&
-        `delayed by ${timeDurationToString(delay, {
-          omitMs: true,
-        })} after being ready`,
+  const title = [
+    `${event.type} @ ${timeDurationToString(event.timestamp - keyStart, {
+      omitMs: true,
+    })}`,
+    !event.ability.lastUse && "First Use",
+    event.type === "Cast" &&
       delay &&
-        delay < 0 &&
-        `used ${timeDurationToString(delay * -1, {
-          omitMs: true,
-        })} under default cooldown`,
-      event.ability.wasted && "wasted Cooldown Window",
-    ]
-      .filter(Boolean)
-      .join(" - ");
+      delay > 0 &&
+      `delayed by ${timeDurationToString(delay, {
+        omitMs: true,
+      })} after being ready`,
+    delay &&
+      delay < 0 &&
+      `used ${timeDurationToString(delay * -1, {
+        omitMs: true,
+      })} under default cooldown`,
+    event.ability.wasted && "wasted Cooldown Window",
+  ]
+    .filter(Boolean)
+    .join(" - ");
 
-    return (
-      <g
-        data-ability-id={event.ability.id}
-        data-player-id={event.sourcePlayerID}
-        className="cursor-help"
-      >
-        <image
-          width="24"
-          height="24"
-          x={`${x < 0 ? 0 : x}%`}
-          y={y}
-          href={`${STATIC_ICON_PREFIX}${ability.icon}.jpg`}
-          xlinkTitle="test"
-          className={classnames(
-            "grayscale",
-            event.type === "AbilityReady" && "outline-dashed outline-1",
-            event.ability.wasted
-              ? "outline-red-500"
-              : "opacity-75 outline-white-500"
-          )}
-        />
-        <title>{title}</title>
-      </g>
-    );
-  }
-);
+  return (
+    <g
+      data-ability-id={event.ability.id}
+      data-player-id={event.sourcePlayerID}
+      className="cursor-help"
+    >
+      <image
+        width="24"
+        height="24"
+        x={`${x < 0 ? 0 : x}%`}
+        y={y}
+        href={`${STATIC_ICON_PREFIX}${ability.icon}.jpg`}
+        className={classnames(
+          "grayscale",
+          event.type === "AbilityReady" && "outline-dashed outline-1",
+          event.ability.wasted
+            ? "outline-red-500"
+            : "opacity-75 outline-white-500"
+        )}
+      />
+      <title>{title}</title>
+    </g>
+  );
+}
 
 type CalculcateDimensionsArgs = {
   zoomFactor: number;
@@ -642,7 +632,10 @@ function calculcateDimensions({
   containerRef,
   zoomFactor,
 }: CalculcateDimensionsArgs) {
-  const height = 75 + amountOfVisibleAbilities * rowHeight;
+  const height =
+    45 +
+    amountOfVisibleAbilities * rowHeight +
+    (isTimelineVisible(zoomFactor) ? 20 : 0);
 
   const width =
     // zoom 1 doesnt need to calc; without ref we can't calc
@@ -657,4 +650,158 @@ function calculcateDimensions({
     width,
     height,
   };
+}
+
+type AbilityListProps = {
+  events: AbilityListItemProps["event"][];
+};
+
+const AbilityList = memo(({ events }: AbilityListProps) => {
+  const { meta } = useFight().fight;
+
+  return (
+    <g data-type="abilities">
+      {events.map((event) => {
+        return (
+          <AbilityListItem
+            event={event}
+            keyStart={meta.startTime}
+            keyTime={meta.time}
+            key={`${event.sourcePlayerID}-${event.timestamp}-${event.offset}`}
+          />
+        );
+      })}
+    </g>
+  );
+});
+
+type TimelineGripdProps = {
+  zoom: number;
+  height: number;
+};
+
+const interval = 5;
+const isTimelineVisible = (zoomFactor: number) => zoomFactor >= 5.5;
+
+const isStepVisible = (step: number, zoom: number) => {
+  if (step === 0) {
+    return false;
+  }
+
+  // 60s and 30s steps are always visible
+  if (step % 60 === 0 || step % 30 === 0) {
+    return true;
+  }
+
+  // beyond zoom 8, 15s steps are visible
+  if (step % 15 === 0) {
+    return zoom >= 8;
+  }
+
+  // past zoom 12, 5s steps
+  return zoom >= 12;
+};
+
+const calcStepVisibility = (step: number, zoom: number) => {
+  if (
+    // 60s steps
+    step % 60 === 0 ||
+    // 30s steps beyond zoom 8
+    (step % 30 === 0 && zoom >= 8) ||
+    // 15s steps beyond zoom 12
+    (step % 15 === 0 && zoom >= 12)
+  ) {
+    return 0.5;
+  }
+
+  return 0.25;
+};
+
+function TimelineGrid({ zoom, height }: TimelineGripdProps) {
+  const { meta } = useFight().fight;
+
+  const visible = isTimelineVisible(zoom);
+
+  const { steps, keyTimeInSeconds } = useMemo(() => {
+    const keyTimeInSeconds = meta.time / 1000;
+
+    const steps = Array.from(
+      { length: Math.floor(keyTimeInSeconds / interval) + 1 },
+      (_, index) => {
+        return index * interval;
+      }
+    );
+
+    return {
+      steps,
+      keyTimeInSeconds,
+    };
+  }, [meta.time]);
+
+  const zoomOverEleven = zoom > 11;
+
+  return (
+    <g data-type="timeline">
+      {steps
+        .filter((step) => isStepVisible(step, zoom))
+        .map((step) => {
+          const x = (step / keyTimeInSeconds) * 100;
+          const strokeOpacity = calcStepVisibility(step, zoom);
+
+          return (
+            <TimelineGridItem
+              key={step}
+              strokeOpacity={strokeOpacity}
+              x={x}
+              height={height}
+              hasText={visible || zoomOverEleven}
+              step={step}
+            />
+          );
+        })}
+    </g>
+  );
+}
+
+type TimelineGridItemProps = {
+  strokeOpacity: number;
+  x: number;
+  height: number;
+  step: number;
+  hasText: boolean;
+};
+
+function TimelineGridItem({
+  strokeOpacity,
+  x,
+  height,
+  step,
+  hasText,
+}: TimelineGridItemProps) {
+  return (
+    <>
+      <line
+        y2="100%"
+        x1={`${x}%`}
+        x2={`${x}%`}
+        stroke="darkgray"
+        strokeDasharray={4}
+        strokeOpacity={strokeOpacity}
+      />
+      {hasText ? (
+        <text x={`${x}%`} y={height}>
+          <tspan
+            x={`${x}%`}
+            dx="0"
+            dy="0"
+            textAnchor="middle"
+            fill="gray"
+            stroke="transparent"
+          >
+            {timeDurationToString(step * 1000, { omitMs: true })}
+          </tspan>
+        </text>
+      ) : null}
+    </>
+  );
 }

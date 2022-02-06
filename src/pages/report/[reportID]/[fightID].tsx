@@ -89,6 +89,7 @@ const imageMap: Record<FightErrorResponse["error"], string> = {
   BROKEN_LOG_OR_WCL_UNAVAILABLE: hands,
   FATAL_ERROR: concern,
   UNKNOWN_REPORT: concern,
+  PRIVATE_REPORT: concern,
 };
 
 type FightContextDefinition = {

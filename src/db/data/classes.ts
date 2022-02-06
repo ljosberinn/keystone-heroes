@@ -2043,6 +2043,13 @@ const paladin: Class = {
           icon: "spell_paladin_lightshammer",
           type: [],
         },
+        {
+          name: "Holy Avenger",
+          id: 105_809,
+          cd: 180,
+          icon: "ability_paladin_holyavenger",
+          type: [],
+        },
       ],
     },
     {

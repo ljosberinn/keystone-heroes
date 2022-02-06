@@ -48,6 +48,8 @@ import {
   tormentedLieutenantIDSet,
   tormentedLieutenants,
 } from "../../wcl/queries/events/affixes/tormented";
+import { racialAbilityIDCooldownMap } from "../../wcl/queries/events/racials";
+import { trinketAbilityIDCooldownMap } from "../../wcl/queries/events/trinkets";
 import type {
   DeathEvent,
   BeginCastEvent,
@@ -69,6 +71,7 @@ import {
   cacheControlKey,
   STALE_WHILE_REVALIDATE_SEVEN_DAYS,
   NO_CACHE,
+  STALE_WHILE_REVALIDATE_FIVE_MINUTES,
 } from "../utils/cache";
 import type { FightHandlerErrorType } from "../utils/errors";
 import {
@@ -77,6 +80,7 @@ import {
   NOT_FOUND,
   UNPROCESSABLE_ENTITY,
   OK,
+  SERVICE_UNAVAILABLE,
 } from "../utils/statusCodes";
 import type { RequestHandler } from "../utils/types";
 
@@ -247,6 +251,7 @@ type RawFight =
           | "damage"
           | "healingDone"
           | "stacks"
+          | "id"
         > & {
           timestamp: number;
           sourceNPC: NPC | null;
@@ -400,6 +405,7 @@ export const loadExistingFight = async (
           percent: true,
           Event: {
             select: {
+              id: true,
               eventType: true,
               timestamp: true,
               sourcePlayerID: true,
@@ -538,13 +544,36 @@ const eventHasRelevantAbilityAndSourcePlayerIDAndIsNotInterruptEvent = (
     "category" | "relTimestamp"
   >
 ): event is EventWithAbilityAndSourcePlayerID => {
-  return (
-    "ability" in event &&
-    event.ability !== null &&
-    event.ability.id in spells &&
-    event.sourcePlayerID !== null &&
-    event.type === "Cast"
-  );
+  if (
+    event.type !== "Cast" ||
+    !("ability" in event) ||
+    event.sourcePlayerID === null ||
+    event.ability === null
+  ) {
+    return false;
+  }
+
+  if (
+    event.ability.id in spells ||
+    event.ability.id in trinketAbilityIDCooldownMap ||
+    event.ability.id in racialAbilityIDCooldownMap
+  ) {
+    return true;
+  }
+
+  return false;
+};
+
+const findCD = (id: number) => {
+  if (id in spells) {
+    return spells[id].cd;
+  }
+
+  if (id in racialAbilityIDCooldownMap) {
+    return racialAbilityIDCooldownMap[id];
+  }
+
+  return trinketAbilityIDCooldownMap[id];
 };
 
 type CalcAbilityReadyEventsReturn = Omit<
@@ -568,7 +597,8 @@ const calculateAbilityReadyEvents = (
   // for const ... is around 2x faster than a reduce here
   for (const event of generallyRelevantEvents) {
     const index = generallyRelevantEvents.indexOf(event);
-    const { cd } = spells[event.ability.id];
+
+    const cd = findCD(event.ability.id);
 
     const nextCast = generallyRelevantEvents
       .slice(index)
@@ -640,6 +670,10 @@ const calculateAbilityReadyEvents = (
   return response;
 };
 
+const notNecessarilyMissingInterruptingAbilities = new Set([
+  31_935, // Avenger's Shield
+]);
+
 type CalcMissedInterruptEventsReturn = CalcAbilityReadyEventsReturn;
 
 const calculateMissedInterruptEvents = (
@@ -656,7 +690,9 @@ const calculateMissedInterruptEvents = (
         !event.sourcePlayerID ||
         !event.ability ||
         // ignore e.g. cast events of NW weapons
-        !(event.ability.id in spells)
+        !(event.ability.id in spells) ||
+        // ignore abilities that _may_ interrupt but don't necessarily
+        notNecessarilyMissingInterruptingAbilities.has(event.ability.id)
       ) {
         return acc;
       }
@@ -894,69 +930,94 @@ export const createResponseFromStoredFight = (
       FightSuccessResponse["pulls"][number]["events"][number],
       "category" | "relTimestamp"
     >
-  >(({ eventType, ability, timestamp, sourcePlayerID, ...rest }) => {
-    const interruptedAbility = rest.interruptedAbility
-      ? rest.interruptedAbility.id
-      : null;
+  >(
+    ({
+      eventType,
+      ability,
+      timestamp,
+      sourcePlayerID,
+      damage,
+      healingDone,
+      interruptedAbility,
+      sourceNPC,
+      sourceNPCInstance,
+      stacks,
+      targetNPC,
+      targetNPCInstance,
+      targetPlayerID,
+    }) => {
+      const maybeInterruptedAbility = interruptedAbility
+        ? interruptedAbility.id
+        : null;
 
-    if (!ability) {
-      return {
-        ...rest,
-        sourcePlayerID,
-        timestamp,
-        interruptedAbility,
-        type: eventType,
-        ability: null,
+      const defaults = {
+        sourceNPC,
+        sourceNPCInstance,
+        stacks,
+        targetNPC,
+        targetNPCInstance,
+        targetPlayerID,
+        damage,
+        healingDone,
+        interruptedAbility: maybeInterruptedAbility,
       };
-    }
 
-    if (!sourcePlayerID) {
-      // other actors, e.g. environment or npcs
+      if (!ability) {
+        return {
+          ...defaults,
+          sourcePlayerID,
+          timestamp,
+          type: eventType,
+          ability: null,
+        };
+      }
+
+      if (!sourcePlayerID) {
+        // other actors, e.g. environment or npcs
+        return {
+          ...defaults,
+          sourcePlayerID,
+          timestamp,
+          type: eventType,
+          ability: {
+            id: ability.id,
+            lastUse: null,
+            nextUse: null,
+            wasted: false,
+          },
+        };
+      }
+
+      // player actor
+      const key = `${sourcePlayerID}-${ability.id}-${eventType}`;
+      const lastUse = lastAbilityUsageMap.get(key) ?? null;
+      lastAbilityUsageMap.set(key, timestamp);
+
+      const nextUsageEvent = flatEvents.find(
+        (event) =>
+          event.timestamp > timestamp &&
+          event.ability &&
+          event.ability.id === ability.id &&
+          event.sourcePlayerID &&
+          event.sourcePlayerID === sourcePlayerID
+      );
+
+      const nextUse = nextUsageEvent ? nextUsageEvent.timestamp : null;
+
       return {
-        ...rest,
+        ...defaults,
         sourcePlayerID,
         timestamp,
-        interruptedAbility,
         type: eventType,
         ability: {
           id: ability.id,
-          lastUse: null,
-          nextUse: null,
+          lastUse,
+          nextUse,
           wasted: false,
         },
       };
     }
-
-    // player actor
-    const key = `${sourcePlayerID}-${ability.id}-${eventType}`;
-    const lastUse = lastAbilityUsageMap.get(key) ?? null;
-    lastAbilityUsageMap.set(key, timestamp);
-
-    const nextUsageEvent = flatEvents.find(
-      (event) =>
-        event.timestamp > timestamp &&
-        event.ability &&
-        event.ability.id === ability.id &&
-        event.sourcePlayerID &&
-        event.sourcePlayerID === sourcePlayerID
-    );
-
-    const nextUse = nextUsageEvent ? nextUsageEvent.timestamp : null;
-
-    return {
-      ...rest,
-      sourcePlayerID,
-      timestamp,
-      interruptedAbility,
-      type: eventType,
-      ability: {
-        id: ability.id,
-        lastUse,
-        nextUse,
-        wasted: false,
-      },
-    };
-  });
+  );
 
   const abilityReadyEvents = calculateAbilityReadyEvents(
     allEvents,
@@ -1135,6 +1196,99 @@ export const createResponseFromStoredFight = (
   };
 };
 
+const loadAndTransformPulls = async ({
+  reportID,
+  fightID,
+}: {
+  reportID: string;
+  fightID: number;
+}): Promise<Omit<PersistableDungeonPull, "isWipe" | "percent" | "count">[]> => {
+  const maybeFightPulls = await getFightPulls({
+    reportID,
+    fightIDs: [fightID],
+  });
+
+  if (!maybeFightPulls.reportData?.report?.fights?.[0]?.dungeonPulls) {
+    return [];
+  }
+
+  return maybeFightPulls.reportData.report.fights[0].dungeonPulls.reduce<
+    Omit<PersistableDungeonPull, "isWipe" | "percent" | "count">[]
+  >((acc, pull) => {
+    if (!pull || !pull.maps || !pull.enemyNPCs) {
+      return acc;
+    }
+
+    const maps = [
+      ...new Set(
+        pull.maps.reduce<number[]>((acc, map) => {
+          if (!map) {
+            return acc;
+          }
+
+          return [...acc, map.id];
+        }, [])
+      ),
+    ];
+
+    if (maps.length === 0) {
+      return acc;
+    }
+
+    const enemyNPCs = pull.enemyNPCs.filter(
+      (
+        enemyNPC
+      ): enemyNPC is Omit<PersistedDungeonPull, "id">["enemyNPCs"][number] =>
+        enemyNPC !== null
+    );
+
+    if (enemyNPCs.length === 0) {
+      return acc;
+    }
+
+    return [
+      ...acc,
+      {
+        x: pull.x,
+        y: pull.y,
+        startTime: pull.startTime,
+        endTime: pull.endTime,
+        maps,
+        enemyNPCs,
+      },
+    ];
+  }, []);
+};
+
+const loadEvents = async (
+  fight: NonNullable<RawFight>,
+  reportID: string,
+  dungeonID: number
+) => {
+  const params: EventParams = {
+    reportID,
+    startTime: fight.startTime,
+    endTime: fight.endTime,
+    fightID: fight.fightID,
+    dungeonID,
+    affixes: [
+      fight.Report.week.affix1.name,
+      fight.Report.week.affix2.name,
+      fight.Report.week.affix3.name,
+      fight.Report.week.season.affix.name,
+    ],
+  };
+
+  const playerMetaInformation = fight.PlayerFight.map((playerFight) => {
+    return {
+      actorID: playerFight.player.actorID,
+      class: playerFight.player.character.class.id,
+    };
+  });
+
+  return getEvents(params, playerMetaInformation);
+};
+
 const getResponseOrRetrieveAndCreateFight = async (
   maybeStoredFight: NonNullable<RawFight>,
   reportID: string,
@@ -1148,24 +1302,12 @@ const getResponseOrRetrieveAndCreateFight = async (
   json: FightResponse;
   cache: boolean;
 }> => {
-  if (
-    maybeStoredFight.Pull.length > 0 &&
-    maybeStoredFight.percent > 0 &&
-    fightHasDungeon(maybeStoredFight)
-  ) {
-    return {
-      status: OK,
-      cache: true,
-      json: createResponseFromStoredFight(maybeStoredFight),
-    };
-  }
-
-  const maybeFightPulls = await getFightPulls({
+  const dungeonPulls = await loadAndTransformPulls({
     reportID,
-    fightIDs: [maybeStoredFight.fightID],
+    fightID: maybeStoredFight.fightID,
   });
 
-  if (!maybeFightPulls.reportData?.report?.fights?.[0]?.dungeonPulls) {
+  if (dungeonPulls.length === 0) {
     return {
       status: BAD_REQUEST,
       cache: false,
@@ -1174,54 +1316,6 @@ const getResponseOrRetrieveAndCreateFight = async (
       },
     };
   }
-
-  const dungeonPulls =
-    maybeFightPulls.reportData.report.fights[0].dungeonPulls.reduce<
-      Omit<PersistableDungeonPull, "isWipe" | "percent" | "count">[]
-    >((acc, pull) => {
-      if (!pull || !pull.maps || !pull.enemyNPCs) {
-        return acc;
-      }
-
-      const maps = [
-        ...new Set(
-          pull.maps.reduce<number[]>((acc, map) => {
-            if (!map) {
-              return acc;
-            }
-
-            return [...acc, map.id];
-          }, [])
-        ),
-      ];
-
-      if (maps.length === 0) {
-        return acc;
-      }
-
-      const enemyNPCs = pull.enemyNPCs.filter(
-        (
-          enemyNPC
-        ): enemyNPC is Omit<PersistedDungeonPull, "id">["enemyNPCs"][number] =>
-          enemyNPC !== null
-      );
-
-      if (enemyNPCs.length === 0) {
-        return acc;
-      }
-
-      return [
-        ...acc,
-        {
-          x: pull.x,
-          y: pull.y,
-          startTime: pull.startTime,
-          endTime: pull.endTime,
-          maps,
-          enemyNPCs,
-        },
-      ];
-    }, []);
 
   const dungeonID = ensureCorrectDungeonID(
     maybeStoredFight.dungeon,
@@ -1253,31 +1347,8 @@ const getResponseOrRetrieveAndCreateFight = async (
     };
   }
 
-  const params: EventParams = {
-    reportID,
-    startTime: maybeStoredFight.startTime,
-    endTime: maybeStoredFight.endTime,
-    fightID: maybeStoredFight.fightID,
-    dungeonID,
-    affixes: [
-      maybeStoredFight.Report.week.affix1.name,
-      maybeStoredFight.Report.week.affix2.name,
-      maybeStoredFight.Report.week.affix3.name,
-      maybeStoredFight.Report.week.season.affix.name,
-    ],
-  };
-
-  const playerMetaInformation = maybeStoredFight.PlayerFight.map(
-    (playerFight) => {
-      return {
-        actorID: playerFight.player.actorID,
-        class: playerFight.player.character.class.id,
-      };
-    }
-  );
-
   const { allEvents, playerDeathEvents, enemyDeathEvents, explosiveTargetID } =
-    await getEvents(params, playerMetaInformation);
+    await loadEvents(maybeStoredFight, reportID, dungeonID);
 
   const pullNPCDeathEventMap = createPullNPCDeathEventMap(
     dungeonPulls,
@@ -1311,28 +1382,6 @@ const getResponseOrRetrieveAndCreateFight = async (
         };
       });
     });
-
-  const persistableNPCs = persistedPulls.flatMap<Prisma.PullNPCCreateManyInput>(
-    (pull) => {
-      const npcDeathCountMap = pullNPCDeathCountMap[pull.startTime];
-
-      return pull.enemyNPCs.map((npc) => {
-        // default to 1 for npcs that appear in the pull and thus are enemy
-        // units but didn't die, e.g. for some reason Dealer in DoS,
-        // slime minigame in DoS as well as invisible units
-
-        const deathCountOfThisNPC = isMultiTargetBossFight(npc.gameID)
-          ? 1
-          : npcDeathCountMap[npc.id] ?? 1;
-
-        return {
-          npcID: npc.gameID,
-          count: deathCountOfThisNPC,
-          pullID: pull.id,
-        };
-      });
-    }
-  );
 
   const actorPlayerMap = new Map(
     maybeStoredFight.PlayerFight.map((playerFight) => [
@@ -1400,34 +1449,65 @@ const getResponseOrRetrieveAndCreateFight = async (
     });
   });
 
+  const isFirstRetrieval =
+    maybeStoredFight.Pull.length === 0 ||
+    maybeStoredFight.percent === 0 ||
+    !fightHasDungeon(maybeStoredFight);
+
   await prisma.$transaction([
-    prisma.fight.update({
-      data: {
-        percent: calculateTotalPercent(
-          pullsWithWipesAndPercent,
-          dungeonID,
-          new Set(persistableMaps.map((map) => map.zoneID))
-        ),
-        // since we need to update `totalPercent` anyways, we might aswell
-        // always update the dungeonID too, even though it may already have
-        // been present
-        dungeonID,
-      },
-      where: {
-        fightID_reportID: {
-          reportID: maybeStoredFight.Report.id,
-          fightID: maybeStoredFight.fightID,
-        },
-      },
-    }),
-    prisma.pullZone.createMany({
-      skipDuplicates: true,
-      data: persistableMaps,
-    }),
-    prisma.pullNPC.createMany({
-      skipDuplicates: true,
-      data: persistableNPCs,
-    }),
+    // only persist this data if it wasnt previously
+    ...(isFirstRetrieval
+      ? [
+          prisma.fight.update({
+            data: {
+              percent: calculateTotalPercent(
+                pullsWithWipesAndPercent,
+                dungeonID,
+                new Set(persistableMaps.map((map) => map.zoneID))
+              ),
+              // since we need to update `totalPercent` anyways, we might aswell
+              // always update the dungeonID too, even though it may already have
+              // been present
+              dungeonID,
+            },
+            where: {
+              fightID_reportID: {
+                reportID: maybeStoredFight.Report.id,
+                fightID: maybeStoredFight.fightID,
+              },
+            },
+          }),
+          prisma.pullZone.createMany({
+            skipDuplicates: true,
+            data: persistableMaps,
+          }),
+          prisma.pullNPC.createMany({
+            skipDuplicates: true,
+            data: persistedPulls.flatMap<Prisma.PullNPCCreateManyInput>(
+              (pull) => {
+                const npcDeathCountMap = pullNPCDeathCountMap[pull.startTime];
+
+                return pull.enemyNPCs.map((npc) => {
+                  // default to 1 for npcs that appear in the pull and thus are enemy
+                  // units but didn't die, e.g. for some reason Dealer in DoS,
+                  // slime minigame in DoS as well as invisible units
+
+                  const deathCountOfThisNPC = isMultiTargetBossFight(npc.gameID)
+                    ? 1
+                    : npcDeathCountMap[npc.id] ?? 1;
+
+                  return {
+                    npcID: npc.gameID,
+                    count: deathCountOfThisNPC,
+                    pullID: pull.id,
+                  };
+                });
+              }
+            ),
+          }),
+        ]
+      : []),
+    // always persist events in order to format them
     prisma.event.createMany({
       skipDuplicates: true,
       data: persistablePullEvents,
@@ -1446,6 +1526,20 @@ const getResponseOrRetrieveAndCreateFight = async (
     };
   }
 
+  // this looks odd but its solely here to reduce storage.
+  // at ~1500 reports, the Events table is ~300MB of the 500MB free tier on
+  // supabase. cleaning these up and retrieving them only on demand
+  // with a proper caching strategy reduces strain on both ends.
+  await prisma.event.deleteMany({
+    where: {
+      id: {
+        in: rawFight.Pull.flatMap((pull) =>
+          pull.Event.map((event) => event.id)
+        ),
+      },
+    },
+  });
+
   return {
     status: OK,
     cache: true,
@@ -1454,33 +1548,53 @@ const getResponseOrRetrieveAndCreateFight = async (
 };
 
 const handler: RequestHandler<Request, FightResponse> = async (req, res) => {
-  const { reportID } = req.query;
-  const fightID = Number.parseInt(req.query.fightID);
+  try {
+    const { reportID } = req.query;
+    const fightID = Number.parseInt(req.query.fightID);
 
-  configureScope((scope) => {
-    scope.setTag("reportID", reportID);
-    scope.setTag("fightID", fightID);
-  });
+    configureScope((scope) => {
+      scope.setTag("reportID", reportID);
+      scope.setTag("fightID", fightID);
+    });
 
-  const maybeStoredFight = await loadExistingFight(reportID, fightID);
+    const maybeStoredFight = await loadExistingFight(reportID, fightID);
 
-  if (!maybeStoredFight) {
-    res.setHeader(cacheControlKey, NO_CACHE);
-    res.status(NOT_FOUND).json({ error: "UNKNOWN_REPORT" });
-    return;
+    if (!maybeStoredFight) {
+      res.setHeader(cacheControlKey, NO_CACHE);
+      res.status(NOT_FOUND).json({ error: "UNKNOWN_REPORT" });
+      return;
+    }
+
+    const { status, json, cache } = await getResponseOrRetrieveAndCreateFight(
+      maybeStoredFight,
+      reportID,
+      fightID
+    );
+
+    if (cache) {
+      res.setHeader(cacheControlKey, STALE_WHILE_REVALIDATE_SEVEN_DAYS);
+    }
+
+    res.status(status).json(json);
+  } catch (error) {
+    res.setHeader(cacheControlKey, STALE_WHILE_REVALIDATE_FIVE_MINUTES);
+
+    // gql status is 200, but throws an error regardless
+    if (JSON.stringify(error).includes("permission")) {
+      res.status(BAD_REQUEST).json({
+        error: "PRIVATE_REPORT",
+      });
+
+      return;
+    }
+
+    // eslint-disable-next-line no-console
+    console.log(error);
+
+    res.status(SERVICE_UNAVAILABLE).json({
+      error: "BROKEN_LOG_OR_WCL_UNAVAILABLE",
+    });
   }
-
-  const { status, json, cache } = await getResponseOrRetrieveAndCreateFight(
-    maybeStoredFight,
-    reportID,
-    fightID
-  );
-
-  if (cache) {
-    res.setHeader(cacheControlKey, STALE_WHILE_REVALIDATE_SEVEN_DAYS);
-  }
-
-  res.status(status).json(json);
 };
 
 const ensureCorrectDungeonID = (
