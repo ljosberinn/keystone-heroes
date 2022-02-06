@@ -55,6 +55,7 @@ import { TRINKETS } from "../wcl/queries/events/trinkets";
 import { allBossIDs, dungeons as rawDungeons } from "./data/dungeons";
 import { spells } from "./data/spellIds";
 import { prisma } from "./prisma";
+import knownInterruptedAbilities from "./raw/interruptedAbilities.json";
 
 config();
 
@@ -64,6 +65,70 @@ const log = (str: string) => {
 };
 
 const DUMMY_CD = 9999;
+
+const getAndPersistInterruptedAbilities = async () => {
+  const storedIDs = knownInterruptedAbilities.map((ability) => ability.id);
+
+  log(`found ${storedIDs.length} KNOWN interrupted abilities`);
+
+  const storedInterruptedAbilityIDs = await prisma.event.findMany({
+    where: {
+      interruptedAbilityID: {
+        not: null,
+      },
+      AND: {
+        interruptedAbilityID: {
+          not: {
+            in: storedIDs,
+          },
+        },
+      },
+    },
+    select: {
+      interruptedAbilityID: true,
+    },
+  });
+
+  log(
+    `found ${storedInterruptedAbilityIDs.length} PERSISTED interrupted abilities`
+  );
+
+  const uniqueInterruptedAbilityIDs = [
+    ...new Set([
+      ...storedIDs,
+      ...storedInterruptedAbilityIDs
+        .map((interruptedAbility) => interruptedAbility.interruptedAbilityID)
+        .filter((maybeNumber): maybeNumber is number => maybeNumber !== null),
+    ]),
+  ];
+
+  log(
+    `found ${uniqueInterruptedAbilityIDs.length} UNIQUE interrupted abilities`
+  );
+
+  const abilities = await prisma.ability.findMany({
+    where: {
+      id: {
+        in: uniqueInterruptedAbilityIDs,
+        notIn: Object.keys(spells).map((key) => Number.parseInt(key)),
+      },
+    },
+    select: {
+      id: true,
+      name: true,
+      icon: true,
+    },
+  });
+
+  await prisma.event.deleteMany();
+
+  writeFileSync(
+    resolve("src/db/raw/interruptedAbilities.json"),
+    JSON.stringify(abilities)
+  );
+
+  return abilities;
+};
 
 async function create() {
   if (process.env.NODE_ENV === "test" || !process.env.DATABASE_URL) {
@@ -286,39 +351,7 @@ async function create() {
 
   log(`found ${rawConduits.length} conduits`);
 
-  const interruptedAbilitiyIDs = await prisma.event.findMany({
-    where: {
-      interruptedAbilityID: {
-        not: null,
-      },
-    },
-    select: {
-      interruptedAbilityID: true,
-    },
-  });
-
-  const uniqueInterruptedAbilities = [
-    ...new Set(
-      interruptedAbilitiyIDs
-        .map((interruptedAbility) => interruptedAbility.interruptedAbilityID)
-        .filter((maybeNumber): maybeNumber is number => maybeNumber !== null)
-    ),
-  ];
-
-  const interruptedAbilities = await prisma.ability.findMany({
-    where: {
-      id: {
-        in: uniqueInterruptedAbilities,
-        // ignore abilities interrupted by Quaking for.. obvious reasons
-        notIn: Object.keys(spells).map((key) => Number.parseInt(key)),
-      },
-    },
-    select: {
-      id: true,
-      name: true,
-      icon: true,
-    },
-  });
+  const interruptedAbilities = await getAndPersistInterruptedAbilities();
 
   log(`found ${interruptedAbilities.length} interrupted abilities`);
 

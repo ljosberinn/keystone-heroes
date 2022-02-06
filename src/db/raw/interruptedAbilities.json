@@ -1,0 +1,455 @@
+[
+  { "id": 116, "name": "Frostbolt", "icon": "spell_frost_frostbolt02" },
+  { "id": 118, "name": "Polymorph", "icon": "spell_nature_polymorph" },
+  { "id": 348, "name": "Immolate", "icon": "spell_fire_immolation" },
+  { "id": 686, "name": "Shadow Bolt", "icon": "spell_shadow_shadowbolt" },
+  { "id": 2060, "name": "Heal", "icon": "spell_holy_greaterheal" },
+  { "id": 2061, "name": "Flash Heal", "icon": "spell_holy_flashheal" },
+  { "id": 2948, "name": "Scorch", "icon": "spell_fire_soulburn" },
+  { "id": 8004, "name": "Healing Surge", "icon": "spell_nature_healingway" },
+  { "id": 8092, "name": "Mind Blast", "icon": "spell_shadow_unholyfrenzy" },
+  { "id": 8936, "name": "Regrowth", "icon": "spell_nature_resistnature" },
+  { "id": 10326, "name": "Turn Evil", "icon": "ability_paladin_turnevil" },
+  { "id": 19750, "name": "Flash of Light", "icon": "spell_holy_flashheal" },
+  {
+    "id": 27243,
+    "name": "Seed of Corruption",
+    "icon": "spell_shadow_seedofdestruction"
+  },
+  { "id": 29722, "name": "Incinerate", "icon": "spell_fire_burnout" },
+  { "id": 34914, "name": "Vampiric Touch", "icon": "spell_holy_stoicism" },
+  { "id": 48181, "name": "Haunt", "icon": "ability_warlock_haunt" },
+  { "id": 48438, "name": "Wild Growth", "icon": "ability_druid_flourish" },
+  { "id": 50769, "name": "Revive", "icon": "ability_druid_lunarguidance" },
+  { "id": 51505, "name": "Lava Burst", "icon": "spell_shaman_lavaburst" },
+  {
+    "id": 73920,
+    "name": "Healing Rain",
+    "icon": "spell_nature_giftofthewaterspirit"
+  },
+  {
+    "id": 77472,
+    "name": "Healing Wave",
+    "icon": "spell_nature_healingwavelesser"
+  },
+  { "id": 82326, "name": "Holy Light", "icon": "spell_holy_surgeoflight" },
+  {
+    "id": 105174,
+    "name": "Hand of Gul'dan",
+    "icon": "ability_warlock_handofguldan"
+  },
+  {
+    "id": 111771,
+    "name": "Demonic Gateway",
+    "icon": "spell_warlock_demonicportal_green"
+  },
+  {
+    "id": 115175,
+    "name": "Soothing Mist",
+    "icon": "ability_monk_soothingmists"
+  },
+  { "id": 116670, "name": "Vivify", "icon": "ability_monk_vivify" },
+  { "id": 116858, "name": "Chaos Bolt", "icon": "ability_warlock_chaosbolt" },
+  {
+    "id": 117952,
+    "name": "Crackling Jade Lightning",
+    "icon": "ability_monk_cracklingjadelightning"
+  },
+  { "id": 123986, "name": "Chi Burst", "icon": "spell_arcane_arcanetorrent" },
+  { "id": 152108, "name": "Cataclysm", "icon": "achievement_zone_cataclysm" },
+  { "id": 188196, "name": "Lightning Bolt", "icon": "spell_nature_lightning" },
+  {
+    "id": 188443,
+    "name": "Chain Lightning",
+    "icon": "spell_nature_chainlightning"
+  },
+  { "id": 190356, "name": "Blizzard", "icon": "spell_frost_icestorm" },
+  { "id": 190984, "name": "Wrath", "icon": "spell_nature_wrathv2" },
+  { "id": 191837, "name": "Essence Font", "icon": "ability_monk_essencefont" },
+  { "id": 194153, "name": "Starfire", "icon": "spell_arcane_starfire" },
+  {
+    "id": 196447,
+    "name": "Channel Demonfire",
+    "icon": "spell_fire_ragnaros_lavaboltgreen"
+  },
+  { "id": 198013, "name": "Eye Beam", "icon": "ability_demonhunter_eyebeam" },
+  { "id": 198590, "name": "Drain Soul", "icon": "spell_shadow_haunting" },
+  {
+    "id": 212040,
+    "name": "Revitalize",
+    "icon": "ability_druid_empoweredtouch"
+  },
+  {
+    "id": 212048,
+    "name": "Ancestral Vision",
+    "icon": "spell_shaman_elementaloath"
+  },
+  { "id": 263165, "name": "Void Torrent", "icon": "spell_priest_voidsear" },
+  {
+    "id": 316099,
+    "name": "Unstable Affliction",
+    "icon": "spell_shadow_unstableaffliction_3"
+  },
+  {
+    "id": 317661,
+    "name": "Insidious Venom",
+    "icon": "ability_vehicle_electrocharge"
+  },
+  {
+    "id": 317936,
+    "name": "Forsworn Doctrine",
+    "icon": "inv_enchanting_crystal"
+  },
+  { "id": 317959, "name": "Dark Lash", "icon": "spell_animamaw_missile" },
+  {
+    "id": 317963,
+    "name": "Burden of Knowledge",
+    "icon": "inv_enchanting_70_arkhana"
+  },
+  {
+    "id": 319070,
+    "name": "Corrosive Gunk",
+    "icon": "ability_creature_disease_03"
+  },
+  { "id": 319654, "name": "Hungering Drain", "icon": "warlock_spelldrain" },
+  {
+    "id": 319669,
+    "name": "Spectral Reach",
+    "icon": "spell_necro_necroticcore"
+  },
+  { "id": 319898, "name": "Vile Spit", "icon": "spell_nature_corrosivebreath" },
+  { "id": 320008, "name": "Frostbolt", "icon": "spell_frost_frostbolt02" },
+  {
+    "id": 320120,
+    "name": "Plague Bolt",
+    "icon": "spell_deathknight_necroticplague"
+  },
+  { "id": 320171, "name": "Necrotic Bolt", "icon": "spell_necro_voodooblast" },
+  {
+    "id": 320300,
+    "name": "Necromantic Bolt",
+    "icon": "spell_necro_voodooblast"
+  },
+  { "id": 320336, "name": "Frostbolt", "icon": "spell_frost_frostbolt02" },
+  { "id": 320462, "name": "Necrotic Bolt", "icon": "spell_necro_voodooblast" },
+  { "id": 320571, "name": "Shadow Well", "icon": "spell_necro_necroticsmash" },
+  { "id": 321038, "name": "Wrack Soul", "icon": "ability_warlock_eradication" },
+  {
+    "id": 321105,
+    "name": "Sap Lifeblood",
+    "icon": "ability_deathwing_bloodcorruption_earth"
+  },
+  { "id": 321349, "name": "Absorbing Haze", "icon": "ability_druid_replenish" },
+  {
+    "id": 321764,
+    "name": "Bark Armor",
+    "icon": "spell_nature_naturetouchdecay"
+  },
+  { "id": 321828, "name": "Patty Cake", "icon": "inv_misc_surgeonglove_01" },
+  {
+    "id": 321999,
+    "name": "Viral Globs",
+    "icon": "ability_deathwing_bloodcorruption_earth"
+  },
+  { "id": 322274, "name": "Enfeeble", "icon": "warlock_curse_weakness" },
+  {
+    "id": 322358,
+    "name": "Burning Strain",
+    "icon": "spell_shadow_plaguecloud"
+  },
+  { "id": 322433, "name": "Stoneskin", "icon": "inv_shoulder_03" },
+  { "id": 322450, "name": "Consumption", "icon": "ability_hunter_pet_spider" },
+  {
+    "id": 322767,
+    "name": "Spirit Bolt",
+    "icon": "spell_fire_twilightflamebolt"
+  },
+  {
+    "id": 322938,
+    "name": "Harvest Essence",
+    "icon": "spell_warlock_harvestoflife"
+  },
+  {
+    "id": 323057,
+    "name": "Spirit Bolt",
+    "icon": "spell_fire_twilightflamebolt"
+  },
+  {
+    "id": 323190,
+    "name": "Meat Shield",
+    "icon": "inv_skinning_80_bloodsoakedbone"
+  },
+  {
+    "id": 323538,
+    "name": "Bolt of Power",
+    "icon": "artifactability_blooddeathknight_umbilicuseternus"
+  },
+  {
+    "id": 323552,
+    "name": "Volley of Power",
+    "icon": "inv_artifact_bloodoftheassassinated"
+  },
+  {
+    "id": 324293,
+    "name": "Rasping Scream",
+    "icon": "spell_shadow_psychicscream"
+  },
+  {
+    "id": 324536,
+    "name": "Malefic Rapture",
+    "icon": "ability_warlock_everlastingaffliction"
+  },
+  { "id": 324589, "name": "Death Bolt", "icon": "spell_necro_voodooblast" },
+  {
+    "id": 324631,
+    "name": "Fleshcraft",
+    "icon": "ability_necrolord_fleshcraft"
+  },
+  {
+    "id": 324776,
+    "name": "Bramblethorn Coat",
+    "icon": "spell_nature_abolishmagic"
+  },
+  {
+    "id": 324914,
+    "name": "Nourish the Forest",
+    "icon": "spell_nature_healingtouch"
+  },
+  { "id": 325700, "name": "Collect Sins", "icon": "warlock_spelldrain" },
+  {
+    "id": 325876,
+    "name": "Curse of Obliteration",
+    "icon": "ability_creature_cursed_02"
+  },
+  {
+    "id": 326046,
+    "name": "Stimulate Resistance",
+    "icon": "ability_vehicle_shellshieldgenerator_green"
+  },
+  {
+    "id": 326319,
+    "name": "Spirit Bolt",
+    "icon": "spell_fire_twilightflamebolt"
+  },
+  {
+    "id": 326607,
+    "name": "Turn to Stone",
+    "icon": "ability_mount_quilenmount"
+  },
+  { "id": 326712, "name": "Dark Bolt", "icon": "spell_animarevendreth_orb" },
+  {
+    "id": 326829,
+    "name": "Wicked Bolt",
+    "icon": "ability_malkorok_blightofyshaarj_red"
+  },
+  {
+    "id": 326836,
+    "name": "Curse of Suppression",
+    "icon": "ability_warlock_baneofhavoc"
+  },
+  { "id": 326837, "name": "Gloom Burst", "icon": "spell_animarevendreth_orb" },
+  { "id": 326952, "name": "Fiery Cantrip", "icon": "inv_misc_scrollrolled02c" },
+  {
+    "id": 327130,
+    "name": "Repair Flesh",
+    "icon": "achievement_faction_craftsman"
+  },
+  {
+    "id": 327413,
+    "name": "Rebellious Fist",
+    "icon": "spell_animabastion_nova"
+  },
+  {
+    "id": 327648,
+    "name": "Internal Strife",
+    "icon": "inv_misc_powder_thorium"
+  },
+  {
+    "id": 328002,
+    "name": "Hurl Spores",
+    "icon": "inv_misc_food_96_zangarcaps"
+  },
+  {
+    "id": 328016,
+    "name": "Wonder Grow",
+    "icon": "inv_misc_starspecklemushroom"
+  },
+  {
+    "id": 328094,
+    "name": "Pestilence Bolt",
+    "icon": "spell_shadow_fingerofdeath"
+  },
+  {
+    "id": 328180,
+    "name": "Gripping Infection",
+    "icon": "inv_-misc_herb_marrowroot"
+  },
+  {
+    "id": 328295,
+    "name": "Greater Mending",
+    "icon": "spell_holy_prayerofhealing02"
+  },
+  {
+    "id": 328322,
+    "name": "Villainous Bolt",
+    "icon": "ability_malkorok_blightofyshaarj_red"
+  },
+  {
+    "id": 328331,
+    "name": "Forced Confession",
+    "icon": "inv_misc_powder_thorium"
+  },
+  {
+    "id": 328338,
+    "name": "Call Venomfang",
+    "icon": "inv_misc_bone_humanskull_01"
+  },
+  {
+    "id": 328475,
+    "name": "Enveloping Webbing",
+    "icon": "ability_rogue_masterofsubtlety"
+  },
+  {
+    "id": 328651,
+    "name": "Call Venomfang",
+    "icon": "inv_misc_bone_humanskull_01"
+  },
+  {
+    "id": 328667,
+    "name": "Frostbolt Volley",
+    "icon": "spell_frost_frostbolt02"
+  },
+  { "id": 328707, "name": "Scribe", "icon": "inv_elemental_primal_shadow" },
+  { "id": 328740, "name": "Dark Lotus", "icon": "item_herbd" },
+  {
+    "id": 329239,
+    "name": "Creepy Crawlers",
+    "icon": "inv_misc_monsterspidercarapace_01"
+  },
+  { "id": 329917, "name": "Binding Fungus", "icon": "inv_eng_bombroot" },
+  {
+    "id": 330562,
+    "name": "Demoralizing Shout",
+    "icon": "ability_warrior_warcry"
+  },
+  {
+    "id": 330703,
+    "name": "Decaying Filth",
+    "icon": "ability_creature_poison_02"
+  },
+  { "id": 330784, "name": "Necrotic Bolt", "icon": "spell_necro_voodooblast" },
+  { "id": 330810, "name": "Bind Soul", "icon": "spell_necro_deathall" },
+  {
+    "id": 330868,
+    "name": "Necrotic Bolt Volley",
+    "icon": "spell_necro_necroticsmash"
+  },
+  {
+    "id": 330875,
+    "name": "Spirit Frost",
+    "icon": "ability_deathknight_icygrip"
+  },
+  {
+    "id": 331379,
+    "name": "Lubricate",
+    "icon": "spell_yorsahj_bloodboil_black"
+  },
+  { "id": 332084, "name": "Self-Cleaning Cycle", "icon": "trade_engineering" },
+  {
+    "id": 332196,
+    "name": "Discharge",
+    "icon": "ability_vehicle_electrocharge"
+  },
+  { "id": 332234, "name": "Essential Oil", "icon": "ability_vehicle_oiljets" },
+  { "id": 332605, "name": "Hex", "icon": "spell_shaman_hex" },
+  {
+    "id": 332608,
+    "name": "Lightning Discharge",
+    "icon": "ability_vehicle_electrocharge"
+  },
+  {
+    "id": 332612,
+    "name": "Healing Wave",
+    "icon": "spell_nature_magicimmunity"
+  },
+  { "id": 332705, "name": "Smite", "icon": "spell_holy_holysmite" },
+  { "id": 332706, "name": "Heal", "icon": "spell_holy_heal" },
+  { "id": 333231, "name": "Searing Death", "icon": "spell_necro_deathrift" },
+  {
+    "id": 333875,
+    "name": "Death's Embrace",
+    "icon": "spell_holy_prayerofshadowprotection"
+  },
+  {
+    "id": 334076,
+    "name": "Shadowcore",
+    "icon": "ability_ironmaidens_convulsiveshadows"
+  },
+  { "id": 334653, "name": "Engorge", "icon": "spell_shadow_focusedpower" },
+  {
+    "id": 334748,
+    "name": "Drain Fluids",
+    "icon": "inv_artifact_bloodoftheassassinated"
+  },
+  { "id": 335143, "name": "Bonemend", "icon": "spell_shadow_requiem" },
+  {
+    "id": 335305,
+    "name": "Barbed Shackles",
+    "icon": "inv_misc_steelweaponchain"
+  },
+  { "id": 336277, "name": "Explosive Anger", "icon": "spell_winston_rage" },
+  {
+    "id": 337235,
+    "name": "Parasitic Pacification",
+    "icon": "ability_pet_baneling"
+  },
+  {
+    "id": 337249,
+    "name": "Parasitic Incapacitation",
+    "icon": "ability_pet_baneling"
+  },
+  {
+    "id": 337255,
+    "name": "Parasitic Domination",
+    "icon": "ability_pet_baneling"
+  },
+  {
+    "id": 338003,
+    "name": "Wicked Bolt",
+    "icon": "ability_malkorok_blightofyshaarj_red"
+  },
+  {
+    "id": 338353,
+    "name": "Goresplatter",
+    "icon": "artifactability_blooddeathknight_umbilicuseternus"
+  },
+  {
+    "id": 340544,
+    "name": "Stimulate Regeneration",
+    "icon": "spell_nature_regeneration_02"
+  },
+  { "id": 341771, "name": "Grave Spike", "icon": "inv_misc_wailingbone" },
+  {
+    "id": 341902,
+    "name": "Unholy Fervor",
+    "icon": "spell_necro_inevitableend"
+  },
+  {
+    "id": 341969,
+    "name": "Withering Discharge",
+    "icon": "ability_rogue_deviouspoisons"
+  },
+  {
+    "id": 341977,
+    "name": "Meat Shield",
+    "icon": "inv_skinning_80_bloodsoakedbone"
+  },
+  { "id": 342139, "name": "Battle Trance", "icon": "spell_winston_rage" },
+  { "id": 342675, "name": "Bone Spear", "icon": "ability_maldraxxus_rogue" },
+  {
+    "id": 345130,
+    "name": "Disposable Spectrophasic Reanimator",
+    "icon": "inv_engineering_90_lightningbox"
+  },
+  { "id": 358967, "name": "Inferno", "icon": "ability_foundryraid_blastwave" }
+]

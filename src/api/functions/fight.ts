@@ -1518,9 +1518,6 @@ const getResponseOrRetrieveAndCreateFight = async (
           pull.Event.map((event) => event.id)
         ),
       },
-      // however, we want to keep all events that interrupted abilities
-      // so we can actually name them in the events
-      interruptedAbility: null,
     },
   });
 
