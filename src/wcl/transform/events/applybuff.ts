@@ -1,6 +1,7 @@
 import { EventType } from "@prisma/client";
 
 import { BOLSTERING } from "../../queries/events/affixes/bolstering";
+import { encryptedAbilityIDs } from "../../queries/events/affixes/encrypted";
 import {
   tormentedBuffsAndDebuffs,
   tormentedAbilityGameIDSet,
@@ -50,6 +51,7 @@ const noteworthyBuffs = new Set<number>([
     .flat()
     .filter((ability) => ability.type.includes("applybuff"))
     .map((racial) => racial.id),
+  ...Object.values(encryptedAbilityIDs),
 ]);
 
 export const applyBuffProcessor: Processor<CustomApplyBuffEvent> = (

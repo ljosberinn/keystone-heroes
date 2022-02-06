@@ -8,7 +8,7 @@ import { resolve } from "path";
 import { BURSTING } from "../wcl/queries/events/affixes/bursting";
 import {
   encryptedAbilities,
-  encryptedDamageAbilityIDs,
+  encryptedAbilityIDs,
   encryptedDebuffs,
   encryptedMinibosses,
 } from "../wcl/queries/events/affixes/encrypted";
@@ -759,7 +759,7 @@ export const encryptedAbilities: Record<number, { icon: string; name: string, ty
     )
   )}\`);
 export const ENCRYPTED = new Set<number>(${JSON.stringify(
-    Object.values(encryptedDamageAbilityIDs)
+    Object.values(encryptedAbilityIDs)
   )});
 export const VOLCANIC = ${VOLCANIC};
 export const BURSTING = JSON.parse(\`${JSON.stringify(BURSTING)}\`);

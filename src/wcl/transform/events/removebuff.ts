@@ -1,5 +1,6 @@
 import { EventType } from "@prisma/client";
 
+import { encryptedAbilityIDs } from "../../queries/events/affixes/encrypted";
 import { tormentedBuffsAndDebuffs } from "../../queries/events/affixes/tormented";
 import { CHEAT_DEATHS } from "../../queries/events/cheathDeath";
 import { NW } from "../../queries/events/dungeons/nw";
@@ -34,6 +35,7 @@ const relevantBuffs = new Set<number>([
     .flat()
     .filter((ability) => ability.type.includes("removebuff"))
     .map((racial) => racial.id),
+  ...Object.values(encryptedAbilityIDs),
 ]);
 
 export const removeBuffProcessor: Processor<RemoveBuffEvent> = (

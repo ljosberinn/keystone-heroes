@@ -8,32 +8,32 @@ import type {
 import { createIsSpecificEvent } from "../utils";
 
 export const encryptedDebuffIDs = {
-  // Vy
-  cdr: 368_239,
   // Urh
-  ms: 368_241,
+  cdrRegen: 368_239,
   // Wo
-  haste: 368_240,
+  msStealth: 368_241,
+  // Vy
+  hasteDmg: 368_240,
 };
 
 export const encryptedDebuffs = [
   {
-    name: "Decrypted Vy Cypher",
-    id: encryptedDebuffIDs.cdr,
+    name: "Decrypted Urh Cypher",
+    id: encryptedDebuffIDs.cdrRegen,
     icon: "inv_progenitor_anima_blue",
-    type: "cdr",
+    type: "haste & dmg",
   },
   {
-    name: "Decrypted Urh Cypher",
-    id: encryptedDebuffIDs.ms,
+    name: "Decrypted Wo Cypher",
+    id: encryptedDebuffIDs.msStealth,
     icon: "inv_progenitor_anima_purple",
     type: "ms & stealth",
   },
   {
-    name: "Decrypted Wo Cypher",
-    id: encryptedDebuffIDs.haste,
+    name: "Decrypted Vy Cypher",
+    id: encryptedDebuffIDs.hasteDmg,
     icon: "inv_progenitor_anima_green",
-    type: "haste",
+    type: "haste & dmg",
   },
 ];
 
@@ -52,14 +52,16 @@ export const encryptedMinibosses = [
   },
 ];
 
-export const encryptedDamageAbilityIDs = {
+export const encryptedAbilityIDs = {
   // urh relic
   energyBarrage: 368_077,
   // vy
   shoot: 366_406,
   fusionBeam: 366_409,
+  vyCypher: 368_495, // on hit proc
   // Wo
   burst: 366_566,
+  stealth: 368_162,
   // Urh
   deconstruct: 366_297,
 };
@@ -67,28 +69,38 @@ export const encryptedDamageAbilityIDs = {
 export const encryptedAbilities = [
   {
     name: "Energy Barrage",
-    id: encryptedDamageAbilityIDs.energyBarrage,
+    id: encryptedAbilityIDs.energyBarrage,
     icon: "spell_progenitor_missile",
   },
   {
     name: "Shoot",
-    id: encryptedDamageAbilityIDs.shoot,
+    id: encryptedAbilityIDs.shoot,
     icon: "spell_progenitor_missile",
   },
   {
     name: "Fusion Beam",
-    id: encryptedDamageAbilityIDs.fusionBeam,
+    id: encryptedAbilityIDs.fusionBeam,
     icon: "spell_progenitor_beam",
   },
   {
     name: "Burst",
-    id: encryptedDamageAbilityIDs.burst,
+    id: encryptedAbilityIDs.burst,
     icon: "spell_progenitor_areadenial",
   },
   {
     name: "Deconstruct",
-    id: encryptedDamageAbilityIDs.deconstruct,
+    id: encryptedAbilityIDs.deconstruct,
     icon: "ability_warrior_shieldbreak",
+  },
+  {
+    name: "Wo Cloaking Field",
+    id: encryptedAbilityIDs.stealth,
+    icon: "ability_vanish",
+  },
+  {
+    name: "Decrypted Vy Cypher",
+    id: encryptedAbilityIDs.vyCypher,
+    icon: "spell_broker_buff",
   },
 ];
 
@@ -111,9 +123,9 @@ export const filterExpression = [
   `type = "applydebuff" and ability.id in (${Object.values(
     encryptedDebuffIDs
   ).join(", ")})`,
-  `type = "damage" and ability.id in (${Object.values(
-    encryptedDamageAbilityIDs
-  ).join(", ")})`,
+  `type = "damage" and ability.id in (${Object.values(encryptedAbilityIDs).join(
+    ", "
+  )})`,
 ];
 
 const isEncryptedDebuffEvent = createIsSpecificEvent<ApplyDebuffEvent>({
@@ -121,9 +133,9 @@ const isEncryptedDebuffEvent = createIsSpecificEvent<ApplyDebuffEvent>({
   abilityGameID: Object.values(encryptedDebuffIDs),
 });
 
-const isEncryptedDamageTakenEvent = createIsSpecificEvent<DamageEvent>({
+const isEncryptedDamageOrDamgeTakenEvent = createIsSpecificEvent<DamageEvent>({
   type: "damage",
-  abilityGameID: Object.values(encryptedDamageAbilityIDs),
+  abilityGameID: Object.values(encryptedAbilityIDs),
 });
 
 export const getEncryptedEvents = (
@@ -135,7 +147,10 @@ export const getEncryptedEvents = (
   }
 
   return allEvents.reduce<(DamageEvent | ApplyDebuffEvent)[]>((acc, event) => {
-    if (isEncryptedDamageTakenEvent(event) || isEncryptedDebuffEvent(event)) {
+    if (
+      isEncryptedDamageOrDamgeTakenEvent(event) ||
+      isEncryptedDebuffEvent(event)
+    ) {
       acc.push(event);
     }
 
