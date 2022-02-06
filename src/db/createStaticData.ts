@@ -324,7 +324,11 @@ async function create() {
         classData.id,
         {
           name: classData.name,
-          cooldowns: classData.Cooldown.map((cooldown) => cooldown.ability.id),
+          cooldowns: [
+            ...new Set(
+              classData.Cooldown.map((cooldown) => cooldown.ability.id)
+            ),
+          ],
           specs: classData.Spec.map((spec) => {
             return {
               id: spec.id,
