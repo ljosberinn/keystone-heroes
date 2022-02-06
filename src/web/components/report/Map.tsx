@@ -533,7 +533,7 @@ function KillIndicator({ type, fullscreen }: KillIndicatorProps) {
     useMapOptions(killIndicatorSelector);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const { fight } = useFight();
-  const { pulls, meta } = fight;
+  const { pulls, meta, affixes } = fight;
   const rafRef = useRef<number | null>(null);
 
   const [left, setLeft] = useState("32px");
@@ -570,6 +570,8 @@ function KillIndicator({ type, fullscreen }: KillIndicatorProps) {
   }, [fullscreen, isBossType]);
 
   if (
+    (!isBossType && !isTormentedType && !affixes.includes(130)) ||
+    (isTormentedType && !affixes.includes(128)) ||
     (isBossType && !renderBossKillIndicator) ||
     (!isBossType && !renderTormentedKillIndicator)
   ) {
