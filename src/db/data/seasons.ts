@@ -20,6 +20,8 @@ export enum SeasonID {
   SL_SEASON_1 = 14,
   SL_POST_SEASON_1 = 15,
   SL_SEASON_2 = 16,
+  SL_POST_SEASON_2 = 17,
+  SL_SEASON_3 = 18,
 }
 
 const ONE_WEEK_IN_MS = 7 * 24 * 60 * 60 * 1000;
@@ -170,8 +172,26 @@ export const seasons: Season[] = [
     name: "SL Season 2",
     expansionID: ExpansionEnum.SHADOWLANDS,
     startTime: new Date(1_625_583_600_000),
-    endTime: null,
+    endTime: new Date(1_645_542_000_000 - ONE_WEEK_IN_MS),
     affixID: getAffixByName("Tormented"),
     id: SeasonID.SL_SEASON_2,
+  },
+  {
+    slug: "sl-post-2",
+    name: "SL Post-Season 2",
+    expansionID: ExpansionEnum.SHADOWLANDS,
+    startTime: new Date(1_645_542_000_000 - ONE_WEEK_IN_MS),
+    endTime: new Date(1_645_542_000_000),
+    affixID: getAffixByName("Tormented"),
+    id: SeasonID.SL_POST_SEASON_2,
+  },
+  {
+    slug: "sl-3",
+    name: "SL Season 3",
+    expansionID: ExpansionEnum.SHADOWLANDS,
+    startTime: new Date(1_645_542_000_000),
+    endTime: null,
+    affixID: getAffixByName("Encrypted"),
+    id: SeasonID.SL_SEASON_3,
   },
 ];

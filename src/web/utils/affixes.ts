@@ -3,6 +3,7 @@
 import type { FightSuccessResponse } from "../../api/functions/fight";
 import {
   BURSTING,
+  ENCRYPTED,
   EXPLOSIVE,
   GRIEVOUS,
   NECROTIC,
@@ -453,6 +454,42 @@ export const calculateNecroticMetrics = ({
 
   return {
     hasNecrotic: true,
+    damage,
+  };
+};
+
+export type EncryptedMetrics = {
+  hasEncrypted: boolean;
+  damage: Record<number, number>;
+};
+
+export const calculateEncryptedMetrics = ({
+  affixes,
+  events,
+}: CalculateAffixMetricsParams): EncryptedMetrics => {
+  if (!affixes.includes(130)) {
+    return {
+      damage: {},
+      hasEncrypted: false,
+    };
+  }
+
+  const damage = events.reduce<Record<number, number>>((acc, event) => {
+    if (
+      event.type === "DamageTaken" &&
+      event.ability &&
+      ENCRYPTED.has(event.ability.id) &&
+      event.targetPlayerID &&
+      event.damage
+    ) {
+      acc[event.targetPlayerID] =
+        (acc[event.targetPlayerID] ?? 0) + event.damage;
+    }
+    return acc;
+  }, {});
+
+  return {
+    hasEncrypted: true,
     damage,
   };
 };

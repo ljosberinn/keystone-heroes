@@ -10,6 +10,7 @@ import {
 } from "react";
 
 import type { FightSuccessResponse } from "../../../api/functions/fight";
+import type { DungeonIDs } from "../../../db/data/dungeons";
 import { useFight } from "../../../pages/report/[reportID]/[fightID]";
 import { usePrevious } from "../../hooks/usePrevious";
 import {
@@ -19,6 +20,7 @@ import {
   HOA_GARGOYLE,
   isBoss,
   isTormentedLieutenant,
+  isEncryptedMiniboss,
   npcs,
   NW,
   SD_LANTERN_BUFF,
@@ -26,6 +28,7 @@ import {
   spells,
   TOP_BANNER_AURA,
   tormentedLieutenants,
+  encryptedAbilities,
 } from "../../staticData";
 import type { MapOptionsStore } from "../../store";
 import {
@@ -353,6 +356,7 @@ export function Map(): JSX.Element {
                     fullscreen={fullscreen}
                     type="tormentedLieutenant"
                   />
+                  <KillIndicator fullscreen={fullscreen} type="encrypted" />
 
                   <div
                     className={classnames(
@@ -488,7 +492,7 @@ function FullscreenNavigation() {
 }
 
 type KillIndicatorProps = {
-  type: "boss" | "tormentedLieutenant";
+  type: "boss" | "tormentedLieutenant" | "encrypted";
   fullscreen: boolean;
 };
 
@@ -535,6 +539,7 @@ function KillIndicator({ type, fullscreen }: KillIndicatorProps) {
   const [left, setLeft] = useState("32px");
 
   const isBossType = type === "boss";
+  const isTormentedType = type === "tormentedLieutenant";
 
   useEffect(() => {
     const recalculate = () => {
@@ -576,7 +581,11 @@ function KillIndicator({ type, fullscreen }: KillIndicatorProps) {
       return pulls.filter((pull) => pull.hasBoss);
     }
 
-    return pull.npcs.some((npc) => isTormentedLieutenant(npc.id));
+    if (isTormentedType) {
+      return pull.npcs.some((npc) => isTormentedLieutenant(npc.id));
+    }
+
+    return pull.npcs.some((npc) => isEncryptedMiniboss(npc.id));
   });
 
   const position = isBossType ? "left-2" : "right-2";
@@ -598,88 +607,143 @@ function KillIndicator({ type, fullscreen }: KillIndicatorProps) {
         )}
         ref={containerRef}
       >
-        {filteredPulls.map((pull) => {
-          const usedLust = findBloodlust(pull);
-          const lustAbility = usedLust ? spells[usedLust] : null;
+        {type === "encrypted"
+          ? Object.entries(encryptedAbilities).map(([key, value]) => {
+              const id = Number.parseInt(key);
 
-          const maybeRelevantNpcName = findBossOrLieutenantName(
-            pull,
-            isBossType
-          );
+              const count = filteredPulls.filter((pull) =>
+                pull.events.some(
+                  (event) =>
+                    event.type === "ApplyDebuff" && event.ability?.id === id
+                )
+              ).length;
 
-          if (!maybeRelevantNpcName) {
-            return null;
-          }
-
-          const fightStart = timeDurationToString(
-            pull.startTime - meta.startTime,
-            { omitMs: true }
-          ).padStart(5, "0");
-
-          const fightEnd = timeDurationToString(pull.endTime - meta.startTime, {
-            omitMs: true,
-          }).padStart(5, "0");
-
-          const fightDuration = timeDurationToString(
-            pull.endTime - pull.startTime,
-            { omitMs: true }
-          ).padStart(5, "0");
-
-          const percentUpToThisPull = pulls.reduce((acc, p) => {
-            if (p.id >= pull.id) {
-              return acc;
-            }
-
-            return acc + p.percent;
-          }, 0);
-
-          return (
-            <span
-              className="flex justify-between block w-full"
-              key={pull.startTime}
-            >
-              <button
-                type="button"
-                className={classnames(
-                  `space-x-1 cursor-pointer md:truncate md:max-w-1/2 lg:max-w-full xl:max-w-1/2`,
-                  pull.isWipe
-                    ? "line-through hover:line-through hover:underline"
-                    : "hover:underline"
-                )}
-                onClick={() => {
-                  setSelectedPull(pull.id);
-                }}
-              >
-                {pull.isWipe && (
-                  <img
-                    className="inline w-4 h-4 rounded-full"
-                    src="/static/skull.png"
-                    alt="The group wiped."
-                    title="The group wiped."
-                    width={16}
-                    height={16}
-                  />
-                )}
-                <span>{maybeRelevantNpcName}</span>
-                {usedLust && lustAbility && (
-                  <img
-                    className="inline w-6 h-6 rounded-full"
-                    src={`${STATIC_ICON_PREFIX}${lustAbility.icon}.jpg`}
-                    alt={`${lustAbility.name} was used on this pull.`}
-                    width={24}
-                    height={24}
-                  />
-                )}
-              </button>{" "}
-              <span className="hidden pl-2 md:block lg:hidden xl:block">
-                <span>{percentUpToThisPull.toFixed(2)}%</span>{" "}
-                <span title={`killed in ${fightDuration}`}>
-                  {fightStart}-{fightEnd}
+              return (
+                <span className="flex justify-between block w-full" key={key}>
+                  <span className="space-x-1">
+                    <AbilityIcon
+                      icon={value.icon}
+                      alt={value.name}
+                      width={16}
+                      height={16}
+                      className="inline"
+                      title={value.name}
+                    />
+                    <span>{value.type.toUpperCase()}</span>
+                  </span>
+                  <span className="hidden pl-2 md:block lg:hidden xl:block">
+                    {count}
+                  </span>
                 </span>
-              </span>
-            </span>
-          );
-        })}
+              );
+            })
+          : filteredPulls.map((pull) => {
+              const usedLust = findBloodlust(pull);
+              const lustAbility = usedLust ? spells[usedLust] : null;
+
+              const maybeRelevantNpcName = findBossOrLieutenantName(
+                pull,
+                isBossType
+              );
+
+              if (!maybeRelevantNpcName) {
+                return null;
+              }
+
+              const fightStart = timeDurationToString(
+                pull.startTime - meta.startTime,
+                { omitMs: true }
+              ).padStart(5, "0");
+
+              const fightEnd = timeDurationToString(
+                pull.endTime - meta.startTime,
+                {
+                  omitMs: true,
+                }
+              ).padStart(5, "0");
+
+              const fightDuration = timeDurationToString(
+                pull.endTime - pull.startTime,
+                { omitMs: true }
+              ).padStart(5, "0");
+
+              const percentUpToThisPull = pulls.reduce((acc, p) => {
+                if (p.id >= pull.id) {
+                  return acc;
+                }
+
+                return acc + p.percent;
+              }, 0);
+
+              const encryptedBuff = pull.events.find(
+                findEncryptedApplyDebuffEvent
+              );
+
+              return (
+                <span
+                  className="flex justify-between block w-full"
+                  key={pull.startTime}
+                >
+                  <button
+                    type="button"
+                    className={classnames(
+                      `space-x-1 cursor-pointer md:truncate md:max-w-1/2 lg:max-w-full xl:max-w-1/2`,
+                      pull.isWipe
+                        ? "line-through hover:line-through hover:underline"
+                        : "hover:underline"
+                    )}
+                    onClick={() => {
+                      setSelectedPull(pull.id);
+                    }}
+                  >
+                    {pull.isWipe ? (
+                      <img
+                        className="inline w-4 h-4 rounded-full"
+                        src="/static/skull.png"
+                        alt="The group wiped."
+                        title="The group wiped."
+                        width={16}
+                        height={16}
+                      />
+                    ) : null}
+
+                    <span className="md:hidden">
+                      {maybeRelevantNpcName.split(" ").slice(-1)}
+                    </span>
+                    <span className="hidden md:inline">
+                      {maybeRelevantNpcName}
+                    </span>
+                    {usedLust && lustAbility && (
+                      <img
+                        className="inline w-6 h-6 rounded-full"
+                        src={`${STATIC_ICON_PREFIX}${lustAbility.icon}.jpg`}
+                        alt={`${lustAbility.name} was used on this pull.`}
+                        width={24}
+                        height={24}
+                      />
+                    )}
+                    {encryptedBuff?.ability?.id ? (
+                      <AbilityIcon
+                        icon={encryptedAbilities[encryptedBuff.ability.id].icon}
+                        alt={encryptedAbilities[encryptedBuff.ability.id].name}
+                        width={16}
+                        height={16}
+                        className="inline"
+                        title={
+                          encryptedAbilities[encryptedBuff.ability.id].name
+                        }
+                      />
+                    ) : null}
+                  </button>
+                  <span className="hidden pl-2 md:block lg:hidden xl:block">
+                    <span>{percentUpToThisPull.toFixed(2)}%</span>{" "}
+                    <span title={`killed in ${fightDuration}`}>
+                      {fightStart}-{fightEnd}
+                    </span>
+                  </span>
+                </span>
+              );
+            })}
       </div>
     </>
   );
@@ -1002,13 +1066,50 @@ type PullIndicatorIconProps = {
 const selectedOutlineClasses =
   "opacity-100 outline-white outline-2 outline-dotted outline-offset-2";
 
-function useDungeonSpecificPullIndicatorEvent(
+type EncryptedEvent = Omit<
+  FightSuccessResponse["pulls"][number]["events"][number],
+  "ability"
+> & {
+  ability: NonNullable<
+    FightSuccessResponse["pulls"][number]["events"][number]["ability"]
+  >;
+  type: "ApplyDebuff";
+};
+
+const findEncryptedApplyDebuffEvent = (
+  event: FightSuccessResponse["pulls"][number]["events"][number]
+): event is EncryptedEvent => {
+  return (
+    event.type === "ApplyDebuff" &&
+    event.ability !== null &&
+    event.ability.id in encryptedAbilities
+  );
+};
+
+function findAffixSpecificPullIndicatorEvent(
   pull: PullIndicatorIconProps["pull"]
+): { label: string; icon: string } | null {
+  const encryptedDebuff = pull.events.find(findEncryptedApplyDebuffEvent);
+
+  if (encryptedDebuff?.ability) {
+    const debuff = encryptedAbilities[encryptedDebuff.ability.id];
+
+    return {
+      icon: debuff.icon,
+      label: debuff.name,
+    };
+  }
+
+  return null;
+}
+
+function findDungeonSpecificPullIndicatorEvent(
+  pull: PullIndicatorIconProps["pull"],
+  dungeon: DungeonIDs
 ): {
   label: string;
   icon: string;
 } | null {
-  const { dungeon } = useFight().fight;
   const slug = dungeons[dungeon].slug.toLowerCase();
 
   switch (slug) {
@@ -1148,6 +1249,7 @@ function useDungeonSpecificPullIndicatorEvent(
 
 function PullIndicatorIcon({ pull, x, y }: PullIndicatorIconProps) {
   const { selectedPull, setSelectedPull } = useReportStore(reportStoreSelector);
+  const { dungeon } = useFight().fight;
 
   const selected = selectedPull === pull.id;
 
@@ -1174,7 +1276,52 @@ function PullIndicatorIcon({ pull, x, y }: PullIndicatorIconProps) {
     y: centerY,
   };
 
-  const dungeonSpecificIcon = useDungeonSpecificPullIndicatorEvent(pull);
+  const bossNPC = pull.npcs.find((npc) => isBoss(npc.id));
+
+  if (bossNPC) {
+    return (
+      <g {...gProps}>
+        <image
+          aria-label={npcs[bossNPC.id]}
+          href={`/static/npcs/${bossNPC.id}.png`}
+          className={classnames(
+            selected ? selectedOutlineClasses : "opacity-70"
+          )}
+          width={32}
+          height={32}
+          x={x - 32 / 2}
+          y={y - 32 / 2}
+        />
+      </g>
+    );
+  }
+
+  const affixSpecificIcon = findAffixSpecificPullIndicatorEvent(pull);
+
+  if (affixSpecificIcon) {
+    return (
+      <g {...gProps}>
+        <image
+          aria-label={affixSpecificIcon.label}
+          href={`${STATIC_ICON_PREFIX}${affixSpecificIcon.icon}.jpg`}
+          {...sharedProps}
+        />
+        <text
+          textAnchor="middle"
+          x={x}
+          y={y + 21.02 / 4}
+          className="text-white fill-current"
+        >
+          {pull.id}
+        </text>
+      </g>
+    );
+  }
+
+  const dungeonSpecificIcon = findDungeonSpecificPullIndicatorEvent(
+    pull,
+    dungeon
+  );
 
   if (dungeonSpecificIcon) {
     return (
@@ -1266,35 +1413,17 @@ function PullIndicatorIcon({ pull, x, y }: PullIndicatorIconProps) {
     );
   }
 
-  const bossNPC = pull.npcs.find((npc) => isBoss(npc.id));
-
   return (
     <g {...gProps}>
-      {bossNPC ? (
-        <image
-          aria-label={npcs[bossNPC.id]}
-          href={`/static/npcs/${bossNPC.id}.png`}
-          className={classnames(
-            selected ? selectedOutlineClasses : "opacity-70"
-          )}
-          width={32}
-          height={32}
-          x={x - 32 / 2}
-          y={y - 32 / 2}
-        />
-      ) : (
-        <>
-          <circle cx={x} cy={y} r={15} className={sharedProps.className} />
-          <text
-            textAnchor="middle"
-            x={x}
-            y={y + 21.02 / 4}
-            className="text-white fill-current"
-          >
-            {pull.id}
-          </text>
-        </>
-      )}
+      <circle cx={x} cy={y} r={15} className={sharedProps.className} />
+      <text
+        textAnchor="middle"
+        x={x}
+        y={y + 21.02 / 4}
+        className="text-white fill-current"
+      >
+        {pull.id}
+      </text>
     </g>
   );
 }

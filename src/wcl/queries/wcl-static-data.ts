@@ -4,6 +4,11 @@ import { resolve } from "path";
 import { format } from "prettier";
 
 import {
+  encryptedMinibosses,
+  encryptedRelics,
+  encryptedAbilities,
+} from "./events/affixes/encrypted";
+import {
   tormentedSpells,
   tormentedBuffsAndDebuffs,
 } from "./events/affixes/tormented";
@@ -27,14 +32,16 @@ async function loadNPCNames() {
     "https://assets.rpglogs.com/json/warcraft/npc-names.json"
   );
   const json: NPCName[] = await response.json();
-  const extracted = json
-    .map((dataset) => ({
+  const extracted = [
+    ...json.map((dataset) => ({
       id: dataset.id,
       name: dataset.name_enus,
-    }))
-    .sort((a, b) => {
-      return a.id - b.id;
-    });
+    })),
+    ...encryptedRelics,
+    ...encryptedMinibosses,
+  ].sort((a, b) => {
+    return a.id - b.id;
+  });
 
   writeFileSync(
     resolve("src/db/raw/all-npcs.json"),
@@ -75,6 +82,7 @@ async function loadSpellNames() {
         };
       })
     ),
+    ...encryptedAbilities,
   ]
     .map((dataset) => ({
       id: dataset.id,

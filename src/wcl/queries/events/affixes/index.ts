@@ -24,6 +24,10 @@ import {
   getBurstingEvents,
 } from "./bursting";
 import {
+  filterExpression as encryptedFilterExpression,
+  getEncryptedEvents,
+} from "./encrypted";
+import {
   filterExpression as explosiveFilterExpression,
   getExplosiveEvents,
 } from "./explosive";
@@ -87,7 +91,7 @@ const affixExpressionMap: Record<AffixWithEvents, string[]> = {
   [Affixes.Storming]: stormingFilterExpression,
   [Affixes.Bolstering]: bolsteringFilterExpression,
   [Affixes.Tormented]: tormentedFilterExpression,
-  [Affixes.Encrypted]: [],
+  [Affixes.Encrypted]: encryptedFilterExpression,
 };
 
 export const getAffixExpression = (affixes: Affixes[]): string[] => {
@@ -127,6 +131,7 @@ export const filterAffixEvents = (
     events: [
       // seasonal
       ...getTormentedEvents(allEvents, affixSet),
+      ...getEncryptedEvents(allEvents, affixSet),
       // common affixes
       ...getStormingEvents(allEvents, affixSet),
       ...getSpitefulEvents(allEvents, affixSet),

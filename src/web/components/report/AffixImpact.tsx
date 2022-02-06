@@ -12,6 +12,7 @@ import {
   SANGUINE_ICHOR_DAMAGE,
   BURSTING,
   NECROTIC,
+  ENCRYPTED,
 } from "../../staticData";
 import { redText, greenText } from "../../styles/tokens";
 import { createWCLUrl, timeDurationToString } from "../../utils";
@@ -25,6 +26,7 @@ import type {
   SanguineMetrics,
   BurstingMetrics,
   NecroticMetrics,
+  EncryptedMetrics,
 } from "../../utils/affixes";
 import {
   calculateExplosiveMetrics,
@@ -36,6 +38,7 @@ import {
   calculateSanguineMetrics,
   calculateBurstingMetrics,
   calculateNecroticMetrics,
+  calculateEncryptedMetrics,
 } from "../../utils/affixes";
 import { getClassAndSpecName } from "../../utils/player";
 import { AbilityIcon } from "../AbilityIcon";
@@ -55,6 +58,7 @@ type Stats = {
   sanguine: SanguineMetrics;
   bursting: BurstingMetrics;
   necrotic: NecroticMetrics;
+  encrypted: EncryptedMetrics;
   player: FightSuccessResponse["player"];
 };
 
@@ -81,6 +85,7 @@ const useAffixSpecificStats = (): Stats => {
     sanguine: calculateSanguineMetrics(params),
     bursting: calculateBurstingMetrics(params),
     necrotic: calculateNecroticMetrics(params),
+    encrypted: calculateEncryptedMetrics(params),
     player,
   };
 };
@@ -99,6 +104,7 @@ export function AffixImpact(): JSX.Element {
     sanguine,
     bursting,
     necrotic,
+    encrypted,
   } = useAffixSpecificStats();
 
   const playerIDClassInfoMap = Object.fromEntries(
@@ -181,6 +187,55 @@ export function AffixImpact(): JSX.Element {
               </>
             )}
 
+            {encrypted.hasEncrypted && (
+              <>
+                <GenericAffixInformationRow
+                  iconSrc="spell_progenitor_orb"
+                  iconAlt="Encrypted"
+                  title="Encrypted"
+                />
+                <ImpactRow>
+                  {player.map((player) => {
+                    const meta = playerIDClassInfoMap[player.id];
+
+                    const damageTaken = encrypted.damage[player.id] ?? 0;
+
+                    return (
+                      <ExternalLink
+                        href={createWCLUrl({
+                          fightID,
+                          reportID,
+                          // eslint-disable-next-line sonarjs/no-duplicate-string
+                          type: "damage-taken",
+                          source: player.actorID,
+                          pins: `2$Off$244F4B$expression$type = "damage" and target.type = "player" and ability.id in (${[
+                            ...ENCRYPTED,
+                          ].join(", ")})`,
+                        })}
+                        key={player.actorID}
+                        className="inline-flex space-x-2"
+                      >
+                        <span className="w-6 h-6">
+                          <SpecIcon
+                            size={6}
+                            class={meta.className}
+                            spec={meta.specName}
+                            alt={player.name}
+                          />
+                        </span>
+                        <span className="md:hidden">{player.name}</span>
+                        <span
+                          className={damageTaken === 0 ? greenText : redText}
+                        >
+                          {formatNumber(damageTaken)}
+                        </span>
+                      </ExternalLink>
+                    );
+                  })}
+                </ImpactRow>
+              </>
+            )}
+
             {quaking.hasQuaking && (
               <>
                 <GenericAffixInformationRow
@@ -200,7 +255,7 @@ export function AffixImpact(): JSX.Element {
                         href={createWCLUrl({
                           fightID,
                           reportID,
-                          // eslint-disable-next-line sonarjs/no-duplicate-string
+
                           type: "damage-taken",
                           source: player.actorID,
                           ability: QUAKING,

@@ -109,7 +109,7 @@ export const affixMap: Record<Affix["id"], Omit<Affix, "id">> = {
   },
   130: {
     name: Affixes.Encrypted,
-    icon: "inv_misc_questionmark",
+    icon: "spell_progenitor_orb",
     seasonal: true,
   },
   129: {
