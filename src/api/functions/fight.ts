@@ -70,6 +70,7 @@ import {
   cacheControlKey,
   STALE_WHILE_REVALIDATE_SEVEN_DAYS,
   NO_CACHE,
+  STALE_WHILE_REVALIDATE_FIVE_MINUTES,
 } from "../utils/cache";
 import type { FightHandlerErrorType } from "../utils/errors";
 import {
@@ -78,6 +79,7 @@ import {
   NOT_FOUND,
   UNPROCESSABLE_ENTITY,
   OK,
+  SERVICE_UNAVAILABLE,
 } from "../utils/statusCodes";
 import type { RequestHandler } from "../utils/types";
 
@@ -1530,33 +1532,53 @@ const getResponseOrRetrieveAndCreateFight = async (
 };
 
 const handler: RequestHandler<Request, FightResponse> = async (req, res) => {
-  const { reportID } = req.query;
-  const fightID = Number.parseInt(req.query.fightID);
+  try {
+    const { reportID } = req.query;
+    const fightID = Number.parseInt(req.query.fightID);
 
-  configureScope((scope) => {
-    scope.setTag("reportID", reportID);
-    scope.setTag("fightID", fightID);
-  });
+    configureScope((scope) => {
+      scope.setTag("reportID", reportID);
+      scope.setTag("fightID", fightID);
+    });
 
-  const maybeStoredFight = await loadExistingFight(reportID, fightID);
+    const maybeStoredFight = await loadExistingFight(reportID, fightID);
 
-  if (!maybeStoredFight) {
-    res.setHeader(cacheControlKey, NO_CACHE);
-    res.status(NOT_FOUND).json({ error: "UNKNOWN_REPORT" });
-    return;
+    if (!maybeStoredFight) {
+      res.setHeader(cacheControlKey, NO_CACHE);
+      res.status(NOT_FOUND).json({ error: "UNKNOWN_REPORT" });
+      return;
+    }
+
+    const { status, json, cache } = await getResponseOrRetrieveAndCreateFight(
+      maybeStoredFight,
+      reportID,
+      fightID
+    );
+
+    if (cache) {
+      res.setHeader(cacheControlKey, STALE_WHILE_REVALIDATE_SEVEN_DAYS);
+    }
+
+    res.status(status).json(json);
+  } catch (error) {
+    res.setHeader(cacheControlKey, STALE_WHILE_REVALIDATE_FIVE_MINUTES);
+
+    // gql status is 200, but throws an error regardless
+    if (JSON.stringify(error).includes("permission")) {
+      res.status(BAD_REQUEST).json({
+        error: "PRIVATE_REPORT",
+      });
+
+      return;
+    }
+
+    // eslint-disable-next-line no-console
+    console.log(error);
+
+    res.status(SERVICE_UNAVAILABLE).json({
+      error: "BROKEN_LOG_OR_WCL_UNAVAILABLE",
+    });
   }
-
-  const { status, json, cache } = await getResponseOrRetrieveAndCreateFight(
-    maybeStoredFight,
-    reportID,
-    fightID
-  );
-
-  if (cache) {
-    res.setHeader(cacheControlKey, STALE_WHILE_REVALIDATE_SEVEN_DAYS);
-  }
-
-  res.status(status).json(json);
 };
 
 const ensureCorrectDungeonID = (
