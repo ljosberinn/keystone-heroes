@@ -97,6 +97,20 @@ describe("parseWCLUrl", () => {
       }
     `);
   });
+
+  test("passes given report url with localized subdomain", () => {
+    expect(
+      parseWCLUrl(
+        "https://de.warcraftlogs.com/reports/yV6AkRZLd8GmCHzJ#fight=1&type=summary"
+      )
+    ).toMatchInlineSnapshot(`
+      {
+        "error": null,
+        "fightID": "1",
+        "reportID": "yV6AkRZLd8GmCHzJ",
+      }
+    `);
+  });
 });
 
 describe("timeDurationToString", () => {

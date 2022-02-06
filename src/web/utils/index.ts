@@ -110,7 +110,10 @@ export const parseWCLUrl = (
     const { pathname, host, hash } = new URL(maybeURL);
 
     // not a WCL url
-    if (host !== "www.warcraftlogs.com" || !pathname.startsWith("/reports/")) {
+    if (
+      !host.includes("warcraftlogs.com") ||
+      !pathname.startsWith("/reports/")
+    ) {
       return {
         reportID: null,
         fightID: null,
