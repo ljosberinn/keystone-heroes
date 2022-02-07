@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import create from "zustand";
 
+import type { DiscoveryQueryParams } from "../api/functions/discovery";
 import { ls } from "./utils/localStorage";
 
 export type ReportStore = {
@@ -274,6 +275,74 @@ export const usePullSettings = create<PullSettings>((set) => {
             ? state.trackedPlayers.filter((player) => player !== id)
             : [...state.trackedPlayers, id],
         };
+      });
+    },
+  };
+});
+
+export type LivingDiscoveryQueryParams = {
+  [Property in keyof Required<Omit<DiscoveryQueryParams, "dungeonID">>]:
+    | number
+    | null;
+} & {
+  dungeonID: number;
+};
+
+type RouteDiscovery = {
+  reset: () => void;
+  handlePropertyChange: <Key extends keyof LivingDiscoveryQueryParams>(
+    key: Key,
+    value: LivingDiscoveryQueryParams[Key]
+  ) => void;
+} & LivingDiscoveryQueryParams;
+
+const initialRouteDiscoveryState: LivingDiscoveryQueryParams = {
+  affix1: null,
+  affix2: null,
+  affix3: null,
+  dps1: null,
+  dps2: null,
+  dps3: null,
+  dungeonID: -1,
+  heal: null,
+  maxDeaths: null,
+  maxItemLevel: null,
+  maxKeyLevel: null,
+  minItemLevel: null,
+  minKeyLevel: null,
+  seasonAffix: null,
+  tank: null,
+  dps1Covenant: null,
+  dps1Legendary1: null,
+  dps1Legendary2: null,
+  dps1Soulbind: null,
+  dps2Covenant: null,
+  dps2Legendary1: null,
+  dps2Legendary2: null,
+  dps2Soulbind: null,
+  dps3Covenant: null,
+  dps3Legendary1: null,
+  dps3Legendary2: null,
+  dps3Soulbind: null,
+  healCovenant: null,
+  healLegendary1: null,
+  healLegendary2: null,
+  healSoulbind: null,
+  tankCovenant: null,
+  tankLegendary1: null,
+  tankLegendary2: null,
+  tankSoulbind: null,
+};
+
+export const useRouteDiscovery = create<RouteDiscovery>((set) => {
+  return {
+    ...initialRouteDiscoveryState,
+    reset: () => {
+      set(initialRouteDiscoveryState);
+    },
+    handlePropertyChange: (key, value) => {
+      set((prev) => {
+        return { ...prev, [key]: value };
       });
     },
   };

@@ -128,7 +128,7 @@ function useSeamlessFightRedirect(
 export default function Report(): JSX.Element | null {
   const { url, reportID, fightID, error, query } = useReportURL();
 
-  const [report, loading] = useAbortableFetch<ReportResponse>({
+  const [report, loading] = useAbortableFetch<ReportResponse | null>({
     initialState: null,
     url,
   });

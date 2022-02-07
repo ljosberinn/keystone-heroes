@@ -113,7 +113,7 @@ export const useFight = (): FightContextDefinition => {
 export default function FightID(): JSX.Element | null {
   const { url, fightID, reportID } = useFightURL();
 
-  const [fight, loading] = useAbortableFetch<FightResponse>({
+  const [fight, loading] = useAbortableFetch<FightResponse | null>({
     url,
     initialState: null,
   });

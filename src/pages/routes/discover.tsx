@@ -1,245 +1,468 @@
+import type { Affix } from "@prisma/client";
 import type { GetStaticProps } from "next";
-import { useRouter } from "next/router";
-import { useEffect } from "react";
+import type { FormEventHandler } from "react";
+import { useState } from "react";
 
-import { dungeons as allDungeons } from "../../db/data/dungeons";
+import type { DiscoveryResponse } from "../../api/functions/discovery";
+import { affixMap } from "../../db/data/affixes";
 import { prisma } from "../../db/prisma";
-import { MIN_KEYSTONE_LEVEL } from "../../web/env";
+import { Seo } from "../../web/components/Seo";
+import { useAbortableFetch } from "../../web/hooks/useAbortableFetch";
+import { affixes as staticAffixMap, dungeons } from "../../web/staticData";
+import type { LivingDiscoveryQueryParams } from "../../web/store";
+import { useRouteDiscovery } from "../../web/store";
+import { widthConstraint } from "../../web/styles/tokens";
+import { classnames } from "../../web/utils/classnames";
 
 type DiscoverProps = {
-  dungeons: { name: string; slug: string; id: number }[];
-  itemLevelBrackets: { from: number; to: number }[];
-  keyLevels: number[];
-};
-
-export const url = "/routes/discover";
-
-export const defaultQueryParams = {
-  itemLevelBracket: "any",
-  level: 15,
+  dungeons: (Pick<typeof dungeons[keyof typeof dungeons], "slug" | "name"> & {
+    id: number;
+  })[];
+  specs: {
+    tank: number[];
+    heal: number[];
+    dps: number[];
+  };
+  affixes: (Pick<Affix, "id"> & { level: 2 | 4 | 7 | 10 })[];
+  weeks: [number, number, number, number][];
+  legendaries: Record<number, number[]>;
 };
 
 export default function Discover({
   dungeons,
-  itemLevelBrackets,
-  keyLevels,
+  specs,
+  affixes,
+  weeks,
+  legendaries,
 }: DiscoverProps): JSX.Element {
-  const { push, query } = useRouter();
+  const [url, setUrl] = useState<string | null>(null);
+  const [data, loading] = useAbortableFetch<DiscoveryResponse>({
+    url,
+    initialState: [],
+  });
 
-  useEffect(() => {
-    if (Object.keys(query).length === 0) {
-      void push({
-        pathname: url,
-        query: defaultQueryParams,
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const handleReset = () => {
+    setUrl(null);
+  };
 
-  const shallowRoute = (
-    key: string,
-    value: string | number,
-    unset?: boolean
-  ) => {
-    const nextQuery = {
-      ...query,
-      [key]: value,
-    };
+  const handleSubmit = (query: LivingDiscoveryQueryParams) => {
+    try {
+      const sanitized = Object.fromEntries(
+        Object.entries(query)
+          .filter((arr): arr is [string, number] => arr[1] !== null)
+          .map(([key, value]) => [key, `${value}`])
+      );
 
-    if (unset && key in nextQuery) {
-      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-      delete nextQuery[key];
-    }
+      if (sanitized.dungeonID === "-1") {
+        setUrl(null);
+        return;
+      }
 
-    void push(
-      {
-        pathname: url,
-        query: nextQuery,
-      },
-      undefined,
-      { shallow: true }
-    );
+      setUrl(`/api/discovery?${new URLSearchParams(sanitized).toString()}`);
+    } catch {}
   };
 
   return (
-    <div>
-      <div>
-        {dungeons.map((dungeon) => {
-          return (
-            <div
-              key={dungeon.slug}
-              className={`bg-${dungeon.slug} p-4 bg-cover bg-no-repeat`}
-            >
-              <style jsx>
-                {`
-                  .bg-${dungeon.slug} {
-                    background-image: url(/static/dungeons/${dungeon.slug}.jpg);
-                  }
-                `}
-              </style>
-              <input
-                type="checkbox"
-                checked={query.dungeon === dungeon.slug}
-                onChange={() => {
-                  shallowRoute(
-                    "dungeon",
-                    dungeon.slug,
-                    query.dungeon === dungeon.slug
-                  );
-                }}
-                id={dungeon.slug}
-                aria-labelledby={`label-${dungeon.slug}`}
-              />{" "}
-              <label id={`label-${dungeon.slug}`} htmlFor={dungeon.slug}>
-                {dungeon.name}
-              </label>
-            </div>
-          );
-        })}
-      </div>
+    <>
+      <Seo title="Route Discovery" />
 
-      <hr />
+      <div className={classnames(widthConstraint, "flex")}>
+        <Form
+          onSubmit={handleSubmit}
+          onReset={handleReset}
+          dungeons={dungeons}
+          affixes={affixes}
+          specs={specs}
+          loading={loading}
+          legendaries={legendaries}
+          weeks={weeks}
+        />
 
-      <div>
-        {keyLevels.map((keyLevel) => {
-          return (
-            <div key={keyLevel}>
-              <input
-                type="checkbox"
-                checked={query.level === `${keyLevel}`}
-                onChange={() => {
-                  shallowRoute("level", keyLevel);
-                }}
-                id={`level-${keyLevel}`}
-                aria-labelledby={`label-${keyLevel}`}
-              />{" "}
-              <label id={`label-${keyLevel}`} htmlFor={`level-${keyLevel}`}>
-                {keyLevel}
-              </label>
-            </div>
-          );
-        })}
-      </div>
-
-      <hr />
-
-      <div>
         <div>
-          <input
-            type="checkbox"
-            checked={query.itemLevelBracket === "any"}
-            onChange={() => {
-              shallowRoute("itemLevelBracket", "any");
-            }}
-            id="bracket-any"
-            aria-labelledby="label-bracket-any"
-          />{" "}
-          <label htmlFor="bracket-any" id="label-bracket-any">
-            any
-          </label>
+          {data.map((dataset) => `${dataset.report}-${dataset.fightID}`)}
         </div>
-        {itemLevelBrackets.map((bracket) => {
-          return (
-            <div key={bracket.from}>
-              <input
-                type="checkbox"
-                checked={
-                  query.itemLevelBracket !== "any" &&
-                  query.itemLevelBracket === `${bracket.from}`
-                }
-                onChange={() => {
-                  shallowRoute("itemLevelBracket", bracket.from);
-                }}
-                id={`bracket-${bracket.from}`}
-                aria-labelledby={`label-${bracket.from}`}
-              />{" "}
-              <label
-                id={`label-${bracket.from}`}
-                htmlFor={`bracket-${bracket.from}`}
-              >
-                {bracket.from} - {bracket.to}
-              </label>
-            </div>
-          );
-        })}
       </div>
-    </div>
+    </>
+  );
+}
+
+type FormProps = {
+  onSubmit: (query: LivingDiscoveryQueryParams) => void;
+  onReset: () => void;
+  loading: boolean;
+} & DiscoverProps;
+
+function Form({
+  onSubmit,
+  onReset,
+  dungeons,
+  loading,
+  affixes,
+  // specs,
+  weeks,
+}: FormProps) {
+  const {
+    reset,
+    dungeonID,
+    affix1,
+    affix2,
+    affix3,
+    dps1,
+    dps2,
+    dps3,
+    handlePropertyChange,
+    heal,
+    maxDeaths,
+    maxItemLevel,
+    maxKeyLevel,
+    minItemLevel,
+    minKeyLevel,
+    seasonAffix,
+    tank,
+    dps1Covenant,
+    dps1Legendary1,
+    dps1Legendary2,
+    dps1Soulbind,
+    dps2Covenant,
+    dps2Legendary1,
+    dps2Legendary2,
+    dps2Soulbind,
+    dps3Covenant,
+    dps3Legendary1,
+    dps3Legendary2,
+    dps3Soulbind,
+    healCovenant,
+    healLegendary1,
+    healLegendary2,
+    healSoulbind,
+    tankCovenant,
+    tankLegendary1,
+    tankLegendary2,
+    tankSoulbind,
+  } = useRouteDiscovery();
+
+  const handleSubmit: FormEventHandler = (event) => {
+    event.preventDefault();
+
+    onSubmit({
+      dungeonID,
+      affix1,
+      affix2,
+      affix3,
+      heal,
+      dps1,
+      dps2,
+      dps3,
+      maxDeaths,
+      maxItemLevel,
+      maxKeyLevel,
+      minItemLevel,
+      minKeyLevel,
+      seasonAffix,
+      tank,
+      dps1Covenant,
+      dps1Legendary1,
+      dps1Legendary2,
+      dps1Soulbind,
+      dps2Covenant,
+      dps2Legendary1,
+      dps2Legendary2,
+      dps2Soulbind,
+      dps3Covenant,
+      dps3Legendary1,
+      dps3Legendary2,
+      dps3Soulbind,
+      healCovenant,
+      healLegendary1,
+      healLegendary2,
+      healSoulbind,
+      tankCovenant,
+      tankLegendary1,
+      tankLegendary2,
+      tankSoulbind,
+    });
+  };
+
+  const handleReset = () => {
+    reset();
+    onReset();
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <fieldset disabled={loading}>
+        {affixes
+          .filter((affix) => affix.level === 2)
+          .map((affix) => {
+            const { name } = staticAffixMap[affix.id];
+
+            return (
+              <label key={affix.id}>
+                <input
+                  name="affix1"
+                  type="radio"
+                  onChange={(event) => {
+                    handlePropertyChange(
+                      "affix1",
+                      event.target.checked ? affix.id : null
+                    );
+                  }}
+                  checked={affix1 === affix.id}
+                />{" "}
+                {name}
+              </label>
+            );
+          })}
+        <hr />
+        {affixes
+          .filter((affix) => affix.level === 4)
+          .map((affix) => {
+            const { name } = staticAffixMap[affix.id];
+            const disabled = affix1
+              ? !weeks.some((week) => {
+                  return week[0] === affix1 && week[1] === affix.id;
+                })
+              : false;
+
+            return (
+              <label key={affix.id}>
+                <input
+                  name="affix2"
+                  type="radio"
+                  disabled={disabled}
+                  onChange={(event) => {
+                    handlePropertyChange(
+                      "affix2",
+                      event.target.checked ? affix.id : null
+                    );
+                  }}
+                  checked={affix2 === affix.id}
+                />{" "}
+                {name}
+              </label>
+            );
+          })}
+        <hr />
+        {affixes
+          .filter((affix) => affix.level === 7)
+          .map((affix) => {
+            const { name } = staticAffixMap[affix.id];
+
+            const disabled =
+              affix1 || affix2
+                ? !weeks.some((week) => {
+                    if (affix1 && affix2) {
+                      return (
+                        week[0] === affix1 &&
+                        week[1] === affix2 &&
+                        week[2] === affix.id
+                      );
+                    }
+
+                    if (affix1 && !affix2) {
+                      return week[0] === affix1 && week[2] === affix.id;
+                    }
+
+                    if (!affix1 && affix2) {
+                      return week[1] === affix2 && week[2] === affix.id;
+                    }
+
+                    return false;
+                  })
+                : false;
+
+            return (
+              <label key={affix.id}>
+                <input
+                  name="affix3"
+                  type="radio"
+                  disabled={disabled}
+                  onChange={(event) => {
+                    handlePropertyChange(
+                      "affix3",
+                      event.target.checked ? affix.id : null
+                    );
+                  }}
+                  checked={affix3 === affix.id}
+                />{" "}
+                {name}
+              </label>
+            );
+          })}
+        <hr />
+        {affixes
+          .filter((affix) => affix.level === 10)
+          .map((affix) => {
+            const { name } = staticAffixMap[affix.id];
+
+            return (
+              <label key={affix.id}>
+                <input
+                  name="affix4"
+                  type="radio"
+                  onChange={(event) => {
+                    handlePropertyChange(
+                      "seasonAffix",
+                      event.target.checked ? affix.id : null
+                    );
+                  }}
+                  checked={seasonAffix === affix.id}
+                />{" "}
+                {name}
+              </label>
+            );
+          })}
+
+        <hr />
+        <select
+          value={dungeonID}
+          onChange={(event) => {
+            try {
+              const value = Number.parseInt(event.target.value);
+              handlePropertyChange("dungeonID", value);
+            } catch {}
+          }}
+        >
+          <option value={-1}>select dungeon</option>
+          {dungeons.map((dungeon) => {
+            return (
+              <option key={dungeon.id} value={dungeon.id}>
+                {dungeon.name}
+              </option>
+            );
+          })}
+        </select>
+
+        <div>
+          <button type="submit" disabled={dungeonID === -1}>
+            submit
+          </button>
+          <button type="reset" onClick={handleReset}>
+            reset
+          </button>
+        </div>
+      </fieldset>
+    </form>
   );
 }
 
 export const getStaticProps: GetStaticProps<DiscoverProps> = async () => {
-  const dungeons = allDungeons.map((dungeon) => {
-    return {
-      name: dungeon.name,
-      slug: dungeon.slug.toLowerCase(),
-      id: dungeon.id,
-    };
-  });
-
-  const min = await prisma.fight.findFirst({
-    take: 1,
-    orderBy: {
-      averageItemLevel: "asc",
-    },
+  const specs = await prisma.spec.findMany({
     select: {
-      averageItemLevel: true,
+      role: true,
+      id: true,
     },
   });
 
-  const max = await prisma.fight.findFirst({
-    take: 1,
-    orderBy: {
-      averageItemLevel: "desc",
-    },
+  const currentSeason = await prisma.season.findFirst({
     select: {
-      averageItemLevel: true,
+      affixID: true,
     },
-  });
-
-  const itemLevelBrackets =
-    min && max
-      ? createItemlevelBrackets(min.averageItemLevel, max.averageItemLevel)
-      : [];
-
-  const maxKeyLevel = await prisma.fight.findFirst({
-    take: 1,
     orderBy: {
-      keystoneLevel: "desc",
-    },
-    select: {
-      keystoneLevel: true,
+      id: "desc",
     },
   });
 
-  const keyLevels = maxKeyLevel
-    ? Array.from({
-        length: maxKeyLevel.keystoneLevel - (MIN_KEYSTONE_LEVEL - 1),
-      }).map((_, index) => MIN_KEYSTONE_LEVEL + index)
-    : [];
+  if (!currentSeason) {
+    throw new Error(`missing season`);
+  }
+
+  const affixes: DiscoverProps["affixes"] = Object.entries(affixMap)
+    .map(([key, data]) => {
+      return {
+        id: Number.parseFloat(key),
+        level: data.level,
+      };
+    })
+    .filter((affix) => {
+      if (affix.level !== 10) {
+        return true;
+      }
+
+      return affix.id === currentSeason.affixID;
+    });
+
+  const rawWeeks = await prisma.week.findMany({
+    select: {
+      affix1ID: true,
+      affix2ID: true,
+      affix3ID: true,
+      season: {
+        select: {
+          affixID: true,
+        },
+      },
+    },
+    where: {
+      season: {
+        affixID: currentSeason.affixID,
+      },
+    },
+  });
+
+  const weeks = rawWeeks.map<[number, number, number, number]>((week) => {
+    return [week.affix1ID, week.affix2ID, week.affix3ID, week.season.affixID];
+  });
+
+  const rawLegendaries = await prisma.legendary.findMany({
+    select: {
+      id: true,
+      PlayerLegendary: {
+        select: {
+          player: {
+            select: {
+              specID: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  // eslint-disable-next-line unicorn/prefer-object-from-entries
+  const legendaries = rawLegendaries.reduce<DiscoverProps["legendaries"]>(
+    (acc, legendary) => {
+      if (legendary.PlayerLegendary.length === 0) {
+        return acc;
+      }
+
+      if (!(legendary.id in acc)) {
+        acc[legendary.id] = [];
+      }
+
+      legendary.PlayerLegendary.forEach((playerLegendary) => {
+        if (!acc[legendary.id].includes(playerLegendary.player.specID)) {
+          acc[legendary.id].push(playerLegendary.player.specID);
+        }
+      });
+
+      return acc;
+    },
+    {}
+  );
 
   return {
     props: {
-      dungeons,
-      itemLevelBrackets,
-      keyLevels,
+      dungeons: Object.entries(dungeons).map(([id, data]) => {
+        return {
+          id: Number.parseInt(id),
+          name: data.name,
+          slug: data.slug,
+        };
+      }),
+      specs: {
+        dps: specs.filter((spec) => spec.role === "dps").map((spec) => spec.id),
+        heal: specs
+          .filter((spec) => spec.role === "healer")
+          .map((spec) => spec.id),
+        tank: specs
+          .filter((spec) => spec.role === "tank")
+          .map((spec) => spec.id),
+      },
+      affixes,
+      weeks,
+      legendaries,
     },
     revalidate: 24 * 60 * 60,
   };
-};
-
-const createItemlevelBrackets = (min: number, max: number) => {
-  const nearestMultipleOf5Min = 5 * Math.ceil(Math.abs(min / 5));
-  const nearestMultipleOf5Max = 5 * Math.ceil(Math.abs(max / 5));
-
-  return Array.from({
-    length: (nearestMultipleOf5Max - nearestMultipleOf5Min) / 5,
-  }).reduce<{ from: number; to: number }[]>((acc, _, index) => {
-    return [
-      ...acc,
-      {
-        from: nearestMultipleOf5Min + 5 * index,
-        to: nearestMultipleOf5Min + 5 * index + 5,
-      },
-    ];
-  }, []);
 };
