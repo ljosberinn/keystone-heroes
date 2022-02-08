@@ -15,11 +15,11 @@ import type { RequestHandler } from "../utils/types";
 type Query = {
   query: {
     dungeonID?: string;
-    minKeyLevel?: string;
-    maxKeyLevel?: string;
+    keyLevel?: string;
     minItemLevel?: string;
     maxItemLevel?: string;
     maxDeaths?: string;
+    maxPercent?: string;
 
     tank?: string;
     tankLegendary1?: string;
@@ -97,11 +97,8 @@ const validateQueryParams = (maybeParams: DiscoveryQueryParams) => {
     maybeParams.dungeonID && maybeParams.dungeonID in dungeonMap
       ? Number.parseInt(maybeParams.dungeonID)
       : undefined;
-  const minKeyLevel = maybeParams?.minKeyLevel
-    ? Number.parseInt(maybeParams.minKeyLevel)
-    : undefined;
-  const maxKeyLevel = maybeParams?.maxKeyLevel
-    ? Number.parseInt(maybeParams.maxKeyLevel)
+  const keyLevel = maybeParams?.keyLevel
+    ? Number.parseInt(maybeParams.keyLevel)
     : undefined;
   const maxDeaths = maybeParams?.maxDeaths
     ? Number.parseInt(maybeParams.maxDeaths)
@@ -111,6 +108,9 @@ const validateQueryParams = (maybeParams: DiscoveryQueryParams) => {
     : undefined;
   const maxItemLevel = maybeParams?.maxItemLevel
     ? Number.parseInt(maybeParams.maxItemLevel)
+    : undefined;
+  const maxPercent = maybeParams?.maxPercent
+    ? Number.parseInt(maybeParams.maxPercent)
     : undefined;
 
   const tank = maybeParams?.tank
@@ -213,8 +213,7 @@ const validateQueryParams = (maybeParams: DiscoveryQueryParams) => {
 
   return {
     dungeonID,
-    minKeyLevel,
-    maxKeyLevel,
+    keyLevel,
     maxDeaths,
     minItemLevel,
     maxItemLevel,
@@ -223,6 +222,7 @@ const validateQueryParams = (maybeParams: DiscoveryQueryParams) => {
     affix2,
     affix3,
     seasonalAffix,
+    maxPercent,
 
     tank,
     tankLegendary1,
@@ -261,9 +261,9 @@ const handler: RequestHandler<Query, Response> = async (req, res) => {
     dungeonID,
     maxDeaths,
     maxItemLevel,
-    maxKeyLevel,
     minItemLevel,
-    minKeyLevel,
+    keyLevel,
+    maxPercent,
     specQuery,
     affix1,
     affix2,
@@ -305,9 +305,9 @@ const handler: RequestHandler<Query, Response> = async (req, res) => {
     dungeonID,
     maxDeaths,
     maxItemLevel,
-    maxKeyLevel,
+    keyLevel,
     minItemLevel,
-    minKeyLevel,
+    maxPercent,
     affix1,
     affix2,
     affix3,
@@ -353,14 +353,15 @@ const handler: RequestHandler<Query, Response> = async (req, res) => {
         chests: {
           gt: 0,
         },
+        percent: {
+          lte: maxPercent,
+          gte: 100,
+        },
         dungeonID,
         totalDeaths: {
           lte: maxDeaths,
         },
-        keystoneLevel: {
-          gte: minKeyLevel,
-          lte: maxKeyLevel,
-        },
+        keystoneLevel: keyLevel,
         PlayerFight: {
           every: {
             player: {
@@ -532,7 +533,8 @@ const handler: RequestHandler<Query, Response> = async (req, res) => {
         }
 
         return b.keystoneLevel - a.keystoneLevel;
-      });
+      })
+      .slice(0, 20);
 
     res.json(transformed);
   } catch (error) {

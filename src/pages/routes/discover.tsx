@@ -1,40 +1,33 @@
-import type { Affix } from "@prisma/client";
-import type { GetStaticProps } from "next";
 import type { FormEventHandler } from "react";
 import { useState } from "react";
 
 import type { DiscoveryResponse } from "../../api/functions/discovery";
-import { affixMap } from "../../db/data/affixes";
-import { prisma } from "../../db/prisma";
 import { Seo } from "../../web/components/Seo";
 import { useAbortableFetch } from "../../web/hooks/useAbortableFetch";
-import { affixes as staticAffixMap, dungeons } from "../../web/staticData";
+import { dungeons, weeks } from "../../web/staticData";
 import type { LivingDiscoveryQueryParams } from "../../web/store";
 import { useRouteDiscovery } from "../../web/store";
-import { widthConstraint } from "../../web/styles/tokens";
-import { classnames } from "../../web/utils/classnames";
+import {
+  bgPrimary,
+  bgSecondary,
+  hoverShadow,
+  widthConstraint,
+} from "../../web/styles/tokens";
 
-type DiscoverProps = {
-  dungeons: (Pick<typeof dungeons[keyof typeof dungeons], "slug" | "name"> & {
-    id: number;
-  })[];
-  specs: {
-    tank: number[];
-    heal: number[];
-    dps: number[];
-  };
-  affixes: (Pick<Affix, "id"> & { level: 2 | 4 | 7 | 10 })[];
-  weeks: [number, number, number, number][];
-  legendaries: Record<number, number[]>;
-};
+// export type DiscoverProps = {
+//   dungeons: (Pick<typeof dungeons[keyof typeof dungeons], "slug" | "name"> & {
+//     id: number;
+//   })[];
+//   specs: {
+//     tank: number[];
+//     heal: number[];
+//     dps: number[];
+//   };
+//   weeks: { ids: [number, number, number]; name: string }[];
+//   legendaries: Record<number, number[]>;
+// };
 
-export default function Discover({
-  dungeons,
-  specs,
-  affixes,
-  weeks,
-  legendaries,
-}: DiscoverProps): JSX.Element {
+export default function Discover(): JSX.Element {
   const [url, setUrl] = useState<string | null>(null);
   const [data, loading] = useAbortableFetch<DiscoveryResponse>({
     url,
@@ -66,20 +59,33 @@ export default function Discover({
     <>
       <Seo title="Route Discovery" />
 
-      <div className={classnames(widthConstraint, "flex")}>
-        <Form
-          onSubmit={handleSubmit}
-          onReset={handleReset}
-          dungeons={dungeons}
-          affixes={affixes}
-          specs={specs}
-          loading={loading}
-          legendaries={legendaries}
-          weeks={weeks}
-        />
+      <div className={`${widthConstraint} py-6`}>
+        <div className="flex flex-col mx-auto space-x-0 lg:flex-row max-w-screen-2xl lg:space-x-4">
+          <div className={`"flex-1 rounded-b-lg ${hoverShadow}`}>
+            <div className={`p-4 rounded-t-lg ${bgSecondary}`}>
+              <h1 className="text-3xl font-bold">Route Discovery</h1>
+            </div>
+            <div className={`h-auto p-4 rounded-b-lg ${bgPrimary}`}>
+              <Form
+                onSubmit={handleSubmit}
+                onReset={handleReset}
+                loading={loading}
+              />
+            </div>
+          </div>
 
-        <div>
-          {data.map((dataset) => `${dataset.report}-${dataset.fightID}`)}
+          <div className="w-full h-auto max-w-screen-xl pt-4 lg:w-4/6 lg:pt-0">
+            <div className={`p-4 rounded-t-lg ${bgSecondary}`}>
+              <h2 className="text-2xl font-bold">Results</h2>
+            </div>
+            <div className={`p-2 rounded-b-lg ${bgPrimary} ${hoverShadow}`}>
+              {data.map((dataset) => (
+                <div key={`${dataset.report}-${dataset.fightID}`}>
+                  {dataset.report}-{dataset.fightID}
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </>
@@ -90,17 +96,9 @@ type FormProps = {
   onSubmit: (query: LivingDiscoveryQueryParams) => void;
   onReset: () => void;
   loading: boolean;
-} & DiscoverProps;
+};
 
-function Form({
-  onSubmit,
-  onReset,
-  dungeons,
-  loading,
-  affixes,
-  // specs,
-  weeks,
-}: FormProps) {
+function Form({ onSubmit, onReset, loading }: FormProps) {
   const {
     reset,
     dungeonID,
@@ -114,9 +112,8 @@ function Form({
     heal,
     maxDeaths,
     maxItemLevel,
-    maxKeyLevel,
     minItemLevel,
-    minKeyLevel,
+    keyLevel,
     seasonAffix,
     tank,
     dps1Covenant,
@@ -139,6 +136,7 @@ function Form({
     tankLegendary1,
     tankLegendary2,
     tankSoulbind,
+    maxPercent,
   } = useRouteDiscovery();
 
   const handleSubmit: FormEventHandler = (event) => {
@@ -155,9 +153,8 @@ function Form({
       dps3,
       maxDeaths,
       maxItemLevel,
-      maxKeyLevel,
+      keyLevel,
       minItemLevel,
-      minKeyLevel,
       seasonAffix,
       tank,
       dps1Covenant,
@@ -180,6 +177,7 @@ function Form({
       tankLegendary1,
       tankLegendary2,
       tankSoulbind,
+      maxPercent,
     });
   };
 
@@ -191,278 +189,279 @@ function Form({
   return (
     <form onSubmit={handleSubmit}>
       <fieldset disabled={loading}>
-        {affixes
-          .filter((affix) => affix.level === 2)
-          .map((affix) => {
-            const { name } = staticAffixMap[affix.id];
+        <div className="flex space-x-4 lg:flex-col lg:space-x-0 lg:space-y-2 xl:flex-row xl:space-y-0 xl:space-x-4">
+          <div className="flex flex-col w-1/2 md:w-full">
+            <label htmlFor="dungeon-selection" title="required">
+              Dungeon<sup className="text-red-500">*</sup>
+            </label>
 
-            return (
-              <label key={affix.id}>
-                <input
-                  name="affix1"
-                  type="radio"
-                  onChange={(event) => {
-                    handlePropertyChange(
-                      "affix1",
-                      event.target.checked ? affix.id : null
-                    );
-                  }}
-                  checked={affix1 === affix.id}
-                />{" "}
-                {name}
-              </label>
-            );
-          })}
-        <hr />
-        {affixes
-          .filter((affix) => affix.level === 4)
-          .map((affix) => {
-            const { name } = staticAffixMap[affix.id];
-            const disabled = affix1
-              ? !weeks.some((week) => {
-                  return week[0] === affix1 && week[1] === affix.id;
+            <select
+              id="dungeon-selection"
+              required
+              value={dungeonID}
+              onChange={(event) => {
+                try {
+                  const value = Number.parseInt(event.target.value);
+                  handlePropertyChange("dungeonID", value);
+                } catch {
+                  handlePropertyChange("dungeonID", -1);
+                }
+              }}
+              className="w-full"
+            >
+              <option value={-1}>select dungeon</option>
+              {Object.entries(dungeons)
+                .map(([id, data]) => {
+                  return {
+                    id: Number.parseInt(id),
+                    name: data.name,
+                    slug: data.slug,
+                  };
                 })
-              : false;
+                .sort((a, b) => a.name.localeCompare(b.name))
+                .map((dungeon) => {
+                  return (
+                    <option key={dungeon.id} value={dungeon.id}>
+                      {dungeon.name}
+                    </option>
+                  );
+                })}
+            </select>
+          </div>
 
-            return (
-              <label key={affix.id}>
-                <input
-                  name="affix2"
-                  type="radio"
-                  disabled={disabled}
-                  onChange={(event) => {
+          <div className="flex flex-col w-1/2 md:w-full">
+            <label htmlFor="key-level">Key Level</label>
+
+            <div>
+              <input
+                type="number"
+                name="keyLevel"
+                min="10"
+                max="40"
+                step="1"
+                id="key-level"
+                aria-label="Key Level"
+                placeholder="Key Level"
+                className="w-full"
+                value={keyLevel ? keyLevel : ""}
+                onChange={(event) => {
+                  try {
+                    const value = Number.parseInt(event.target.value);
+
                     handlePropertyChange(
-                      "affix2",
-                      event.target.checked ? affix.id : null
+                      "keyLevel",
+                      Number.isNaN(value) ? null : value
                     );
-                  }}
-                  checked={affix2 === affix.id}
-                />{" "}
-                {name}
-              </label>
-            );
-          })}
-        <hr />
-        {affixes
-          .filter((affix) => affix.level === 7)
-          .map((affix) => {
-            const { name } = staticAffixMap[affix.id];
+                  } catch {
+                    handlePropertyChange("keyLevel", null);
+                  }
+                }}
+              />
+            </div>
+          </div>
+        </div>
 
-            const disabled =
-              affix1 || affix2
-                ? !weeks.some((week) => {
-                    if (affix1 && affix2) {
-                      return (
-                        week[0] === affix1 &&
-                        week[1] === affix2 &&
-                        week[2] === affix.id
+        <div className="flex space-x-4 lg:flex-col lg:space-x-0 lg:space-y-2 xl:flex-row xl:space-y-0 xl:space-x-4 lg:pt-2">
+          <div className="flex flex-col w-1/2 lg:w-full">
+            <label htmlFor="dungeon-selection">Affixes</label>
+
+            <select
+              id="affix-selection"
+              value={
+                affix1 && affix2 && affix3
+                  ? [affix1, affix2, affix3].join("-")
+                  : ""
+              }
+              onChange={(event) => {
+                try {
+                  const ids = event.target.value
+                    .split("-")
+                    .map((id) => Number.parseInt(id));
+
+                  if (ids.length === 3) {
+                    handlePropertyChange("affix1", ids[0]);
+                    handlePropertyChange("affix2", ids[1]);
+                    handlePropertyChange("affix3", ids[2]);
+                  } else {
+                    handlePropertyChange("affix1", null);
+                    handlePropertyChange("affix2", null);
+                    handlePropertyChange("affix3", null);
+                  }
+                } catch {
+                  handlePropertyChange("affix1", null);
+                  handlePropertyChange("affix2", null);
+                  handlePropertyChange("affix3", null);
+                }
+              }}
+              className="w-full"
+            >
+              <option value={-1}>select week</option>
+              {[...weeks]
+                .sort((a, b) => a.name.localeCompare(b.name))
+                .map((week) => {
+                  const key = week.ids.join("-");
+
+                  return (
+                    <option key={key} value={key}>
+                      {week.name}
+                    </option>
+                  );
+                })}
+            </select>
+          </div>
+
+          <div className="flex flex-row w-1/2 space-x-2 lg:w-full lg:flex-col lg:space-x-0 lg:space-y-2 xl:flex-row xl:space-x-4 xl:space-y-0">
+            <div className="w-1/2 lg:w-full xl:w-1/2">
+              <label htmlFor="min-item-level">Min ILVL</label>
+
+              <div>
+                <input
+                  type="number"
+                  name="minItemlevel"
+                  min="180"
+                  max="300"
+                  step="1"
+                  id="min-item-level"
+                  aria-label="Min ILVL"
+                  placeholder="Min ILVL"
+                  className="w-full"
+                  value={minItemLevel ? minItemLevel : ""}
+                  onChange={(event) => {
+                    try {
+                      const value = Number.parseInt(event.target.value);
+
+                      handlePropertyChange(
+                        "minItemLevel",
+                        Number.isNaN(value) ? null : value
                       );
+                    } catch {
+                      handlePropertyChange("minItemLevel", null);
                     }
-
-                    if (affix1 && !affix2) {
-                      return week[0] === affix1 && week[2] === affix.id;
-                    }
-
-                    if (!affix1 && affix2) {
-                      return week[1] === affix2 && week[2] === affix.id;
-                    }
-
-                    return false;
-                  })
-                : false;
-
-            return (
-              <label key={affix.id}>
-                <input
-                  name="affix3"
-                  type="radio"
-                  disabled={disabled}
-                  onChange={(event) => {
-                    handlePropertyChange(
-                      "affix3",
-                      event.target.checked ? affix.id : null
-                    );
                   }}
-                  checked={affix3 === affix.id}
-                />{" "}
-                {name}
-              </label>
-            );
-          })}
-        <hr />
-        {affixes
-          .filter((affix) => affix.level === 10)
-          .map((affix) => {
-            const { name } = staticAffixMap[affix.id];
+                />
+              </div>
+            </div>
 
-            return (
-              <label key={affix.id}>
+            <div className="w-1/2 lg:w-full xl:w-1/2">
+              <label htmlFor="max-item-level">Max ILVL</label>
+
+              <div>
                 <input
-                  name="affix4"
-                  type="radio"
+                  type="number"
+                  name="maxItemlevel"
+                  min="180"
+                  max="300"
+                  step="1"
+                  id="max-item-level"
+                  aria-label="Max ILVL"
+                  placeholder="Max ILVL"
+                  className="w-full"
+                  value={maxItemLevel ? maxItemLevel : ""}
                   onChange={(event) => {
-                    handlePropertyChange(
-                      "seasonAffix",
-                      event.target.checked ? affix.id : null
-                    );
+                    try {
+                      const value = Number.parseInt(event.target.value);
+
+                      handlePropertyChange(
+                        "maxItemLevel",
+                        Number.isNaN(value) ? null : value
+                      );
+                    } catch {
+                      handlePropertyChange("maxItemLevel", null);
+                    }
                   }}
-                  checked={seasonAffix === affix.id}
-                />{" "}
-                {name}
-              </label>
-            );
-          })}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
 
-        <hr />
-        <select
-          value={dungeonID}
-          onChange={(event) => {
-            try {
-              const value = Number.parseInt(event.target.value);
-              handlePropertyChange("dungeonID", value);
-            } catch {}
-          }}
-        >
-          <option value={-1}>select dungeon</option>
-          {dungeons.map((dungeon) => {
-            return (
-              <option key={dungeon.id} value={dungeon.id}>
-                {dungeon.name}
-              </option>
-            );
-          })}
-        </select>
+        <div className="flex space-x-4 lg:flex-col lg:space-x-0 lg:space-y-2 xl:flex-row xl:space-y-0 xl:space-x-4 lg:pt-2">
+          <div className="flex flex-col w-1/2 md:w-full">
+            <label htmlFor="max-percent">Max Percent</label>
 
-        <div>
-          <button type="submit" disabled={dungeonID === -1}>
-            submit
-          </button>
-          <button type="reset" onClick={handleReset}>
+            <div>
+              <input
+                type="number"
+                name="maxPercent"
+                min="100"
+                step="1"
+                id="max-percent"
+                aria-label="Max Percent"
+                placeholder="Max Percent"
+                className="w-full"
+                value={maxPercent ? maxPercent : ""}
+                onChange={(event) => {
+                  try {
+                    const value = Number.parseInt(event.target.value);
+
+                    handlePropertyChange(
+                      "maxPercent",
+                      Number.isNaN(value) ? null : value
+                    );
+                  } catch {
+                    handlePropertyChange("maxPercent", null);
+                  }
+                }}
+              />
+            </div>
+          </div>
+
+          <div className="flex flex-col w-1/2 md:w-full">
+            <label htmlFor="max-deaths">Max Deaths</label>
+
+            <div>
+              <input
+                type="number"
+                name="maxDeaths"
+                min="0"
+                step="1"
+                id="max-deaths"
+                aria-label="Max Deaths"
+                placeholder="Max Deaths"
+                className="w-full"
+                value={maxDeaths === null ? "" : maxDeaths}
+                onChange={(event) => {
+                  try {
+                    const value = Number.parseInt(event.target.value);
+                    console.log(value, Number.isNaN(value) ? null : value);
+
+                    handlePropertyChange(
+                      "maxDeaths",
+                      Number.isNaN(value) ? null : value
+                    );
+                  } catch {
+                    handlePropertyChange("maxDeaths", null);
+                  }
+                }}
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="flex justify-between w-full pt-4">
+          <button
+            className="px-4 font-medium text-center text-white transition-all duration-200 ease-in-out bg-red-500 rounded-lg outline-none dark:hover:bg-red-600 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-700 focus:bg-red-600 dark:focus:ring-red-300"
+            type="reset"
+            onClick={handleReset}
+          >
             reset
+          </button>
+
+          <button
+            className="px-4 font-medium text-center text-white transition-all duration-200 ease-in-out bg-blue-600 rounded-lg outline-none dark:hover:bg-blue-500 hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:bg-blue-500 dark:focus:ring-blue-300"
+            type="submit"
+            onClick={(event) => {
+              if (dungeonID === -1) {
+                event.preventDefault();
+                // eslint-disable-next-line no-alert
+                alert(`Please select a dungeon first.`);
+              }
+            }}
+          >
+            submit
           </button>
         </div>
       </fieldset>
     </form>
   );
 }
-
-export const getStaticProps: GetStaticProps<DiscoverProps> = async () => {
-  const specs = await prisma.spec.findMany({
-    select: {
-      role: true,
-      id: true,
-    },
-  });
-
-  const currentSeason = await prisma.season.findFirst({
-    select: {
-      affixID: true,
-    },
-    orderBy: {
-      id: "desc",
-    },
-  });
-
-  if (!currentSeason) {
-    throw new Error(`missing season`);
-  }
-
-  const affixes: DiscoverProps["affixes"] = Object.entries(affixMap)
-    .map(([key, data]) => {
-      return {
-        id: Number.parseFloat(key),
-        level: data.level,
-      };
-    })
-    .filter((affix) => {
-      if (affix.level !== 10) {
-        return true;
-      }
-
-      return affix.id === currentSeason.affixID;
-    });
-
-  const rawWeeks = await prisma.week.findMany({
-    select: {
-      affix1ID: true,
-      affix2ID: true,
-      affix3ID: true,
-      season: {
-        select: {
-          affixID: true,
-        },
-      },
-    },
-    where: {
-      season: {
-        affixID: currentSeason.affixID,
-      },
-    },
-  });
-
-  const weeks = rawWeeks.map<[number, number, number, number]>((week) => {
-    return [week.affix1ID, week.affix2ID, week.affix3ID, week.season.affixID];
-  });
-
-  const rawLegendaries = await prisma.legendary.findMany({
-    select: {
-      id: true,
-      PlayerLegendary: {
-        select: {
-          player: {
-            select: {
-              specID: true,
-            },
-          },
-        },
-      },
-    },
-  });
-
-  // eslint-disable-next-line unicorn/prefer-object-from-entries
-  const legendaries = rawLegendaries.reduce<DiscoverProps["legendaries"]>(
-    (acc, legendary) => {
-      if (legendary.PlayerLegendary.length === 0) {
-        return acc;
-      }
-
-      if (!(legendary.id in acc)) {
-        acc[legendary.id] = [];
-      }
-
-      legendary.PlayerLegendary.forEach((playerLegendary) => {
-        if (!acc[legendary.id].includes(playerLegendary.player.specID)) {
-          acc[legendary.id].push(playerLegendary.player.specID);
-        }
-      });
-
-      return acc;
-    },
-    {}
-  );
-
-  return {
-    props: {
-      dungeons: Object.entries(dungeons).map(([id, data]) => {
-        return {
-          id: Number.parseInt(id),
-          name: data.name,
-          slug: data.slug,
-        };
-      }),
-      specs: {
-        dps: specs.filter((spec) => spec.role === "dps").map((spec) => spec.id),
-        heal: specs
-          .filter((spec) => spec.role === "healer")
-          .map((spec) => spec.id),
-        tank: specs
-          .filter((spec) => spec.role === "tank")
-          .map((spec) => spec.id),
-      },
-      affixes,
-      weeks,
-      legendaries,
-    },
-    revalidate: 24 * 60 * 60,
-  };
-};

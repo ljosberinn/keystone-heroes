@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import create from "zustand";
 
 import type { DiscoveryQueryParams } from "../api/functions/discovery";
+import { currentSeasonID } from "./staticData";
 import { ls } from "./utils/localStorage";
 
 export type ReportStore = {
@@ -304,13 +305,13 @@ const initialRouteDiscoveryState: LivingDiscoveryQueryParams = {
   dps2: null,
   dps3: null,
   dungeonID: -1,
+  maxPercent: null,
   heal: null,
   maxDeaths: null,
   maxItemLevel: null,
-  maxKeyLevel: null,
   minItemLevel: null,
-  minKeyLevel: null,
-  seasonAffix: null,
+  keyLevel: null,
+  seasonAffix: currentSeasonID,
   tank: null,
   dps1Covenant: null,
   dps1Legendary1: null,
