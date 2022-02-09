@@ -353,6 +353,7 @@ const handler: RequestHandler<Query, Response> = async (req, res) => {
         chests: {
           gt: 0,
         },
+        ...(keyLevel ? { keystoneLevel: keyLevel } : null),
         percent: {
           ...(maxPercent ? { lte: maxPercent } : null),
           gte: 100,
