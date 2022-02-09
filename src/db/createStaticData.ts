@@ -445,19 +445,41 @@ async function create() {
     },
   });
 
-  const weeks = rawWeeks.map((week) => {
-    const ids: [number, number, number] = [
-      week.affix1ID,
-      week.affix2ID,
-      week.affix3ID,
-    ];
-    const name = ids.map((id) => affixes[id].name).join(" ");
+  const weeks = rawWeeks
+    .map((week) => {
+      const ids: [number, number, number] = [
+        week.affix1ID,
+        week.affix2ID,
+        week.affix3ID,
+      ];
+      const name = [week.affix2ID, week.affix3ID]
+        .map((id) => affixes[id].name)
+        .join(" ");
 
-    return {
-      name,
-      ids,
-    };
-  });
+      return {
+        name,
+        ids,
+        key: affixes[week.affix1ID].name,
+      };
+    })
+    // eslint-disable-next-line unicorn/prefer-object-from-entries
+    .reduce<Record<string, { ids: [number, number, number]; name: string }[]>>(
+      (acc, week) => {
+        const dataset = {
+          ids: week.ids,
+          name: week.name,
+        };
+
+        if (week.key in acc) {
+          acc[week.key].push(dataset);
+          return acc;
+        }
+
+        acc[week.key] = [dataset];
+        return acc;
+      },
+      {}
+    );
 
   const rawLegendariesPerSpec = await prisma.legendary.findMany({
     select: {
@@ -873,8 +895,12 @@ export const NW = JSON.parse(\`${JSON.stringify(NW)}\`);
 
 type StaticDataMap = Record<number, { name: string, icon: string }>;
 
-export const weeks = ${JSON.stringify(weeks)};
-export const legendariesBySpec = ${JSON.stringify(legendariesBySpec)}
+export const weeks: Record<string, { ids: [number, number, number]; name: string }[]> = ${JSON.stringify(
+    weeks
+  )};
+export const legendariesBySpec: Record<number, number[]> = ${JSON.stringify(
+    legendariesBySpec
+  )}
 export const specIDsPerRole = ${JSON.stringify(specIDsPerRole)};
 export const currentSeasonID = ${currentSeason.affixID};
 

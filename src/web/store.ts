@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import create from "zustand";
 
 import type { DiscoveryQueryParams } from "../api/functions/discovery";
-import { currentSeasonID } from "./staticData";
 import { ls } from "./utils/localStorage";
 
 export type ReportStore = {
@@ -282,13 +281,8 @@ export const usePullSettings = create<PullSettings>((set) => {
 });
 
 export type LivingDiscoveryQueryParams = {
-  [Property in keyof Required<Omit<DiscoveryQueryParams, "dungeonID">>]:
-    | number
-    | null;
-} & {
-  dungeonID: number;
+  [Property in keyof Required<DiscoveryQueryParams>]: number | null;
 };
-
 type RouteDiscovery = {
   reset: () => void;
   handlePropertyChange: <Key extends keyof LivingDiscoveryQueryParams>(
@@ -304,14 +298,14 @@ const initialRouteDiscoveryState: LivingDiscoveryQueryParams = {
   dps1: null,
   dps2: null,
   dps3: null,
-  dungeonID: -1,
+  dungeonID: null,
   maxPercent: null,
   heal: null,
   maxDeaths: null,
   minItemLevelAvg: null,
   maxItemLevelAvg: null,
-  keyLevel: null,
-  seasonAffix: currentSeasonID,
+  maxKeyLevel: null,
+  minKeyLevel: null,
   tank: null,
   dps1Covenant: null,
   dps1Legendary1: null,

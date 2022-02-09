@@ -46,22 +46,29 @@ export const NW = JSON.parse(
 
 type StaticDataMap = Record<number, { name: string; icon: string }>;
 
-export const weeks = [
-  { name: "Fortified Sanguine Necrotic", ids: [10, 8, 4] },
-  { name: "Tyrannical Sanguine Storming", ids: [9, 8, 124] },
-  { name: "Tyrannical Bolstering Explosive", ids: [9, 7, 13] },
-  { name: "Fortified Bolstering Quaking", ids: [10, 7, 14] },
-  { name: "Fortified Inspiring Grievous", ids: [10, 122, 12] },
-  { name: "Tyrannical Raging Volcanic", ids: [9, 6, 3] },
-  { name: "Tyrannical Bursting Volcanic", ids: [9, 11, 3] },
-  { name: "Encrypted Encrypted Encrypted", ids: [130, 130, 130] },
-  { name: "Fortified Bursting Storming", ids: [10, 11, 124] },
-  { name: "Tyrannical Inspiring Quaking", ids: [9, 122, 14] },
-  { name: "Tyrannical Spiteful Necrotic", ids: [9, 123, 4] },
-  { name: "Fortified Spiteful Grievous", ids: [10, 123, 12] },
-  { name: "Fortified Raging Explosive", ids: [10, 6, 13] },
-];
-export const legendariesBySpec = {
+export const weeks: Record<
+  string,
+  { ids: [number, number, number]; name: string }[]
+> = {
+  Fortified: [
+    { ids: [10, 8, 4], name: "Sanguine Necrotic" },
+    { ids: [10, 7, 14], name: "Bolstering Quaking" },
+    { ids: [10, 122, 12], name: "Inspiring Grievous" },
+    { ids: [10, 11, 124], name: "Bursting Storming" },
+    { ids: [10, 123, 12], name: "Spiteful Grievous" },
+    { ids: [10, 6, 13], name: "Raging Explosive" },
+  ],
+  Tyrannical: [
+    { ids: [9, 8, 124], name: "Sanguine Storming" },
+    { ids: [9, 7, 13], name: "Bolstering Explosive" },
+    { ids: [9, 6, 3], name: "Raging Volcanic" },
+    { ids: [9, 11, 3], name: "Bursting Volcanic" },
+    { ids: [9, 122, 14], name: "Inspiring Quaking" },
+    { ids: [9, 123, 4], name: "Spiteful Necrotic" },
+  ],
+};
+
+export const legendariesBySpec: Record<string, number[]> = {
   "327364": [5],
   "327365": [4],
   "332769": [6],

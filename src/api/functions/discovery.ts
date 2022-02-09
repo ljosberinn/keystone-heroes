@@ -4,6 +4,8 @@ import nc from "next-connect";
 import { dungeonMap } from "../../db/data/dungeons";
 import { specs } from "../../db/data/specs";
 import { prisma } from "../../db/prisma";
+import { MIN_KEYSTONE_LEVEL } from "../../web/env";
+import { currentSeasonID } from "../../web/staticData";
 import { configureScope, withSentry } from "../middleware";
 import {
   cacheControlKey,
@@ -15,7 +17,8 @@ import type { RequestHandler } from "../utils/types";
 type Query = {
   query: {
     dungeonID?: string;
-    keyLevel?: string;
+    minKeyLevel?: string;
+    maxKeyLevel?: string;
     minItemLevelAvg?: string;
     maxItemLevelAvg?: string;
     maxDeaths?: string;
@@ -54,8 +57,6 @@ type Query = {
     affix1?: string;
     affix2?: string;
     affix3?: string;
-
-    seasonAffix?: string;
   };
 };
 
@@ -80,6 +81,7 @@ export type DiscoveryResponse = (Pick<
   | "totalDeaths"
 > & {
   affixes: number[];
+  dungeonID: number;
   report: string;
   player: (Pick<
     Player,
@@ -97,8 +99,11 @@ const validateQueryParams = (maybeParams: DiscoveryQueryParams) => {
     maybeParams.dungeonID && maybeParams.dungeonID in dungeonMap
       ? Number.parseInt(maybeParams.dungeonID)
       : undefined;
-  const keyLevel = maybeParams?.keyLevel
-    ? Number.parseInt(maybeParams.keyLevel)
+  const minKeyLevel = maybeParams?.minKeyLevel
+    ? Number.parseInt(maybeParams.minKeyLevel)
+    : undefined;
+  const maxKeyLevel = maybeParams?.maxKeyLevel
+    ? Number.parseInt(maybeParams.maxKeyLevel)
     : undefined;
   const maxDeaths = maybeParams?.maxDeaths
     ? Number.parseInt(maybeParams.maxDeaths)
@@ -207,13 +212,11 @@ const validateQueryParams = (maybeParams: DiscoveryQueryParams) => {
   const affix3 = maybeParams?.affix3
     ? Number.parseInt(maybeParams.affix3)
     : undefined;
-  const seasonalAffix = maybeParams?.seasonAffix
-    ? Number.parseInt(maybeParams.seasonAffix)
-    : undefined;
 
   return {
     dungeonID,
-    keyLevel,
+    minKeyLevel,
+    maxKeyLevel,
     maxDeaths,
     minItemLevelAvg,
     maxItemLevelAvg,
@@ -221,7 +224,6 @@ const validateQueryParams = (maybeParams: DiscoveryQueryParams) => {
     affix1,
     affix2,
     affix3,
-    seasonalAffix,
     maxPercent,
 
     tank,
@@ -256,6 +258,38 @@ const validateQueryParams = (maybeParams: DiscoveryQueryParams) => {
   };
 };
 
+const hasValidParams = ({
+  minKeyLevel,
+  maxDeaths,
+  maxPercent,
+  maxKeyLevel,
+  maxItemLevelAvg,
+  minItemLevelAvg,
+}: {
+  [Property in keyof Pick<
+    DiscoveryQueryParams,
+    | "minKeyLevel"
+    | "maxDeaths"
+    | "maxPercent"
+    | "maxKeyLevel"
+    | "maxItemLevelAvg"
+    | "minItemLevelAvg"
+  >]: number;
+}) => {
+  if (
+    (minKeyLevel && minKeyLevel < MIN_KEYSTONE_LEVEL) ||
+    (maxDeaths && maxDeaths < 0) ||
+    (maxPercent && maxPercent < 100) ||
+    (maxKeyLevel && maxKeyLevel > 45) ||
+    (maxItemLevelAvg && maxItemLevelAvg > 400) ||
+    (minItemLevelAvg && minItemLevelAvg < 180)
+  ) {
+    return false;
+  }
+
+  return true;
+};
+
 const handler: RequestHandler<Query, Response> = async (req, res) => {
   try {
     const {
@@ -263,13 +297,13 @@ const handler: RequestHandler<Query, Response> = async (req, res) => {
       maxDeaths,
       maxItemLevelAvg,
       minItemLevelAvg,
-      keyLevel,
+      minKeyLevel,
+      maxKeyLevel,
       maxPercent,
       specQuery,
       affix1,
       affix2,
       affix3,
-      seasonalAffix,
       dps1Covenant,
       dps1Legendary1,
       dps1Legendary2,
@@ -297,22 +331,31 @@ const handler: RequestHandler<Query, Response> = async (req, res) => {
       tank,
     } = validateQueryParams(req.query);
 
-    if (!dungeonID) {
-      res.status(BAD_REQUEST).end();
-      return;
+    if (
+      !hasValidParams({
+        maxDeaths,
+        maxItemLevelAvg,
+        maxKeyLevel,
+        maxPercent,
+        minItemLevelAvg,
+        minKeyLevel,
+      })
+    ) {
+      res.status(BAD_REQUEST);
+      res.json([]);
     }
 
     Object.entries({
       dungeonID,
       maxDeaths,
       maxItemLevelAvg,
-      keyLevel,
+      minKeyLevel,
+      maxKeyLevel,
       minItemLevelAvg,
       maxPercent,
       affix1,
       affix2,
       affix3,
-      seasonalAffix,
       dps1Covenant,
       dps1Legendary1,
       dps1Legendary2,
@@ -353,7 +396,14 @@ const handler: RequestHandler<Query, Response> = async (req, res) => {
         chests: {
           gt: 0,
         },
-        ...(keyLevel ? { keystoneLevel: keyLevel } : null),
+        ...(minKeyLevel || maxKeyLevel
+          ? {
+              keystoneLevel: {
+                ...(minKeyLevel ? { gte: minKeyLevel } : null),
+                ...(maxKeyLevel ? { lte: maxKeyLevel } : null),
+              },
+            }
+          : null),
         percent: {
           ...(maxPercent ? { lte: maxPercent } : null),
           gte: 100,
@@ -387,7 +437,7 @@ const handler: RequestHandler<Query, Response> = async (req, res) => {
             affix3ID: affix3,
             season: {
               affixID: {
-                in: seasonalAffix,
+                in: currentSeasonID,
               },
             },
           },
@@ -488,6 +538,14 @@ const handler: RequestHandler<Query, Response> = async (req, res) => {
       dps3Soulbind,
     });
 
+    const covenantFilter = createCovenantFilter({
+      tankCovenant,
+      healCovenant,
+      dps1Covenant,
+      dps2Covenant,
+      dps3Covenant,
+    });
+
     const transformed = rawData
       .map<DiscoveryResponse[number] | null>(
         ({ PlayerFight, Report, dungeonID, ...rest }) => {
@@ -497,6 +555,7 @@ const handler: RequestHandler<Query, Response> = async (req, res) => {
 
           return {
             ...rest,
+            dungeonID,
             affixes: [
               Report.week.affix1ID,
               Report.week.affix2ID,
@@ -528,7 +587,8 @@ const handler: RequestHandler<Query, Response> = async (req, res) => {
           dataset === null ||
           !specQueryFilter(dataset) ||
           !legendaryFilter(dataset) ||
-          !soulbindFilter(dataset)
+          !soulbindFilter(dataset) ||
+          !covenantFilter(dataset)
         ) {
           return acc;
         }
@@ -787,6 +847,81 @@ const hasMismatch = (
 };
 
 const isNumber = (dataset?: number): dataset is number => dataset !== undefined;
+
+type CovenantFilterArgs = {
+  tankCovenant?: number;
+  healCovenant?: number;
+  dps1Covenant?: number;
+  dps2Covenant?: number;
+  dps3Covenant?: number;
+};
+
+const createCovenantFilter = ({
+  dps1Covenant,
+  dps2Covenant,
+  dps3Covenant,
+  healCovenant,
+  tankCovenant,
+}: CovenantFilterArgs) => {
+  if (
+    !tankCovenant &&
+    !healCovenant &&
+    !dps1Covenant &&
+    !dps2Covenant &&
+    !dps3Covenant
+  ) {
+    return () => true;
+  }
+
+  return (dataset: DiscoveryResponse[number]) => {
+    const tankPlayer = dataset.player.find((player) => {
+      return filterPlayerByRole(player, "tank");
+    });
+
+    const healPlayer = dataset.player.find((player) => {
+      return filterPlayerByRole(player, "healer");
+    });
+
+    if (
+      (tankCovenant && tankPlayer?.covenantID !== tankCovenant) ||
+      (healCovenant && healPlayer?.covenantID !== healCovenant)
+    ) {
+      return false;
+    }
+
+    const dpsCovenantIDSet = new Set(
+      [dps1Covenant, dps2Covenant, dps3Covenant].filter(isNumber)
+    );
+
+    if (dpsCovenantIDSet.size === 0) {
+      return true;
+    }
+
+    const dpsPlayer = dataset.player.filter((player) => {
+      return filterPlayerByRole(player, "dps");
+    });
+
+    if (dpsCovenantIDSet.size < 3) {
+      return dpsPlayer.some((player) =>
+        player.covenantID ? dpsCovenantIDSet.has(player.covenantID) : true
+      );
+    }
+
+    const dpsPlayerCovenantIDSet = new Set(
+      dpsPlayer.map((player) => player.covenantID)
+    );
+
+    // 3 explicit covenant requirements were made but this dataset does not have
+    // 3 different covenant
+    if (dpsPlayerCovenantIDSet.size !== 3) {
+      return false;
+    }
+
+    return dpsPlayer.every((player) =>
+      player.covenantID ? dpsCovenantIDSet.has(player.covenantID) : false
+    );
+  };
+};
 
 type SoulbindFilterArgs = {
   tankSoulbind?: number;
