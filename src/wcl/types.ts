@@ -1788,63 +1788,33 @@ export type GetReportQueryVariables = Exact<{
 
 export type GetReportQuery = {
   __typename?: "Query";
-  reportData?:
-    | {
-        __typename?: "ReportData";
-        report?:
-          | {
-              __typename?: "Report";
-              title: string;
-              startTime: number;
-              endTime: number;
-              region?:
-                | { __typename?: "Region"; slug: string }
-                | null
-                | undefined;
-              fights?:
-                | (
-                    | {
-                        __typename?: "ReportFight";
-                        id: number;
-                        startTime: number;
-                        endTime: number;
-                        keystoneLevel?: number | null | undefined;
-                        keystoneAffixes?:
-                          | (number | null | undefined)[]
-                          | null
-                          | undefined;
-                        keystoneBonus?: number | null | undefined;
-                        keystoneTime?: number | null | undefined;
-                        rating?: number | null | undefined;
-                        averageItemLevel?: number | null | undefined;
-                        friendlyPlayers?:
-                          | (number | null | undefined)[]
-                          | null
-                          | undefined;
-                        gameZone?:
-                          | { __typename?: "GameZone"; id: number }
-                          | null
-                          | undefined;
-                        maps?:
-                          | (
-                              | { __typename?: "ReportMap"; id: number }
-                              | null
-                              | undefined
-                            )[]
-                          | null
-                          | undefined;
-                      }
-                    | null
-                    | undefined
-                  )[]
-                | null
-                | undefined;
-            }
-          | null
-          | undefined;
-      }
-    | null
-    | undefined;
+  reportData?: {
+    __typename?: "ReportData";
+    report?: {
+      __typename?: "Report";
+      title: string;
+      startTime: number;
+      endTime: number;
+      region?: { __typename?: "Region"; slug: string } | null;
+      fights?:
+        | ({
+            __typename?: "ReportFight";
+            id: number;
+            startTime: number;
+            endTime: number;
+            keystoneLevel?: number | null;
+            keystoneAffixes?: (number | null)[] | null;
+            keystoneBonus?: number | null;
+            keystoneTime?: number | null;
+            rating?: number | null;
+            averageItemLevel?: number | null;
+            friendlyPlayers?: (number | null)[] | null;
+            gameZone?: { __typename?: "GameZone"; id: number } | null;
+            maps?: ({ __typename?: "ReportMap"; id: number } | null)[] | null;
+          } | null)[]
+        | null;
+    } | null;
+  } | null;
 };
 
 export type GetEventsQueryVariables = Exact<{
@@ -1857,26 +1827,17 @@ export type GetEventsQueryVariables = Exact<{
 
 export type GetEventsQuery = {
   __typename?: "Query";
-  reportData?:
-    | {
-        __typename?: "ReportData";
-        report?:
-          | {
-              __typename?: "Report";
-              events?:
-                | {
-                    __typename?: "ReportEventPaginator";
-                    data?: any | null | undefined;
-                    nextPageTimestamp?: number | null | undefined;
-                  }
-                | null
-                | undefined;
-            }
-          | null
-          | undefined;
-      }
-    | null
-    | undefined;
+  reportData?: {
+    __typename?: "ReportData";
+    report?: {
+      __typename?: "Report";
+      events?: {
+        __typename?: "ReportEventPaginator";
+        data?: any | null;
+        nextPageTimestamp?: number | null;
+      } | null;
+    } | null;
+  } | null;
 };
 
 export type GetTableQueryVariables = Exact<{
@@ -1888,16 +1849,10 @@ export type GetTableQueryVariables = Exact<{
 
 export type GetTableQuery = {
   __typename?: "Query";
-  reportData?:
-    | {
-        __typename?: "ReportData";
-        report?:
-          | { __typename?: "Report"; table?: any | null | undefined }
-          | null
-          | undefined;
-      }
-    | null
-    | undefined;
+  reportData?: {
+    __typename?: "ReportData";
+    report?: { __typename?: "Report"; table?: any | null } | null;
+  } | null;
 };
 
 export type GetPullsOfFightQueryVariables = Exact<{
@@ -1907,65 +1862,36 @@ export type GetPullsOfFightQueryVariables = Exact<{
 
 export type GetPullsOfFightQuery = {
   __typename?: "Query";
-  reportData?:
-    | {
-        __typename?: "ReportData";
-        report?:
-          | {
-              __typename?: "Report";
-              fights?:
-                | (
-                    | {
-                        __typename?: "ReportFight";
-                        dungeonPulls?:
-                          | (
-                              | {
-                                  __typename?: "ReportDungeonPull";
-                                  startTime: number;
-                                  endTime: number;
-                                  x: number;
-                                  y: number;
-                                  maps?:
-                                    | (
-                                        | {
-                                            __typename?: "ReportMap";
-                                            id: number;
-                                          }
-                                        | null
-                                        | undefined
-                                      )[]
-                                    | null
-                                    | undefined;
-                                  enemyNPCs?:
-                                    | (
-                                        | {
-                                            __typename?: "ReportDungeonPullNPC";
-                                            id?: number | null | undefined;
-                                            gameID?: number | null | undefined;
-                                          }
-                                        | null
-                                        | undefined
-                                      )[]
-                                    | null
-                                    | undefined;
-                                }
-                              | null
-                              | undefined
-                            )[]
-                          | null
-                          | undefined;
-                      }
-                    | null
-                    | undefined
-                  )[]
-                | null
-                | undefined;
-            }
-          | null
-          | undefined;
-      }
-    | null
-    | undefined;
+  reportData?: {
+    __typename?: "ReportData";
+    report?: {
+      __typename?: "Report";
+      fights?:
+        | ({
+            __typename?: "ReportFight";
+            dungeonPulls?:
+              | ({
+                  __typename?: "ReportDungeonPull";
+                  startTime: number;
+                  endTime: number;
+                  x: number;
+                  y: number;
+                  maps?:
+                    | ({ __typename?: "ReportMap"; id: number } | null)[]
+                    | null;
+                  enemyNPCs?:
+                    | ({
+                        __typename?: "ReportDungeonPullNPC";
+                        id?: number | null;
+                        gameID?: number | null;
+                      } | null)[]
+                    | null;
+                } | null)[]
+              | null;
+          } | null)[]
+        | null;
+    } | null;
+  } | null;
 };
 
 export const GetReportDocument = gql`

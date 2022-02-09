@@ -1454,6 +1454,25 @@ const getResponseOrRetrieveAndCreateFight = async (
     maybeStoredFight.percent === 0 ||
     !fightHasDungeon(maybeStoredFight);
 
+  const abilityIDs = persistablePullEvents
+    .map((event) => {
+      if (event.eventType === "Interrupt" && event.interruptedAbilityID) {
+        return event.interruptedAbilityID;
+      }
+      return null;
+    })
+    .filter((id): id is number => id !== null);
+
+  await prisma.ability.createMany({
+    skipDuplicates: true,
+    data: abilityIDs.map((id) => {
+      return {
+        id,
+        name: `${id}`,
+      };
+    }),
+  });
+
   await prisma.$transaction([
     // only persist this data if it wasnt previously
     ...(isFirstRetrieval

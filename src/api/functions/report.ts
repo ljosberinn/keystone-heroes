@@ -773,7 +773,7 @@ const handler: RequestHandler<Request, ReportResponse> = async (req, res) => {
           }
 
           const match = Object.entries(dungeonMap).find(
-            ([, meta]) => meta === dungeon
+            ([, meta]) => meta.name === dungeon.name
           );
 
           if (!match) {
@@ -1043,25 +1043,24 @@ const handler: RequestHandler<Request, ReportResponse> = async (req, res) => {
           })
       );
 
-    await prisma.conduit.createMany({
-      skipDuplicates: true,
-      data: conduitCreateMany,
-    });
-
-    await prisma.talent.createMany({
-      skipDuplicates: true,
-      data: talentCreateMany,
-    });
-
-    await prisma.covenantTrait.createMany({
-      skipDuplicates: true,
-      data: covenantTraitCreateMany,
-    });
-
-    await prisma.legendary.createMany({
-      skipDuplicates: true,
-      data: legendariesCreateMany,
-    });
+    await Promise.all([
+      prisma.conduit.createMany({
+        skipDuplicates: true,
+        data: conduitCreateMany,
+      }),
+      prisma.talent.createMany({
+        skipDuplicates: true,
+        data: talentCreateMany,
+      }),
+      prisma.covenantTrait.createMany({
+        skipDuplicates: true,
+        data: covenantTraitCreateMany,
+      }),
+      prisma.legendary.createMany({
+        skipDuplicates: true,
+        data: legendariesCreateMany,
+      }),
+    ]);
 
     const regionDataset = await prisma.region.upsert({
       select: {

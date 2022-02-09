@@ -63,7 +63,7 @@ export enum Boss {
   ZO_GRON = 176_563,
   ALCRUUX = 176_556,
   ACHILLITE = 176_555,
-  VENZA_GOLDFUSE = 176_705,
+  // VENZA_GOLDFUSE = 176_705, shows up as friendly
   POST_MASTER = 175_646,
   SO_AZMI = 175_806,
   // TVU
@@ -770,19 +770,13 @@ export const THEATER_OF_PAIN: DungeonMeta = {
   covenant: Covenants.Necrolord,
 };
 
-/**
- * @see https://www.warcraftlogs.com/reports/7wQbrYxg6KJZfc1W#fight=2&view=replay
- *
- * - $.getJSON(url, console.log)
- * - first replay segment url
- */
 export const TAZAVESH_LOWER: DungeonMeta = {
   bossIDs: [
     Boss.ZO_PHEX,
     Boss.ZO_GRON,
     Boss.ALCRUUX,
     Boss.ACHILLITE,
-    Boss.VENZA_GOLDFUSE,
+    // Boss.VENZA_GOLDFUSE,
     Boss.POST_MASTER,
     Boss.SO_AZMI,
   ],
