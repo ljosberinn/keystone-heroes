@@ -16,8 +16,8 @@ type Query = {
   query: {
     dungeonID?: string;
     keyLevel?: string;
-    minItemLevel?: string;
-    maxItemLevel?: string;
+    minItemLevelAvg?: string;
+    maxItemLevelAvg?: string;
     maxDeaths?: string;
     maxPercent?: string;
 
@@ -103,11 +103,11 @@ const validateQueryParams = (maybeParams: DiscoveryQueryParams) => {
   const maxDeaths = maybeParams?.maxDeaths
     ? Number.parseInt(maybeParams.maxDeaths)
     : undefined;
-  const minItemLevel = maybeParams?.minItemLevel
-    ? Number.parseInt(maybeParams.minItemLevel)
+  const minItemLevelAvg = maybeParams?.minItemLevelAvg
+    ? Number.parseInt(maybeParams.minItemLevelAvg)
     : undefined;
-  const maxItemLevel = maybeParams?.maxItemLevel
-    ? Number.parseInt(maybeParams.maxItemLevel)
+  const maxItemLevelAvg = maybeParams?.maxItemLevelAvg
+    ? Number.parseInt(maybeParams.maxItemLevelAvg)
     : undefined;
   const maxPercent = maybeParams?.maxPercent
     ? Number.parseInt(maybeParams.maxPercent)
@@ -215,8 +215,8 @@ const validateQueryParams = (maybeParams: DiscoveryQueryParams) => {
     dungeonID,
     keyLevel,
     maxDeaths,
-    minItemLevel,
-    maxItemLevel,
+    minItemLevelAvg,
+    maxItemLevelAvg,
     specQuery,
     affix1,
     affix2,
@@ -257,128 +257,128 @@ const validateQueryParams = (maybeParams: DiscoveryQueryParams) => {
 };
 
 const handler: RequestHandler<Query, Response> = async (req, res) => {
-  const {
-    dungeonID,
-    maxDeaths,
-    maxItemLevel,
-    minItemLevel,
-    keyLevel,
-    maxPercent,
-    specQuery,
-    affix1,
-    affix2,
-    affix3,
-    seasonalAffix,
-    dps1Covenant,
-    dps1Legendary1,
-    dps1Legendary2,
-    dps1Soulbind,
-    dps2Covenant,
-    dps2Legendary1,
-    dps2Legendary2,
-    dps2Soulbind,
-    dps3Covenant,
-    dps3Legendary1,
-    dps3Legendary2,
-    dps3Soulbind,
-    healCovenant,
-    healLegendary1,
-    healLegendary2,
-    healSoulbind,
-    tankCovenant,
-    tankLegendary1,
-    tankLegendary2,
-    tankSoulbind,
-    dps1,
-    dps2,
-    dps3,
-    heal,
-    tank,
-  } = validateQueryParams(req.query);
-
-  if (!dungeonID) {
-    res.status(BAD_REQUEST).end();
-    return;
-  }
-
-  Object.entries({
-    dungeonID,
-    maxDeaths,
-    maxItemLevel,
-    keyLevel,
-    minItemLevel,
-    maxPercent,
-    affix1,
-    affix2,
-    affix3,
-    seasonalAffix,
-    dps1Covenant,
-    dps1Legendary1,
-    dps1Legendary2,
-    dps1Soulbind,
-    dps2Covenant,
-    dps2Legendary1,
-    dps2Legendary2,
-    dps2Soulbind,
-    dps3Covenant,
-    dps3Legendary1,
-    dps3Legendary2,
-    dps3Soulbind,
-    healCovenant,
-    healLegendary1,
-    healLegendary2,
-    healSoulbind,
-    tankCovenant,
-    tankLegendary1,
-    tankLegendary2,
-    tankSoulbind,
-    dps1,
-    dps2,
-    dps3,
-    heal,
-    tank,
-  })
-    .filter(([, value]) => !!value)
-    .forEach(([key, value]) => {
-      configureScope((scope) => {
-        scope.setTag(key, value);
-      });
-    });
-
   try {
-    res.setHeader(cacheControlKey, STALE_WHILE_REVALIDATE_TWO_HOURS);
+    const {
+      dungeonID,
+      maxDeaths,
+      maxItemLevelAvg,
+      minItemLevelAvg,
+      keyLevel,
+      maxPercent,
+      specQuery,
+      affix1,
+      affix2,
+      affix3,
+      seasonalAffix,
+      dps1Covenant,
+      dps1Legendary1,
+      dps1Legendary2,
+      dps1Soulbind,
+      dps2Covenant,
+      dps2Legendary1,
+      dps2Legendary2,
+      dps2Soulbind,
+      dps3Covenant,
+      dps3Legendary1,
+      dps3Legendary2,
+      dps3Soulbind,
+      healCovenant,
+      healLegendary1,
+      healLegendary2,
+      healSoulbind,
+      tankCovenant,
+      tankLegendary1,
+      tankLegendary2,
+      tankSoulbind,
+      dps1,
+      dps2,
+      dps3,
+      heal,
+      tank,
+    } = validateQueryParams(req.query);
+
+    if (!dungeonID) {
+      res.status(BAD_REQUEST).end();
+      return;
+    }
+
+    Object.entries({
+      dungeonID,
+      maxDeaths,
+      maxItemLevelAvg,
+      keyLevel,
+      minItemLevelAvg,
+      maxPercent,
+      affix1,
+      affix2,
+      affix3,
+      seasonalAffix,
+      dps1Covenant,
+      dps1Legendary1,
+      dps1Legendary2,
+      dps1Soulbind,
+      dps2Covenant,
+      dps2Legendary1,
+      dps2Legendary2,
+      dps2Soulbind,
+      dps3Covenant,
+      dps3Legendary1,
+      dps3Legendary2,
+      dps3Soulbind,
+      healCovenant,
+      healLegendary1,
+      healLegendary2,
+      healSoulbind,
+      tankCovenant,
+      tankLegendary1,
+      tankLegendary2,
+      tankSoulbind,
+      dps1,
+      dps2,
+      dps3,
+      heal,
+      tank,
+    })
+      .filter(([, value]) => !!value)
+      .forEach(([key, value]) => {
+        configureScope((scope) => {
+          scope.setTag(key, value);
+        });
+      });
+    console.time("rawData");
 
     const rawData = await prisma.fight.findMany({
       where: {
+        dungeonID,
         chests: {
           gt: 0,
         },
         percent: {
-          lte: maxPercent,
+          ...(maxPercent ? { lte: maxPercent } : null),
           gte: 100,
         },
-        dungeonID,
-        totalDeaths: {
-          lte: maxDeaths,
-        },
-        keystoneLevel: keyLevel,
-        PlayerFight: {
-          every: {
-            player: {
-              itemLevel: {
-                gte: minItemLevel,
-                lte: maxItemLevel,
+        ...(maxDeaths ? { totalDeaths: { lte: maxDeaths } } : null),
+        ...(minItemLevelAvg || maxItemLevelAvg
+          ? {
+              averageItemLevel: {
+                ...(minItemLevelAvg ? { gte: minItemLevelAvg } : null),
+                ...(maxItemLevelAvg ? { lte: maxItemLevelAvg } : null),
               },
-            },
-          },
-          some: {
-            player: {
-              specID: {
-                in: specQuery.length === 1 ? specQuery : undefined,
+            }
+          : null),
+        ...(specQuery.length === 1
+          ? {
+              PlayerFight: {
+                some: {
+                  player: {
+                    specID: {
+                      in: specQuery,
+                    },
+                  },
+                },
               },
-            },
-          },
-        },
+            }
+          : null),
         Report: {
           week: {
             affix1ID: affix1,
@@ -445,12 +445,19 @@ const handler: RequestHandler<Query, Response> = async (req, res) => {
           },
         },
       },
+      take: 250,
     });
+
+    console.timeEnd("rawData");
+
+    console.info(`found ${rawData.length} entries`);
 
     if (rawData.length === 0) {
       res.json([]);
       return;
     }
+
+    console.time("transform");
 
     const specQueryFilter = createSpecQueryFilter({
       tank,
@@ -536,16 +543,18 @@ const handler: RequestHandler<Query, Response> = async (req, res) => {
       })
       .slice(0, 20);
 
+    console.timeEnd("transform");
+
+    res.setHeader(cacheControlKey, STALE_WHILE_REVALIDATE_TWO_HOURS);
     res.json(transformed);
   } catch (error) {
+    console.timeEnd("rawData");
+    console.timeEnd("transform");
     // eslint-disable-next-line no-console
     console.error(error);
 
     res.status(INTERNAL_SERVER_ERROR);
-
-    if (error instanceof Error) {
-      res.json({ error: error.message });
-    }
+    res.json([]);
   }
 };
 

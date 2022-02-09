@@ -1,10 +1,22 @@
+/* eslint-disable sonarjs/no-identical-functions */
+import type { SpecName } from "@prisma/client";
 import type { FormEventHandler } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import type { DiscoveryResponse } from "../../api/functions/discovery";
+import { specs } from "../../db/data/specs";
 import { Seo } from "../../web/components/Seo";
 import { useAbortableFetch } from "../../web/hooks/useAbortableFetch";
-import { dungeons, weeks } from "../../web/staticData";
+import {
+  dungeons,
+  weeks,
+  specIDsPerRole,
+  classes,
+  covenants,
+  soulbinds,
+  legendariesBySpec,
+  legendaries,
+} from "../../web/staticData";
 import type { LivingDiscoveryQueryParams } from "../../web/store";
 import { useRouteDiscovery } from "../../web/store";
 import {
@@ -13,19 +25,7 @@ import {
   hoverShadow,
   widthConstraint,
 } from "../../web/styles/tokens";
-
-// export type DiscoverProps = {
-//   dungeons: (Pick<typeof dungeons[keyof typeof dungeons], "slug" | "name"> & {
-//     id: number;
-//   })[];
-//   specs: {
-//     tank: number[];
-//     heal: number[];
-//     dps: number[];
-//   };
-//   weeks: { ids: [number, number, number]; name: string }[];
-//   legendaries: Record<number, number[]>;
-// };
+import { classnames } from "../../web/utils/classnames";
 
 export default function Discover(): JSX.Element {
   const [url, setUrl] = useState<string | null>(null);
@@ -111,8 +111,8 @@ function Form({ onSubmit, onReset, loading }: FormProps) {
     handlePropertyChange,
     heal,
     maxDeaths,
-    maxItemLevel,
-    minItemLevel,
+    maxItemLevelAvg,
+    minItemLevelAvg,
     keyLevel,
     seasonAffix,
     tank,
@@ -152,9 +152,9 @@ function Form({ onSubmit, onReset, loading }: FormProps) {
       dps2,
       dps3,
       maxDeaths,
-      maxItemLevel,
+      maxItemLevelAvg,
       keyLevel,
-      minItemLevel,
+      minItemLevelAvg,
       seasonAffix,
       tank,
       dps1Covenant,
@@ -207,7 +207,7 @@ function Form({ onSubmit, onReset, loading }: FormProps) {
                   handlePropertyChange("dungeonID", -1);
                 }
               }}
-              className="w-full"
+              className="w-full border-solid border-2 dark:border-gray-600"
             >
               <option value={-1}>select dungeon</option>
               {Object.entries(dungeons)
@@ -237,12 +237,12 @@ function Form({ onSubmit, onReset, loading }: FormProps) {
                 type="number"
                 name="keyLevel"
                 min="10"
-                max="40"
+                max="45"
                 step="1"
                 id="key-level"
                 aria-label="Key Level"
                 placeholder="Key Level"
-                className="w-full"
+                className="w-full border-solid border-2 dark:border-gray-600"
                 value={keyLevel ? keyLevel : ""}
                 onChange={(event) => {
                   try {
@@ -293,7 +293,7 @@ function Form({ onSubmit, onReset, loading }: FormProps) {
                   handlePropertyChange("affix3", null);
                 }
               }}
-              className="w-full"
+              className="w-full border-solid border-2 dark:border-gray-600"
             >
               <option value={-1}>select week</option>
               {[...weeks]
@@ -312,7 +312,7 @@ function Form({ onSubmit, onReset, loading }: FormProps) {
 
           <div className="flex flex-row w-1/2 space-x-2 lg:w-full lg:flex-col lg:space-x-0 lg:space-y-2 xl:flex-row xl:space-x-4 xl:space-y-0">
             <div className="w-1/2 lg:w-full xl:w-1/2">
-              <label htmlFor="min-item-level">Min ILVL</label>
+              <label htmlFor="min-item-level-avg">Min ILVL Ø</label>
 
               <div>
                 <input
@@ -321,21 +321,21 @@ function Form({ onSubmit, onReset, loading }: FormProps) {
                   min="180"
                   max="300"
                   step="1"
-                  id="min-item-level"
-                  aria-label="Min ILVL"
-                  placeholder="Min ILVL"
-                  className="w-full"
-                  value={minItemLevel ? minItemLevel : ""}
+                  id="min-item-level-avg"
+                  aria-label="Min ILVL Ø"
+                  placeholder="Min ILVL Ø"
+                  className="w-full border-solid border-2 dark:border-gray-600"
+                  value={minItemLevelAvg ? minItemLevelAvg : ""}
                   onChange={(event) => {
                     try {
                       const value = Number.parseInt(event.target.value);
 
                       handlePropertyChange(
-                        "minItemLevel",
+                        "minItemLevelAvg",
                         Number.isNaN(value) ? null : value
                       );
                     } catch {
-                      handlePropertyChange("minItemLevel", null);
+                      handlePropertyChange("minItemLevelAvg", null);
                     }
                   }}
                 />
@@ -343,30 +343,30 @@ function Form({ onSubmit, onReset, loading }: FormProps) {
             </div>
 
             <div className="w-1/2 lg:w-full xl:w-1/2">
-              <label htmlFor="max-item-level">Max ILVL</label>
+              <label htmlFor="max-item-level-avg">Max ILVL Ø</label>
 
               <div>
                 <input
                   type="number"
-                  name="maxItemlevel"
+                  name="maxItemlevelAvg"
                   min="180"
                   max="300"
                   step="1"
-                  id="max-item-level"
-                  aria-label="Max ILVL"
-                  placeholder="Max ILVL"
-                  className="w-full"
-                  value={maxItemLevel ? maxItemLevel : ""}
+                  id="max-item-level-avg"
+                  aria-label="Max ILVL Ø"
+                  placeholder="Max ILVL Ø"
+                  className="w-full border-solid border-2 dark:border-gray-600"
+                  value={maxItemLevelAvg ? maxItemLevelAvg : ""}
                   onChange={(event) => {
                     try {
                       const value = Number.parseInt(event.target.value);
 
                       handlePropertyChange(
-                        "maxItemLevel",
+                        "maxItemLevelAvg",
                         Number.isNaN(value) ? null : value
                       );
                     } catch {
-                      handlePropertyChange("maxItemLevel", null);
+                      handlePropertyChange("maxItemLevelAvg", null);
                     }
                   }}
                 />
@@ -385,10 +385,11 @@ function Form({ onSubmit, onReset, loading }: FormProps) {
                 name="maxPercent"
                 min="100"
                 step="1"
+                max="200"
                 id="max-percent"
                 aria-label="Max Percent"
                 placeholder="Max Percent"
-                className="w-full"
+                className="w-full border-solid border-2 dark:border-gray-600"
                 value={maxPercent ? maxPercent : ""}
                 onChange={(event) => {
                   try {
@@ -415,10 +416,11 @@ function Form({ onSubmit, onReset, loading }: FormProps) {
                 name="maxDeaths"
                 min="0"
                 step="1"
+                max="50"
                 id="max-deaths"
                 aria-label="Max Deaths"
                 placeholder="Max Deaths"
-                className="w-full"
+                className="w-full border-solid border-2 dark:border-gray-600"
                 value={maxDeaths === null ? "" : maxDeaths}
                 onChange={(event) => {
                   try {
@@ -438,9 +440,47 @@ function Form({ onSubmit, onReset, loading }: FormProps) {
           </div>
         </div>
 
+        <SpecFilters
+          tank={{
+            tank,
+            tankCovenant,
+            tankLegendary1,
+            tankLegendary2,
+            tankSoulbind,
+          }}
+          heal={{
+            heal,
+            healCovenant,
+            healLegendary1,
+            healLegendary2,
+            healSoulbind,
+          }}
+          dps1={{
+            dps1,
+            dps1Covenant,
+            dps1Legendary1,
+            dps1Legendary2,
+            dps1Soulbind,
+          }}
+          dps2={{
+            dps2,
+            dps2Covenant,
+            dps2Legendary1,
+            dps2Legendary2,
+            dps2Soulbind,
+          }}
+          dps3={{
+            dps3,
+            dps3Covenant,
+            dps3Legendary1,
+            dps3Legendary2,
+            dps3Soulbind,
+          }}
+        />
+
         <div className="flex justify-between w-full pt-4">
           <button
-            className="px-4 font-medium text-center text-white transition-all duration-200 ease-in-out bg-red-500 rounded-lg outline-none dark:hover:bg-red-600 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-700 focus:bg-red-600 dark:focus:ring-red-300"
+            className="px-4 font-medium text-center text-white transition-all duration-200 ease-in-out bg-red-500 rounded-lg outline-none dark:hover:bg-red-400 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-700 focus:bg-red-600 dark:focus:ring-red-300"
             type="reset"
             onClick={handleReset}
           >
@@ -463,5 +503,568 @@ function Form({ onSubmit, onReset, loading }: FormProps) {
         </div>
       </fieldset>
     </form>
+  );
+}
+
+type SpecFiltersProps = {
+  tank: {
+    tank: number | null;
+    tankCovenant: number | null;
+    tankLegendary1: number | null;
+    tankLegendary2: number | null;
+    tankSoulbind: number | null;
+  };
+  heal: {
+    heal: number | null;
+    healCovenant: number | null;
+    healLegendary1: number | null;
+    healLegendary2: number | null;
+    healSoulbind: number | null;
+  };
+  dps1: {
+    dps1: number | null;
+    dps1Covenant: number | null;
+    dps1Legendary1: number | null;
+    dps1Legendary2: number | null;
+    dps1Soulbind: number | null;
+  };
+  dps2: {
+    dps2: number | null;
+    dps2Covenant: number | null;
+    dps2Legendary1: number | null;
+    dps2Legendary2: number | null;
+    dps2Soulbind: number | null;
+  };
+  dps3: {
+    dps3: number | null;
+    dps3Covenant: number | null;
+    dps3Legendary1: number | null;
+    dps3Legendary2: number | null;
+    dps3Soulbind: number | null;
+  };
+};
+
+type SpecFiltersState = {
+  tank: boolean;
+  heal: boolean;
+  dps1: boolean;
+  dps2: boolean;
+  dps3: boolean;
+};
+
+function SpecFilters({ dps1, dps2, dps3, heal, tank }: SpecFiltersProps) {
+  const [activeFilters, setActiveFilters] = useState<SpecFiltersState>({
+    tank: tank.tank !== null,
+    heal: heal.heal !== null,
+    dps1: dps1.dps1 !== null,
+    dps2: dps2.dps2 !== null,
+    dps3: dps3.dps3 !== null,
+  });
+
+  useEffect(() => {
+    setActiveFilters((prev) => {
+      return {
+        tank: prev.tank ? prev.tank : tank.tank !== null,
+        heal: prev.heal ? prev.heal : heal.heal !== null,
+        dps1: prev.dps1 ? prev.dps1 : dps1.dps1 !== null,
+        dps2: prev.dps2 ? prev.dps2 : dps2.dps2 !== null,
+        dps3: prev.dps3 ? prev.dps3 : dps3.dps3 !== null,
+      };
+    });
+  }, [dps1, dps2, dps3, heal, tank]);
+
+  const handleAddRole = (role: keyof SpecFiltersState) => {
+    setActiveFilters((prev) => {
+      return {
+        ...prev,
+        [role]: !prev[role],
+      };
+    });
+  };
+
+  const active = Object.values(activeFilters).filter((bool) => bool).length;
+
+  return (
+    <>
+      {activeFilters.tank ? (
+        <SpecFilter
+          type="tank"
+          data={{
+            covenant: tank.tankCovenant,
+            soulbind: tank.tankSoulbind,
+            legendary1: tank.tankLegendary1,
+            legendary2: tank.tankLegendary2,
+            specID: tank.tank,
+          }}
+          remove={() => {
+            handleAddRole("tank");
+          }}
+        />
+      ) : null}
+      {activeFilters.heal ? (
+        <SpecFilter
+          type="heal"
+          data={{
+            covenant: heal.healCovenant,
+            soulbind: heal.healSoulbind,
+            legendary1: heal.healLegendary1,
+            legendary2: heal.healLegendary2,
+            specID: heal.heal,
+          }}
+          remove={() => {
+            handleAddRole("heal");
+          }}
+        />
+      ) : null}
+      {activeFilters.dps1 ? (
+        <SpecFilter
+          type="dps1"
+          data={{
+            covenant: dps1.dps1Covenant,
+            soulbind: dps1.dps1Soulbind,
+            legendary1: dps1.dps1Legendary1,
+            legendary2: dps1.dps1Legendary2,
+            specID: dps1.dps1,
+          }}
+          remove={() => {
+            handleAddRole("dps1");
+          }}
+        />
+      ) : null}
+      {activeFilters.dps2 ? (
+        <SpecFilter
+          type="dps2"
+          data={{
+            covenant: dps2.dps2Covenant,
+            soulbind: dps2.dps2Soulbind,
+            legendary1: dps2.dps2Legendary1,
+            legendary2: dps2.dps2Legendary2,
+            specID: dps2.dps2,
+          }}
+          remove={() => {
+            handleAddRole("dps2");
+          }}
+        />
+      ) : null}
+      {activeFilters.dps3 ? (
+        <SpecFilter
+          type="dps3"
+          data={{
+            covenant: dps3.dps3Covenant,
+            soulbind: dps3.dps3Soulbind,
+            legendary1: dps3.dps3Legendary1,
+            legendary2: dps3.dps3Legendary2,
+            specID: dps3.dps3,
+          }}
+          remove={() => {
+            handleAddRole("dps3");
+          }}
+        />
+      ) : null}
+
+      {active < 5 ? (
+        <AddSpecFilterButton
+          onAdd={handleAddRole}
+          hasTank={activeFilters.tank}
+          hasHeal={activeFilters.heal}
+          amountOfDps={
+            (activeFilters.dps1 ? 1 : 0) +
+            (activeFilters.dps2 ? 1 : 0) +
+            (activeFilters.dps3 ? 1 : 0)
+          }
+        />
+      ) : null}
+    </>
+  );
+}
+
+type SpecFilterProps = {
+  type: keyof SpecFiltersState;
+  data: {
+    covenant: number | null;
+    soulbind: number | null;
+    legendary1: number | null;
+    legendary2: number | null;
+    specID: number | null;
+  };
+  remove: () => void;
+};
+
+function SpecFilter({ type, data, remove }: SpecFilterProps) {
+  const handlePropertyChange = useRouteDiscovery(
+    (state) => state.handlePropertyChange
+  );
+
+  const displayableType = type.includes("dps") ? type.slice(0, -1) : type;
+  const availableSpecs = (
+    displayableType === "dps"
+      ? specIDsPerRole.dps
+      : type === "heal"
+      ? specIDsPerRole.heal
+      : specIDsPerRole.tank
+  )
+    .map((id) => {
+      const specData = specs.find((spec) => spec.id === id);
+
+      if (!specData) {
+        return null;
+      }
+
+      const className = classes[specData.classID].name;
+
+      return {
+        name: specData.name,
+        className,
+        id,
+      };
+    })
+    .filter(
+      (dataset): dataset is { name: SpecName; id: number; className: string } =>
+        dataset !== null
+    )
+    .sort((a, b) => a.name.localeCompare(b.name));
+  const { specID, soulbind, covenant, legendary1, legendary2 } = data;
+
+  const availableLegendaries = Object.entries(legendariesBySpec)
+    .filter(([, specIDs]) => {
+      if (specID) {
+        return specIDs.includes(specID);
+      }
+
+      return availableSpecs.some((spec) => specIDs.includes(spec.id));
+    })
+    .map(([id]) => {
+      const idAsNumber = Number.parseInt(id);
+
+      return {
+        id: idAsNumber,
+        name: legendaries[idAsNumber].name,
+      };
+    })
+    .sort((a, b) => a.name.localeCompare(b.name));
+
+  return (
+    <div className="border-2 border-dashed border-gray-200 rounded-lg p-2 my-2 space-y-2">
+      <div className="flex space-x-4 lg:flex-col lg:space-x-0 lg:space-y-2 xl:flex-row xl:space-y-0 xl:space-x-4">
+        <div className="flex flex-col w-1/2 md:w-full">
+          <div className="flex justify-between">
+            <span>Role</span>
+
+            <b>
+              {displayableType === "dps"
+                ? "DPS"
+                : `${displayableType
+                    .slice(0, 1)
+                    .toUpperCase()}${displayableType.slice(1)}`}
+            </b>
+          </div>
+
+          <div className="w-full flex justify-end">
+            <button
+              type="button"
+              onClick={() => {
+                remove();
+                handlePropertyChange(type, null);
+                handlePropertyChange(`${type}Legendary1`, null);
+                handlePropertyChange(`${type}Legendary2`, null);
+                handlePropertyChange(`${type}Covenant`, null);
+                handlePropertyChange(`${type}Soulbind`, null);
+              }}
+              aria-label="remove"
+              className="bg-red-500 hover:bg-red-400 transition-all duration-200 rounded-xl px-2 text-white"
+            >
+              remove
+            </button>
+          </div>
+        </div>
+
+        <div className="flex flex-col w-1/2 md:w-full">
+          <label htmlFor={`spec-selection-${type}`}>Spec</label>
+
+          <select
+            id={`spec-selection-${type}`}
+            value={specID ? specID : -1}
+            onChange={(event) => {
+              try {
+                const value = Number.parseInt(event.target.value);
+
+                handlePropertyChange(type, value === -1 ? null : value);
+              } catch {
+                handlePropertyChange(type, null);
+              }
+            }}
+            className="w-full border-solid border-2 dark:border-gray-600"
+          >
+            <option value={-1}>select spec</option>
+            {availableSpecs.map((spec) => {
+              return (
+                <option key={spec.id} value={spec.id}>
+                  {spec.name} {spec.className}
+                </option>
+              );
+            })}
+          </select>
+        </div>
+      </div>
+
+      <div className="flex space-x-4 lg:flex-col lg:space-x-0 lg:space-y-2 xl:flex-row xl:space-y-0 xl:space-x-4">
+        <div className="flex flex-col w-1/2 md:w-full">
+          <label htmlFor={`covenant-selection-${type}`}>Covenant</label>
+
+          <select
+            id={`covenant-selection-${type}`}
+            required
+            value={covenant ? covenant : -1}
+            onChange={(event) => {
+              try {
+                const value = Number.parseInt(event.target.value);
+
+                if (value === -1) {
+                  handlePropertyChange(`${type}Covenant`, null);
+                  return;
+                }
+
+                handlePropertyChange(`${type}Covenant`, value);
+
+                if (soulbind && soulbinds[soulbind].covenantID !== value) {
+                  handlePropertyChange(`${type}Soulbind`, null);
+                }
+              } catch {
+                handlePropertyChange(`${type}Covenant`, null);
+              }
+            }}
+            className="w-full border-solid border-2 dark:border-gray-600"
+          >
+            <option value={-1}>select covenant</option>
+            {Object.entries(covenants)
+              .sort((a, b) => a[1].name.localeCompare(b[1].name))
+              .map(([id, { name }]) => {
+                return (
+                  <option key={id} value={id}>
+                    {name}
+                  </option>
+                );
+              })}
+          </select>
+        </div>
+
+        <div className="flex flex-col w-1/2 md:w-full">
+          <label htmlFor={`soulbind-selection-${type}`}>Soulbind</label>
+
+          <select
+            id={`soulbind-selection-${type}`}
+            required
+            value={soulbind ? soulbind : -1}
+            onChange={(event) => {
+              try {
+                const value = Number.parseInt(event.target.value);
+
+                if (value === -1) {
+                  handlePropertyChange(`${type}Soulbind`, null);
+                  return;
+                }
+
+                handlePropertyChange(`${type}Soulbind`, value);
+                handlePropertyChange(
+                  `${type}Covenant`,
+                  soulbinds[value].covenantID
+                );
+              } catch {
+                handlePropertyChange(`${type}Soulbind`, null);
+              }
+            }}
+            className="w-full border-solid border-2 dark:border-gray-600"
+          >
+            <option value={-1}>select soulbind</option>
+            {Object.entries(soulbinds)
+              .filter((soulbind) => {
+                if (covenant) {
+                  return soulbind[1].covenantID === covenant;
+                }
+
+                return true;
+              })
+              .sort((a, b) => a[1].name.localeCompare(b[1].name))
+              .map(([id, { name }]) => {
+                return (
+                  <option key={id} value={id}>
+                    {name}
+                  </option>
+                );
+              })}
+          </select>
+        </div>
+      </div>
+
+      <div className="flex space-x-4 lg:flex-col lg:space-x-0 lg:space-y-2 xl:flex-row xl:space-y-0 xl:space-x-4">
+        <div className="flex flex-col w-1/2 md:w-full">
+          <label htmlFor={`legendary1-selection-${type}`}>Legendary 1</label>
+
+          <select
+            id={`legendary1-selection-${type}`}
+            required
+            value={legendary1 ? legendary1 : -1}
+            onChange={(event) => {
+              try {
+                const value = Number.parseInt(event.target.value);
+
+                handlePropertyChange(
+                  `${type}Legendary1`,
+                  value === -1 ? null : value
+                );
+              } catch {
+                handlePropertyChange(`${type}Legendary1`, null);
+              }
+            }}
+            className="w-full border-solid border-2 dark:border-gray-600"
+          >
+            <option value={-1}>first legendary</option>
+            {availableLegendaries
+              .filter((legendary) => {
+                if (!legendary2) {
+                  return true;
+                }
+
+                return legendary.id !== legendary2;
+              })
+              .map((legendary) => {
+                return (
+                  <option key={legendary.id} value={legendary.id}>
+                    {legendary.name}
+                  </option>
+                );
+              })}
+          </select>
+        </div>
+
+        <div className="flex flex-col w-1/2 md:w-full">
+          <label htmlFor={`legendary2-selection-${type}`}>Legendary 2</label>
+
+          <select
+            id={`legendary2-selection-${type}`}
+            required
+            value={legendary2 ? legendary2 : -1}
+            onChange={(event) => {
+              try {
+                const value = Number.parseInt(event.target.value);
+
+                handlePropertyChange(
+                  `${type}Legendary2`,
+                  value === -1 ? null : value
+                );
+              } catch {
+                handlePropertyChange(`${type}Legendary2`, null);
+              }
+            }}
+            className="w-full border-solid border-2 dark:border-gray-600"
+          >
+            <option value={-1}>second legendary</option>
+            {availableLegendaries
+              .filter((legendary) => {
+                if (!legendary1) {
+                  return true;
+                }
+
+                return legendary.id !== legendary1;
+              })
+              .map((legendary) => {
+                return (
+                  <option key={legendary.id} value={legendary.id}>
+                    {legendary.name}
+                  </option>
+                );
+              })}
+          </select>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+type AddSpecFilterButtonProps = {
+  onAdd: (role: keyof SpecFiltersState) => void;
+  hasTank: boolean;
+  hasHeal: boolean;
+  amountOfDps: number;
+};
+
+function AddSpecFilterButton({
+  onAdd,
+  amountOfDps,
+  hasHeal,
+  hasTank,
+}: AddSpecFilterButtonProps) {
+  const [active, setActive] = useState(false);
+
+  function toggle() {
+    setActive(!active);
+  }
+
+  const className =
+    "w-full bg-gray-200 dark:bg-gray-600 rounded-lg p-4 border-dashed border-2 border-gray-700 dark:hover:bg-gray-500 transition-all duration-200";
+
+  if (active) {
+    return (
+      <div
+        className={classnames(
+          className,
+          "flex justify-center space-x-8 xl:space-x-4"
+        )}
+      >
+        {hasTank ? null : (
+          <button
+            type="button"
+            onClick={() => {
+              onAdd("tank");
+            }}
+          >
+            <img
+              loading="lazy"
+              alt="Tank"
+              src="/static/roles/tank.png"
+              className="grayscale hover:filter-none w-12 h-12"
+            />
+          </button>
+        )}
+        {hasHeal ? null : (
+          <button
+            type="button"
+            onClick={() => {
+              onAdd("heal");
+            }}
+          >
+            <img
+              loading="lazy"
+              alt="Heal"
+              src="/static/roles/heal.png"
+              className="grayscale hover:filter-none w-12 h-12"
+            />
+          </button>
+        )}
+        {amountOfDps === 3 ? null : (
+          <button
+            type="button"
+            onClick={() => {
+              onAdd(
+                amountOfDps === 0 ? "dps1" : amountOfDps === 1 ? "dps2" : "dps3"
+              );
+            }}
+          >
+            <img
+              loading="lazy"
+              alt="DPS"
+              src="/static/roles/dps.png"
+              className="grayscale hover:filter-none w-12 h-12"
+            />
+          </button>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <button type="button" className={className} onClick={toggle}>
+      add spec filter
+    </button>
   );
 }
