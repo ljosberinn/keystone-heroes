@@ -2,7 +2,8 @@
 import type { SpecName } from "@prisma/client";
 import Link from "next/link";
 import type { FormEventHandler } from "react";
-import { useState } from "react";
+import { useCallback } from "react";
+import { useState, useEffect } from "react";
 
 import type { DiscoveryResponse } from "../../api/functions/discovery";
 import { dungeonMap } from "../../db/data/dungeons";
@@ -20,7 +21,10 @@ import {
   legendariesBySpec,
   legendaries,
 } from "../../web/staticData";
-import type { LivingDiscoveryQueryParams } from "../../web/store";
+import type {
+  LivingDiscoveryQueryParams,
+  RouteDiscovery,
+} from "../../web/store";
 import { useRouteDiscovery } from "../../web/store";
 import {
   bgPrimary,
@@ -29,6 +33,16 @@ import {
   widthConstraint,
 } from "../../web/styles/tokens";
 
+const discoverySelector = ({
+  restoreFromUrl,
+  persistToUrl,
+}: RouteDiscovery) => {
+  return {
+    persistToUrl,
+    restoreFromUrl,
+  };
+};
+
 export default function Discover(): JSX.Element {
   const [url, setUrl] = useState<string | null>(null);
   const [data, loading] = useAbortableFetch<DiscoveryResponse>({
@@ -36,21 +50,37 @@ export default function Discover(): JSX.Element {
     initialState: [],
   });
 
+  const { persistToUrl, restoreFromUrl } = useRouteDiscovery(discoverySelector);
+
   const handleReset = () => {
     setUrl(null);
   };
 
-  const handleSubmit = (query: LivingDiscoveryQueryParams) => {
-    try {
-      const sanitized = Object.fromEntries(
-        Object.entries(query)
-          .filter((arr): arr is [string, number] => arr[1] !== null)
-          .map(([key, value]) => [key, `${value}`])
-      );
+  const handleSubmit = useCallback(
+    (query: LivingDiscoveryQueryParams) => {
+      try {
+        const sanitized = Object.fromEntries(
+          Object.entries(query)
+            .filter((arr): arr is [string, number] => arr[1] !== null)
+            .map(([key, value]) => [key, `${value}`])
+        );
 
-      setUrl(`/api/discovery?${new URLSearchParams(sanitized).toString()}`);
-    } catch {}
-  };
+        persistToUrl(sanitized);
+
+        setUrl(`/api/discovery?${new URLSearchParams(sanitized).toString()}`);
+        // eslint-disable-next-line no-empty
+      } catch {}
+    },
+    [persistToUrl]
+  );
+
+  useEffect(() => {
+    const restored = restoreFromUrl();
+
+    if (restored) {
+      handleSubmit(restored);
+    }
+  }, [restoreFromUrl, handleSubmit]);
 
   return (
     <>
@@ -488,7 +518,6 @@ function Form({ onSubmit, onReset, loading }: FormProps) {
                 onChange={(event) => {
                   try {
                     const value = Number.parseInt(event.target.value);
-                    console.log(value, Number.isNaN(value) ? null : value);
 
                     handlePropertyChange(
                       "maxDeaths",
@@ -618,6 +647,18 @@ function SpecFilters({ dps1, dps2, dps3, heal, tank }: SpecFiltersProps) {
     dps2: dps2.dps2 !== null,
     dps3: dps3.dps3 !== null,
   });
+
+  useEffect(() => {
+    setActiveFilters((prev) => {
+      return {
+        tank: prev.tank ? prev.tank : tank.tank !== null,
+        heal: prev.heal ? prev.heal : heal.heal !== null,
+        dps1: prev.dps1 ? prev.dps1 : dps1.dps1 !== null,
+        dps2: prev.dps2 ? prev.dps2 : dps2.dps2 !== null,
+        dps3: prev.dps3 ? prev.dps3 : dps3.dps3 !== null,
+      };
+    });
+  }, [dps1, dps2, dps3, heal, tank]);
 
   const handleAddRole = (role: keyof SpecFiltersState) => {
     setActiveFilters((prev) => {
@@ -821,11 +862,14 @@ function SpecFilter({ type, data, remove }: SpecFilterProps) {
               type="button"
               onClick={() => {
                 remove();
-                handlePropertyChange(type, null);
-                handlePropertyChange(`${type}Legendary1`, null);
-                handlePropertyChange(`${type}Legendary2`, null);
-                handlePropertyChange(`${type}Covenant`, null);
-                handlePropertyChange(`${type}Soulbind`, null);
+
+                handlePropertyChange({
+                  [type]: null,
+                  [`${type}Legendary1`]: null,
+                  [`${type}Legendary2`]: null,
+                  [`${type}Covenant`]: null,
+                  [`${type}Soulbind`]: null,
+                });
               }}
               aria-label="remove"
               className="px-2 text-white transition-all duration-200 bg-red-500 hover:bg-red-400 rounded-xl"
@@ -902,21 +946,27 @@ function SpecFilter({ type, data, remove }: SpecFilterProps) {
             id={`covenant-selection-${type}`}
             value={covenant ? covenant : -1}
             onChange={(event) => {
+              const key = `${type}Covenant`;
+
               try {
                 const value = Number.parseInt(event.target.value);
 
                 if (value === -1) {
-                  handlePropertyChange(`${type}Covenant`, null);
+                  handlePropertyChange(key, null);
                   return;
                 }
 
-                handlePropertyChange(`${type}Covenant`, value);
+                const next: Record<string, null | number> = {
+                  [key]: value,
+                };
 
                 if (soulbind && soulbinds[soulbind].covenantID !== value) {
-                  handlePropertyChange(`${type}Soulbind`, null);
+                  next[`${type}Soulbind`] = null;
                 }
+
+                handlePropertyChange(next);
               } catch {
-                handlePropertyChange(`${type}Covenant`, null);
+                handlePropertyChange(key, null);
               }
             }}
             className="w-full border-2 border-solid dark:border-gray-600"
@@ -941,21 +991,21 @@ function SpecFilter({ type, data, remove }: SpecFilterProps) {
             id={`soulbind-selection-${type}`}
             value={soulbind ? soulbind : -1}
             onChange={(event) => {
+              const key = `${type}Soulbind`;
               try {
                 const value = Number.parseInt(event.target.value);
 
                 if (value === -1) {
-                  handlePropertyChange(`${type}Soulbind`, null);
+                  handlePropertyChange(key, null);
                   return;
                 }
 
-                handlePropertyChange(`${type}Soulbind`, value);
-                handlePropertyChange(
-                  `${type}Covenant`,
-                  soulbinds[value].covenantID
-                );
+                handlePropertyChange({
+                  [key]: value,
+                  [`${type}Covenant`]: soulbinds[value].covenantID,
+                });
               } catch {
-                handlePropertyChange(`${type}Soulbind`, null);
+                handlePropertyChange(key, null);
               }
             }}
             className="w-full border-2 border-solid dark:border-gray-600"
@@ -1017,23 +1067,29 @@ function SpecFilter({ type, data, remove }: SpecFilterProps) {
             id={`legendary1-selection-${type}`}
             value={legendary1 ? legendary1 : -1}
             onChange={(event) => {
+              const key = `${type}Legendary1`;
               try {
                 const value = Number.parseInt(event.target.value);
 
                 if (value === -1) {
-                  handlePropertyChange(`${type}Legendary1`, null);
+                  handlePropertyChange(key, null);
                   return;
                 }
 
-                handlePropertyChange(`${type}Legendary1`, value);
+                const next: Record<string, null | number> = {
+                  [key]: value,
+                };
 
                 const specsPlayingThisLegendary = legendariesBySpec[value];
 
                 if (specsPlayingThisLegendary.length === 1) {
-                  handlePropertyChange(type, specsPlayingThisLegendary[0]);
+                  // eslint-disable-next-line prefer-destructuring
+                  next[type] = specsPlayingThisLegendary[0];
                 }
+
+                handlePropertyChange(next);
               } catch {
-                handlePropertyChange(`${type}Legendary1`, null);
+                handlePropertyChange(key, null);
               }
             }}
             className="w-full border-2 border-solid dark:border-gray-600"
@@ -1064,15 +1120,14 @@ function SpecFilter({ type, data, remove }: SpecFilterProps) {
             id={`legendary2-selection-${type}`}
             value={legendary2 ? legendary2 : -1}
             onChange={(event) => {
+              const key = `${type}Legendary2`;
+
               try {
                 const value = Number.parseInt(event.target.value);
 
-                handlePropertyChange(
-                  `${type}Legendary2`,
-                  value === -1 ? null : value
-                );
+                handlePropertyChange(key, value === -1 ? null : value);
               } catch {
-                handlePropertyChange(`${type}Legendary2`, null);
+                handlePropertyChange(key, null);
               }
             }}
             className="w-full border-2 border-solid dark:border-gray-600"

@@ -283,12 +283,14 @@ export const usePullSettings = create<PullSettings>((set) => {
 export type LivingDiscoveryQueryParams = {
   [Property in keyof Required<DiscoveryQueryParams>]: number | null;
 };
-type RouteDiscovery = {
+export type RouteDiscovery = {
   reset: () => void;
-  handlePropertyChange: <Key extends keyof LivingDiscoveryQueryParams>(
-    key: Key,
-    value: LivingDiscoveryQueryParams[Key]
+  handlePropertyChange: (
+    key: string | Record<string, number | null>,
+    value?: number | null
   ) => void;
+  restoreFromUrl: () => LivingDiscoveryQueryParams | null;
+  persistToUrl: (query: Record<string, string>) => void;
 } & LivingDiscoveryQueryParams;
 
 const initialRouteDiscoveryState: LivingDiscoveryQueryParams = {
@@ -329,16 +331,83 @@ const initialRouteDiscoveryState: LivingDiscoveryQueryParams = {
   tankSoulbind: null,
 };
 
+const isQueryKey = (key: string): key is keyof LivingDiscoveryQueryParams =>
+  key in initialRouteDiscoveryState;
+
 export const useRouteDiscovery = create<RouteDiscovery>((set) => {
   return {
     ...initialRouteDiscoveryState,
     reset: () => {
       set(initialRouteDiscoveryState);
+
+      try {
+        window.history.pushState(
+          {},
+          "",
+          new URL(window.location.href.split("?")[0])
+        );
+        // eslint-disable-next-line no-empty
+      } catch {}
     },
     handlePropertyChange: (key, value) => {
+      if (typeof key === "object") {
+        set((prev) => {
+          return {
+            ...prev,
+            ...key,
+          };
+        });
+
+        return;
+      }
+
       set((prev) => {
         return { ...prev, [key]: value };
       });
+    },
+
+    persistToUrl: (query: Record<string, string>) => {
+      try {
+        const url = new URL(window.location.href.split("?")[0]);
+
+        Object.entries(query).forEach(([key, value]) => {
+          url.searchParams.set(key, value);
+        });
+
+        window.history.pushState({}, "", url);
+        // eslint-disable-next-line no-empty
+      } catch {}
+    },
+    restoreFromUrl: (): LivingDiscoveryQueryParams | null => {
+      try {
+        const url = new URL(window.location.toString());
+        const result: LivingDiscoveryQueryParams = {
+          ...initialRouteDiscoveryState,
+        };
+
+        for (const [key, value] of url.searchParams.entries()) {
+          if (isQueryKey(key)) {
+            result[key] = Number.parseInt(value);
+          }
+        }
+
+        const isDiff =
+          JSON.stringify(result) !== JSON.stringify(initialRouteDiscoveryState);
+
+        if (isDiff) {
+          set((prev) => {
+            return {
+              ...prev,
+              ...result,
+            };
+          });
+
+          return result;
+        }
+        return null;
+      } catch {
+        return null;
+      }
     },
   };
 });
