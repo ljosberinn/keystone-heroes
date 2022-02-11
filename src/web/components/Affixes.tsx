@@ -7,9 +7,23 @@ import { ExternalLink } from "./ExternalLink";
 export type AffixesProps = {
   ids: number[];
   className?: string;
+  iconSize?: 24 | 32 | 40 | 48;
 };
 
-export function Affixes({ ids, className }: AffixesProps): JSX.Element {
+const iconSizeMap = {
+  24: "w-6 h-6",
+  32: "w-8 h-8",
+  40: "w-10 h-10",
+  48: "w-12 h-12",
+};
+
+export function Affixes({
+  ids,
+  className,
+  iconSize = 40,
+}: AffixesProps): JSX.Element {
+  const linkClasses = iconSizeMap[iconSize];
+
   return (
     <div className={classnames("flex space-x-1", className)}>
       {ids.map((id) => (
@@ -19,15 +33,15 @@ export function Affixes({ ids, className }: AffixesProps): JSX.Element {
             id,
           })}
           key={id}
-          className="w-10 h-10"
+          className={linkClasses}
         >
           <AbilityIcon
             icon={affixes[id].icon}
             alt={affixes[id].name}
             title={affixes[id].name}
             className="object-cover w-full h-full rounded-full"
-            width={40}
-            height={40}
+            width={iconSize}
+            height={iconSize}
           />
         </ExternalLink>
       ))}

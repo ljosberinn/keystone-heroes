@@ -8,6 +8,8 @@ export const STALE_WHILE_REVALIDATE_FIVE_MINUTES =
   "max-age=300, stale-while-revalidate=600";
 export const STALE_WHILE_REVALIDATE_THIRTY_MINUTES =
   "max-age=1800, stale-while-revalidate=3600";
+export const STALE_WHILE_REVALIDATE_TWO_HOURS =
+  "max-age=7200, stale-while-revalidate=14400";
 
 export const NO_CACHE = "no-cache";
 

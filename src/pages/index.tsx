@@ -1,4 +1,4 @@
-// import Link from "next/link";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import type { FormEvent, ChangeEvent } from "react";
 import { useState } from "react";
@@ -13,7 +13,6 @@ import {
   parseWCLUrl,
 } from "../web/utils";
 import { classnames } from "../web/utils/classnames";
-// import { defaultQueryParams, url as discoverUrl } from "./routes/discover";
 
 export default function Home(): JSX.Element | null {
   return (
@@ -48,17 +47,11 @@ export default function Home(): JSX.Element | null {
         <p className="pt-10 text-2xl font-semibold leading-tight">OR</p>
 
         <div className="w-full pt-10 sm:w-auto">
-          {/* <Link href={createInternalUrl(discoverUrl, defaultQueryParams)}> */}
-          {/* <a> */}
-          <button
-            disabled
-            type="button"
-            className="sm:mt-0 bg-blue-600 w-full sm:min-w-[140px] text-center dark:hover:bg-blue-500 hover:bg-blue-500 rounded-lg px-4 sm:py-3 py-4 text-white font-medium text-sm flex-shrink-0 flex items-center justify-center transition-all ease-in-out duration-200 group focus:outline-none outline-none focus:ring-2 focus:ring-blue-700 focus:bg-blue-500 dark:focus:ring-blue-300 relative z-10"
-          >
-            Discover Routes (coming soon)
-          </button>
-          {/* </a> */}
-          {/* </Link> */}
+          <Link href="/routes/discover">
+            <a className="sm:mt-0 bg-blue-600 w-full sm:min-w-[140px] text-center dark:hover:bg-blue-500 hover:bg-blue-500 rounded-lg px-4 sm:py-3 py-4 text-white font-medium text-sm flex-shrink-0 flex items-center justify-center transition-all ease-in-out duration-200 group focus:outline-none outline-none focus:ring-2 focus:ring-blue-700 focus:bg-blue-500 dark:focus:ring-blue-300 relative z-10">
+              Discover Routes
+            </a>
+          </Link>
         </div>
 
         <p className="max-w-sm pt-10 text-xs text-center text-stone-800 dark:text-stone-200 sm:text-sm">

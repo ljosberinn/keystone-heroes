@@ -406,6 +406,117 @@ async function create() {
     })
   );
 
+  const specs = await prisma.spec.findMany({
+    select: {
+      role: true,
+      id: true,
+    },
+  });
+
+  const specIDsPerRole = {
+    dps: specs.filter((spec) => spec.role === "dps").map((spec) => spec.id),
+    heal: specs.filter((spec) => spec.role === "healer").map((spec) => spec.id),
+    tank: specs.filter((spec) => spec.role === "tank").map((spec) => spec.id),
+  };
+
+  const currentSeason = await prisma.season.findFirst({
+    select: {
+      affixID: true,
+    },
+    orderBy: {
+      id: "desc",
+    },
+  });
+
+  if (!currentSeason) {
+    throw new Error(`missing season`);
+  }
+
+  const rawWeeks = await prisma.week.findMany({
+    select: {
+      affix1ID: true,
+      affix2ID: true,
+      affix3ID: true,
+    },
+    where: {
+      season: {
+        affixID: currentSeason.affixID,
+      },
+    },
+  });
+
+  const weeks = rawWeeks
+    .map((week) => {
+      const ids: [number, number, number] = [
+        week.affix1ID,
+        week.affix2ID,
+        week.affix3ID,
+      ];
+      const name = [week.affix2ID, week.affix3ID]
+        .map((id) => affixes[id].name)
+        .join(" ");
+
+      return {
+        name,
+        ids,
+        key: affixes[week.affix1ID].name,
+      };
+    })
+    // eslint-disable-next-line unicorn/prefer-object-from-entries
+    .reduce<Record<string, { ids: [number, number, number]; name: string }[]>>(
+      (acc, week) => {
+        const dataset = {
+          ids: week.ids,
+          name: week.name,
+        };
+
+        if (week.key in acc) {
+          acc[week.key].push(dataset);
+          return acc;
+        }
+
+        acc[week.key] = [dataset];
+        return acc;
+      },
+      {}
+    );
+
+  const rawLegendariesPerSpec = await prisma.legendary.findMany({
+    select: {
+      id: true,
+      PlayerLegendary: {
+        select: {
+          player: {
+            select: {
+              specID: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  // eslint-disable-next-line unicorn/prefer-object-from-entries
+  const legendariesBySpec = rawLegendariesPerSpec.reduce<
+    Record<number, number[]>
+  >((acc, legendary) => {
+    if (legendary.PlayerLegendary.length === 0) {
+      return acc;
+    }
+
+    if (!(legendary.id in acc)) {
+      acc[legendary.id] = [];
+    }
+
+    legendary.PlayerLegendary.forEach((playerLegendary) => {
+      if (!acc[legendary.id].includes(playerLegendary.player.specID)) {
+        acc[legendary.id].push(playerLegendary.player.specID);
+      }
+    });
+
+    return acc;
+  }, {});
+
   const dungeonSpecificSpells = [
     ...Object.values(NW),
     HOA_GARGOYLE,
@@ -783,6 +894,15 @@ export const TOP_BANNER_AURA = ${TOP_BANNER_AURA};
 export const NW = JSON.parse(\`${JSON.stringify(NW)}\`);
 
 type StaticDataMap = Record<number, { name: string, icon: string }>;
+
+export const weeks: Record<string, { ids: [number, number, number]; name: string }[]> = ${JSON.stringify(
+    weeks
+  )};
+export const legendariesBySpec: Record<number, number[]> = ${JSON.stringify(
+    legendariesBySpec
+  )}
+export const specIDsPerRole = ${JSON.stringify(specIDsPerRole)};
+export const currentSeasonID = ${currentSeason.affixID};
 
 const dungeonSpells = new Set<number>(${JSON.stringify([
     ...dungeonSpecificSpells,
