@@ -2,6 +2,7 @@
 import type { SpecName } from "@prisma/client";
 import Link from "next/link";
 import type { FormEventHandler } from "react";
+import { useRef } from "react";
 import { useCallback, useState, useEffect } from "react";
 
 import type { PublicDiscoveryResponse } from "../../api/functions/discovery";
@@ -56,12 +57,28 @@ export default function Discover(): JSX.Element {
     url,
     initialState: [],
   });
+  const resultsContainerRef = useRef<HTMLDivElement | null>(null);
 
   const { persistToUrl, restoreFromUrl } = useRouteDiscovery(discoverySelector);
 
   const handleReset = () => {
     setUrl(null);
   };
+
+  useEffect(() => {
+    if (resultsContainerRef.current && (data.length > 0 || loading)) {
+      try {
+        const currentScrollPosition = window.scrollY;
+        const windowHeight = window.innerHeight;
+        const containerPosition = resultsContainerRef.current.offsetTop;
+
+        if (currentScrollPosition + windowHeight < containerPosition) {
+          resultsContainerRef.current.scrollIntoView({ behavior: "smooth" });
+        }
+        // eslint-disable-next-line no-empty
+      } catch {}
+    }
+  }, [data, loading]);
 
   const handleSubmit = useCallback(
     (query: LivingDiscoveryQueryParams) => {
@@ -98,7 +115,9 @@ export default function Discover(): JSX.Element {
 
       <div className={`${widthConstraint} py-6`}>
         <div className="flex flex-col mx-auto space-x-0 lg:flex-row max-w-screen-2xl lg:space-x-4">
-          <div className={`"flex-1 rounded-b-lg ${hoverShadow} lg:w-2/6`}>
+          <div
+            className={`flex-1 rounded-b-lg ${hoverShadow} lg:w-2/6 lg:max-w-1/3`}
+          >
             <div className={`p-4 rounded-t-lg ${bgSecondary}`}>
               <h1 className="text-3xl font-bold">Route Discovery</h1>
             </div>
@@ -108,10 +127,31 @@ export default function Discover(): JSX.Element {
                 onReset={handleReset}
                 loading={loading}
               />
+
+              <details
+                className={`rounded-lg ${bgSecondary} p-2 mt-4 cursor-pointer`}
+              >
+                <summary>FAQ</summary>
+
+                <ul className="cursor-default">
+                  <li>A maximum of 25 results will be shown.</li>
+                  <li>Results are ordered by level, then by speed.</li>
+                  <li>
+                    Runs must be timed and imported on KSH to appear here.
+                  </li>
+                  <li>
+                    Secondary legendaries will only work once people actually
+                    obtained them.
+                  </li>
+                </ul>
+              </details>
             </div>
           </div>
 
-          <div className="w-full h-auto max-w-screen-xl pt-4 lg:w-4/6 lg:pt-0">
+          <div
+            className="flex flex-col flex-1 w-full h-auto max-w-screen-xl pt-4 lg:w-4/6 lg:pt-0"
+            ref={resultsContainerRef}
+          >
             <div className={`p-4 rounded-t-lg ${bgSecondary}`}>
               <h2 className="text-2xl font-bold">Results</h2>
             </div>
@@ -129,136 +169,174 @@ type DiscoveryResultsProps = {
   loading: boolean;
 };
 
-function DiscoveryResults({ data }: DiscoveryResultsProps) {
+function DiscoveryResults({ data, loading }: DiscoveryResultsProps) {
   return (
     <div
-      className={`p-2 rounded-b-lg ${bgPrimary} ${hoverShadow} space-y-4 lg:space-y-2`}
+      className={`p-2 rounded-b-lg ${bgPrimary} ${hoverShadow} space-y-4 lg:space-y-2 h-full`}
     >
-      {data.map((dataset) => {
-        const dungeon = dungeonMap[dataset.dungeonID];
-
-        return (
-          <div
-            key={`${dataset.report}-${dataset.fightID}`}
-            className={`bg-maincolor bg-cover rounded-md bg-${dungeon.slug.toLowerCase()} bg-blend-multiply px-4 py-6`}
-          >
-            <div className="flex items-center justify-between pb-4">
-              <Link href={`/report/${dataset.report}/${dataset.fightID}`}>
-                <a>
-                  <h2 className="text-xl font-extrabold">
-                    <span className="hidden underline lg:inline">
-                      {dungeon.name}
-                    </span>
-                    <span className="inline underline lg:hidden">
-                      {dungeon.slug}
-                    </span>
-                    <span className="pl-2">+{dataset.keystoneLevel}</span>
-                    <sup className="hidden pl-2 space-x-1 sm:inline">
-                      {Array.from({ length: dataset.chests }, (_, index) => (
-                        <svg
-                          key={index}
-                          className={`inline w-4 h-4 ${yellowText} fill-current`}
-                        >
-                          <use href={`#${star.id}`} />
-                        </svg>
-                      ))}
-                    </sup>
-                  </h2>
-                </a>
-              </Link>
-
-              <div>
-                <Affixes ids={dataset.affixes} iconSize={32} />
-              </div>
-            </div>
-
-            <div className="flex justify-between">
-              <div className="space-x-2">
-                <TimeInformation
-                  dungeonTimer={dungeon.timer[0]}
-                  keystoneTime={dataset.keystoneTime}
-                  chests={dataset.chests}
-                />
-                <span> | </span>
-                <span>{dataset.percent.toFixed(2)}%</span>
-              </div>
-
-              <div>
-                <ExternalLink
-                  href={createWCLUrl({
-                    reportID: dataset.report,
-                    fightID: `${dataset.fightID}`,
-                  })}
-                >
-                  <img
-                    src="/static/icons/wcl.png"
-                    alt="See on Warcraft Logs"
-                    title="See on Warcraft Logs"
-                    className="w-6 h-6"
-                    width={24}
-                    height={24}
-                    loading="lazy"
-                  />
-                </ExternalLink>
-              </div>
-            </div>
-
-            <div className="flex justify-center w-full pt-4 space-x-2">
-              {dataset.player.map((player, index) => {
-                const { className, colors, specName } = getClassAndSpecName({
-                  spec: player.specID,
-                  class: player.classID,
-                });
-
-                return (
-                  <div
-                    className="w-8 h-8"
-                    // eslint-disable-next-line react/no-array-index-key
-                    key={`${player.classID}-${player.specID}-${index}`}
-                  >
-                    <SpecIcon
-                      class={className}
-                      spec={specName}
-                      className={`${colors.border} border-2`}
-                    />
-                  </div>
-                );
-              })}
-            </div>
-
-            <div className="flex justify-center w-full pt-4 space-x-2">
-              <span>
-                DPS{" "}
-                <span className="italic font-bold">
-                  {dataset.dps.toLocaleString("en-US")}
-                </span>
-              </span>
-              <span>
-                HPS{" "}
-                <span className="italic font-bold">
-                  {dataset.hps.toLocaleString("en-US")}
-                </span>
-              </span>
-            </div>
-
-            <div className="flex justify-center w-full space-x-2">
-              <span>
-                Deaths{" "}
-                <span className="italic font-bold">
-                  {dataset.totalDeaths.toLocaleString("en-US")}
-                </span>
-              </span>
-
-              <span>
-                Ø{" "}
-                <span className="italic font-bold">
-                  {dataset.averageItemLevel.toLocaleString("en-US")}
-                </span>
-              </span>
-            </div>
+      {loading ? (
+        <div className="flex flex-col items-center justify-center w-full h-full">
+          <div>
+            <style jsx>
+              {`
+                .rotate-y-180 {
+                  transform: rotateY(180deg);
+                }
+              `}
+            </style>
+            <img
+              src="/static/bear/orb.gif"
+              height="256"
+              width="256"
+              alt="Loading"
+              loading="lazy"
+              className="rotate-y-180"
+            />
           </div>
-        );
-      })}
+
+          <p className="px-2 mt-2 text-center">processing your query...</p>
+        </div>
+      ) : data.length === 0 ? (
+        <div className="flex flex-col items-center justify-center w-full h-full">
+          <div>
+            <img
+              src="/static/bear/shrug.png"
+              height="256"
+              width="256"
+              alt="Loading"
+              loading="lazy"
+            />
+          </div>
+
+          <p className="px-2 mt-2 text-center">no results (yet?)</p>
+        </div>
+      ) : (
+        data.map((dataset) => {
+          const dungeon = dungeonMap[dataset.dungeonID];
+
+          return (
+            <div
+              key={`${dataset.report}-${dataset.fightID}`}
+              className={`bg-maincolor bg-cover rounded-md bg-${dungeon.slug.toLowerCase()} bg-blend-multiply hover:bg-blend-soft-light px-4 py-6 hover:-translate-y-1 transition-transform duration-200`}
+            >
+              <div className="flex items-center justify-between pb-4">
+                <Link href={`/report/${dataset.report}/${dataset.fightID}`}>
+                  <a>
+                    <h2 className="text-xl font-extrabold">
+                      <span className="hidden underline lg:inline">
+                        {dungeon.name}
+                      </span>
+                      <span className="inline underline lg:hidden">
+                        {dungeon.slug}
+                      </span>
+                      <span className="pl-2">+{dataset.keystoneLevel}</span>
+                      <sup className="hidden pl-2 space-x-1 sm:inline">
+                        {Array.from({ length: dataset.chests }, (_, index) => (
+                          <svg
+                            key={index}
+                            className={`inline w-4 h-4 ${yellowText} fill-current`}
+                          >
+                            <use href={`#${star.id}`} />
+                          </svg>
+                        ))}
+                      </sup>
+                    </h2>
+                  </a>
+                </Link>
+
+                <div>
+                  <Affixes ids={dataset.affixes} iconSize={32} />
+                </div>
+              </div>
+
+              <div className="flex justify-between">
+                <div className="space-x-2">
+                  <TimeInformation
+                    dungeonTimer={dungeon.timer[0]}
+                    keystoneTime={dataset.keystoneTime}
+                    chests={dataset.chests}
+                  />
+                  <span> | </span>
+                  <span>{dataset.percent.toFixed(2)}%</span>
+                </div>
+
+                <div>
+                  <ExternalLink
+                    href={createWCLUrl({
+                      reportID: dataset.report,
+                      fightID: `${dataset.fightID}`,
+                    })}
+                  >
+                    <img
+                      src="/static/icons/wcl.png"
+                      alt="See on Warcraft Logs"
+                      title="See on Warcraft Logs"
+                      className="w-6 h-6"
+                      width={24}
+                      height={24}
+                      loading="lazy"
+                    />
+                  </ExternalLink>
+                </div>
+              </div>
+
+              <div className="flex justify-center w-full pt-4 space-x-2">
+                {dataset.player.map((player, index) => {
+                  const { className, colors, specName } = getClassAndSpecName({
+                    spec: player.specID,
+                    class: player.classID,
+                  });
+
+                  return (
+                    <div
+                      className="w-8 h-8"
+                      // eslint-disable-next-line react/no-array-index-key
+                      key={`${player.classID}-${player.specID}-${index}`}
+                    >
+                      <SpecIcon
+                        class={className}
+                        spec={specName}
+                        className={`${colors.border} border-2`}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div className="flex justify-center w-full pt-4 space-x-2">
+                <span>
+                  DPS{" "}
+                  <span className="italic font-bold">
+                    {dataset.dps.toLocaleString("en-US")}
+                  </span>
+                </span>
+                <span>
+                  HPS{" "}
+                  <span className="italic font-bold">
+                    {dataset.hps.toLocaleString("en-US")}
+                  </span>
+                </span>
+              </div>
+
+              <div className="flex justify-center w-full space-x-2">
+                <span>
+                  Deaths{" "}
+                  <span className="italic font-bold">
+                    {dataset.totalDeaths.toLocaleString("en-US")}
+                  </span>
+                </span>
+
+                <span>
+                  Ø{" "}
+                  <span className="italic font-bold">
+                    {dataset.averageItemLevel.toLocaleString("en-US")}
+                  </span>
+                </span>
+              </div>
+            </div>
+          );
+        })
+      )}
     </div>
   );
 }
@@ -676,7 +754,7 @@ function Form({ onSubmit, onReset, loading }: FormProps) {
           </div>
         </div>
 
-        <div className="mt-4 space-y-4">
+        <div className="mt-4">
           <SpecFilters
             tank={{
               tank,
@@ -816,98 +894,100 @@ function SpecFilters({ dps1, dps2, dps3, heal, tank }: SpecFiltersProps) {
   const active = Object.values(activeFilters).filter((bool) => bool).length;
 
   return (
-    <>
-      <p>Spec Filter</p>
+    <div>
+      <p className="pb-2">Spec Filter</p>
 
-      {activeFilters.tank ? (
-        <SpecFilter
-          type="tank"
-          data={{
-            covenant: tank.tankCovenant,
-            soulbind: tank.tankSoulbind,
-            legendary1: tank.tankLegendary1,
-            legendary2: tank.tankLegendary2,
-            specID: tank.tank,
-          }}
-          remove={() => {
-            handleAddRole("tank");
-          }}
-        />
-      ) : null}
-      {activeFilters.heal ? (
-        <SpecFilter
-          type="heal"
-          data={{
-            covenant: heal.healCovenant,
-            soulbind: heal.healSoulbind,
-            legendary1: heal.healLegendary1,
-            legendary2: heal.healLegendary2,
-            specID: heal.heal,
-          }}
-          remove={() => {
-            handleAddRole("heal");
-          }}
-        />
-      ) : null}
-      {activeFilters.dps1 ? (
-        <SpecFilter
-          type="dps1"
-          data={{
-            covenant: dps1.dps1Covenant,
-            soulbind: dps1.dps1Soulbind,
-            legendary1: dps1.dps1Legendary1,
-            legendary2: dps1.dps1Legendary2,
-            specID: dps1.dps1,
-          }}
-          remove={() => {
-            handleAddRole("dps1");
-          }}
-        />
-      ) : null}
-      {activeFilters.dps2 ? (
-        <SpecFilter
-          type="dps2"
-          data={{
-            covenant: dps2.dps2Covenant,
-            soulbind: dps2.dps2Soulbind,
-            legendary1: dps2.dps2Legendary1,
-            legendary2: dps2.dps2Legendary2,
-            specID: dps2.dps2,
-          }}
-          remove={() => {
-            handleAddRole("dps2");
-          }}
-        />
-      ) : null}
-      {activeFilters.dps3 ? (
-        <SpecFilter
-          type="dps3"
-          data={{
-            covenant: dps3.dps3Covenant,
-            soulbind: dps3.dps3Soulbind,
-            legendary1: dps3.dps3Legendary1,
-            legendary2: dps3.dps3Legendary2,
-            specID: dps3.dps3,
-          }}
-          remove={() => {
-            handleAddRole("dps3");
-          }}
-        />
-      ) : null}
+      <div className="space-y-4">
+        {activeFilters.tank ? (
+          <SpecFilter
+            type="tank"
+            data={{
+              covenant: tank.tankCovenant,
+              soulbind: tank.tankSoulbind,
+              legendary1: tank.tankLegendary1,
+              legendary2: tank.tankLegendary2,
+              specID: tank.tank,
+            }}
+            remove={() => {
+              handleAddRole("tank");
+            }}
+          />
+        ) : null}
+        {activeFilters.heal ? (
+          <SpecFilter
+            type="heal"
+            data={{
+              covenant: heal.healCovenant,
+              soulbind: heal.healSoulbind,
+              legendary1: heal.healLegendary1,
+              legendary2: heal.healLegendary2,
+              specID: heal.heal,
+            }}
+            remove={() => {
+              handleAddRole("heal");
+            }}
+          />
+        ) : null}
+        {activeFilters.dps1 ? (
+          <SpecFilter
+            type="dps1"
+            data={{
+              covenant: dps1.dps1Covenant,
+              soulbind: dps1.dps1Soulbind,
+              legendary1: dps1.dps1Legendary1,
+              legendary2: dps1.dps1Legendary2,
+              specID: dps1.dps1,
+            }}
+            remove={() => {
+              handleAddRole("dps1");
+            }}
+          />
+        ) : null}
+        {activeFilters.dps2 ? (
+          <SpecFilter
+            type="dps2"
+            data={{
+              covenant: dps2.dps2Covenant,
+              soulbind: dps2.dps2Soulbind,
+              legendary1: dps2.dps2Legendary1,
+              legendary2: dps2.dps2Legendary2,
+              specID: dps2.dps2,
+            }}
+            remove={() => {
+              handleAddRole("dps2");
+            }}
+          />
+        ) : null}
+        {activeFilters.dps3 ? (
+          <SpecFilter
+            type="dps3"
+            data={{
+              covenant: dps3.dps3Covenant,
+              soulbind: dps3.dps3Soulbind,
+              legendary1: dps3.dps3Legendary1,
+              legendary2: dps3.dps3Legendary2,
+              specID: dps3.dps3,
+            }}
+            remove={() => {
+              handleAddRole("dps3");
+            }}
+          />
+        ) : null}
 
-      {active < 5 ? (
-        <AddSpecFilterButton
-          onAdd={handleAddRole}
-          hasTank={activeFilters.tank}
-          hasHeal={activeFilters.heal}
-          amountOfDps={
-            (activeFilters.dps1 ? 1 : 0) +
-            (activeFilters.dps2 ? 1 : 0) +
-            (activeFilters.dps3 ? 1 : 0)
-          }
-        />
-      ) : null}
-    </>
+        {active < 5 ? (
+          <AddSpecFilterButton
+            onAdd={handleAddRole}
+            hasTank={activeFilters.tank}
+            hasHeal={activeFilters.heal}
+            amountOfDps={
+              (activeFilters.dps1 ? 1 : 0) +
+              (activeFilters.dps2 ? 1 : 0) +
+              (activeFilters.dps3 ? 1 : 0)
+            }
+          />
+        ) : null}
+      </div>
+    </div>
   );
 }
 
@@ -989,46 +1069,6 @@ function SpecFilter({ type, data, remove }: SpecFilterProps) {
     <div className="p-2 space-y-2 border-2 border-gray-200 border-dashed rounded-lg">
       <div className="flex space-x-4 lg:flex-col lg:space-x-0 lg:space-y-2 xl:flex-row xl:space-y-0 xl:space-x-4">
         <div className="flex flex-col w-1/2 md:w-full">
-          <div className="flex space-x-2">
-            <img
-              src={`/static/roles/${displayableType}.png`}
-              width="20"
-              height="20"
-              className="w-5 h-5"
-              alt=""
-            />
-            <b>
-              {displayableType === "dps"
-                ? "DPS"
-                : `${displayableType
-                    .slice(0, 1)
-                    .toUpperCase()}${displayableType.slice(1)}`}
-            </b>
-          </div>
-
-          <div className="flex justify-end w-full">
-            <button
-              type="button"
-              onClick={() => {
-                remove();
-
-                handlePropertyChange({
-                  [type]: null,
-                  [`${type}Legendary1`]: null,
-                  [`${type}Legendary2`]: null,
-                  [`${type}Covenant`]: null,
-                  [`${type}Soulbind`]: null,
-                });
-              }}
-              aria-label="remove"
-              className="px-2 text-white transition-all duration-200 bg-red-500 hover:bg-red-400 rounded-xl"
-            >
-              remove
-            </button>
-          </div>
-        </div>
-
-        <div className="flex flex-col w-1/2 md:w-full">
           <label htmlFor={`spec-selection-${type}`}>Spec</label>
 
           <select
@@ -1085,221 +1125,268 @@ function SpecFilter({ type, data, remove }: SpecFilterProps) {
             })}
           </select>
         </div>
+
+        <div className="flex flex-col w-1/2 md:w-full">
+          <div className="flex flex-col items-end w-full">
+            <div className="flex space-x-2">
+              <b>
+                {displayableType === "dps"
+                  ? "DPS"
+                  : `${displayableType
+                      .slice(0, 1)
+                      .toUpperCase()}${displayableType.slice(1)}`}
+              </b>
+
+              <img
+                src={`/static/roles/${displayableType}.png`}
+                width="20"
+                height="20"
+                className="w-5 h-5"
+                alt=""
+              />
+            </div>
+
+            <div>
+              <button
+                type="button"
+                onClick={() => {
+                  remove();
+
+                  handlePropertyChange({
+                    [type]: null,
+                    [`${type}Legendary1`]: null,
+                    [`${type}Legendary2`]: null,
+                    [`${type}Covenant`]: null,
+                    [`${type}Soulbind`]: null,
+                  });
+                }}
+                aria-label="remove"
+                className="px-2 text-white transition-all duration-200 bg-red-500 hover:bg-red-400 rounded-xl"
+              >
+                remove
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div className="flex space-x-4 lg:flex-col lg:space-x-0 lg:space-y-2 xl:flex-row xl:space-y-0 xl:space-x-4">
-        <div className="flex flex-col w-1/2 md:w-full">
-          <label htmlFor={`covenant-selection-${type}`}>Covenant</label>
+      <details>
+        <summary className="cursor-pointer">more</summary>
 
-          <select
-            id={`covenant-selection-${type}`}
-            value={covenant ? covenant : -1}
-            onChange={(event) => {
-              const key = `${type}Covenant`;
+        <div className="flex space-x-4 lg:flex-col lg:space-x-0 lg:space-y-2 xl:flex-row xl:space-y-0 xl:space-x-4">
+          <div className="flex flex-col w-1/2 md:w-full">
+            <label htmlFor={`covenant-selection-${type}`}>Covenant</label>
 
-              try {
-                const value = Number.parseInt(event.target.value);
+            <select
+              id={`covenant-selection-${type}`}
+              value={covenant ? covenant : -1}
+              onChange={(event) => {
+                const key = `${type}Covenant`;
 
-                if (value === -1) {
-                  handlePropertyChange(key, null);
-                  return;
-                }
+                try {
+                  const value = Number.parseInt(event.target.value);
 
-                const next: Record<string, null | number> = {
-                  [key]: value,
-                };
-
-                if (soulbind && soulbinds[soulbind].covenantID !== value) {
-                  next[`${type}Soulbind`] = null;
-                }
-
-                handlePropertyChange(next);
-              } catch {
-                handlePropertyChange(key, null);
-              }
-            }}
-            className="w-full px-1 border-2 border-solid dark:border-gray-600"
-          >
-            <option value={-1}>select covenant</option>
-            {Object.entries(covenants)
-              .sort((a, b) => a[1].name.localeCompare(b[1].name))
-              .map(([id, { name }]) => {
-                return (
-                  <option key={id} value={id}>
-                    {name}
-                  </option>
-                );
-              })}
-          </select>
-        </div>
-
-        <div className="flex flex-col w-1/2 md:w-full">
-          <label htmlFor={`soulbind-selection-${type}`}>Soulbind</label>
-
-          <select
-            id={`soulbind-selection-${type}`}
-            value={soulbind ? soulbind : -1}
-            onChange={(event) => {
-              const key = `${type}Soulbind`;
-              try {
-                const value = Number.parseInt(event.target.value);
-
-                if (value === -1) {
-                  handlePropertyChange(key, null);
-                  return;
-                }
-
-                handlePropertyChange({
-                  [key]: value,
-                  [`${type}Covenant`]: soulbinds[value].covenantID,
-                });
-              } catch {
-                handlePropertyChange(key, null);
-              }
-            }}
-            className="w-full px-1 border-2 border-solid dark:border-gray-600"
-          >
-            <option value={-1}>select soulbind</option>
-
-            {Object.entries(
-              Object.entries(soulbinds)
-                .filter((soulbind) => {
-                  if (covenant) {
-                    return soulbind[1].covenantID === covenant;
+                  if (value === -1) {
+                    handlePropertyChange(key, null);
+                    return;
                   }
 
-                  return true;
-                })
-                // eslint-disable-next-line unicorn/prefer-object-from-entries
-                .reduce<Record<number, { id: number; name: string }[]>>(
-                  (acc, [id, { covenantID, name }]) => {
-                    const dataset = { id: Number.parseInt(id), name };
+                  const next: Record<string, null | number> = {
+                    [key]: value,
+                  };
 
-                    if (covenantID in acc) {
-                      acc[covenantID].push(dataset);
-                      return acc;
+                  if (soulbind && soulbinds[soulbind].covenantID !== value) {
+                    next[`${type}Soulbind`] = null;
+                  }
+
+                  handlePropertyChange(next);
+                } catch {
+                  handlePropertyChange(key, null);
+                }
+              }}
+              className="w-full px-1 border-2 border-solid dark:border-gray-600"
+            >
+              <option value={-1}>select covenant</option>
+              {Object.entries(covenants)
+                .sort((a, b) => a[1].name.localeCompare(b[1].name))
+                .map(([id, { name }]) => {
+                  return (
+                    <option key={id} value={id}>
+                      {name}
+                    </option>
+                  );
+                })}
+            </select>
+          </div>
+
+          <div className="flex flex-col w-1/2 md:w-full">
+            <label htmlFor={`soulbind-selection-${type}`}>Soulbind</label>
+
+            <select
+              id={`soulbind-selection-${type}`}
+              value={soulbind ? soulbind : -1}
+              onChange={(event) => {
+                const key = `${type}Soulbind`;
+                try {
+                  const value = Number.parseInt(event.target.value);
+
+                  if (value === -1) {
+                    handlePropertyChange(key, null);
+                    return;
+                  }
+
+                  handlePropertyChange({
+                    [key]: value,
+                    [`${type}Covenant`]: soulbinds[value].covenantID,
+                  });
+                } catch {
+                  handlePropertyChange(key, null);
+                }
+              }}
+              className="w-full px-1 border-2 border-solid dark:border-gray-600"
+            >
+              <option value={-1}>select soulbind</option>
+
+              {Object.entries(
+                Object.entries(soulbinds)
+                  .filter((soulbind) => {
+                    if (covenant) {
+                      return soulbind[1].covenantID === covenant;
                     }
 
-                    acc[covenantID] = [dataset];
+                    return true;
+                  })
+                  // eslint-disable-next-line unicorn/prefer-object-from-entries
+                  .reduce<Record<number, { id: number; name: string }[]>>(
+                    (acc, [id, { covenantID, name }]) => {
+                      const dataset = { id: Number.parseInt(id), name };
 
-                    return acc;
-                  },
-                  {}
-                )
-            ).map(([covenantID, soulbinds]) => {
-              return (
-                <optgroup
-                  label={covenants[Number.parseInt(covenantID)].name}
-                  key={covenantID}
-                >
-                  {soulbinds
-                    .sort((a, b) => a.name.localeCompare(b.name))
-                    .map((soulbind) => {
-                      return (
-                        <option value={soulbind.id} key={soulbind.id}>
-                          {soulbind.name}
-                        </option>
-                      );
-                    })}
-                </optgroup>
-              );
-            })}
-          </select>
+                      if (covenantID in acc) {
+                        acc[covenantID].push(dataset);
+                        return acc;
+                      }
+
+                      acc[covenantID] = [dataset];
+
+                      return acc;
+                    },
+                    {}
+                  )
+              ).map(([covenantID, soulbinds]) => {
+                return (
+                  <optgroup
+                    label={covenants[Number.parseInt(covenantID)].name}
+                    key={covenantID}
+                  >
+                    {soulbinds
+                      .sort((a, b) => a.name.localeCompare(b.name))
+                      .map((soulbind) => {
+                        return (
+                          <option value={soulbind.id} key={soulbind.id}>
+                            {soulbind.name}
+                          </option>
+                        );
+                      })}
+                  </optgroup>
+                );
+              })}
+            </select>
+          </div>
         </div>
-      </div>
 
-      <div className="flex space-x-4 lg:flex-col lg:space-x-0 lg:space-y-2 xl:flex-row xl:space-y-0 xl:space-x-4">
-        <div className="flex flex-col w-1/2 md:w-full">
-          <label htmlFor={`legendary1-selection-${type}`}>Legendary 1</label>
+        <div className="flex space-x-4 lg:flex-col lg:space-x-0 lg:space-y-2 xl:flex-row xl:space-y-0 xl:space-x-4">
+          <div className="flex flex-col w-1/2 md:w-full">
+            <label htmlFor={`legendary1-selection-${type}`}>Legendary 1</label>
 
-          <select
-            id={`legendary1-selection-${type}`}
-            value={legendary1 ? legendary1 : -1}
-            onChange={(event) => {
-              const key = `${type}Legendary1`;
-              try {
-                const value = Number.parseInt(event.target.value);
+            <select
+              id={`legendary1-selection-${type}`}
+              value={legendary1 ? legendary1 : -1}
+              onChange={(event) => {
+                const key = `${type}Legendary1`;
+                try {
+                  const value = Number.parseInt(event.target.value);
 
-                if (value === -1) {
+                  if (value === -1) {
+                    handlePropertyChange(key, null);
+                    return;
+                  }
+
+                  const next: Record<string, null | number> = {
+                    [key]: value,
+                  };
+
+                  const specsPlayingThisLegendary = legendariesBySpec[value];
+
+                  if (specsPlayingThisLegendary.length === 1) {
+                    // eslint-disable-next-line prefer-destructuring
+                    next[type] = specsPlayingThisLegendary[0];
+                  }
+
+                  handlePropertyChange(next);
+                } catch {
                   handlePropertyChange(key, null);
-                  return;
                 }
+              }}
+              className="w-full px-1 border-2 border-solid dark:border-gray-600"
+            >
+              <option value={-1}>first legendary</option>
+              {availableLegendaries
+                .filter((legendary) => {
+                  if (!legendary2) {
+                    return true;
+                  }
 
-                const next: Record<string, null | number> = {
-                  [key]: value,
-                };
+                  return legendary.id !== legendary2;
+                })
+                .map((legendary) => {
+                  return (
+                    <option key={legendary.id} value={legendary.id}>
+                      {legendary.name}
+                    </option>
+                  );
+                })}
+            </select>
+          </div>
 
-                const specsPlayingThisLegendary = legendariesBySpec[value];
+          <div className="flex flex-col w-1/2 md:w-full">
+            <label htmlFor={`legendary2-selection-${type}`}>Legendary 2</label>
 
-                if (specsPlayingThisLegendary.length === 1) {
-                  // eslint-disable-next-line prefer-destructuring
-                  next[type] = specsPlayingThisLegendary[0];
+            <select
+              id={`legendary2-selection-${type}`}
+              value={legendary2 ? legendary2 : -1}
+              onChange={(event) => {
+                const key = `${type}Legendary2`;
+
+                try {
+                  const value = Number.parseInt(event.target.value);
+
+                  handlePropertyChange(key, value === -1 ? null : value);
+                } catch {
+                  handlePropertyChange(key, null);
                 }
+              }}
+              className="w-full px-1 border-2 border-solid dark:border-gray-600"
+            >
+              <option value={-1}>second legendary</option>
+              {availableLegendaries
+                .filter((legendary) => {
+                  if (!legendary1) {
+                    return true;
+                  }
 
-                handlePropertyChange(next);
-              } catch {
-                handlePropertyChange(key, null);
-              }
-            }}
-            className="w-full px-1 border-2 border-solid dark:border-gray-600"
-          >
-            <option value={-1}>first legendary</option>
-            {availableLegendaries
-              .filter((legendary) => {
-                if (!legendary2) {
-                  return true;
-                }
-
-                return legendary.id !== legendary2;
-              })
-              .map((legendary) => {
-                return (
-                  <option key={legendary.id} value={legendary.id}>
-                    {legendary.name}
-                  </option>
-                );
-              })}
-          </select>
+                  return legendary.id !== legendary1;
+                })
+                .map((legendary) => {
+                  return (
+                    <option key={legendary.id} value={legendary.id}>
+                      {legendary.name}
+                    </option>
+                  );
+                })}
+            </select>
+          </div>
         </div>
-
-        <div className="flex flex-col w-1/2 md:w-full">
-          <label htmlFor={`legendary2-selection-${type}`}>Legendary 2</label>
-
-          <select
-            id={`legendary2-selection-${type}`}
-            value={legendary2 ? legendary2 : -1}
-            onChange={(event) => {
-              const key = `${type}Legendary2`;
-
-              try {
-                const value = Number.parseInt(event.target.value);
-
-                handlePropertyChange(key, value === -1 ? null : value);
-              } catch {
-                handlePropertyChange(key, null);
-              }
-            }}
-            className="w-full px-1 border-2 border-solid dark:border-gray-600"
-          >
-            <option value={-1}>second legendary</option>
-            {availableLegendaries
-              .filter((legendary) => {
-                if (!legendary1) {
-                  return true;
-                }
-
-                return legendary.id !== legendary1;
-              })
-              .map((legendary) => {
-                return (
-                  <option key={legendary.id} value={legendary.id}>
-                    {legendary.name}
-                  </option>
-                );
-              })}
-          </select>
-        </div>
-      </div>
+      </details>
     </div>
   );
 }
@@ -1318,7 +1405,10 @@ function AddSpecFilterButton({
   hasTank,
 }: AddSpecFilterButtonProps) {
   return (
-    <div className="flex justify-center w-full p-4 space-x-8 transition-all duration-200 bg-gray-200 border-2 border-gray-700 border-dashed rounded-lg xl:space-x-4 dark:bg-gray-600 dark:hover:bg-gray-500">
+    <div
+      className="flex justify-center w-full p-4 space-x-8 transition-all duration-200 bg-gray-200 border-2 border-gray-700 border-dashed rounded-lg xl:space-x-4 dark:bg-gray-600 dark:hover:bg-gray-500"
+      title="Click an icon to add a role to filter for."
+    >
       {hasTank ? null : (
         <button
           type="button"

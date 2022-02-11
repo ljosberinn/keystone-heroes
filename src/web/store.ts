@@ -371,7 +371,9 @@ export const useRouteDiscovery = create<RouteDiscovery>((set) => {
         const url = new URL(window.location.href.split("?")[0]);
 
         Object.entries(query).forEach(([key, value]) => {
-          url.searchParams.set(key, value);
+          if (value !== "-1") {
+            url.searchParams.set(key, value);
+          }
         });
 
         window.history.pushState({}, "", url);
