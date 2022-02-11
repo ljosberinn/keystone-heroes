@@ -7,6 +7,7 @@ import { prisma } from "../../db/prisma";
 import { MIN_KEYSTONE_LEVEL } from "../../web/env";
 import { currentSeasonID } from "../../web/staticData";
 import { configureScope, withSentry } from "../middleware";
+import { sortByRole } from "../utils";
 import {
   cacheControlKey,
   STALE_WHILE_REVALIDATE_TWO_HOURS,
@@ -66,9 +67,9 @@ type Response =
   | {
       error: string;
     }
-  | DiscoveryResponse;
+  | PublicDiscoveryResponse;
 
-export type DiscoveryResponse = (Pick<
+type InternalDiscoveryResponse = (Pick<
   Fight,
   | "averageItemLevel"
   | "dps"
@@ -77,6 +78,7 @@ export type DiscoveryResponse = (Pick<
   | "fightID"
   | "keystoneLevel"
   | "keystoneTime"
+  | "chests"
   | "percent"
   | "totalDeaths"
 > & {
@@ -89,10 +91,35 @@ export type DiscoveryResponse = (Pick<
   > & {
     talents: number[];
     legendaries: number[];
+    classID: number;
   })[];
 })[];
 
-export type DiscoveryPlayer = DiscoveryResponse[number]["player"][number];
+export type PublicDiscoveryResponse = (Pick<
+  Fight,
+  | "averageItemLevel"
+  | "dps"
+  | "hps"
+  | "chests"
+  | "fightID"
+  | "keystoneLevel"
+  | "keystoneTime"
+  | "chests"
+  | "percent"
+  | "totalDeaths"
+> & {
+  affixes: number[];
+  dungeonID: number;
+  report: string;
+  player: Pick<
+    InternalDiscoveryResponse[number]["player"][number],
+    "classID" | "specID"
+  >[];
+})[];
+
+type InternalDiscoveryPlayer =
+  InternalDiscoveryResponse[number]["player"][number];
+export type DiscoveryPlayer = PublicDiscoveryResponse[number]["player"][number];
 
 const validateQueryParams = (maybeParams: DiscoveryQueryParams) => {
   const dungeonID =
@@ -292,128 +319,58 @@ const hasValidParams = ({
 
 const handler: RequestHandler<Query, Response> = async (req, res) => {
   try {
-    const {
-      dungeonID,
-      maxDeaths,
-      maxItemLevelAvg,
-      minItemLevelAvg,
-      minKeyLevel,
-      maxKeyLevel,
-      maxPercent,
-      specQuery,
-      affix1,
-      affix2,
-      affix3,
-      dps1Covenant,
-      dps1Legendary1,
-      dps1Legendary2,
-      dps1Soulbind,
-      dps2Covenant,
-      dps2Legendary1,
-      dps2Legendary2,
-      dps2Soulbind,
-      dps3Covenant,
-      dps3Legendary1,
-      dps3Legendary2,
-      dps3Soulbind,
-      healCovenant,
-      healLegendary1,
-      healLegendary2,
-      healSoulbind,
-      tankCovenant,
-      tankLegendary1,
-      tankLegendary2,
-      tankSoulbind,
-      dps1,
-      dps2,
-      dps3,
-      heal,
-      tank,
-    } = validateQueryParams(req.query);
+    const { specQuery, ...queryParams } = validateQueryParams(req.query);
 
-    if (
-      !hasValidParams({
-        maxDeaths,
-        maxItemLevelAvg,
-        maxKeyLevel,
-        maxPercent,
-        minItemLevelAvg,
-        minKeyLevel,
-      })
-    ) {
+    if (!hasValidParams(queryParams)) {
       res.status(BAD_REQUEST);
       res.json([]);
     }
 
-    Object.entries({
-      dungeonID,
-      maxDeaths,
-      maxItemLevelAvg,
-      minKeyLevel,
-      maxKeyLevel,
-      minItemLevelAvg,
-      maxPercent,
-      affix1,
-      affix2,
-      affix3,
-      dps1Covenant,
-      dps1Legendary1,
-      dps1Legendary2,
-      dps1Soulbind,
-      dps2Covenant,
-      dps2Legendary1,
-      dps2Legendary2,
-      dps2Soulbind,
-      dps3Covenant,
-      dps3Legendary1,
-      dps3Legendary2,
-      dps3Soulbind,
-      healCovenant,
-      healLegendary1,
-      healLegendary2,
-      healSoulbind,
-      tankCovenant,
-      tankLegendary1,
-      tankLegendary2,
-      tankSoulbind,
-      dps1,
-      dps2,
-      dps3,
-      heal,
-      tank,
-    })
-      .filter(([, value]) => !!value)
+    Object.entries(queryParams)
+      .filter(
+        (param): param is [string, number] =>
+          param[1] !== undefined && !Array.isArray(param[1])
+      )
       .forEach(([key, value]) => {
         configureScope((scope) => {
           scope.setTag(key, value);
         });
       });
-    console.time("rawData");
 
     const rawData = await prisma.fight.findMany({
       where: {
-        dungeonID,
+        dungeonID: queryParams.dungeonID,
         chests: {
           gt: 0,
         },
-        ...(minKeyLevel || maxKeyLevel
+        ...(queryParams.minKeyLevel || queryParams.maxKeyLevel
           ? {
               keystoneLevel: {
-                ...(minKeyLevel ? { gte: minKeyLevel } : null),
-                ...(maxKeyLevel ? { lte: maxKeyLevel } : null),
+                ...(queryParams.minKeyLevel
+                  ? { gte: queryParams.minKeyLevel }
+                  : null),
+                ...(queryParams.maxKeyLevel
+                  ? { lte: queryParams.maxKeyLevel }
+                  : null),
               },
             }
           : null),
         percent: {
-          ...(maxPercent ? { lte: maxPercent } : null),
+          ...(queryParams.maxPercent ? { lte: queryParams.maxPercent } : null),
           gte: 100,
         },
-        ...(maxDeaths ? { totalDeaths: { lte: maxDeaths } } : null),
-        ...(minItemLevelAvg || maxItemLevelAvg
+        ...(queryParams.maxDeaths
+          ? { totalDeaths: { lte: queryParams.maxDeaths } }
+          : null),
+        ...(queryParams.minItemLevelAvg || queryParams.maxItemLevelAvg
           ? {
               averageItemLevel: {
-                ...(minItemLevelAvg ? { gte: minItemLevelAvg } : null),
-                ...(maxItemLevelAvg ? { lte: maxItemLevelAvg } : null),
+                ...(queryParams.minItemLevelAvg
+                  ? { gte: queryParams.minItemLevelAvg }
+                  : null),
+                ...(queryParams.maxItemLevelAvg
+                  ? { lte: queryParams.maxItemLevelAvg }
+                  : null),
               },
             }
           : null),
@@ -432,9 +389,9 @@ const handler: RequestHandler<Query, Response> = async (req, res) => {
           : null),
         Report: {
           week: {
-            affix1ID: affix1,
-            affix2ID: affix2,
-            affix3ID: affix3,
+            affix1ID: queryParams.affix1,
+            affix2ID: queryParams.affix2,
+            affix3ID: queryParams.affix3,
             season: {
               affixID: {
                 in: currentSeasonID,
@@ -459,6 +416,11 @@ const handler: RequestHandler<Query, Response> = async (req, res) => {
             player: {
               select: {
                 specID: true,
+                character: {
+                  select: {
+                    classID: true,
+                  },
+                },
                 dps: true,
                 hps: true,
                 itemLevel: true,
@@ -499,55 +461,49 @@ const handler: RequestHandler<Query, Response> = async (req, res) => {
       take: 250,
     });
 
-    console.timeEnd("rawData");
-
-    console.info(`found ${rawData.length} entries`);
-
     if (rawData.length === 0) {
       res.json([]);
       return;
     }
 
-    console.time("transform");
-
     const specQueryFilter = createSpecQueryFilter({
-      tank,
-      heal,
-      dps1,
-      dps2,
-      dps3,
+      tank: queryParams.tank,
+      heal: queryParams.heal,
+      dps1: queryParams.dps1,
+      dps2: queryParams.dps2,
+      dps3: queryParams.dps3,
     });
     const legendaryFilter = createLegendaryFilter({
-      tankLegendary1,
-      tankLegendary2,
-      healLegendary1,
-      healLegendary2,
-      dps1Legendary1,
-      dps1Legendary2,
-      dps2Legendary1,
-      dps2Legendary2,
-      dps3Legendary1,
-      dps3Legendary2,
+      tankLegendary1: queryParams.tankLegendary1,
+      tankLegendary2: queryParams.tankLegendary2,
+      healLegendary1: queryParams.healLegendary1,
+      healLegendary2: queryParams.healLegendary2,
+      dps1Legendary1: queryParams.dps1Legendary1,
+      dps1Legendary2: queryParams.dps1Legendary2,
+      dps2Legendary1: queryParams.dps2Legendary1,
+      dps2Legendary2: queryParams.dps2Legendary2,
+      dps3Legendary1: queryParams.dps3Legendary1,
+      dps3Legendary2: queryParams.dps3Legendary2,
     });
 
     const soulbindFilter = createSoulbindFilter({
-      tankSoulbind,
-      healSoulbind,
-      dps1Soulbind,
-      dps2Soulbind,
-      dps3Soulbind,
+      tankSoulbind: queryParams.tankSoulbind,
+      healSoulbind: queryParams.healSoulbind,
+      dps1Soulbind: queryParams.dps1Soulbind,
+      dps2Soulbind: queryParams.dps2Soulbind,
+      dps3Soulbind: queryParams.dps3Soulbind,
     });
 
     const covenantFilter = createCovenantFilter({
-      tankCovenant,
-      healCovenant,
-      dps1Covenant,
-      dps2Covenant,
-      dps3Covenant,
+      tankCovenant: queryParams.tankCovenant,
+      healCovenant: queryParams.healCovenant,
+      dps1Covenant: queryParams.dps1Covenant,
+      dps2Covenant: queryParams.dps2Covenant,
+      dps3Covenant: queryParams.dps3Covenant,
     });
 
     const transformed = rawData
-      .map<DiscoveryResponse[number] | null>(
+      .map<InternalDiscoveryResponse[number] | null>(
         ({ PlayerFight, Report, dungeonID, ...rest }) => {
           if (!dungeonID) {
             return null;
@@ -564,6 +520,14 @@ const handler: RequestHandler<Query, Response> = async (req, res) => {
             ],
             report: Report.report.trim(),
             player: PlayerFight.map((playerFight) => {
+              const classData = specs.find(
+                (spec) => spec.id === playerFight.player.specID
+              );
+
+              if (!classData) {
+                return null;
+              }
+
               return {
                 dps: playerFight.player.dps,
                 hps: playerFight.player.hps,
@@ -577,12 +541,29 @@ const handler: RequestHandler<Query, Response> = async (req, res) => {
                 talents: playerFight.player.PlayerTalent.map(
                   (playerTalent) => playerTalent.talentID
                 ),
+                classID: classData.classID,
               };
-            }),
+            })
+              .filter(
+                (
+                  dataset
+                ): dataset is InternalDiscoveryResponse[number]["player"][number] =>
+                  dataset !== null
+              )
+              .sort((a, b) => {
+                const aSpec = specs.find((spec) => spec.id === a.specID);
+                const bSpec = specs.find((spec) => spec.id === b.specID);
+
+                if (!aSpec || !bSpec) {
+                  return -1;
+                }
+
+                return sortByRole(aSpec.role, bSpec.role);
+              }),
           };
         }
       )
-      .reduce<DiscoveryResponse>((acc, dataset) => {
+      .reduce<InternalDiscoveryResponse>((acc, dataset) => {
         if (
           dataset === null ||
           !specQueryFilter(dataset) ||
@@ -602,15 +583,22 @@ const handler: RequestHandler<Query, Response> = async (req, res) => {
 
         return b.keystoneLevel - a.keystoneLevel;
       })
-      .slice(0, 20);
-
-    console.timeEnd("transform");
+      .slice(0, 25)
+      .map<PublicDiscoveryResponse[number]>((dataset) => {
+        return {
+          ...dataset,
+          player: dataset.player.map((player) => {
+            return {
+              classID: player.classID,
+              specID: player.specID,
+            };
+          }),
+        };
+      });
 
     res.setHeader(cacheControlKey, STALE_WHILE_REVALIDATE_TWO_HOURS);
     res.json(transformed);
   } catch (error) {
-    console.timeEnd("rawData");
-    console.timeEnd("transform");
     // eslint-disable-next-line no-console
     console.error(error);
 
@@ -642,7 +630,7 @@ const createSpecQueryFilter = ({
     return () => true;
   }
 
-  return (dataset: DiscoveryResponse[number]) => {
+  return (dataset: InternalDiscoveryResponse[number]) => {
     const tankPlayer = dataset.player.find((player) => {
       return filterPlayerByRole(player, "tank");
     });
@@ -720,7 +708,7 @@ const createLegendaryFilter = ({
     return () => true;
   }
 
-  return (dataset: DiscoveryResponse[number]) => {
+  return (dataset: InternalDiscoveryResponse[number]) => {
     const tankPlayer = dataset.player.find((player) => {
       return filterPlayerByRole(player, "tank");
     });
@@ -833,7 +821,11 @@ const createLegendaryFilter = ({
 
 const hasMismatch = (
   set: Set<number>,
-  [dps1, dps2, dps3]: [DiscoveryPlayer, DiscoveryPlayer, DiscoveryPlayer]
+  [dps1, dps2, dps3]: [
+    InternalDiscoveryPlayer,
+    InternalDiscoveryPlayer,
+    InternalDiscoveryPlayer
+  ]
 ) => {
   if (set.size === 0) {
     return false;
@@ -873,7 +865,7 @@ const createCovenantFilter = ({
     return () => true;
   }
 
-  return (dataset: DiscoveryResponse[number]) => {
+  return (dataset: InternalDiscoveryResponse[number]) => {
     const tankPlayer = dataset.player.find((player) => {
       return filterPlayerByRole(player, "tank");
     });
@@ -948,7 +940,7 @@ const createSoulbindFilter = ({
     return () => true;
   }
 
-  return (dataset: DiscoveryResponse[number]) => {
+  return (dataset: InternalDiscoveryResponse[number]) => {
     const tankPlayer = dataset.player.find((player) => {
       return filterPlayerByRole(player, "tank");
     });
@@ -999,7 +991,7 @@ const createSoulbindFilter = ({
 };
 
 const filterPlayerByRole = (
-  player: DiscoveryResponse[number]["player"][number],
+  player: InternalDiscoveryResponse[number]["player"][number],
   role: Role
 ) => {
   const specData = specs.find((spec) => player.specID === spec.id);

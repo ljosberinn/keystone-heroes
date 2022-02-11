@@ -2,15 +2,18 @@
 import type { SpecName } from "@prisma/client";
 import Link from "next/link";
 import type { FormEventHandler } from "react";
-import { useCallback } from "react";
-import { useState, useEffect } from "react";
+import { useCallback, useState, useEffect } from "react";
 
-import type { DiscoveryResponse } from "../../api/functions/discovery";
+import type { PublicDiscoveryResponse } from "../../api/functions/discovery";
 import { dungeonMap } from "../../db/data/dungeons";
 import { specs } from "../../db/data/specs";
+import { Affixes } from "../../web/components/Affixes";
+import { ExternalLink } from "../../web/components/ExternalLink";
 import { Seo } from "../../web/components/Seo";
+import { SpecIcon } from "../../web/components/SpecIcon";
 import { MIN_KEYSTONE_LEVEL } from "../../web/env";
 import { useAbortableFetch } from "../../web/hooks/useAbortableFetch";
+import { star } from "../../web/icons";
 import {
   dungeons,
   weeks,
@@ -29,9 +32,13 @@ import { useRouteDiscovery } from "../../web/store";
 import {
   bgPrimary,
   bgSecondary,
+  greenText,
   hoverShadow,
   widthConstraint,
+  yellowText,
 } from "../../web/styles/tokens";
+import { createWCLUrl, timeDurationToString } from "../../web/utils";
+import { getClassAndSpecName } from "../../web/utils/player";
 
 const discoverySelector = ({
   restoreFromUrl,
@@ -45,7 +52,7 @@ const discoverySelector = ({
 
 export default function Discover(): JSX.Element {
   const [url, setUrl] = useState<string | null>(null);
-  const [data, loading] = useAbortableFetch<DiscoveryResponse>({
+  const [data, loading] = useAbortableFetch<PublicDiscoveryResponse>({
     url,
     initialState: [],
   });
@@ -84,7 +91,10 @@ export default function Discover(): JSX.Element {
 
   return (
     <>
-      <Seo title="Route Discovery" />
+      <Seo
+        title="Route Discovery"
+        description="Explore previously imported Mythic+ Logs based on custom filters tailored to your group."
+      />
 
       <div className={`${widthConstraint} py-6`}>
         <div className="flex flex-col mx-auto space-x-0 lg:flex-row max-w-screen-2xl lg:space-x-4">
@@ -115,33 +125,167 @@ export default function Discover(): JSX.Element {
 }
 
 type DiscoveryResultsProps = {
-  data: DiscoveryResponse;
+  data: PublicDiscoveryResponse;
   loading: boolean;
 };
 
 function DiscoveryResults({ data }: DiscoveryResultsProps) {
   return (
-    <div className={`p-2 rounded-b-lg ${bgPrimary} ${hoverShadow}`}>
+    <div
+      className={`p-2 rounded-b-lg ${bgPrimary} ${hoverShadow} space-y-4 lg:space-y-2`}
+    >
       {data.map((dataset) => {
         const dungeon = dungeonMap[dataset.dungeonID];
 
         return (
           <div
             key={`${dataset.report}-${dataset.fightID}`}
-            className={`bg-maincolor bg-cover rounded-md bg-${dungeon.slug.toLowerCase()} hover:bg-blend-multiply`}
+            className={`bg-maincolor bg-cover rounded-md bg-${dungeon.slug.toLowerCase()} bg-blend-multiply px-4 py-6`}
           >
-            <h2 className="font-extrabold">
-              {dungeon.slug} +{dataset.keystoneLevel}
-            </h2>
-            <Link href={`/report/${dataset.report}/${dataset.fightID}`}>
-              <a>
-                {dataset.report}-{dataset.fightID}
-              </a>
-            </Link>
+            <div className="flex items-center justify-between pb-4">
+              <Link href={`/report/${dataset.report}/${dataset.fightID}`}>
+                <a>
+                  <h2 className="text-xl font-extrabold">
+                    <span className="hidden underline lg:inline">
+                      {dungeon.name}
+                    </span>
+                    <span className="inline underline lg:hidden">
+                      {dungeon.slug}
+                    </span>
+                    <span className="pl-2">+{dataset.keystoneLevel}</span>
+                    <sup className="hidden pl-2 space-x-1 sm:inline">
+                      {Array.from({ length: dataset.chests }, (_, index) => (
+                        <svg
+                          key={index}
+                          className={`inline w-4 h-4 ${yellowText} fill-current`}
+                        >
+                          <use href={`#${star.id}`} />
+                        </svg>
+                      ))}
+                    </sup>
+                  </h2>
+                </a>
+              </Link>
+
+              <div>
+                <Affixes ids={dataset.affixes} iconSize={32} />
+              </div>
+            </div>
+
+            <div className="flex justify-between">
+              <div className="space-x-2">
+                <TimeInformation
+                  dungeonTimer={dungeon.timer[0]}
+                  keystoneTime={dataset.keystoneTime}
+                  chests={dataset.chests}
+                />
+                <span> | </span>
+                <span>{dataset.percent.toFixed(2)}%</span>
+              </div>
+
+              <div>
+                <ExternalLink
+                  href={createWCLUrl({
+                    reportID: dataset.report,
+                    fightID: `${dataset.fightID}`,
+                  })}
+                >
+                  <img
+                    src="/static/icons/wcl.png"
+                    alt="See on Warcraft Logs"
+                    title="See on Warcraft Logs"
+                    className="w-6 h-6"
+                    width={24}
+                    height={24}
+                    loading="lazy"
+                  />
+                </ExternalLink>
+              </div>
+            </div>
+
+            <div className="flex justify-center w-full pt-4 space-x-2">
+              {dataset.player.map((player, index) => {
+                const { className, colors, specName } = getClassAndSpecName({
+                  spec: player.specID,
+                  class: player.classID,
+                });
+
+                return (
+                  <div
+                    className="w-8 h-8"
+                    // eslint-disable-next-line react/no-array-index-key
+                    key={`${player.classID}-${player.specID}-${index}`}
+                  >
+                    <SpecIcon
+                      class={className}
+                      spec={specName}
+                      className={`${colors.border} border-2`}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="flex justify-center w-full pt-4 space-x-2">
+              <span>
+                DPS{" "}
+                <span className="italic font-bold">
+                  {dataset.dps.toLocaleString("en-US")}
+                </span>
+              </span>
+              <span>
+                HPS{" "}
+                <span className="italic font-bold">
+                  {dataset.hps.toLocaleString("en-US")}
+                </span>
+              </span>
+            </div>
+
+            <div className="flex justify-center w-full space-x-2">
+              <span>
+                Deaths{" "}
+                <span className="italic font-bold">
+                  {dataset.totalDeaths.toLocaleString("en-US")}
+                </span>
+              </span>
+
+              <span>
+                Ø{" "}
+                <span className="italic font-bold">
+                  {dataset.averageItemLevel.toLocaleString("en-US")}
+                </span>
+              </span>
+            </div>
           </div>
         );
       })}
     </div>
+  );
+}
+
+type TimeInformationProps = {
+  keystoneTime: number;
+  dungeonTimer: number;
+  chests: number;
+};
+
+function TimeInformation({
+  dungeonTimer,
+  keystoneTime,
+  chests,
+}: TimeInformationProps) {
+  return (
+    <span>
+      <span className="space-x-2">
+        <span>{timeDurationToString(keystoneTime)}</span>
+        <span
+          className={`italic ${greenText}`}
+          title={`${chests} chest${chests > 1 ? "s" : ""}`}
+        >
+          {timeDurationToString(dungeonTimer - keystoneTime)}
+        </span>
+      </span>
+    </span>
   );
 }
 
@@ -243,7 +387,7 @@ function Form({ onSubmit, onReset, loading }: FormProps) {
     <form onSubmit={handleSubmit}>
       <fieldset disabled={loading}>
         <div className="flex space-x-4 lg:flex-col lg:space-x-0 lg:space-y-2 xl:flex-row xl:space-y-0 xl:space-x-4">
-          <div className="flex flex-col w-1/2 md:w-full">
+          <div className="flex flex-col w-1/3 lg:w-full xl:w-1/3">
             <label htmlFor="dungeon-selection">Dungeon</label>
 
             <select
@@ -261,7 +405,7 @@ function Form({ onSubmit, onReset, loading }: FormProps) {
                   handlePropertyChange("dungeonID", null);
                 }
               }}
-              className="w-full border-2 border-solid dark:border-gray-600"
+              className="w-full px-1 border-2 border-solid dark:border-gray-600"
             >
               <option value={-1}>select dungeon</option>
               {Object.entries(dungeons)
@@ -283,7 +427,7 @@ function Form({ onSubmit, onReset, loading }: FormProps) {
             </select>
           </div>
 
-          <div className="flex flex-row w-1/2 space-x-2 lg:w-full lg:flex-col lg:space-x-0 lg:space-y-2 xl:flex-row xl:space-x-4 xl:space-y-0">
+          <div className="flex flex-row w-2/3 space-x-2 lg:w-full xl:w-2/3 lg:flex-col lg:space-x-0 lg:space-y-2 xl:flex-row xl:space-x-4 xl:space-y-0">
             <div className="w-1/2 lg:w-full xl:w-1/2">
               <label htmlFor="min-level">Min Level</label>
 
@@ -297,7 +441,7 @@ function Form({ onSubmit, onReset, loading }: FormProps) {
                   id="min-level"
                   aria-label="Min Level"
                   placeholder="Min Level"
-                  className="w-full border-2 border-solid dark:border-gray-600"
+                  className="w-full px-1 border-2 border-solid dark:border-gray-600"
                   value={minKeyLevel ? minKeyLevel : ""}
                   onChange={(event) => {
                     try {
@@ -328,7 +472,7 @@ function Form({ onSubmit, onReset, loading }: FormProps) {
                   id="max-level"
                   aria-label="Max Level"
                   placeholder="Max Level"
-                  className="w-full border-2 border-solid dark:border-gray-600"
+                  className="w-full px-1 border-2 border-solid dark:border-gray-600"
                   value={maxKeyLevel ? maxKeyLevel : ""}
                   onChange={(event) => {
                     try {
@@ -349,7 +493,7 @@ function Form({ onSubmit, onReset, loading }: FormProps) {
         </div>
 
         <div className="flex space-x-4 lg:flex-col lg:space-x-0 lg:space-y-2 xl:flex-row xl:space-y-0 xl:space-x-4 lg:pt-2">
-          <div className="flex flex-col w-1/2 lg:w-full">
+          <div className="flex flex-col w-1/3 lg:w-full xl:w-1/3">
             <label htmlFor="dungeon-selection">Affixes</label>
 
             <select
@@ -380,7 +524,7 @@ function Form({ onSubmit, onReset, loading }: FormProps) {
                   handlePropertyChange("affix3", null);
                 }
               }}
-              className="w-full border-2 border-solid dark:border-gray-600"
+              className="w-full px-1 border-2 border-solid dark:border-gray-600"
             >
               <option value={-1}>select week</option>
               {Object.entries(weeks).map(([group, weeks]) => {
@@ -403,7 +547,7 @@ function Form({ onSubmit, onReset, loading }: FormProps) {
             </select>
           </div>
 
-          <div className="flex flex-row w-1/2 space-x-2 lg:w-full lg:flex-col lg:space-x-0 lg:space-y-2 xl:flex-row xl:space-x-4 xl:space-y-0">
+          <div className="flex flex-row w-2/3 space-x-2 xl:w-2/3 lg:w-full lg:flex-col lg:space-x-0 lg:space-y-2 xl:flex-row xl:space-x-4 xl:space-y-0">
             <div className="w-1/2 lg:w-full xl:w-1/2">
               <label htmlFor="min-item-level-avg">Min ILVL Ø</label>
 
@@ -417,7 +561,7 @@ function Form({ onSubmit, onReset, loading }: FormProps) {
                   id="min-item-level-avg"
                   aria-label="Min ILVL Ø"
                   placeholder="Min ILVL Ø"
-                  className="w-full border-2 border-solid dark:border-gray-600"
+                  className="w-full px-1 border-2 border-solid dark:border-gray-600"
                   value={minItemLevelAvg ? minItemLevelAvg : ""}
                   onChange={(event) => {
                     try {
@@ -448,7 +592,7 @@ function Form({ onSubmit, onReset, loading }: FormProps) {
                   id="max-item-level-avg"
                   aria-label="Max ILVL Ø"
                   placeholder="Max ILVL Ø"
-                  className="w-full border-2 border-solid dark:border-gray-600"
+                  className="w-full px-1 border-2 border-solid dark:border-gray-600"
                   value={maxItemLevelAvg ? maxItemLevelAvg : ""}
                   onChange={(event) => {
                     try {
@@ -482,7 +626,7 @@ function Form({ onSubmit, onReset, loading }: FormProps) {
                 id="max-percent"
                 aria-label="Max Percent"
                 placeholder="Max Percent"
-                className="w-full border-2 border-solid dark:border-gray-600"
+                className="w-full px-1 border-2 border-solid dark:border-gray-600"
                 value={maxPercent ? maxPercent : ""}
                 onChange={(event) => {
                   try {
@@ -513,7 +657,7 @@ function Form({ onSubmit, onReset, loading }: FormProps) {
                 id="max-deaths"
                 aria-label="Max Deaths"
                 placeholder="Max Deaths"
-                className="w-full border-2 border-solid dark:border-gray-600"
+                className="w-full px-1 border-2 border-solid dark:border-gray-600"
                 value={maxDeaths === null ? "" : maxDeaths}
                 onChange={(event) => {
                   try {
@@ -845,9 +989,14 @@ function SpecFilter({ type, data, remove }: SpecFilterProps) {
     <div className="p-2 space-y-2 border-2 border-gray-200 border-dashed rounded-lg">
       <div className="flex space-x-4 lg:flex-col lg:space-x-0 lg:space-y-2 xl:flex-row xl:space-y-0 xl:space-x-4">
         <div className="flex flex-col w-1/2 md:w-full">
-          <div className="flex justify-between">
-            <span>Role</span>
-
+          <div className="flex space-x-2">
+            <img
+              src={`/static/roles/${displayableType}.png`}
+              width="20"
+              height="20"
+              className="w-5 h-5"
+              alt=""
+            />
             <b>
               {displayableType === "dps"
                 ? "DPS"
@@ -894,7 +1043,7 @@ function SpecFilter({ type, data, remove }: SpecFilterProps) {
                 handlePropertyChange(type, null);
               }
             }}
-            className="w-full border-2 border-solid dark:border-gray-600"
+            className="w-full px-1 border-2 border-solid dark:border-gray-600"
           >
             <option value={-1}>select spec</option>
             {Object.entries(
@@ -969,7 +1118,7 @@ function SpecFilter({ type, data, remove }: SpecFilterProps) {
                 handlePropertyChange(key, null);
               }
             }}
-            className="w-full border-2 border-solid dark:border-gray-600"
+            className="w-full px-1 border-2 border-solid dark:border-gray-600"
           >
             <option value={-1}>select covenant</option>
             {Object.entries(covenants)
@@ -1008,7 +1157,7 @@ function SpecFilter({ type, data, remove }: SpecFilterProps) {
                 handlePropertyChange(key, null);
               }
             }}
-            className="w-full border-2 border-solid dark:border-gray-600"
+            className="w-full px-1 border-2 border-solid dark:border-gray-600"
           >
             <option value={-1}>select soulbind</option>
 
@@ -1092,7 +1241,7 @@ function SpecFilter({ type, data, remove }: SpecFilterProps) {
                 handlePropertyChange(key, null);
               }
             }}
-            className="w-full border-2 border-solid dark:border-gray-600"
+            className="w-full px-1 border-2 border-solid dark:border-gray-600"
           >
             <option value={-1}>first legendary</option>
             {availableLegendaries
@@ -1130,7 +1279,7 @@ function SpecFilter({ type, data, remove }: SpecFilterProps) {
                 handlePropertyChange(key, null);
               }
             }}
-            className="w-full border-2 border-solid dark:border-gray-600"
+            className="w-full px-1 border-2 border-solid dark:border-gray-600"
           >
             <option value={-1}>second legendary</option>
             {availableLegendaries
@@ -1182,6 +1331,9 @@ function AddSpecFilterButton({
             alt="Tank"
             src="/static/roles/tank.png"
             className="w-12 h-12 grayscale hover:filter-none"
+            width={48}
+            height={48}
+            title="Tank"
           />
         </button>
       )}
@@ -1197,6 +1349,9 @@ function AddSpecFilterButton({
             alt="Heal"
             src="/static/roles/heal.png"
             className="w-12 h-12 grayscale hover:filter-none"
+            width={48}
+            height={48}
+            title="Heal"
           />
         </button>
       )}
@@ -1214,6 +1369,9 @@ function AddSpecFilterButton({
             alt="DPS"
             src="/static/roles/dps.png"
             className="w-12 h-12 grayscale hover:filter-none"
+            width={48}
+            height={48}
+            title="DPS"
           />
         </button>
       )}
