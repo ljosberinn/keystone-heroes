@@ -4,7 +4,7 @@ import { useIsMounted } from "./useIsMounted";
 import { usePrevious } from "./usePrevious";
 
 type State<T> = {
-  data: T | null;
+  data: T;
   loading: boolean;
 };
 
@@ -13,12 +13,12 @@ const threshold = 750;
 export function useAbortableFetch<T>({
   url,
   options,
-  initialState = null,
+  initialState,
 }: {
   url: RequestInfo | null;
   options?: Omit<RequestInit, "signal">;
-  initialState: T | null;
-}): [T | null, boolean] {
+  initialState: T;
+}): [T, boolean] {
   const [{ data, loading }, setState] = useState<State<T>>({
     data: initialState,
     loading: false,
@@ -71,7 +71,7 @@ export function useAbortableFetch<T>({
 
         setState((prev) => ({ ...prev, data: json, loading: false }));
       } catch (error) {
-        setState((prev) => ({ ...prev, data: null, loading: false }));
+        setState((prev) => ({ ...prev, data: initialState, loading: false }));
 
         if (!(error instanceof DOMException)) {
           throw error;
@@ -89,7 +89,7 @@ export function useAbortableFetch<T>({
         clearTimeout(timeout);
       }
     };
-  }, [loading, url, options, isMounted]);
+  }, [loading, url, options, isMounted, initialState]);
 
   useEffect(() => {
     // run when initially executed or whenever the url changes
@@ -103,12 +103,12 @@ export function useAbortableFetch<T>({
 
         return {
           ...prev,
-          data: null,
-          loading: true,
+          data: initialState,
+          loading: !!url,
         };
       });
     }
-  }, [url, previousUrl]);
+  }, [url, previousUrl, initialState]);
 
   return useMemo(() => [data, loading], [data, loading]);
 }

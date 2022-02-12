@@ -21,7 +21,7 @@ export const encryptedDebuffs = [
     name: "Decrypted Urh Cypher",
     id: encryptedDebuffIDs.cdrRegen,
     icon: "inv_progenitor_anima_blue",
-    type: "haste & dmg",
+    type: "cdr & regen",
   },
   {
     name: "Decrypted Wo Cypher",

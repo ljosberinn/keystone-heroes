@@ -42,11 +42,11 @@ export function Meta(): JSX.Element {
 
   return (
     <section
-      className={`flex flex-col flex-1 h-auto ${hoverShadow}`}
+      className={`flex flex-col flex-1 h-auto ${hoverShadow} rounded-b-lg`}
       aria-labelledby="meta-title"
     >
       <div className={`rounded-t-lg ${bgSecondary}`}>
-        <div className="justify-between p-4 md:flex lg:block ">
+        <div className="justify-between p-4 md:flex lg:block">
           <Heading chests={fight.meta.chests} level={fight.meta.level} />
 
           <Affixes ids={fight.affixes} className="pt-4 md:pt-0 lg:pt-4" />

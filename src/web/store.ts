@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import create from "zustand";
 
+import type { DiscoveryQueryParams } from "../api/functions/discovery";
 import { ls } from "./utils/localStorage";
 
 export type ReportStore = {
@@ -275,6 +276,140 @@ export const usePullSettings = create<PullSettings>((set) => {
             : [...state.trackedPlayers, id],
         };
       });
+    },
+  };
+});
+
+export type LivingDiscoveryQueryParams = {
+  [Property in keyof Required<DiscoveryQueryParams>]: number | null;
+};
+export type RouteDiscovery = {
+  reset: () => void;
+  handlePropertyChange: (
+    key: string | Record<string, number | null>,
+    value?: number | null
+  ) => void;
+  restoreFromUrl: () => LivingDiscoveryQueryParams | null;
+  persistToUrl: (query: Record<string, string>) => void;
+} & LivingDiscoveryQueryParams;
+
+const initialRouteDiscoveryState: LivingDiscoveryQueryParams = {
+  affix1: null,
+  affix2: null,
+  affix3: null,
+  dps1: null,
+  dps2: null,
+  dps3: null,
+  dungeonID: null,
+  maxPercent: null,
+  heal: null,
+  maxDeaths: null,
+  minItemLevelAvg: null,
+  maxItemLevelAvg: null,
+  maxKeyLevel: null,
+  minKeyLevel: null,
+  tank: null,
+  dps1Covenant: null,
+  dps1Legendary1: null,
+  dps1Legendary2: null,
+  dps1Soulbind: null,
+  dps2Covenant: null,
+  dps2Legendary1: null,
+  dps2Legendary2: null,
+  dps2Soulbind: null,
+  dps3Covenant: null,
+  dps3Legendary1: null,
+  dps3Legendary2: null,
+  dps3Soulbind: null,
+  healCovenant: null,
+  healLegendary1: null,
+  healLegendary2: null,
+  healSoulbind: null,
+  tankCovenant: null,
+  tankLegendary1: null,
+  tankLegendary2: null,
+  tankSoulbind: null,
+};
+
+const isQueryKey = (key: string): key is keyof LivingDiscoveryQueryParams =>
+  key in initialRouteDiscoveryState;
+
+export const useRouteDiscovery = create<RouteDiscovery>((set) => {
+  return {
+    ...initialRouteDiscoveryState,
+    reset: () => {
+      set(initialRouteDiscoveryState);
+
+      try {
+        window.history.pushState(
+          {},
+          "",
+          new URL(window.location.href.split("?")[0])
+        );
+        // eslint-disable-next-line no-empty
+      } catch {}
+    },
+    handlePropertyChange: (key, value) => {
+      if (typeof key === "object") {
+        set((prev) => {
+          return {
+            ...prev,
+            ...key,
+          };
+        });
+
+        return;
+      }
+
+      set((prev) => {
+        return { ...prev, [key]: value };
+      });
+    },
+
+    persistToUrl: (query: Record<string, string>) => {
+      try {
+        const url = new URL(window.location.href.split("?")[0]);
+
+        Object.entries(query).forEach(([key, value]) => {
+          if (value !== "-1") {
+            url.searchParams.set(key, value);
+          }
+        });
+
+        window.history.pushState({}, "", url);
+        // eslint-disable-next-line no-empty
+      } catch {}
+    },
+    restoreFromUrl: (): LivingDiscoveryQueryParams | null => {
+      try {
+        const url = new URL(window.location.toString());
+        const result: LivingDiscoveryQueryParams = {
+          ...initialRouteDiscoveryState,
+        };
+
+        for (const [key, value] of url.searchParams.entries()) {
+          if (isQueryKey(key)) {
+            result[key] = Number.parseInt(value);
+          }
+        }
+
+        const isDiff =
+          JSON.stringify(result) !== JSON.stringify(initialRouteDiscoveryState);
+
+        if (isDiff) {
+          set((prev) => {
+            return {
+              ...prev,
+              ...result,
+            };
+          });
+
+          return result;
+        }
+        return null;
+      } catch {
+        return null;
+      }
     },
   };
 });

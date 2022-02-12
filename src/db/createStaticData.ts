@@ -138,26 +138,194 @@ async function create() {
 
   log("loading static data");
 
-  const rawCovenants = await prisma.covenant.findMany({
+  const interruptedAbilities = await getAndPersistInterruptedAbilities();
+
+  log(`found ${interruptedAbilities.length} interrupted abilities`);
+
+  const [
+    rawCovenants,
+    rawCovenantTraits,
+    rawSoulbinds,
+    rawNPCs,
+    rawAffixes,
+    rawClasses,
+    rawLegendaries,
+    rawTalents,
+    rawConduits,
+    specs,
+    currentSeason,
+    legendariesBySpecRaw,
+  ] = await Promise.all([
+    prisma.covenant.findMany({
+      select: {
+        name: true,
+        id: true,
+        icon: true,
+      },
+    }),
+    prisma.covenantTrait.findMany({
+      select: {
+        name: true,
+        id: true,
+        icon: true,
+      },
+    }),
+    prisma.soulbind.findMany({
+      select: {
+        name: true,
+        id: true,
+        covenantID: true,
+      },
+    }),
+    prisma.pullNPC.findMany({
+      select: {
+        npc: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+      distinct: "npcID",
+    }),
+    prisma.affix.findMany({
+      select: {
+        name: true,
+        id: true,
+        icon: true,
+      },
+    }),
+    prisma.class.findMany({
+      select: {
+        id: true,
+        name: true,
+        Cooldown: {
+          select: {
+            ability: {
+              select: {
+                id: true,
+                icon: true,
+                name: true,
+              },
+            },
+            cd: true,
+          },
+        },
+        Spec: {
+          select: {
+            id: true,
+            name: true,
+            role: true,
+            Cooldown: {
+              select: {
+                ability: {
+                  select: {
+                    id: true,
+                    icon: true,
+                    name: true,
+                  },
+                },
+                cd: true,
+              },
+            },
+          },
+        },
+      },
+    }),
+    prisma.legendary.findMany({
+      select: {
+        id: true,
+        effectName: true,
+        effectIcon: true,
+        // PlayerLegendary: {
+        //   select: {
+        //     player: {
+        //       select: {
+        //         specID: true,
+        //       },
+        //     },
+        //   },
+        // },
+      },
+    }),
+    prisma.talent.findMany({
+      select: {
+        id: true,
+        icon: true,
+        name: true,
+      },
+    }),
+    prisma.conduit.findMany({
+      select: {
+        id: true,
+        icon: true,
+        name: true,
+      },
+    }),
+    prisma.spec.findMany({
+      select: {
+        role: true,
+        id: true,
+      },
+    }),
+    prisma.season.findFirst({
+      select: {
+        affixID: true,
+      },
+      orderBy: {
+        id: "desc",
+      },
+    }),
+
+    prisma.player.findMany({
+      distinct: "specID",
+      select: {
+        specID: true,
+        PlayerLegendary: {
+          select: {
+            legendaryID: true,
+          },
+          distinct: "legendaryID",
+        },
+      },
+    }),
+  ]);
+
+  log(`found ${rawCovenants.length} covenants`);
+  log(`found ${rawCovenantTraits.length} covenantTraits`);
+  log(`found ${rawSoulbinds.length} soulbinds`);
+  log(`found ${rawNPCs.length} npcs`);
+  log(`found ${rawAffixes.length} affixes`);
+  log(`found ${rawClasses.length} classes`);
+  log(`found ${rawLegendaries.length} legendaries`);
+  log(`found ${rawTalents.length} talents`);
+  log(`found ${rawConduits.length} conduits`);
+  log(`found ${specs.length} specs`);
+
+  if (!currentSeason) {
+    throw new Error(`missing season`);
+  }
+
+  const rawWeeks = await prisma.week.findMany({
     select: {
-      name: true,
-      id: true,
-      icon: true,
+      affix1ID: true,
+      affix2ID: true,
+      affix3ID: true,
+    },
+    where: {
+      season: {
+        affixID: currentSeason.affixID,
+      },
     },
   });
+
+  log(`found ${rawWeeks.length} weeks`);
+
   const covenants = Object.fromEntries(
     rawCovenants.map((covenant) => {
       return [covenant.id, { name: covenant.name, icon: covenant.icon }];
     })
   );
-
-  const rawCovenantTraits = await prisma.covenantTrait.findMany({
-    select: {
-      name: true,
-      id: true,
-      icon: true,
-    },
-  });
 
   const covenantTraits = Object.fromEntries(
     rawCovenantTraits.map((covenantTrait) => {
@@ -171,14 +339,6 @@ async function create() {
     })
   );
 
-  const rawSoulbinds = await prisma.soulbind.findMany({
-    select: {
-      name: true,
-      id: true,
-      covenantID: true,
-    },
-  });
-
   const soulbinds = Object.fromEntries(
     rawSoulbinds.map((soulbind) => {
       return [
@@ -187,17 +347,6 @@ async function create() {
       ];
     })
   );
-
-  const rawNPCs = await prisma.pullNPC.findMany({
-    select: {
-      npc: {
-        select: {
-          id: true,
-          name: true,
-        },
-      },
-    },
-  });
 
   const npcMap = Object.fromEntries(
     rawNPCs.map((npc) => {
@@ -229,14 +378,6 @@ async function create() {
     })
   );
 
-  const rawAffixes = await prisma.affix.findMany({
-    select: {
-      name: true,
-      id: true,
-      icon: true,
-    },
-  });
-
   const affixes = Object.fromEntries(
     rawAffixes.map((affix) => {
       return [
@@ -253,54 +394,6 @@ async function create() {
     rawAffixes.map((affix) => [affix.name.toLowerCase(), affix.id])
   );
 
-  const rawClasses = await prisma.class.findMany({
-    select: {
-      id: true,
-      name: true,
-      Cooldown: {
-        select: {
-          ability: {
-            select: {
-              id: true,
-              icon: true,
-              name: true,
-            },
-          },
-          cd: true,
-        },
-      },
-      Spec: {
-        select: {
-          id: true,
-          name: true,
-          role: true,
-          Cooldown: {
-            select: {
-              ability: {
-                select: {
-                  id: true,
-                  icon: true,
-                  name: true,
-                },
-              },
-              cd: true,
-            },
-          },
-        },
-      },
-    },
-  });
-
-  const rawLegendaries = await prisma.legendary.findMany({
-    select: {
-      id: true,
-      effectName: true,
-      effectIcon: true,
-    },
-  });
-
-  log(`found ${rawLegendaries.length} legendaries`);
-
   const legendaries = Object.fromEntries(
     rawLegendaries.map((legendary) => [
       legendary.id,
@@ -310,34 +403,6 @@ async function create() {
       },
     ])
   );
-
-  const rawTalents = await prisma.talent.findMany({
-    select: {
-      id: true,
-      icon: true,
-      name: true,
-    },
-  });
-
-  log(`found ${rawTalents.length} talents`);
-
-  const talents = Object.fromEntries(
-    rawTalents.map((talent) => [
-      talent.id,
-      {
-        name: talent.name,
-        icon: talent.icon,
-      },
-    ])
-  );
-
-  const rawConduits = await prisma.conduit.findMany({
-    select: {
-      id: true,
-      icon: true,
-      name: true,
-    },
-  });
 
   const conduits = Object.fromEntries(
     rawConduits.map((conduit) => [
@@ -349,14 +414,15 @@ async function create() {
     ])
   );
 
-  log(`found ${rawConduits.length} conduits`);
-
-  const interruptedAbilities = await getAndPersistInterruptedAbilities();
-
-  log(`found ${interruptedAbilities.length} interrupted abilities`);
-
-  await prisma.$disconnect();
-  log(`db disconnected`);
+  const talents = Object.fromEntries(
+    rawTalents.map((talent) => [
+      talent.id,
+      {
+        name: talent.name,
+        icon: talent.icon,
+      },
+    ])
+  );
 
   const classes = Object.fromEntries(
     rawClasses.map((classData) => {
@@ -405,6 +471,82 @@ async function create() {
       ];
     })
   );
+
+  const specIDsPerRole = {
+    dps: specs.filter((spec) => spec.role === "dps").map((spec) => spec.id),
+    heal: specs.filter((spec) => spec.role === "healer").map((spec) => spec.id),
+    tank: specs.filter((spec) => spec.role === "tank").map((spec) => spec.id),
+  };
+
+  const weeksSeen: Record<string, boolean> = {};
+
+  const weeks = rawWeeks
+    .map((dataset) => {
+      const ids: [number, number, number] = [
+        dataset.affix1ID,
+        dataset.affix2ID,
+        dataset.affix3ID,
+      ];
+
+      const name = [dataset.affix2ID, dataset.affix3ID]
+        .map((id) => affixes[id].name)
+        .join(" ");
+
+      return {
+        ids,
+        key: ids.join("-"),
+        name,
+        weekKey: affixes[dataset.affix1ID].name,
+      };
+    })
+    .reduce<{ ids: [number, number, number]; name: string; weekKey: string }[]>(
+      (acc, { key, ...dataset }) => {
+        if (weeksSeen[key]) {
+          return acc;
+        }
+
+        weeksSeen[key] = true;
+
+        return [...acc, dataset];
+      },
+      []
+    )
+    // eslint-disable-next-line unicorn/prefer-object-from-entries
+    .reduce<Record<string, { ids: [number, number, number]; name: string }[]>>(
+      (acc, week) => {
+        const dataset = {
+          ids: week.ids,
+          name: week.name,
+        };
+
+        if (week.weekKey in acc) {
+          acc[week.weekKey].push(dataset);
+          return acc;
+        }
+
+        acc[week.weekKey] = [dataset];
+        return acc;
+      },
+      {}
+    );
+
+  await prisma.$disconnect();
+  log(`db disconnected`);
+
+  // eslint-disable-next-line unicorn/prefer-object-from-entries
+  const legendariesBySpec = legendariesBySpecRaw.reduce<
+    Record<number, number[]>
+  >((acc, dataset) => {
+    dataset.PlayerLegendary.forEach((legendary) => {
+      if (legendary.legendaryID in acc) {
+        acc[legendary.legendaryID].push(dataset.specID);
+      } else {
+        acc[legendary.legendaryID] = [dataset.specID];
+      }
+    });
+
+    return acc;
+  }, {});
 
   const dungeonSpecificSpells = [
     ...Object.values(NW),
@@ -784,6 +926,15 @@ export const NW = JSON.parse(\`${JSON.stringify(NW)}\`);
 
 type StaticDataMap = Record<number, { name: string, icon: string }>;
 
+export const weeks: Record<string, { ids: [number, number, number]; name: string }[]> = ${JSON.stringify(
+    weeks
+  )};
+export const legendariesBySpec: Record<number, number[]> = ${JSON.stringify(
+    legendariesBySpec
+  )}
+export const specIDsPerRole = ${JSON.stringify(specIDsPerRole)};
+export const currentSeasonID = ${currentSeason.affixID};
+
 const dungeonSpells = new Set<number>(${JSON.stringify([
     ...dungeonSpecificSpells,
   ])});
@@ -899,5 +1050,9 @@ export const npcs: Record<number, string> = JSON.parse(\`${JSON.stringify(
   log(`done creating static data`);
 }
 
-// eslint-disable-next-line no-console
-create().catch(console.error);
+// eslint-disable-next-line promise/prefer-await-to-callbacks
+create().catch(async (error) => {
+  // eslint-disable-next-line no-console
+  console.error(error);
+  await prisma.$disconnect();
+});

@@ -247,10 +247,6 @@ const createCharacterKey = (
 ) => `${character.name}-${character.serverID}`;
 
 const removeImageFormat = (icon: string) => {
-  if (!icon) {
-    debugger;
-  }
-
   if (!icon.includes(".")) {
     return icon;
   }

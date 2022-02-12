@@ -2,8 +2,7 @@ name: Mergability Check
 
 on:
   pull_request:
-    branches-ignore:
-      - master
+    types: [opened, edited]
 
 # used actions
 # https://github.com/actions/setup-node - sets up node env
