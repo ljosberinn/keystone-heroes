@@ -459,6 +459,9 @@ const handler: RequestHandler<Query, Response> = async (req, res) => {
         },
       },
       take: 250,
+      orderBy: {
+        keystoneLevel: "desc",
+      },
     });
 
     if (rawData.length === 0) {
@@ -664,7 +667,24 @@ const createSpecQueryFilter = ({
       return filterPlayerByRole(player, "dps");
     });
 
-    return dpsPlayer.every((player) => dpsSpecIDSet.has(player.specID));
+    switch (dpsSpecIDSet.size) {
+      case 3: {
+        // every searched spec must be present
+        return dpsPlayer.every((player) => dpsSpecIDSet.has(player.specID));
+      }
+      case 2: {
+        const existingDpsSpecIDSet = new Set(
+          dpsPlayer.map((player) => player.specID)
+        );
+
+        // both searched must be present
+        return [...dpsSpecIDSet].every((id) => existingDpsSpecIDSet.has(id));
+      }
+      case 1: {
+        // just any match is fine
+        return dpsPlayer.some((player) => dpsSpecIDSet.has(player.specID));
+      }
+    }
   };
 };
 
