@@ -478,23 +478,39 @@ async function create() {
     tank: specs.filter((spec) => spec.role === "tank").map((spec) => spec.id),
   };
 
+  const weeksSeen: Record<string, boolean> = {};
+
   const weeks = rawWeeks
-    .map((week) => {
+    .map((dataset) => {
       const ids: [number, number, number] = [
-        week.affix1ID,
-        week.affix2ID,
-        week.affix3ID,
+        dataset.affix1ID,
+        dataset.affix2ID,
+        dataset.affix3ID,
       ];
-      const name = [week.affix2ID, week.affix3ID]
+
+      const name = [dataset.affix2ID, dataset.affix3ID]
         .map((id) => affixes[id].name)
         .join(" ");
 
       return {
-        name,
         ids,
-        key: affixes[week.affix1ID].name,
+        key: ids.join("-"),
+        name,
+        weekKey: affixes[dataset.affix1ID].name,
       };
     })
+    .reduce<{ ids: [number, number, number]; name: string; weekKey: string }[]>(
+      (acc, { key, ...dataset }) => {
+        if (weeksSeen[key]) {
+          return acc;
+        }
+
+        weeksSeen[key] = true;
+
+        return [...acc, dataset];
+      },
+      []
+    )
     // eslint-disable-next-line unicorn/prefer-object-from-entries
     .reduce<Record<string, { ids: [number, number, number]; name: string }[]>>(
       (acc, week) => {
@@ -503,12 +519,12 @@ async function create() {
           name: week.name,
         };
 
-        if (week.key in acc) {
-          acc[week.key].push(dataset);
+        if (week.weekKey in acc) {
+          acc[week.weekKey].push(dataset);
           return acc;
         }
 
-        acc[week.key] = [dataset];
+        acc[week.weekKey] = [dataset];
         return acc;
       },
       {}
