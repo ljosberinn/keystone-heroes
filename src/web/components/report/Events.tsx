@@ -311,7 +311,7 @@ function PullSelection() {
         >
           <img
             src={`/static/npcs/${mostRelevantNPCsByPull.current.id}.png`}
-            alt={mostRelevantNPCsByPull.current.name}
+            alt=""
             className="object-cover w-8 h-8 rounded-full"
             width={32}
             height={32}

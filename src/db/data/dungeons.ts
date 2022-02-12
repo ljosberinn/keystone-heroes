@@ -876,6 +876,10 @@ export const TAZAVESH_UPPER: DungeonMeta = {
     178_171: 10, // Stormforged Guardian
     180_429: 10, // Adorned Starseer
     180_432: 5, // Devoted Accomplice
+
+    180_433: 0, // Wandering Pulsar via Adorned Starseer
+    176_551: 0, // Vault Purifier via Hylbrande
+    177_716: 0, // So' Cartel Assassin via So'leah
   },
   zones: [
     {

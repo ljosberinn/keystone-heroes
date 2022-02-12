@@ -515,7 +515,7 @@ function findBossOrLieutenantName(
       return null;
     }
 
-    return npcs[boss.id];
+    return npcs[boss.id] ?? `${boss.id}`;
   }
 
   const lieutenant = pull.npcs.find((npc) => isTormentedLieutenant(npc.id));
