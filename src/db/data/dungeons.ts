@@ -58,6 +58,18 @@ export enum Boss {
   DOCTOR_ICKUS = 164_967,
   DOMINA_VENOMBLADE = 164_266,
   MARGRAVE_STRADAMA = 164_267,
+  // TVL
+  ZO_PHEX = 175_616,
+  ZO_GRON = 176_563,
+  ALCRUUX = 176_556,
+  ACHILLITE = 176_555,
+  // VENZA_GOLDFUSE = 176_705, shows up as friendly
+  POST_MASTER = 175_646,
+  SO_AZMI = 175_806,
+  // TVU
+  HYLBRANDE = 175_663,
+  SO_LEAH = 177_269,
+  TIMECAPN_HOOKTAIL = 175_546,
 }
 
 const multiTargetBossFights = new Set([
@@ -90,11 +102,13 @@ export enum DungeonIDs {
   MISTS_OF_TIRNA_SCITHE = 2290,
   DE_OTHER_SIDE = 2291,
   THEATER_OF_PAIN = 2293,
+  // TAZAVESH_LOWER = ???,
+  TAZAVESH = 2441,
   // Battle for Azeroth
   // Legion
 }
 
-type DungeonMeta = Omit<Dungeon, "id" | "time"> & {
+export type DungeonMeta = Omit<Dungeon, "id" | "time"> & {
   /**
    * 1 chest / 2 chest / 3 chest in milliseconds
    */
@@ -181,6 +195,9 @@ export const EXCLUDED_NPCS = new Set([
   165_430, // Malignant Spawn via Margrave Stradama
   171_188, // Plaguebound Devoted via Margrave Stradama
   168_747, // Venomfang
+  // TVLV
+  177_500, // Corsair Brute via Timecap'n Hooktail
+  178_435, // Corsair Brute via Timecap'n Hooktail
 ]);
 
 export const SOA_FINAL_BOSS_ANGELS = new Set([
@@ -754,26 +771,154 @@ export const THEATER_OF_PAIN: DungeonMeta = {
 };
 
 export const TAZAVESH_LOWER: DungeonMeta = {
-  bossIDs: [],
-  count: 0,
+  bossIDs: [
+    Boss.ZO_PHEX,
+    Boss.ZO_GRON,
+    Boss.ALCRUUX,
+    Boss.ACHILLITE,
+    // Boss.VENZA_GOLDFUSE,
+    Boss.POST_MASTER,
+    Boss.SO_AZMI,
+  ],
+  count: 330,
   expansionID: ExpansionEnum.SHADOWLANDS,
   name: "Tazavesh: Streets of Wonder",
   slug: "TVL",
-  timer: createDungeonTimer(0),
-  unitCountMap: {},
-  zones: [],
+  timer: createDungeonTimer(38),
+  unitCountMap: {
+    177_807: 4, // Customs Security
+    178_392: 10, // Gatewarden Zo'mazz,
+    177_817: 4, // Support Officer
+    177_816: 4, // Interrogation Specialist
+    177_808: 8, // Armored Overseer
+    179_334: 16, // Portalmancer Zo'honn
+    179_837: 20, // Tracker Zo'korss,
+    180_091: 12, // Ancient Core Houdn,
+    180_495: 10, // Enraged Direhorn,
+    180_567: 4, // Frenzied Nightclaw
+    179_840: 4, // Market Peacekeeper
+    179_841: 4, // Veteran Sparkcaster
+    179_842: 8, // Commerce Enforcer
+    179_821: 20, // Commander Zo'far,
+    180_348: 8, // Cartel Muscle
+    180_335: 4, // Cartel Smuggler
+    180_336: 4, // Cartel Wiseguy
+    179_893: 4, // Cartel Skulker
+
+    179_269: 0, // Oasis Security
+    176_565: 0, // Disruptive Patron,
+    180_159: 0, // Brawling Patron
+    176_562: 0, // Brawling Patron
+    176_396: 2, // Defective Sorter
+    176_394: 4, // P.O.S.T. Worker
+    176_395: 4, // Overloaded Mailemental
+  },
+  zones: [
+    {
+      id: 1989,
+      name: "The Veiled Market",
+      order: 1,
+      maxX: 197_025,
+      maxY: 405_000,
+      minX: 62_775,
+      minY: 315_500,
+    },
+    {
+      id: 1990,
+      name: "The Grand Menagerie",
+      order: 2,
+      maxX: 142_750,
+      maxY: 352_000,
+      minX: 109_750,
+      minY: 330_000,
+    },
+    {
+      id: 1991,
+      name: "The P.O.S.T.",
+      order: 3,
+      maxX: 120_125,
+      maxY: 375_000,
+      minX: 101_375,
+      minY: 362_500,
+    },
+    {
+      id: 1992,
+      name: "Myza's Oasis",
+      order: 4,
+      maxX: 129_125,
+      maxY: 397_000,
+      minX: 99_875,
+      minY: 377_500,
+    },
+  ],
   covenant: null,
 };
 
 export const TAZAVESH_UPPER: DungeonMeta = {
-  bossIDs: [],
-  count: 0,
+  bossIDs: [Boss.HYLBRANDE, Boss.SO_LEAH, Boss.TIMECAPN_HOOKTAIL],
+  count: 160,
   expansionID: ExpansionEnum.SHADOWLANDS,
   name: "Tazavesh: So'leah's Gambit",
   slug: "TVU",
-  timer: createDungeonTimer(0),
-  unitCountMap: {},
-  zones: [],
+  timer: createDungeonTimer(30),
+  unitCountMap: {
+    178_163: 1, // Murkbrine Shorerunner
+    178_139: 6, // Murkbrine Shellcrusher,
+    178_165: 15, // Coastwalker Goliath
+    180_431: 5, // Focused Ritualist
+    180_015: 5, // Burly Deckhand
+    178_133: 3, // Murkbrine Wavejumper
+    179_388: 5, // Hourglass Tidesage
+    179_399: 0, // Drunk Pirate
+    178_142: 3, // Murkbrine Fishmancer
+    178_141: 3, // Murkbrine Scalebinder,
+    179_386: 5, // Corsair Officer
+    178_171: 10, // Stormforged Guardian
+    180_429: 10, // Adorned Starseer
+    180_432: 5, // Devoted Accomplice
+
+    180_433: 0, // Wandering Pulsar via Adorned Starseer
+    176_551: 0, // Vault Purifier via Hylbrande
+    177_716: 0, // So' Cartel Assassin via So'leah
+  },
+  zones: [
+    {
+      id: 1995,
+      name: "Stormheim",
+      order: 1,
+      maxX: -1_383_960,
+      maxY: 1_269_580,
+      minX: -1_446_460,
+      minY: 1_227_920,
+    },
+    {
+      id: 1996,
+      name: "Boralus Harbor",
+      order: 3,
+      maxX: 1_192_710,
+      maxY: -1_228_750,
+      minX: 1_102_710,
+      minY: -1_288_750,
+    },
+    {
+      id: 1997,
+      name: "Aggramar's Vault",
+      order: 2,
+      maxX: -1_383_880,
+      maxY: 1_251_250,
+      minX: -1_411_630,
+      minY: 1_232_750,
+    },
+    {
+      id: 1993,
+      name: "The Opulent Nexus",
+      order: 4,
+      maxX: 97_500,
+      maxY: 369_000,
+      minX: 63_000,
+      minY: 346_000,
+    },
+  ],
   covenant: null,
 };
 
@@ -786,6 +931,9 @@ export const dungeonMap: Record<Dungeon["id"], DungeonMeta> = {
   [DungeonIDs.MISTS_OF_TIRNA_SCITHE]: MISTS_OF_TIRNA_SCITHE,
   [DungeonIDs.DE_OTHER_SIDE]: DE_OTHER_SIDE,
   [DungeonIDs.THEATER_OF_PAIN]: THEATER_OF_PAIN,
+  // megadungeon have the same zone id
+  [`1${DungeonIDs.TAZAVESH}`]: TAZAVESH_LOWER,
+  [`2${DungeonIDs.TAZAVESH}`]: TAZAVESH_UPPER,
 };
 
 export const allBossIDs = new Set<number>(
@@ -798,3 +946,18 @@ export const dungeons: (Omit<Dungeon, "time"> & DungeonMeta)[] = Object.entries(
   id: Number.parseInt(id),
   ...dataset,
 }));
+
+export const findDungeonByIDAndMaps = (
+  id: number,
+  maps: Set<number>
+): DungeonMeta | null => {
+  if (id in dungeonMap) {
+    return dungeonMap[id];
+  }
+
+  const match = dungeons.find((dungeon) =>
+    dungeon.zones.every((zone) => maps.has(zone.id))
+  );
+
+  return match ?? null;
+};

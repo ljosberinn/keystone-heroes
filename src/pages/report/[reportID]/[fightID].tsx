@@ -122,7 +122,7 @@ export default function FightID(): JSX.Element | null {
     // TODO: extract as component since its identical to /[reportID]/index
     return (
       <div className="flex flex-col items-center justify-center w-full px-16 py-8 m-auto xl:px-64 xl:py-32 lg:flex-row max-w-screen-2xl">
-        <p className="pt-8 lg:pl-24 lg:pt-0">
+        <p className="pt-8 pb-2 text-center lg:pl-24 lg:pt-0 lg:pb-0">
           Bear busy retrieving run. Please stand by.
         </p>
 

@@ -1870,6 +1870,11 @@ type Report {
   The principal zone that the report contains fights for. Null if no supported zone exists.
   """
   zone: Zone
+
+  """
+  Whether this report has been archived. Events, tables, and graphs for archived reports are inaccessible unless the retrieving user has a subscription including archive access.
+  """
+  archiveStatus: ReportArchiveStatus
 }
 
 """
@@ -2710,6 +2715,26 @@ enum TableDataType {
   Threat.
   """
   Threat
+}
+
+"""
+The archival status of a report.
+"""
+type ReportArchiveStatus {
+  """
+  Whether the report has been archived.
+  """
+  isArchived: Boolean!
+
+  """
+  Whether the current user can access the report. Always true if the report is not archived, and always false if not using user authentication.
+  """
+  isAccessible: Boolean!
+
+  """
+  The date on which the report was archived (if it has been archived).
+  """
+  archiveDate: Int
 }
 
 """

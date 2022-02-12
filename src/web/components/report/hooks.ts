@@ -67,8 +67,8 @@ export function usePullNPCs(selectedPullID: number): PullNPCs {
           return -1;
         }
 
-        const nameA = a.name.toUpperCase();
-        const nameB = b.name.toUpperCase();
+        const nameA = a.name?.toUpperCase() ?? "Unknown";
+        const nameB = b.name?.toUpperCase() ?? "Unknown";
 
         if (nameB > nameA) {
           return -1;

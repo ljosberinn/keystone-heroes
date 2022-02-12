@@ -9,7 +9,7 @@ type SidebarNPCProps = {
   npc: {
     count: number;
     id: number;
-    name: string;
+    name?: string;
     totalPercent: number | null;
     percentPerNPC: number | null;
     countPerNPC: number;
@@ -44,7 +44,7 @@ export function SidebarNPC({ npc }: SidebarNPCProps): JSX.Element {
           // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
           <img
             src={`/static/npcs/${npc.id}.png`}
-            alt=""
+            alt={`${npc.id}`}
             className="object-cover w-8 h-8 rounded-full"
             width={32}
             height={32}

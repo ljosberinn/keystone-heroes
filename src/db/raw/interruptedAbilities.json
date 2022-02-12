@@ -451,5 +451,49 @@
     "name": "Disposable Spectrophasic Reanimator",
     "icon": "inv_engineering_90_lightningbox"
   },
+  {
+    "id": 351119,
+    "name": "Shuriken Blitz",
+    "icon": "ability_hunter_assassinate2"
+  },
+  {
+    "id": 352347,
+    "name": "Valorous Bolt",
+    "icon": "spell_paladin_lightofdawn"
+  },
+  { "id": 354297, "name": "Hyperlight Bolt", "icon": "spell_broker_missile" },
+  { "id": 355225, "name": "Waterbolt", "icon": "spell_frost_frostbolt" },
+  {
+    "id": 355234,
+    "name": "Volatile Pufferfish",
+    "icon": "inv_fishing_innards_guts"
+  },
+  { "id": 355641, "name": "Scintillate", "icon": "spell_broker_beam" },
+  { "id": 355642, "name": "Hyperlight Salvo", "icon": "spell_broker_missile" },
+  { "id": 355930, "name": "Spark Burn", "icon": "spell_broker_beam" },
+  {
+    "id": 355934,
+    "name": "Hard Light Barrier",
+    "icon": "inv_misc_gem_pearl_03"
+  },
+  { "id": 356031, "name": "Stasis Beam", "icon": "spell_frost_stun" },
+  { "id": 356260, "name": "Tidal Burst", "icon": "inv_elemental_primal_water" },
+  {
+    "id": 356537,
+    "name": "Empowered Glyph of Restraint",
+    "icon": "spell_broker_buff"
+  },
+  { "id": 356843, "name": "Brackish Bolt", "icon": "ability_mage_waterjet" },
+  {
+    "id": 357188,
+    "name": "Double Technique",
+    "icon": "ability_dualwieldspecialization"
+  },
+  { "id": 357260, "name": "Unstable Rift", "icon": "spell_broker_nova" },
+  {
+    "id": 357284,
+    "name": "Reinvigorate",
+    "icon": "ability_druid_empoweredtouch"
+  },
   { "id": 358967, "name": "Inferno", "icon": "ability_foundryraid_blastwave" }
 ]

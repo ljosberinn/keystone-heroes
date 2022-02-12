@@ -26,8 +26,8 @@ import type {
 } from "@prisma/client";
 import nc from "next-connect";
 
+import type { DungeonMeta } from "../../db/data/dungeons";
 import {
-  dungeonMap,
   dungeons,
   EXCLUDED_NPCS,
   allBossIDs,
@@ -35,6 +35,7 @@ import {
   SOA_FINAL_BOSS_ANGELS,
   Boss,
   isMultiTargetBossFight,
+  findDungeonByIDAndMaps,
 } from "../../db/data/dungeons";
 import { spells } from "../../db/data/spellIds";
 import { prisma } from "../../db/prisma";
@@ -1331,6 +1332,21 @@ const getResponseOrRetrieveAndCreateFight = async (
     };
   }
 
+  const dungeon = findDungeonByIDAndMaps(
+    dungeonID,
+    new Set(dungeonPulls.flatMap((pull) => pull.maps))
+  );
+
+  if (!dungeon) {
+    return {
+      status: UNPROCESSABLE_ENTITY,
+      cache: false,
+      json: {
+        error: "MISSING_DUNGEON",
+      },
+    };
+  }
+
   const { allEvents, playerDeathEvents, enemyDeathEvents, explosiveTargetID } =
     await loadEvents(maybeStoredFight, reportID, dungeonID);
 
@@ -1344,6 +1360,7 @@ const getResponseOrRetrieveAndCreateFight = async (
   const pullsWithWipesAndPercent = calculatePullsWithWipesAndPercent(
     dungeonPulls,
     {
+      dungeon,
       dungeonID,
       playerDeathEvents,
       deathCountMap: pullNPCDeathCountMap,
@@ -1355,6 +1372,16 @@ const getResponseOrRetrieveAndCreateFight = async (
     pullsWithWipesAndPercent,
     maybeStoredFight.id
   );
+
+  const persistableMaps =
+    persistedPulls.flatMap<Prisma.PullZoneCreateManyInput>((pull) => {
+      return pull.maps.map((map) => {
+        return {
+          pullID: pull.id,
+          zoneID: map,
+        };
+      });
+    });
 
   const actorPlayerMap = new Map(
     maybeStoredFight.PlayerFight.map((playerFight) => [
@@ -1427,6 +1454,25 @@ const getResponseOrRetrieveAndCreateFight = async (
     maybeStoredFight.percent === 0 ||
     !fightHasDungeon(maybeStoredFight);
 
+  const abilityIDs = persistablePullEvents
+    .map((event) => {
+      if (event.eventType === "Interrupt" && event.interruptedAbilityID) {
+        return event.interruptedAbilityID;
+      }
+      return null;
+    })
+    .filter((id): id is number => id !== null);
+
+  await prisma.ability.createMany({
+    skipDuplicates: true,
+    data: abilityIDs.map((id) => {
+      return {
+        id,
+        name: `${id}`,
+      };
+    }),
+  });
+
   await prisma.$transaction([
     // only persist this data if it wasnt previously
     ...(isFirstRetrieval
@@ -1435,7 +1481,8 @@ const getResponseOrRetrieveAndCreateFight = async (
             data: {
               percent: calculateTotalPercent(
                 pullsWithWipesAndPercent,
-                dungeonID
+                dungeonID,
+                new Set(persistableMaps.map((map) => map.zoneID))
               ),
               // since we need to update `totalPercent` anyways, we might aswell
               // always update the dungeonID too, even though it may already have
@@ -1451,16 +1498,7 @@ const getResponseOrRetrieveAndCreateFight = async (
           }),
           prisma.pullZone.createMany({
             skipDuplicates: true,
-            data: persistedPulls.flatMap<Prisma.PullZoneCreateManyInput>(
-              (pull) => {
-                return pull.maps.map((map) => {
-                  return {
-                    pullID: pull.id,
-                    zoneID: map,
-                  };
-                });
-              }
-            ),
+            data: persistableMaps,
           }),
           prisma.pullNPC.createMany({
             skipDuplicates: true,
@@ -1699,7 +1737,7 @@ const isPullWipe = <T extends { startTime: number; endTime: number }>(
 
 const createTotalCountReducer = (
   npcDeathCountMap: Record<number, number>,
-  { unitCountMap }: typeof dungeonMap[number]
+  { unitCountMap }: DungeonMeta
 ) => {
   return (acc: number, npc: { id: number; gameID: number }) => {
     const deathCount = npcDeathCountMap[npc.id] ?? 0;
@@ -1859,6 +1897,7 @@ const calculatePullCoordinates = (
 
 type PullWipePercentMeta = {
   dungeonID: DungeonIDs;
+  dungeon: DungeonMeta;
   playerDeathEvents: DeathEvent[];
   deathEventMap: ReturnType<typeof createPullNPCDeathEventMap>;
   deathCountMap: Record<number, Record<number, number>>;
@@ -1868,12 +1907,12 @@ const calculatePullsWithWipesAndPercent = (
   pulls: Omit<PersistableDungeonPull, "percent" | "isWipe" | "count">[],
   {
     dungeonID,
+    dungeon,
     playerDeathEvents,
     deathEventMap,
     deathCountMap,
   }: PullWipePercentMeta
 ): PersistableDungeonPull[] => {
-  const dungeon = dungeonMap[dungeonID];
   const hasNoWipes = playerDeathEvents.length < 5;
 
   let skipNextPull = false;
@@ -2099,19 +2138,24 @@ const createPullNPCDeathCountMap = (
 
 export const calculateTotalPercent = (
   pulls: PersistableDungeonPull[],
-  dungeonID: number
+  dungeonID: number,
+  maps: Set<number>
 ): number => {
-  const { count } = dungeonMap[dungeonID];
+  const dungeon = findDungeonByIDAndMaps(dungeonID, maps);
+
+  if (!dungeon) {
+    return 0;
+  }
 
   const clearedCount = pulls.reduce((acc, pull) => {
     return acc + pull.count;
   }, 0);
 
-  if (count === clearedCount) {
+  if (dungeon.count === clearedCount) {
     return 100;
   }
 
-  return (clearedCount / count) * 100;
+  return (clearedCount / dungeon.count) * 100;
 };
 
 export const fightHandler = nc()

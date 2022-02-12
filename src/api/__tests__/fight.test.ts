@@ -3,6 +3,7 @@ import { calculateTotalPercent } from "../functions/fight";
 
 describe("calculateTotalPercent", () => {
   const requiredCount = dungeonMap["2289"].count;
+  const zones = new Set(dungeonMap[2289].zones.map((zone) => zone.id));
 
   test("returns 100 if count matches dungeon count", () => {
     const mockPull: Parameters<typeof calculateTotalPercent>[0][number] = {
@@ -17,7 +18,7 @@ describe("calculateTotalPercent", () => {
       y: 0,
     };
 
-    const result = calculateTotalPercent([mockPull], 2289);
+    const result = calculateTotalPercent([mockPull], 2289, zones);
 
     expect(result).toBe(100);
   });
@@ -35,7 +36,7 @@ describe("calculateTotalPercent", () => {
       y: 0,
     };
 
-    const result = calculateTotalPercent([mockPull], 2289);
+    const result = calculateTotalPercent([mockPull], 2289, zones);
 
     expect(result).toMatchInlineSnapshot(`99.16666666666667`);
   });

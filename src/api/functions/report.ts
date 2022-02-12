@@ -15,7 +15,7 @@ import type { Awaited, DeepRequired, DeepNonNullable } from "ts-essentials";
 
 import { getAffixByName } from "../../db/data/affixes";
 import { classMapByName } from "../../db/data/classes";
-import { dungeonMap } from "../../db/data/dungeons";
+import { dungeonMap, findDungeonByIDAndMaps } from "../../db/data/dungeons";
 import { specs as allSpecs } from "../../db/data/specs";
 import { prisma } from "../../db/prisma";
 import type {
@@ -151,6 +151,20 @@ export const fightIsFight = (fight: MaybeFight): fight is Fight => {
 export const fightFulfillsKeystoneLevelRequirement = (fight: Fight): boolean =>
   fight.keystoneLevel >= MIN_KEYSTONE_LEVEL;
 
+const detectDungeonTimer = (fight: Fight) => {
+  // defer checking whether its a timed key to later
+  if (!fight.gameZone) {
+    return null;
+  }
+
+  const dungeon = findDungeonByIDAndMaps(
+    fight.gameZone.id,
+    new Set(fight.maps.map((map) => map.id))
+  );
+
+  return dungeon ? dungeon.timer[0] : null;
+};
+
 /**
  * Raider.io has a built-in threshold to allow keys that supposedly were
  * NOT in time to still count as the official Battle.net API reports values that
@@ -167,12 +181,11 @@ export const fightFulfillsKeystoneLevelRequirement = (fight: Fight): boolean =>
  * @see https://discord.com/channels/180033360939319296/681904912090529801/860180670298980412
  */
 export const fightIsTimedKeystone = (fight: Fight): fight is Fight => {
-  if (!fight.gameZone) {
-    // defer checking whether its a timed key to later
+  const timer = detectDungeonTimer(fight);
+
+  if (!timer) {
     return true;
   }
-
-  const [timer] = dungeonMap[fight.gameZone.id].timer;
 
   // 1 second threshold included
   return timer >= fight.keystoneTime - 750;
@@ -548,8 +561,11 @@ const createResponseFromRawData = ({
           rating,
           gameZone,
           player,
+          maps,
         }) => {
-          const dungeon = gameZone ? dungeonMap[gameZone.id] : null;
+          const dungeon = gameZone
+            ? findDungeonByIDAndMaps(gameZone.id, new Set(maps))
+            : null;
 
           return {
             averageItemLevel,
@@ -741,13 +757,20 @@ const handler: RequestHandler<Request, ReportResponse> = async (req, res) => {
             return [...acc, fight];
           }
 
-          const fightMaps = new Set(fight.maps.map((map) => map.id));
-
           // report K9Mfcb2CtjZ7pX6q contains zone 2222 as starting point, however
           // via .maps property its clear its the SD21 in the log, which is 2296
-          const match = Object.entries(dungeonMap).find(([, dungeon]) => {
-            return dungeon.zones.every((zone) => fightMaps.has(zone.id));
-          });
+          const dungeon = findDungeonByIDAndMaps(
+            fight.gameZone.id,
+            new Set(fight.maps.map((map) => map.id))
+          );
+
+          if (!dungeon) {
+            return acc;
+          }
+
+          const match = Object.entries(dungeonMap).find(
+            ([, meta]) => meta.name === dungeon.name
+          );
 
           if (!match) {
             return acc;
@@ -1016,25 +1039,24 @@ const handler: RequestHandler<Request, ReportResponse> = async (req, res) => {
           })
       );
 
-    await prisma.conduit.createMany({
-      skipDuplicates: true,
-      data: conduitCreateMany,
-    });
-
-    await prisma.talent.createMany({
-      skipDuplicates: true,
-      data: talentCreateMany,
-    });
-
-    await prisma.covenantTrait.createMany({
-      skipDuplicates: true,
-      data: covenantTraitCreateMany,
-    });
-
-    await prisma.legendary.createMany({
-      skipDuplicates: true,
-      data: legendariesCreateMany,
-    });
+    await Promise.all([
+      prisma.conduit.createMany({
+        skipDuplicates: true,
+        data: conduitCreateMany,
+      }),
+      prisma.talent.createMany({
+        skipDuplicates: true,
+        data: talentCreateMany,
+      }),
+      prisma.covenantTrait.createMany({
+        skipDuplicates: true,
+        data: covenantTraitCreateMany,
+      }),
+      prisma.legendary.createMany({
+        skipDuplicates: true,
+        data: legendariesCreateMany,
+      }),
+    ]);
 
     const regionDataset = await prisma.region.upsert({
       select: {
