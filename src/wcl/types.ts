@@ -1061,6 +1061,8 @@ export type RegionServersArgs = {
 /** A single report uploaded by a player to a guild or personal logs. */
 export type Report = {
   __typename?: "Report";
+  /** Whether this report has been archived. Events, tables, and graphs for archived reports are inaccessible unless the retrieving user has a subscription including archive access. */
+  archiveStatus?: Maybe<ReportArchiveStatus>;
   /** The report code, a unique value used to identify the report. */
   code: Scalars["String"];
   /** The end time of the report. This is a UNIX timestamp representing the timestamp of the last event contained in the report. */
@@ -1262,6 +1264,17 @@ export type ReportActor = {
   subType?: Maybe<Scalars["String"]>;
   /** The type of the actor, i.e., if it is a player, pet or NPC. */
   type?: Maybe<Scalars["String"]>;
+};
+
+/** The archival status of a report. */
+export type ReportArchiveStatus = {
+  __typename?: "ReportArchiveStatus";
+  /** The date on which the report was archived (if it has been archived). */
+  archiveDate?: Maybe<Scalars["Int"]>;
+  /** Whether the current user can access the report. Always true if the report is not archived, and always false if not using user authentication. */
+  isAccessible: Scalars["Boolean"];
+  /** Whether the report has been archived. */
+  isArchived: Scalars["Boolean"];
 };
 
 /** The ReportData object enables the retrieval of single reports or filtered collections of reports. */
