@@ -109,7 +109,7 @@ function BackgroundImage() {
         `}
       </style>
       <img
-        src="static/index-backgrounds/91.jpg"
+        src="static/index-backgrounds/92.jpg"
         className="object-cover w-full h-full opacity-10 with-animation"
         alt=""
       />

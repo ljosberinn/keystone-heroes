@@ -366,10 +366,12 @@ async function create() {
           name: dungeon.name,
           slug: dungeon.slug,
           time: dungeon.timer[0],
-          zones: dungeon.zones.map((zone) => ({
-            id: zone.id,
-            name: zone.name,
-          })),
+          zones: dungeon.zones
+            .sort((a, b) => a.order - b.order)
+            .map((zone) => ({
+              id: zone.id,
+              name: zone.name,
+            })),
           unitCountMap: dungeon.unitCountMap,
           count: dungeon.count,
           covenant: covenant ? covenant.id : null,
