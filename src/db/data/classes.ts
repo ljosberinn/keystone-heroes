@@ -1524,6 +1524,13 @@ const druid: Class = {
       icon: "ability_maldraxxus_druid",
       type: ["covenant"],
     },
+    {
+      name: "Empower Bond",
+      id: 326_446,
+      cd: 60,
+      icon: "spell_animabastion_beam",
+      type: ["covenant"],
+    },
   ],
   specs: [
     {

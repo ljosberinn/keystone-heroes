@@ -339,10 +339,12 @@ const handler: RequestHandler<Query, Response> = async (req, res) => {
 
     const rawData = await prisma.fight.findMany({
       where: {
-        dungeonID: queryParams.dungeonID,
         chests: {
           gt: 0,
         },
+        ...(queryParams.dungeonID
+          ? { dungeonID: queryParams.dungeonID }
+          : null),
         ...(queryParams.minKeyLevel || queryParams.maxKeyLevel
           ? {
               keystoneLevel: {
