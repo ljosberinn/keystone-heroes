@@ -54,7 +54,11 @@ const config = {
 // https://securityheaders.com
 const ContentSecurityPolicy = `
   default-src 'self';
-  script-src 'self' 'unsafe-eval' 'unsafe-inline' *.youtube.com *.twitter.com wow.zamimg.com;
+  script-src 'self' data: wow.zamimg.com${
+    process.env.NODE_ENV === "development"
+      ? " 'unsafe-inline' 'unsafe-eval'"
+      : ""
+  };
   child-src *.youtube.com *.google.com *.twitter.com;
   style-src 'self' 'unsafe-inline' *.googleapis.com wow.zamimg.com;
   img-src * blob: data:;
