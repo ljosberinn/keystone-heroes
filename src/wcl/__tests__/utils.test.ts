@@ -30,13 +30,13 @@ describe("recursiveGetEvents", () => {
     server.use(
       graphql.query("getEvents", (req, res, ctx) => {
         expect(req.variables.startTime).toBe(
-          // eslint-disable-next-line jest/no-if
+          // eslint-disable-next-line jest/no-conditional-in-test
           requestNumber === 0 ? 0 : requestNumber * 1000
         );
 
         requestNumber++;
 
-        // eslint-disable-next-line jest/no-if
+        // eslint-disable-next-line jest/no-conditional-in-test
         if (requestNumber === 3) {
           return res(
             ctx.data({
@@ -84,6 +84,7 @@ describe("recursiveGetEvents", () => {
 
     server.use(
       graphql.query("getEvents", (_req, res, ctx) => {
+        // eslint-disable-next-line jest/no-conditional-in-test
         if (requestNumber !== 1) {
           dummy();
 
@@ -177,11 +178,14 @@ describe("createChunkByThresholdReducer", () => {
 
     const events: DamageEvent[] = Array.from({ length: 20 }, (_, index) => {
       const chunk =
+        // eslint-disable-next-line jest/no-conditional-in-test
         index < 5
           ? timestampMap.firstChunk
-          : index < 10
+          : // eslint-disable-next-line jest/no-conditional-in-test
+          index < 10
           ? timestampMap.secondChunk
-          : index < 15
+          : // eslint-disable-next-line jest/no-conditional-in-test
+          index < 15
           ? timestampMap.thirdChunk
           : timestampMap.fourthChunk;
 

@@ -2,8 +2,7 @@
 import type { SpecName } from "@prisma/client";
 import Link from "next/link";
 import type { FormEventHandler } from "react";
-import { useRef } from "react";
-import { useCallback, useState, useEffect } from "react";
+import { useRef, useCallback, useState, useEffect } from "react";
 
 import type { PublicDiscoveryResponse } from "../../api/functions/discovery";
 import { dungeonMap } from "../../db/data/dungeons";
@@ -208,7 +207,17 @@ function DiscoveryResults({ data, loading }: DiscoveryResultsProps) {
             />
           </div>
 
-          <p className="px-2 mt-2 text-center">no results (yet?)</p>
+          <p className="px-2 mt-2 text-center">
+            no results (yet?)
+            <br />
+            consider importing some from{" "}
+            <ExternalLink
+              className="underline"
+              href="https://www.warcraftlogs.com/zone/rankings/25#leaderboards=1"
+            >
+              Warcraft Logs
+            </ExternalLink>
+          </p>
         </div>
       ) : (
         data.map((dataset) => {

@@ -8,6 +8,9 @@ const {
 const {
   createReactOverride,
 } = require("eslint-config-galex/src/overrides/react");
+const {
+  createTSOverride,
+} = require("eslint-config-galex/src/overrides/typescript");
 
 const deps = getDependencies();
 
@@ -23,7 +26,14 @@ const reactOverride = createReactOverride({
   },
 });
 
+const tsOverride = createTSOverride({
+  ...deps,
+  rules: {
+    "@typescript-eslint/no-unnecessary-type-arguments": "warn",
+  },
+});
+
 module.exports = createConfig({
-  overrides: [jestOverride, reactOverride],
+  overrides: [jestOverride, reactOverride, tsOverride],
   root: true,
 });

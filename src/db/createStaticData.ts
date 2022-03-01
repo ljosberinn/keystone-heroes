@@ -276,7 +276,6 @@ async function create() {
         id: "desc",
       },
     }),
-
     prisma.player.findMany({
       distinct: "specID",
       select: {
