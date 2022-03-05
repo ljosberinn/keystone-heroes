@@ -151,6 +151,9 @@ export const fightIsFight = (fight: MaybeFight): fight is Fight => {
 export const fightFulfillsKeystoneLevelRequirement = (fight: Fight): boolean =>
   fight.keystoneLevel >= MIN_KEYSTONE_LEVEL;
 
+export const fightFulfillsMaxDurationRequirement = (fight: Fight): boolean =>
+  fight.keystoneTime <= 60 * 60 * 1000;
+
 const detectDungeonTimer = (fight: Fight) => {
   // defer checking whether its a timed key to later
   if (!fight.gameZone) {
@@ -750,6 +753,7 @@ const handler: RequestHandler<Request, ReportResponse> = async (req, res) => {
           fightIsFight(fight) &&
           fightHasFivePlayers(fight) &&
           fightFulfillsKeystoneLevelRequirement(fight) &&
+          fightFulfillsMaxDurationRequirement(fight) &&
           fightIsUnknown(fight) &&
           fightHasSupportedAffixes(fight)
         ) {
