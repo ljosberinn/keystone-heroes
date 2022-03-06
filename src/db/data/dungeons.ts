@@ -784,7 +784,7 @@ export const TAZAVESH_LOWER: DungeonMeta = {
   expansionID: ExpansionEnum.SHADOWLANDS,
   name: "Tazavesh: Streets of Wonder",
   slug: "TVL",
-  timer: createDungeonTimer(38),
+  timer: createDungeonTimer(39),
   unitCountMap: {
     177_807: 4, // Customs Security
     178_392: 10, // Gatewarden Zo'mazz,
