@@ -856,7 +856,7 @@ export const TAZAVESH_LOWER: DungeonMeta = {
 
 export const TAZAVESH_UPPER: DungeonMeta = {
   bossIDs: [Boss.HYLBRANDE, Boss.SO_LEAH, Boss.TIMECAPN_HOOKTAIL],
-  count: 160,
+  count: 346,
   expansionID: ExpansionEnum.SHADOWLANDS,
   name: "Tazavesh: So'leah's Gambit",
   slug: "TVU",
