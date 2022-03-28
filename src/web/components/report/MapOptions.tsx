@@ -88,7 +88,7 @@ function TormentedKillIndicatorToggle() {
         aria-labelledby="toggleTormentedKillIndicator"
       />
       <label htmlFor="toggleTormentedKillIndicator" className="cursor-pointer">
-        toggle tormented kill indicator
+        toggle seasonal indicators
       </label>
     </div>
   );
