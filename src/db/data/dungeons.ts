@@ -780,20 +780,20 @@ export const TAZAVESH_LOWER: DungeonMeta = {
     Boss.POST_MASTER,
     Boss.SO_AZMI,
   ],
-  count: 330,
+  count: 290,
   expansionID: ExpansionEnum.SHADOWLANDS,
   name: "Tazavesh: Streets of Wonder",
   slug: "TVL",
   timer: createDungeonTimer(39),
   unitCountMap: {
     177_807: 4, // Customs Security
-    178_392: 10, // Gatewarden Zo'mazz,
+    178_392: 18, // Gatewarden Zo'mazz,
     177_817: 4, // Support Officer
     177_816: 4, // Interrogation Specialist
     177_808: 8, // Armored Overseer
-    179_334: 16, // Portalmancer Zo'honn
+    179_334: 20, // Portalmancer Zo'honn
     179_837: 20, // Tracker Zo'korss,
-    180_091: 12, // Ancient Core Houdn,
+    180_091: 12, // Ancient Core Hound,
     180_495: 10, // Enraged Direhorn,
     180_567: 4, // Frenzied Nightclaw
     179_840: 4, // Market Peacekeeper
@@ -801,17 +801,17 @@ export const TAZAVESH_LOWER: DungeonMeta = {
     179_842: 8, // Commerce Enforcer
     179_821: 20, // Commander Zo'far,
     180_348: 8, // Cartel Muscle
-    180_335: 4, // Cartel Smuggler
-    180_336: 4, // Cartel Wiseguy
+    180_335: 5, // Cartel Smuggler
+    180_336: 5, // Cartel Wiseguy
     179_893: 4, // Cartel Skulker
 
     179_269: 0, // Oasis Security
     176_565: 0, // Disruptive Patron,
     180_159: 0, // Brawling Patron
     176_562: 0, // Brawling Patron
-    176_396: 2, // Defective Sorter
-    176_394: 4, // P.O.S.T. Worker
-    176_395: 4, // Overloaded Mailemental
+    176_396: 3, // Defective Sorter
+    176_394: 5, // P.O.S.T. Worker
+    176_395: 5, // Overloaded Mailemental
   },
   zones: [
     {
