@@ -799,7 +799,7 @@ export const TAZAVESH_LOWER: DungeonMeta = {
     179_840: 4, // Market Peacekeeper
     179_841: 4, // Veteran Sparkcaster
     179_842: 8, // Commerce Enforcer
-    179_821: 20, // Commander Zo'far,
+    179_821: 25, // Commander Zo'far,
     180_348: 8, // Cartel Muscle
     180_335: 5, // Cartel Smuggler
     180_336: 5, // Cartel Wiseguy
