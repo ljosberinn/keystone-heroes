@@ -410,8 +410,9 @@ function FullscreenPullNPCs() {
     >
       <summary className="p-2 cursor-pointer">Enemies</summary>
 
-      {pullNPCs.npcs.map((npc) => {
-        return <SidebarNPC npc={npc} key={npc.id} />;
+      {pullNPCs.npcs.map((npc, index) => {
+        // eslint-disable-next-line react/no-array-index-key
+        return <SidebarNPC npc={npc} key={`${npc.id}-${index}`} />;
       })}
 
       {pullNPCs.explosives.size > 0 && (
