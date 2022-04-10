@@ -10,6 +10,10 @@ a [title] {
   cursor: pointer;
 }
 
+.bg-tvu,
+.bg-tvl {
+  background-image: url(/static/dungeons/tv-700.jpg);
+}
 .bg-sd {
   background-image: url(/static/dungeons/sd-700.jpg);
 }
