@@ -12286,13 +12286,13 @@ react-docgen@^5.0.0:
     node-dir "^0.1.10"
     strip-indent "^3.0.0"
 
-react-dom@18.0.0:
-  version "18.0.0"
-  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-18.0.0.tgz#26b88534f8f1dbb80853e1eabe752f24100d8023"
-  integrity sha512-XqX7uzmFo0pUceWFCt7Gff6IyIMzFUn7QMZrbrQfGxtaxXZIcGQzoNpRLE3fQLnS4XzLLPMZX2T9TRcSrasicw==
+"react-dom@npm:react-dom@experimental":
+  version "0.0.0-experimental-5b2e7253f-20220408"
+  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-0.0.0-experimental-5b2e7253f-20220408.tgz#5fbf65e72cc9f3e341d55134d50394f65dd7bfc3"
+  integrity sha512-jHB2qvXonH4lvy74dg5cCTDh8L+WVqTmMzXsrx5QokGZa2Hnfl1s4Rz1Lv/pI+TrhgeawTWyBkqxdbQdMX69jg==
   dependencies:
     loose-envify "^1.1.0"
-    scheduler "^0.21.0"
+    scheduler "0.0.0-experimental-5b2e7253f-20220408"
 
 react-draggable@^4.4.3:
   version "4.4.4"
@@ -12418,10 +12418,10 @@ react-textarea-autosize@^8.3.0:
     use-composed-ref "^1.0.0"
     use-latest "^1.0.0"
 
-react@18.0.0:
-  version "18.0.0"
-  resolved "https://registry.yarnpkg.com/react/-/react-18.0.0.tgz#b468736d1f4a5891f38585ba8e8fb29f91c3cb96"
-  integrity sha512-x+VL6wbT4JRVPm7EGxXhZ8w8LTROaxPXOqhlGyVSrv0sB1jkyFGgXxJ8LVoPRLvPR6/CIZGFmfzqUa2NYeMr2A==
+"react@npm:react@experimental":
+  version "0.0.0-experimental-5b2e7253f-20220408"
+  resolved "https://registry.yarnpkg.com/react/-/react-0.0.0-experimental-5b2e7253f-20220408.tgz#f0460a091dacffc22208e384b26b4d9d3c5230fd"
+  integrity sha512-OJ1PQznIDKxs0KtSBHAnwAPo6JJvcetic5/nUuvEIJGohkEHOpGirDyuTNEFF+xJliRjQkruUv3Q4KILaytzYw==
   dependencies:
     loose-envify "^1.1.0"
 
@@ -12996,10 +12996,10 @@ saxes@^5.0.1:
   dependencies:
     xmlchars "^2.2.0"
 
-scheduler@^0.21.0:
-  version "0.21.0"
-  resolved "https://registry.yarnpkg.com/scheduler/-/scheduler-0.21.0.tgz#6fd2532ff5a6d877b6edb12f00d8ab7e8f308820"
-  integrity sha512-1r87x5fz9MXqswA2ERLo0EbOAU74DpIUO090gIasYTqlVoJeMcl+Z1Rg7WHz+qtPujhS/hGIt9kxZOYBV3faRQ==
+scheduler@0.0.0-experimental-5b2e7253f-20220408:
+  version "0.0.0-experimental-5b2e7253f-20220408"
+  resolved "https://registry.yarnpkg.com/scheduler/-/scheduler-0.0.0-experimental-5b2e7253f-20220408.tgz#b6f621171de947c9ebb83d1dd2f15e398ec5c6b4"
+  integrity sha512-7/n+xR3Di30Y7GE2iHgc46skgkhO8xtLNVYG9espriZZq4VhKWbpwwbX8JchATcpw9DLfmV/qa7TGPK0ju2AgQ==
   dependencies:
     loose-envify "^1.1.0"
 
