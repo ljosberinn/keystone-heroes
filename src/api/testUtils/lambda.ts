@@ -1,6 +1,6 @@
 import { mockDeep } from "jest-mock-extended";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { apiResolver } from "next/dist/server/api-utils";
+import { apiResolver } from "next/dist/server/api-utils/node";
 
 import type { RequestHandler } from "../utils/types";
 
