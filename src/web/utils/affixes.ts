@@ -1,5 +1,3 @@
-/* eslint-disable unicorn/prefer-object-from-entries */
-
 import type { FightSuccessResponse } from "../../api/functions/fight";
 import {
   BURSTING,

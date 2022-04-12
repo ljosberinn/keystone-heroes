@@ -900,7 +900,7 @@ function SpecFilters({ dps1, dps2, dps3, heal, tank }: SpecFiltersProps) {
     });
   };
 
-  const active = Object.values(activeFilters).filter((bool) => bool).length;
+  const active = Object.values(activeFilters).filter(Boolean).length;
 
   return (
     <div>
@@ -1096,7 +1096,6 @@ function SpecFilter({ type, data, remove }: SpecFilterProps) {
           >
             <option value={-1}>select spec</option>
             {Object.entries(
-              // eslint-disable-next-line unicorn/prefer-object-from-entries
               availableSpecs.reduce<
                 Record<string, { id: number; name: string }[]>
               >((acc, spec) => {
@@ -1265,7 +1264,6 @@ function SpecFilter({ type, data, remove }: SpecFilterProps) {
 
                     return true;
                   })
-                  // eslint-disable-next-line unicorn/prefer-object-from-entries
                   .reduce<Record<number, { id: number; name: string }[]>>(
                     (acc, [id, { covenantID, name }]) => {
                       const dataset = { id: Number.parseInt(id), name };

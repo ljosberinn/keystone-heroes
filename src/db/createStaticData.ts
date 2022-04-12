@@ -512,7 +512,7 @@ async function create() {
       },
       []
     )
-    // eslint-disable-next-line unicorn/prefer-object-from-entries
+
     .reduce<Record<string, { ids: [number, number, number]; name: string }[]>>(
       (acc, week) => {
         const dataset = {
@@ -534,7 +534,6 @@ async function create() {
   await prisma.$disconnect();
   log(`db disconnected`);
 
-  // eslint-disable-next-line unicorn/prefer-object-from-entries
   const legendariesBySpec = legendariesBySpecRaw.reduce<
     Record<number, number[]>
   >((acc, dataset) => {

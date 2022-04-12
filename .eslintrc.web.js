@@ -1,16 +1,14 @@
-const {
-  createConfig,
-  getDependencies,
-} = require("eslint-config-galex/src/createConfig");
+const { createConfig } = require("eslint-config-galex/dist/createConfig");
+const { getDependencies } = require("eslint-config-galex/dist/getDependencies");
 const {
   createJestOverride,
-} = require("eslint-config-galex/src/overrides/jest");
+} = require("eslint-config-galex/dist/overrides/jest");
 const {
   createReactOverride,
-} = require("eslint-config-galex/src/overrides/react");
+} = require("eslint-config-galex/dist/overrides/react");
 const {
-  createTSOverride,
-} = require("eslint-config-galex/src/overrides/typescript");
+  createTypeScriptOverride,
+} = require("eslint-config-galex/dist/overrides/typescript");
 
 const deps = getDependencies();
 
@@ -26,7 +24,7 @@ const reactOverride = createReactOverride({
   },
 });
 
-const tsOverride = createTSOverride({
+const tsOverride = createTypeScriptOverride({
   ...deps,
   rules: {
     "@typescript-eslint/no-unnecessary-type-arguments": "warn",

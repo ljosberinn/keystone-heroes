@@ -95,7 +95,6 @@ export default function CooldownManagement(): JSX.Element {
           spells[ability.id].cd >= cooldown
       );
 
-      // eslint-disable-next-line unicorn/prefer-object-from-entries
       const castsByPlayer = relevantEvents.reduce<
         Record<number, CastOrAbilityReadyEventWIthABilityAndSourcePlayerID[]>
       >((acc, event) => {
@@ -384,11 +383,7 @@ function isCastOrAbilityReadyEventWithAbilityAndSourcePlayerID(
     return false;
   }
 
-  if (isDungeonSpecificSpell(event.ability.id)) {
-    return false;
-  }
-
-  return true;
+  return !isDungeonSpecificSpell(event.ability.id);
 }
 
 type PullGridProps = {

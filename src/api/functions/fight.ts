@@ -2120,7 +2120,6 @@ const createPullNPCDeathCountMap = (
 
       return [
         startTime,
-        // eslint-disable-next-line unicorn/prefer-object-from-entries
         events.reduce<Record<number, number>>(
           (acc, { type, targetID, sourceID }) => {
             // differentiate between `BeginCastEvent` and `DeathEvent`

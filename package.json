@@ -86,7 +86,7 @@
     "autoprefixer": "10.4.4",
     "babel-jest": "27.5.1",
     "eslint": "8.13.0",
-    "eslint-config-galex": "3.6.5",
+    "eslint-config-galex": "4.0.2",
     "husky": "7.0.4",
     "jest": "27.5.1",
     "jest-mock-extended": "2.0.5",

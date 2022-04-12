@@ -1,14 +1,12 @@
+const { createConfig } = require("eslint-config-galex/dist/createConfig");
+const { getDependencies } = require("eslint-config-galex/dist/getDependencies");
 const {
-  createConfig,
-  getDependencies,
-} = require("eslint-config-galex/src/createConfig");
-const {
-  createTSOverride,
-} = require("eslint-config-galex/src/overrides/typescript");
+  createTypeScriptOverride,
+} = require("eslint-config-galex/dist/overrides/typescript");
 
 const deps = getDependencies();
 
-const mockOverride = createTSOverride({
+const mockOverride = createTypeScriptOverride({
   ...deps,
   rules: {
     "@typescript-eslint/explicit-module-boundary-types": "off",
@@ -17,7 +15,7 @@ const mockOverride = createTSOverride({
   files: ["src/wcl/__mocks__/**/*.ts"],
 });
 
-const generatedTypesOverride = createTSOverride({
+const generatedTypesOverride = createTypeScriptOverride({
   ...deps,
   files: ["src/wcl/types.ts"],
   rules: {
@@ -26,6 +24,7 @@ const generatedTypesOverride = createTSOverride({
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "unicorn/no-keyword-prefix": "off",
     "@typescript-eslint/no-unused-vars": "off",
+    "@typescript-eslint/no-redundant-type-constituents": "off",
   },
 });
 

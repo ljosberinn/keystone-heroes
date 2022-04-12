@@ -1,4 +1,4 @@
-const { createConfig } = require("eslint-config-galex/src/createConfig");
+const { createConfig } = require("eslint-config-galex/dist/createConfig");
 
 module.exports = createConfig({
   rules: {

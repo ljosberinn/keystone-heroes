@@ -37,11 +37,7 @@ const FIVE_DAYS_IN_SECONDS = 5 * 24 * 60 * 60;
 const mustRefreshToken = (expiresAt: NonNullable<WCLAuth["expiresAt"]>) => {
   const now = Math.floor(Date.now() / 1000);
 
-  if (expiresAt <= now || expiresAt - now <= FIVE_DAYS_IN_SECONDS) {
-    return true;
-  }
-
-  return false;
+  return expiresAt <= now || expiresAt - now <= FIVE_DAYS_IN_SECONDS;
 };
 
 export const getGqlClient = async (): Promise<GraphQLClient> => {
@@ -70,7 +66,7 @@ export const getGqlClient = async (): Promise<GraphQLClient> => {
 
   if (
     persisted?.token &&
-    persisted?.expiresAt &&
+    persisted.expiresAt &&
     !mustRefreshToken(persisted.expiresAt) &&
     !cache.client &&
     !cache.expiresAt

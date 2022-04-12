@@ -59,30 +59,25 @@ function LoadingFailed({
         },
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [error, fightID, reportID]);
 
-  switch (error) {
-    case "UNKNOWN_REPORT": {
-      return null;
-    }
-
-    default: {
-      return (
-        <>
-          <p className="font-semibold">
-            Something went horribly wrong here and we're sorry.
-          </p>
-          <p>At this point, this lousy error message is all we have:</p>
-          <p className="py-4 italic">{error}</p>
-          <p>
-            Please attach a link to the current URL should you file an issue on
-            GitHub or Discord. Thanks!
-          </p>
-        </>
-      );
-    }
+  if (error === "UNKNOWN_REPORT") {
+    return null;
   }
+
+  return (
+    <>
+      <p className="font-semibold">
+        Something went horribly wrong here and we're sorry.
+      </p>
+      <p>At this point, this lousy error message is all we have:</p>
+      <p className="py-4 italic">{error}</p>
+      <p>
+        Please attach a link to the current URL should you file an issue on
+        GitHub or Discord. Thanks!
+      </p>
+    </>
+  );
 }
 
 // eslint-disable-next-line import/no-default-export
