@@ -87,6 +87,7 @@ export type CharacterEncounterRankingsArgs = {
 
 /** A player character. Characters can earn individual rankings and appear in reports. */
 export type CharacterGameDataArgs = {
+  forceUpdate?: InputMaybe<Scalars["Boolean"]>;
   specID?: InputMaybe<Scalars["Int"]>;
 };
 
@@ -159,6 +160,8 @@ export type CharacterPagination = {
 export enum CharacterRankingMetricType {
   /** Boss damage per second. */
   Bossdps = "bossdps",
+  /** Boss nDPS is unique to FFXIV and is damage done to the boss adjusted for raid-contributing buffs and debuffs. */
+  Bossndps = "bossndps",
   /** Boss rDPS is unique to FFXIV and is damage done to the boss adjusted for raid-contributing buffs and debuffs. */
   Bossrdps = "bossrdps",
   /** Choose an appropriate default depending on the other selected parameters. */
@@ -168,15 +171,21 @@ export enum CharacterRankingMetricType {
   /** Unique to FFXIV. Represents the combined ranking for a pair of healers in 8-man content. */
   Healercombinedbossdps = "healercombinedbossdps",
   /** Unique to FFXIV. Represents the combined ranking for a pair of healers in 8-man content. */
+  Healercombinedbossndps = "healercombinedbossndps",
+  /** Unique to FFXIV. Represents the combined ranking for a pair of healers in 8-man content. */
   Healercombinedbossrdps = "healercombinedbossrdps",
   /** Unique to FFXIV. Represents the combined ranking for a pair of healers in 8-man content. */
   Healercombineddps = "healercombineddps",
+  /** Unique to FFXIV. Represents the combined ranking for a pair of healers in 8-man content. */
+  Healercombinedndps = "healercombinedndps",
   /** Unique to FFXIV. Represents the combined ranking for a pair of healers in 8-man content. */
   Healercombinedrdps = "healercombinedrdps",
   /** Healing per second. */
   Hps = "hps",
   /** Survivability ranking for tanks. Deprecated. Only supported for some older WoW zones. */
   Krsi = "krsi",
+  /** nDPS is unique to FFXIV and is damage done adjusted for raid-contributing buffs and debuffs. */
+  Ndps = "ndps",
   /** Score. Used by WoW Mythic dungeons and by ESO trials. */
   Playerscore = "playerscore",
   /** Speed. Not supported by every zone. */
@@ -186,9 +195,13 @@ export enum CharacterRankingMetricType {
   /** Unique to FFXIV. Represents the combined ranking for a pair of tanks in 8-man content. */
   Tankcombinedbossdps = "tankcombinedbossdps",
   /** Unique to FFXIV. Represents the combined ranking for a pair of tanks in 8-man content. */
+  Tankcombinedbossndps = "tankcombinedbossndps",
+  /** Unique to FFXIV. Represents the combined ranking for a pair of tanks in 8-man content. */
   Tankcombinedbossrdps = "tankcombinedbossrdps",
   /** Unique to FFXIV. Represents the combined ranking for a pair of tanks in 8-man content. */
   Tankcombineddps = "tankcombineddps",
+  /** Unique to FFXIV. Represents the combined ranking for a pair of tanks in 8-man content. */
+  Tankcombinedndps = "tankcombinedndps",
   /** Unique to FFXIV. Represents the combined ranking for a pair of tanks in 8-man content. */
   Tankcombinedrdps = "tankcombinedrdps",
   /** Healing done per second to tanks. */
@@ -460,7 +473,7 @@ export type GameClass = {
   /** A slug used to identify the class. */
   slug: Scalars["String"];
   /** The specs supported by the class. */
-  specs?: Maybe<Maybe<Spec>[]>;
+  specs?: Maybe<Maybe<GameSpec>[]>;
 };
 
 /** The game object contains collections of data such as NPCs, classes, abilities, items, maps, etc. Game data only changes when major game patches are released, so you should cache results for as long as possible and only update when new content is released for the game. */
@@ -490,6 +503,10 @@ export type GameData = {
   factions?: Maybe<Maybe<GameFaction>[]>;
   /** Obtain a single item for the game. */
   item?: Maybe<GameItem>;
+  /** Obtain a single item set for the game. */
+  item_set?: Maybe<GameItemSet>;
+  /** Item sets for the game. */
+  item_sets?: Maybe<GameItemSetPagination>;
   /** Items for the game. */
   items?: Maybe<GameItemPagination>;
   /** Obtain a single map for the game. */
@@ -560,6 +577,17 @@ export type GameDataEnchantsArgs = {
 /** The game object contains collections of data such as NPCs, classes, abilities, items, maps, etc. Game data only changes when major game patches are released, so you should cache results for as long as possible and only update when new content is released for the game. */
 export type GameDataItemArgs = {
   id?: InputMaybe<Scalars["Int"]>;
+};
+
+/** The game object contains collections of data such as NPCs, classes, abilities, items, maps, etc. Game data only changes when major game patches are released, so you should cache results for as long as possible and only update when new content is released for the game. */
+export type GameDataItem_SetArgs = {
+  id?: InputMaybe<Scalars["Int"]>;
+};
+
+/** The game object contains collections of data such as NPCs, classes, abilities, items, maps, etc. Game data only changes when major game patches are released, so you should cache results for as long as possible and only update when new content is released for the game. */
+export type GameDataItem_SetsArgs = {
+  limit?: InputMaybe<Scalars["Int"]>;
+  page?: InputMaybe<Scalars["Int"]>;
 };
 
 /** The game object contains collections of data such as NPCs, classes, abilities, items, maps, etc. Game data only changes when major game patches are released, so you should cache results for as long as possible and only update when new content is released for the game. */
@@ -679,6 +707,26 @@ export type GameItemSet = {
   name?: Maybe<Scalars["String"]>;
 };
 
+export type GameItemSetPagination = {
+  __typename?: "GameItemSetPagination";
+  /** Current page of the cursor */
+  current_page: Scalars["Int"];
+  /** List of items on the current page */
+  data?: Maybe<Maybe<GameItemSet>[]>;
+  /** Number of the first item returned */
+  from?: Maybe<Scalars["Int"]>;
+  /** Determines if cursor has more pages after the current page */
+  has_more_pages: Scalars["Boolean"];
+  /** The last page (number of pages) */
+  last_page: Scalars["Int"];
+  /** Number of items returned per page */
+  per_page: Scalars["Int"];
+  /** Number of the last item returned */
+  to?: Maybe<Scalars["Int"]>;
+  /** Number of total items selected by the query */
+  total: Scalars["Int"];
+};
+
 /** A single map for the game. */
 export type GameMap = {
   __typename?: "GameMap";
@@ -735,6 +783,19 @@ export type GameNpcPagination = {
   to?: Maybe<Scalars["Int"]>;
   /** Number of total items selected by the query */
   total: Scalars["Int"];
+};
+
+/** A spec for a given player class. */
+export type GameSpec = {
+  __typename?: "GameSpec";
+  /** The player class that the spec belongs to. */
+  class?: Maybe<GameClass>;
+  /** An integer used to identify the spec. */
+  id: Scalars["Int"];
+  /** The localized name of the class. */
+  name: Scalars["String"];
+  /** A slug used to identify the spec. */
+  slug: Scalars["String"];
 };
 
 /** A single zone for the game. */
@@ -975,13 +1036,27 @@ export type PlayerAttendance = {
 /** A way to obtain data for the top guilds involved in an ongoing world first or realm first progress race. */
 export type ProgressRaceData = {
   __typename?: "ProgressRaceData";
+  /** Detail composition data for a given guild and encounter. */
+  detailedComposition?: Maybe<Scalars["JSON"]>;
   /** Progress race information including best percentages, pull counts and streams for top guilds. This API is only active when there is an ongoing race. The format of this JSON may change without notice and is not considered frozen. */
   progressRace?: Maybe<Scalars["JSON"]>;
 };
 
 /** A way to obtain data for the top guilds involved in an ongoing world first or realm first progress race. */
+export type ProgressRaceDataDetailedCompositionArgs = {
+  difficulty?: InputMaybe<Scalars["Int"]>;
+  encounterID?: InputMaybe<Scalars["Int"]>;
+  guildID?: InputMaybe<Scalars["Int"]>;
+  guildName?: InputMaybe<Scalars["String"]>;
+  serverRegion?: InputMaybe<Scalars["String"]>;
+  serverSlug?: InputMaybe<Scalars["String"]>;
+};
+
+/** A way to obtain data for the top guilds involved in an ongoing world first or realm first progress race. */
 export type ProgressRaceDataProgressRaceArgs = {
   difficulty?: InputMaybe<Scalars["Int"]>;
+  guildID?: InputMaybe<Scalars["Int"]>;
+  guildName?: InputMaybe<Scalars["String"]>;
   serverRegion?: InputMaybe<Scalars["String"]>;
   serverSlug?: InputMaybe<Scalars["String"]>;
   serverSubregion?: InputMaybe<Scalars["String"]>;
@@ -1398,6 +1473,8 @@ export type ReportFight = {
   gameZone?: Maybe<GameZone>;
   /** The report ID of the fight. This ID can be used to fetch only events, tables or graphs for this fight. */
   id: Scalars["Int"];
+  /** Whether or not the fight is still in progress. If this field is false, it means the entire fight has been uploaded. */
+  inProgress?: Maybe<Scalars["Boolean"]>;
   /** The affixes for a Mythic+ dungeon. */
   keystoneAffixes?: Maybe<Maybe<Scalars["Int"]>[]>;
   /** The bonus field represents Bronze, Silver or Gold in Challenge Modes, or +1-+3 pushing of Mythic+ keys. It has the values 1, 2, and 3. */
@@ -1406,10 +1483,12 @@ export type ReportFight = {
   keystoneLevel?: Maybe<Scalars["Int"]>;
   /** The completion time for a Challenge Mode or Mythic+ Dungeon. This is the official time used on Blizzard leaderboards. */
   keystoneTime?: Maybe<Scalars["Int"]>;
-  /** Whether or not the fight was a boss kill, i.e., successful. If this field is false, it means the fight was an incomplete run, etc.. */
+  /** Whether or not the fight was a boss kill, i.e., successful. If this field is false, it means the fight was a wipe or a failed run, etc.. */
   kill?: Maybe<Scalars["Boolean"]>;
-  /** The phase that the encounter was in when the fight ended. */
+  /** The phase that the encounter was in when the fight ended. Counts up from 1 based off the phase type (i.e., normal phase vs intermission). */
   lastPhase?: Maybe<Scalars["Int"]>;
+  /** The phase that the encounter was in when the fight ended. Always increases from 0, so a fight with three real phases and two intermissions would count up from 0 to 4. */
+  lastPhaseAsAbsoluteIndex?: Maybe<Scalars["Int"]>;
   /** Whether or not the phase that the encounter was in when the fight ended was an intermission or not. */
   lastPhaseIsIntermission?: Maybe<Scalars["Boolean"]>;
   /** The layer of a Torghast run. */
@@ -1585,19 +1664,6 @@ export type ServerPagination = {
   to?: Maybe<Scalars["Int"]>;
   /** Number of total items selected by the query */
   total: Scalars["Int"];
-};
-
-/** A spec for a given player class. */
-export type Spec = {
-  __typename?: "Spec";
-  /** The player class that the spec belongs to. */
-  class: GameClass;
-  /** An integer used to identify the spec. */
-  id: Scalars["Int"];
-  /** The localized name of the class. */
-  name: Scalars["String"];
-  /** A slug used to identify the spec. */
-  slug: Scalars["String"];
 };
 
 /** A single subregion. Subregions are used to divide a region into sub-categories, such as French or German subregions of a Europe region. */
@@ -2002,10 +2068,15 @@ export const GetPullsOfFightDocument = gql`
 
 export type SdkFunctionWrapper = <T>(
   action: (requestHeaders?: Record<string, string>) => Promise<T>,
-  operationName: string
+  operationName: string,
+  operationType?: string
 ) => Promise<T>;
 
-const defaultWrapper: SdkFunctionWrapper = (action, _operationName) => action();
+const defaultWrapper: SdkFunctionWrapper = (
+  action,
+  _operationName,
+  _operationType
+) => action();
 
 export function getSdk(
   client: GraphQLClient,
@@ -2022,7 +2093,8 @@ export function getSdk(
             ...requestHeaders,
             ...wrappedRequestHeaders,
           }),
-        "getReport"
+        "getReport",
+        "query"
       );
     },
     getEvents(
@@ -2035,7 +2107,8 @@ export function getSdk(
             ...requestHeaders,
             ...wrappedRequestHeaders,
           }),
-        "getEvents"
+        "getEvents",
+        "query"
       );
     },
     getTable(
@@ -2048,7 +2121,8 @@ export function getSdk(
             ...requestHeaders,
             ...wrappedRequestHeaders,
           }),
-        "getTable"
+        "getTable",
+        "query"
       );
     },
     getPullsOfFight(
@@ -2062,7 +2136,8 @@ export function getSdk(
             variables,
             { ...requestHeaders, ...wrappedRequestHeaders }
           ),
-        "getPullsOfFight"
+        "getPullsOfFight",
+        "query"
       );
     },
   };

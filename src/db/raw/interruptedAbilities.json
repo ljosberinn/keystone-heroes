@@ -495,5 +495,6 @@
     "name": "Reinvigorate",
     "icon": "ability_druid_empoweredtouch"
   },
-  { "id": 358967, "name": "Inferno", "icon": "ability_foundryraid_blastwave" }
+  { "id": 358967, "name": "Inferno", "icon": "ability_foundryraid_blastwave" },
+  { "id": 366566, "name": "Burst", "icon": "spell_progenitor_areadenial" }
 ]

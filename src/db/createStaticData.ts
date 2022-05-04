@@ -237,15 +237,6 @@ async function create() {
         id: true,
         effectName: true,
         effectIcon: true,
-        // PlayerLegendary: {
-        //   select: {
-        //     player: {
-        //       select: {
-        //         specID: true,
-        //       },
-        //     },
-        //   },
-        // },
       },
     }),
     prisma.talent.findMany({
@@ -276,18 +267,9 @@ async function create() {
         id: "desc",
       },
     }),
-    prisma.player.findMany({
-      distinct: "specID",
-      select: {
-        specID: true,
-        PlayerLegendary: {
-          select: {
-            legendaryID: true,
-          },
-          distinct: "legendaryID",
-        },
-      },
-    }),
+    prisma.$queryRaw<
+      { legendaryID: number; specID: number }[]
+    >`SELECT public."PlayerLegendary"."legendaryID", public."Player"."specID" FROM public."PlayerLegendary" LEFT JOIN public."Player" ON public."PlayerLegendary"."playerID" = public."Player".id`,
   ]);
 
   log(`found ${rawCovenants.length} covenants`);
@@ -300,6 +282,7 @@ async function create() {
   log(`found ${rawTalents.length} talents`);
   log(`found ${rawConduits.length} conduits`);
   log(`found ${specs.length} specs`);
+  log(`found ${legendariesBySpecRaw.length} legendariesBySpec`);
 
   if (!currentSeason) {
     throw new Error(`missing season`);
@@ -537,13 +520,14 @@ async function create() {
   const legendariesBySpec = legendariesBySpecRaw.reduce<
     Record<number, number[]>
   >((acc, dataset) => {
-    dataset.PlayerLegendary.forEach((legendary) => {
-      if (legendary.legendaryID in acc) {
-        acc[legendary.legendaryID].push(dataset.specID);
-      } else {
-        acc[legendary.legendaryID] = [dataset.specID];
-      }
-    });
+    if (
+      dataset.legendaryID in acc &&
+      !acc[dataset.legendaryID].includes(dataset.specID)
+    ) {
+      acc[dataset.legendaryID].push(dataset.specID);
+    } else {
+      acc[dataset.legendaryID] = [dataset.specID];
+    }
 
     return acc;
   }, {});

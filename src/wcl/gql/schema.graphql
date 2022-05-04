@@ -182,6 +182,11 @@ type Character {
     Optional. A specific spec ID to retrieve information for. If omitted, the last observed spec on Armory (WoW) or Lodestone (FF) will be used.
     """
     specID: Int = 0
+
+    """
+    Optional. Whether or not to force the updating of the character before returning the game data.
+    """
+    forceUpdate: Boolean = false
   ): JSON
 
   """
@@ -320,6 +325,11 @@ enum CharacterRankingMetricType {
   bossdps
 
   """
+  Boss nDPS is unique to FFXIV and is damage done to the boss adjusted for raid-contributing buffs and debuffs.
+  """
+  bossndps
+
+  """
   Boss rDPS is unique to FFXIV and is damage done to the boss adjusted for raid-contributing buffs and debuffs.
   """
   bossrdps
@@ -355,6 +365,11 @@ enum CharacterRankingMetricType {
   playerspeed
 
   """
+  nDPS is unique to FFXIV and is damage done adjusted for raid-contributing buffs and debuffs.
+  """
+  ndps
+
+  """
   rDPS is unique to FFXIV and is damage done adjusted for raid-contributing buffs and debuffs.
   """
   rdps
@@ -382,6 +397,16 @@ enum CharacterRankingMetricType {
   """
   Unique to FFXIV. Represents the combined ranking for a pair of healers in 8-man content.
   """
+  healercombinedndps
+
+  """
+  Unique to FFXIV. Represents the combined ranking for a pair of healers in 8-man content.
+  """
+  healercombinedbossndps
+
+  """
+  Unique to FFXIV. Represents the combined ranking for a pair of healers in 8-man content.
+  """
   healercombinedrdps
 
   """
@@ -398,6 +423,16 @@ enum CharacterRankingMetricType {
   Unique to FFXIV. Represents the combined ranking for a pair of tanks in 8-man content.
   """
   tankcombinedbossdps
+
+  """
+  Unique to FFXIV. Represents the combined ranking for a pair of tanks in 8-man content.
+  """
+  tankcombinedndps
+
+  """
+  Unique to FFXIV. Represents the combined ranking for a pair of tanks in 8-man content.
+  """
+  tankcombinedbossndps
 
   """
   Unique to FFXIV. Represents the combined ranking for a pair of tanks in 8-man content.
@@ -2107,6 +2142,11 @@ type ReportFight {
   id: Int!
 
   """
+  Whether or not the fight is still in progress. If this field is false, it means the entire fight has been uploaded.
+  """
+  inProgress: Boolean
+
+  """
   The affixes for a Mythic+ dungeon.
   """
   keystoneAffixes: [Int]
@@ -2127,14 +2167,19 @@ type ReportFight {
   keystoneTime: Int
 
   """
-  Whether or not the fight was a boss kill, i.e., successful. If this field is false, it means the fight was an incomplete run, etc..
+  Whether or not the fight was a boss kill, i.e., successful. If this field is false, it means the fight was a wipe or a failed run, etc..
   """
   kill: Boolean
 
   """
-  The phase that the encounter was in when the fight ended.
+  The phase that the encounter was in when the fight ended. Counts up from 1 based off the phase type (i.e., normal phase vs intermission).
   """
   lastPhase: Int
+
+  """
+  The phase that the encounter was in when the fight ended. Always increases from 0, so a fight with three real phases and two intermissions would count up from 0 to 4.
+  """
+  lastPhaseAsAbsoluteIndex: Int
 
   """
   Whether or not the phase that the encounter was in when the fight ended was an intermission or not.
@@ -2882,6 +2927,31 @@ type GameData {
   ): GameItem
 
   """
+  Obtain a single item set for the game.
+  """
+  item_set(
+    """
+    Required. Specify a specific item set to retrieve by its id.
+    """
+    id: Int
+  ): GameItemSet
+
+  """
+  Item sets for the game.
+  """
+  item_sets(
+    """
+    Optional. The number of item sets to retrieve per page. If omitted, defaults to 100. The maximum allowed value is 100, and minimum allowed value is 1.
+    """
+    limit: Int = 100
+
+    """
+    Optional. The page of paginated data to retrieve. If omitted, defaults to the first page.
+    """
+    page: Int = 1
+  ): GameItemSetPagination
+
+  """
   Items for the game.
   """
   items(
@@ -3138,13 +3208,13 @@ type GameClass {
   """
   The specs supported by the class.
   """
-  specs: [Spec]
+  specs: [GameSpec]
 }
 
 """
 A spec for a given player class.
 """
-type Spec {
+type GameSpec {
   """
   An integer used to identify the spec.
   """
@@ -3153,7 +3223,7 @@ type Spec {
   """
   The player class that the spec belongs to.
   """
-  class: GameClass!
+  class: GameClass
 
   """
   The localized name of the class.
@@ -3241,6 +3311,63 @@ type GameItem {
   The localized name of the item. Will be null if no localization information exists for the item.
   """
   name: String
+}
+
+"""
+A single item set for the game.
+"""
+type GameItemSet {
+  """
+  The ID of the item set.
+  """
+  id: Int!
+
+  """
+  The localized name of the item set. Will be null if no localization information exists for the item set.
+  """
+  name: String
+}
+
+type GameItemSetPagination {
+  """
+  List of items on the current page
+  """
+  data: [GameItemSet]
+
+  """
+  Number of total items selected by the query
+  """
+  total: Int!
+
+  """
+  Number of items returned per page
+  """
+  per_page: Int!
+
+  """
+  Current page of the cursor
+  """
+  current_page: Int!
+
+  """
+  Number of the first item returned
+  """
+  from: Int
+
+  """
+  Number of the last item returned
+  """
+  to: Int
+
+  """
+  The last page (number of pages)
+  """
+  last_page: Int!
+
+  """
+  Determines if cursor has more pages after the current page
+  """
+  has_more_pages: Boolean!
 }
 
 type GameItemPagination {
@@ -3533,6 +3660,51 @@ type ProgressRaceData {
     Optional. If not specified, the highest difficulty will be used.
     """
     difficulty: Int = 0
+
+    """
+    Optional. The ID of a single guild to retrieve.
+    """
+    guildID: Int
+
+    """
+    Optional. The name of a specific guild. Must be used in conjunction with serverSlug and serverRegion to uniquely identify a guild.
+    """
+    guildName: String
+  ): JSON
+
+  """
+  Detail composition data for a given guild and encounter.
+  """
+  detailedComposition(
+    """
+    Optional. The ID of a single guild to retrieve.
+    """
+    guildID: Int
+
+    """
+    Optional. The name of a specific guild. Must be used in conjunction with serverSlug and serverRegion to uniquely identify a guild.
+    """
+    guildName: String
+
+    """
+    Optional. The name of a specific guild. Must be used in conjunction with name and serverRegion to uniquely identify a guild.
+    """
+    serverSlug: String
+
+    """
+    Optional. The region for a specific guild. Must be used in conjunction with name and serverRegion to uniquely identify a guild.
+    """
+    serverRegion: String
+
+    """
+    Optional. If not specified, the current boss that is being pulled will be used.
+    """
+    encounterID: Int = 0
+
+    """
+    Optional. If not specified, the highest difficulty will be used.
+    """
+    difficulty: Int = 0
   ): JSON
 }
 
@@ -3744,21 +3916,6 @@ type WorldData {
     """
     expansion_id: Int
   ): [Zone]
-}
-
-"""
-A single item set for the game.
-"""
-type GameItemSet {
-  """
-  The ID of the item set.
-  """
-  id: Int!
-
-  """
-  The localized name of the item set. Will be null if no localization information exists for the item set.
-  """
-  name: String
 }
 
 type ExtendedData {

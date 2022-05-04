@@ -302,6 +302,18 @@
             "description": "Cached game data such as gear for the character. This data was fetched from the appropriate source (Blizzard APIs for WoW, Lodestone for FF). This call will only return a cached copy of the data if it exists already. It will not go out to Blizzard or Lodestone to fetch a new copy.",
             "args": [
               {
+                "name": "forceUpdate",
+                "description": "Optional. Whether or not to force the updating of the character before returning the game data.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                },
+                "defaultValue": "false",
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
                 "name": "specID",
                 "description": "Optional. A specific spec ID to retrieve information for. If omitted, the last observed spec on Armory (WoW) or Lodestone (FF) will be used.",
                 "type": {
@@ -889,6 +901,12 @@
             "deprecationReason": null
           },
           {
+            "name": "bossndps",
+            "description": "Boss nDPS is unique to FFXIV and is damage done to the boss adjusted for raid-contributing buffs and debuffs.",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "bossrdps",
             "description": "Boss rDPS is unique to FFXIV and is damage done to the boss adjusted for raid-contributing buffs and debuffs.",
             "isDeprecated": false,
@@ -913,6 +931,12 @@
             "deprecationReason": null
           },
           {
+            "name": "healercombinedbossndps",
+            "description": "Unique to FFXIV. Represents the combined ranking for a pair of healers in 8-man content.",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "healercombinedbossrdps",
             "description": "Unique to FFXIV. Represents the combined ranking for a pair of healers in 8-man content.",
             "isDeprecated": false,
@@ -920,6 +944,12 @@
           },
           {
             "name": "healercombineddps",
+            "description": "Unique to FFXIV. Represents the combined ranking for a pair of healers in 8-man content.",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "healercombinedndps",
             "description": "Unique to FFXIV. Represents the combined ranking for a pair of healers in 8-man content.",
             "isDeprecated": false,
             "deprecationReason": null
@@ -939,6 +969,12 @@
           {
             "name": "krsi",
             "description": "Survivability ranking for tanks. Deprecated. Only supported for some older WoW zones.",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "ndps",
+            "description": "nDPS is unique to FFXIV and is damage done adjusted for raid-contributing buffs and debuffs.",
             "isDeprecated": false,
             "deprecationReason": null
           },
@@ -967,6 +1003,12 @@
             "deprecationReason": null
           },
           {
+            "name": "tankcombinedbossndps",
+            "description": "Unique to FFXIV. Represents the combined ranking for a pair of tanks in 8-man content.",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "tankcombinedbossrdps",
             "description": "Unique to FFXIV. Represents the combined ranking for a pair of tanks in 8-man content.",
             "isDeprecated": false,
@@ -974,6 +1016,12 @@
           },
           {
             "name": "tankcombineddps",
+            "description": "Unique to FFXIV. Represents the combined ranking for a pair of tanks in 8-man content.",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "tankcombinedndps",
             "description": "Unique to FFXIV. Represents the combined ranking for a pair of tanks in 8-man content.",
             "isDeprecated": false,
             "deprecationReason": null
@@ -2584,7 +2632,7 @@
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "Spec",
+                "name": "GameSpec",
                 "ofType": null
               }
             },
@@ -2955,6 +3003,68 @@
             "type": {
               "kind": "OBJECT",
               "name": "GameItem",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "item_set",
+            "description": "Obtain a single item set for the game.",
+            "args": [
+              {
+                "name": "id",
+                "description": "Required. Specify a specific item set to retrieve by its id.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
+            "type": {
+              "kind": "OBJECT",
+              "name": "GameItemSet",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "item_sets",
+            "description": "Item sets for the game.",
+            "args": [
+              {
+                "name": "limit",
+                "description": "Optional. The number of item sets to retrieve per page. If omitted, defaults to 100. The maximum allowed value is 100, and minimum allowed value is 1.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": "100",
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "page",
+                "description": "Optional. The page of paginated data to retrieve. If omitted, defaults to the first page.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": "1",
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
+            "type": {
+              "kind": "OBJECT",
+              "name": "GameItemSetPagination",
               "ofType": null
             },
             "isDeprecated": false,
@@ -3625,6 +3735,137 @@
       },
       {
         "kind": "OBJECT",
+        "name": "GameItemSetPagination",
+        "description": null,
+        "fields": [
+          {
+            "name": "current_page",
+            "description": "Current page of the cursor",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "data",
+            "description": "List of items on the current page",
+            "args": [],
+            "type": {
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "GameItemSet",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "from",
+            "description": "Number of the first item returned",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "has_more_pages",
+            "description": "Determines if cursor has more pages after the current page",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "last_page",
+            "description": "The last page (number of pages)",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "per_page",
+            "description": "Number of items returned per page",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "to",
+            "description": "Number of the last item returned",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "total",
+            "description": "Number of total items selected by the query",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
         "name": "GameMap",
         "description": "A single map for the game.",
         "fields": [
@@ -3951,6 +4192,77 @@
               "ofType": {
                 "kind": "SCALAR",
                 "name": "Int",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "GameSpec",
+        "description": "A spec for a given player class.",
+        "fields": [
+          {
+            "name": "class",
+            "description": "The player class that the spec belongs to.",
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "GameClass",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "id",
+            "description": "An integer used to identify the spec.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "name",
+            "description": "The localized name of the class.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "slug",
+            "description": "A slug used to identify the spec.",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
                 "ofType": null
               }
             },
@@ -5218,6 +5530,91 @@
         "description": "A way to obtain data for the top guilds involved in an ongoing world first or realm first progress race.",
         "fields": [
           {
+            "name": "detailedComposition",
+            "description": "Detail composition data for a given guild and encounter.",
+            "args": [
+              {
+                "name": "difficulty",
+                "description": "Optional. If not specified, the highest difficulty will be used.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": "0",
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "encounterID",
+                "description": "Optional. If not specified, the current boss that is being pulled will be used.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": "0",
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "guildID",
+                "description": "Optional. The ID of a single guild to retrieve.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "guildName",
+                "description": "Optional. The name of a specific guild. Must be used in conjunction with serverSlug and serverRegion to uniquely identify a guild.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "serverRegion",
+                "description": "Optional. The region for a specific guild. Must be used in conjunction with name and serverRegion to uniquely identify a guild.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "serverSlug",
+                "description": "Optional. The name of a specific guild. Must be used in conjunction with name and serverRegion to uniquely identify a guild.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
+            "type": {
+              "kind": "SCALAR",
+              "name": "JSON",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "progressRace",
             "description": "Progress race information including best percentages, pull counts and streams for top guilds. This API is only active when there is an ongoing race. The format of this JSON may change without notice and is not considered frozen.",
             "args": [
@@ -5230,6 +5627,30 @@
                   "ofType": null
                 },
                 "defaultValue": "0",
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "guildID",
+                "description": "Optional. The ID of a single guild to retrieve.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "guildName",
+                "description": "Optional. The name of a specific guild. Must be used in conjunction with serverSlug and serverRegion to uniquely identify a guild.",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": null,
                 "isDeprecated": false,
                 "deprecationReason": null
               },
@@ -8111,6 +8532,18 @@
             "deprecationReason": null
           },
           {
+            "name": "inProgress",
+            "description": "Whether or not the fight is still in progress. If this field is false, it means the entire fight has been uploaded.",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "keystoneAffixes",
             "description": "The affixes for a Mythic+ dungeon.",
             "args": [],
@@ -8164,7 +8597,7 @@
           },
           {
             "name": "kill",
-            "description": "Whether or not the fight was a boss kill, i.e., successful. If this field is false, it means the fight was an incomplete run, etc..",
+            "description": "Whether or not the fight was a boss kill, i.e., successful. If this field is false, it means the fight was a wipe or a failed run, etc..",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -8176,7 +8609,19 @@
           },
           {
             "name": "lastPhase",
-            "description": "The phase that the encounter was in when the fight ended.",
+            "description": "The phase that the encounter was in when the fight ended. Counts up from 1 based off the phase type (i.e., normal phase vs intermission).",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "lastPhaseAsAbsoluteIndex",
+            "description": "The phase that the encounter was in when the fight ended. Always increases from 0, so a fight with three real phases and two intermissions would count up from 0 to 4.",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -9087,81 +9532,6 @@
               "ofType": {
                 "kind": "SCALAR",
                 "name": "Int",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          }
-        ],
-        "inputFields": null,
-        "interfaces": [],
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
-        "kind": "OBJECT",
-        "name": "Spec",
-        "description": "A spec for a given player class.",
-        "fields": [
-          {
-            "name": "class",
-            "description": "The player class that the spec belongs to.",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "GameClass",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "id",
-            "description": "An integer used to identify the spec.",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "name",
-            "description": "The localized name of the class.",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "slug",
-            "description": "A slug used to identify the spec.",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
                 "ofType": null
               }
             },
