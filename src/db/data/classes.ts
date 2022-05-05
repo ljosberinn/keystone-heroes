@@ -1058,6 +1058,13 @@ const hunter: Class = {
       icon: "ability_hunter_murderofcrows",
       type: [],
     },
+    {
+      name: "Primal Rage",
+      id: 272_678,
+      cd: 360,
+      icon: "spell_shadow_unholyfrenzy",
+      type: ["major", "utility"],
+    },
   ],
   covenantAbilities: [
     {

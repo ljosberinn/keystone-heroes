@@ -36,6 +36,8 @@ export const bloodlustTypes = new Set([
   80_353,
   // Bloodlust
   2825,
+  // Primal Rage
+  272_678,
 ]);
 export const invisibilityTypes = new Set([
   // Invisible; Potion of the Hidden Spirit

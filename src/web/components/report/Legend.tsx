@@ -41,7 +41,7 @@ const generalIcons: Item[] = [
       .filter((id) => id in spells)
       .map((id) => spells[id].icon),
     label:
-      "Bloodlust/Heroism/Timewarp/Drums of Deathly Ferocity were used on this pull.",
+      "Bloodlust/Heroism/Timewarp/Primal Rage/Drums of Deathly Ferocity were used on this pull.",
   },
 ];
 
