@@ -28,6 +28,7 @@ export default function App({
   pageProps,
 }: AppRenderProps): JSX.Element {
   useWCLURLPaste();
+  useFunctionHealthCheck();
 
   return (
     <>
@@ -81,4 +82,10 @@ function useWCLURLPaste() {
       document.removeEventListener("paste", listener);
     };
   }, [push, setSelectedPull]);
+}
+
+function useFunctionHealthCheck() {
+  useEffect(() => {
+    void fetch("/api/health");
+  }, []);
 }

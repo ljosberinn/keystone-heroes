@@ -8,7 +8,8 @@ type State<T> = {
   loading: boolean;
 };
 
-const threshold = 750;
+const loadAnimationThreshold = 750;
+const maxInvocationDuration = 9750;
 
 export function useAbortableFetch<T>({
   url,
@@ -33,9 +34,31 @@ export function useAbortableFetch<T>({
       return;
     }
 
-    const controller = new AbortController();
+    let controller = new AbortController();
+    let loadingAnimationTimeout: NodeJS.Timeout | null = null;
+    let retryAttempts = 0;
 
-    let timeout: NodeJS.Timeout | null = null;
+    const onRetry = () => {
+      controller.abort();
+      controller = new AbortController();
+
+      retryAttempts += 1;
+
+      void load(url);
+      retryTimeout = setTimeout(onRetry, maxInvocationDuration);
+    };
+    let retryTimeout: NodeJS.Timeout = setTimeout(
+      onRetry,
+      maxInvocationDuration
+    );
+
+    const onValidBail = () => {
+      setState((prev) => ({ ...prev, data: initialState, loading: false }));
+
+      if (retryAttempts === 3) {
+        window.location.reload();
+      }
+    };
 
     async function load(url: RequestInfo) {
       const start = Date.now();
@@ -46,7 +69,7 @@ export function useAbortableFetch<T>({
           signal: controller.signal,
         });
 
-        if (!isMounted.current) {
+        if (!isMounted.current || controller.signal.aborted) {
           return;
         }
 
@@ -58,12 +81,12 @@ export function useAbortableFetch<T>({
 
         const end = Date.now();
         const elapsed = end - start;
-        const diff = threshold - elapsed;
+        const diff = loadAnimationThreshold - elapsed;
 
         // delay setting state to a min elapsed time of threshold
         // but only if the request wasn't cached
         if (diff > 0 && elapsed > 100) {
-          timeout = setTimeout(() => {
+          loadingAnimationTimeout = setTimeout(() => {
             setState((prev) => ({ ...prev, data: json, loading: false }));
           }, diff);
           return;
@@ -71,9 +94,12 @@ export function useAbortableFetch<T>({
 
         setState((prev) => ({ ...prev, data: json, loading: false }));
       } catch (error) {
-        setState((prev) => ({ ...prev, data: initialState, loading: false }));
-
-        if (!(error instanceof DOMException)) {
+        if (error instanceof DOMException) {
+          if (retryAttempts === 3) {
+            onValidBail();
+          }
+        } else {
+          onValidBail();
           throw error;
         }
       }
@@ -85,8 +111,12 @@ export function useAbortableFetch<T>({
     return () => {
       controller.abort();
 
-      if (timeout) {
-        clearTimeout(timeout);
+      if (loadingAnimationTimeout) {
+        clearTimeout(loadingAnimationTimeout);
+      }
+
+      if (retryTimeout) {
+        clearTimeout(retryTimeout);
       }
     };
   }, [loading, url, options, isMounted, initialState]);
