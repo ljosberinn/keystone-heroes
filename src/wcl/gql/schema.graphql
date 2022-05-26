@@ -1223,7 +1223,7 @@ type GuildTag {
   guild: Guild!
 
   """
-  The name of the guild.
+  The name of the tag.
   """
   name: String!
 }

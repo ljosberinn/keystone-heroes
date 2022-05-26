@@ -983,7 +983,7 @@ export type GuildTag = {
   guild: Guild;
   /** The ID of the tag. */
   id: Scalars["Int"];
-  /** The name of the guild. */
+  /** The name of the tag. */
   name: Scalars["String"];
 };
 
