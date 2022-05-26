@@ -303,18 +303,14 @@ const hasValidParams = ({
     | "minItemLevelAvg"
   >]: number;
 }) => {
-  if (
+  return !(
     (minKeyLevel && minKeyLevel < MIN_KEYSTONE_LEVEL) ||
     (maxDeaths && maxDeaths < 0) ||
     (maxPercent && maxPercent < 100) ||
     (maxKeyLevel && maxKeyLevel > 45) ||
     (maxItemLevelAvg && maxItemLevelAvg > 400) ||
     (minItemLevelAvg && minItemLevelAvg < 180)
-  ) {
-    return false;
-  }
-
-  return true;
+  );
 };
 
 const handler: RequestHandler<Query, Response> = async (req, res) => {
@@ -829,15 +825,11 @@ const createLegendaryFilter = ({
       );
     }
 
-    if (
+    return !(
       hasMismatch(dps1LegendaryIDSet, [dps1, dps2, dps3]) ||
       hasMismatch(dps2LegendaryIDSet, [dps1, dps2, dps3]) ||
       hasMismatch(dps3LegendaryIDSet, [dps1, dps2, dps3])
-    ) {
-      return false;
-    }
-
-    return true;
+    );
   };
 };
 

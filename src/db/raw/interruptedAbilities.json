@@ -451,6 +451,9 @@
     "name": "Disposable Spectrophasic Reanimator",
     "icon": "inv_engineering_90_lightningbox"
   },
+  { "id": 347775, "name": "347775", "icon": null },
+  { "id": 349934, "name": "349934", "icon": null },
+  { "id": 350922, "name": "350922", "icon": null },
   {
     "id": 351119,
     "name": "Shuriken Blitz",
@@ -461,6 +464,7 @@
     "name": "Valorous Bolt",
     "icon": "spell_paladin_lightofdawn"
   },
+  { "id": 353836, "name": "353836", "icon": null },
   { "id": 354297, "name": "Hyperlight Bolt", "icon": "spell_broker_missile" },
   { "id": 355225, "name": "Waterbolt", "icon": "spell_frost_frostbolt" },
   {
@@ -484,11 +488,13 @@
     "icon": "spell_broker_buff"
   },
   { "id": 356843, "name": "Brackish Bolt", "icon": "ability_mage_waterjet" },
+  { "id": 357029, "name": "357029", "icon": null },
   {
     "id": 357188,
     "name": "Double Technique",
     "icon": "ability_dualwieldspecialization"
   },
+  { "id": 357196, "name": "357196", "icon": null },
   { "id": 357260, "name": "Unstable Rift", "icon": "spell_broker_nova" },
   {
     "id": 357284,
