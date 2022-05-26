@@ -120,8 +120,6 @@ const getAndPersistInterruptedAbilities = async () => {
     },
   });
 
-  await prisma.event.deleteMany();
-
   writeFileSync(
     resolve("src/db/raw/interruptedAbilities.json"),
     JSON.stringify(abilities)

@@ -9,7 +9,8 @@ type State<T> = {
 };
 
 const loadAnimationThreshold = 750;
-const maxInvocationDuration = 9750;
+const maxInvocationDuration =
+  process.env.NODE_ENV === "development" ? 900_000 : 9750;
 
 export function useAbortableFetch<T>({
   url,

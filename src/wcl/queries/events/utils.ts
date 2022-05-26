@@ -21,8 +21,12 @@ export const recursiveGetEvents = async <T extends AnyEvent>(
   }>,
   previousEvents: T[] = []
 ): Promise<T[]> => {
+  console.time("getCachedSdk");
   const sdk = await getCachedSdk();
+  console.timeEnd("getCachedSdk");
+  console.time("getEvents");
   const response = await sdk.getEvents({ ...params, limit: 10_000 });
+  console.timeEnd("getEvents");
 
   const { data = [], nextPageTimestamp = null } =
     response?.reportData?.report?.events ?? {};

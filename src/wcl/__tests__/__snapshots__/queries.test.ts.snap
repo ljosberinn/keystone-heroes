@@ -33371,7 +33371,7 @@ exports[`getEvents works 1`] = `
 ]
 `;
 
-exports[`getEvents works 2`] = `"((type = \\"death\\" and target.type != \\"pet\\")"`;
+exports[`getEvents works 2`] = `"target.name != 'Mire Fertilizer' and ((type = \\"death\\" and target.type != \\"pet\\")"`;
 
 exports[`getEvents works 3`] = `"(ability.id = 300155 and type = \\"begincast\\"))"`;
 
@@ -33409,7 +33409,7 @@ exports[`getEvents works 19`] = `"(ability.name = \\"Sanguine Ichor\\" and ((tar
 
 exports[`getEvents works 20`] = `"(type = \\"damage\\" and target.type = \\"player\\" and ability.id = 209862)"`;
 
-exports[`getEvents works 21`] = `"((type = \\"death\\" and target.type != \\"pet\\")"`;
+exports[`getEvents works 21`] = `"target.name != 'Mire Fertilizer' and ((type = \\"death\\" and target.type != \\"pet\\")"`;
 
 exports[`getEvents works 22`] = `"(ability.id = 300155 and type = \\"begincast\\"))"`;
 
@@ -33441,7 +33441,7 @@ exports[`getEvents works 35`] = `"(ability.name = \\"Sanguine Ichor\\" and ((tar
 
 exports[`getEvents works 36`] = `"(type = \\"damage\\" and target.type = \\"player\\" and ability.id = 209862)"`;
 
-exports[`getEvents works 37`] = `"((type = \\"death\\" and target.type != \\"pet\\")"`;
+exports[`getEvents works 37`] = `"target.name != 'Mire Fertilizer' and ((type = \\"death\\" and target.type != \\"pet\\")"`;
 
 exports[`getEvents works 38`] = `"(ability.id = 300155 and type = \\"begincast\\"))"`;
 
@@ -33481,7 +33481,7 @@ exports[`getEvents works 55`] = `"(ability.name = \\"Sanguine Ichor\\" and ((tar
 
 exports[`getEvents works 56`] = `"(type = \\"damage\\" and target.type = \\"player\\" and ability.id = 209862)"`;
 
-exports[`getEvents works 57`] = `"((type = \\"death\\" and target.type != \\"pet\\")"`;
+exports[`getEvents works 57`] = `"target.name != 'Mire Fertilizer' and ((type = \\"death\\" and target.type != \\"pet\\")"`;
 
 exports[`getEvents works 58`] = `"(ability.id = 300155 and type = \\"begincast\\"))"`;
 
@@ -33511,7 +33511,7 @@ exports[`getEvents works 70`] = `"(ability.name = \\"Sanguine Ichor\\" and ((tar
 
 exports[`getEvents works 71`] = `"(type = \\"damage\\" and target.type = \\"player\\" and ability.id = 209862)"`;
 
-exports[`getEvents works 72`] = `"((type = \\"death\\" and target.type != \\"pet\\")"`;
+exports[`getEvents works 72`] = `"target.name != 'Mire Fertilizer' and ((type = \\"death\\" and target.type != \\"pet\\")"`;
 
 exports[`getEvents works 73`] = `"(ability.id = 300155 and type = \\"begincast\\"))"`;
 
@@ -33547,7 +33547,7 @@ exports[`getEvents works 88`] = `"(ability.name = \\"Sanguine Ichor\\" and ((tar
 
 exports[`getEvents works 89`] = `"(type = \\"damage\\" and target.type = \\"player\\" and ability.id = 209862)"`;
 
-exports[`getEvents works 90`] = `"((type = \\"death\\" and target.type != \\"pet\\")"`;
+exports[`getEvents works 90`] = `"target.name != 'Mire Fertilizer' and ((type = \\"death\\" and target.type != \\"pet\\")"`;
 
 exports[`getEvents works 91`] = `"(ability.id = 300155 and type = \\"begincast\\"))"`;
 
@@ -33579,7 +33579,7 @@ exports[`getEvents works 104`] = `"(ability.name = \\"Sanguine Ichor\\" and ((ta
 
 exports[`getEvents works 105`] = `"(type = \\"damage\\" and target.type = \\"player\\" and ability.id = 209862)"`;
 
-exports[`getEvents works 106`] = `"((type = \\"death\\" and target.type != \\"pet\\")"`;
+exports[`getEvents works 106`] = `"target.name != 'Mire Fertilizer' and ((type = \\"death\\" and target.type != \\"pet\\")"`;
 
 exports[`getEvents works 107`] = `"(ability.id = 300155 and type = \\"begincast\\"))"`;
 
@@ -33611,7 +33611,7 @@ exports[`getEvents works 120`] = `"(ability.name = \\"Sanguine Ichor\\" and ((ta
 
 exports[`getEvents works 121`] = `"(type = \\"damage\\" and target.type = \\"player\\" and ability.id = 209862)"`;
 
-exports[`getEvents works 122`] = `"((type = \\"death\\" and target.type != \\"pet\\")"`;
+exports[`getEvents works 122`] = `"target.name != 'Mire Fertilizer' and ((type = \\"death\\" and target.type != \\"pet\\")"`;
 
 exports[`getEvents works 123`] = `"(ability.id = 300155 and type = \\"begincast\\"))"`;
 
@@ -33643,7 +33643,7 @@ exports[`getEvents works 136`] = `"(ability.name = \\"Sanguine Ichor\\" and ((ta
 
 exports[`getEvents works 137`] = `"(type = \\"damage\\" and target.type = \\"player\\" and ability.id = 209862)"`;
 
-exports[`getEvents works 138`] = `"((type = \\"death\\" and target.type != \\"pet\\")"`;
+exports[`getEvents works 138`] = `"target.name != 'Mire Fertilizer' and ((type = \\"death\\" and target.type != \\"pet\\")"`;
 
 exports[`getEvents works 139`] = `"(ability.id = 300155 and type = \\"begincast\\"))"`;
 

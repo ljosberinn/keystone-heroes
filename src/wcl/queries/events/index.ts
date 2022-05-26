@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { Affixes } from "@prisma/client";
 
 import type { DungeonIDs } from "../../../db/data/dungeons";
@@ -53,7 +54,7 @@ const generateFilterExpression = ({
   dungeonID,
   affixes,
 }: Pick<EventParams, "dungeonID" | "affixes">) => {
-  return [
+  const dynamic = [
     deathFilterExpression,
     remarkableSpellFilterExpression,
     engineeringBattleRezExpression,
@@ -69,6 +70,8 @@ const generateFilterExpression = ({
     .flat()
     .map((part) => `(${part})`)
     .join(" or ");
+
+  return `target.name != 'Mire Fertilizer' and ${dynamic}`;
 };
 
 export const getEvents = async (
@@ -85,12 +88,14 @@ export const getEvents = async (
     affixes: params.affixes,
   });
 
+  console.time("recursiveGetEvents");
   const allEvents = await recursiveGetEvents<AllTrackedEventTypes>({
     startTime: params.startTime,
     endTime: params.endTime,
     reportID: params.reportID,
     filterExpression,
   });
+  console.timeEnd("recursiveGetEvents");
 
   const actorIDSet = new Set(
     playerMetaInformation.map((dataset) => dataset.actorID)
