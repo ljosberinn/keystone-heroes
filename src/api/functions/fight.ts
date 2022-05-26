@@ -1302,10 +1302,12 @@ const getResponseOrRetrieveAndCreateFight = async (
   json: FightResponse;
   cache: boolean;
 }> => {
+  console.time("loadAndTransformPulls");
   const dungeonPulls = await loadAndTransformPulls({
     reportID,
     fightID: maybeStoredFight.fightID,
   });
+  console.timeEnd("loadAndTransformPulls");
 
   if (dungeonPulls.length === 0) {
     return {
@@ -1347,8 +1349,10 @@ const getResponseOrRetrieveAndCreateFight = async (
     };
   }
 
+  console.time("loadEvents");
   const { allEvents, playerDeathEvents, enemyDeathEvents, explosiveTargetID } =
     await loadEvents(maybeStoredFight, reportID, dungeonID);
+  console.timeEnd("loadEvents");
 
   const pullNPCDeathEventMap = createPullNPCDeathEventMap(
     dungeonPulls,
@@ -1368,10 +1372,12 @@ const getResponseOrRetrieveAndCreateFight = async (
     }
   );
 
+  console.time("persistPulls");
   const persistedPulls = await persistPulls(
     pullsWithWipesAndPercent,
     maybeStoredFight.id
   );
+  console.timeEnd("persistPulls");
 
   const persistableMaps =
     persistedPulls.flatMap<Prisma.PullZoneCreateManyInput>((pull) => {
@@ -1473,6 +1479,8 @@ const getResponseOrRetrieveAndCreateFight = async (
     }),
   });
 
+  console.time("transaction");
+
   await prisma.$transaction([
     // only persist this data if it wasnt previously
     ...(isFirstRetrieval
@@ -1532,8 +1540,11 @@ const getResponseOrRetrieveAndCreateFight = async (
       data: persistablePullEvents,
     }),
   ]);
+  console.timeEnd("transaction");
 
+  console.time("loadExistingFight");
   const rawFight = await loadExistingFight(reportID, fightID);
+  console.timeEnd("loadExistingFight");
 
   if (!fightHasDungeon(rawFight)) {
     return {
@@ -1576,7 +1587,9 @@ const handler: RequestHandler<Request, FightResponse> = async (req, res) => {
       scope.setTag("fightID", fightID);
     });
 
+    console.time("loadExistingFight");
     const maybeStoredFight = await loadExistingFight(reportID, fightID);
+    console.timeEnd("loadExistingFight");
 
     if (!maybeStoredFight) {
       res.setHeader(cacheControlKey, NO_CACHE);
@@ -1584,11 +1597,13 @@ const handler: RequestHandler<Request, FightResponse> = async (req, res) => {
       return;
     }
 
+    console.time("getResponseOrRetrieveAndCreateFight");
     const { status, json, cache } = await getResponseOrRetrieveAndCreateFight(
       maybeStoredFight,
       reportID,
       fightID
     );
+    console.timeEnd("getResponseOrRetrieveAndCreateFight");
 
     if (cache) {
       res.setHeader(cacheControlKey, STALE_WHILE_REVALIDATE_SEVEN_DAYS);
