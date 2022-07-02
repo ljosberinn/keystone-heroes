@@ -9652,6 +9652,35 @@
       },
       {
         "kind": "ENUM",
+        "name": "SubscriptionStatusType",
+        "description": "The type of Subscription.",
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": [
+          {
+            "name": "Gold",
+            "description": "Gold Tier subscription",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "Platinum",
+            "description": "Platinum Tier subscription",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "Silver",
+            "description": "Silver Tier subscription",
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
         "name": "TableDataType",
         "description": "The type of table to examine.",
         "fields": null,

@@ -486,7 +486,6 @@ enum RankingTimeframeType {
 }
 
 """
-
 """
 scalar JSON
 
@@ -4090,6 +4089,26 @@ type ExtendedZone {
     """
     soulbindID: Int = 0
   ): JSON
+}
+
+"""
+The type of Subscription.
+"""
+enum SubscriptionStatusType {
+  """
+  Silver Tier subscription
+  """
+  Silver
+
+  """
+  Gold Tier subscription
+  """
+  Gold
+
+  """
+  Platinum Tier subscription
+  """
+  Platinum
 }
 
 type ViewModels {

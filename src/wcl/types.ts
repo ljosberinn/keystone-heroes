@@ -1685,6 +1685,16 @@ export type SubregionServersArgs = {
   page?: InputMaybe<Scalars["Int"]>;
 };
 
+/** The type of Subscription. */
+export enum SubscriptionStatusType {
+  /** Gold Tier subscription */
+  Gold = "Gold",
+  /** Platinum Tier subscription */
+  Platinum = "Platinum",
+  /** Silver Tier subscription */
+  Silver = "Silver",
+}
+
 /** The type of table to examine. */
 export enum TableDataType {
   /** Buffs. */
