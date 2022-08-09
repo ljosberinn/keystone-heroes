@@ -1465,7 +1465,11 @@ exports[`/api/report existing report ongoing report - new fights 15`] = `
           "averageItemLevel": 223.4,
           "chests": 1,
           "dps": 16927,
-          "dungeon": {},
+          "dungeon": {
+            "connect": {
+              "id": 2289,
+            },
+          },
           "endTime": 1910367,
           "fightID": 99,
           "hps": 5401,
@@ -1680,7 +1684,7 @@ exports[`/api/report existing report ongoing report - new fights 16`] = `
     },
     {
       "averageItemLevel": 223.4,
-      "dungeon": null,
+      "dungeon": 2289,
       "id": 99,
       "keystoneBonus": 1,
       "keystoneLevel": 17,
