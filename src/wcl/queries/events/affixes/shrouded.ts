@@ -135,11 +135,15 @@ export const getShroudedEvents = (
     return [];
   }
 
-  return [
+  const events = [
     ...allEvents.filter(isShroudedEvent),
     ...allEvents.filter(isZulGamuxBrokerRestorationEvent),
     ...allEvents.filter(isInfiltratorBrokerRestorationEvent),
     ...allEvents.filter(isShroudedApplyBuffStackEvent),
     ...allEvents.filter(isShroudedApplyDebuffEvent),
   ];
+
+  console.log(`found ${events.length} Shrouded events`);
+
+  return events;
 };

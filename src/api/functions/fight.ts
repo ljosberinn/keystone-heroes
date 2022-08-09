@@ -1332,8 +1332,6 @@ const getResponseOrRetrieveAndCreateFight = async (
     dungeonPulls
   );
 
-  console.log(dungeonID, { maybeStoredFight });
-
   if (!dungeonID) {
     return {
       status: UNPROCESSABLE_ENTITY,
