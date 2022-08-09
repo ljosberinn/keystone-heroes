@@ -23,8 +23,6 @@ import {
 import {
   shroudedAbilities,
   shroudedBuffs,
-  shroudedNathrezimInfiltratorID,
-  shroudedZulgamuxID,
 } from "../wcl/queries/events/affixes/shrouded";
 import { SPITEFUL } from "../wcl/queries/events/affixes/spiteful";
 import { STORMING } from "../wcl/queries/events/affixes/storming";

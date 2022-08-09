@@ -22,6 +22,10 @@ const dungeonExpressionMap: Record<DungeonIDs, string[]> = {
   [DungeonIDs.THE_NECROTIC_WAKE]: nwFilterExpression,
   [DungeonIDs.MISTS_OF_TIRNA_SCITHE]: motsFilterExpression,
   [DungeonIDs.TAZAVESH]: [],
+  [DungeonIDs.GRIMRAIL_DEPOT]: [],
+  [DungeonIDs.MECHAGON]: [],
+  [DungeonIDs.KARAZHAN]: [],
+  [DungeonIDs.IRON_DOCKS]: [],
 };
 
 export const getDungeonExpression = (id: DungeonIDs): string[] =>
