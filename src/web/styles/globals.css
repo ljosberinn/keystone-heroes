@@ -38,6 +38,22 @@ a [title] {
 .bg-top {
   background-image: url(/static/dungeons/top-700.jpg);
 }
+.bg-uk {
+  background-image: url(/static/dungeons/uk-700.jpg);
+}
+.bg-lk {
+  background-image: url(/static/dungeons/lk-700.jpg);
+}
+.bg-ws,
+.bg-yj {
+  background-image: url(/static/dungeons/ws-700.jpg);
+}
+.bg-id {
+  background-image: url(/static/dungeons/id-700.jpg);
+}
+.bg-gd {
+  background-image: url(/static/dungeons/gd-700.jpg);
+}
 .bg-fallback {
   background-image: url(/static/dungeons/fallback-700.jpg);
 }

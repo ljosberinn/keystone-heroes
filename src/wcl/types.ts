@@ -312,68 +312,6 @@ export type Expansion = {
   zones?: Maybe<Maybe<Zone>[]>;
 };
 
-export type ExtendedData = {
-  __typename?: "ExtendedData";
-  /** Obtain a specific zone by its ID. */
-  zone?: Maybe<ExtendedZone>;
-};
-
-export type ExtendedDataZoneArgs = {
-  id?: InputMaybe<Scalars["Int"]>;
-};
-
-export type ExtendedZone = {
-  __typename?: "ExtendedZone";
-  /** The bracket information for this zone. This field will be null if the zone does not support brackets. */
-  brackets?: Maybe<Bracket>;
-  /** Player rankings information for a zone. This data is not considered frozen, and it can change without notice. Use at your own risk. */
-  characterRankings?: Maybe<Scalars["JSON"]>;
-  /** A list of all the difficulties supported for this zone. */
-  difficulties?: Maybe<Maybe<Difficulty>[]>;
-  /** The encounters found within this zone. */
-  encounters?: Maybe<Maybe<Encounter>[]>;
-  /** The expansion that this zone belongs to. */
-  expansion: Expansion;
-  /** Fight rankings information for a zone. This data is not considered frozen, and it can change without notice. Use at your own risk. */
-  fightRankings?: Maybe<Scalars["JSON"]>;
-  /** Whether or not the entire zone (including all its partitions) is permanently frozen. When a zone is frozen, data involving that zone will never change and can be cached forever. */
-  frozen: Scalars["Boolean"];
-  /** The ID of the zone. */
-  id: Scalars["Int"];
-  /** The name of the zone. */
-  name: Scalars["String"];
-  /** A list of all the partitions supported for this zone. */
-  partitions?: Maybe<Maybe<Partition>[]>;
-};
-
-export type ExtendedZoneCharacterRankingsArgs = {
-  bracket?: InputMaybe<Scalars["Int"]>;
-  className?: InputMaybe<Scalars["String"]>;
-  covenantID?: InputMaybe<Scalars["Int"]>;
-  difficulty?: InputMaybe<Scalars["Int"]>;
-  filter?: InputMaybe<Scalars["String"]>;
-  metric?: InputMaybe<CharacterRankingMetricType>;
-  page?: InputMaybe<Scalars["Int"]>;
-  partition?: InputMaybe<Scalars["Int"]>;
-  serverRegion?: InputMaybe<Scalars["String"]>;
-  serverSlug?: InputMaybe<Scalars["String"]>;
-  size?: InputMaybe<Scalars["Int"]>;
-  soulbindID?: InputMaybe<Scalars["Int"]>;
-  specName?: InputMaybe<Scalars["String"]>;
-};
-
-export type ExtendedZoneFightRankingsArgs = {
-  bracket?: InputMaybe<Scalars["Int"]>;
-  difficulty?: InputMaybe<Scalars["Int"]>;
-  filter?: InputMaybe<Scalars["String"]>;
-  metric?: InputMaybe<FightRankingMetricType>;
-  page?: InputMaybe<Scalars["Int"]>;
-  partition?: InputMaybe<Scalars["Int"]>;
-  serverRegion?: InputMaybe<Scalars["String"]>;
-  serverSlug?: InputMaybe<Scalars["String"]>;
-  size?: InputMaybe<Scalars["Int"]>;
-};
-
 /** All the possible metrics. */
 export enum FightRankingMetricType {
   /** Choose an appropriate default depending on the other selected parameters. */
@@ -1686,9 +1624,24 @@ export type SubregionServersArgs = {
 };
 
 /** The type of Subscription. */
-export enum SubscriptionStatusType {
+export enum SubscriptionStatus {
   /** Gold Tier subscription */
   Gold = "Gold",
+  /**
+   * Legacy Gold Tier subscription
+   * @deprecated Legacy Gold subscriptions are not available for new users.
+   */
+  LegacyGold = "LegacyGold",
+  /**
+   * Legacy Platinum Tier subscription
+   * @deprecated Legacy Platinum subscriptions are not available for new users.
+   */
+  LegacyPlatinum = "LegacyPlatinum",
+  /**
+   * Legacy Silver Tier subscription
+   * @deprecated Legacy Silver subscriptions are not available for new users.
+   */
+  LegacySilver = "LegacySilver",
   /** Platinum Tier subscription */
   Platinum = "Platinum",
   /** Silver Tier subscription */
@@ -1756,10 +1709,14 @@ export type ViewModels = {
   __typename?: "ViewModels";
   article?: Maybe<Scalars["JSON"]>;
   articleCategories?: Maybe<Scalars["JSON"]>;
+  articleCategory?: Maybe<Scalars["JSON"]>;
+  articleIndexPage?: Maybe<Scalars["JSON"]>;
   articleSlugs?: Maybe<Scalars["JSON"]>;
+  cmsNavigation?: Maybe<Scalars["JSON"]>;
   game?: Maybe<Scalars["JSON"]>;
   googleAnalytics?: Maybe<Scalars["JSON"]>;
   headerTitle?: Maybe<Scalars["JSON"]>;
+  pageOfArticlePreviews?: Maybe<Scalars["JSON"]>;
   snippets?: Maybe<Scalars["JSON"]>;
 };
 
@@ -1769,8 +1726,26 @@ export type ViewModelsArticleArgs = {
   siteName?: InputMaybe<Scalars["String"]>;
 };
 
+export type ViewModelsArticleCategoryArgs = {
+  articleCategorySlug?: InputMaybe<Scalars["String"]>;
+};
+
+export type ViewModelsArticleIndexPageArgs = {
+  siteName?: InputMaybe<Scalars["String"]>;
+};
+
 export type ViewModelsArticleSlugsArgs = {
   articleCategorySlug?: InputMaybe<Scalars["String"]>;
+  siteName?: InputMaybe<Scalars["String"]>;
+};
+
+export type ViewModelsCmsNavigationArgs = {
+  currentSlug?: InputMaybe<Scalars["String"]>;
+};
+
+export type ViewModelsPageOfArticlePreviewsArgs = {
+  articleCategorySlug?: InputMaybe<Scalars["String"]>;
+  pageNumber?: InputMaybe<Scalars["Int"]>;
   siteName?: InputMaybe<Scalars["String"]>;
 };
 

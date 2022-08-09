@@ -44,6 +44,12 @@ import type { EventParams } from "../../wcl/queries/events";
 import { getEvents } from "../../wcl/queries/events";
 import { EXPLOSIVE } from "../../wcl/queries/events/affixes/explosive";
 import {
+  defaultBrokerRestorationID,
+  shroudedNathrezimInfiltratorID,
+  shroudedZulgamuxID,
+  zulgamuxBrokerRestorationID,
+} from "../../wcl/queries/events/affixes/shrouded";
+import {
   tormentedAbilityGameIDSet,
   tormentedLieutenantIDSet,
   tormentedLieutenants,
@@ -54,6 +60,8 @@ import type {
   DeathEvent,
   BeginCastEvent,
   DamageEvent,
+  AllTrackedEventTypes,
+  CastEvent,
 } from "../../wcl/queries/events/types";
 import { processEvents } from "../../wcl/transform";
 import type {
@@ -1324,6 +1332,8 @@ const getResponseOrRetrieveAndCreateFight = async (
     dungeonPulls
   );
 
+  console.log(dungeonID, { maybeStoredFight });
+
   if (!dungeonID) {
     return {
       status: UNPROCESSABLE_ENTITY,
@@ -1335,8 +1345,8 @@ const getResponseOrRetrieveAndCreateFight = async (
   }
 
   const dungeon = findDungeonByIDAndMaps(
-    dungeonID,
-    new Set(dungeonPulls.flatMap((pull) => pull.maps))
+    new Set(dungeonPulls.flatMap((pull) => pull.maps)),
+    { id: dungeonID }
   );
 
   if (!dungeon) {
@@ -1369,7 +1379,8 @@ const getResponseOrRetrieveAndCreateFight = async (
       playerDeathEvents,
       deathCountMap: pullNPCDeathCountMap,
       deathEventMap: pullNPCDeathEventMap,
-    }
+    },
+    allEvents
   );
 
   console.time("persistPulls");
@@ -1918,6 +1929,29 @@ type PullWipePercentMeta = {
   deathCountMap: Record<number, Record<number, number>>;
 };
 
+const findShroudedRestorationCasts = (
+  casts: CastEvent[],
+  pull: Omit<PersistableDungeonPull, "percent" | "isWipe" | "count">,
+  allPulls: Omit<PersistableDungeonPull, "percent" | "isWipe" | "count">[]
+) => {
+  const restorationCastsDuringThisPull = casts.filter(
+    (event) =>
+      event.timestamp >= pull.startTime && event.timestamp <= pull.endTime
+  );
+
+  const nextPull = allPulls[allPulls.indexOf(pull) + 1];
+
+  const restorationCastsBeforeNextPull = nextPull
+    ? casts.filter(
+        (event) =>
+          event.timestamp >= pull.endTime &&
+          event.timestamp <= nextPull.startTime
+      )
+    : [];
+
+  return [...restorationCastsDuringThisPull, ...restorationCastsBeforeNextPull];
+};
+
 const calculatePullsWithWipesAndPercent = (
   pulls: Omit<PersistableDungeonPull, "percent" | "isWipe" | "count">[],
   {
@@ -1926,7 +1960,8 @@ const calculatePullsWithWipesAndPercent = (
     playerDeathEvents,
     deathEventMap,
     deathCountMap,
-  }: PullWipePercentMeta
+  }: PullWipePercentMeta,
+  allEvents: AllTrackedEventTypes[]
 ): PersistableDungeonPull[] => {
   const hasNoWipes = playerDeathEvents.length < 5;
 
@@ -1936,6 +1971,50 @@ const calculatePullsWithWipesAndPercent = (
     dungeonID === DungeonIDs.SPIRES_OF_ASCENSION
       ? Object.fromEntries([...SOA_FINAL_BOSS_ANGELS].map((id) => [id, false]))
       : {};
+
+  const { infiltratorTargetID, zulgamuxTargetID } = pulls.reduce<{
+    infiltratorTargetID: number | null;
+    zulgamuxTargetID: number | null;
+  }>(
+    (acc, pull) => {
+      if (acc.infiltratorTargetID && acc.zulgamuxTargetID) {
+        return acc;
+      }
+
+      if (!acc.infiltratorTargetID) {
+        const match = pull.enemyNPCs.find(
+          (npc) => npc.gameID === shroudedNathrezimInfiltratorID
+        );
+
+        if (match) {
+          acc.infiltratorTargetID = match.id;
+        }
+      }
+
+      if (!acc.zulgamuxTargetID) {
+        const match = pull.enemyNPCs.find(
+          (npc) => npc.gameID === shroudedZulgamuxID
+        );
+
+        if (match) {
+          acc.zulgamuxTargetID = match.id;
+        }
+      }
+
+      return acc;
+    },
+    { infiltratorTargetID: null, zulgamuxTargetID: null }
+  );
+
+  const shroudedRestorationCastEvents =
+    infiltratorTargetID || zulgamuxTargetID
+      ? allEvents.filter(
+          (event): event is CastEvent =>
+            event.type === "cast" &&
+            (event.abilityGameID === defaultBrokerRestorationID ||
+              event.abilityGameID === zulgamuxBrokerRestorationID)
+        )
+      : [];
 
   return pulls.reduce<PersistableDungeonPull[]>((acc, pull, index) => {
     if (skipNextPull) {
@@ -1955,6 +2034,37 @@ const calculatePullsWithWipesAndPercent = (
       // not appear as death event
       ...(isLastPull ? pull.enemyNPCs.map((npc) => npc.id) : []),
     ]);
+
+    if (zulgamuxTargetID || infiltratorTargetID) {
+      const allEvents = findShroudedRestorationCasts(
+        shroudedRestorationCastEvents,
+        pull,
+        pulls
+      );
+
+      if (allEvents.length > 0) {
+        if (!(pull.startTime in deathCountMap)) {
+          deathCountMap[pull.startTime] = {};
+        }
+
+        allEvents.forEach((cast) => {
+          const targetIDToAdd =
+            cast.abilityGameID === defaultBrokerRestorationID
+              ? infiltratorTargetID
+              : zulgamuxTargetID;
+
+          if (targetIDToAdd) {
+            if (deathCountMap[pull.startTime][targetIDToAdd]) {
+              deathCountMap[pull.startTime][targetIDToAdd] += 1;
+            } else {
+              deathCountMap[pull.startTime][targetIDToAdd] = 1;
+            }
+
+            killedNPCTargetIDsOfThisPull.add(targetIDToAdd);
+          }
+        });
+      }
+    }
 
     /**
      * EXPERIMENTAL
@@ -2032,6 +2142,7 @@ const calculatePullsWithWipesAndPercent = (
           // merge fight duration
           pull.endTime = nextPull.endTime;
           skipNextPull = true;
+
           return true;
         }
       }
@@ -2042,6 +2153,65 @@ const calculatePullsWithWipesAndPercent = (
 
       return wasKilledDuringThisPull || isBoss;
     });
+
+    // kinda cursed. move over non death events of shrouded mobs to this pull
+    if (skipNextPull) {
+      const nextPull = pulls[index + 1];
+
+      if (nextPull) {
+        const allEvents = findShroudedRestorationCasts(
+          shroudedRestorationCastEvents,
+          nextPull,
+          pulls
+        );
+
+        const amountAndTypesToAdd = allEvents.reduce(
+          (acc, event) => {
+            if (event.abilityGameID === defaultBrokerRestorationID) {
+              acc.infiltrator += 1;
+            }
+
+            if (event.abilityGameID === zulgamuxBrokerRestorationID) {
+              acc.zulgamux = 1;
+            }
+
+            return acc;
+          },
+          {
+            infiltrator: 0,
+            zulgamux: 0,
+          }
+        );
+
+        if (infiltratorTargetID && amountAndTypesToAdd.infiltrator > 0) {
+          if (infiltratorTargetID in deathCountMap[pull.startTime]) {
+            deathCountMap[pull.startTime][infiltratorTargetID] +=
+              amountAndTypesToAdd.infiltrator;
+          } else {
+            deathCountMap[pull.startTime][infiltratorTargetID] =
+              amountAndTypesToAdd.infiltrator;
+          }
+
+          if (!enemyNPCs.some((npc) => npc.id === infiltratorTargetID)) {
+            enemyNPCs.push({
+              id: infiltratorTargetID,
+              gameID: shroudedNathrezimInfiltratorID,
+            });
+          }
+        }
+
+        if (zulgamuxTargetID && amountAndTypesToAdd.zulgamux > 0) {
+          deathCountMap[pull.startTime][zulgamuxTargetID] = 1;
+
+          if (!enemyNPCs.some((npc) => npc.id === zulgamuxTargetID)) {
+            enemyNPCs.push({
+              id: zulgamuxTargetID,
+              gameID: shroudedZulgamuxID,
+            });
+          }
+        }
+      }
+    }
 
     if (enemyNPCs.length === 0) {
       return acc;
@@ -2155,7 +2325,7 @@ export const calculateTotalPercent = (
   dungeonID: number,
   maps: Set<number>
 ): number => {
-  const dungeon = findDungeonByIDAndMaps(dungeonID, maps);
+  const dungeon = findDungeonByIDAndMaps(maps, { id: dungeonID });
 
   if (!dungeon) {
     return 0;

@@ -20,6 +20,12 @@ import {
   SANGUINE_ICHOR_DAMAGE,
   SANGUINE_ICHOR_HEALING,
 } from "../wcl/queries/events/affixes/sanguine";
+import {
+  shroudedAbilities,
+  shroudedBuffs,
+  shroudedNathrezimInfiltratorID,
+  shroudedZulgamuxID,
+} from "../wcl/queries/events/affixes/shrouded";
 import { SPITEFUL } from "../wcl/queries/events/affixes/spiteful";
 import { STORMING } from "../wcl/queries/events/affixes/storming";
 import {
@@ -856,6 +862,28 @@ async function create() {
         },
       ])
     ),
+
+    ...Object.fromEntries(
+      shroudedAbilities.map((ability) => [
+        ability.id,
+        {
+          name: ability.name,
+          icon: ability.icon,
+          cd: 0,
+        },
+      ])
+    ),
+
+    ...Object.fromEntries(
+      shroudedBuffs.map((ability) => [
+        ability.id,
+        {
+          name: ability.name,
+          icon: ability.icon,
+          cd: 0,
+        },
+      ])
+    ),
   };
 
   const targetPath = resolve("src/web/staticData.ts");
@@ -905,6 +933,15 @@ export const PF = JSON.parse(\`${JSON.stringify(PF)}\`);
 export const DOS_URN = ${DOS_URN};
 export const TOP_BANNER_AURA = ${TOP_BANNER_AURA};
 export const NW = JSON.parse(\`${JSON.stringify(NW)}\`);
+export const SHROUDED = new Set<number>(
+${JSON.stringify([
+  ...shroudedBuffs.map((buff) => buff.id),
+  ...shroudedAbilities.map((ability) => ability.id),
+])}
+);
+export const shroudedBuffs: {id: number; name: string; icon: string}[] = JSON.parse(\`${JSON.stringify(
+    shroudedBuffs
+  )}\`);
 
 type StaticDataMap = Record<number, { name: string, icon: string }>;
 

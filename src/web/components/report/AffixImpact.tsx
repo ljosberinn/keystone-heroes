@@ -13,6 +13,7 @@ import {
   BURSTING,
   NECROTIC,
   ENCRYPTED,
+  SHROUDED,
 } from "../../staticData";
 import { redText, greenText } from "../../styles/tokens";
 import { createWCLUrl, timeDurationToString } from "../../utils";
@@ -27,7 +28,9 @@ import type {
   BurstingMetrics,
   NecroticMetrics,
   EncryptedMetrics,
+  ShroudedMetrics,
 } from "../../utils/affixes";
+import { calculateShroudedMetrics } from "../../utils/affixes";
 import {
   calculateExplosiveMetrics,
   calculateQuakingMetrics,
@@ -59,6 +62,7 @@ type Stats = {
   bursting: BurstingMetrics;
   necrotic: NecroticMetrics;
   encrypted: EncryptedMetrics;
+  shrouded: ShroudedMetrics;
   player: FightSuccessResponse["player"];
 };
 
@@ -86,6 +90,7 @@ const useAffixSpecificStats = (): Stats => {
     bursting: calculateBurstingMetrics(params),
     necrotic: calculateNecroticMetrics(params),
     encrypted: calculateEncryptedMetrics(params),
+    shrouded: calculateShroudedMetrics(params),
     player,
   };
 };
@@ -105,6 +110,7 @@ export function AffixImpact(): JSX.Element {
     bursting,
     necrotic,
     encrypted,
+    shrouded,
   } = useAffixSpecificStats();
 
   const playerIDClassInfoMap = Object.fromEntries(
@@ -210,6 +216,55 @@ export function AffixImpact(): JSX.Element {
                           source: player.actorID,
                           pins: `2$Off$244F4B$expression$type = "damage" and target.type = "player" and ability.id in (${[
                             ...ENCRYPTED,
+                          ].join(", ")})`,
+                        })}
+                        key={player.actorID}
+                        className="inline-flex space-x-2"
+                      >
+                        <span className="w-6 h-6">
+                          <SpecIcon
+                            size={6}
+                            class={meta.className}
+                            spec={meta.specName}
+                            alt={player.name}
+                          />
+                        </span>
+                        <span className="md:hidden">{player.name}</span>
+                        <span
+                          className={damageTaken === 0 ? greenText : redText}
+                        >
+                          {formatNumber(damageTaken)}
+                        </span>
+                      </ExternalLink>
+                    );
+                  })}
+                </ImpactRow>
+              </>
+            )}
+
+            {shrouded.hasShrouded && (
+              <>
+                <GenericAffixInformationRow
+                  iconSrc="spell_shadow_nethercloak"
+                  iconAlt="Shrouded"
+                  title="Shrouded"
+                />
+                <ImpactRow>
+                  {player.map((player) => {
+                    const meta = playerIDClassInfoMap[player.id];
+
+                    const damageTaken = shrouded.damage[player.id] ?? 0;
+
+                    return (
+                      <ExternalLink
+                        href={createWCLUrl({
+                          fightID,
+                          reportID,
+                          // eslint-disable-next-line sonarjs/no-duplicate-string
+                          type: "damage-taken",
+                          source: player.actorID,
+                          pins: `2$Off$244F4B$expression$type = "damage" and target.type = "player" and ability.id in (${[
+                            ...SHROUDED,
                           ].join(", ")})`,
                         })}
                         key={player.actorID}

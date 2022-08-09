@@ -12,6 +12,7 @@ import {
 import type { FightSuccessResponse } from "../../../api/functions/fight";
 import type { DungeonIDs } from "../../../db/data/dungeons";
 import { useFight } from "../../../pages/report/[reportID]/[fightID]";
+import { shroudedAbilities } from "../../../wcl/queries/events/affixes/shrouded";
 import { usePrevious } from "../../hooks/usePrevious";
 import {
   DOS_URN,
@@ -29,6 +30,7 @@ import {
   TOP_BANNER_AURA,
   tormentedLieutenants,
   encryptedAbilities,
+  SHROUDED,
 } from "../../staticData";
 import type { MapOptionsStore } from "../../store";
 import {
@@ -53,7 +55,11 @@ import { TabList, TabButton, TabPanel, useTabs } from "../Tabs";
 import { SidebarNPC } from "./SidebarNPC";
 import { usePullNPCs } from "./hooks";
 import { usePointsOfInterest, PointsOfInterestProvider } from "./poi/context";
-import { findBloodlust, detectInvisibilityUsage } from "./utils";
+import {
+  findBloodlust,
+  detectInvisibilityUsage,
+  determineAbility,
+} from "./utils";
 
 const createRafCleanup = <K extends keyof WindowEventMap>(
   rafRef: MutableRefObject<number | null>,
@@ -357,6 +363,7 @@ export function Map(): JSX.Element {
                     type="tormentedLieutenant"
                   />
                   <KillIndicator fullscreen={fullscreen} type="encrypted" />
+                  <KillIndicator fullscreen={fullscreen} type="shrouded" />
 
                   <div
                     className={classnames(
@@ -493,7 +500,7 @@ function FullscreenNavigation() {
 }
 
 type KillIndicatorProps = {
-  type: "boss" | "tormentedLieutenant" | "encrypted";
+  type: "boss" | "tormentedLieutenant" | "encrypted" | "shrouded";
   fullscreen: boolean;
 };
 
@@ -534,13 +541,15 @@ function KillIndicator({ type, fullscreen }: KillIndicatorProps) {
     useMapOptions(killIndicatorSelector);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const { fight } = useFight();
-  const { pulls, meta, affixes } = fight;
+  const { pulls, meta, affixes, player } = fight;
   const rafRef = useRef<number | null>(null);
 
   const [left, setLeft] = useState("32px");
 
   const isBossType = type === "boss";
   const isTormentedType = type === "tormentedLieutenant";
+  const isShroudedType = type === "shrouded";
+  const isEncryptedType = type === "encrypted";
 
   useEffect(() => {
     const recalculate = () => {
@@ -570,26 +579,50 @@ function KillIndicator({ type, fullscreen }: KillIndicatorProps) {
     return createRafCleanup(rafRef, "resize", listener);
   }, [fullscreen, isBossType]);
 
-  if (
-    (!isBossType && !isTormentedType && !affixes.includes(130)) ||
-    (isTormentedType && !affixes.includes(128)) ||
-    (isBossType && !renderBossKillIndicator) ||
-    (!isBossType && !renderTormentedKillIndicator)
-  ) {
+  if (!isBossType && !renderTormentedKillIndicator) {
     return null;
   }
 
-  const filteredPulls = pulls.filter((pull) => {
-    if (isBossType) {
-      return pulls.filter((pull) => pull.hasBoss);
-    }
+  if (isShroudedType && !affixes.includes(131)) {
+    return null;
+  }
 
-    if (isTormentedType) {
-      return pull.npcs.some((npc) => isTormentedLieutenant(npc.id));
-    }
+  if (isBossType && !renderBossKillIndicator) {
+    return null;
+  }
 
-    return pull.npcs.some((npc) => isEncryptedMiniboss(npc.id));
-  });
+  if (isEncryptedType && !affixes.includes(130)) {
+    return null;
+  }
+
+  if (isTormentedType && !affixes.includes(128)) {
+    return null;
+  }
+
+  const shroudedEvents = isShroudedType
+    ? pulls
+        .flatMap((pull) => pull.events)
+        .filter(
+          (event) =>
+            event.type === "ApplyBuffStack" &&
+            event.ability &&
+            SHROUDED.has(event.ability.id)
+        )
+    : [];
+
+  const filteredPulls = isShroudedType
+    ? []
+    : pulls.filter((pull) => {
+        if (isBossType) {
+          return pulls.filter((pull) => pull.hasBoss);
+        }
+
+        if (isTormentedType) {
+          return pull.npcs.some((npc) => isTormentedLieutenant(npc.id));
+        }
+
+        return pull.npcs.some((npc) => isEncryptedMiniboss(npc.id));
+      });
 
   const position = isBossType ? "left-2" : "right-2";
 
@@ -610,7 +643,45 @@ function KillIndicator({ type, fullscreen }: KillIndicatorProps) {
         )}
         ref={containerRef}
       >
-        {type === "encrypted"
+        {type === "shrouded"
+          ? player.map((player) => {
+              const applyBuffStackEvents = shroudedEvents.filter(
+                (event) => event.targetPlayerID === player.id
+              );
+
+              const last =
+                applyBuffStackEvents[applyBuffStackEvents.length - 1];
+
+              if (!last || !last.ability) {
+                return null;
+              }
+
+              const count = last.stacks ?? 0;
+              const buff = determineAbility(last.ability?.id);
+
+              if (!buff) {
+                return null;
+              }
+
+              return (
+                <span className="flex justify-between w-full" key={player.id}>
+                  <span>{player.name}</span>
+                  <span className="hidden pl-2 md:block lg:hidden xl:block space-x-1">
+                    <span>{count}</span>
+
+                    <AbilityIcon
+                      icon={buff.icon}
+                      alt={buff.name}
+                      width={16}
+                      height={16}
+                      className="inline"
+                      title={buff.name}
+                    />
+                  </span>
+                </span>
+              );
+            })
+          : type === "encrypted"
           ? Object.entries(encryptedAbilities).map(([key, value]) => {
               const id = Number.parseInt(key);
 
@@ -622,7 +693,7 @@ function KillIndicator({ type, fullscreen }: KillIndicatorProps) {
               ).length;
 
               return (
-                <span className="flex justify-between block w-full" key={key}>
+                <span className="flex justify-between w-full" key={key}>
                   <span className="space-x-1">
                     <AbilityIcon
                       icon={value.icon}
@@ -1089,6 +1160,16 @@ const findEncryptedApplyDebuffEvent = (
   );
 };
 
+const shroudedDamageEvent = (
+  event: FightSuccessResponse["pulls"][number]["events"][number]
+): event is EncryptedEvent => {
+  return (
+    event.type === "DamageTaken" &&
+    event.ability !== null &&
+    SHROUDED.has(event.ability.id)
+  );
+};
+
 function findAffixSpecificPullIndicatorEvent(
   pull: PullIndicatorIconProps["pull"]
 ): { label: string; icon: string } | null {
@@ -1100,6 +1181,23 @@ function findAffixSpecificPullIndicatorEvent(
     return {
       icon: debuff.icon,
       label: debuff.name,
+    };
+  }
+
+  const shroudedDamage = pull.events.find(shroudedDamageEvent);
+
+  if (shroudedDamage?.ability) {
+    const icon = shroudedAbilities.find(
+      (ability) => ability.id === shroudedDamage.ability.id
+    );
+
+    if (!icon) {
+      return null;
+    }
+
+    return {
+      icon: icon.icon,
+      label: icon.name,
     };
   }
 

@@ -28,6 +28,7 @@ model Spec {
   Talent Talent[]
 
   Cooldown Cooldown[]
+
   @@unique([name, classID])
 }
 
@@ -122,6 +123,7 @@ model Week {
   season Season @relation(fields: [seasonID], references: [id])
 
   Report Report[]
+
   @@unique([seasonID, seasonWeekID])
 }
 
@@ -582,6 +584,7 @@ enum Affixes {
   Tormented
   Encrypted
   Infernal
+  Shrouded
 }
 
 enum Covenants {

@@ -3917,184 +3917,10 @@ type WorldData {
   ): [Zone]
 }
 
-type ExtendedData {
-  """
-  Obtain a specific zone by its ID.
-  """
-  zone(
-    """
-    Required. The ID of a specific zone.
-    """
-    id: Int
-  ): ExtendedZone
-}
-
-type ExtendedZone {
-  """
-  The ID of the zone.
-  """
-  id: Int!
-
-  """
-  The bracket information for this zone. This field will be null if the zone does not support brackets.
-  """
-  brackets: Bracket
-
-  """
-  A list of all the difficulties supported for this zone.
-  """
-  difficulties: [Difficulty]
-
-  """
-  The encounters found within this zone.
-  """
-  encounters: [Encounter]
-
-  """
-  The expansion that this zone belongs to.
-  """
-  expansion: Expansion!
-
-  """
-  Whether or not the entire zone (including all its partitions) is permanently frozen. When a zone is frozen, data involving that zone will never change and can be cached forever.
-  """
-  frozen: Boolean!
-
-  """
-  The name of the zone.
-  """
-  name: String!
-
-  """
-  A list of all the partitions supported for this zone.
-  """
-  partitions: [Partition]
-
-  """
-  Fight rankings information for a zone. This data is not considered frozen, and it can change without notice. Use at your own risk.
-  """
-  fightRankings(
-    """
-    Optional. A specific bracket (e.g., item level range) to use instead of overall rankings. For WoW, brackets are item levels or keystones. For FF, brackets are patches.
-    """
-    bracket: Int = 0
-
-    """
-    Optional. A specific difficulty to fetch rankings for. If omitted, the highest difficulty is used.
-    """
-    difficulty: Int = 0
-
-    """
-    Optional. A filter string for advanced searching. The syntax matches the one used on the web site exactly, so you can filter encounter rankings on the site to figure out the string to use.
-    """
-    filter: String = ""
-
-    """
-    Optional. Which page of rankings to fetch. By default the first page is used.
-    """
-    page: Int = 1
-
-    """
-    Optional. Whether or not to filter the rankings to a specific partition. By default, the latest partition is chosen.
-    """
-    partition: Int = 0
-
-    """
-    Optional. The short name of a region to filter to. If paired with a server slug, will uniquely identify a server. If used by itself, rankings for that specific region will be fetched.
-    """
-    serverRegion: String = ""
-
-    """
-    Optional. The slug for a specific server. Whether or not to filter rankings to a specific server. If omitted, data for all servers will be used.
-    """
-    serverSlug: String = ""
-
-    """
-    Optional. Whether or not to filter rankings to a specific size. If omitted, the first valid raid size will be used.
-    """
-    size: Int = 0
-
-    """
-    Optional. You can filter to a specific fight metric like speed or execution. If omitted, an appropriate default fight metric for the zone will be chosen.
-    """
-    metric: FightRankingMetricType = default
-  ): JSON
-
-  """
-  Player rankings information for a zone. This data is not considered frozen, and it can change without notice. Use at your own risk.
-  """
-  characterRankings(
-    """
-    Optional. A specific bracket (e.g., item level range) to use instead of overall rankings. For WoW, brackets are item levels or keystones. For FF, brackets are patches.
-    """
-    bracket: Int = 0
-
-    """
-    Optional. A specific difficulty to fetch rankings for. If omitted, the highest difficulty is used.
-    """
-    difficulty: Int = 0
-
-    """
-    Optional. A filter string for advanced searching. The syntax matches the one used on the web site exactly, so you can filter encounter rankings on the site to figure out the string to use.
-    """
-    filter: String = ""
-
-    """
-    Optional. Which page of rankings to fetch. By default the first page is used.
-    """
-    page: Int = 1
-
-    """
-    Optional. Whether or not to filter the rankings to a specific partition. By default, the latest partition is chosen.
-    """
-    partition: Int = 0
-
-    """
-    Optional. The short name of a region to filter to. If paired with a server slug, will uniquely identify a server. If used by itself, rankings for that specific region will be fetched.
-    """
-    serverRegion: String = ""
-
-    """
-    Optional. The slug for a specific server. Whether or not to filter rankings to a specific server. If omitted, data for all servers will be used.
-    """
-    serverSlug: String = ""
-
-    """
-    Optional. Whether or not to filter rankings to a specific size. If omitted, the first valid raid size will be used.
-    """
-    size: Int = 0
-
-    """
-    Optional. You can filter to a specific player metric like dps or hps. If omitted, an appropriate default player metric for the zone will be chosen.
-    """
-    metric: CharacterRankingMetricType = default
-
-    """
-    Optional. The slug for a specific class. Whether or not to filter rankings to a specific class. If omitted, data for all classes will be used.
-    """
-    className: String = "Any"
-
-    """
-    Optional. The slug for a specific spec. Whether or not to filter rankings to a specific spec. If omitted, data for all specs will be used.
-    """
-    specName: String = "Any"
-
-    """
-    Optional. The covenant ID to filter to if viewing Shadowlands rankings.
-    """
-    covenantID: Int = 0
-
-    """
-    Optional. The soulbind ID to filter to if viewing Shadowlands rankings.
-    """
-    soulbindID: Int = 0
-  ): JSON
-}
-
 """
 The type of Subscription.
 """
-enum SubscriptionStatusType {
+enum SubscriptionStatus {
   """
   Silver Tier subscription
   """
@@ -4109,12 +3935,37 @@ enum SubscriptionStatusType {
   Platinum Tier subscription
   """
   Platinum
+
+  """
+  Legacy Silver Tier subscription
+  """
+  LegacySilver
+    @deprecated(
+      reason: "Legacy Silver subscriptions are not available for new users."
+    )
+
+  """
+  Legacy Gold Tier subscription
+  """
+  LegacyGold
+    @deprecated(
+      reason: "Legacy Gold subscriptions are not available for new users."
+    )
+
+  """
+  Legacy Platinum Tier subscription
+  """
+  LegacyPlatinum
+    @deprecated(
+      reason: "Legacy Platinum subscriptions are not available for new users."
+    )
 }
 
 type ViewModels {
   googleAnalytics: JSON
   game: JSON
   headerTitle: JSON
+  articleCategory(articleCategorySlug: String): JSON
   articleCategories: JSON
   articleSlugs(articleCategorySlug: String, siteName: String): JSON
   article(
@@ -4122,5 +3973,12 @@ type ViewModels {
     articleCategorySlug: String
     siteName: String
   ): JSON
+  cmsNavigation(currentSlug: String): JSON
+  pageOfArticlePreviews(
+    articleCategorySlug: String
+    pageNumber: Int
+    siteName: String
+  ): JSON
   snippets(snippetSlugs: [String]): JSON
+  articleIndexPage(siteName: String): JSON
 }

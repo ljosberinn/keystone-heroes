@@ -48,6 +48,10 @@ import {
   getSanguineEvents,
 } from "./sanguine";
 import {
+  getShroudedEvents,
+  filterExpression as shroudedFilterExpression,
+} from "./shrouded";
+import {
   filterExpression as spitefulFilterExpression,
   getSpitefulEvents,
 } from "./spiteful";
@@ -92,6 +96,7 @@ const affixExpressionMap: Record<AffixWithEvents, string[]> = {
   [Affixes.Bolstering]: bolsteringFilterExpression,
   [Affixes.Tormented]: tormentedFilterExpression,
   [Affixes.Encrypted]: encryptedFilterExpression,
+  [Affixes.Shrouded]: shroudedFilterExpression,
 };
 
 export const getAffixExpression = (affixes: Affixes[]): string[] => {
@@ -143,6 +148,7 @@ export const filterAffixEvents = (
       ...explosiveEvents,
       ...getGrievousEvents(allEvents, affixSet),
       ...getNecroticEvents(allEvents, affixSet),
+      ...getShroudedEvents(allEvents, affixSet),
     ],
   };
 };

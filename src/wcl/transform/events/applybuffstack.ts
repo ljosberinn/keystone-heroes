@@ -1,6 +1,10 @@
 import { EventType } from "@prisma/client";
 
 import {
+  shroudedAbilities,
+  shroudedBuffs,
+} from "../../queries/events/affixes/shrouded";
+import {
   tormentedAbilityGameIDSet,
   tormentedBuffsAndDebuffs,
 } from "../../queries/events/affixes/tormented";
@@ -18,6 +22,8 @@ const relevantIDs = new Set<number>([
   ...Object.values(TRINKETS)
     .filter((ability) => ability.type.includes("applybuffstack"))
     .flatMap((ability) => ability.ids),
+  ...shroudedBuffs.map((buff) => buff.id),
+  ...shroudedAbilities.map((ability) => ability.id),
 ]);
 
 export const applyBuffStackProcessor: Processor<ApplyBuffStackEvent> = (

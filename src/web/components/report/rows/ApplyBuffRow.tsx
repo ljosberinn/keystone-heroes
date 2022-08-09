@@ -63,11 +63,7 @@ export default function ApplyBuffRow({
           event.sourcePlayerID === null && event.targetPlayerID === null
         }
         sourcePlayerID={
-          event.sourcePlayerID
-            ? event.sourcePlayerID
-            : event.targetPlayerID
-            ? event.targetPlayerID
-            : undefined
+          event.sourcePlayerID ?? event.targetPlayerID ?? undefined
         }
         playerIdIconMap={playerIdIconMap}
         transparent

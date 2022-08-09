@@ -1638,467 +1638,6 @@
         "possibleTypes": null
       },
       {
-        "kind": "OBJECT",
-        "name": "ExtendedData",
-        "description": null,
-        "fields": [
-          {
-            "name": "zone",
-            "description": "Obtain a specific zone by its ID.",
-            "args": [
-              {
-                "name": "id",
-                "description": "Required. The ID of a specific zone.",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              }
-            ],
-            "type": {
-              "kind": "OBJECT",
-              "name": "ExtendedZone",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          }
-        ],
-        "inputFields": null,
-        "interfaces": [],
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
-        "kind": "OBJECT",
-        "name": "ExtendedZone",
-        "description": null,
-        "fields": [
-          {
-            "name": "brackets",
-            "description": "The bracket information for this zone. This field will be null if the zone does not support brackets.",
-            "args": [],
-            "type": {
-              "kind": "OBJECT",
-              "name": "Bracket",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "characterRankings",
-            "description": "Player rankings information for a zone. This data is not considered frozen, and it can change without notice. Use at your own risk.",
-            "args": [
-              {
-                "name": "bracket",
-                "description": "Optional. A specific bracket (e.g., item level range) to use instead of overall rankings. For WoW, brackets are item levels or keystones. For FF, brackets are patches.",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                },
-                "defaultValue": "0",
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "className",
-                "description": "Optional. The slug for a specific class. Whether or not to filter rankings to a specific class. If omitted, data for all classes will be used.",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                },
-                "defaultValue": "\"Any\"",
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "covenantID",
-                "description": "Optional. The covenant ID to filter to if viewing Shadowlands rankings.",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                },
-                "defaultValue": "0",
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "difficulty",
-                "description": "Optional. A specific difficulty to fetch rankings for. If omitted, the highest difficulty is used.",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                },
-                "defaultValue": "0",
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "filter",
-                "description": "Optional. A filter string for advanced searching. The syntax matches the one used on the web site exactly, so you can filter encounter rankings on the site to figure out the string to use.",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                },
-                "defaultValue": "\"\"",
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "metric",
-                "description": "Optional. You can filter to a specific player metric like dps or hps. If omitted, an appropriate default player metric for the zone will be chosen.",
-                "type": {
-                  "kind": "ENUM",
-                  "name": "CharacterRankingMetricType",
-                  "ofType": null
-                },
-                "defaultValue": "default",
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "page",
-                "description": "Optional. Which page of rankings to fetch. By default the first page is used.",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                },
-                "defaultValue": "1",
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "partition",
-                "description": "Optional. Whether or not to filter the rankings to a specific partition. By default, the latest partition is chosen.",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                },
-                "defaultValue": "0",
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "serverRegion",
-                "description": "Optional. The short name of a region to filter to. If paired with a server slug, will uniquely identify a server. If used by itself, rankings for that specific region will be fetched.",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                },
-                "defaultValue": "\"\"",
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "serverSlug",
-                "description": "Optional. The slug for a specific server. Whether or not to filter rankings to a specific server. If omitted, data for all servers will be used.",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                },
-                "defaultValue": "\"\"",
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "size",
-                "description": "Optional. Whether or not to filter rankings to a specific size. If omitted, the first valid raid size will be used.",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                },
-                "defaultValue": "0",
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "soulbindID",
-                "description": "Optional. The soulbind ID to filter to if viewing Shadowlands rankings.",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                },
-                "defaultValue": "0",
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "specName",
-                "description": "Optional. The slug for a specific spec. Whether or not to filter rankings to a specific spec. If omitted, data for all specs will be used.",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                },
-                "defaultValue": "\"Any\"",
-                "isDeprecated": false,
-                "deprecationReason": null
-              }
-            ],
-            "type": {
-              "kind": "SCALAR",
-              "name": "JSON",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "difficulties",
-            "description": "A list of all the difficulties supported for this zone.",
-            "args": [],
-            "type": {
-              "kind": "LIST",
-              "name": null,
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "Difficulty",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "encounters",
-            "description": "The encounters found within this zone.",
-            "args": [],
-            "type": {
-              "kind": "LIST",
-              "name": null,
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "Encounter",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "expansion",
-            "description": "The expansion that this zone belongs to.",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "Expansion",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "fightRankings",
-            "description": "Fight rankings information for a zone. This data is not considered frozen, and it can change without notice. Use at your own risk.",
-            "args": [
-              {
-                "name": "bracket",
-                "description": "Optional. A specific bracket (e.g., item level range) to use instead of overall rankings. For WoW, brackets are item levels or keystones. For FF, brackets are patches.",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                },
-                "defaultValue": "0",
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "difficulty",
-                "description": "Optional. A specific difficulty to fetch rankings for. If omitted, the highest difficulty is used.",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                },
-                "defaultValue": "0",
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "filter",
-                "description": "Optional. A filter string for advanced searching. The syntax matches the one used on the web site exactly, so you can filter encounter rankings on the site to figure out the string to use.",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                },
-                "defaultValue": "\"\"",
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "metric",
-                "description": "Optional. You can filter to a specific fight metric like speed or execution. If omitted, an appropriate default fight metric for the zone will be chosen.",
-                "type": {
-                  "kind": "ENUM",
-                  "name": "FightRankingMetricType",
-                  "ofType": null
-                },
-                "defaultValue": "default",
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "page",
-                "description": "Optional. Which page of rankings to fetch. By default the first page is used.",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                },
-                "defaultValue": "1",
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "partition",
-                "description": "Optional. Whether or not to filter the rankings to a specific partition. By default, the latest partition is chosen.",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                },
-                "defaultValue": "0",
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "serverRegion",
-                "description": "Optional. The short name of a region to filter to. If paired with a server slug, will uniquely identify a server. If used by itself, rankings for that specific region will be fetched.",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                },
-                "defaultValue": "\"\"",
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "serverSlug",
-                "description": "Optional. The slug for a specific server. Whether or not to filter rankings to a specific server. If omitted, data for all servers will be used.",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                },
-                "defaultValue": "\"\"",
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "size",
-                "description": "Optional. Whether or not to filter rankings to a specific size. If omitted, the first valid raid size will be used.",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                },
-                "defaultValue": "0",
-                "isDeprecated": false,
-                "deprecationReason": null
-              }
-            ],
-            "type": {
-              "kind": "SCALAR",
-              "name": "JSON",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "frozen",
-            "description": "Whether or not the entire zone (including all its partitions) is permanently frozen. When a zone is frozen, data involving that zone will never change and can be cached forever.",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "id",
-            "description": "The ID of the zone.",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "name",
-            "description": "The name of the zone.",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "partitions",
-            "description": "A list of all the partitions supported for this zone.",
-            "args": [],
-            "type": {
-              "kind": "LIST",
-              "name": null,
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "Partition",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          }
-        ],
-        "inputFields": null,
-        "interfaces": [],
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
         "kind": "ENUM",
         "name": "FightRankingMetricType",
         "description": "All the possible metrics.",
@@ -9652,7 +9191,7 @@
       },
       {
         "kind": "ENUM",
-        "name": "SubscriptionStatusType",
+        "name": "SubscriptionStatus",
         "description": "The type of Subscription.",
         "fields": null,
         "inputFields": null,
@@ -9663,6 +9202,24 @@
             "description": "Gold Tier subscription",
             "isDeprecated": false,
             "deprecationReason": null
+          },
+          {
+            "name": "LegacyGold",
+            "description": "Legacy Gold Tier subscription",
+            "isDeprecated": true,
+            "deprecationReason": "Legacy Gold subscriptions are not available for new users."
+          },
+          {
+            "name": "LegacyPlatinum",
+            "description": "Legacy Platinum Tier subscription",
+            "isDeprecated": true,
+            "deprecationReason": "Legacy Platinum subscriptions are not available for new users."
+          },
+          {
+            "name": "LegacySilver",
+            "description": "Legacy Silver Tier subscription",
+            "isDeprecated": true,
+            "deprecationReason": "Legacy Silver subscriptions are not available for new users."
           },
           {
             "name": "Platinum",
@@ -9944,6 +9501,56 @@
             "deprecationReason": null
           },
           {
+            "name": "articleCategory",
+            "description": null,
+            "args": [
+              {
+                "name": "articleCategorySlug",
+                "description": null,
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
+            "type": {
+              "kind": "SCALAR",
+              "name": "JSON",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "articleIndexPage",
+            "description": null,
+            "args": [
+              {
+                "name": "siteName",
+                "description": null,
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
+            "type": {
+              "kind": "SCALAR",
+              "name": "JSON",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "articleSlugs",
             "description": null,
             "args": [
@@ -9961,6 +9568,31 @@
               },
               {
                 "name": "siteName",
+                "description": null,
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
+            "type": {
+              "kind": "SCALAR",
+              "name": "JSON",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "cmsNavigation",
+            "description": null,
+            "args": [
+              {
+                "name": "currentSlug",
                 "description": null,
                 "type": {
                   "kind": "SCALAR",
@@ -10008,6 +9640,55 @@
             "name": "headerTitle",
             "description": null,
             "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "JSON",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "pageOfArticlePreviews",
+            "description": null,
+            "args": [
+              {
+                "name": "articleCategorySlug",
+                "description": null,
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "pageNumber",
+                "description": null,
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "siteName",
+                "description": null,
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
             "type": {
               "kind": "SCALAR",
               "name": "JSON",

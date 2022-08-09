@@ -3,6 +3,7 @@ import { EventType } from "@prisma/client";
 import { BURSTING } from "../../queries/events/affixes/bursting";
 import { encryptedDebuffIDs } from "../../queries/events/affixes/encrypted";
 import { NECROTIC } from "../../queries/events/affixes/necrotic";
+import { shroudedAbilities } from "../../queries/events/affixes/shrouded";
 import { tormentedBuffsAndDebuffs } from "../../queries/events/affixes/tormented";
 import { CHEAT_DEATHS } from "../../queries/events/cheathDeath";
 import { DOS_URN } from "../../queries/events/dungeons/dos";
@@ -28,6 +29,7 @@ const ids = new Set<number>([
     .filter((ability) => ability.type.includes("applydebuff"))
     .flatMap((ability) => ability.ids),
   ...Object.values(encryptedDebuffIDs),
+  ...shroudedAbilities.map((ability) => ability.id),
 ]);
 
 export const applyDebuffProcessor: Processor<ApplyDebuffEvent> = (

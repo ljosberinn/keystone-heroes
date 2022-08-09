@@ -8,6 +8,7 @@ import {
   QUAKING,
   SANGUINE_ICHOR_DAMAGE,
   SANGUINE_ICHOR_HEALING,
+  SHROUDED,
   SPITEFUL,
   STORMING,
   VOLCANIC,
@@ -488,6 +489,42 @@ export const calculateEncryptedMetrics = ({
 
   return {
     hasEncrypted: true,
+    damage,
+  };
+};
+
+export type ShroudedMetrics = {
+  hasShrouded: boolean;
+  damage: Record<number, number>;
+};
+
+export const calculateShroudedMetrics = ({
+  affixes,
+  events,
+}: CalculateAffixMetricsParams): ShroudedMetrics => {
+  if (!affixes.includes(131)) {
+    return {
+      damage: {},
+      hasShrouded: false,
+    };
+  }
+
+  const damage = events.reduce<Record<number, number>>((acc, event) => {
+    if (
+      event.type === "DamageTaken" &&
+      event.ability &&
+      SHROUDED.has(event.ability.id) &&
+      event.targetPlayerID &&
+      event.damage
+    ) {
+      acc[event.targetPlayerID] =
+        (acc[event.targetPlayerID] ?? 0) + event.damage;
+    }
+    return acc;
+  }, {});
+
+  return {
+    hasShrouded: true,
     damage,
   };
 };

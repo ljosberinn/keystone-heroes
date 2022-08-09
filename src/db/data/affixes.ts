@@ -149,6 +149,12 @@ export const affixMap: Record<
     seasonal: true,
     level: 10,
   },
+  131: {
+    name: Affixes.Shrouded,
+    icon: "spell_shadow_nethercloak",
+    seasonal: true,
+    level: 10,
+  },
 };
 
 export const affixes = Object.entries(affixMap).map(([key, dataset]) => ({

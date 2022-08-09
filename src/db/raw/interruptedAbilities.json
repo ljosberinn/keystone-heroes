@@ -1,15 +1,20 @@
 [
   { "id": 116, "name": "Frostbolt", "icon": "spell_frost_frostbolt02" },
   { "id": 118, "name": "Polymorph", "icon": "spell_nature_polymorph" },
+  { "id": 133, "name": "Fireball", "icon": "spell_fire_flamebolt" },
   { "id": 348, "name": "Immolate", "icon": "spell_fire_immolation" },
+  { "id": 585, "name": "Smite", "icon": "spell_holy_holysmite" },
   { "id": 686, "name": "Shadow Bolt", "icon": "spell_shadow_shadowbolt" },
   { "id": 2060, "name": "Heal", "icon": "spell_holy_greaterheal" },
   { "id": 2061, "name": "Flash Heal", "icon": "spell_holy_flashheal" },
+  { "id": 2120, "name": "Flamestrike", "icon": "spell_fire_selfdestruct" },
   { "id": 2948, "name": "Scorch", "icon": "spell_fire_soulburn" },
   { "id": 8004, "name": "Healing Surge", "icon": "spell_nature_healingway" },
   { "id": 8092, "name": "Mind Blast", "icon": "spell_shadow_unholyfrenzy" },
   { "id": 8936, "name": "Regrowth", "icon": "spell_nature_resistnature" },
   { "id": 10326, "name": "Turn Evil", "icon": "ability_paladin_turnevil" },
+  { "id": 11366, "name": "Pyroblast", "icon": "spell_fire_fireball02" },
+  { "id": 14914, "name": "Holy Fire", "icon": "spell_holy_searinglight" },
   { "id": 19750, "name": "Flash of Light", "icon": "spell_holy_flashheal" },
   {
     "id": 27243,
@@ -17,6 +22,11 @@
     "icon": "spell_shadow_seedofdestruction"
   },
   { "id": 29722, "name": "Incinerate", "icon": "spell_fire_burnout" },
+  {
+    "id": 31687,
+    "name": "Summon Water Elemental",
+    "icon": "spell_frost_summonwaterelemental_2"
+  },
   { "id": 34914, "name": "Vampiric Touch", "icon": "spell_holy_stoicism" },
   { "id": 48181, "name": "Haunt", "icon": "ability_warlock_haunt" },
   { "id": 48438, "name": "Wild Growth", "icon": "ability_druid_flourish" },
@@ -48,6 +58,7 @@
     "name": "Soothing Mist",
     "icon": "ability_monk_soothingmists"
   },
+  { "id": 116011, "name": "Rune of Power", "icon": "spell_mage_runeofpower" },
   { "id": 116670, "name": "Vivify", "icon": "ability_monk_vivify" },
   { "id": 116858, "name": "Chaos Bolt", "icon": "ability_warlock_chaosbolt" },
   {
@@ -75,6 +86,11 @@
   { "id": 198013, "name": "Eye Beam", "icon": "ability_demonhunter_eyebeam" },
   { "id": 198590, "name": "Drain Soul", "icon": "spell_shadow_haunting" },
   {
+    "id": 212036,
+    "name": "Mass Resurrection",
+    "icon": "achievement_guildperk_massresurrection"
+  },
+  {
     "id": 212040,
     "name": "Revitalize",
     "icon": "ability_druid_empoweredtouch"
@@ -84,6 +100,7 @@
     "name": "Ancestral Vision",
     "icon": "spell_shaman_elementaloath"
   },
+  { "id": 234153, "name": "Drain Life", "icon": "spell_shadow_lifedrain02" },
   { "id": 263165, "name": "Void Torrent", "icon": "spell_priest_voidsear" },
   {
     "id": 316099,

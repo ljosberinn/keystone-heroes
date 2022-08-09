@@ -1,6 +1,10 @@
 import type { Dungeon, Zone } from "@prisma/client";
 import { Covenants } from "@prisma/client";
 
+import {
+  shroudedNathrezimInfiltratorID,
+  shroudedZulgamuxID,
+} from "../../wcl/queries/events/affixes/shrouded";
 import { SPITEFUL } from "../../wcl/queries/events/affixes/spiteful";
 import { ExpansionEnum } from "./expansions";
 
@@ -70,14 +74,72 @@ export enum Boss {
   HYLBRANDE = 175_663,
   SO_LEAH = 177_269,
   TIMECAPN_HOOKTAIL = 175_546,
+  // GD
+  RAILMASTER_ROCKETSPARK = 77_803,
+  BORKA_THE_BRUTE = 77_816,
+  NITROGG_THUNDERTOWER = 79_545,
+  SKYLORD_TOVRA = 80_005,
+  // ID
+  DREADFANG = 81_297,
+  FLESHRENDER_NOKGAR = 81_305,
+  MAKOGG_EMBERBLADE = 80_805,
+  AHRIOK_DUGRU = 80_816,
+  NEESA_NOX = 80_808,
+  OSHIR = 79_852,
+  SKULLOC = 83_612,
+  KORAMAR = 83_613,
+  ZOGGOSH = 83_616,
+  // WS
+  GNOMERCY = 145_185,
+  PLATINUM_PUMMELER = 144_244,
+  KUJO = 144_246,
+  HEAD_MACHINIST_SPARKFLUX = 144_248,
+  AERIAL_UNIT_R21X = 150_396,
+  OMEGA_BUSTER = 144_249,
+  KING_MECHAGON = 150_397,
+  // JY
+  GUNKER = 150_222,
+  TRIXXIE_TAZER = 150_712,
+  NAENO_MEGACRASH = 153_755,
+  KING_GOBBMAK = 150_159,
+  TANKBUSTER_MK1 = 150_295,
+  HK8_AERIAL_OPPRESSION_UNIT = 150_190,
+  // LK
+  // OPERA = 114_284, // one of many
+  MAIDEN_OF_VIRTUE = 113_971,
+  ATTUMEN = 114_262,
+  MOROES = 114_312,
+  // UK
+  THE_CURATOR = 114_247,
+  MANA_DEVOURER = 114_252,
+  VIZADUUM_THE_ATCHER = 114_790,
+  SHADE_OF_MEDIVH = 114_350,
 }
 
 const multiTargetBossFights = new Set([
   Boss.KIN_TARA,
   Boss.AZULES,
+
   Boss.PACERAN_THE_VIRULENT,
   Boss.DESSIA_THE_DECAPITATOR,
   Boss.SATHEL_THE_ACCURSED,
+
+  Boss.RAILMASTER_ROCKETSPARK,
+  Boss.BORKA_THE_BRUTE,
+
+  Boss.DREADFANG,
+  Boss.FLESHRENDER_NOKGAR,
+
+  Boss.MAKOGG_EMBERBLADE,
+  Boss.AHRIOK_DUGRU,
+  Boss.NEESA_NOX,
+
+  Boss.SKULLOC,
+  Boss.KORAMAR,
+  Boss.ZOGGOSH,
+
+  Boss.TRIXXIE_TAZER,
+  Boss.NAENO_MEGACRASH,
 ]);
 
 /**
@@ -105,7 +167,12 @@ export enum DungeonIDs {
   // TAZAVESH_LOWER = ???,
   TAZAVESH = 2441,
   // Battle for Azeroth
+  MECHAGON = 2097,
   // Legion
+  KARAZHAN = 1651,
+  // Warlords
+  IRON_DOCKS = 1195,
+  GRIMRAIL_DEPOT = 1208,
 }
 
 export type DungeonMeta = Omit<Dungeon, "id" | "time"> & {
@@ -791,15 +858,15 @@ export const TAZAVESH_LOWER: DungeonMeta = {
     177_817: 4, // Support Officer
     177_816: 4, // Interrogation Specialist
     177_808: 8, // Armored Overseer
-    179_334: 20, // Portalmancer Zo'honn
-    179_837: 20, // Tracker Zo'korss,
+    179_334: 24, // Portalmancer Zo'honn
+    179_837: 18, // Tracker Zo'korss,
     180_091: 12, // Ancient Core Hound,
     180_495: 10, // Enraged Direhorn,
     180_567: 4, // Frenzied Nightclaw
     179_840: 4, // Market Peacekeeper
     179_841: 4, // Veteran Sparkcaster
     179_842: 8, // Commerce Enforcer
-    179_821: 25, // Commander Zo'far,
+    179_821: 24, // Commander Zo'far,
     180_348: 8, // Cartel Muscle
     180_335: 5, // Cartel Smuggler
     180_336: 5, // Cartel Wiseguy
@@ -812,6 +879,9 @@ export const TAZAVESH_LOWER: DungeonMeta = {
     176_396: 3, // Defective Sorter
     176_394: 5, // P.O.S.T. Worker
     176_395: 5, // Overloaded Mailemental
+
+    [shroudedNathrezimInfiltratorID]: 3,
+    [shroudedZulgamuxID]: 9,
   },
   zones: [
     {
@@ -863,23 +933,25 @@ export const TAZAVESH_UPPER: DungeonMeta = {
   timer: createDungeonTimer(30),
   unitCountMap: {
     178_163: 1, // Murkbrine Shorerunner
-    178_139: 6, // Murkbrine Shellcrusher,
-    178_165: 15, // Coastwalker Goliath
-    180_431: 5, // Focused Ritualist
+    178_139: 3, // Murkbrine Shellcrusher,
+    178_165: 18, // Coastwalker Goliath
+    180_431: 4, // Focused Ritualist
     180_015: 5, // Burly Deckhand
-    178_133: 3, // Murkbrine Wavejumper
-    179_388: 5, // Hourglass Tidesage
-    179_399: 0, // Drunk Pirate
+    178_133: 2, // Murkbrine Wavejumper
+    179_388: 4, // Hourglass Tidesage
     178_142: 3, // Murkbrine Fishmancer
-    178_141: 3, // Murkbrine Scalebinder,
+    178_141: 2, // Murkbrine Scalebinder,
     179_386: 5, // Corsair Officer
     178_171: 10, // Stormforged Guardian
-    180_429: 10, // Adorned Starseer
+    180_429: 12, // Adorned Starseer
     180_432: 5, // Devoted Accomplice
 
     180_433: 0, // Wandering Pulsar via Adorned Starseer
     176_551: 0, // Vault Purifier via Hylbrande
     177_716: 0, // So' Cartel Assassin via So'leah
+
+    [shroudedNathrezimInfiltratorID]: 6,
+    [shroudedZulgamuxID]: 18,
   },
   zones: [
     {
@@ -922,6 +994,478 @@ export const TAZAVESH_UPPER: DungeonMeta = {
   covenant: null,
 };
 
+export const KARAZHAN_LOWER: DungeonMeta = {
+  bossIDs: [Boss.MAIDEN_OF_VIRTUE, Boss.ATTUMEN, Boss.MOROES],
+  count: 420,
+  name: "Lower Karazhan",
+  slug: "LK",
+  timer: createDungeonTimer(42),
+  unitCountMap: {
+    114_626: 5, // Forlorn Spirit
+    114_541: 1, // Spectral Patron
+    114_542: 4, // Ghostly Philanthropist
+    114_584: 4, // Phantom Crew
+    114_526: 3, // Ghostly Understudy
+    116_549: 4, // Backup Singer
+    114_544: 6, // Skeletal Usher
+    114_634: 3, // Undying Servant
+    114_633: 5, // Spectral Valet
+    114_625: 1, // Phantom Guest
+    114_629: 3, // Spectral Retainer
+    114_623: 3, // Spectral Attendant
+    114_636: 3, // Phantom Guardsman
+    114_783: 4, // Reformed Maiden
+    114_796: 3, // Wholesome Hostess
+    114_792: 3, // Virtuous Lady
+    114_637: 3, // Spectral Sentry
+    114_624: 6, // Arcane Warden
+    114_628: 3, // Skeletal Waiter
+    114_793: 3, // Skeletal Hound
+    114_716: 3, // Ghostly Baker
+    114_715: 3, // Ghostly Chef
+    114_714: 3, // Ghostly Steward
+    114_802: 4, // Spectral Journeyman
+    114_801: 4, // Spectral Apprentice
+    114_804: 5, // Spectral Charger
+    114_803: 4, // Spectral Stable Hand
+    115_019: 3, // Coldmist Widow
+    115_115: 3, // Coldmist Stalker
+    115_020: 4, // Arcanid
+    114_627: 5, // Shrieking Terror
+
+    [shroudedNathrezimInfiltratorID]: 4,
+    [shroudedZulgamuxID]: 12,
+  },
+  zones: [
+    {
+      id: 814,
+      name: "Master's Terrace",
+      minX: 162_423,
+      maxX: 220_577,
+      minY: -1_119_060,
+      maxY: -1_080_290,
+      order: 1,
+    },
+    {
+      id: 813,
+      name: "Opera Hall Balcony",
+      minX: 169_843,
+      maxX: 193_258,
+      minY: -1_096_930,
+      maxY: -1_081_320,
+      order: 2,
+    },
+    {
+      id: 812,
+      name: "The Guest Chambers",
+      minX: 166_998,
+      maxX: 219_002,
+      minY: -1_111_960,
+      maxY: -1_077_290,
+      order: 3,
+    },
+    {
+      id: 811,
+      name: "The Banquet Hall",
+      minX: 178_743,
+      maxX: 213_257,
+      minY: -1_106_630,
+      maxY: -1_083_620,
+      order: 4,
+    },
+    {
+      id: 810,
+      name: "Upper Livery Stables",
+      minX: 182_356,
+      maxX: 208_142,
+      minY: -1_118_900,
+      maxY: -1_101_710,
+      order: 5,
+    },
+    {
+      id: 809,
+      name: "Servant's Quarters",
+      minX: 167_498,
+      maxX: 222_502,
+      minY: -1_118_960,
+      maxY: -1_082_290,
+      order: 6,
+    },
+  ],
+  expansionID: ExpansionEnum.SHADOWLANDS,
+  covenant: null,
+};
+
+export const KARAZHAN_UPPER: DungeonMeta = {
+  bossIDs: [
+    Boss.THE_CURATOR,
+    Boss.MANA_DEVOURER,
+    Boss.VIZADUUM_THE_ATCHER,
+    Boss.SHADE_OF_MEDIVH,
+  ],
+  count: 169,
+  name: "Upper Karazhan",
+  slug: "UK",
+  timer: createDungeonTimer(35),
+  unitCountMap: {
+    114_626: 4, // Forlorn Spirit
+    114_627: 4, // Shrieking Terror
+    114_334: 4, // Damaged Golem
+    115_765: 18, // Abstract Nullifier
+    114_338: 9, // Mana Confluence
+    114_364: 1, // Mana-Gorged Wyrm
+    115_488: 8, // Infused Pyromancer
+    115_484: 4, // Fel Bat
+    115_757: 12, // Wrathguard Flamebringer
+    115_417: 7, // Rat
+    115_419: 7, // Ancient Tome
+    115_418: 7, // Spider
+    115_831: 3, // Mana Devourer
+    115_486: 9, // Erudite Slayer
+    115_388: 18, // King
+
+    [shroudedNathrezimInfiltratorID]: 6,
+    [shroudedZulgamuxID]: 18,
+  },
+  zones: [
+    {
+      id: 815,
+      name: "Lower Broken Stair",
+      minX: 187_523,
+      maxX: 206_677,
+      minY: -1_111_560,
+      maxY: -1_098_790,
+      order: 1,
+    },
+    {
+      id: 816,
+      name: "Upper Broken Stair",
+      minX: 189_833,
+      maxX: 203_768,
+      minY: -1_110_520,
+      maxY: -1_101_230,
+      order: 2,
+    },
+    {
+      id: 817,
+      name: "The Menagerie",
+      minX: 167_998,
+      maxX: 211_002,
+      minY: -1_122_960,
+      maxY: -1_094_290,
+      order: 3,
+    },
+    {
+      id: 818,
+      name: "Guardian's Library",
+      minX: 210_625,
+      maxX: 266_875,
+      minY: -480_000,
+      maxY: -442_500,
+      order: 4,
+    },
+    {
+      id: 819,
+      name: "Library Floor",
+      minX: 204_375,
+      maxX: 305_625,
+      minY: -485_000,
+      maxY: -417_500,
+      order: 5,
+    },
+    {
+      id: 820,
+      name: "Upper Library",
+      minX: 198_525,
+      maxX: 244_575,
+      minY: 391_800,
+      maxY: 422_500,
+      order: 6,
+    },
+    {
+      id: 821,
+      name: "Gamesman's Hall",
+      minX: 198_375,
+      maxX: 251_625,
+      minY: 366_000,
+      maxY: 401_500,
+      order: 7,
+    },
+    {
+      id: 822,
+      name: "Netherspace",
+      minX: 155_719,
+      maxX: 265_969,
+      minY: 333_000,
+      maxY: 406_500,
+      order: 8,
+    },
+  ],
+  expansionID: ExpansionEnum.SHADOWLANDS,
+  covenant: null,
+};
+
+export const MECHAGON_LOWER: DungeonMeta = {
+  bossIDs: [
+    Boss.GUNKER,
+    Boss.TRIXXIE_TAZER,
+    Boss.NAENO_MEGACRASH,
+    Boss.KING_GOBBMAK,
+    Boss.TANKBUSTER_MK1,
+    Boss.HK8_AERIAL_OPPRESSION_UNIT,
+  ],
+  count: 332,
+  name: "Mechagon: Junkyard",
+  slug: "JY",
+  timer: createDungeonTimer(38),
+  unitCountMap: {
+    150_142: 3, // Scrapbone Trashtosser
+    150_250: 3, // Pistonhead Blaster
+    150_249: 3, // Pistonhead Scrapper
+    150_143: 3, // Scrapbone Grinder
+    150_547: 1, // Scrapbone Grunter
+    150_146: 3, // Scrapbone Shaman
+    152_009: 5, // Malfunctioning Scrapbot
+    150_253: 10, // Weaponized Crawler
+    150_254: 3, // Scraphound
+    150_251: 3, // Pistonhead Mechanic
+    150_154: 3, // Saurolisk Boneipper
+    150_160: 4, // Scrapbone Bully
+    150_276: 5, // Heavy Scrapbot
+    150_195: 3, // Gnome-Eating Slime
+    150_169: 4, // Toxic Lurker
+    150_297: 4, // Mechagon Renormalizer
+    155_094: 3, // Mechagon Trooper
+    150_165: 4, // Slime Elemental
+    155_090: 4, // Anodized Coilbearer
+    150_292: 5, // Mechagon Cavalry
+    150_293: 3, // Mechagon Prowler
+    150_168: 5, // Toxic Monstrosity
+
+    [shroudedNathrezimInfiltratorID]: 7,
+    [shroudedZulgamuxID]: 21,
+  },
+  zones: [
+    {
+      id: 1490,
+      name: "Mechagon Island",
+      minX: -128_743,
+      maxX: 105_007,
+      minY: -1048,
+      maxY: 154_785,
+      order: 1,
+    },
+  ],
+  expansionID: ExpansionEnum.SHADOWLANDS,
+  covenant: null,
+};
+
+export const MECHAGON_UPPER: DungeonMeta = {
+  bossIDs: [
+    Boss.GNOMERCY,
+    Boss.PLATINUM_PUMMELER,
+    Boss.KUJO,
+    Boss.HEAD_MACHINIST_SPARKFLUX,
+    Boss.AERIAL_UNIT_R21X,
+    Boss.OMEGA_BUSTER,
+    Boss.KING_MECHAGON,
+  ],
+  count: 160,
+  name: "Mechagon: Workshop",
+  slug: "WS",
+  timer: createDungeonTimer(32),
+  unitCountMap: {
+    151_476: 9, // Blastatron X-80
+    151_649: 3, // Defense Bot Mk I
+    144_294: 3, // Mechagon Tinkerer
+    144_299: 3, // Workshop Defender
+    144_295: 3, // Mechagon Mechanic
+    144_296: 5, // Spider Tank
+    144_298: 6, // Defense Bot Mk III
+    151_773: 4, // Junkyard D.O.G.
+    144_293: 6, // Waste Processing Unit
+    144_301: 1, // Living Waste
+    151_657: 3, // Bomb Tonk
+    151_659: 3, // Rocket Tonk
+    151_658: 3, // Striker Tonk
+    144_303: 3, // G.U.A.R.D.
+    144_300: 0, // Mechagon Citizen
+    151_325: 0, // Alarm-o-Bot
+
+    [shroudedNathrezimInfiltratorID]: 4,
+    [shroudedZulgamuxID]: 12,
+  },
+  zones: [
+    {
+      id: 1491,
+      name: "The Robodrome",
+      minX: -33_023,
+      maxX: -1976,
+      minY: 38_000,
+      maxY: 58_698,
+      order: 1,
+    },
+    {
+      id: 1493,
+      name: "Waste Pipes",
+      minX: -35_750,
+      maxX: -11_750,
+      minY: 34_500,
+      maxY: 50_500,
+      order: 2,
+    },
+    {
+      id: 1494,
+      name: "The Under Junk",
+      minX: -47_625,
+      maxX: 125,
+      minY: 39_666,
+      maxY: 71_500,
+      order: 3,
+    },
+    {
+      id: 1497,
+      name: "Mechagon City",
+      minX: -72_000,
+      maxX: -18_000,
+      minY: 58_500,
+      maxY: 94_500,
+      order: 4,
+    },
+  ],
+  expansionID: ExpansionEnum.SHADOWLANDS,
+  covenant: null,
+};
+
+export const IRON_DOCKS: DungeonMeta = {
+  bossIDs: [
+    Boss.DREADFANG,
+    Boss.FLESHRENDER_NOKGAR,
+    Boss.MAKOGG_EMBERBLADE,
+    Boss.AHRIOK_DUGRU,
+    Boss.NEESA_NOX,
+    Boss.OSHIR,
+    Boss.SKULLOC,
+    Boss.KORAMAR,
+    Boss.ZOGGOSH,
+  ],
+  count: 400,
+  name: "Iron Docks",
+  slug: "ID",
+  timer: createDungeonTimer(30),
+  unitCountMap: {
+    81_283: 4, // Grom'kar Footsoldier
+    86_809: 5, // Grom'kar Incinerator
+    83_025: 9, // Grom'kar Battlemaster
+    83_028: 3, // Grom'kar Deadeye
+    87_252: 9, // Unruly Ogron
+    81_432: 4, // Grom'kar Technician
+    81_603: 9, // Champion Druna
+    83_026: 9, // Siegemaster Olugar
+    83_763: 2, // Grom'kar Technician
+    84_520: 9, // Pitwarden Gwarnok
+    83_697: 3, // Grom'kar Deckhand
+    83_578: 9, // Ogron Laborer
+    83_761: 9, // Ogron Laborer
+    83_762: 1, // Grom'kar Deckhand
+    83_765: 2, // Grom'kar Footsoldier
+    83_764: 2, // Grom'kar Deadeye
+    86_526: 9, // Grom'kar Chainmaster
+    81_279: 5, // Grom'kar Flameslinger
+    83_392: 2, // Rampaging Clefthoof
+    83_390: 7, // Thunderlord Wrangler
+    83_389: 8, // Ironwing Flamespitter
+    84_028: 9, // Siegemaster Rokra
+
+    [shroudedNathrezimInfiltratorID]: 4,
+    [shroudedZulgamuxID]: 12,
+  },
+  zones: [
+    {
+      id: 595,
+      maxX: 133_075,
+      maxY: 708_250,
+      minX: 20_140,
+      minY: 632_754,
+      name: "Iron Docks",
+      order: 1,
+    },
+  ],
+  expansionID: ExpansionEnum.SHADOWLANDS,
+  covenant: null,
+};
+
+export const GRIMRAIL_DEPOT: DungeonMeta = {
+  bossIDs: [
+    Boss.RAILMASTER_ROCKETSPARK,
+    Boss.BORKA_THE_BRUTE,
+    Boss.NITROGG_THUNDERTOWER,
+    Boss.SKYLORD_TOVRA,
+  ],
+  count: 300,
+  name: "Grimrail Depot",
+  slug: "GD",
+  timer: createDungeonTimer(30),
+  unitCountMap: {
+    81_235: 2, // Grimrail Laborer
+    81_212: 7, // Grimrail Overseer
+    81_407: 12, // Grimrail Bombardier
+    80_940: 3, // Iron Infantry
+    80_937: 6, // Grom'kar Gunner
+    80_936: 7, // Grom'kar Grenadier
+    88_163: 8, // Grom'kar Cinderseer
+    80_935: 7, // Grom'kar Boomer
+    80_938: 18, // Grom'kar Hulk
+    82_579: 12, // Grom'kar Far Seer
+    82_594: 1, // Grimrail Loader
+    82_590: 12, // Grimrail Scout
+    82_597: 18, // Grom'kar Captain
+
+    [shroudedNathrezimInfiltratorID]: 6,
+    [shroudedZulgamuxID]: 18,
+  },
+  zones: [
+    {
+      id: 606,
+      name: "Train Depot",
+      minX: -178_438,
+      maxX: -146_563,
+      minY: 159_375,
+      maxY: 180_625,
+      order: 1,
+    },
+    {
+      id: 607,
+      name: "Rafters",
+      minX: -178_438,
+      maxX: -146_563,
+      minY: 159_375,
+      maxY: 180_625,
+      order: 2,
+    },
+    {
+      id: 608,
+      name: "Rear Train Cars",
+      minX: -177_500,
+      maxX: -150_500,
+      minY: 156_000,
+      maxY: 174_000,
+      order: 3,
+    },
+    {
+      id: 609,
+      name: "Forward Train Cars",
+      minX: -203_500,
+      maxX: -174_000,
+      minY: 155_167,
+      maxY: 174_833,
+      order: 4,
+    },
+  ],
+  expansionID: ExpansionEnum.SHADOWLANDS,
+  covenant: null,
+};
+
 export const dungeonMap: Record<Dungeon["id"], DungeonMeta> = {
   [DungeonIDs.SANGUINE_DEPTHS]: SANGUINE_DEPTHS,
   [DungeonIDs.SPIRES_OF_ASCENSION]: SPIRES_OF_ASCENSION,
@@ -934,6 +1478,14 @@ export const dungeonMap: Record<Dungeon["id"], DungeonMeta> = {
   // megadungeon have the same zone id
   [`1${DungeonIDs.TAZAVESH}`]: TAZAVESH_LOWER,
   [`2${DungeonIDs.TAZAVESH}`]: TAZAVESH_UPPER,
+  [`1${DungeonIDs.MECHAGON}`]: MECHAGON_LOWER,
+  [`2${DungeonIDs.MECHAGON}`]: MECHAGON_UPPER,
+  [`1${DungeonIDs.KARAZHAN}`]: KARAZHAN_LOWER,
+  [`2${DungeonIDs.KARAZHAN}`]: KARAZHAN_UPPER,
+  [DungeonIDs.IRON_DOCKS]: IRON_DOCKS,
+  [DungeonIDs.GRIMRAIL_DEPOT]: GRIMRAIL_DEPOT,
+
+  // TODO: TAZAVESH S4
 };
 
 export const allBossIDs = new Set<number>(
@@ -948,15 +1500,17 @@ export const dungeons: (Omit<Dungeon, "time"> & DungeonMeta)[] = Object.entries(
 }));
 
 export const findDungeonByIDAndMaps = (
-  id: number,
-  maps: Set<number>
+  maps: Set<number>,
+  gameZone: { id: number } | null
 ): DungeonMeta | null => {
-  if (id in dungeonMap) {
-    return dungeonMap[id];
+  if (gameZone && gameZone.id in dungeonMap) {
+    return dungeonMap[gameZone.id];
   }
 
-  const match = dungeons.find((dungeon) =>
-    dungeon.zones.every((zone) => maps.has(zone.id))
+  const match = dungeons.find(
+    (dungeon) =>
+      dungeon.zones.length > 0 &&
+      dungeon.zones.every((zone) => maps.has(zone.id))
   );
 
   return match ?? null;
