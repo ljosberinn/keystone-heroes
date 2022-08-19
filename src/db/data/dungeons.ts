@@ -1292,8 +1292,8 @@ export const MECHAGON_UPPER: DungeonMeta = {
     144_300: 0, // Mechagon Citizen
     151_325: 0, // Alarm-o-Bot
 
-    [shroudedNathrezimInfiltratorID]: 4,
-    [shroudedZulgamuxID]: 12,
+    [shroudedNathrezimInfiltratorID]: 3,
+    [shroudedZulgamuxID]: 9,
   },
   zones: [
     {
