@@ -1240,7 +1240,9 @@ export const MECHAGON_LOWER: DungeonMeta = {
     155_090: 4, // Anodized Coilbearer
     150_292: 5, // Mechagon Cavalry
     150_293: 3, // Mechagon Prowler
-    150_168: 5, // Toxic Monstrosity
+    150_168: 5, // Toxic Monstrosity 1
+    154_744: 5, // Toxic Monstrosity 2
+    154_758: 5, // Toxic Monstrosity 3
 
     [shroudedNathrezimInfiltratorID]: 7,
     [shroudedZulgamuxID]: 21,
