@@ -1374,7 +1374,7 @@ export const IRON_DOCKS: DungeonMeta = {
     83_764: 2, // Grom'kar Deadeye
     86_526: 9, // Grom'kar Chainmaster
     81_279: 5, // Grom'kar Flameslinger
-    83_392: 2, // Rampaging Clefthoof
+    83_392: 8, // Rampaging Clefthoof
     83_390: 7, // Thunderlord Wrangler
     83_389: 8, // Ironwing Flamespitter
     84_028: 9, // Siegemaster Rokra
