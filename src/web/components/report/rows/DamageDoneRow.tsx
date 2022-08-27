@@ -41,7 +41,7 @@ export default function DamageDoneRow({
 }: DamageDoneRowProps): JSX.Element | null {
   if (event.targetNPC && event.targetNPC.id === EXPLOSIVE.unit) {
     return (
-      <tr className="text-white bg-emerald-600 ">
+      <tr className="text-white bg-emerald-600/50">
         <TimestampCell event={event} msSinceLastEvent={msSinceLastEvent} />
 
         <TypeCell type="DamageDone" />
@@ -78,7 +78,7 @@ export default function DamageDoneRow({
   }
 
   return (
-    <tr className="text-white bg-emerald-600">
+    <tr className="text-white bg-emerald-600/50">
       <TimestampCell event={event} msSinceLastEvent={msSinceLastEvent} />
 
       <TypeCell type="DamageDone" />

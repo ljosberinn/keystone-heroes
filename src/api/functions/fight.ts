@@ -1343,7 +1343,7 @@ const getResponseOrRetrieveAndCreateFight = async (
   }
 
   const dungeon = findDungeonByIDAndMaps(
-    new Set(dungeonPulls.flatMap((pull) => pull.maps)),
+    dungeonPulls.flatMap((pull) => pull.maps),
     { id: dungeonID }
   );
 
@@ -1499,7 +1499,7 @@ const getResponseOrRetrieveAndCreateFight = async (
               percent: calculateTotalPercent(
                 pullsWithWipesAndPercent,
                 dungeonID,
-                new Set(persistableMaps.map((map) => map.zoneID))
+                persistableMaps.map((map) => map.zoneID)
               ),
               // since we need to update `totalPercent` anyways, we might aswell
               // always update the dungeonID too, even though it may already have
@@ -2321,7 +2321,7 @@ const createPullNPCDeathCountMap = (
 export const calculateTotalPercent = (
   pulls: PersistableDungeonPull[],
   dungeonID: number,
-  maps: Set<number>
+  maps: number[]
 ): number => {
   const dungeon = findDungeonByIDAndMaps(maps, { id: dungeonID });
 

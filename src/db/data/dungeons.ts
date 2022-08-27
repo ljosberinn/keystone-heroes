@@ -1486,8 +1486,6 @@ export const dungeonMap: Record<Dungeon["id"], DungeonMeta> = {
   [`2${DungeonIDs.KARAZHAN}`]: KARAZHAN_UPPER,
   [DungeonIDs.IRON_DOCKS]: IRON_DOCKS,
   [DungeonIDs.GRIMRAIL_DEPOT]: GRIMRAIL_DEPOT,
-
-  // TODO: TAZAVESH S4
 };
 
 export const allBossIDs = new Set<number>(
@@ -1502,18 +1500,19 @@ export const dungeons: (Omit<Dungeon, "time"> & DungeonMeta)[] = Object.entries(
 }));
 
 export const findDungeonByIDAndMaps = (
-  maps: Set<number>,
+  maps: number[],
   gameZone: { id: number } | null
 ): DungeonMeta | null => {
   if (gameZone && gameZone.id in dungeonMap) {
     return dungeonMap[gameZone.id];
   }
 
-  const match = dungeons.find(
-    (dungeon) =>
-      dungeon.zones.length > 0 &&
-      dungeon.zones.every((zone) => maps.has(zone.id))
-  );
+  // not all dungeons require you to enter each zone, so validate reverse:
+  // expect each seen map to be present in the dungeon <-> not every dungeon zone to be present in maps
+  const match = dungeons.find((dungeon) => {
+    const mapIDs = new Set(dungeon.zones.map((zone) => zone.id));
+    return [...maps].every((map) => mapIDs.has(map));
+  });
 
   return match ?? null;
 };

@@ -66,8 +66,8 @@ export default function CastRow({
     <tr
       className={
         event.type === "BeginCast" || event.ability.id === SD_LANTERN_OPENING
-          ? "bg-yellow-700 hover:bg-yellow-900"
-          : "bg-gray-200 hover:bg-white dark:bg-gray-600 dark:hover:bg-gray-700"
+          ? "bg-yellow-700/50 hover:bg-yellow-900"
+          : "bg-gray-200/50 hover:bg-white dark:bg-gray-600 dark:hover:bg-gray-700"
       }
     >
       <TimestampCell event={event} msSinceLastEvent={msSinceLastEvent} />

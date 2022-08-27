@@ -40,6 +40,7 @@ import { SidebarNPC } from "./SidebarNPC";
 import type { SourceOrTargetPlayerCellProps } from "./cells";
 import { usePullNPCs } from "./hooks";
 import type { DefaultEvent } from "./utils";
+import { isCrushedEvent } from "./utils";
 import {
   isAbilityReadyEventWithAbilityAndSourcePlayer,
   isApplyBuffEventWithAbility,
@@ -63,6 +64,8 @@ import {
   isBloodyJavelinDamageEvent,
   isDischargedAnimaDamageEvent,
   isForgottenForgehammerDamageEvent,
+  isAntipersonnelSquirrelEvent,
+  isRocketBarrageEvent,
 } from "./utils";
 
 type MostRelevantNPCReturn = {
@@ -480,6 +483,8 @@ function usePullSummaryRows(
 
   const isPlaguefall = dungeons[dungeon].slug === "PF";
   const isNecroticWake = dungeons[dungeon].slug === "NW";
+  const isIronDocks = dungeons[dungeon].slug === "ID";
+  const isWorkshop = dungeons[dungeon].slug === "WS";
 
   return {
     sanguineHealEvents: affixes.includes(affixNameIdMap.sanguine)
@@ -511,6 +516,15 @@ function usePullSummaryRows(
       : [],
     forgottenForgehammerEvents: isNecroticWake
       ? selectedPull.events.filter(isForgottenForgehammerDamageEvent)
+      : [],
+    crushedEvents: isIronDocks
+      ? selectedPull.events.filter(isCrushedEvent)
+      : [],
+    antiPersonnelSquirrelEvents: isWorkshop
+      ? selectedPull.events.filter(isAntipersonnelSquirrelEvent)
+      : [],
+    rocketBarrageEvents: isWorkshop
+      ? selectedPull.events.filter(isRocketBarrageEvent)
       : [],
   };
 }
@@ -605,6 +619,9 @@ function EventsTable() {
     bloodyJavelinDamageEvents,
     dischargedAnimaDamageEvents,
     forgottenForgehammerEvents,
+    crushedEvents,
+    antiPersonnelSquirrelEvents,
+    rocketBarrageEvents,
   } = usePullSummaryRows(selectedPull);
 
   return (
@@ -837,6 +854,17 @@ function EventsTable() {
                   playerIdPlayerNameMap={playerIdPlayerNameMap}
                   playerIdTextColorMap={playerIdTextColorMap}
                 />
+              ) : null}
+              {crushedEvents.length > 0 ? (
+                <CrushedDamageRow events={crushedEvents} />
+              ) : null}
+              {antiPersonnelSquirrelEvents.length > 0 ? (
+                <AntiPersonnelSquirrelDamageRow
+                  events={antiPersonnelSquirrelEvents}
+                />
+              ) : null}
+              {rocketBarrageEvents.length > 0 ? (
+                <RocketBarrageDamageRow events={rocketBarrageEvents} />
               ) : null}
             </Suspense>
           </tfoot>
@@ -1100,6 +1128,30 @@ const ApplyBuffRow = dynamic(
 const ApplyDebuffRow = dynamic(
   () =>
     import(/* webpackChunkName: "ApplyDebuffRow" */ "./rows/ApplyDebuffRow"),
+  { suspense: true }
+);
+
+const CrushedDamageRow = dynamic(
+  () =>
+    import(
+      /* webpackChunkName: "CrushedDamageRow" */ "./rows/CrushedDamageRow"
+    ),
+  { suspense: true }
+);
+
+const AntiPersonnelSquirrelDamageRow = dynamic(
+  () =>
+    import(
+      /* webpackChunkName: "AntiPersonnelSquirrelDamageRow" */ "./rows/AntiPersonnelSquirrelDamageRow"
+    ),
+  { suspense: true }
+);
+
+const RocketBarrageDamageRow = dynamic(
+  () =>
+    import(
+      /* webpackChunkName: "RocketBarrageDamageRow" */ "./rows/RocketBarrageDamageRow"
+    ),
   { suspense: true }
 );
 

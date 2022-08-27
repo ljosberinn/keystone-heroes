@@ -5,14 +5,18 @@ import {
   PF,
   EXPLOSIVE,
   NW,
+  ID,
+  WS,
 } from "../../staticData";
 import type { AbilityReadyRowProps } from "./rows/AbilityReadyRow";
 import type { AnimaExhaustDamageRowProps } from "./rows/AnimaExhaustDamageRow";
 import type { AnimaExhaustHealingRowProps } from "./rows/AnimaExhaustHealingRow";
+import type { AntiPersonnelSquirrelDamageRowProps } from "./rows/AntiPersonnelSquirrelDamageRow";
 import type { ApplyBuffRowProps } from "./rows/ApplyBuffRow";
 import type { ApplyDebuffRowProps } from "./rows/ApplyDebuffRow";
 import type { BloodyJavelinDamageRowProps } from "./rows/BloodyJavelinDamageRow";
 import type { CastRowProps } from "./rows/CastRow";
+import type { CrushedDamageRowProps } from "./rows/CrushedDamageRow";
 import type { DamageDoneRowProps } from "./rows/DamageDoneRow";
 import type { DamageTakenRowProps } from "./rows/DamageTakenRow";
 import type { DeathRowProps } from "./rows/DeathRow";
@@ -23,6 +27,7 @@ import type { HealingDoneRowProps } from "./rows/HealingDoneRow";
 import type { InterruptRowProps } from "./rows/InterruptRow";
 import type { MissedInterruptRowProps } from "./rows/MissedInterruptRow";
 import type { PlagueBombDamageRowProps } from "./rows/PlagueBombDamageRow";
+import type { RocketBarrageDamageRowProps } from "./rows/RocketBarrageDamageRow";
 import type { SanguineTimeLossRowProps } from "./rows/SanguineTimeLossRow";
 import type { ThrowCleaverDamageRowProps } from "./rows/ThrowCleaverDamageRow";
 import type { ViolentDetonationDamageRowProps } from "./rows/ViolentDetonationDamageRow";
@@ -266,3 +271,18 @@ export const formatNumber = (value: number): string => {
 
   return value.toLocaleString("en-US");
 };
+
+export const isCrushedEvent = (
+  event: DefaultEvent
+): event is CrushedDamageRowProps["events"][number] =>
+  event.ability?.id === ID.CRUSHED;
+
+export const isRocketBarrageEvent = (
+  event: DefaultEvent
+): event is RocketBarrageDamageRowProps["events"][number] =>
+  event.ability?.id === WS.ROCKET_BARRAGE;
+
+export const isAntipersonnelSquirrelEvent = (
+  event: DefaultEvent
+): event is AntiPersonnelSquirrelDamageRowProps["events"][number] =>
+  event.ability?.id === WS.ANTI_PERSONNEL_SQUIRREL;

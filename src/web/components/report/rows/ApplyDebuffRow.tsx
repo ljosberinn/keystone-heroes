@@ -43,7 +43,7 @@ export default function ApplyDebuffRow({
   }
 
   return (
-    <tr className="text-white bg-yellow-700 hover:bg-yellow-900">
+    <tr className="text-white bg-yellow-700/50 hover:bg-yellow-900">
       <TimestampCell event={event} msSinceLastEvent={msSinceLastEvent} />
 
       <TypeCell type={event.type} />

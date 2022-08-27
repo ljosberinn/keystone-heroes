@@ -32,6 +32,9 @@ function MissingPercentWarning({ percent }: { percent: number }) {
       <br />
       - the log is broken due to the game not sending the events
       <br />
+      - NPCs that were passively killed through environmental effects (e.g. Iron
+      Docks Stars) and were never otherwise interacted with do not show up
+      <br />
       - specific NPCs were killed that do not log a death event (e.g. Son of
       Hakkar in De Other Side)
       <br />
@@ -86,7 +89,7 @@ export default function GenericError(
 ): JSX.Element | null {
   return (
     <div className={`${widthConstraint} text-white pb-4`}>
-      <div className="flex flex-col p-2 bg-red-500 rounded-lg md:flex-row">
+      <div className="flex flex-col p-2 bg-red-500 dark:bg-red-500/40 rounded-lg md:flex-row">
         <div className="flex justify-center">
           <svg>
             <use href={`#${warning.id}`} />

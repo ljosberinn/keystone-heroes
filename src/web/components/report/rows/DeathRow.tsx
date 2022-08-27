@@ -26,8 +26,8 @@ export default function DeathRow({
     <tr
       className={
         event.targetPlayerID
-          ? "bg-red-500 hover:bg-red-700"
-          : "bg-emerald-600 hover:bg-emerald-800"
+          ? "bg-red-500/50 hover:bg-red-700"
+          : "bg-emerald-600/50 hover:bg-emerald-800"
       }
     >
       <TimestampCell event={event} msSinceLastEvent={msSinceLastEvent} />

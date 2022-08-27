@@ -38,7 +38,7 @@ export default function DamageTakenRow({
   const ability = event.ability ? determineAbility(event.ability.id) : null;
 
   return (
-    <tr className="text-white bg-red-500 hover:bg-red-700">
+    <tr className="text-white bg-red-500/50 hover:bg-red-700">
       <TimestampCell event={event} msSinceLastEvent={msSinceLastEvent} />
 
       <TypeCell type="DamageTaken" />

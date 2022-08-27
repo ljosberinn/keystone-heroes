@@ -161,7 +161,7 @@ const detectDungeonTimer = (fight: Fight) => {
   }
 
   const dungeon = findDungeonByIDAndMaps(
-    new Set(fight.maps.map((map) => map.id)),
+    fight.maps.map((map) => map.id),
     fight.gameZone
   );
 
@@ -567,7 +567,7 @@ const createResponseFromRawData = ({
           maps,
         }) => {
           const dungeon = gameZone
-            ? findDungeonByIDAndMaps(new Set(maps), gameZone)
+            ? findDungeonByIDAndMaps(maps, gameZone)
             : null;
 
           return {
@@ -760,7 +760,7 @@ const handler: RequestHandler<Request, ReportResponse> = async (req, res) => {
           // report K9Mfcb2CtjZ7pX6q contains zone 2222 as starting point, however
           // via .maps property its clear its the SD21 in the log, which is 2296
           const dungeon = findDungeonByIDAndMaps(
-            new Set(fight.maps.map((map) => map.id)),
+            fight.maps.map((map) => map.id),
             fight.gameZone
           );
 

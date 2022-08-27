@@ -26,7 +26,7 @@ export default function AnimaExhaustHealingRow({
   );
 
   return (
-    <tr className="text-white bg-yellow-700 border-t-2 border-gray-900 hover:bg-yellow-900">
+    <tr className="text-white bg-yellow-700/50 border-t-2 border-gray-900 hover:bg-yellow-900">
       <td colSpan={6} className="text-center">
         <span>Total </span>
         <ExternalLink

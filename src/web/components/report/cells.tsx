@@ -117,7 +117,7 @@ export function MaybeWastedCooldownCell({
         );
 
       return (
-        <td className="pl-2 bg-red-500">
+        <td className="pl-2 bg-red-500/50">
           <LinkToUsePullButton
             allPulls={fight.pulls}
             nextUse={event.ability.nextUse}
@@ -142,7 +142,7 @@ export function MaybeWastedCooldownCell({
     );
 
     return (
-      <td className="pl-2 bg-red-500">
+      <td className="pl-2 bg-red-500/50">
         <span>never</span>
         <span className="hidden xl:inline"> (missing {couldUseNTimes}x)</span>
       </td>
@@ -171,7 +171,7 @@ export function MaybeWastedCooldownCell({
         className={classnames(
           "pl-2",
           wastedCastUpcoming
-            ? "bg-red-500"
+            ? "bg-red-500/50"
             : nextCastIsUnderCD
             ? "text-emerald-500"
             : undefined
@@ -203,7 +203,7 @@ export function MaybeWastedCooldownCell({
   }
 
   return (
-    <td className="pl-2 bg-red-500">
+    <td className="pl-2 bg-red-500/50">
       <span>never </span>
       <span className="hidden xl:inline">
         (missing {Math.floor(couldUseNTimes)}x)

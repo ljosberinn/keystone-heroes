@@ -1,5 +1,6 @@
 import { EventType } from "@prisma/client";
 
+import { ID, WS } from "../../../web/staticData";
 import { BURSTING } from "../../queries/events/affixes/bursting";
 import { EXPLOSIVE } from "../../queries/events/affixes/explosive";
 import { GRIEVOUS_WOUND } from "../../queries/events/affixes/grievous";
@@ -115,6 +116,20 @@ export const damageProcessor: Processor<DamageEvent> = (
   if (
     abilityID === PF.CANISTER_VIOLENT_DETONATION &&
     sourceNPCID !== targetNPCID
+  ) {
+    return {
+      timestamp,
+      eventType: EventType.DamageDone,
+      damage,
+      abilityID,
+      targetNPCID,
+    };
+  }
+
+  if (
+    abilityID === ID.CRUSHED ||
+    abilityID === WS.ANTI_PERSONNEL_SQUIRREL ||
+    abilityID === WS.ROCKET_BARRAGE
   ) {
     return {
       timestamp,

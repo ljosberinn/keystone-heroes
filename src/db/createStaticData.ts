@@ -36,6 +36,7 @@ import { CHEAT_DEATHS } from "../wcl/queries/events/cheathDeath";
 import { SHARED_COVENANT_ABILITIES } from "../wcl/queries/events/covenant";
 import { DOS_URN, DOS_URN_OPENING } from "../wcl/queries/events/dungeons/dos";
 import { HOA_GARGOYLE } from "../wcl/queries/events/dungeons/hoa";
+import { IRON_DOCKS_CRUSHED } from "../wcl/queries/events/dungeons/id";
 import {
   ENVELOPMENT_OF_MISTS,
   MOTS_OPENING,
@@ -54,6 +55,7 @@ import {
   TOP_BANNER_AURA,
   TOP_OPENING,
 } from "../wcl/queries/events/dungeons/top";
+import { WS } from "../wcl/queries/events/dungeons/ws";
 import { RACIALS } from "../wcl/queries/events/racials";
 import { TRINKETS } from "../wcl/queries/events/trinkets";
 import { allBossIDs, dungeons as rawDungeons } from "./data/dungeons";
@@ -69,6 +71,10 @@ const log = (str: string) => {
 };
 
 const DUMMY_CD = 9999;
+
+const ID = {
+  CRUSHED: IRON_DOCKS_CRUSHED,
+};
 
 const getAndPersistInterruptedAbilities = async () => {
   const storedIDs = knownInterruptedAbilities.map((ability) => ability.id);
@@ -589,6 +595,21 @@ async function create() {
       icon: "ability_necrolord_fleshcraft",
       cd: 120,
     },
+    [ID.CRUSHED]: {
+      name: "Crushed!",
+      cd: 0,
+      icon: "ability_ironmaidens_incindiarydevice",
+    },
+    [WS.ANTI_PERSONNEL_SQUIRREL]: {
+      name: "Anti-Personnel Squirrel",
+      cd: 0,
+      icon: "ability_thunderking_thunderstruck",
+    },
+    [WS.ROCKET_BARRAGE]: {
+      name: "Rocket Barrage",
+      cd: 0,
+      icon: "ability_racial_rocketbarrage",
+    },
 
     ...Object.fromEntries(
       Object.values(CHEAT_DEATHS).map((cheat) => [
@@ -928,6 +949,8 @@ export const SOA_SPEAR = ${SOA_SPEAR};
 export const SD_LANTERN_OPENING = ${SD_LANTERN_OPENING};
 export const SD_LANTERN_BUFF = ${SD_LANTERN_BUFF};
 export const PF = JSON.parse(\`${JSON.stringify(PF)}\`);
+export const ID = JSON.parse(\`${JSON.stringify(ID)}\`);
+export const WS = JSON.parse(\`${JSON.stringify(WS)}\`);
 export const DOS_URN = ${DOS_URN};
 export const TOP_BANNER_AURA = ${TOP_BANNER_AURA};
 export const NW = JSON.parse(\`${JSON.stringify(NW)}\`);

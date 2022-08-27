@@ -2,6 +2,7 @@ import { DungeonIDs } from "../../../../db/data/dungeons";
 import type { AllTrackedEventTypes } from "../../events/types";
 import { filterExpression as dosFilterExpression, getDOSEvents } from "./dos";
 import { filterExpression as hoaFilterExpression, getHOAEvents } from "./hoa";
+import { filterExpression as idFilterExpression, getIDEvents } from "./id";
 import {
   filterExpression as motsFilterExpression,
   getMOTSEvents,
@@ -11,8 +12,9 @@ import { filterExpression as pfFilterExpression, getPFEvents } from "./pf";
 import { filterExpression as sdFilterExpression, getSDEvents } from "./sd";
 import { filterExpression as soaFilterExpression, getSOAEvents } from "./soa";
 import { filterExpression as topFilterExpression, getTOPEvents } from "./top";
+import { filterExpression as wsFilterExpression, getWSEvents } from "./ws";
 
-const dungeonExpressionMap: Record<DungeonIDs, string[]> = {
+const dungeonExpressionMap: Record<number, string[]> = {
   [DungeonIDs.DE_OTHER_SIDE]: dosFilterExpression,
   [DungeonIDs.HALLS_OF_ATONEMENT]: hoaFilterExpression,
   [DungeonIDs.PLAGUEFALL]: pfFilterExpression,
@@ -23,9 +25,9 @@ const dungeonExpressionMap: Record<DungeonIDs, string[]> = {
   [DungeonIDs.MISTS_OF_TIRNA_SCITHE]: motsFilterExpression,
   [DungeonIDs.TAZAVESH]: [],
   [DungeonIDs.GRIMRAIL_DEPOT]: [],
-  [DungeonIDs.MECHAGON]: [],
+  [Number.parseInt(`2${DungeonIDs.MECHAGON}`)]: wsFilterExpression,
   [DungeonIDs.KARAZHAN]: [],
-  [DungeonIDs.IRON_DOCKS]: [],
+  [DungeonIDs.IRON_DOCKS]: idFilterExpression,
 };
 
 export const getDungeonExpression = (id: DungeonIDs): string[] =>
@@ -44,6 +46,7 @@ export const filterDungeonEvents = (
   | typeof getTOPEvents
   | typeof getNWEvents
   | typeof getMOTSEvents
+  | typeof getIDEvents
 > => {
   switch (dungeonID) {
     case DungeonIDs.DE_OTHER_SIDE:
@@ -62,6 +65,10 @@ export const filterDungeonEvents = (
       return getNWEvents(allEvents);
     case DungeonIDs.MISTS_OF_TIRNA_SCITHE:
       return getMOTSEvents(allEvents);
+    case DungeonIDs.IRON_DOCKS:
+      return getIDEvents(allEvents);
+    case Number.parseInt(`2${DungeonIDs.MECHAGON}`):
+      return getWSEvents(allEvents);
     default:
       return [];
   }

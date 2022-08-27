@@ -41,11 +41,6 @@ export const shroudedAbilities = [
     id: 373_729,
     icon: "ability_ironmaidens_bloodritual",
   },
-  // {
-  //   name: "Blood Siphon", // channel, should be irrelevant
-  //   id: 373_747,
-  //   icon: "ability_ironmaidens_bloodritual",
-  // },
   {
     name: "Blood Siphon", // damage source
     id: 373_744,
@@ -135,15 +130,11 @@ export const getShroudedEvents = (
     return [];
   }
 
-  const events = [
+  return [
     ...allEvents.filter(isShroudedEvent),
     ...allEvents.filter(isZulGamuxBrokerRestorationEvent),
     ...allEvents.filter(isInfiltratorBrokerRestorationEvent),
     ...allEvents.filter(isShroudedApplyBuffStackEvent),
     ...allEvents.filter(isShroudedApplyDebuffEvent),
   ];
-
-  console.log(`found ${events.length} Shrouded events`);
-
-  return events;
 };

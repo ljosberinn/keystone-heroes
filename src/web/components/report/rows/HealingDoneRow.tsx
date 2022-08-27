@@ -63,8 +63,8 @@ export default function HealingDoneRow({
     <tr
       className={classnames(
         "text-white",
-        event.sourcePlayerID && "bg-emerald-600 hover:bg-emerald-800",
-        event.targetNPC && "bg-red-700 hover:bg-red-900"
+        event.sourcePlayerID && "bg-emerald-600/50 hover:bg-emerald-800",
+        event.targetNPC && "bg-red-700/50 hover:bg-red-900"
       )}
     >
       <TimestampCell event={event} msSinceLastEvent={msSinceLastEvent} />

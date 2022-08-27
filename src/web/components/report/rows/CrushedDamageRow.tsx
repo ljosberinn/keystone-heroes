@@ -1,36 +1,36 @@
 import { useFight } from "../../../../pages/report/[reportID]/[fightID]";
-import { PF, spells } from "../../../staticData";
+import { ID, spells } from "../../../staticData";
 import { createWowheadUrl, timeDurationToString } from "../../../utils";
 import { AbilityIcon } from "../../AbilityIcon";
 import { ExternalLink } from "../../ExternalLink";
 import type { DefaultEvent } from "../utils";
 
-export type PlagueBombDamageRowProps = {
+export type CrushedDamageRowProps = {
   events: (Omit<DefaultEvent, "ability" | "damage" | "type"> & {
     ability: NonNullable<DefaultEvent["ability"]>;
     damage: number;
-    type: "DamageDone" | "DamageTaken";
+    type: "DamageTaken";
   })[];
 };
 
-const ability = spells[PF.PLAGUE_BOMB];
+const ability = spells[ID.CRUSHED];
 
 // eslint-disable-next-line import/no-default-export
-export default function PlagueBombDamageRow({
+export default function CrushedDamageRow({
   events,
-}: PlagueBombDamageRowProps): JSX.Element {
+}: CrushedDamageRowProps): JSX.Element {
   const { fight } = useFight();
 
   const totalDamageDone = events.reduce((acc, event) => acc + event.damage, 0);
 
   return (
-    <tr className="text-white bg-yellow-700/50 border-t-2 border-gray-900 hover:bg-yellow-900">
+    <tr className="text-white bg-yellow-700 border-t-2 border-gray-900 hover:bg-yellow-900">
       <td colSpan={6} className="text-center">
         <span>Total </span>
         <ExternalLink
           href={createWowheadUrl({
             category: "spell",
-            id: PF.PLAGUE_BOMB,
+            id: ID.CRUSHED,
           })}
         >
           <AbilityIcon
