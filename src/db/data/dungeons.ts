@@ -1002,12 +1002,12 @@ export const KARAZHAN_LOWER: DungeonMeta = {
   timer: createDungeonTimer(42),
   unitCountMap: {
     114_626: 5, // Forlorn Spirit
-    114_541: 1, // Spectral Patron
+    114_541: 3, // Spectral Patron
     114_542: 4, // Ghostly Philanthropist
     114_584: 4, // Phantom Crew
     114_526: 3, // Ghostly Understudy
     116_549: 4, // Backup Singer
-    114_544: 6, // Skeletal Usher
+    114_544: 12, // Skeletal Usher
     114_634: 3, // Undying Servant
     114_633: 5, // Spectral Valet
     114_625: 1, // Phantom Guest
@@ -1018,7 +1018,7 @@ export const KARAZHAN_LOWER: DungeonMeta = {
     114_796: 3, // Wholesome Hostess
     114_792: 3, // Virtuous Lady
     114_637: 3, // Spectral Sentry
-    114_624: 6, // Arcane Warden
+    114_624: 12, // Arcane Warden
     114_628: 3, // Skeletal Waiter
     114_793: 3, // Skeletal Hound
     114_716: 3, // Ghostly Baker
