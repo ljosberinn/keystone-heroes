@@ -1028,9 +1028,9 @@ export const KARAZHAN_LOWER: DungeonMeta = {
     114_801: 4, // Spectral Apprentice
     114_804: 5, // Spectral Charger
     114_803: 4, // Spectral Stable Hand
-    115_019: 3, // Coldmist Widow
+    115_019: 6, // Coldmist Widow
     115_115: 3, // Coldmist Stalker
-    115_020: 4, // Arcanid
+    115_020: 7, // Arcanid
     114_627: 5, // Shrieking Terror
 
     [shroudedNathrezimInfiltratorID]: 4,
