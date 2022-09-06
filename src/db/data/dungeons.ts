@@ -1511,7 +1511,13 @@ export const findDungeonByIDAndMaps = (
   // expect each seen map to be present in the dungeon <-> not every dungeon zone to be present in maps
   const match = dungeons.find((dungeon) => {
     const mapIDs = new Set(dungeon.zones.map((zone) => zone.id));
-    return [...maps].every((map) => mapIDs.has(map));
+
+    // Taza Gambit occasionally has the spawning zone of Streets in logs
+    if (dungeon.id === 22_441) {
+      mapIDs.add(TAZAVESH_LOWER.zones[0].id);
+    }
+
+    return maps.every((map) => mapIDs.has(map));
   });
 
   return match ?? null;
