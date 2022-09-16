@@ -108,6 +108,7 @@ export enum Boss {
   // OPERA = 114_284, // one of many
   MAIDEN_OF_VIRTUE = 113_971,
   ATTUMEN = 114_262,
+  MIDNIGHT = 114_264,
   MOROES = 114_312,
   // UK
   THE_CURATOR = 114_247,
@@ -140,6 +141,9 @@ const multiTargetBossFights = new Set([
 
   Boss.TRIXXIE_TAZER,
   Boss.NAENO_MEGACRASH,
+
+  Boss.ATTUMEN,
+  Boss.MIDNIGHT,
 ]);
 
 /**
@@ -995,7 +999,7 @@ export const TAZAVESH_UPPER: DungeonMeta = {
 };
 
 export const KARAZHAN_LOWER: DungeonMeta = {
-  bossIDs: [Boss.MAIDEN_OF_VIRTUE, Boss.ATTUMEN, Boss.MOROES],
+  bossIDs: [Boss.MAIDEN_OF_VIRTUE, Boss.ATTUMEN, Boss.MIDNIGHT, Boss.MOROES],
   count: 420,
   name: "Lower Karazhan",
   slug: "LK",
