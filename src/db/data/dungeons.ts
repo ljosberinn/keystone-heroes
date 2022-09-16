@@ -108,7 +108,7 @@ export enum Boss {
   // OPERA = 114_284, // one of many
   MAIDEN_OF_VIRTUE = 113_971,
   ATTUMEN = 114_262,
-  MIDNIGHT = 114_264,
+  // MIDNIGHT = 114_264,
   MOROES = 114_312,
   // UK
   THE_CURATOR = 114_247,
@@ -143,7 +143,7 @@ const multiTargetBossFights = new Set([
   Boss.NAENO_MEGACRASH,
 
   Boss.ATTUMEN,
-  Boss.MIDNIGHT,
+  // Boss.MIDNIGHT,
 ]);
 
 /**
