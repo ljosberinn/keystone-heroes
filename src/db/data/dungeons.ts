@@ -999,7 +999,7 @@ export const TAZAVESH_UPPER: DungeonMeta = {
 };
 
 export const KARAZHAN_LOWER: DungeonMeta = {
-  bossIDs: [Boss.MAIDEN_OF_VIRTUE, Boss.ATTUMEN, Boss.MIDNIGHT, Boss.MOROES],
+  bossIDs: [Boss.MAIDEN_OF_VIRTUE, Boss.ATTUMEN, Boss.MOROES],
   count: 420,
   name: "Lower Karazhan",
   slug: "LK",
