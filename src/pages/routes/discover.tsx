@@ -213,7 +213,7 @@ function DiscoveryResults({ data, loading }: DiscoveryResultsProps) {
             consider importing some from{" "}
             <ExternalLink
               className="underline"
-              href="https://www.warcraftlogs.com/zone/rankings/25#leaderboards=1"
+              href="https://www.warcraftlogs.com/zone/rankings/30#leaderboards=1"
             >
               Warcraft Logs
             </ExternalLink>
